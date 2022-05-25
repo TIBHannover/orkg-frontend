@@ -24,7 +24,7 @@ const HelpCenter = () => {
                 let categories = await getHelpCategories();
                 categories = categories.map(category => ({
                     ...category,
-                    help_articles: category.help_articles.sort((a, b) => (parseInt(a.order) > parseInt(b.order) ? 1 : -1))
+                    help_articles: category.help_articles.sort((a, b) => (parseInt(a.order) > parseInt(b.order) ? 1 : -1)),
                 }));
                 setCategories(categories);
             } catch (e) {
@@ -76,7 +76,7 @@ const HelpCenter = () => {
                             <h2 className="h4">
                                 <Link
                                     to={reverse(ROUTES.HELP_CENTER_CATEGORY, {
-                                        id: category.id
+                                        id: category.id,
                                     })}
                                     className="text-body"
                                 >
@@ -90,7 +90,7 @@ const HelpCenter = () => {
                                             <Link
                                                 to={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                                     id: article.id,
-                                                    slug: article.title
+                                                    slug: article.title,
                                                 })}
                                             >
                                                 {article.title}
@@ -101,7 +101,7 @@ const HelpCenter = () => {
                             <div className="mt-2 mb-4">
                                 <Link
                                     to={reverse(ROUTES.HELP_CENTER_CATEGORY, {
-                                        id: category.id
+                                        id: category.id,
                                     })}
                                     className="text-muted"
                                 >

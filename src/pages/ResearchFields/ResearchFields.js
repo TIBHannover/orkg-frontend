@@ -105,7 +105,7 @@ const ResearchFields = () => {
                                                 tag={Link}
                                                 to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
                                                     researchFieldId: selectedResearchField,
-                                                    slug: researchFieldLabel
+                                                    slug: researchFieldLabel,
                                                 })}
                                                 color="light"
                                                 size="sm"

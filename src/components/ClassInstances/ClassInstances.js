@@ -27,11 +27,11 @@ const ClassInstances = props => {
 
             getResourcesByClass({
                 id: props.classId,
-                page: page,
+                page,
                 items: pageSize,
                 sortBy: 'id',
                 desc: true,
-                q: searchQuery
+                q: searchQuery,
             }).then(result => {
                 // Resources
                 setInstances(prevResources => [...prevResources, ...result.content]);
@@ -42,7 +42,7 @@ const ClassInstances = props => {
                 setIsLastPageReached(result.last);
             });
         }, 500),
-        [props.classId]
+        [props.classId],
     );
 
     // reset resources when the id has changed
@@ -157,7 +157,7 @@ const ClassInstances = props => {
 };
 
 ClassInstances.propTypes = {
-    classId: PropTypes.string.isRequired
+    classId: PropTypes.string.isRequired,
 };
 
 export default ClassInstances;

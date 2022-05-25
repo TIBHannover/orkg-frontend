@@ -39,25 +39,25 @@ const Templates = () => {
      * @param {String} resourceId Resource Id
      * @param {String} predicateId Predicate Id
      */
-    const getTemplatesOfResourceId = (resourceId, predicateId) => {
-        return getStatementsByObjectAndPredicate({
+    const getTemplatesOfResourceId = (resourceId, predicateId) =>
+        getStatementsByObjectAndPredicate({
             objectId: resourceId,
-            predicateId: predicateId,
-            page: page,
+            predicateId,
+            page,
             items: pageSize,
             sortBy: 'created_at',
             desc: true,
-            returnContent: false
-        }).then(statements => {
-            // Filter statement with subjects of type Template
-            return {
-                ...statements,
-                content: statements.content
-                    .filter(statement => statement.subject.classes.includes(CLASSES.TEMPLATE))
-                    .map(st => ({ id: st.subject.id, label: st.subject.label, source: resourceId }))
-            }; // return the template Object
-        });
-    };
+            returnContent: false,
+        }).then(
+            statements =>
+                // Filter statement with subjects of type Template
+                ({
+                    ...statements,
+                    content: statements.content
+                        .filter(statement => statement.subject.classes.includes(CLASSES.TEMPLATE))
+                        .map(st => ({ id: st.subject.id, label: st.subject.label, source: resourceId })),
+                }), // return the template Object
+        );
 
     const loadMoreTemplates = (researchField, researchProblem, fClass, label) => {
         setIsNextPageLoading(true);
@@ -71,11 +71,11 @@ const Templates = () => {
         } else {
             apiCalls = getResourcesByClass({
                 id: CLASSES.TEMPLATE,
-                page: page,
+                page,
                 q: label,
                 items: pageSize,
                 sortBy: 'created_at',
-                desc: true
+                desc: true,
             });
         }
 
@@ -97,9 +97,7 @@ const Templates = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterResearchField, filterResearchProblem, filterClass, filterLabel]);
 
-    const isFilterApplied = () => {
-        return filterResearchField || filterResearchProblem || filterClass || filterLabel;
-    };
+    const isFilterApplied = () => filterResearchField || filterResearchProblem || filterClass || filterLabel;
 
     const handleResearchFieldSelect = selected => {
         setTemplates([]);
@@ -258,9 +256,9 @@ const Templates = () => {
                 <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
                     {templates.length > 0 && (
                         <div>
-                            {templates.map(template => {
-                                return <TemplateCard key={template.id} template={template} />;
-                            })}
+                            {templates.map(template => (
+                                <TemplateCard key={template.id} template={template} />
+                            ))}
                         </div>
                     )}
                     {templates.length === 0 && !isNextPageLoading && (

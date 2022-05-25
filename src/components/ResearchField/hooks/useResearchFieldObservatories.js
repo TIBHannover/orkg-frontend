@@ -3,7 +3,7 @@ import {
     getAllObservatories,
     getObservatoriesByResearchFieldId,
     getObservatoriesStats,
-    getUsersByObservatoryId
+    getUsersByObservatoryId,
 } from 'services/backend/observatories';
 import { getAllOrganizations } from 'services/backend/organizations';
 import { MISC } from 'constants/graphSettings';
@@ -57,7 +57,7 @@ function useResearchFieldObservatories({ researchFieldId }) {
                             observatoriesData = orderBy(
                                 observatoriesData.map((o, index) => set(o, 'contributors', c[index])),
                                 ['comparisons', 'resources'],
-                                ['desc', 'desc']
+                                ['desc', 'desc'],
                             );
                             setData(observatoriesData);
                             setIsLoading(false);
@@ -70,7 +70,7 @@ function useResearchFieldObservatories({ researchFieldId }) {
                     });
             }
         },
-        [researchFieldId]
+        [researchFieldId],
     );
 
     useEffect(() => {

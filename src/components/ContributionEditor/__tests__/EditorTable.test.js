@@ -8,6 +8,7 @@ jest.mock('react-flip-move', () => ({ children }) => children);
 // mock the ResizeObserver
 class ResizeObserver {
     observe() {}
+
     unobserve() {}
 }
 
@@ -18,7 +19,7 @@ const setup = (initialState = {}) => {
         <TableScrollContainer className="contribution-editor">
             <EditTable />
         </TableScrollContainer>,
-        { initialState }
+        { initialState },
     );
 };
 

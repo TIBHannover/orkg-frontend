@@ -80,7 +80,7 @@ AddOrganization.propTypes = {
     toggle: PropTypes.func.isRequired,
     id: PropTypes.string,
     organizations: PropTypes.array,
-    toggleOrganizationItem: PropTypes.func.isRequired
+    toggleOrganizationItem: PropTypes.func.isRequired,
 };
 
 export default AddOrganization;

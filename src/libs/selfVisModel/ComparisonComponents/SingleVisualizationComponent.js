@@ -52,7 +52,7 @@ const SingleVisualizationComponent = props => {
     const [windowWidth, setWindowWidth] = useState(0.8 * width);
     const [selfVisModel] = useState(new SelfVisDataModel());
 
-    /** hover over a preview card handler -- currently disabled **/
+    /** hover over a preview card handler -- currently disabled * */
     const handleMouseEnter = () => {
         // get window dimensions to set the fullWidget into the center of the screen.
         const width = getAvailableWidth();
@@ -64,8 +64,8 @@ const SingleVisualizationComponent = props => {
         setIsHovering(false);
     };
 
-    const visMethod = props.input.reconstructionModel.data.visMethod;
-    const customizationState = props.input.reconstructionModel.data.reconstructionData.customizationState;
+    const { visMethod } = props.input.reconstructionModel.data;
+    const { customizationState } = props.input.reconstructionModel.data.reconstructionData;
     useEffect(() => {
         // we need to check if the data input for this component has changed iff then apply reconstructionModel)
         const renderingData = selfVisModel.applyReconstructionModel(props.input.reconstructionModel);
@@ -91,12 +91,12 @@ const SingleVisualizationComponent = props => {
                         style={{
                             overflow: 'hidden',
                             borderRadius: '4px',
-                            width: windowWidth + 'px'
+                            width: `${windowWidth}px`,
                             // height: windowHeight + 100 + 'px'
                         }}
                     >
                         <DescriptionHeader>
-                            {props.input.label.length > 0 ? 'Title: ' + props.input.label : 'No Title'}
+                            {props.input.label.length > 0 ? `Title: ${props.input.label}` : 'No Title'}
                             <Tippy content="Go to resource page">
                                 <Link target="_blank" className="ms-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: props.input.id })}>
                                     <Icon icon={faLink} color="#fff" />
@@ -107,17 +107,17 @@ const SingleVisualizationComponent = props => {
                             <Chart
                                 chartType={visMethod}
                                 data={renderingData}
-                                width={windowWidth - 20 + 'px'}
-                                height={windowHeight - 50 + 'px'}
+                                width={`${windowWidth - 20}px`}
+                                height={`${windowHeight - 50}px`}
                                 options={{
                                     showRowNumber: true,
                                     width: '100%',
                                     hAxis: {
-                                        title: visMethod === 'BarChart' ? customizationState.yAxisLabel : customizationState.xAxisLabel
+                                        title: visMethod === 'BarChart' ? customizationState.yAxisLabel : customizationState.xAxisLabel,
                                     },
                                     vAxis: {
-                                        title: visMethod === 'BarChart' ? customizationState.xAxisLabel : customizationState.yAxisLabel
-                                    }
+                                        title: visMethod === 'BarChart' ? customizationState.xAxisLabel : customizationState.yAxisLabel,
+                                    },
                                 }}
                             />
                         )}
@@ -158,18 +158,17 @@ const SingleVisualizationComponent = props => {
                                                         </Badge>
                                                     </Link>
                                                 );
-                                            } else {
-                                                return (
-                                                    <Badge key={`author${author.id}`} color="light" className="me-2 mb-2">
-                                                        <Icon icon={faUser} /> {author.label}
-                                                    </Badge>
-                                                );
                                             }
+                                            return (
+                                                <Badge key={`author${author.id}`} color="light" className="me-2 mb-2">
+                                                    <Icon icon={faUser} /> {author.label}
+                                                </Badge>
+                                            );
                                         })}
                                     </div>
                                 )}
                             </div>
-                            {!isHovering && <div style={{ width: windowWidth - 20 + 'px', height: windowHeight - 50 + 'px' }} />}
+                            {!isHovering && <div style={{ width: `${windowWidth - 20}px`, height: `${windowHeight - 50}px` }} />}
                         </div>
                     </div>
                 }
@@ -191,11 +190,11 @@ const SingleVisualizationComponent = props => {
                                     chartArea: { height: '50%' },
                                     showRowNumber: true,
                                     hAxis: {
-                                        title: visMethod === 'BarChart' ? customizationState.yAxisLabel : customizationState.xAxisLabel
+                                        title: visMethod === 'BarChart' ? customizationState.yAxisLabel : customizationState.xAxisLabel,
                                     },
                                     vAxis: {
-                                        title: visMethod === 'BarChart' ? customizationState.xAxisLabel : customizationState.yAxisLabel
-                                    }
+                                        title: visMethod === 'BarChart' ? customizationState.xAxisLabel : customizationState.yAxisLabel,
+                                    },
                                 }}
                             />
                         )}
@@ -217,7 +216,7 @@ const SingleVisualizationComponent = props => {
 SingleVisualizationComponent.propTypes = {
     input: PropTypes.object,
     itemIndex: PropTypes.number,
-    expandVisualization: PropTypes.func
+    expandVisualization: PropTypes.func,
 };
 
 export default SingleVisualizationComponent;

@@ -3,7 +3,6 @@ import { getStatementsBySubject, getStatementsBySubjects } from 'services/backen
 import { connect } from 'react-redux';
 import * as PropTypes from 'prop-types';
 // import Graph from 'react-graph-vis';
-import GizmoGraph from './GizmoGraph';
 import { Modal, ModalHeader, ModalBody, Input, Form, FormGroup, Label, Button } from 'reactstrap';
 import uniqBy from 'lodash/uniqBy';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -13,8 +12,9 @@ import flattenDeep from 'lodash/flattenDeep';
 
 // moving GraphVis here in order to maintain the layouts and status related stuff;
 import GraphVis from 'libs/gizmo/GraphVis';
-import SearchAutoComplete from './SearchAutoComplete';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
+import SearchAutoComplete from './SearchAutoComplete';
+import GizmoGraph from './GizmoGraph';
 
 class GraphView extends Component {
     constructor(props) {
@@ -45,11 +45,11 @@ class GraphView extends Component {
         layoutSelectionOpen: false,
         exploringFullGraph: false,
         layout: 'force',
-        windowHeight: 0 // want this for auto aligning the size of the modal window
+        windowHeight: 0, // want this for auto aligning the size of the modal window
     };
 
     componentDidMount() {
-        //console.log('Graph View Modal is mounted');
+        // console.log('Graph View Modal is mounted');
         window.addEventListener('resize', this.updateDimensions);
         this.updateDimensions();
     }
@@ -64,7 +64,7 @@ class GraphView extends Component {
     };
 
     componentWillUnmount() {
-        //console.log('View modal un mounting');
+        // console.log('View modal un mounting');
         window.removeEventListener('resize', this.updateDimensions);
     }
 
@@ -77,14 +77,12 @@ class GraphView extends Component {
         if (value < this.state.depth || this.state.seenFullGraph === true) {
             // Case we have seen the full Graph so we just update the graph view
             this.setState({ depth: value });
+        } else if (!fullGraph && this.state.seenFullGraph === false) {
+            // Case we want to load more data
+            this.setState({ depth: value, seenFullGraph: false });
         } else {
-            if (!fullGraph && this.state.seenFullGraph === false) {
-                //Case we want to load more data
-                this.setState({ depth: value, seenFullGraph: false });
-            } else {
-                //Case we have seen the full Graph on going deeper
-                this.setState({ maxDepth: value, seenFullGraph: true });
-            }
+            // Case we have seen the full Graph on going deeper
+            this.setState({ maxDepth: value, seenFullGraph: true });
         }
     };
 
@@ -97,10 +95,9 @@ class GraphView extends Component {
             const statements = await getStatementsBySubject({ id: resourceId });
             if (statements.length === 0) {
                 return {}; // we dont have incremental data
-            } else {
-                // result is the incremental data we get;
-                return this.processStatements(statements);
             }
+            // result is the incremental data we get;
+            return this.processStatements(statements);
         } catch (error) {
             return {}; // TODO: handle unsaved resources
         }
@@ -111,9 +108,8 @@ class GraphView extends Component {
             const objectStatements = await getStatementsBySubjects({ ids: resourceIds });
             if (objectStatements.length === 0) {
                 return {}; // we dont have incremental data
-            } else {
-                return this.processMultiStatements(objectStatements);
             }
+            return this.processMultiStatements(objectStatements);
         } catch (error) {
             return {}; // TODO: handle unsaved resources
         }
@@ -131,7 +127,7 @@ class GraphView extends Component {
         });
         nodes = uniqBy(nodes, 'id');
         edges = uniqBy(edges, e => [e.from, e.to, e.label].join());
-        return { nodes: nodes, edges: edges };
+        return { nodes, edges };
     };
 
     processSingleStatement = (nodes, edges, statement) => {
@@ -142,7 +138,7 @@ class GraphView extends Component {
             id: statement.subject.id,
             label: subjectLabel,
             title: statement.subject.label,
-            classificationArray: statement.subject.classes
+            classificationArray: statement.subject.classes,
         });
 
         // check if node type is resource or literal
@@ -153,14 +149,14 @@ class GraphView extends Component {
                 title: statement.object.label,
                 classificationArray: statement.object.classes,
                 isResearchFieldRelated:
-                    statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD || statement.predicate.id === PREDICATES.HAS_SUB_RESEARCH_FIELD
+                    statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD || statement.predicate.id === PREDICATES.HAS_SUB_RESEARCH_FIELD,
             });
         } else {
             nodes.push({
                 id: statement.object.id,
                 label: objectLabel,
                 title: statement.object.label,
-                type: 'literal'
+                type: 'literal',
             });
         }
 
@@ -171,7 +167,7 @@ class GraphView extends Component {
                 to: statement.object.id,
                 label: statement.predicate.label,
                 isAuthorProp: true,
-                predicateId: statement.predicate.id
+                predicateId: statement.predicate.id,
             });
         } else if (statement.predicate.id === 'P26') {
             // add DOI Icon to target node
@@ -180,7 +176,7 @@ class GraphView extends Component {
                 to: statement.object.id,
                 label: statement.predicate.label,
                 isDOIProp: false,
-                predicateId: statement.predicate.id
+                predicateId: statement.predicate.id,
             }); // remove doi icon for now
         } else {
             // no Icon for the target node
@@ -188,7 +184,7 @@ class GraphView extends Component {
                 from: statement.subject.id,
                 to: statement.object.id,
                 label: statement.predicate.label,
-                predicateId: statement.predicate.id
+                predicateId: statement.predicate.id,
             });
         }
     };
@@ -214,12 +210,12 @@ class GraphView extends Component {
                 id: '__META_NODE__',
                 label: 'Meta Information',
                 title: 'Meta Information',
-                classificationArray: []
+                classificationArray: [],
             };
             const link = {
                 from: nodes[0].id,
                 to: meta.id,
-                label: 'has meta information'
+                label: 'has meta information',
             };
 
             nodes.push(meta);
@@ -243,7 +239,7 @@ class GraphView extends Component {
             });
         }
 
-        return { nodes: nodes, edges: edges };
+        return { nodes, edges };
     };
 
     loadStatements = async () => {
@@ -269,7 +265,7 @@ class GraphView extends Component {
         const { title, authors, doi, publicationMonth, publicationYear, selectedResearchField, contributions } = this.props.addPaper;
 
         // title
-        nodes.push({ id: 'title', label: title.substring(0, 20), title: title, classificationArray: [CLASSES.PAPER] });
+        nodes.push({ id: 'title', label: title.substring(0, 20), title, classificationArray: [CLASSES.PAPER] });
 
         // authors
         if (authors.length > 0) {
@@ -279,19 +275,19 @@ class GraphView extends Component {
             }
         }
 
-        //doi
+        // doi
         nodes.push({ id: 'doi', label: doi.substring(0, 20), title: doi, type: 'literal' });
         edges.push({ from: 'title', to: 'doi', label: 'has doi', isDOIProp: true });
 
-        //publicationMonth
+        // publicationMonth
         nodes.push({ id: 'publicationMonth', label: publicationMonth, title: publicationMonth, type: 'literal' });
         edges.push({ from: 'title', to: 'publicationMonth', label: 'has publication month' });
 
-        //publicationYear
+        // publicationYear
         nodes.push({ id: 'publicationYear', label: publicationYear, title: publicationYear, type: 'literal' });
         edges.push({ from: 'title', to: 'publicationYear', label: 'has publication year' });
 
-        //research field
+        // research field
         let researchFieldLabel = selectedResearchField;
         if (this.props.addPaper.researchFields && this.props.addPaper.researchFields.length > 0) {
             const rF = flattenDeep(this.props.addPaper.researchFields).find(rf => rf.id === selectedResearchField);
@@ -301,21 +297,21 @@ class GraphView extends Component {
         nodes.push({
             id: 'researchField',
             label: researchFieldLabel.substring(0, 20),
-            title: researchFieldLabel
+            title: researchFieldLabel,
         });
 
         edges.push({ from: 'title', to: 'researchField', label: 'has research field' });
 
-        //contributions
-        if (Object.keys(contributions['byId']).length) {
-            for (const contributionId in contributions['byId']) {
-                if (contributions['byId'].hasOwnProperty(contributionId)) {
-                    const contribution = contributions['byId'][contributionId];
+        // contributions
+        if (Object.keys(contributions.byId).length) {
+            for (const contributionId in contributions.byId) {
+                if (contributions.byId.hasOwnProperty(contributionId)) {
+                    const contribution = contributions.byId[contributionId];
 
                     nodes.push({ id: contribution.resourceId, label: contribution.label, title: contribution.label });
                     edges.push({ from: 'title', to: contribution.resourceId, label: 'has contribution' });
 
-                    //contribution statements
+                    // contribution statements
                     const statements = this.addPaperStatementsToGraph(contribution.resourceId, [], []);
                     nodes.push(...statements.nodes);
                     edges.push(...statements.edges);
@@ -329,7 +325,7 @@ class GraphView extends Component {
 
         this.setState({
             nodes,
-            edges
+            edges,
         });
     };
 
@@ -340,7 +336,7 @@ class GraphView extends Component {
         // select all nodes that have this value and only query these ones
         // >> faster performance since only retrieving what is needed !
 
-        const statementBrowser = this.props.statementBrowser;
+        const { statementBrowser } = this.props;
         const resource = statementBrowser.resources.byId[resourceId];
 
         if (resource.propertyIds.length > 0) {
@@ -352,8 +348,8 @@ class GraphView extends Component {
                         const value = statementBrowser.values.byId[valueId];
                         const id = value.resourceId ? value.resourceId : valueId;
 
-                        //add the node and relation
-                        nodes.push({ id: id, label: value.label, title: value.label });
+                        // add the node and relation
+                        nodes.push({ id, label: value.label, title: value.label });
                         edges.push({ from: resourceId, to: id, label: property.label });
                         if (value._class === ENTITIES.RESOURCE) {
                             this.addPaperStatementsToGraph(id, nodes, edges);
@@ -365,7 +361,7 @@ class GraphView extends Component {
 
         return {
             nodes,
-            edges
+            edges,
         };
     };
 
@@ -390,6 +386,7 @@ class GraphView extends Component {
             this.graphVis.depthUpdateEvent(parseInt(event.target.value)).then();
         }
     };
+
     exploreTheFullGraph = async () => {
         this.setState({ exploringFullGraph: true });
         await this.graphVis.fullExplore();
@@ -412,17 +409,16 @@ class GraphView extends Component {
             }
 
             return list;
-        } else {
-            return list;
         }
+        return list;
     };
 
     render() {
-        /*const events = {
+        /* const events = {
             select: function (event) {
                 var { nodes, edges } = event;
             }
-        };*/
+        }; */
         return (
             <Modal
                 isOpen={this.props.showDialog}
@@ -583,7 +579,7 @@ class GraphView extends Component {
                     )}
                     {this.state.isLoadingStatements && (
                         <div className="text-center text-primary mt-4 mb-4">
-                            {/*using a manual fixed scale value for the spinner scale! */}
+                            {/* using a manual fixed scale value for the spinner scale! */}
                             <span style={{ fontSize: this.state.windowHeight / 5 }}>
                                 <Icon icon={faSpinner} spin />
                             </span>
@@ -604,12 +600,12 @@ GraphView.propTypes = {
     statementBrowser: PropTypes.object.isRequired,
     paperId: PropTypes.string,
     addPaperVisualization: PropTypes.bool,
-    paperObject: PropTypes.object
+    paperObject: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
     addPaper: state.addPaper,
-    statementBrowser: state.statementBrowser
+    statementBrowser: state.statementBrowser,
 });
 
 export default connect(mapStateToProps)(GraphView);

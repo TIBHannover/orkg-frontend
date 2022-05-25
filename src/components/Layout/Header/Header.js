@@ -12,27 +12,23 @@ import {
     Tooltip,
     ButtonGroup,
     Row,
-    Badge
+    Badge,
 } from 'reactstrap';
 import { Link, NavLink as RouterNavLink, useLocation, useNavigate } from 'react-router-dom';
 import Jumbotron from 'components/Home/Jumbotron';
-import AddNew from './AddNew';
 import { ReactComponent as Logo } from 'assets/img/logo.svg';
 import { ReactComponent as LogoWhite } from 'assets/img/logo_white.svg';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon, FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faChevronDown, faUser, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import { Cookies } from 'react-cookie';
 import Gravatar from 'react-gravatar';
 import { useSelector, useDispatch } from 'react-redux';
 import Authentication from 'components/Authentication/Authentication';
-import SearchForm from './SearchForm';
 import { openAuthDialog, updateAuth, resetAuth } from 'slices/authSlice';
 import { getUserInformation } from 'services/backend/users';
 import greetingTime from 'greeting-time';
 import styled, { createGlobalStyle } from 'styled-components';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
 import { toast } from 'react-toastify';
@@ -41,6 +37,8 @@ import { scrollbarWidth } from '@xobotyi/scrollbar-width';
 import AboutMenu from 'components/Layout/Header/AboutMenu';
 import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
 import Nfdi4dsButton from 'components/Layout/Header/Nfdi4dsButton';
+import SearchForm from './SearchForm';
+import AddNew from './AddNew';
 
 const cookies = new Cookies();
 
@@ -244,14 +242,14 @@ const Header = () => {
     const [logoutTimeoutId, setLogoutTimeoutId] = useState(null);
 
     const location = useLocation();
-    const [isHomePageStyle, setIsHomePageStyle] = useState(location.pathname === ROUTES.HOME ? true : false);
+    const [isHomePageStyle, setIsHomePageStyle] = useState(location.pathname === ROUTES.HOME);
     const user = useSelector(state => state.auth.user);
     const userPopup = useRef(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
-        setIsHomePageStyle(location.pathname === ROUTES.HOME ? true : false);
+        setIsHomePageStyle(location.pathname === ROUTES.HOME);
     }, [location.pathname]);
 
     const toggleUserTooltip = useCallback(() => {
@@ -271,12 +269,12 @@ const Header = () => {
                                 user: {
                                     displayName: userData.display_name,
                                     id: userData.id,
-                                    token: token,
+                                    token,
                                     tokenExpire: token_expires_in,
                                     email: userData.email,
-                                    isCurationAllowed: userData.is_curation_allowed
-                                }
-                            })
+                                    isCurationAllowed: userData.is_curation_allowed,
+                                },
+                            }),
                         );
                     })
                     .catch(error => {
@@ -292,10 +290,8 @@ const Header = () => {
                 if (isHomePageStyle) {
                     setIsHomePageStyle(false);
                 }
-            } else {
-                if (!isHomePageStyle && location.pathname === ROUTES.HOME) {
-                    setIsHomePageStyle(true);
-                }
+            } else if (!isHomePageStyle && location.pathname === ROUTES.HOME) {
+                setIsHomePageStyle(true);
             }
         };
 
@@ -325,7 +321,7 @@ const Header = () => {
             cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
             dispatch(resetAuth());
             dispatch(openAuthDialog({ action: 'signin' }));
-            //logoutTimeoutId = null;
+            // logoutTimeoutId = null;
         };
         if (!logoutTimeoutId && user) {
             const token_expires_in = cookies.get('token_expires_in') ? cookies.get('token_expires_in') : null;
@@ -630,7 +626,7 @@ const Header = () => {
                         </div>
                     )}
 
-                    {!!!user && (
+                    {!user && (
                         <Button
                             color="secondary"
                             className="ps-4 pe-4 flex-shrink-0 sign-in"

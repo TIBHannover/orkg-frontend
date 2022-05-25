@@ -58,18 +58,18 @@ AbstractInputView.propTypes = {
     updateAbstract: PropTypes.func.isRequired,
     validation: PropTypes.bool.isRequired,
     isAbstractLoading: PropTypes.bool.isRequired,
-    isAbstractFailedLoading: PropTypes.bool.isRequired
+    isAbstractFailedLoading: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
-    abstract: state.addPaper.abstract
+    abstract: state.addPaper.abstract,
 });
 
 const mapDispatchToProps = dispatch => ({
-    updateAbstract: data => dispatch(updateAbstract(data))
+    updateAbstract: data => dispatch(updateAbstract(data)),
 });
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(AbstractInputView);

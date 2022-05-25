@@ -25,10 +25,10 @@ function useAddProperty({ resourceId, syncBackend }) {
                         .then(newPredicate => {
                             dispatch(
                                 createProperty({
-                                    resourceId: resourceId,
+                                    resourceId,
                                     existingPredicateId: newPredicate.id,
-                                    label: newPredicate.label
-                                })
+                                    label: newPredicate.label,
+                                }),
                             );
                             setIsLoading(false);
                         })
@@ -39,9 +39,9 @@ function useAddProperty({ resourceId, syncBackend }) {
                 } else {
                     dispatch(
                         createProperty({
-                            resourceId: resourceId,
-                            label
-                        })
+                            resourceId,
+                            label,
+                        }),
                     );
                 }
             };
@@ -54,17 +54,17 @@ function useAddProperty({ resourceId, syncBackend }) {
                 setShowAddProperty(false);
             }
         },
-        [confirmProperty, dispatch, resourceId, syncBackend]
+        [confirmProperty, dispatch, resourceId, syncBackend],
     );
 
     const handlePropertySelect = ({ id, value: label }) => {
         setShowAddProperty(false);
         dispatch(
             createProperty({
-                resourceId: resourceId,
+                resourceId,
                 existingPredicateId: id,
-                label: label
-            })
+                label,
+            }),
         );
     };
 
@@ -75,7 +75,7 @@ function useAddProperty({ resourceId, syncBackend }) {
         canAddProperty,
         setShowAddProperty,
         handlePropertySelect,
-        toggleConfirmNewProperty
+        toggleConfirmNewProperty,
     };
 }
 

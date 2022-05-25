@@ -19,11 +19,11 @@ function PublishVisualization(props) {
     const displayName = useSelector(state => state.auth.user.displayName);
 
     const [visualizationCreators, setVisualizationCreators] = useState(
-        props.authors ?? [{ label: displayName, id: displayName, orcid: '', statementId: '' }]
+        props.authors ?? [{ label: displayName, id: displayName, orcid: '', statementId: '' }],
     );
 
     const handleCreatorsChange = creators => {
-        creators = creators ? creators : [];
+        creators = creators || [];
         setVisualizationCreators(creators);
     };
 
@@ -40,7 +40,7 @@ function PublishVisualization(props) {
                     predicateId: PREDICATES.HAS_ORCID,
                     literal: author.orcid,
                     subjectClass: CLASSES.AUTHOR,
-                    items: 1
+                    items: 1,
                 });
                 if (responseJson.length > 0) {
                     // Author resource exists
@@ -92,7 +92,7 @@ function PublishVisualization(props) {
 
     const createReconstructionModel = resourceId => {
         const currModel = new SelfVisDataModel();
-        //collect Data
+        // collect Data
         const metaVisData = {};
         metaVisData.orkgOrigin = resourceId;
         metaVisData.renderingEngine = currModel._renderingEngine;
@@ -103,17 +103,16 @@ function PublishVisualization(props) {
 
         if (reconstructionData === undefined) {
             return undefined;
-        } else {
-            metaVisData.reconstructionData = reconstructionData;
-            return metaVisData;
         }
+        metaVisData.reconstructionData = reconstructionData;
+        return metaVisData;
     };
 
     const createReconstructionModelInBackend = async (resourceId, model) => {
         try {
             await addVisualization({
-                resourceId: resourceId,
-                jsonData: model
+                resourceId,
+                jsonData: model,
             });
         } catch (error) {
             toast.error(`Error publishing a visualization : ${error.message}`);
@@ -136,15 +135,15 @@ function PublishVisualization(props) {
             if (execute === true) {
                 try {
                     if (description === '' || title === '') {
-                        toast.error(`Please enter a title and description`);
+                        toast.error('Please enter a title and description');
                     } else {
-                        const newResource = await createResource(title ? title : '', [CLASSES.VISUALIZATION]);
+                        const newResource = await createResource(title || '', [CLASSES.VISUALIZATION]);
                         // we need not to create a resource statement on the comparision;
                         backendReferenceResource = newResource.id;
 
                         await createResourceStatement(props.comparisonId, PREDICATES.HAS_VISUALIZATION, backendReferenceResource);
                         const predicateId = PREDICATES.DESCRIPTION;
-                        const literalDescription = await createLiteral(description ? description : '');
+                        const literalDescription = await createLiteral(description || '');
                         await createLiteralStatement(backendReferenceResource, predicateId, literalDescription.id);
                         await saveCreators(visualizationCreators, backendReferenceResource);
                         const reconstructionModel = createReconstructionModel(backendReferenceResource); // NOW for my own backend <<<<
@@ -159,7 +158,7 @@ function PublishVisualization(props) {
                 }
             }
         } else {
-            toast.error(`Error in publishing a visualization: Model is empty, select data `);
+            toast.error('Error in publishing a visualization: Model is empty, select data ');
         }
         setIsLoading(false);
     };
@@ -204,7 +203,7 @@ function PublishVisualization(props) {
             </ModalBody>
             <ModalFooter>
                 <div className="text-align-center mt-2">
-                    {/*<Button color="primary" disabled={isLoading} onClick={handleSubmit}>*/}
+                    {/* <Button color="primary" disabled={isLoading} onClick={handleSubmit}> */}
                     <Button color="primary" onClick={handleSubmit}>
                         {isLoading && <span className="fa fa-spinner fa-spin" />} Publish
                     </Button>
@@ -220,7 +219,7 @@ PublishVisualization.propTypes = {
     closeAllAndReloadVisualizations: PropTypes.func.isRequired,
     comparisonId: PropTypes.string,
     // doi: PropTypes.string,
-    authors: PropTypes.array // not necessary required
+    authors: PropTypes.array, // not necessary required
 };
 
 export default PublishVisualization;

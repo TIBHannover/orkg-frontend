@@ -9,7 +9,7 @@ import {
     DropdownToggle,
     DropdownMenu,
     DropdownItem,
-    ListGroupItem
+    ListGroupItem,
 } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
 import ROUTES from 'constants/routes.js';
@@ -27,7 +27,7 @@ const VenuePage = () => {
     const [loading, setLoading] = useState(true);
     const [venue, setVenue] = useState(null);
     const { isNextPageLoading, hasNextPage, papers, page, totalElements, isLastPageReached, handleLoadMore } = useVenuePapers({
-        venueId: params.venueId
+        venueId: params.venueId,
     });
 
     const [menuOpen, setMenuOpen] = useState(false);
@@ -88,9 +88,9 @@ const VenuePage = () => {
                     <Container className="p-0">
                         {papers.length > 0 && (
                             <div>
-                                {papers.map(resource => {
-                                    return <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />;
-                                })}
+                                {papers.map(resource => (
+                                    <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />
+                                ))}
                             </div>
                         )}
                         {totalElements === 0 && !isNextPageLoading && (

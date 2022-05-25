@@ -36,7 +36,7 @@ const SectionContentLink = props => {
         }
         setSelectedResource({
             label,
-            value: objectId
+            value: objectId,
         });
     }, [props.section.contentLink, selectedResource]);
 
@@ -63,8 +63,8 @@ const SectionContentLink = props => {
             updateSectionLink({
                 id: props.section.id,
                 objectId: id,
-                label
-            })
+                label,
+            }),
         );
 
         if (props.type === 'comparison') {
@@ -77,11 +77,11 @@ const SectionContentLink = props => {
     const getPaperMetadataFromComparison = async comparisonId => {
         const contributionStatements = await getStatementsBySubjectAndPredicate({
             subjectId: comparisonId,
-            predicateId: PREDICATES.COMPARE_CONTRIBUTION
+            predicateId: PREDICATES.COMPARE_CONTRIBUTION,
         });
         const contributionIds = contributionStatements.map(statement => statement.object.id);
         const paperStatementsPromises = contributionIds.map(contributionId =>
-            getStatementsByObjectAndPredicate({ predicateId: PREDICATES.HAS_CONTRIBUTION, objectId: contributionId })
+            getStatementsByObjectAndPredicate({ predicateId: PREDICATES.HAS_CONTRIBUTION, objectId: contributionId }),
         );
         const paperStatements = (await Promise.all(paperStatementsPromises)).flatMap(statement => statement);
         const paperIds = uniq(paperStatements.map(statement => statement.subject.id));
@@ -95,7 +95,7 @@ const SectionContentLink = props => {
                     author: statements
                         .filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR)
                         .map(statement => ({ name: statement.object.label })),
-                    year: statements?.find(statement => statement.predicate.id === PREDICATES.HAS_PUBLICATION_YEAR)?.object?.label
+                    year: statements?.find(statement => statement.predicate.id === PREDICATES.HAS_PUBLICATION_YEAR)?.object?.label,
                 };
 
                 const parsedReference = await Cite.async(bibJson);
@@ -121,8 +121,8 @@ const SectionContentLink = props => {
             createSection({
                 afterIndex: props.index,
                 contributionId,
-                sectionType: 'ontology'
-            })
+                sectionType: 'ontology',
+            }),
         );
         toast.success('Ontology section has been added successfully below the comparison');
         // TODO: somehow populate the just added section with properties from the comparison...
@@ -131,7 +131,7 @@ const SectionContentLink = props => {
 
     const entityType = props.type === 'property' ? ENTITIES.PREDICATE : ENTITIES.RESOURCE;
     const hasValue = selectedResource && selectedResource?.value;
-    let optionsClass = undefined;
+    let optionsClass;
 
     if (props.type === 'comparison') {
         optionsClass = CLASSES.COMPARISON;
@@ -188,7 +188,7 @@ const SectionContentLink = props => {
 SectionContentLink.propTypes = {
     section: PropTypes.object.isRequired,
     type: PropTypes.string.isRequired,
-    index: PropTypes.number.isRequired
+    index: PropTypes.number.isRequired,
 };
 
 export default SectionContentLink;

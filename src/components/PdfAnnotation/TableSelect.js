@@ -1,10 +1,10 @@
 import { Button } from 'reactstrap';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import ExtractionModal from './ExtractionModal';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import ExtractionModal from './ExtractionModal';
 import useTableSelect from './hooks/useTableSelect';
 
 const TableSelectContainer = styled.div`
@@ -45,7 +45,7 @@ const TableSelect = props => {
     const tableRegions = useSelector(state => state.pdfAnnotation.tableRegions);
     const selectedTool = useSelector(state => state.pdfAnnotation.selectedTool);
     const [onMouseDown, onMouseUp, onMouseMove, pointerStyles, rect, handleExtract, deleteRegion, extractionModal, toggleModel] = useTableSelect(
-        props
+        props,
     );
 
     return (
@@ -99,7 +99,7 @@ const TableSelect = props => {
 
 TableSelect.propTypes = {
     children: PropTypes.node.isRequired,
-    pageNumber: PropTypes.number.isRequired
+    pageNumber: PropTypes.number.isRequired,
 };
 
 export default TableSelect;

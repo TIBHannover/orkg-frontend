@@ -14,8 +14,8 @@ const ConfirmBulkImport = props => {
     const { papers, existingPaperIds, idToLabel, isLoading, createdContributions, makePaperList, handleImport, validationErrors } = useImportBulkData(
         {
             data,
-            onFinish
-        }
+            onFinish,
+        },
     );
 
     useEffect(() => {
@@ -23,7 +23,7 @@ const ConfirmBulkImport = props => {
     }, [data, makePaperList]);
 
     const comparisonUrl = createdContributions
-        ? reverse(ROUTES.CONTRIBUTION_EDITOR) + '?contributions=' + createdContributions.map(entry => entry.contributionId)
+        ? `${reverse(ROUTES.CONTRIBUTION_EDITOR)}?contributions=${createdContributions.map(entry => entry.contributionId)}`
         : null;
 
     const progressPercentage =
@@ -83,11 +83,11 @@ ConfirmBulkImport.propTypes = {
     data: PropTypes.array.isRequired,
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    onFinish: PropTypes.func
+    onFinish: PropTypes.func,
 };
 
 ConfirmBulkImport.defaultProps = {
-    onFinish: () => {}
+    onFinish: () => {},
 };
 
 export default ConfirmBulkImport;

@@ -37,10 +37,10 @@ function ClassDetails(props) {
                 // Get the template of the class
                 getStatementsByObjectAndPredicate({
                     objectId: params.id,
-                    predicateId: PREDICATES.TEMPLATE_OF_CLASS
+                    predicateId: PREDICATES.TEMPLATE_OF_CLASS,
                 })
                     .then(statements =>
-                        Promise.all(statements.filter(statement => statement.subject.classes?.includes(CLASSES.TEMPLATE)).map(st => st.subject))
+                        Promise.all(statements.filter(statement => statement.subject.classes?.includes(CLASSES.TEMPLATE)).map(st => st.subject)),
                     )
                     .then(templates => {
                         if (templates.length > 0) {
@@ -105,9 +105,7 @@ function ClassDetails(props) {
                                 <tr>
                                     <th scope="row">Label</th>
                                     <td>
-                                        {label ? (
-                                            label
-                                        ) : (
+                                        {label || (
                                             <i>
                                                 <small>No label</small>
                                             </i>

@@ -139,7 +139,7 @@ const ResearchFieldHeader = ({ id }) => {
                                             key={`index${subfield.id}`}
                                             to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
                                                 researchFieldId: subfield.id,
-                                                slug: subfield.label
+                                                slug: subfield.label,
                                             })}
                                         >
                                             <Badge color="light" className="me-2 mb-2">
@@ -154,7 +154,7 @@ const ResearchFieldHeader = ({ id }) => {
                                                 key={`index${subfield.id}`}
                                                 to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
                                                     researchFieldId: subfield.id,
-                                                    slug: subfield.label
+                                                    slug: subfield.label,
                                                 })}
                                             >
                                                 <Badge color="light" className="me-2 mb-2">
@@ -182,7 +182,7 @@ const ResearchFieldHeader = ({ id }) => {
 };
 
 ResearchFieldHeader.propTypes = {
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
 };
 
 export default ResearchFieldHeader;

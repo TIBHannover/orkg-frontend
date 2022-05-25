@@ -1,9 +1,18 @@
 import { useState, useMemo } from 'react';
-import { Container, Table, Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import {
+    Container,
+    Table,
+    Button,
+    ButtonGroup,
+    ButtonDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+    UncontrolledButtonDropdown,
+} from 'reactstrap';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import moment from 'moment';
-import { UncontrolledButtonDropdown } from 'reactstrap';
 import Chart from 'react-google-charts';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
@@ -20,9 +29,7 @@ import { useTable, useSortBy } from 'react-table';
 import TitleBar from 'components/TitleBar/TitleBar';
 
 function getTicksAxisH(data) {
-    const dateRange = data.slice(1).map(function(value, index) {
-        return value[0];
-    });
+    const dateRange = data.slice(1).map((value, index) => value[0]);
     const maxDate = new Date(Math.max.apply(null, dateRange));
     const minDate = new Date(Math.min.apply(null, dateRange));
     const ticksAxisH = [];
@@ -43,7 +50,7 @@ function getTicksAxisH(data) {
         if (year !== moment(tick).format('MMM yyyy')) {
             ticksAxisH.push({
                 v: tick,
-                f: moment(tick).format('MMM yyyy')
+                f: moment(tick).format('MMM yyyy'),
             });
             year = moment(tick).format('MMM yyyy');
         }
@@ -64,10 +71,10 @@ function Benchmark() {
         datasetProblems,
         metrics,
         selectedMetric,
-        setSelectedMetric
+        setSelectedMetric,
     } = useBenchmarkDatasetPapers({
         datasetId,
-        problemId
+        problemId,
     });
 
     const columns = useMemo(
@@ -79,37 +86,37 @@ function Benchmark() {
                     <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: cell.row.original.paper_id })} style={{ textDecoration: 'none' }}>
                         {cell.row.original.paper_title ?? '-'}
                     </Link>
-                )
+                ),
             },
             {
                 Header: 'Model',
                 accessor: 'model_name',
-                Cell: cell => cell.value ?? '-'
+                Cell: cell => cell.value ?? '-',
             },
             {
                 Header: 'Score',
                 accessor: 'score',
-                Cell: cell => cell.value ?? '-'
+                Cell: cell => cell.value ?? '-',
             },
             {
                 Header: 'Metric',
                 accessor: 'metric',
-                Cell: cell => cell.value ?? '-'
+                Cell: cell => cell.value ?? '-',
             },
             {
                 Header: 'Code',
                 accessor: 'code_urls',
                 Cell: cell => (
                     <CodeURLsTooltip id={cell.row.original.paper_id} title={cell.row.original.paper_title} urls={cell.row.original.code_urls} />
-                )
-            }
+                ),
+            },
         ],
-        []
+        [],
     );
 
     const data = useMemo(() => (benchmarkDatasetPapers && benchmarkDatasetPapers[selectedMetric] ? benchmarkDatasetPapers[selectedMetric] : []), [
         selectedMetric,
-        benchmarkDatasetPapers
+        benchmarkDatasetPapers,
     ]);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
@@ -120,12 +127,12 @@ function Benchmark() {
                 sortBy: [
                     {
                         id: 'score',
-                        desc: true
-                    }
-                ]
-            }
+                        desc: true,
+                    },
+                ],
+            },
         },
-        useSortBy
+        useSortBy,
     );
 
     const dataChart = [
@@ -141,7 +148,7 @@ function Benchmark() {
                                     parseFloat(c.score),
                                     `<b>Paper</b>: ${c.paper_title}<br /> <b>Model</b>: ${c.model_name ?? '-'}<br /> <b>Score</b>: ${
                                         c.score
-                                    }<br /> <b>Published on</b>: ${publishedOn.format('MM-YYYY')}`
+                                    }<br /> <b>Published on</b>: ${publishedOn.format('MM-YYYY')}`,
                                 ]
                               : null;
                       } catch (error) {
@@ -149,7 +156,7 @@ function Benchmark() {
                       }
                   })
                   .filter(v => v)
-            : [])
+            : []),
     ];
 
     return (
@@ -272,7 +279,7 @@ function Benchmark() {
                                             <DropdownItem
                                                 key={index}
                                                 disabled={isLoading}
-                                                onClick={() => navigate(reverse(ROUTES.BENCHMARK, { datasetId: datasetId, problemId: rp.id }))}
+                                                onClick={() => navigate(reverse(ROUTES.BENCHMARK, { datasetId, problemId: rp.id }))}
                                             >
                                                 {rp.label}
                                             </DropdownItem>
@@ -315,8 +322,8 @@ function Benchmark() {
                                     tooltip: { isHtml: true },
                                     pointSize: 7,
                                     trendlines: {
-                                        0: { labelInLegend: 'Linear trendline', tooltip: false, type: 'linear', visibleInLegend: true }
-                                    }
+                                        0: { labelInLegend: 'Linear trendline', tooltip: false, type: 'linear', visibleInLegend: true },
+                                    },
                                 }}
                                 chartEvents={[
                                     {
@@ -329,12 +336,12 @@ function Benchmark() {
                                                 const { row } = selectedItem;
                                                 navigate(
                                                     reverse(ROUTES.VIEW_PAPER, {
-                                                        resourceId: benchmarkDatasetPapers[selectedMetric][row].paper_id
-                                                    })
+                                                        resourceId: benchmarkDatasetPapers[selectedMetric][row].paper_id,
+                                                    }),
                                                 );
                                             }
-                                        }
-                                    }
+                                        },
+                                    },
                                 ]}
                             />
                         )}
@@ -384,9 +391,9 @@ function Benchmark() {
                                             prepareRow(row);
                                             return (
                                                 <tr {...row.getRowProps()}>
-                                                    {row.cells.map(cell => {
-                                                        return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-                                                    })}
+                                                    {row.cells.map(cell => (
+                                                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                                    ))}
                                                 </tr>
                                             );
                                         })}

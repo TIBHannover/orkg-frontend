@@ -14,7 +14,7 @@ import {
     getStatementsBySubject,
     getStatementsBySubjectAndPredicate,
     deleteStatementById,
-    updateStatement
+    updateStatement,
 } from 'services/backend/statements';
 
 const initialState = {
@@ -34,7 +34,7 @@ const initialState = {
     isOpenHistoryModal: false,
     references: [],
     usedReferences: {},
-    statements: []
+    statements: [],
 };
 
 export const reviewSlice = createSlice({
@@ -94,23 +94,23 @@ export const reviewSlice = createSlice({
                     id: sectionId,
                     title: {
                         id: sectionId,
-                        label: ''
+                        label: '',
                     },
                     type: {
-                        id: typeId
+                        id: typeId,
                     },
                     markdown: markdownId
                         ? {
                               id: markdownId,
-                              label: ''
+                              label: '',
                           }
                         : undefined,
                     dataTable: {
                         entities: [],
-                        properties: []
-                    }
+                        properties: [],
+                    },
                 },
-                ...state.sections.slice(afterIndex)
+                ...state.sections.slice(afterIndex),
             ];
         },
         sectionDeleted: (state, { payload: { id } }) => {
@@ -136,7 +136,7 @@ export const reviewSlice = createSlice({
             const index = state.sections.findIndex(section => section.id === sectionId);
             state.sections[index].dataTable = {
                 ...state.sections[index].dataTable,
-                ...dataTable
+                ...dataTable,
             };
         },
         setDataTableStatements: (state, { payload: { id, sectionId, statements } }) => {
@@ -150,7 +150,7 @@ export const reviewSlice = createSlice({
             }
             state.sections[sectionIndex].dataTable.entities[dataTableIndex] = {
                 ...state.sections[sectionIndex].dataTable.entities[dataTableIndex],
-                statements
+                statements,
             };
         },
         referenceAdded: (state, { payload: { reference } }) => {
@@ -161,12 +161,12 @@ export const reviewSlice = createSlice({
         },
         referenceUpdated: (state, { payload: { literalId, bibtex, parsedReference } }) => {
             state.references = state.references.map(reference =>
-                reference.literal.id === literalId ? { ...reference, literal: { ...reference.literal, label: bibtex }, parsedReference } : reference
+                reference.literal.id === literalId ? { ...reference, literal: { ...reference.literal, label: bibtex }, parsedReference } : reference,
             );
         },
         setUsedReferences: (state, { payload: { references, sectionId } }) => {
             state.usedReferences[sectionId] = references;
-        }
+        },
     },
     extraReducers: {
         [LOCATION_CHANGE]: (state, { payload }) => {
@@ -177,8 +177,8 @@ export const reviewSlice = createSlice({
                 return state;
             }
             return initialState;
-        }
-    }
+        },
+    },
 });
 
 export const {
@@ -204,7 +204,7 @@ export const {
     referenceAdded,
     referenceDeleted,
     referenceUpdated,
-    setUsedReferences
+    setUsedReferences,
 } = reviewSlice.actions;
 
 export default reviewSlice.reducer;
@@ -323,8 +323,8 @@ export const createSection = ({ contributionId, afterIndex, sectionType }) => as
     dispatch(
         sortSections({
             contributionId,
-            sections: getState().review.sections
-        })
+            sections: getState().review.sections,
+        }),
     );
     dispatch(setIsLoading(false));
 };
@@ -338,8 +338,8 @@ export const deleteSection = id => async dispatch => {
     const sectionObjectStatementIds = sectionObjectStatement.map(stmt => stmt.id);
     const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
     await deleteStatementsByIds([...sectionObjectStatementIds, ...sectionSubjectStatementIds]);
-    //the resource isn't deleted, because deleting resources can only be done with the is_curation_allowed flag
-    //await deleteResource(id);
+    // the resource isn't deleted, because deleting resources can only be done with the is_curation_allowed flag
+    // await deleteResource(id);
 
     dispatch(setIsLoading(false));
     dispatch(setUsedReferences({ sectionId: id, references: {} }));
@@ -350,7 +350,7 @@ export const setResearchField = ({ statementId, paperId, researchField }) => asy
         updateStatement(statementId, {
             subject_id: paperId,
             predicate_id: PREDICATES.HAS_RESEARCH_FIELD,
-            object_id: researchField.id
+            object_id: researchField.id,
         });
     } else {
         const statement = await createResourceStatement(paperId, PREDICATES.HAS_RESEARCH_FIELD, researchField.id);
@@ -397,8 +397,8 @@ export const reloadDataTableStatements = ({ id, sectionId }) => async dispatch =
     dispatch(setDataTableStatements({ id, sectionId, statements }));
 };
 
-export const createReference = ({ contributionId, bibtex, parsedReference }) => dispatch => {
-    return createLiteral(bibtex)
+export const createReference = ({ contributionId, bibtex, parsedReference }) => dispatch =>
+    createLiteral(bibtex)
         .then(async literal => {
             const { id: statementId } = await createLiteralStatement(contributionId, PREDICATES.HAS_REFERENCE, literal.id);
             dispatch(referenceAdded({ reference: { statementId, literal, parsedReference } }));
@@ -408,10 +408,9 @@ export const createReference = ({ contributionId, bibtex, parsedReference }) => 
             console.log(e);
             return Promise.resolve();
         });
-};
 
-export const deleteReference = statementId => dispatch => {
-    return deleteStatementById(statementId)
+export const deleteReference = statementId => dispatch =>
+    deleteStatementById(statementId)
         .then(() => {
             dispatch(referenceDeleted(statementId));
             return Promise.resolve();
@@ -420,10 +419,9 @@ export const deleteReference = statementId => dispatch => {
             console.log(e);
             return Promise.resolve();
         });
-};
 
-export const updateReference = ({ literalId, bibtex, parsedReference }) => dispatch => {
-    return updateLiteral(literalId, bibtex)
+export const updateReference = ({ literalId, bibtex, parsedReference }) => dispatch =>
+    updateLiteral(literalId, bibtex)
         .then(literal => {
             dispatch(referenceUpdated({ literalId, bibtex, parsedReference }));
             return Promise.resolve();
@@ -432,4 +430,3 @@ export const updateReference = ({ literalId, bibtex, parsedReference }) => dispa
             console.log(e);
             return Promise.resolve();
         });
-};

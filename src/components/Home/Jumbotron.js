@@ -42,7 +42,7 @@ export default class Jumbotron extends Component {
             backSpeed: 50,
             backDelay: 1500,
             loop: true,
-            loopCount: Infinity
+            loopCount: Infinity,
         };
         // this.el refers to the <span> in the render() method
         this.typed = new Typed(this.el, options);

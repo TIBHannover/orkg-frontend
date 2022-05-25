@@ -5,6 +5,7 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { renderToString } from 'react-dom/server';
 import REGEX from 'constants/regex';
 import ReactStringReplace from 'react-string-replace';
+
 class Link extends Component {
     constructor(props) {
         super(props);
@@ -22,6 +23,7 @@ class Link extends Component {
             label.match(new RegExp(REGEX.IMAGE_URL));
         return label.match(this.supportedValues) && !excludeMatch;
     };
+
     render() {
         const label = this.props.children;
         const labelToText = renderToString(label);
@@ -31,22 +33,19 @@ class Link extends Component {
         }
 
         if (this.props.type === 'literal' && this.doesMatch(labelToText)) {
-            return ReactStringReplace(labelToText, this.supportedValues, (match, i) => {
-                return (
-                    <a key={i} href={match.indexOf('://') === -1 ? 'http://' + match : match} target="_blank" rel="noopener noreferrer">
-                        {match} <Icon icon={faExternalLinkAlt} />
-                    </a>
-                );
-            });
-        } else {
-            return label;
+            return ReactStringReplace(labelToText, this.supportedValues, (match, i) => (
+                <a key={i} href={match.indexOf('://') === -1 ? `http://${match}` : match} target="_blank" rel="noopener noreferrer">
+                    {match} <Icon icon={faExternalLinkAlt} />
+                </a>
+            ));
         }
+        return label;
     }
 }
 
 Link.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
-    type: PropTypes.oneOf(['resource', 'literal'])
+    type: PropTypes.oneOf(['resource', 'literal']),
 };
 
 export default Link;

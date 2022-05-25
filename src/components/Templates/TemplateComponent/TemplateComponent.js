@@ -1,11 +1,11 @@
 import { useRef } from 'react';
 import { StatementsGroupStyle } from 'components/StatementBrowser/styled';
 import PropTypes from 'prop-types';
-import TemplateComponentProperty from './Property/TemplateComponentProperty';
-import TemplateComponentValue from './Value/TemplateComponentValue';
 import { useDrag, useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';
 import ItemTypes from 'constants/dndTypes';
+import TemplateComponentValue from './Value/TemplateComponentValue';
+import TemplateComponentProperty from './Property/TemplateComponentProperty';
 
 function TemplateComponent(props) {
     const editMode = useSelector(state => state.templateEditor.editMode);
@@ -48,15 +48,15 @@ function TemplateComponent(props) {
             // but it's good here for the sake of performance
             // to avoid expensive index searches.
             item.index = hoverIndex;
-        }
+        },
     });
     const [{ isDragging }, drag, preview] = useDrag({
         type: ItemTypes.TEMPLATE_COMPONENT,
         item: { index: props.id },
         collect: monitor => ({
-            isDragging: monitor.isDragging()
+            isDragging: monitor.isDragging(),
         }),
-        canDrag: () => editMode
+        canDrag: () => editMode,
     });
     const opacity = isDragging ? 0 : 1;
 
@@ -95,7 +95,7 @@ TemplateComponent.propTypes = {
     moveCard: PropTypes.func.isRequired,
     handleDeleteTemplateComponent: PropTypes.func.isRequired,
     handlePropertiesSelect: PropTypes.func.isRequired,
-    handleClassOfPropertySelect: PropTypes.func.isRequired
+    handleClassOfPropertySelect: PropTypes.func.isRequired,
 };
 
 export default TemplateComponent;

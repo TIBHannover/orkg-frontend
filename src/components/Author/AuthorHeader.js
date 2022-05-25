@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Button, Container, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import useAuthor from './hooks/useAuthor';
 import NotFound from 'pages/NotFound';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faOrcid, faLinkedin, faGoogle, faResearchgate } from '@fortawesome/free-brands-svg-icons';
@@ -13,6 +12,7 @@ import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
+import useAuthor from './hooks/useAuthor';
 
 const AuthorMetaInfo = styled.div`
     border-left: 1px ${props => props.theme.secondary} solid;
@@ -31,7 +31,7 @@ const AuthorHeader = ({ authorId }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const { author, isLoading, isFailedLoading, loadAuthorData } = useAuthor({
-        authorId
+        authorId,
     });
 
     return (
@@ -168,7 +168,7 @@ const AuthorHeader = ({ authorId }) => {
 };
 
 AuthorHeader.propTypes = {
-    authorId: PropTypes.string.isRequired
+    authorId: PropTypes.string.isRequired,
 };
 
 export default AuthorHeader;

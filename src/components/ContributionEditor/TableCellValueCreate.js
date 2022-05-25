@@ -29,11 +29,11 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
         isBlankNode,
         entityType,
         canAddValue,
-        updateResourceStatements
+        updateResourceStatements,
     } = useTableCellForm({
         value: null,
         contributionId,
-        propertyId
+        propertyId,
     });
 
     return (
@@ -88,7 +88,7 @@ TableCellValueCreate.propTypes = {
     isVisible: PropTypes.bool.isRequired,
     contributionId: PropTypes.string.isRequired,
     propertyId: PropTypes.string.isRequired,
-    isEmptyCell: PropTypes.bool.isRequired
+    isEmptyCell: PropTypes.bool.isRequired,
 };
 
 export default memo(TableCellValueCreate);

@@ -1,8 +1,8 @@
 import { render, screen, waitFor, waitForElementToBeRemoved } from 'testUtils';
 import userEvent from '@testing-library/user-event';
-import StatementBrowser from './../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 import selectEvent from 'react-select-event';
+import StatementBrowser from '../StatementBrowser';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
@@ -14,8 +14,8 @@ const setup = (
         initialSubjectLabel: null,
         newStore: true,
         rootNodeType: ENTITIES.RESOURCE,
-        enableEdit: true
-    }
+        enableEdit: true,
+    },
 ) => render(<StatementBrowser {...props} />, { initialState });
 
 // syncBackend = false
@@ -91,7 +91,7 @@ describe('AddProperty syncBackend', () => {
             newStore: true,
             rootNodeType: ENTITIES.RESOURCE,
             enableEdit: true,
-            syncBackend: true
+            syncBackend: true,
         };
         setup({}, config);
         await waitFor(() => expect(screen.queryByText(/Add property/i)).toBeInTheDocument());
@@ -114,7 +114,7 @@ describe('AddProperty syncBackend', () => {
             newStore: true,
             rootNodeType: ENTITIES.RESOURCE,
             enableEdit: true,
-            syncBackend: true
+            syncBackend: true,
         };
         setup({}, config);
         await waitFor(() => expect(screen.queryByText(/Add property/i)).toBeInTheDocument());

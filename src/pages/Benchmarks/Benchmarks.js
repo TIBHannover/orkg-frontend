@@ -58,9 +58,7 @@ function Benchmarks() {
                     {benchmarks?.length > 0 &&
                         benchmarks
                             .filter(b => b.research_problem.label.toLowerCase().includes(filter.toLowerCase()) || filter === '')
-                            .map(benchmark => {
-                                return <BenchmarkCard key={`${benchmark.research_problem.id}`} benchmark={benchmark} />;
-                            })}
+                            .map(benchmark => <BenchmarkCard key={`${benchmark.research_problem.id}`} benchmark={benchmark} />)}
                 </Row>
 
                 {benchmarks.length === 0 && !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">No benchmarks yet</div>}

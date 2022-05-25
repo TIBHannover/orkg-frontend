@@ -13,7 +13,7 @@ const useScroll = () => {
 
     useEffect(() => {
         const scrollToQuote = () => {
-            const hash = location.hash;
+            const { hash } = location;
             const id = isString(hash) ? hash.replace('#', '') : null;
 
             if (id && document.getElementById(id)) {
@@ -30,7 +30,7 @@ const useScroll = () => {
         if (scrollTop >= 0) {
             window.scrollTo({
                 behavior: 'smooth',
-                top: scrollTop
+                top: scrollTop,
             });
         }
     }, [scrollTop]);
@@ -50,7 +50,7 @@ const useScroll = () => {
             }
         },
         100,
-        [windowScrollY]
+        [windowScrollY],
     );
 };
 

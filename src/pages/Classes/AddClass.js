@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
-import { get_error_message } from 'utils';
+import { getErrorMessage } from 'utils';
 import ROUTES from 'constants/routes';
 import TitleBar from 'components/TitleBar/TitleBar';
 import requireAuthentication from 'requireAuthentication';
@@ -29,14 +29,14 @@ const AddClass = () => {
                 toast.error('Please enter a valid URI of the class');
             } else {
                 try {
-                    const newClass = await createClass(label, uri ? uri : null);
+                    const newClass = await createClass(label, uri || null);
                     toast.success('Class created successfully');
                     setIsLoading(false);
                     navigate(reverse(ROUTES.CLASS, { id: newClass.id }));
                 } catch (error) {
                     console.error(error);
                     setIsLoading(false);
-                    toast.error(`${get_error_message(error, 'uri')}`);
+                    toast.error(`${getErrorMessage(error, 'uri')}`);
                 }
             }
         } else {

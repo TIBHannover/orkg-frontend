@@ -34,14 +34,12 @@ class EditorComponent extends BaseEditorComponent {
             show: false,
             valueType: 'literal',
             dropdownValueTypeOpen: false,
-            valueClass: null
+            valueClass: null,
         };
     }
 
     setValue(value, callback) {
-        this.setState((state, props) => {
-            return { value: value };
-        }, callback);
+        this.setState((state, props) => ({ value }), callback);
     }
 
     getValue() {
@@ -50,7 +48,7 @@ class EditorComponent extends BaseEditorComponent {
 
     toggle = type => {
         this.setState(prevState => ({
-            [type]: !prevState[type]
+            [type]: !prevState[type],
         }));
     };
 
@@ -79,13 +77,13 @@ class EditorComponent extends BaseEditorComponent {
             type,
             valueType: valueClass ? 'resource' : prevState.valueType,
             valueClass,
-            show: true
+            show: true,
         }));
     };
 
     close() {
         this.setState({
-            show: false
+            show: false,
         });
         this.clearHooks();
     }
@@ -108,8 +106,8 @@ class EditorComponent extends BaseEditorComponent {
 
         this.setState({
             valueType: isResource ? 'resource' : 'literal',
-            left: tdPosition.left - 3 + 'px',
-            top: tdPosition.top + window.scrollY - 8 + 'px'
+            left: `${tdPosition.left - 3}px`,
+            top: `${tdPosition.top + window.scrollY - 8}px`,
         });
     }
 
@@ -118,7 +116,7 @@ class EditorComponent extends BaseEditorComponent {
     };
 
     handleInputChange = value => {
-        this.setState({ value: value });
+        this.setState({ value });
     };
 
     confirmCreatePredicate = async label => {
@@ -143,9 +141,9 @@ class EditorComponent extends BaseEditorComponent {
         return false;
     };
 
-    /*finishEditing = () => {
+    /* finishEditing = () => {
         This function can be used to keep the editor open when mouseDown is triggered
-    };*/
+    }; */
 
     render() {
         let { value } = this.state;
@@ -164,7 +162,7 @@ class EditorComponent extends BaseEditorComponent {
             border: '1px solid #000',
             padding: '3px',
             zIndex: 9999,
-            width: 300
+            width: 300,
         };
 
         // show a select input for publication month
@@ -185,13 +183,11 @@ class EditorComponent extends BaseEditorComponent {
                             <option value="" key="">
                                 Month
                             </option>
-                            {moment.months().map((el, index) => {
-                                return (
-                                    <option value={index + 1} key={index + 1}>
-                                        {el}
-                                    </option>
-                                );
-                            })}
+                            {moment.months().map((el, index) => (
+                                <option value={index + 1} key={index + 1}>
+                                    {el}
+                                </option>
+                            ))}
                         </Input>
                     </div>
                 </NativeListener>
@@ -244,14 +240,14 @@ class EditorComponent extends BaseEditorComponent {
                                     } else if (i.__isNew__) {
                                         valueID = await this.confirmCreateResource(i.value, this.state.valueClass);
                                     }
-                                    //i.__isNew__ (the user selected to create an new value)
+                                    // i.__isNew__ (the user selected to create an new value)
                                     if (valueID || !i.__isNew__) {
                                         this.setState({ value: `orkg:${i.__isNew__ ? valueID : i.id}` }, () => {
                                             this.finishEditing();
 
                                             this.props.setLabelCache({
                                                 id: i.__isNew__ ? valueID : i.id,
-                                                label: i.__isNew__ ? i.value : i.label // we use value because the label contain "create" prefix
+                                                label: i.__isNew__ ? i.value : i.label, // we use value because the label contain "create" prefix
                                             });
                                         });
                                     }
@@ -264,7 +260,7 @@ class EditorComponent extends BaseEditorComponent {
                                 eventListener={true}
                                 innerRef={this.resourceInputRef}
                                 openMenuOnFocus={true}
-                                allowCreate={this.state.valueClass && this.state.valueClass === CLASSES.RESEARCH_FIELD ? false : true}
+                                allowCreate={!(this.state.valueClass && this.state.valueClass === CLASSES.RESEARCH_FIELD)}
                             />
                         ) : (
                             <Input
@@ -282,7 +278,7 @@ class EditorComponent extends BaseEditorComponent {
                         {this.state.type === 'resource' && !this.state.valueClass && (
                             <Dropdown isOpen={this.state.dropdownValueTypeOpen} toggle={() => this.toggle('dropdownValueTypeOpen')}>
                                 <StyledDropdownToggle disableBorderRadiusLeft={true}>
-                                    <small>{this.state.valueType.charAt(0).toUpperCase() + this.state.valueType.slice(1) + ' '}</small>
+                                    <small>{`${this.state.valueType.charAt(0).toUpperCase() + this.state.valueType.slice(1)} `}</small>
                                     <Icon size="xs" icon={faBars} />
                                 </StyledDropdownToggle>
                                 <DropdownMenu>
@@ -307,14 +303,14 @@ class EditorComponent extends BaseEditorComponent {
 }
 
 const mapStateToProps = state => ({
-    cachedLabels: state.pdfAnnotation.cachedLabels
+    cachedLabels: state.pdfAnnotation.cachedLabels,
 });
 
 const mapDispatchToProps = dispatch => ({
-    setLabelCache: payload => dispatch(setLabelCache(payload))
+    setLabelCache: payload => dispatch(setLabelCache(payload)),
 });
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(EditorComponent);

@@ -47,7 +47,7 @@ const TableCell = ({ values, contributionId, propertyId }) => {
 TableCell.propTypes = {
     values: PropTypes.array,
     contributionId: PropTypes.string.isRequired,
-    propertyId: PropTypes.string.isRequired
+    propertyId: PropTypes.string.isRequired,
 };
 
 const propsAreEqual = (prevProps, nextProps) => isEqual(prevProps, nextProps);

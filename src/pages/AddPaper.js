@@ -15,7 +15,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import { resetStatementBrowser } from 'slices/statementBrowserSlice';
 import { openTour, closeTour, blockNavigation, loadPaperDataAction as loadPaperData } from 'slices/addPaperSlice';
-//import { Prompt } from 'react-router';
+// import { Prompt } from 'react-router';
 import GizmoGraphViewModal from 'components/ViewPaper/GraphView/GizmoGraphViewModal';
 import env from '@beam-australia/react-env';
 import TitleBar from 'components/TitleBar/TitleBar';
@@ -89,7 +89,7 @@ class AddPaper extends Component {
 
         this.state = {
             showGraphModal: false,
-            dropdownOpen: false
+            dropdownOpen: false,
         };
     }
 
@@ -100,7 +100,7 @@ class AddPaper extends Component {
     }
 
     componentDidUpdate = prevProps => {
-        //paperNewResourceId : means paper is saved
+        // paperNewResourceId : means paper is saved
         if (
             !this.props.addPaper.shouldBlockNavigation &&
             prevProps.addPaper.shouldBlockNavigation &&
@@ -127,7 +127,7 @@ class AddPaper extends Component {
 
     toggle = type => {
         this.setState(prevState => ({
-            [type]: !prevState[type]
+            [type]: !prevState[type],
         }));
     };
 
@@ -212,7 +212,7 @@ class AddPaper extends Component {
                     showDialog={this.state.showGraphModal}
                     toggle={() => this.toggle('showGraphModal')}
                 />
-                {/*the style display node will hide the help button when the graph view is activated*/}
+                {/* the style display node will hide the help button when the graph view is activated */}
                 {this.props.currentStep !== 2 && (
                     <Help
                         style={this.state.showGraphModal ? { display: 'none' } : {}}
@@ -239,13 +239,13 @@ AddPaper.propTypes = {
     theme: PropTypes.object.isRequired,
     loadPaperData: PropTypes.func.isRequired,
     addPaper: PropTypes.object.isRequired,
-    statementBrowser: PropTypes.object.isRequired
+    statementBrowser: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
     currentStep: state.addPaper.currentStep,
     addPaper: state.addPaper,
-    statementBrowser: state.statementBrowser
+    statementBrowser: state.statementBrowser,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -253,14 +253,14 @@ const mapDispatchToProps = dispatch => ({
     openTour: () => dispatch(openTour()),
     closeTour: () => dispatch(closeTour()),
     blockNavigation: data => dispatch(blockNavigation(data)),
-    loadPaperData: data => dispatch(loadPaperData(data))
+    loadPaperData: data => dispatch(loadPaperData(data)),
 });
 
 export default compose(
     connect(
         mapStateToProps,
-        mapDispatchToProps
+        mapDispatchToProps,
     ),
     withTheme,
-    withCookies
+    withCookies,
 )(AddPaper);

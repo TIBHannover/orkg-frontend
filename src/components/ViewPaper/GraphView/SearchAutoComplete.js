@@ -24,6 +24,7 @@ class SearchAutoComplete extends Component {
         this.props.graphVis.clearSearchEntryValue = this.clearSearchEntryValue; // binding to the graph (node clicked)
         this.updateDictionary();
     }
+
     state = {
         selectedItemId: null,
         inputValue: '',
@@ -33,14 +34,14 @@ class SearchAutoComplete extends Component {
         loadingIndicatorForBlackOps: false,
         updateFlip: false,
         locateClass: 'me-1 align-self-center locateDisabled',
-        locateTitle: 'Nothing to locate'
+        locateTitle: 'Nothing to locate',
     };
 
     componentDidUpdate = (prevProps, prevState) => {
         if (prevState.activeTargetButton !== this.state.activeTargetButton) {
             this.setState({
                 locateClass: this.state.activeTargetButton ? 'me-1 align-self-center locateActive' : 'me-1 align-self-center locateDisabled',
-                locateTitle: this.state.activeTargetButton ? this.locateTitleActive : this.locateTitleDisabled
+                locateTitle: this.state.activeTargetButton ? this.locateTitleActive : this.locateTitleDisabled,
             });
         }
 
@@ -85,24 +86,22 @@ class SearchAutoComplete extends Component {
                     this.lookupValue(this.state.value);
                     this.ignoreToggle = false;
                 });
-            } else {
-                if (this.onEnterPressedIds) {
-                    // handle on enter key when selecting a searchEntry
-                    if (this.onEnterPressedIds.visible === 0) {
-                        // none visible, expand them!
-                        await this.props.graphVis.expandNodesForHaloVis(this.onEnterPressedIds.nodeId);
-                        this.props.graphVis.layout.pauseForceLayoutAnimation(false);
-                    }
-
-                    // update State and run haloVis
-                    this.setState({
-                        activeTargetButton: true,
-                        value: this.onEnterPressedIds.label,
-                        updateFlip: !this.state.updateFlip,
-                        dropdownMenuOpen: !this.state.dropdownMenuOpen
-                    });
-                    this.props.graphVis.haloVisForNodes(this.onEnterPressedIds.nodeId);
+            } else if (this.onEnterPressedIds) {
+                // handle on enter key when selecting a searchEntry
+                if (this.onEnterPressedIds.visible === 0) {
+                    // none visible, expand them!
+                    await this.props.graphVis.expandNodesForHaloVis(this.onEnterPressedIds.nodeId);
+                    this.props.graphVis.layout.pauseForceLayoutAnimation(false);
                 }
+
+                // update State and run haloVis
+                this.setState({
+                    activeTargetButton: true,
+                    value: this.onEnterPressedIds.label,
+                    updateFlip: !this.state.updateFlip,
+                    dropdownMenuOpen: !this.state.dropdownMenuOpen,
+                });
+                this.props.graphVis.haloVisForNodes(this.onEnterPressedIds.nodeId);
             }
         }
     };
@@ -205,7 +204,7 @@ class SearchAutoComplete extends Component {
             this.searchResultIsEmpty = false;
             // create search items
             this.searchEntries = [
-                <DropdownItem key={'searchDropdownItem' + searchString} header className="d-flex">
+                <DropdownItem key={`searchDropdownItem${searchString}`} header className="d-flex">
                     <div className="flex-shrink-0">Result</div>
                     <div className="flex-shrink-0" style={{ marginLeft: 'auto', fontSize: 'small' }}>
                         Visible/Total
@@ -248,7 +247,7 @@ class SearchAutoComplete extends Component {
                             onClick={event => {
                                 this.handleDropdownItemClick(false, event, expandIconDisabled, item.visible, callHaloVis, callExpandHaloVis, this);
                             }}
-                            key={'selectionX' + item.nodeId}
+                            key={`selectionX${item.nodeId}`}
                             value={item.label}
                             nodelabel={item.label}
                             nodeid={item.nodeId}
@@ -269,7 +268,7 @@ class SearchAutoComplete extends Component {
                                             item.visible,
                                             callHaloVis,
                                             callExpandHaloVis,
-                                            this
+                                            this,
                                         );
                                     }}
                                 />
@@ -282,7 +281,7 @@ class SearchAutoComplete extends Component {
                                             item.visible,
                                             callHaloVis,
                                             callExpandHaloVis,
-                                            this
+                                            this,
                                         );
                                     }}
                                     onKeyDown={e =>
@@ -294,7 +293,7 @@ class SearchAutoComplete extends Component {
                                                   item.visible,
                                                   callHaloVis,
                                                   callExpandHaloVis,
-                                                  this
+                                                  this,
                                               )
                                             : undefined
                                     }
@@ -309,7 +308,7 @@ class SearchAutoComplete extends Component {
                             </div>
                         </DropdownItem>
                     );
-                })
+                }),
             ];
 
             // if graph is not fully explored add the explore button
@@ -322,7 +321,7 @@ class SearchAutoComplete extends Component {
                 this.searchEntries.push(this.createFullSearchDropdownItem(searchString));
             }
         } else {
-            //create a dropdown entry to tell that there is no result (check if expanded, then provide user with option
+            // create a dropdown entry to tell that there is no result (check if expanded, then provide user with option
             // to expand and until entry is found.
             this.searchResultIsEmpty = true;
             this.onEnterPressedIds = null;
@@ -351,15 +350,13 @@ class SearchAutoComplete extends Component {
                     this.props.graphVis.layout.pauseForceLayoutAnimation(false);
                 });
             }
+        } else if (visibleItems === 0) {
+            // do the explorer thing;
+            _expandHaloVis(event, parent).then(() => {
+                this.props.graphVis.layout.pauseForceLayoutAnimation(false);
+            });
         } else {
-            if (visibleItems === 0) {
-                // do the explorer thing;
-                _expandHaloVis(event, parent).then(() => {
-                    this.props.graphVis.layout.pauseForceLayoutAnimation(false);
-                });
-            } else {
-                _haloVis(event, parent);
-            }
+            _haloVis(event, parent);
         }
     };
 
@@ -448,7 +445,7 @@ class SearchAutoComplete extends Component {
 
 SearchAutoComplete.propTypes = {
     graphVis: PropTypes.object.isRequired,
-    placeHolder: PropTypes.string
+    placeHolder: PropTypes.string,
 };
 
 export default SearchAutoComplete;

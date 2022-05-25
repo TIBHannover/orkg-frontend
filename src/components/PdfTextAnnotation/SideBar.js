@@ -6,11 +6,11 @@ import { faHeart, faTrash, faQuestionCircle } from '@fortawesome/free-solid-svg-
 import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import AnnotationCategory from 'components/PdfTextAnnotation/AnnotationCategory';
 import Completion from 'components/PdfTextAnnotation/ProgressBar';
-import Save from './Save';
 import { discardChanges } from 'slices/pdfTextAnnotationSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import Help from './Help';
 import PropTypes from 'prop-types';
+import Help from './Help';
+import Save from './Save';
 
 const SideBarStyled = styled.div`
     height: calc(100vh - 73px);
@@ -81,7 +81,7 @@ const SideBar = () => {
 
             <Completion />
 
-            {/*<SmartSentenceDetection pdfViewer={pdfViewer} />*/}
+            {/* <SmartSentenceDetection pdfViewer={pdfViewer} /> */}
 
             <div id="annotation-categories">
                 {recommendedClasses.map(annotationClass => (
@@ -107,7 +107,7 @@ const SideBar = () => {
 };
 
 SideBar.propTypes = {
-    pdfViewer: PropTypes.object
+    pdfViewer: PropTypes.object,
 };
 
 export default SideBar;

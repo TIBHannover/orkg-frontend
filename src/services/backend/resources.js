@@ -8,29 +8,17 @@ import { url } from 'constants/misc';
 
 export const resourcesUrl = `${url}resources/`;
 
-export const updateResource = (id, label, classes = null) => {
-    return submitPutRequest(
-        `${resourcesUrl}${id}`,
-        { 'Content-Type': 'application/json' },
-        { label: label, ...(classes ? { classes: classes } : null) }
-    );
-};
+export const updateResource = (id, label, classes = null) =>
+    submitPutRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' }, { label, ...(classes ? { classes } : null) });
 
-export const updateResourceClasses = (id, classes = null) => {
-    return submitPutRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' }, { ...(classes ? { classes: classes } : null) });
-};
+export const updateResourceClasses = (id, classes = null) =>
+    submitPutRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' }, { ...(classes ? { classes } : null) });
 
-export const createResource = (label, classes = []) => {
-    return submitPostRequest(resourcesUrl, { 'Content-Type': 'application/json' }, { label, classes });
-};
+export const createResource = (label, classes = []) => submitPostRequest(resourcesUrl, { 'Content-Type': 'application/json' }, { label, classes });
 
-export const getResource = id => {
-    return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`);
-};
+export const getResource = id => submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`);
 
-export const deleteResource = id => {
-    return submitDeleteRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' });
-};
+export const deleteResource = id => submitDeleteRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' });
 
 export const getResources = ({
     page = 0,
@@ -40,7 +28,7 @@ export const getResources = ({
     q = null,
     exclude = null,
     exact = false,
-    returnContent = false
+    returnContent = false,
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
@@ -51,36 +39,33 @@ export const getResources = ({
             desc,
             exact,
             ...(q ? { q } : {}),
-            ...(exclude ? { exclude } : {})
+            ...(exclude ? { exclude } : {}),
         },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
 
     return submitGetRequest(`${resourcesUrl}?${params}`).then(res => (returnContent ? res.content : res));
 };
 
-export const getContributorsByResourceId = id => {
-    return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/contributors`).then(contributors => {
+export const getContributorsByResourceId = id =>
+    submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/contributors`).then(contributors => {
         const c = contributors.map(contributor => {
             if (contributor.createdBy === MISC.UNKNOWN_ID) {
                 return { ...contributor, created_by: { id: MISC.UNKNOWN_ID, display_name: 'Unknown' } };
-            } else {
-                return getContributorInformationById(contributor.createdBy)
-                    .then(user => ({ ...contributor, created_by: user }))
-                    .catch(() => ({ ...contributor, created_by: { id: MISC.UNKNOWN_ID, display_name: 'Unknown' } }));
             }
+            return getContributorInformationById(contributor.createdBy)
+                .then(user => ({ ...contributor, created_by: user }))
+                .catch(() => ({ ...contributor, created_by: { id: MISC.UNKNOWN_ID, display_name: 'Unknown' } }));
         });
         // Order the contribution timeline because it's not ordered in the result
         return Promise.all(c).then(rc => orderBy(rc, ['created_at'], ['desc']));
     });
-};
 
-export const addResourceToObservatory = ({ observatory_id, organization_id, id }) => {
-    return submitPutRequest(`${resourcesUrl}${id}/observatory`, { 'Content-Type': 'application/json' }, { observatory_id, organization_id });
-};
+export const addResourceToObservatory = ({ observatory_id, organization_id, id }) =>
+    submitPutRequest(`${resourcesUrl}${id}/observatory`, { 'Content-Type': 'application/json' }, { observatory_id, organization_id });
 
 export const getResourcesByClass = async ({
     id,
@@ -94,35 +79,27 @@ export const getResourcesByClass = async ({
     verified = null,
     returnContent = false,
     featured = null,
-    unlisted = null
+    unlisted = null,
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
         { page, size, sort, desc, creator, exact, ...(q ? { q } : {}), verified, featured, unlisted },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
 
     const resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/?${params}`).then(res =>
-        returnContent ? res.content : res
+        returnContent ? res.content : res,
     );
     return resources;
 };
 
-export const markAsFeatured = id => {
-    return submitPutRequest(`${resourcesUrl}${id}/metadata/featured`, { 'Content-Type': 'application/json' });
-};
+export const markAsFeatured = id => submitPutRequest(`${resourcesUrl}${id}/metadata/featured`, { 'Content-Type': 'application/json' });
 
-export const removeFeaturedFlag = id => {
-    return submitDeleteRequest(`${resourcesUrl}${id}/metadata/featured`, { 'Content-Type': 'application/json' });
-};
+export const removeFeaturedFlag = id => submitDeleteRequest(`${resourcesUrl}${id}/metadata/featured`, { 'Content-Type': 'application/json' });
 
-export const markAsUnlisted = id => {
-    return submitPutRequest(`${resourcesUrl}${id}/metadata/unlisted`, { 'Content-Type': 'application/json' });
-};
+export const markAsUnlisted = id => submitPutRequest(`${resourcesUrl}${id}/metadata/unlisted`, { 'Content-Type': 'application/json' });
 
-export const removeUnlistedFlag = id => {
-    return submitDeleteRequest(`${resourcesUrl}${id}/metadata/unlisted`, { 'Content-Type': 'application/json' });
-};
+export const removeUnlistedFlag = id => submitDeleteRequest(`${resourcesUrl}${id}/metadata/unlisted`, { 'Content-Type': 'application/json' });

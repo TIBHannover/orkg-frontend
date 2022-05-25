@@ -1,7 +1,6 @@
 import ContentLoader from 'react-content-loader';
 import useTopChangelog from 'components/LastUpdatesBox/hooks/useTopChangelog';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { StyledActivity } from './styled';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { getResourceLink, getResourceTypeLabel } from 'utils';
@@ -9,6 +8,7 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
+import { StyledActivity } from './styled';
 
 const LastUpdatesBox = ({ researchFieldId, openModal, setOpenModal }) => {
     const { activities, isLoading } = useTopChangelog({ researchFieldId, pageSize: 30 });
@@ -19,30 +19,28 @@ const LastUpdatesBox = ({ researchFieldId, openModal, setOpenModal }) => {
             <ModalBody>
                 <div className="ps-3 pe-3">
                     {!isLoading &&
-                        activities.map((activity, index) => {
-                            return (
-                                <StyledActivity key={`sss${activity.id}`} className="ps-3 pb-3">
-                                    <div className="time">{moment(activity.created_at).fromNow()}</div>
-                                    <div className="action">
-                                        {activity.profile?.id ? (
-                                            <>
-                                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>
-                                                    {activity.profile.display_name}
-                                                </Link>
-                                            </>
-                                        ) : (
-                                            <i>Anonymous user</i>
-                                        )}{' '}
-                                        added
-                                        {` a ${getResourceTypeLabel(activity.classes?.length > 0 ? activity.classes[0] : '')} `}
-                                        <Link to={getResourceLink(activity.classes?.length > 0 ? activity.classes[0] : '', activity.id)}>
-                                            {' '}
-                                            {truncate(activity.label, { length: 50 })}
-                                        </Link>
-                                    </div>
-                                </StyledActivity>
-                            );
-                        })}
+                        activities.map((activity, index) => (
+                            <StyledActivity key={`sss${activity.id}`} className="ps-3 pb-3">
+                                <div className="time">{moment(activity.created_at).fromNow()}</div>
+                                <div className="action">
+                                    {activity.profile?.id ? (
+                                        <>
+                                            <Link to={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>
+                                                {activity.profile.display_name}
+                                            </Link>
+                                        </>
+                                    ) : (
+                                        <i>Anonymous user</i>
+                                    )}{' '}
+                                    added
+                                    {` a ${getResourceTypeLabel(activity.classes?.length > 0 ? activity.classes[0] : '')} `}
+                                    <Link to={getResourceLink(activity.classes?.length > 0 ? activity.classes[0] : '', activity.id)}>
+                                        {' '}
+                                        {truncate(activity.label, { length: 50 })}
+                                    </Link>
+                                </div>
+                            </StyledActivity>
+                        ))}
                     {isLoading && (
                         <div className="mt-4 mb-4">
                             <ContentLoader
@@ -73,7 +71,7 @@ const LastUpdatesBox = ({ researchFieldId, openModal, setOpenModal }) => {
 LastUpdatesBox.propTypes = {
     researchFieldId: PropTypes.string.isRequired,
     openModal: PropTypes.bool.isRequired,
-    setOpenModal: PropTypes.func.isRequired
+    setOpenModal: PropTypes.func.isRequired,
 };
 
 export default LastUpdatesBox;

@@ -28,7 +28,7 @@ const Toolbar = props => {
     const discardPdfFile = async () => {
         const result = await Confirm({
             title: 'Are you sure?',
-            message: 'Are you sure you want to discard this PDF file?'
+            message: 'Are you sure you want to discard this PDF file?',
         });
 
         if (result) {
@@ -89,7 +89,7 @@ const Toolbar = props => {
 
 Toolbar.propTypes = {
     changeZoom: PropTypes.func.isRequired,
-    zoom: PropTypes.number.isRequired
+    zoom: PropTypes.number.isRequired,
 };
 
 export default Toolbar;

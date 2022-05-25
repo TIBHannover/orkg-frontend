@@ -50,7 +50,7 @@ const HelpCenterArticle = () => {
                                 <BreadcrumbItem>
                                     <Link
                                         to={reverse(ROUTES.HELP_CENTER_CATEGORY, {
-                                            id: page.help_category.id
+                                            id: page.help_category.id,
                                         })}
                                     >
                                         {page.help_category.title}

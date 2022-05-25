@@ -1,14 +1,12 @@
 import { Alert, Col, Container, FormGroup, Row } from 'reactstrap';
 import ContentLoader from 'react-content-loader';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
-import SimilarContributions from '../SimilarContributions';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import ContributionComparisons from 'components/ViewPaper/ContirbutionComparisons/ContributionComparisons';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import { reverse } from 'named-urls';
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import AddToComparison from 'components/PaperCard/AddToComparison';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
@@ -17,8 +15,9 @@ import { useSelector } from 'react-redux';
 import { StyledContributionTabs, GlobalStyle } from 'components/ContributionTabs/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
-import useContributions from './hooks/useContributions';
 import Tabs, { TabPane } from 'rc-tabs';
+import SimilarContributions from '../SimilarContributions';
+import useContributions from './hooks/useContributions';
 
 const Title = styled.div`
     font-size: 18px;
@@ -49,19 +48,19 @@ const Contributions = props => {
         handleChangeContributionLabel,
         handleCreateContribution,
         toggleDeleteContribution,
-        navigate
+        navigate,
     } = useContributions({
         paperId: resourceId,
-        contributionId
+        contributionId,
     });
     const isAddingContribution = useSelector(state => state.viewPaper.isAddingContribution);
 
     const onTabChange = key => {
         navigate(
             reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
-                resourceId: resourceId,
-                contributionId: key
-            })
+                resourceId,
+                contributionId: key,
+            }),
         );
     };
 
@@ -227,7 +226,7 @@ const Contributions = props => {
 
 Contributions.propTypes = {
     toggleEditMode: PropTypes.func.isRequired,
-    enableEdit: PropTypes.bool.isRequired
+    enableEdit: PropTypes.bool.isRequired,
 };
 
 export default Contributions;

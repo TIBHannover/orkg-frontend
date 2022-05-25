@@ -20,7 +20,7 @@ const TableContainerStyled = styled.div`
 
 const PARSER_OPTIONS = {
     delimiter: ',',
-    skipEmptyLines: true
+    skipEmptyLines: true,
 };
 
 const CsvImport = () => {
@@ -92,7 +92,7 @@ const CsvImport = () => {
                             <Alert color="danger" className="mt-3">
                                 <div
                                     dangerouslySetInnerHTML={{
-                                        __html: error
+                                        __html: error,
                                     }}
                                 />
                             </Alert>

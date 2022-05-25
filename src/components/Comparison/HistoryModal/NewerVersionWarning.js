@@ -42,11 +42,11 @@ const NewerVersionWarning = ({ versions, showViewHistory, comparisonId }) => {
 NewerVersionWarning.propTypes = {
     comparisonId: PropTypes.string,
     showViewHistory: PropTypes.bool,
-    versions: PropTypes.array
+    versions: PropTypes.array,
 };
 
 NewerVersionWarning.defaultProps = {
-    showViewHistory: true
+    showViewHistory: true,
 };
 
 export default NewerVersionWarning;

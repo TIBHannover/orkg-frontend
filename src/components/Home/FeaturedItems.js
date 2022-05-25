@@ -19,11 +19,11 @@ const ListGroupStyled = styled(ListGroup)`
 
 const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) => {
     const { items, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useResearchFieldContent({
-        researchFieldId: researchFieldId,
+        researchFieldId,
         initialSort: 'combined',
         initialClassFilterOptions: [{ id: featuredClass.id, label: featuredClass.label }],
         initClassesFilter: [{ id: featuredClass.id, label: featuredClass.label }],
-        initialIncludeSubFields: true
+        initialIncludeSubFields: true,
     });
 
     return (
@@ -66,17 +66,15 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
                 (items.length > 0 ? (
                     <>
                         <ListGroupStyled>
-                            {items.map(item => {
-                                return (
-                                    <CardFactory
-                                        showBadge={false}
-                                        showCurationFlags={false}
-                                        showAddToComparison={false}
-                                        key={`item${item.id}`}
-                                        item={item}
-                                    />
-                                );
-                            })}
+                            {items.map(item => (
+                                <CardFactory
+                                    showBadge={false}
+                                    showCurationFlags={false}
+                                    showAddToComparison={false}
+                                    key={`item${item.id}`}
+                                    item={item}
+                                />
+                            ))}
                         </ListGroupStyled>
 
                         <div className="text-center mt-2">
@@ -85,8 +83,8 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
                                 to={
                                     researchFieldId !== MISC.RESEARCH_FIELD_MAIN
                                         ? `${reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                                              researchFieldId: researchFieldId,
-                                              slug: researchFieldLabel
+                                              researchFieldId,
+                                              slug: researchFieldLabel,
                                           })}?sort=${sort}&includeSubFields=${includeSubFields}&classesFilter=${featuredClass.id}`
                                         : featuredClass.link
                                 }
@@ -131,8 +129,8 @@ FeaturedItems.propTypes = {
     featuredClass: PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string,
-        link: PropTypes.string
-    }).isRequired
+        link: PropTypes.string,
+    }).isRequired,
 };
 
 export default FeaturedItems;

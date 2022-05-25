@@ -17,8 +17,8 @@ const TYPES = [
     {
         id: CLASSES.PAPER,
         label: 'Paper',
-        icon: faFile
-    }
+        icon: faFile,
+    },
 ];
 
 const ContentTypeNew = () => {

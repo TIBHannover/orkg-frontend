@@ -4,13 +4,13 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import { getUsersByOrganizationId } from 'services/backend/organizations';
 import ContentLoader from 'react-content-loader';
-import MembersModal from './MembersModal';
 import ROUTES from 'constants/routes.js';
 import { StyledGravatar, StyledDotGravatar, ContributorsAvatars } from 'components/styled';
 import Tippy from '@tippyjs/react';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
+import MembersModal from './MembersModal';
 
 const Members = ({ organizationsId }) => {
     const [members, setMembers] = useState([]);
@@ -87,7 +87,7 @@ const Members = ({ organizationsId }) => {
 };
 
 Members.propTypes = {
-    organizationsId: PropTypes.string.isRequired
+    organizationsId: PropTypes.string.isRequired,
 };
 
 export default Members;

@@ -24,8 +24,8 @@ const Section = props => {
         dispatch(
             updateSectionTitle({
                 sectionId,
-                title: e.target.value
-            })
+                title: e.target.value,
+            }),
         );
     };
 
@@ -33,15 +33,15 @@ const Section = props => {
         dispatch(
             updateSectionMarkdown({
                 id: markdown.id,
-                markdown: value
-            })
+                markdown: value,
+            }),
         );
     };
 
     const handleDelete = async () => {
         const confirm = await Confirm({
             title: 'Are you sure?',
-            message: 'Are you sure you want to delete this section?'
+            message: 'Are you sure you want to delete this section?',
         });
 
         if (confirm) {
@@ -96,7 +96,7 @@ const Section = props => {
 Section.propTypes = {
     section: PropTypes.object.isRequired,
     atIndex: PropTypes.number.isRequired,
-    handleManualSort: PropTypes.func.isRequired
+    handleManualSort: PropTypes.func.isRequired,
 };
 
 export default SortableElement(Section);

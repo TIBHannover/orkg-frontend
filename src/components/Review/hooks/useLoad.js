@@ -34,7 +34,7 @@ const useLoad = () => {
                 return;
             }
             const {
-                data: { rootResource, statements }
+                data: { rootResource, statements },
             } = resourceData;
             paperStatements = statements;
             id = rootResource;
@@ -43,7 +43,7 @@ const useLoad = () => {
             isPublished = true;
         } else {
             const { statements } = await getStatementsBundleBySubject({
-                id
+                id,
             });
             paperStatements = statements;
         }
@@ -70,13 +70,13 @@ const useLoad = () => {
         // get the research field
         let researchField = null;
         const researchFieldStatement = paperStatements.find(
-            statement => statement.subject.id === id && statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD
+            statement => statement.subject.id === id && statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD,
         );
         if (researchFieldStatement) {
             researchField = {
                 id: researchFieldStatement.object.id,
                 label: researchFieldStatement.object.label,
-                statementId: researchFieldStatement.id
+                statementId: researchFieldStatement.id,
             };
         }
 
@@ -98,7 +98,7 @@ const useLoad = () => {
             authorResources.push({
                 ...author.object,
                 statementId: author.id,
-                orcid: orcid || undefined
+                orcid: orcid || undefined,
             });
         }
 
@@ -118,7 +118,7 @@ const useLoad = () => {
                 contentLink = {
                     id: section?.id,
                     objectId: link?.id,
-                    label: link?.label
+                    label: link?.label,
                 };
             } else if (type === CLASSES.ONTOLOGY_SECTION) {
                 const properties =
@@ -135,19 +135,19 @@ const useLoad = () => {
 
                 const entityStatements = entities.flatMap(entity => ({
                     ...entity,
-                    statements: paperStatements.filter(statement => statement.subject.id === entity.id)
+                    statements: paperStatements.filter(statement => statement.subject.id === entity.id),
                 }));
 
                 dataTable = {
                     properties,
-                    entities: entityStatements
+                    entities: entityStatements,
                 };
             } else {
                 const contentStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_CONTENT);
                 const content = contentStatement?.object;
                 markdown = {
                     id: content?.id,
-                    label: content?.label
+                    label: content?.label,
                 };
             }
 
@@ -155,14 +155,14 @@ const useLoad = () => {
                 id: section.id,
                 title: {
                     id: section.id,
-                    label: section.label
+                    label: section.label,
                 },
                 type: {
-                    id: type
+                    id: type,
                 },
                 markdown,
                 contentLink,
-                dataTable
+                dataTable,
             });
         }
 
@@ -175,7 +175,7 @@ const useLoad = () => {
             articleResource: articleResource ?? null,
             paper: {
                 id: paperResource.id,
-                title: paperResource.label
+                title: paperResource.label,
             },
             contributionId: contributionResource.id,
             authorResources: authorResources.reverse(),
@@ -185,20 +185,20 @@ const useLoad = () => {
             researchField,
             statements: paperStatements,
             contributors,
-            references
+            references,
         };
     }, []);
 
     const getReferences = async (statements, contributionId) => {
         const referenceStatements = statements.filter(
-            statement => statement.subject.id === contributionId && statement.predicate.id === PREDICATES.HAS_REFERENCE
+            statement => statement.subject.id === contributionId && statement.predicate.id === PREDICATES.HAS_REFERENCE,
         );
         const parseReferences = referenceStatements.map(reference => Cite.async(reference.object.label).catch(e => console.log(e)));
 
         return (await Promise.all(parseReferences)).map((parsedReference, index) => ({
             parsedReference: parsedReference?.data?.[0] ?? {},
             literal: referenceStatements[index].object,
-            statementId: referenceStatements[index].id
+            statementId: referenceStatements[index].id,
         }));
     };
 
@@ -213,7 +213,7 @@ const useLoad = () => {
         const statementAmountPerContributor = countBy(contributors);
         const contributorsWithPercentage = Object.keys(statementAmountPerContributor).map(contributorId => ({
             id: contributorId,
-            percentage: Math.round((statementAmountPerContributor[contributorId] / contributors.length) * 100)
+            percentage: Math.round((statementAmountPerContributor[contributorId] / contributors.length) * 100),
         }));
 
         return orderBy(contributorsWithPercentage, 'percentage', 'desc');
@@ -228,7 +228,7 @@ const useLoad = () => {
             }
             setIsLoading(false);
         },
-        [dispatch, getArticleById]
+        [dispatch, getArticleById],
     );
 
     const getVersions = async paperId => {
@@ -244,14 +244,14 @@ const useLoad = () => {
             .map(versionSubject => ({
                 ...versionSubject.statements.find(
                     statement =>
-                        statement.subject.classes.includes(CLASSES.SMART_REVIEW_PUBLISHED) && statement.predicate.id === PREDICATES.DESCRIPTION
-                )
+                        statement.subject.classes.includes(CLASSES.SMART_REVIEW_PUBLISHED) && statement.predicate.id === PREDICATES.DESCRIPTION,
+                ),
             }))
             .map(statement => ({
                 id: statement.subject.id,
                 date: statement.subject.created_at,
                 description: statement.object.label,
-                creator: statement.object.created_by
+                creator: statement.object.created_by,
             }));
     };
 
@@ -260,19 +260,15 @@ const useLoad = () => {
         setIsLoading(false);
     };
 
-    const getObjectsByPredicateAndSubject = (statements, predicateId, subjectId) => {
-        return statements
+    const getObjectsByPredicateAndSubject = (statements, predicateId, subjectId) =>
+        statements
             .filter(statement => statement.predicate.id === predicateId && statement.subject.id === subjectId)
             .map(statement => statement.object);
-    };
 
-    const getStatementsBySubjectId = (statements, subjectId) => {
-        return statements.filter(statement => statement.subject.id === subjectId);
-    };
+    const getStatementsBySubjectId = (statements, subjectId) => statements.filter(statement => statement.subject.id === subjectId);
 
-    const getStatementsByPredicateAndSubject = (statements, predicateId, subjectId) => {
-        return statements.filter(statement => statement.subject.id === subjectId && statement.predicate.id === predicateId);
-    };
+    const getStatementsByPredicateAndSubject = (statements, predicateId, subjectId) =>
+        statements.filter(statement => statement.subject.id === subjectId && statement.predicate.id === predicateId);
 
     return { load, isLoading, isNotFound, getArticleById, getVersions };
 };

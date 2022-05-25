@@ -62,7 +62,7 @@ const PropertyValue = ({
     grouped = false,
     handleToggleShow,
     groupId,
-    hiddenGroups
+    hiddenGroups,
 }) => {
     const [showStatementBrowser, setShowStatementBrowser] = useState(false);
     const [showFilterDialog, setShowFilterDialog] = useState(false);
@@ -73,13 +73,11 @@ const PropertyValue = ({
         setShowStatementBrowser(true);
     };
 
-    const getValuesNr = () => {
-        return !group ? Object.keys(getValuesByProperty(filterControlData, id)).length : 0;
-    };
+    const getValuesNr = () => (!group ? Object.keys(getValuesByProperty(filterControlData, id)).length : 0);
 
     const filterButtonClasses = classNames({
         'd-block': true,
-        active: !group ? getRuleByProperty(filterControlData, id).length > 0 : false
+        active: !group ? getRuleByProperty(filterControlData, id).length > 0 : false,
     });
 
     return (
@@ -104,7 +102,7 @@ const PropertyValue = ({
                             <FilterWrapper
                                 data={{
                                     rules: getRuleByProperty(filterControlData, id),
-                                    disabled: getValuesNr() <= 1 && getRuleByProperty(filterControlData, id).length === 0
+                                    disabled: getValuesNr() <= 1 && getRuleByProperty(filterControlData, id).length === 0,
                                 }}
                             >
                                 <FilterButton
@@ -159,7 +157,7 @@ PropertyValue.propTypes = {
     embeddedMode: PropTypes.bool.isRequired,
     handleToggleShow: PropTypes.func.isRequired,
     groupId: PropTypes.string,
-    hiddenGroups: PropTypes.array
+    hiddenGroups: PropTypes.array,
 };
 
 PropertyValue.defaultProps = {
@@ -167,7 +165,7 @@ PropertyValue.defaultProps = {
     similar: PropTypes.array,
     embeddedMode: false,
     groupId: null,
-    hiddenGroups: []
+    hiddenGroups: [],
 };
 
 export default PropertyValue;

@@ -1,8 +1,8 @@
 import { ButtonGroup, Container } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import PaperMenuBar from './PaperMenuBar';
 import { CSSTransition } from 'react-transition-group';
+import PaperMenuBar from './PaperMenuBar';
 
 const PaperHeaderBarContainer = styled.div`
     position: fixed;
@@ -67,7 +67,7 @@ PaperHeaderBar.propTypes = {
     paperLink: PropTypes.string,
     toggle: PropTypes.func.isRequired,
     paperTitle: PropTypes.string.isRequired,
-    id: PropTypes.string
+    id: PropTypes.string,
 };
 
 export default PaperHeaderBar;

@@ -23,5 +23,5 @@ export default routerReducer =>
         review,
         templateEditor,
         pdfAnnotation,
-        pdfTextAnnotation
+        pdfTextAnnotation,
     });

@@ -24,7 +24,7 @@ const RequireAuthentication = ({ component: Component, ...rest }) => {
 
 RequireAuthentication.propTypes = {
     component: PropTypes.elementType.isRequired,
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
 };
 
 export default RequireAuthentication;

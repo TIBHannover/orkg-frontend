@@ -160,7 +160,7 @@ TemplateComponentValue.propTypes = {
     minOccurs: PropTypes.string.isRequired,
     maxOccurs: PropTypes.string,
     validationRules: PropTypes.object.isRequired,
-    handleClassOfPropertySelect: PropTypes.func.isRequired
+    handleClassOfPropertySelect: PropTypes.func.isRequired,
 };
 
 export default TemplateComponentValue;

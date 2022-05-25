@@ -26,7 +26,7 @@ const SaveDraft = ({ isOpen, toggle, comparisonUrl }) => {
         const draftComparison = await createResource(title, [CLASSES.COMPARISON_DRAFT]);
         await createResourceData({
             resourceId: draftComparison.id,
-            data: { url: comparisonUrl }
+            data: { url: comparisonUrl },
         });
         setSavedDraftId(draftComparison.id);
         setIsLoading(false);
@@ -71,7 +71,7 @@ SaveDraft.propTypes = {
     comparisonType: PropTypes.string.isRequired,
     contributions: PropTypes.array,
     properties: PropTypes.array,
-    comparisonUrl: PropTypes.string.isRequired
+    comparisonUrl: PropTypes.string.isRequired,
 };
 
 export default SaveDraft;

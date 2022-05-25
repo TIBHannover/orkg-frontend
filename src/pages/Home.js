@@ -21,7 +21,7 @@ export default function Home() {
     const navigate = useNavigate();
     const { selectedResearchField, handleFieldSelect, researchFields, isLoadingFields } = useResearchFieldSelector({
         id: MISC.RESEARCH_FIELD_MAIN,
-        label: 'Main'
+        label: 'Main',
     });
 
     useEffect(() => {

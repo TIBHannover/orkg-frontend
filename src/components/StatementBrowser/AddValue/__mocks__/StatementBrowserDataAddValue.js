@@ -17,7 +17,7 @@ export const statementBrowserOneProperty = {
             showClasses: false,
             showStatementInfo: true,
             showValueInfo: true,
-            showLiteralDataTypes: true
+            showLiteralDataTypes: true,
         },
         resources: {
             byId: {
@@ -30,10 +30,10 @@ export const statementBrowserOneProperty = {
                     _class: 'resource',
                     isFetching: false,
                     isFetched: true,
-                    fetchedDepth: 1
-                }
+                    fetchedDepth: 1,
+                },
             },
-            allIds: ['R144078']
+            allIds: ['R144078'],
         },
         properties: {
             byId: {
@@ -46,31 +46,31 @@ export const statementBrowserOneProperty = {
                     isExistingProperty: false,
                     isEditing: false,
                     isSaving: false,
-                    isAnimated: false
-                }
+                    isAnimated: false,
+                },
             },
-            allIds: ['6085aff6-8fb9-e964-f015-64c8e56165b0']
+            allIds: ['6085aff6-8fb9-e964-f015-64c8e56165b0'],
         },
         values: {
             byId: {
                 undefined: {
-                    classes: []
-                }
+                    classes: [],
+                },
             },
-            allIds: []
+            allIds: [],
         },
         resourceHistory: {
             byId: {
                 R144078: {
                     id: 'R144078',
-                    label: 'Test'
-                }
+                    label: 'Test',
+                },
             },
-            allIds: ['R144078']
+            allIds: ['R144078'],
         },
         templates: {},
         classes: {},
         contributions: {},
-        selectedContributionId: ''
-    }
+        selectedContributionId: '',
+    },
 };

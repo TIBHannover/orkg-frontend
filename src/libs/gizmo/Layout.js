@@ -1,5 +1,5 @@
-import DrawTools from './drawTools';
 import * as d3 from 'd3';
+import DrawTools from './drawTools';
 
 export default class Layout {
     constructor(props) {
@@ -36,7 +36,7 @@ export default class Layout {
 
         this.makeExpandAnimation = this.makeExpandAnimation.bind(this); // used
         this.makeSingleNodeCollapseAnimation = this.makeSingleNodeCollapseAnimation.bind(this);
-        this.depthExplorationAnimation = this.depthExplorationAnimation.bind(this); //used
+        this.depthExplorationAnimation = this.depthExplorationAnimation.bind(this); // used
         this.initializePositionsForGroupExpansionAnimation = this.initializePositionsForGroupExpansionAnimation.bind(this);
         this.promisedLayoutAnimation = this.promisedLayoutAnimation.bind(this);
         this.pauseForceLayoutAnimation = this.pauseForceLayoutAnimation.bind(this);
@@ -55,14 +55,14 @@ export default class Layout {
     // the collapseAnimation will be propagated to the node, if true then it will be set to invisible
     async promisedLayoutAnimation(collapseAnimation, durationPercentage) {
         const that = this;
-        const animationWaiter = new Promise(function(resolve) {
+        const animationWaiter = new Promise(resolve => {
             const max = that.graph.classNodes.length - 1;
             let it = 0;
 
             that.graph.classNodes.forEach(async node => {
                 node.setAnimationDurationPercentage(durationPercentage);
                 if (it === max) {
-                    node.startLayoutTransition(collapseAnimation, it, max, function() {
+                    node.startLayoutTransition(collapseAnimation, it, max, () => {
                         resolve(true);
                     });
                 } else {
@@ -82,7 +82,7 @@ export default class Layout {
         if (this.layoutType() === 'force') {
             nodesToCollapse.forEach(node => {
                 if (it === max) {
-                    node.startLayoutTransition(true, it, max, function() {
+                    node.startLayoutTransition(true, it, max, () => {
                         that.graph.redrawGraphAfterCollapse();
                     });
                 } else {
@@ -93,7 +93,7 @@ export default class Layout {
         } else {
             this.graph.classNodes.forEach(node => {
                 if (it === max) {
-                    node.startLayoutTransition(true, it, max, function() {
+                    node.startLayoutTransition(true, it, max, () => {
                         that.graph.redrawGraphAfterCollapse();
                     });
                 } else {
@@ -106,12 +106,12 @@ export default class Layout {
 
     async singleLevelExploration() {
         const that = this;
-        const animationWaiter = new Promise(function(resolve) {
+        const animationWaiter = new Promise(resolve => {
             const max = that.graph.classNodes.length - 1;
             let it = 0;
             that.graph.classNodes.forEach(async node => {
                 if (it === max) {
-                    node.startLayoutTransition(false, it, max, function() {
+                    node.startLayoutTransition(false, it, max, () => {
                         resolve(true);
                     });
                 } else {
@@ -150,7 +150,7 @@ export default class Layout {
             const that = this;
             nodesToExpand.forEach(node => {
                 if (it === max) {
-                    node.startLayoutTransition(false, it, max, function() {
+                    node.startLayoutTransition(false, it, max, () => {
                         that.resumeForce();
                     });
                 } else {
@@ -176,11 +176,13 @@ export default class Layout {
             });
         }
     }
+
     resumeForce() {
         if (this.force) {
             this.force.resume();
         }
     }
+
     stopForce() {
         if (this.force) {
             this.force.stop();
@@ -215,18 +217,18 @@ export default class Layout {
         // recursive function;
         const newObj = {};
         this.treeMap[node.id()] = node;
-        newObj['name'] = node.id();
+        newObj.name = node.id();
         if (parent === null) {
-            newObj['parent'] = 'null';
+            newObj.parent = 'null';
         } else {
-            newObj['parent'] = parent.id();
+            newObj.parent = parent.id();
         }
         if (node.outgoingLink.length > 0) {
-            newObj['children'] = [];
+            newObj.children = [];
             node.outgoingLink.forEach(item => {
                 // check if we have an downward (child depth > parent depth) connection
                 if (item.rangeNode().getDepth() > node.getDepth() && item.rangeNode().visible()) {
-                    newObj['children'].push(this.processSingleElement(item.rangeNode(), node));
+                    newObj.children.push(this.processSingleElement(item.rangeNode(), node));
                 }
             });
         }
@@ -365,7 +367,7 @@ export default class Layout {
         const max = this.graph.classNodes.length - 1;
         this.graph.classNodes.forEach(node => {
             if (id === max) {
-                node.startLayoutTransition(false, id, max, function() {
+                node.startLayoutTransition(false, id, max, () => {
                     if (__callback) {
                         if (!args) {
                             __callback();
@@ -390,7 +392,7 @@ export default class Layout {
 
     createForceElements() {
         const that = this;
-        const graph = this.graph;
+        const { graph } = this;
         if (this.force === undefined) {
             this.force = d3.layout.force();
             this.force.on('tick', this.recalculatePositions);
@@ -458,7 +460,7 @@ export default class Layout {
             }
         });
 
-        let parent = undefined;
+        let parent;
         let singleParent = false;
         let multiParent = false;
         if (node.incommingLink.length === 1) {
@@ -468,7 +470,7 @@ export default class Layout {
             }
         }
         if (node.incommingLink.length > 1) {
-            //&& some are visible
+            // && some are visible
             multiParent = false;
 
             node.incommingLink.forEach(income => {
@@ -530,9 +532,7 @@ export default class Layout {
                         const oY = p.domainNode().y - node.y;
                         angularSpace.push(DrawTools().angleFromVector(oX, oY));
                     });
-                    angularSpace.sort(function(a, b) {
-                        return a - b;
-                    });
+                    angularSpace.sort((a, b) => a - b);
                     const angularDistances = [];
 
                     let i;

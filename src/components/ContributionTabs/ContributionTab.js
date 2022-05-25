@@ -125,7 +125,7 @@ ContributionTab.propTypes = {
     isSelected: PropTypes.bool.isRequired,
     handleChangeContributionLabel: PropTypes.func.isRequired,
     toggleDeleteContribution: PropTypes.func.isRequired,
-    enableEdit: PropTypes.bool.isRequired
+    enableEdit: PropTypes.bool.isRequired,
 };
 
 export default ContributionTab;

@@ -10,7 +10,7 @@ import {
     faTable,
     faUnderline,
     faVideo,
-    faExternalLinkAlt
+    faExternalLinkAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -59,7 +59,7 @@ const ItemReference = ({ entity: { reference } }) => (
 );
 
 ItemReference.propTypes = {
-    entity: PropTypes.object.isRequired
+    entity: PropTypes.object.isRequired,
 };
 
 const ItemResource = ({ entity: { resource } }) => (
@@ -72,7 +72,7 @@ const ItemResource = ({ entity: { resource } }) => (
 );
 
 ItemResource.propTypes = {
-    entity: PropTypes.object.isRequired
+    entity: PropTypes.object.isRequired,
 };
 
 const Loading = () => <div>Loading</div>;
@@ -144,8 +144,8 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                 const resource = await getResource(resourceId);
                 return [
                     {
-                        resource
-                    }
+                        resource,
+                    },
                 ];
             } catch (e) {
                 return [];
@@ -153,7 +153,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
         } else {
             return token && token !== '!'
                 ? (await getResources({ q: token.substring(1), returnContent: true, items: 10 })).map(resource => ({
-                      resource
+                      resource,
                   }))
                 : [];
         }
@@ -166,8 +166,8 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
             allowWhitespace: true,
             output: item =>
                 `[${item.resource.label}](${env('URL')}${reverse(ROUTES.RESOURCE, {
-                    id: item.resource.id
-                }).replace('/', '', 1)})`
+                    id: item.resource.id,
+                }).replace('/', '', 1)})`,
         },
         '[@': {
             dataProvider: token =>
@@ -175,8 +175,8 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                     .filter(reference => reference.parsedReference.id.toLowerCase().startsWith(token.toLowerCase().substring(1)))
                     .map(reference => ({ reference: reference.parsedReference, char: reference.parsedReference.id })),
             component: ItemReference,
-            output: item => `[@${item.char}]`
-        }
+            output: item => `[@${item.char}]`,
+        },
     };
 
     const handleKeyPress = e => {
@@ -329,7 +329,7 @@ MarkdownEditor.propTypes = {
     label: PropTypes.string.isRequired,
     handleUpdate: PropTypes.func.isRequired,
     references: PropTypes.object,
-    literalId: PropTypes.string
+    literalId: PropTypes.string,
 };
 
 export default MarkdownEditor;

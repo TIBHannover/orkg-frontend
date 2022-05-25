@@ -3,8 +3,7 @@ import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
 import { omit, isString } from 'lodash';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { getPaperByDOI } from 'services/backend/misc';
-import { createResource, getResourcesByClass, getResources } from 'services/backend/resources';
-import { getResource } from 'services/backend/resources';
+import { createResource, getResourcesByClass, getResources, getResource } from 'services/backend/resources';
 import { getPredicate, getPredicates, createPredicate } from 'services/backend/predicates';
 import { saveFullPaper } from 'services/backend/papers';
 import Cite from 'citation-js';
@@ -20,7 +19,7 @@ const PREDEFINED_COLUMNS = [
     'paper:doi',
     'paper:url',
     'paper:research_field',
-    'paper:published_in'
+    'paper:published_in',
 ];
 
 const useImportBulkData = ({ data, onFinish }) => {
@@ -31,9 +30,7 @@ const useImportBulkData = ({ data, onFinish }) => {
     const [validationErrors, setValidationErrors] = useState({});
     const [createdContributions, setCreatedContributions] = useState([]);
 
-    const getFirstValue = (object, key, defaultValue = '') => {
-        return key in object && object[key].length && object[key][0] ? object[key][0] : defaultValue;
-    };
+    const getFirstValue = (object, key, defaultValue = '') => (key in object && object[key].length && object[key][0] ? object[key][0] : defaultValue);
 
     const findDataType = literal => DATA_TYPES.find(type => literal.endsWith(`<${type.name.toLowerCase()}>`));
 
@@ -49,7 +46,7 @@ const useImportBulkData = ({ data, onFinish }) => {
 
         return {
             text: datatype ? removeDataTypeLiteral({ literal, datatype }) : literal,
-            datatype: datatype ? datatype.type : MISC.DEFAULT_LITERAL_DATATYPE
+            datatype: datatype ? datatype.type : MISC.DEFAULT_LITERAL_DATATYPE,
         };
     }, []);
 
@@ -58,7 +55,7 @@ const useImportBulkData = ({ data, onFinish }) => {
             removeDataTypeHeader(label)
                 .replace(/^(resource:)/, '')
                 .replace(/^(orkg:)/, ''),
-        [removeDataTypeHeader]
+        [removeDataTypeHeader],
     );
 
     const makePaperList = useCallback(async () => {
@@ -69,7 +66,7 @@ const useImportBulkData = ({ data, onFinish }) => {
         const _existingPaperIds = [];
         // used to map resource/property IDs to their labels
         const _idToLabel = {
-            [PREDICATES.HAS_RESEARCH_PROBLEM]: 'has research problem'
+            [PREDICATES.HAS_RESEARCH_PROBLEM]: 'has research problem',
         };
         // used to map property values to their IDs (not the inverse of _idToLabel!)
         const valueToId = {};
@@ -187,7 +184,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                         }
                         if (value in _idToLabel) {
                             valueObject = {
-                                '@id': value
+                                '@id': value,
                             };
                         }
                     }
@@ -212,12 +209,12 @@ const useImportBulkData = ({ data, onFinish }) => {
                             valueToId[cleanNewResource(value)] = fetchedResource.content[0].id;
                             _idToLabel[fetchedResource.content[0].id] = cleanNewResource(value);
                             valueObject = {
-                                '@id': valueToId[cleanNewResource(value)]
+                                '@id': valueToId[cleanNewResource(value)],
                             };
                         } else {
                             valueObject = {
                                 label: cleanNewResource(value),
-                                class: classes
+                                class: classes,
                             };
                         }
                     }
@@ -226,7 +223,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                         const { text, datatype } = parseDataTypes({ value, property });
                         valueObject = {
                             text,
-                            datatype
+                            datatype,
                         };
                         error = checkDataTypeIsInValid({ dataType: datatype, value: text });
                     }
@@ -256,9 +253,9 @@ const useImportBulkData = ({ data, onFinish }) => {
                 contributions: [
                     {
                         name: 'Contribution',
-                        values: contributionStatements
-                    }
-                ]
+                        values: contributionStatements,
+                    },
+                ],
             };
 
             _papers.push(paper);
@@ -287,31 +284,21 @@ const useImportBulkData = ({ data, onFinish }) => {
             id: CLASSES.PAPER,
             q: title,
             exact: true,
-            returnContent: true
+            returnContent: true,
         });
 
         return paperResources.length ? paperResources[0].id : null;
     };
 
-    const cleanLabel = label => {
-        return label.replace(/^(orkg:)/, '');
-    };
+    const cleanLabel = label => label.replace(/^(orkg:)/, '');
 
-    const propertyHasMapping = value => {
-        return isString(value) && (value.startsWith('orkg:') || value.replace(/^(resource:)/, '').startsWith('orkg:'));
-    };
+    const propertyHasMapping = value => isString(value) && (value.startsWith('orkg:') || value.replace(/^(resource:)/, '').startsWith('orkg:'));
 
-    const hasMapping = value => {
-        return isString(value) && value.startsWith('orkg:');
-    };
+    const hasMapping = value => isString(value) && value.startsWith('orkg:');
 
-    const isNewResource = value => {
-        return isString(value) && value.startsWith('resource:');
-    };
+    const isNewResource = value => isString(value) && value.startsWith('resource:');
 
-    const cleanNewResource = label => {
-        return label.replace(/^(resource:)/, '');
-    };
+    const cleanNewResource = label => label.replace(/^(resource:)/, '');
 
     const handleImport = async () => {
         if (createdContributions.length > 0) {
@@ -357,7 +344,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                             if (label in newResources) {
                                 const newId = newResources[label];
                                 paper.contributions[0].values[property][index] = {
-                                    '@id': newId
+                                    '@id': newId,
                                 };
                             }
                         }
@@ -376,15 +363,15 @@ const useImportBulkData = ({ data, onFinish }) => {
                             ...state,
                             {
                                 paperId: _paper.id,
-                                contributionId: statement.object.id
-                            }
+                                contributionId: statement.object.id,
+                            },
                         ]);
                         break;
                     }
                 }
             } catch (e) {
                 console.log(e);
-                toast.error('Something went wrong while adding the paper: ' + paper.title);
+                toast.error(`Something went wrong while adding the paper: ${paper.title}`);
             }
         }
         setIsLoading(false);

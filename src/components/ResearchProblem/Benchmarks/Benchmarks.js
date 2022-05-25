@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 const Benchmarks = props => {
     const { researchProblemBenchmarksData: benchmarks, isLoadingData } = useResearchProblemBenchmarks({
-        researchProblemId: props.id
+        researchProblemId: props.id,
     });
 
     if (benchmarks.length === 0 && !isLoadingData) {
@@ -47,7 +47,7 @@ const Benchmarks = props => {
 };
 
 Benchmarks.propTypes = {
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
 };
 
 export default Benchmarks;

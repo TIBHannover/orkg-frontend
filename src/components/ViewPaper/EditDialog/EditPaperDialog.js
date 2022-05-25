@@ -47,29 +47,29 @@ const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink
         const updatedData = await editPaper({
             paper: {
                 ...paperData.paper,
-                label: title
+                label: title,
             },
             month: {
                 ...paperData.month,
-                label: month
+                label: month,
             },
             year: {
                 ...paperData.year,
-                label: year
+                label: year,
             },
             authors,
             prevAuthors: paperData.authors,
             doi: {
                 ...paperData.doi,
-                label: doi
+                label: doi,
             },
             publishedIn,
             researchField,
             url: {
                 ...paperData.url,
-                label: url
+                label: url,
             },
-            isVerified
+            isVerified,
         });
 
         if (updatedData && afterUpdate) {
@@ -82,7 +82,7 @@ const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink
             label: 'Title',
             type: 'text',
             value: title,
-            onChange: e => setTitle(e.target.value)
+            onChange: e => setTitle(e.target.value),
         },
         researchField: {
             label: 'Research field',
@@ -91,32 +91,32 @@ const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink
             onChange: value =>
                 setResearchField({
                     ...value,
-                    statementId: researchField?.statementId ?? ''
-                })
+                    statementId: researchField?.statementId ?? '',
+                }),
         },
         month: {
             label: 'Publication month',
             type: 'month',
             value: month,
-            onChange: e => setMonth(e.target.value)
+            onChange: e => setMonth(e.target.value),
         },
         year: {
             label: 'Publication year',
             type: 'year',
             value: year,
-            onChange: e => setYear(e.target.value)
+            onChange: e => setYear(e.target.value),
         },
         authors: {
             label: 'Authors',
             type: 'authors',
             value: authors,
-            onChange: setAuthors
+            onChange: setAuthors,
         },
         doi: {
             label: 'DOI',
             type: 'text',
             value: doi,
-            onChange: e => setDoi(e.target.value)
+            onChange: e => setDoi(e.target.value),
         },
         publishedIn: {
             label: 'Published in',
@@ -125,16 +125,16 @@ const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink
             onChange: value =>
                 setPublishedIn({
                     ...value,
-                    statementId: publishedIn?.statementId ?? ''
-                })
+                    statementId: publishedIn?.statementId ?? '',
+                }),
         },
         paperUrl: {
             label: 'Paper URL',
             type: 'text',
             value: url,
-            onChange: e => setUrl(e.target.value)
+            onChange: e => setUrl(e.target.value),
         },
-        ...additionalFields
+        ...additionalFields,
     };
 
     const toggleItem = item => setOpenItem(openItem !== item ? item : null);
@@ -155,9 +155,9 @@ const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink
                         background: 'rgba(215, 215, 215, 0.7)',
                         color: '#282828',
                         '& svg circle': {
-                            stroke: '#282828'
-                        }
-                    })
+                            stroke: '#282828',
+                        },
+                    }),
                 }}
             >
                 <ModalHeader toggle={toggle}>
@@ -233,17 +233,17 @@ EditPaperDialog.propTypes = {
         publishedIn: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
         researchField: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
         url: PropTypes.object,
-        isVerified: PropTypes.bool
+        isVerified: PropTypes.bool,
     }),
     afterUpdate: PropTypes.func,
     showPaperLink: PropTypes.bool,
-    additionalFields: PropTypes.object
+    additionalFields: PropTypes.object,
 };
 
 EditPaperDialog.defaultProps = {
     afterUpdate: null,
     id: null,
-    showPaperLink: false
+    showPaperLink: false,
 };
 
 export default EditPaperDialog;

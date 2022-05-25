@@ -13,7 +13,7 @@ class WikipediaSummary extends Component {
             summary: '',
             collapsed: true,
             isLoading: false,
-            loadingFailed: false
+            loadingFailed: false,
         };
     }
 
@@ -36,15 +36,13 @@ class WikipediaSummary extends Component {
         const self = this;
 
         fetch(url)
-            .then(function(response) {
-                return response.json();
-            })
+            .then(response => response.json())
             .then(function(data) {
                 if (data.extract) {
                     self.setState({
                         summary: data.extract,
                         isLoading: false,
-                        loadingFailed: false
+                        loadingFailed: false,
                     });
                 } else {
                     this.setState({ isLoading: false, loadingFailed: true });
@@ -57,7 +55,7 @@ class WikipediaSummary extends Component {
 
     handleReadMore = () => {
         this.setState(prevState => ({
-            collapsed: !prevState.collapsed
+            collapsed: !prevState.collapsed,
         }));
     };
 
@@ -82,7 +80,7 @@ class WikipediaSummary extends Component {
                     {!this.state.isLoading && this.state.loadingFailed && <div className="text-primary">Failed loading summary from Wikipedia.</div>}
                     {!this.state.isLoading && !this.state.loadingFailed && (
                         <>
-                            {this.state.collapsed && this.state.summary.length > 550 ? shortSummary + '...' : this.state.summary}
+                            {this.state.collapsed && this.state.summary.length > 550 ? `${shortSummary}...` : this.state.summary}
                             {showReadMore && (
                                 <Button color="link" className="p-0" style={{ fontSize: 'inherit' }} onClick={this.handleReadMore}>
                                     {this.state.collapsed ? 'Read more' : 'Read less'}
@@ -97,7 +95,7 @@ class WikipediaSummary extends Component {
 }
 
 WikipediaSummary.propTypes = {
-    externalResource: PropTypes.string.isRequired
+    externalResource: PropTypes.string.isRequired,
 };
 
 export default WikipediaSummary;

@@ -6,13 +6,10 @@ import { SubTitle } from 'components/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
-import Contributors from './Contributors';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import useResearchProblem from 'components/ResearchProblem/hooks/useResearchProblem';
 import useResearchProblemResearchFields from 'components/ResearchProblem/hooks/useResearchProblemResearchFields';
 import AuthorsBox from 'components/TopAuthors/AuthorsBox';
-import ResearchFieldsBox from './ResearchFieldBox/ResearchFieldsBox';
-import SuperResearchProblemBox from './SuperResearchProblemBox/SuperResearchProblemBox';
 import FeaturedMark from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
@@ -26,6 +23,9 @@ import { reverseWithSlug } from 'utils';
 import CheckClasses from 'components/CheckClasses/CheckClasses';
 import { CLASSES } from 'constants/graphSettings';
 import TitleBar from 'components/TitleBar/TitleBar';
+import SuperResearchProblemBox from 'components/ResearchProblem/SuperResearchProblemBox/SuperResearchProblemBox';
+import ResearchFieldsBox from './ResearchFieldBox/ResearchFieldsBox';
+import Contributors from './Contributors';
 
 const ResearchProblemHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -36,7 +36,7 @@ const ResearchProblemHeader = ({ id }) => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: id,
         unlisted: researchProblemData?.unlisted,
-        featured: researchProblemData?.featured
+        featured: researchProblemData?.featured,
     });
 
     return (
@@ -149,7 +149,7 @@ const ResearchProblemHeader = ({ id }) => {
                                             key={`index${subfield.id}`}
                                             to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
                                                 researchProblemId: subfield.id,
-                                                slug: subfield.label
+                                                slug: subfield.label,
                                             })}
                                         >
                                             <Badge color="light" className="me-2 mb-2">
@@ -164,7 +164,7 @@ const ResearchProblemHeader = ({ id }) => {
                                                 key={`index${subfield.id}`}
                                                 to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
                                                     researchProblemId: subfield.id,
-                                                    slug: subfield.label
+                                                    slug: subfield.label,
                                                 })}
                                             >
                                                 <Badge color="light" className="me-2 mb-2">
@@ -204,7 +204,7 @@ const ResearchProblemHeader = ({ id }) => {
 };
 
 ResearchProblemHeader.propTypes = {
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
 };
 
 export default ResearchProblemHeader;

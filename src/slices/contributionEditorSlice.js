@@ -1,10 +1,17 @@
-import { guid } from 'utils';
+import { guid, filterObjectOfStatementsByPredicateAndClass, LOCATION_CHANGE } from 'utils';
 import { createSlice } from '@reduxjs/toolkit';
 import {
     getStatementsByObjectAndPredicate,
     getStatementsBySubjectAndPredicate,
     getStatementsBySubject,
-    getStatementsBundleBySubject
+    getStatementsBundleBySubject,
+    getTemplateById,
+    getTemplatesByClass,
+    createResourceStatement,
+    deleteStatementById,
+    createLiteralStatement,
+    updateStatement,
+    deleteStatementsByIds,
 } from 'services/backend/statements';
 import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
 import { uniq, flatten, intersection, uniqBy } from 'lodash';
@@ -12,24 +19,13 @@ import {
     createResource as createResourceApi,
     getResource,
     updateResource as updateResourceApi,
-    updateResourceClasses as updateResourceClassesApi
+    updateResourceClasses as updateResourceClassesApi,
 } from 'services/backend/resources';
 import { toast } from 'react-toastify';
-import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import { createClass } from 'services/backend/classes';
 import { createLiteral as createLiteralApi, updateLiteral as updateLiteralApi } from 'services/backend/literals';
 import format from 'string-format';
-import {
-    getTemplateById,
-    getTemplatesByClass,
-    createResourceStatement,
-    deleteStatementById,
-    createLiteralStatement,
-    updateStatement,
-    deleteStatementsByIds
-} from 'services/backend/statements';
 import { createPredicate, getPredicate } from 'services/backend/predicates';
-import { LOCATION_CHANGE } from 'utils';
 
 const initialState = {
     contributions: {},
@@ -41,42 +37,40 @@ const initialState = {
     templates: {},
     classes: {},
     isLoading: false,
-    hasFailed: false
+    hasFailed: false,
 };
 
 export const contributionEditorSlice = createSlice({
     name: 'contributionEditor',
     initialState,
     reducers: {
-        contributionsAdded: (state, { payload: { contributions, statements, resources, literals, papers, properties } }) => {
-            return {
-                ...state,
-                contributions: {
-                    ...state.contributions,
-                    ...contributions
-                },
-                statements: {
-                    ...state.statements,
-                    ...statements
-                },
-                resources: {
-                    ...state.resources,
-                    ...resources
-                },
-                literals: {
-                    ...state.literals,
-                    ...literals
-                },
-                papers: {
-                    ...state.papers,
-                    ...papers
-                },
-                properties: {
-                    ...state.properties,
-                    ...properties
-                }
-            };
-        },
+        contributionsAdded: (state, { payload: { contributions, statements, resources, literals, papers, properties } }) => ({
+            ...state,
+            contributions: {
+                ...state.contributions,
+                ...contributions,
+            },
+            statements: {
+                ...state.statements,
+                ...statements,
+            },
+            resources: {
+                ...state.resources,
+                ...resources,
+            },
+            literals: {
+                ...state.literals,
+                ...literals,
+            },
+            papers: {
+                ...state.papers,
+                ...papers,
+            },
+            properties: {
+                ...state.properties,
+                ...properties,
+            },
+        }),
         setIsLoading: (state, { payload }) => {
             state.isLoading = payload;
         },
@@ -99,7 +93,7 @@ export const contributionEditorSlice = createSlice({
                 type: ENTITIES.RESOURCE,
                 contributionId,
                 propertyId,
-                objectId: resource.id
+                objectId: resource.id,
             };
             state.resources[resource.id] = resource;
         },
@@ -121,7 +115,7 @@ export const contributionEditorSlice = createSlice({
                 type: ENTITIES.LITERAL,
                 contributionId,
                 propertyId,
-                objectId: literal.id
+                objectId: literal.id,
             };
             state.literals[literal.id] = literal;
         },
@@ -135,7 +129,7 @@ export const contributionEditorSlice = createSlice({
         propertyAdded: (state, { payload }) => {
             state.properties[payload.id] = {
                 ...payload,
-                staticRowId: guid()
+                staticRowId: guid(),
             };
         },
         templateAdded: (state, { payload }) => {
@@ -143,7 +137,7 @@ export const contributionEditorSlice = createSlice({
             if (payload.class.id) {
                 state.classes[payload.class.id] = {
                     ...(state.classes[payload.class.id] ?? {}),
-                    templateIds: [...(state.classes[payload.class.id]?.templateIds ?? []), payload.id]
+                    templateIds: [...(state.classes[payload.class.id]?.templateIds ?? []), payload.id],
                 };
             }
         },
@@ -168,11 +162,11 @@ export const contributionEditorSlice = createSlice({
         },
         updateContributionClasses: (state, { payload: { resourceId, classes } }) => {
             state.contributions[resourceId].classes = classes;
-        }
+        },
     },
     extraReducers: {
-        [LOCATION_CHANGE]: () => initialState
-    }
+        [LOCATION_CHANGE]: () => initialState,
+    },
 });
 
 export const {
@@ -194,7 +188,7 @@ export const {
     templateAdded,
     propertyDeleted,
     propertyUpdated,
-    paperUpdated
+    paperUpdated,
 } = contributionEditorSlice.actions;
 
 export default contributionEditorSlice.reducer;
@@ -257,19 +251,19 @@ export const loadContributions = contributionIds => async dispatch => {
         for (const { id, predicate: property, object, Added_by } of contributionStatements.filter(s => s.subject.id === contributionId)) {
             statements[id] = {
                 contributionId,
-                Added_by: Added_by,
+                Added_by,
                 propertyId: property.id,
                 objectId: object.id,
-                type: object._class
+                type: object._class,
             };
             properties[property.id] = {
                 ...property,
-                staticRowId: guid()
+                staticRowId: guid(),
             };
             if (object._class === ENTITIES.RESOURCE) {
                 resources[object.id] = { ...object, statements: contributionStatements.filter(s => s.subject.id === object.id) };
                 objects_classes.push(
-                    contributionStatements.filter(s => s.subject.id === object.id && s.subject?.classes?.length).map(s => s.subject.classes)
+                    contributionStatements.filter(s => s.subject.id === object.id && s.subject?.classes?.length).map(s => s.subject.classes),
                 );
             }
             if (object._class === ENTITIES.LITERAL) {
@@ -289,8 +283,8 @@ export const loadContributions = contributionIds => async dispatch => {
             resources,
             literals,
             properties,
-            papers
-        })
+            papers,
+        }),
     );
 
     // create properties
@@ -306,11 +300,11 @@ export const updateLiteral = payload => async dispatch => {
     updateLiteralApi(id, label, datatype)
         .then(() => {
             dispatch(literalUpdated(payload));
-            toast.success(`Literal label updated successfully`);
+            toast.success('Literal label updated successfully');
             dispatch(setIsLoading(false));
         })
         .catch(() => {
-            toast.error(`Something went wrong while updating the literal.`);
+            toast.error('Something went wrong while updating the literal.');
             dispatch(setIsLoading(false));
         });
 };
@@ -321,11 +315,11 @@ export const updateResourceLabel = payload => async dispatch => {
     updateResourceApi(id, label)
         .then(() => {
             dispatch(resourceLabelUpdated(payload));
-            toast.success(`Resource label updated successfully`);
+            toast.success('Resource label updated successfully');
             dispatch(setIsLoading(false));
         })
         .catch(() => {
-            toast.error(`Something went wrong while updating the resource label.`);
+            toast.error('Something went wrong while updating the resource label.');
             dispatch(setIsLoading(false));
         });
 };
@@ -335,7 +329,7 @@ export const deleteStatement = id => dispatch => {
         .then(() => {
             dispatch(statementDeleted(id));
         })
-        .catch(() => toast.error(`Error deleting statement, please refresh the page`));
+        .catch(() => toast.error('Error deleting statement, please refresh the page'));
 };
 
 /**
@@ -349,7 +343,7 @@ const generateStatementsFromExternalData = data => {
     for (const statement of data) {
         statements.push({
             propertyId: statement.predicate.id,
-            value: statement.value
+            value: statement.value,
         });
     }
     return statements;
@@ -405,8 +399,8 @@ export const addValue = (entityType, value, valueClass, contributionId, property
                             statementId: newStatement.id,
                             contributionId,
                             propertyId,
-                            resource: newEntity
-                        })
+                            resource: newEntity,
+                        }),
                     );
                     break;
                 case ENTITIES.PREDICATE:
@@ -418,8 +412,8 @@ export const addValue = (entityType, value, valueClass, contributionId, property
                             statementId: newStatement.id,
                             contributionId,
                             propertyId,
-                            literal: newEntity
-                        })
+                            literal: newEntity,
+                        }),
                     );
                     break;
                 default:
@@ -428,25 +422,25 @@ export const addValue = (entityType, value, valueClass, contributionId, property
                             statementId: newStatement.id,
                             contributionId,
                             propertyId,
-                            literal: newEntity
-                        })
+                            literal: newEntity,
+                        }),
                     );
             }
             dispatch(setIsLoading(false));
         })
         .catch(e => {
             console.error(e);
-            toast.error(`Something went wrong while creating the resource.`);
+            toast.error('Something went wrong while creating the resource.');
             dispatch(setIsLoading(false));
         });
 
-    //create statements
+    // create statements
     value.statements &&
         dispatch(
             fillStatements({
                 statements: generateStatementsFromExternalData(value.statements),
-                resourceId: newEntity.id
-            })
+                resourceId: newEntity.id,
+            }),
         );
     return newEntity.id;
 };
@@ -458,7 +452,7 @@ export const createResource = ({ contributionId, propertyId, action, classes = [
         action,
         id: resourceId,
         label: resourceLabel,
-        classes
+        classes,
     });
 
     if (!resource) {
@@ -473,14 +467,14 @@ export const createResource = ({ contributionId, propertyId, action, classes = [
                     statementId: newStatement.id,
                     contributionId,
                     propertyId,
-                    resource
-                })
+                    resource,
+                }),
             );
             dispatch(setIsLoading(false));
             return resource.id;
         })
         .catch(() => {
-            toast.error(`Something went wrong while creating the resource.`);
+            toast.error('Something went wrong while creating the resource.');
             dispatch(setIsLoading(false));
         });
 };
@@ -503,13 +497,13 @@ export const createLiteral = ({ contributionId, propertyId, label, datatype }) =
                     statementId: newStatement.id,
                     contributionId,
                     propertyId,
-                    literal
-                })
+                    literal,
+                }),
             );
             dispatch(setIsLoading(false));
         })
         .catch(() => {
-            toast.error(`Something went wrong while creating the literal.`);
+            toast.error('Something went wrong while creating the literal.');
             dispatch(setIsLoading(false));
         });
 };
@@ -528,12 +522,12 @@ export const deleteProperty = ({ id, statementIds }) => dispatch => {
             dispatch(
                 propertyDeleted({
                     id,
-                    statementIds
-                })
+                    statementIds,
+                }),
             );
         })
         .catch(() => {
-            toast.error(`Error deleting statements, please refresh the page`);
+            toast.error('Error deleting statements, please refresh the page');
         });
 };
 
@@ -553,15 +547,15 @@ export const updateProperty = ({ id, statementIds, action, newId = null, newLabe
             propertyUpdated({
                 id,
                 newProperty: property,
-                statementIds
-            })
+                statementIds,
+            }),
         );
     } catch (e) {
-        toast.error(`Error updating statements, please refresh the page`);
+        toast.error('Error updating statements, please refresh the page');
     }
     dispatch(setIsLoading(false));
     // use this code instead when the backend issue is fixed: https://gitlab.com/TIBHannover/orkg/orkg-backend/-/issues/308
-    /*updateStatements(statementIds, { predicate_id: property.id })
+    /* updateStatements(statementIds, { predicate_id: property.id })
         .then(() => {
             dispatch(
                 propertyUpdated({
@@ -571,7 +565,7 @@ export const updateProperty = ({ id, statementIds, action, newId = null, newLabe
                 })
             );
         })
-        .catch(e => toast.error(`Error updating statements, please refresh the page`));*/
+        .catch(e => toast.error(`Error updating statements, please refresh the page`)); */
 };
 
 /**
@@ -588,11 +582,10 @@ export function fetchTemplateIfNeeded(templateID) {
             // Add template to the global state
             dispatch(templateAdded(template));
             return template;
-        } else {
-            // Let the calling code know there's nothing to wait for.
-            const template = getState().contributionEditor.templates[templateID];
-            return Promise.resolve(template);
         }
+        // Let the calling code know there's nothing to wait for.
+        const template = getState().contributionEditor.templates[templateID];
+        return Promise.resolve(template);
     };
 }
 
@@ -607,9 +600,8 @@ function shouldFetchTemplate(state, templateID) {
     const template = state.contributionEditor.templates[templateID];
     if (!template) {
         return true;
-    } else {
-        return false;
     }
+    return false;
 }
 
 /**
@@ -623,9 +615,8 @@ function shouldFetchTemplatesOfClass(state, classID) {
     const classObj = state.contributionEditor.classes[classID];
     if (!classObj) {
         return true;
-    } else {
-        return false;
     }
+    return false;
 }
 
 /**
@@ -641,10 +632,9 @@ export function fetchTemplatesOfClassIfNeeded(classID) {
             dispatch(setIsLoadingTemplateClass({ classID, status: false }));
             const templates = await Promise.all(templateIds.map(templateId => dispatch(fetchTemplateIfNeeded(templateId)))).catch(e => []);
             return templates;
-        } else {
-            // Let the calling code know there's nothing to wait for.
-            return Promise.resolve();
         }
+        // Let the calling code know there's nothing to wait for.
+        return Promise.resolve();
     };
 }
 
@@ -723,7 +713,7 @@ export function getComponentsByContributionID(state, contributionId, classId = n
 export function createRequiredPropertiesInContribution(contributionId) {
     return (dispatch, getState) => {
         const components = getComponentsByContributionID(getState(), contributionId);
-        //Get the list of existing predicate ids
+        // Get the list of existing predicate ids
         const existingPropertyIds = Object.keys(getState().contributionEditor.properties);
 
         // Add required properties (minOccurs >= 1)
@@ -753,8 +743,8 @@ export const updateContributionClasses = ({ contributionId, classes }) => (dispa
         dispatch(
             contributionUpdated({
                 ...resource,
-                classes: uniq(classes?.filter(c => c) ?? [])
-            })
+                classes: uniq(classes?.filter(c => c) ?? []),
+            }),
         );
 
         // Fetch templates
@@ -775,8 +765,8 @@ export const updateContributionClasses = ({ contributionId, classes }) => (dispa
  */
 
 export function fillContributionsWithTemplate({ templateID }) {
-    return async (dispatch, getState) => {
-        return dispatch(fetchTemplateIfNeeded(templateID)).then(async templateDate => {
+    return async (dispatch, getState) =>
+        dispatch(fetchTemplateIfNeeded(templateID)).then(async templateDate => {
             const contributionsIds = Object.keys(getState().contributionEditor.contributions);
             const template = templateDate;
             // Check if it's a template
@@ -784,14 +774,14 @@ export function fillContributionsWithTemplate({ templateID }) {
                 // TODO : handle the case where the template isFetching
                 if (!template.predicate || template?.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
                     // update the class of the current resource
-                    contributionsIds.map(contributionId => {
-                        return dispatch(
+                    contributionsIds.map(contributionId =>
+                        dispatch(
                             updateContributionClasses({
                                 contributionId,
-                                classes: [...getState().contributionEditor.contributions[contributionId].classes, template.class.id]
-                            })
-                        );
-                    });
+                                classes: [...getState().contributionEditor.contributions[contributionId].classes, template.class.id],
+                            }),
+                        ),
+                    );
                     // Add properties
                     for (const component of template?.components.filter(mp => mp.minOccurs >= 1)) {
                         dispatch(propertyAdded(component.property));
@@ -807,14 +797,13 @@ export function fillContributionsWithTemplate({ templateID }) {
                                 contributionId,
                                 propertyId: template.predicate.id,
                                 action: 'select-option',
-                                resourceId: instanceResourceId
-                            })
+                                resourceId: instanceResourceId,
+                            }),
                         );
                     });
                 }
             }
         });
-    };
 }
 
 /**
@@ -866,7 +855,7 @@ export function getResearchProblems(state) {
     const problems = Object.keys(state.contributionEditor.contributions).map(cId =>
         Object.values(state.contributionEditor.statements)
             .filter(s => s.contributionId === cId && s.propertyId === PREDICATES.HAS_RESEARCH_PROBLEM)
-            .map(s => s.objectId)
+            .map(s => s.objectId),
     );
     return uniq(flatten(problems));
 }
@@ -905,24 +894,25 @@ export function removeEmptyPropertiesOfClass({ classId }) {
     return (dispatch, getState) => {
         const components = flatten(
             Object.keys(getState().contributionEditor.contributions).map(contributionId =>
-                getComponentsByContributionID(getState(), contributionId, classId)
-            )
+                getComponentsByContributionID(getState(), contributionId, classId),
+            ),
         );
         const existingPropertyIdsToRemove = components.map(mp => mp.property?.id).filter(p => p);
 
         return existingPropertyIdsToRemove.map(propertyId => {
             // count statements and delete if number of statements == 0
-            const countStatements = Object.keys(getState().contributionEditor.contributions).filter(contributionId => {
-                return Object.values(getState().contributionEditor.statements).filter(
-                    s => s.propertyId === propertyId && s.contributionId === contributionId
-                ).length;
-            });
+            const countStatements = Object.keys(getState().contributionEditor.contributions).filter(
+                contributionId =>
+                    Object.values(getState().contributionEditor.statements).filter(
+                        s => s.propertyId === propertyId && s.contributionId === contributionId,
+                    ).length,
+            );
             if (countStatements?.length === 0) {
                 dispatch(
                     propertyDeleted({
                         id: propertyId,
-                        statementIds: []
-                    })
+                        statementIds: [],
+                    }),
                 );
             }
             return [];
@@ -938,14 +928,14 @@ export function removeClassFromContributionResource({ classId }) {
     return (dispatch, getState) => {
         const contributionsIds = Object.keys(getState().contributionEditor.contributions);
         return Promise.all(
-            contributionsIds.map(contributionId => {
-                return dispatch(
+            contributionsIds.map(contributionId =>
+                dispatch(
                     updateContributionClasses({
                         contributionId,
-                        classes: [...(getState().contributionEditor.contributions[contributionId].classes?.filter(c => c !== classId) ?? [])]
-                    })
-                );
-            })
+                        classes: [...(getState().contributionEditor.contributions[contributionId].classes?.filter(c => c !== classId) ?? [])],
+                    }),
+                ),
+            ),
         );
     };
 }
@@ -962,16 +952,14 @@ export function canAddValueAction(state, contributionId, propertyId) {
     const typeComponents = getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId);
     if (typeComponents?.length > 0) {
         const countStatements = Object.values(state.contributionEditor.statements).filter(
-            s => s.propertyId === propertyId && s.contributionId === contributionId
+            s => s.propertyId === propertyId && s.contributionId === contributionId,
         ).length;
         if (typeComponents[0].maxOccurs && countStatements >= parseInt(typeComponents[0].maxOccurs)) {
             return false;
-        } else {
-            return true;
         }
-    } else {
         return true;
     }
+    return true;
 }
 
 /**
@@ -990,9 +978,8 @@ export function canDeletePropertyAction(state, propertyId) {
                 if (typeComponents?.length > 0) {
                     if (typeComponents[0].minOccurs >= 1) {
                         return false;
-                    } else {
-                        return true;
                     }
+                    return true;
                 }
                 return true;
             })
@@ -1027,9 +1014,8 @@ export function generatedFormattedLabel(resource, labelFormat) {
     }
     if (Object.keys(valueObject).length > 0) {
         return format(labelFormat, valueObject);
-    } else {
-        return resource.label;
     }
+    return resource.label;
 }
 
 /**
@@ -1044,8 +1030,8 @@ export function updateResourceStatementsAction(resourceId) {
             dispatch(
                 resourceStatementsUpdated({
                     id: resourceId,
-                    resource: { ...resource, statements }
-                })
+                    resource: { ...resource, statements },
+                }),
             );
             // load templates
             resource?.classes?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));

@@ -30,7 +30,7 @@ const Save = props => {
         paperPublicationMonth: null,
         paperPublicationYear: null,
         doi: null,
-        publishedIn: null
+        publishedIn: null,
     });
 
     const handleSave = async () => {
@@ -57,12 +57,12 @@ const Save = props => {
             if (!(PREDICATES.CONTAINS in contributionStatements)) {
                 contributionStatements[PREDICATES.CONTAINS] = [
                     {
-                        '@id': resource.id
-                    }
+                        '@id': resource.id,
+                    },
                 ];
             } else {
                 contributionStatements[PREDICATES.CONTAINS].push({
-                    '@id': resource.id
+                    '@id': resource.id,
                 });
             }
         }
@@ -80,12 +80,12 @@ const Save = props => {
             contributions: [
                 {
                     name: 'Contribution',
-                    values: contributionStatements
-                }
-            ]
+                    values: contributionStatements,
+                },
+            ],
         };
 
-        const savedPaper = await saveFullPaper({ paper: paper }, true);
+        const savedPaper = await saveFullPaper({ paper }, true);
 
         setIsLoading(false);
         setPaperId(savedPaper.id);
@@ -127,7 +127,7 @@ const Save = props => {
                         paperPublicationMonth,
                         paperPublicationYear,
                         doi,
-                        publishedIn
+                        publishedIn,
                     });
                     setDoiIsFetching(false);
                 }
@@ -213,7 +213,7 @@ const Save = props => {
 
 Save.propTypes = {
     toggle: PropTypes.func.isRequired,
-    isOpen: PropTypes.bool.isRequired
+    isOpen: PropTypes.bool.isRequired,
 };
 
 export default Save;

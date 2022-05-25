@@ -101,7 +101,7 @@ const AddResource = () => {
         if (action === 'create-option') {
             const foundIndex = selected.findIndex(x => x.__isNew__);
             const newClass = await ConfirmClass({
-                label: selected[foundIndex].label
+                label: selected[foundIndex].label,
             });
             if (newClass) {
                 const foundIndex = selected.findIndex(x => x.__isNew__);
