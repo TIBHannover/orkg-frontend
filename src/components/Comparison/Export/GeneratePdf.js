@@ -22,7 +22,7 @@ const GeneratePdf = props => {
             orientation: 'l',
             unit: 'px',
             format: [headerHeightMm + bodyHeightMm + 10, headerWidthMm + 10],
-            hotfixes: ['px_scaling']
+            hotfixes: ['px_scaling'],
         });
         pdf.addImage(imgData, 'PNG', 5, 5);
 
@@ -39,7 +39,7 @@ const GeneratePdf = props => {
 };
 
 GeneratePdf.propTypes = {
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
 };
 
 export default GeneratePdf;

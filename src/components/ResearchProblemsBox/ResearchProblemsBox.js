@@ -4,7 +4,6 @@ import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
-import ResearchProblemsModal from './ResearchProblemsModal';
 import AddResearchProblem from 'components/Observatory/AddResearchProblem';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -13,6 +12,7 @@ import PropTypes from 'prop-types';
 import { reverseWithSlug } from 'utils';
 import Tippy from '@tippyjs/react';
 import { useSelector } from 'react-redux';
+import ResearchProblemsModal from './ResearchProblemsModal';
 
 const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) => {
     const { problems, isLoading, totalElements, setProblems } = useResearchProblems({ id, by, initialSort: 'combined', pageSize: 10 });
@@ -40,7 +40,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) =>
             </div>
             <div className="flex-grow-1">
                 {!isLoading && totalElements > 0 && (
-                    <div className="ps-3 pt-2">
+                    <ul className="ps-3 pt-2">
                         {problems.slice(0, 5).map(rp => (
                             <li key={`rp${rp.id}`}>
                                 <Tippy content={rp.label} disabled={rp.label?.length <= 70}>
@@ -50,9 +50,9 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) =>
                                 </Tippy>
                             </li>
                         ))}
-                    </div>
+                    </ul>
                 )}
-                {!isLoading && totalElements === 0 && <>No research problems.</>}
+                {!isLoading && totalElements === 0 && <div className="text-center my-4">No research problems yet</div>}
             </div>
             {isLoading && (
                 <div className="mt-4 mb-4">
@@ -81,7 +81,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) =>
 ResearchProblemsBox.propTypes = {
     id: PropTypes.string.isRequired,
     by: PropTypes.string.isRequired, // ResearchField || Observatory
-    organizationsList: PropTypes.array
+    organizationsList: PropTypes.array,
 };
 
 export default ResearchProblemsBox;

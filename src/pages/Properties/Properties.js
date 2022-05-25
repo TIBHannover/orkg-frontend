@@ -21,13 +21,13 @@ const Properties = () => {
             page,
             items: pageSize,
             sortBy: 'created_at',
-            desc: true
+            desc: true,
         });
 
         return {
             items,
             last,
-            totalElements
+            totalElements,
         };
     };
 

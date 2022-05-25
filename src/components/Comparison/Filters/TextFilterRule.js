@@ -15,11 +15,11 @@ const TextFilterRule = props => {
     const options = [
         ...new Set(
             Object.keys(values)
-                .reduce((prev, curr) => prev + ' ' + curr, '')
+                .reduce((prev, curr) => `${prev} ${curr}`, '')
                 .replace(/[.,/#!$%^&*;:{}=_`~()0-9]+/g, '')
                 .toLowerCase()
-                .split(' ')
-        )
+                .split(' '),
+        ),
     ]
         .filter(val => val.length > 1 && !stopwords.includes(val))
         .map(val => ({ value: val, label: val }));
@@ -64,6 +64,6 @@ const TextFilterRule = props => {
     );
 };
 TextFilterRule.propTypes = {
-    dataController: PropTypes.object.isRequired
+    dataController: PropTypes.object.isRequired,
 };
 export default TextFilterRule;

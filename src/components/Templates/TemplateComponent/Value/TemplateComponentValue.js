@@ -81,7 +81,14 @@ const TemplateComponentValue = props => {
                             <small>Cardinality</small>
                         </Label>
                         <Col sm={9}>
-                            <Input disabled={!editMode} onChange={onChangeCardinality} value={cardinality} type="select" bsSize="sm">
+                            <Input
+                                disabled={!editMode}
+                                onChange={onChangeCardinality}
+                                value={cardinality}
+                                type="select"
+                                bsSize="sm"
+                                id="cardinalityValueInput"
+                            >
                                 <option value="0,*">Zero or more [0,*]</option>
                                 <option value="0,1">Optional [0,1]</option>
                                 <option value="1,1">Exactly one [1,1]</option>
@@ -153,7 +160,7 @@ TemplateComponentValue.propTypes = {
     minOccurs: PropTypes.string.isRequired,
     maxOccurs: PropTypes.string,
     validationRules: PropTypes.object.isRequired,
-    handleClassOfPropertySelect: PropTypes.func.isRequired
+    handleClassOfPropertySelect: PropTypes.func.isRequired,
 };
 
 export default TemplateComponentValue;

@@ -72,36 +72,34 @@ const StyledAlertCookie = styled(Alert)`
     }
 `;
 
-const CloseToastButton = ({ closeToast }) => {
-    return (
-        <span
-            onClick={e => {
+const CloseToastButton = ({ closeToast }) => (
+    <span
+        onClick={e => {
+            e.stopPropagation();
+            closeToast(e);
+        }}
+        onKeyDown={e => {
+            if (e.keyCode === 13) {
                 e.stopPropagation();
                 closeToast(e);
-            }}
-            onKeyDown={e => {
-                if (e.keyCode === 13) {
-                    e.stopPropagation();
-                    closeToast(e);
-                }
-            }}
-            role="button"
-            tabIndex={0}
-        >
-            <Icon icon={faTimes} />
-        </span>
-    );
-};
+            }
+        }}
+        role="button"
+        tabIndex={0}
+    >
+        <Icon icon={faTimes} />
+    </span>
+);
 
 CloseToastButton.propTypes = {
-    closeToast: PropTypes.func
+    closeToast: PropTypes.func,
 };
 
 export default function DefaultLayout(props) {
     const location = useLocation();
     const showFooter = location.pathname !== ROUTES.PDF_TEXT_ANNOTATION && location.pathname !== ROUTES.PDF_ANNOTATION;
     const [cookies, setCookie] = useCookies(['cookieInfoDismissed']);
-    const [visible, setVisible] = useState(!Boolean(cookies.cookieInfoDismissed));
+    const [visible, setVisible] = useState(!cookies.cookieInfoDismissed);
     const { trackPageView } = useMatomo();
 
     const onDismissCookieInfo = () => {
@@ -110,10 +108,10 @@ export default function DefaultLayout(props) {
     };
 
     useOnLocationChange(() =>
-        setTimeout(function() {
+        setTimeout(() => {
             // Track page view
             trackPageView();
-        }, 1000)
+        }, 1000),
     );
 
     return (
@@ -151,5 +149,5 @@ export default function DefaultLayout(props) {
 }
 
 DefaultLayout.propTypes = {
-    children: PropTypes.array.isRequired
+    children: PropTypes.array.isRequired,
 };

@@ -26,7 +26,7 @@ const useCreatePaper = () => {
             authors: authors.map(author => ({
                 label: author.label,
                 id: author.id !== author.label ? author.id : undefined,
-                orcid: author.orcid || undefined
+                orcid: author.orcid || undefined,
             })),
             publicationMonth: month,
             publicationYear: year,
@@ -35,9 +35,9 @@ const useCreatePaper = () => {
             publishedIn,
             contributions: [
                 {
-                    name: 'Contribution 1'
-                }
-            ]
+                    name: 'Contribution 1',
+                },
+            ],
         };
 
         const createdPaper = await saveFullPaper({ paper });
@@ -50,7 +50,7 @@ const useCreatePaper = () => {
 
         return {
             paperId: createdPaper.id,
-            contributionId: contributionStatement.object.id
+            contributionId: contributionStatement.object.id,
         };
     };
 

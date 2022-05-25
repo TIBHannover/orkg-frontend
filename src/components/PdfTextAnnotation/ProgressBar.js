@@ -18,7 +18,7 @@ const ProgressBar = () => {
         return {
             label: _class.label,
             amount,
-            percentage
+            percentage,
         };
     });
 

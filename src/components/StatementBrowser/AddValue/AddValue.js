@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import useAddValue from './hooks/useAddValue';
 import { ENTITIES } from 'constants/graphSettings';
 import { useSelector } from 'react-redux';
 import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
@@ -9,12 +8,13 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import PropTypes from 'prop-types';
+import useAddValue from './hooks/useAddValue';
 
 const AddValue = props => {
     const { modal, property, setModal, isBlankNode, entityType, dialogResourceId, dialogResourceLabel, createBlankNode } = useAddValue({
         resourceId: props.resourceId,
         propertyId: props.propertyId,
-        syncBackend: props.syncBackend
+        syncBackend: props.syncBackend,
     });
 
     const [showAddValue, setShowAddValue] = useState(false);
@@ -36,7 +36,7 @@ const AddValue = props => {
             )}
             <ValueItemStyle className={showAddValue ? 'editingLabel' : ''}>
                 {!showAddValue ? (
-                    !templateIsLoading && !isAddingValue ? ( //Show loading indicator if the template is still loading
+                    !templateIsLoading && !isAddingValue ? ( // Show loading indicator if the template is still loading
                         <StatementActionButton
                             isDisabled={props.isDisabled}
                             title={!props.isDisabled ? 'Add value' : 'This property reached the maximum number of values set by template'}
@@ -74,11 +74,11 @@ AddValue.propTypes = {
     propertyId: PropTypes.string,
     resourceId: PropTypes.string,
     syncBackend: PropTypes.bool.isRequired,
-    isDisabled: PropTypes.bool.isRequired
+    isDisabled: PropTypes.bool.isRequired,
 };
 
 AddValue.defaultProps = {
-    isDisabled: false
+    isDisabled: false,
 };
 
 export default AddValue;

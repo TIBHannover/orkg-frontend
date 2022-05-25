@@ -65,7 +65,7 @@ CreateContributionModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     paperId: PropTypes.string.isRequired,
-    onCreateContribution: PropTypes.func.isRequired
+    onCreateContribution: PropTypes.func.isRequired,
 };
 
 export default CreateContributionModal;

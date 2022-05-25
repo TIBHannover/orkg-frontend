@@ -10,13 +10,11 @@ import { useDispatch } from 'react-redux';
 import Select, { components } from 'react-select';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
-const Option = ({ children, ...props }) => {
-    return <components.Option {...props}>{children}</components.Option>;
-};
+const Option = ({ children, ...props }) => <components.Option {...props}>{children}</components.Option>;
 
 Option.propTypes = {
     data: PropTypes.object.isRequired,
-    children: PropTypes.string.isRequired
+    children: PropTypes.string.isRequired,
 };
 
 const SectionType = props => {
@@ -25,7 +23,7 @@ const SectionType = props => {
     const [options, setOptions] = useState([]);
     const [typeValue, setTypeValue] = useState({
         label: null,
-        value: null
+        value: null,
     });
     const { classes } = useOntology();
     const dispatch = useDispatch();
@@ -34,39 +32,39 @@ const SectionType = props => {
         if (options.length === 0) {
             const ontologyClasses = classes.map(_class => ({
                 label: upperFirst(_class.label),
-                value: _class.iri
-                //comment: _class.comment
+                value: _class.iri,
+                // comment: _class.comment
             }));
             const additionalClasses = [
                 {
                     label: 'Section',
-                    value: 'Section'
+                    value: 'Section',
                 },
                 {
                     label: 'Resource',
                     value: CLASSES.RESOURCE_SECTION,
-                    disabled: true
+                    disabled: true,
                 },
                 {
                     label: 'Property',
                     value: CLASSES.PROPERTY_SECTION,
-                    disabled: true
+                    disabled: true,
                 },
                 {
                     label: 'Comparison',
                     value: CLASSES.COMPARISON_SECTION,
-                    disabled: true
+                    disabled: true,
                 },
                 {
                     label: 'Visualization',
                     value: CLASSES.VISUALIZATION_SECTION,
-                    disabled: true
+                    disabled: true,
                 },
                 {
                     label: 'Ontology',
                     value: CLASSES.ONTOLOGY_SECTION,
-                    disabled: true
-                }
+                    disabled: true,
+                },
             ];
             const _options = sortBy([...ontologyClasses, ...additionalClasses], 'label');
             setOptions(_options);
@@ -93,8 +91,8 @@ const SectionType = props => {
         dispatch(
             updateSectionType({
                 sectionId: props.sectionId,
-                type: selected.value
-            })
+                type: selected.value,
+            }),
         );
     };
 
@@ -139,12 +137,12 @@ SectionType.propTypes = {
     sectionId: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool,
-    disabledTooltip: PropTypes.string
+    disabledTooltip: PropTypes.string,
 };
 
 SectionType.defaultProps = {
     isDisabled: false,
-    disabledTooltip: 'The type of this section cannot be changed'
+    disabledTooltip: 'The type of this section cannot be changed',
 };
 
 export default SectionType;

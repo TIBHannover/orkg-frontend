@@ -34,7 +34,7 @@ const ValidationRules = props => {
                                 type="text"
                                 name="pattern"
                                 id="patternInput"
-                                value={props.validationRules['pattern']}
+                                value={props.validationRules.pattern}
                                 placeholder="Enter a regular expression"
                                 onChange={onChange}
                             />
@@ -55,7 +55,7 @@ const ValidationRules = props => {
                                 onChange={onChange}
                                 bsSize="sm"
                                 type="text"
-                                value={props.validationRules['min']}
+                                value={props.validationRules.min}
                                 name="min"
                                 id="minimumValueInput"
                                 placeholder="Specify the minimum value"
@@ -71,7 +71,7 @@ const ValidationRules = props => {
                                 disabled={!editMode}
                                 onChange={onChange}
                                 bsSize="sm"
-                                value={props.validationRules['max']}
+                                value={props.validationRules.max}
                                 type="text"
                                 name="max"
                                 id="maximumValueInput"
@@ -88,7 +88,7 @@ const ValidationRules = props => {
 ValidationRules.propTypes = {
     id: PropTypes.number.isRequired,
     value: PropTypes.object.isRequired,
-    validationRules: PropTypes.object
+    validationRules: PropTypes.object,
 };
 
 export default ValidationRules;

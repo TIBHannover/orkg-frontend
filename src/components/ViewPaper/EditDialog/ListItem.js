@@ -7,13 +7,13 @@ const ListItem = props => {
         statementActive: props.open,
         statementItem: true,
         selectable: true,
-        'rounded-bottom': props.isLastItem && !props.open
+        'rounded-bottom': props.isLastItem && !props.open,
     });
 
     const openBoxClass = classNames({
         listGroupOpenBorderBottom: props.isLastItem,
         'rounded-bottom': props.isLastItem,
-        'list-group-item': true
+        'list-group-item': true,
     });
 
     return (
@@ -40,12 +40,12 @@ ListItem.propTypes = {
     toggleItem: PropTypes.func.isRequired,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array, PropTypes.object]),
     isLastItem: PropTypes.bool,
-    children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
 };
 
 ListItem.defaultProps = {
     isLastItem: false,
-    value: ''
+    value: '',
 };
 
 export default ListItem;

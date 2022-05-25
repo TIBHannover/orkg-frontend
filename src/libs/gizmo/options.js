@@ -61,7 +61,7 @@ export default class Options {
                 hoverInFontColor: '#000000',
                 hoverInFontFamily: 'Helvetica,Arial,sans-serif',
                 overWriteOffset: '15',
-                hoverInFontSize: '12px'
+                hoverInFontSize: '12px',
             };
         }
         if (this._renderingStyle === 'uml') {
@@ -99,8 +99,8 @@ export default class Options {
                     hoverInStrokeColor: '#1f20ff',
                     hoverInFontColor: '#000000',
                     hoverInFontFamily: 'Helvetica,Arial,sans-serif',
-                    hoverInFontSize: '12px'
-                }
+                    hoverInFontSize: '12px',
+                },
             };
         }
     }
@@ -134,7 +134,7 @@ export default class Options {
                 link_arrowHead_strokeWidth: '2px',
                 link_arrowHead_strokeStyle: 'solid',
                 link_arrowHead_strokeColor: '#000000',
-                link_arrowHead_fillColor: '#000000'
+                link_arrowHead_fillColor: '#000000',
             };
         }
         if (this._renderingStyle === 'uml') {
@@ -165,7 +165,7 @@ export default class Options {
                 link_arrowHead_strokeWidth: '2px',
                 link_arrowHead_strokeStyle: 'solid',
                 link_arrowHead_strokeColor: '#000000',
-                link_arrowHead_fillColor: '#000000'
+                link_arrowHead_fillColor: '#000000',
             };
         }
     }
@@ -190,7 +190,7 @@ export default class Options {
                 hoverInStrokeColor: '#ff0000',
                 hoverInFontColor: '#000000',
                 hoverInFontFamily: 'Helvetica,Arial,sans-serif',
-                hoverInFontSize: '12px'
+                hoverInFontSize: '12px',
             };
         }
         if (this._renderingStyle === 'uml') {
@@ -212,7 +212,7 @@ export default class Options {
                 hoverInStrokeColor: '#ff0000',
                 hoverInFontColor: '#000000',
                 hoverInFontFamily: 'Helvetica,Arial,sans-serif',
-                hoverInFontSize: '12px'
+                hoverInFontSize: '12px',
             };
         }
     }
@@ -246,7 +246,7 @@ export default class Options {
                 hoverInStrokeColor: '#ff0000',
                 hoverInFontColor: '#000000',
                 hoverInFontFamily: 'Helvetica,Arial,sans-serif',
-                hoverInFontSize: '12px'
+                hoverInFontSize: '12px',
             };
         }
         if (this._renderingStyle === 'uml') {
@@ -277,7 +277,7 @@ export default class Options {
                 hoverInStrokeColor: '#ff0000',
                 hoverInFontColor: '#000000',
                 hoverInFontFamily: 'Helvetica,Arial,sans-serif',
-                hoverInFontSize: '12px'
+                hoverInFontSize: '12px',
             };
         }
     }

@@ -22,8 +22,8 @@ const EditSection = ({ section, handleManualSort, atIndex }) => {
             dispatch(
                 updateSectionTitle({
                     sectionId: id,
-                    title: e.target.value
-                })
+                    title: e.target.value,
+                }),
             );
         }
     };
@@ -31,7 +31,7 @@ const EditSection = ({ section, handleManualSort, atIndex }) => {
     const handleDelete = async () => {
         const confirm = await Confirm({
             title: 'Are you sure?',
-            message: 'Are you sure you want to delete this section?'
+            message: 'Are you sure you want to delete this section?',
         });
 
         if (confirm) {
@@ -43,8 +43,8 @@ const EditSection = ({ section, handleManualSort, atIndex }) => {
         dispatch(
             updateSectionMarkdown({
                 id: content.id,
-                markdown
-            })
+                markdown,
+            }),
         );
     };
 
@@ -52,8 +52,8 @@ const EditSection = ({ section, handleManualSort, atIndex }) => {
         dispatch(
             updateSectionHeadingLevel({
                 id: heading?.id,
-                level
-            })
+                level,
+            }),
         );
 
     return (
@@ -99,7 +99,7 @@ const EditSection = ({ section, handleManualSort, atIndex }) => {
 EditSection.propTypes = {
     section: PropTypes.object.isRequired,
     atIndex: PropTypes.number.isRequired,
-    handleManualSort: PropTypes.func.isRequired
+    handleManualSort: PropTypes.func.isRequired,
 };
 
 export default SortableElement(EditSection);

@@ -68,11 +68,9 @@ const PdfAnnotation = () => {
         }
     };
 
-    const getFullPageScale = () => {
-        return window.innerWidth / (DEFAULT_PAGE_WIDTH + 20);
-    };
+    const getFullPageScale = () => window.innerWidth / (DEFAULT_PAGE_WIDTH + 20);
 
-    const zoomContainerStyle = { transform: 'scale(' + zoom + ')' };
+    const zoomContainerStyle = { transform: `scale(${zoom})` };
 
     return (
         <div style={{ paddingTop: 20 }}>

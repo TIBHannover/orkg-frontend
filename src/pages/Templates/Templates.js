@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Container, Col, Row, FormGroup, Label, Form, Input, ListGroup, ListGroupItem, Alert } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import { faAngleDoubleDown, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
@@ -39,25 +39,25 @@ const Templates = () => {
      * @param {String} resourceId Resource Id
      * @param {String} predicateId Predicate Id
      */
-    const getTemplatesOfResourceId = (resourceId, predicateId) => {
-        return getStatementsByObjectAndPredicate({
+    const getTemplatesOfResourceId = (resourceId, predicateId) =>
+        getStatementsByObjectAndPredicate({
             objectId: resourceId,
-            predicateId: predicateId,
-            page: page,
+            predicateId,
+            page,
             items: pageSize,
             sortBy: 'created_at',
             desc: true,
-            returnContent: false
-        }).then(statements => {
-            // Filter statement with subjects of type Template
-            return {
-                ...statements,
-                content: statements.content
-                    .filter(statement => statement.subject.classes.includes(CLASSES.TEMPLATE))
-                    .map(st => ({ id: st.subject.id, label: st.subject.label, source: resourceId }))
-            }; // return the template Object
-        });
-    };
+            returnContent: false,
+        }).then(
+            statements =>
+                // Filter statement with subjects of type Template
+                ({
+                    ...statements,
+                    content: statements.content
+                        .filter(statement => statement.subject.classes.includes(CLASSES.TEMPLATE))
+                        .map(st => ({ id: st.subject.id, label: st.subject.label, source: resourceId })),
+                }), // return the template Object
+        );
 
     const loadMoreTemplates = (researchField, researchProblem, fClass, label) => {
         setIsNextPageLoading(true);
@@ -71,11 +71,11 @@ const Templates = () => {
         } else {
             apiCalls = getResourcesByClass({
                 id: CLASSES.TEMPLATE,
-                page: page,
+                page,
                 q: label,
                 items: pageSize,
                 sortBy: 'created_at',
-                desc: true
+                desc: true,
             });
         }
 
@@ -97,9 +97,7 @@ const Templates = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterResearchField, filterResearchProblem, filterClass, filterLabel]);
 
-    const isFilterApplied = () => {
-        return filterResearchField || filterResearchProblem || filterClass || filterLabel;
-    };
+    const isFilterApplied = () => filterResearchField || filterResearchProblem || filterClass || filterLabel;
 
     const handleResearchFieldSelect = selected => {
         setTemplates([]);
@@ -187,13 +185,12 @@ const Templates = () => {
                     >
                         ORKG help center
                     </a>
-                    .
                 </Alert>
                 <Form className="mb-3">
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label for="exampleEmail">Filter by research field</Label>
+                                <Label for="filter-research-field">Filter by research field</Label>
                                 <AutoComplete
                                     entityType={ENTITIES.RESOURCE}
                                     optionsClass={CLASSES.RESEARCH_FIELD}
@@ -205,12 +202,13 @@ const Templates = () => {
                                     allowCreate={false}
                                     isClearable
                                     autoFocus={false}
+                                    inputId="filter-research-field"
                                 />
                             </FormGroup>
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label for="examplePassword">Filter by reseach problem</Label>
+                                <Label for="filter-research-problem">Filter by research problem</Label>
                                 <AutoComplete
                                     entityType={ENTITIES.RESOURCE}
                                     optionsClass={CLASSES.PROBLEM}
@@ -222,6 +220,7 @@ const Templates = () => {
                                     allowCreate={false}
                                     isClearable
                                     autoFocus={false}
+                                    inputId="filter-research-problem"
                                 />
                             </FormGroup>
                         </Col>
@@ -229,13 +228,13 @@ const Templates = () => {
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label for="filterLabel">Filter by Label</Label>
-                                <Input value={filterLabel} type="text" name="filterLabel" onChange={handleLabelFilter} />
+                                <Label for="filter-label">Filter by label</Label>
+                                <Input value={filterLabel} type="text" id="filter-label" onChange={handleLabelFilter} />
                             </FormGroup>
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label for="examplePassword">Filter by class</Label>
+                                <Label for="filter-class">Filter by class</Label>
                                 <AutoComplete
                                     entityType={ENTITIES.CLASS}
                                     placeholder="Select or type to enter a class"
@@ -246,6 +245,7 @@ const Templates = () => {
                                     allowCreate={false}
                                     isClearable
                                     autoFocus={false}
+                                    inputId="filter-class"
                                 />
                             </FormGroup>
                         </Col>
@@ -256,9 +256,9 @@ const Templates = () => {
                 <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
                     {templates.length > 0 && (
                         <div>
-                            {templates.map(template => {
-                                return <TemplateCard key={template.id} template={template} />;
-                            })}
+                            {templates.map(template => (
+                                <TemplateCard key={template.id} template={template} />
+                            ))}
                         </div>
                     )}
                     {templates.length === 0 && !isNextPageLoading && (
@@ -283,12 +283,12 @@ const Templates = () => {
                                     : undefined
                             }
                         >
-                            <Icon icon={faAngleDoubleDown} /> Load more templates
+                            Load more templates
                         </ListGroupItem>
                     )}
                     {!hasNextPage && isLastPageReached && page > 1 && (
                         <ListGroupItem tag="div" className="text-center">
-                            You have reached the last page.
+                            You have reached the last page
                         </ListGroupItem>
                     )}
                 </ListGroup>

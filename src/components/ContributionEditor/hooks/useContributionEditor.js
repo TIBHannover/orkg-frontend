@@ -17,12 +17,12 @@ const useContributionEditor = () => {
         return without(uniq(contributionIds), undefined, null, '') ?? [];
     }, [location.search]);
 
-    const hasPreviousVersion = queryString.parse(location.search).hasPreviousVersion;
+    const { hasPreviousVersion } = queryString.parse(location.search);
 
     const handleAddContributions = ids => {
         const idsQueryString = [...getContributionIds(), ...ids].join(',');
         navigate(
-            `${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''}`
+            `${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''}`,
         );
     };
 
@@ -31,7 +31,7 @@ const useContributionEditor = () => {
             .filter(_id => _id !== id)
             .join(',');
         navigate(
-            `${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''}`
+            `${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''}`,
         );
     };
 
@@ -52,7 +52,7 @@ const useContributionEditor = () => {
 
     const Cell = useCallback(
         cell => <TableCell values={cell.value} contributionId={cell.column.id} propertyId={cell.row.original.property.id} />,
-        []
+        [],
     );
 
     const generateTableMatrix = useCallback(
@@ -71,11 +71,11 @@ const useContributionEditor = () => {
                                 ...(statements[statementId].type === 'resource'
                                     ? resources[statements[statementId].objectId]
                                     : literals[statements[statementId].objectId]),
-                                statementId
+                                statementId,
                             })),
-                            value => value?.label?.trim().toLowerCase()
-                        ) || [{}]
-                )
+                            value => value?.label?.trim().toLowerCase(),
+                        ) || [{}],
+                ),
             }));
 
             data = sortBy(data, date => date.property.label.trim().toLowerCase());
@@ -86,7 +86,7 @@ const useContributionEditor = () => {
                     accessor: 'property',
                     sticky: 'left',
                     minWidth: 250,
-                    Cell: cell => <TableHeaderRow property={cell.value} />
+                    Cell: cell => <TableHeaderRow property={cell.value} />,
                 },
                 ...Object.keys(contributions).map((contributionId, i) => {
                     const contribution = contributions[contributionId];
@@ -94,21 +94,21 @@ const useContributionEditor = () => {
                         id: contributionId,
                         Header: () => <TableHeaderColumn contribution={contribution} paper={papers[contribution.paperId]} key={contributionId} />,
                         accessor: d => d.values[i],
-                        Cell: Cell
+                        Cell,
                     };
-                })
+                }),
             ];
 
             return { data, columns };
         },
-        [Cell]
+        [Cell],
     );
 
     return {
         handleAddContributions,
         handleRemoveContribution,
         getContributionIds,
-        generateTableMatrix
+        generateTableMatrix,
     };
 };
 

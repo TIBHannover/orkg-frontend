@@ -12,7 +12,7 @@ const HistoryModal = ({ id, show, toggle }) => {
         created_by: version.creator,
         created_at: version.date,
         isSelected: id === version.id,
-        link: reverse(ROUTES.LIST, { id: version.id })
+        link: reverse(ROUTES.LIST, { id: version.id }),
     }));
 
     return <HistoryModalComponent id={id} show={show} toggle={toggle} title="Publish history" versions={versions} routeDiff={ROUTES.LIST_DIFF} />;
@@ -21,7 +21,7 @@ const HistoryModal = ({ id, show, toggle }) => {
 HistoryModal.propTypes = {
     id: PropTypes.string.isRequired,
     toggle: PropTypes.func.isRequired,
-    show: PropTypes.bool.isRequired
+    show: PropTypes.bool.isRequired,
 };
 
 export default HistoryModal;

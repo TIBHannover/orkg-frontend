@@ -5,8 +5,8 @@ import Gravatar from 'react-gravatar';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
-import StatementActionButton from '../StatementBrowser/StatementActionButton/StatementActionButton';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import StatementActionButton from '../StatementBrowser/StatementActionButton/StatementActionButton';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.dark};
@@ -34,7 +34,7 @@ function ContributorCard(props) {
                             <StatementActionButton
                                 title={option.label}
                                 icon={option.icon}
-                                key={'contributor-card-' + props.contributor.id + '-' + option.label}
+                                key={`contributor-card-${props.contributor.id}-${option.label}`}
                                 requireConfirmation={option.requireConfirmation}
                                 confirmationMessage="Are you sure?"
                                 confirmationButtons={[
@@ -42,13 +42,13 @@ function ContributorCard(props) {
                                         title: 'Delete',
                                         color: 'danger',
                                         icon: faCheck,
-                                        action: option.action
+                                        action: option.action,
                                     },
                                     {
                                         title: 'Cancel',
                                         color: 'secondary',
-                                        icon: faTimes
-                                    }
+                                        icon: faTimes,
+                                    },
                                 ]}
                             />
                         ))}
@@ -99,7 +99,7 @@ function ContributorCard(props) {
 
 ContributorCard.propTypes = {
     contributor: PropTypes.object.isRequired,
-    options: PropTypes.array
+    options: PropTypes.array,
 };
 
 export default ContributorCard;

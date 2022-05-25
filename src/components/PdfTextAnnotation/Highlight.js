@@ -45,11 +45,11 @@ const Highlight = props => {
 Highlight.propTypes = {
     position: PropTypes.object.isRequired,
     isScrolledTo: PropTypes.bool.isRequired,
-    type: PropTypes.string
+    type: PropTypes.string,
 };
 
 Highlight.defaultProps = {
-    type: null
+    type: null,
 };
 
 export default Highlight;

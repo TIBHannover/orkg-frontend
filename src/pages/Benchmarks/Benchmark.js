@@ -1,16 +1,25 @@
 import { useState, useMemo } from 'react';
-import { Container, Table, Card, CardBody, Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import {
+    Container,
+    Table,
+    Button,
+    ButtonGroup,
+    ButtonDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+    UncontrolledButtonDropdown,
+} from 'reactstrap';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import moment from 'moment';
-import { UncontrolledButtonDropdown } from 'reactstrap';
 import Chart from 'react-google-charts';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ContentLoader from 'react-content-loader';
 import { reverseWithSlug } from 'utils';
-import { SubTitle, SubtitleSeparator } from 'components/styled';
+import { SubTitle } from 'components/styled';
 import useBenchmarkDatasetResource from 'components/Benchmarks/hooks/useBenchmarkDatasetResource';
 import useBenchmarkDatasetPapers from 'components/Benchmarks/hooks/useBenchmarkDatasetPapers';
 import CodeURLsTooltip from 'components/Benchmarks/BenchmarkCard/CodeURLsTooltip';
@@ -20,9 +29,7 @@ import { useTable, useSortBy } from 'react-table';
 import TitleBar from 'components/TitleBar/TitleBar';
 
 function getTicksAxisH(data) {
-    const dateRange = data.slice(1).map(function(value, index) {
-        return value[0];
-    });
+    const dateRange = data.slice(1).map((value, index) => value[0]);
     const maxDate = new Date(Math.max.apply(null, dateRange));
     const minDate = new Date(Math.min.apply(null, dateRange));
     const ticksAxisH = [];
@@ -43,7 +50,7 @@ function getTicksAxisH(data) {
         if (year !== moment(tick).format('MMM yyyy')) {
             ticksAxisH.push({
                 v: tick,
-                f: moment(tick).format('MMM yyyy')
+                f: moment(tick).format('MMM yyyy'),
             });
             year = moment(tick).format('MMM yyyy');
         }
@@ -64,10 +71,10 @@ function Benchmark() {
         datasetProblems,
         metrics,
         selectedMetric,
-        setSelectedMetric
+        setSelectedMetric,
     } = useBenchmarkDatasetPapers({
         datasetId,
-        problemId
+        problemId,
     });
 
     const columns = useMemo(
@@ -79,37 +86,37 @@ function Benchmark() {
                     <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: cell.row.original.paper_id })} style={{ textDecoration: 'none' }}>
                         {cell.row.original.paper_title ?? '-'}
                     </Link>
-                )
+                ),
             },
             {
                 Header: 'Model',
                 accessor: 'model_name',
-                Cell: cell => cell.value ?? '-'
+                Cell: cell => cell.value ?? '-',
             },
             {
                 Header: 'Score',
                 accessor: 'score',
-                Cell: cell => cell.value ?? '-'
+                Cell: cell => cell.value ?? '-',
             },
             {
                 Header: 'Metric',
                 accessor: 'metric',
-                Cell: cell => cell.value ?? '-'
+                Cell: cell => cell.value ?? '-',
             },
             {
                 Header: 'Code',
                 accessor: 'code_urls',
                 Cell: cell => (
                     <CodeURLsTooltip id={cell.row.original.paper_id} title={cell.row.original.paper_title} urls={cell.row.original.code_urls} />
-                )
-            }
+                ),
+            },
         ],
-        []
+        [],
     );
 
     const data = useMemo(() => (benchmarkDatasetPapers && benchmarkDatasetPapers[selectedMetric] ? benchmarkDatasetPapers[selectedMetric] : []), [
         selectedMetric,
-        benchmarkDatasetPapers
+        benchmarkDatasetPapers,
     ]);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
@@ -120,12 +127,12 @@ function Benchmark() {
                 sortBy: [
                     {
                         id: 'score',
-                        desc: true
-                    }
-                ]
-            }
+                        desc: true,
+                    },
+                ],
+            },
         },
-        useSortBy
+        useSortBy,
     );
 
     const dataChart = [
@@ -141,7 +148,7 @@ function Benchmark() {
                                     parseFloat(c.score),
                                     `<b>Paper</b>: ${c.paper_title}<br /> <b>Model</b>: ${c.model_name ?? '-'}<br /> <b>Score</b>: ${
                                         c.score
-                                    }<br /> <b>Published on</b>: ${publishedOn.format('MM-YYYY')}`
+                                    }<br /> <b>Published on</b>: ${publishedOn.format('MM-YYYY')}`,
                                 ]
                               : null;
                       } catch (error) {
@@ -149,7 +156,7 @@ function Benchmark() {
                       }
                   })
                   .filter(v => v)
-            : [])
+            : []),
     ];
 
     return (
@@ -192,12 +199,9 @@ function Benchmark() {
                 <>
                     <TitleBar
                         titleAddition={
-                            <>
-                                <SubtitleSeparator />
-                                <SubTitle>
-                                    {problemData.label} on {resourceData.label}
-                                </SubTitle>
-                            </>
+                            <SubTitle>
+                                {problemData.label} on {resourceData.label}
+                            </SubTitle>
                         }
                         buttonGroup={
                             <>
@@ -238,26 +242,22 @@ function Benchmark() {
                         />
                     )}
 
-                    <Container className="p-0">
-                        <Card>
-                            <CardBody>
-                                <div>
-                                    <i>Research problem:</i>{' '}
-                                    <Link
-                                        to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problemData.id, slug: problemData.label })}
-                                        style={{ textDecoration: 'none', flex: 1 }}
-                                    >
-                                        {problemData.label}
-                                    </Link>
-                                </div>
-                                <div>
-                                    <i>Dataset:</i> {resourceData.label}
-                                </div>
+                    <Container className="p-3 box rounded">
+                        <div>
+                            <i>Research problem:</i>{' '}
+                            <Link
+                                to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problemData.id, slug: problemData.label })}
+                                style={{ textDecoration: 'none', flex: 1 }}
+                            >
+                                {problemData.label}
+                            </Link>
+                        </div>
+                        <div>
+                            <i>Dataset:</i> {resourceData.label}
+                        </div>
 
-                                <>{resourceData.description && <p className="m-0">{resourceData.description}</p>}</>
-                                {resourceData.url && <div className="mb-4">{resourceData.url}</div>}
-                            </CardBody>
-                        </Card>
+                        <>{resourceData.description && <p className="m-0">{resourceData.description}</p>}</>
+                        {resourceData.url && <div className="mb-4">{resourceData.url}</div>}
                     </Container>
                 </>
             )}
@@ -279,7 +279,7 @@ function Benchmark() {
                                             <DropdownItem
                                                 key={index}
                                                 disabled={isLoading}
-                                                onClick={() => navigate(reverse(ROUTES.BENCHMARK, { datasetId: datasetId, problemId: rp.id }))}
+                                                onClick={() => navigate(reverse(ROUTES.BENCHMARK, { datasetId, problemId: rp.id }))}
                                             >
                                                 {rp.label}
                                             </DropdownItem>
@@ -294,7 +294,7 @@ function Benchmark() {
                                         <DropdownToggle caret size="sm" color="secondary">
                                             {selectedMetric}
                                         </DropdownToggle>
-                                        <DropdownMenu>
+                                        <DropdownMenu end>
                                             {metrics.map((m, index) => (
                                                 <DropdownItem key={index} disabled={isLoading} onClick={() => setSelectedMetric(m)}>
                                                     {m}
@@ -307,133 +307,118 @@ function Benchmark() {
                         </div>
                     </Container>
 
-                    <Container className="p-0">
-                        <Card>
-                            <CardBody>
-                                {dataChart?.length > 1 && (
-                                    <Chart
-                                        width="100%"
-                                        height={300}
-                                        chartType="ScatterChart"
-                                        loader={<div>Loading Chart</div>}
-                                        data={dataChart}
-                                        options={{
-                                            hAxis: { title: 'Year', format: 'MMM yyyy', ticks: getTicksAxisH(dataChart) },
-                                            vAxis: { title: selectedMetric },
-                                            legend: true,
-                                            tooltip: { isHtml: true },
-                                            pointSize: 7,
-                                            trendlines: {
-                                                0: { labelInLegend: 'Linear trendline', tooltip: false, type: 'linear', visibleInLegend: true }
+                    <Container className="p-3 box rounded ">
+                        {dataChart?.length > 1 && (
+                            <Chart
+                                width="100%"
+                                height={300}
+                                chartType="ScatterChart"
+                                loader={<div>Loading Chart</div>}
+                                data={dataChart}
+                                options={{
+                                    hAxis: { title: 'Year', format: 'MMM yyyy', ticks: getTicksAxisH(dataChart) },
+                                    vAxis: { title: selectedMetric },
+                                    legend: true,
+                                    tooltip: { isHtml: true },
+                                    pointSize: 7,
+                                    trendlines: {
+                                        0: { labelInLegend: 'Linear trendline', tooltip: false, type: 'linear', visibleInLegend: true },
+                                    },
+                                }}
+                                chartEvents={[
+                                    {
+                                        eventName: 'select',
+                                        callback: ({ chartWrapper }) => {
+                                            const chart = chartWrapper.getChart();
+                                            const selection = chart.getSelection();
+                                            if (selection.length === 1) {
+                                                const [selectedItem] = selection;
+                                                const { row } = selectedItem;
+                                                navigate(
+                                                    reverse(ROUTES.VIEW_PAPER, {
+                                                        resourceId: benchmarkDatasetPapers[selectedMetric][row].paper_id,
+                                                    }),
+                                                );
                                             }
-                                        }}
-                                        chartEvents={[
-                                            {
-                                                eventName: 'select',
-                                                callback: ({ chartWrapper }) => {
-                                                    const chart = chartWrapper.getChart();
-                                                    const selection = chart.getSelection();
-                                                    if (selection.length === 1) {
-                                                        const [selectedItem] = selection;
-                                                        const { row } = selectedItem;
-                                                        navigate(
-                                                            reverse(ROUTES.VIEW_PAPER, {
-                                                                resourceId: benchmarkDatasetPapers[selectedMetric][row].paper_id
-                                                            })
-                                                        );
-                                                    }
-                                                }
-                                            }
-                                        ]}
-                                    />
-                                )}
-                                {dataChart?.length <= 1 && 'No data to plot!'}
-                            </CardBody>
-                        </Card>
+                                        },
+                                    },
+                                ]}
+                            />
+                        )}
+                        {dataChart?.length <= 1 && 'No data to plot!'}
                     </Container>
                     <TitleBar
                         titleSize="h5"
                         titleAddition={
-                            <>
-                                <SubtitleSeparator />
-                                <SubTitle className="mb-0">
-                                    <small className="text-muted mb-0 text-small">Data imported from paperswithcode.com</small>
-                                </SubTitle>
-                            </>
+                            <SubTitle className="mb-0">
+                                <small className="text-muted mb-0 text-small">Data imported from paperswithcode.com</small>
+                            </SubTitle>
                         }
                     >
                         Papers
                     </TitleBar>
-                    <Container className="p-0">
-                        <Card>
-                            {rows?.length > 0 && (
-                                <Table {...getTableProps()}>
-                                    <thead>
-                                        {headerGroups.map(headerGroup => (
-                                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                                {headerGroup.headers.map(column => (
-                                                    <th key={column.getHeaderProps(column.getSortByToggleProps()).key}>
-                                                        <div className="d-flex" {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                                            {column.render('Header')}
-                                                            {/* Add a sort direction indicator */}
-                                                            <div className="ms-1">
-                                                                {column.isSorted ? (
-                                                                    column.isSortedDesc ? (
-                                                                        <Icon icon={faSortUp} className="ms-1" />
-                                                                    ) : (
-                                                                        <Icon icon={faSortDown} />
-                                                                    )
+                    <Container className="p-0 rounded box">
+                        {rows?.length > 0 && (
+                            <Table {...getTableProps()}>
+                                <thead>
+                                    {headerGroups.map(headerGroup => (
+                                        <tr {...headerGroup.getHeaderGroupProps()}>
+                                            {headerGroup.headers.map(column => (
+                                                <th key={column.getHeaderProps(column.getSortByToggleProps()).key}>
+                                                    <div className="d-flex" {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                                        {column.render('Header')}
+                                                        {/* Add a sort direction indicator */}
+                                                        <div className="ms-1">
+                                                            {column.isSorted ? (
+                                                                column.isSortedDesc ? (
+                                                                    <Icon icon={faSortUp} className="ms-1" />
                                                                 ) : (
-                                                                    ''
-                                                                )}
-                                                            </div>
+                                                                    <Icon icon={faSortDown} />
+                                                                )
+                                                            ) : (
+                                                                ''
+                                                            )}
                                                         </div>
-                                                    </th>
-                                                ))}
-                                            </tr>
-                                        ))}
-                                    </thead>
-                                    <tbody {...getTableBodyProps()}>
-                                        {rows?.length > 0 &&
-                                            rows.map((row, i) => {
-                                                prepareRow(row);
-                                                return (
-                                                    <tr {...row.getRowProps()}>
-                                                        {row.cells.map(cell => {
-                                                            return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-                                                        })}
-                                                    </tr>
-                                                );
-                                            })}
-                                    </tbody>
-                                </Table>
-                            )}
+                                                    </div>
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </thead>
+                                <tbody {...getTableBodyProps()}>
+                                    {rows?.length > 0 &&
+                                        rows.map((row, i) => {
+                                            prepareRow(row);
+                                            return (
+                                                <tr {...row.getRowProps()}>
+                                                    {row.cells.map(cell => (
+                                                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                                    ))}
+                                                </tr>
+                                            );
+                                        })}
+                                </tbody>
+                            </Table>
+                        )}
 
-                            {!rows?.length && (
-                                <div className="p-4">
-                                    No papers that addresses {problemData.label} on {resourceData.label} yet!
-                                    <div className="pt-3">
-                                        Add your benchmark dataset and its evaluations to the ORKG by following the steps found in the{' '}
-                                        <a
-                                            href="https://www.orkg.org/orkg/help-center/article/21/Benchmarks"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            ORKG help center
-                                        </a>
-                                        .
-                                    </div>
+                        {!rows?.length && (
+                            <div className="p-4">
+                                No papers that addresses {problemData.label} on {resourceData.label} yet.
+                                <div className="pt-3">
+                                    Add your benchmark dataset and its evaluations to the ORKG by following the steps found in the{' '}
+                                    <a href="https://www.orkg.org/orkg/help-center/article/21/Benchmarks" target="_blank" rel="noopener noreferrer">
+                                        ORKG help center
+                                    </a>
+                                    .
                                 </div>
-                            )}
-                        </Card>
+                            </div>
+                        )}
                     </Container>
                 </div>
             )}
             {!isLoadingPapers && isFailedLoadingPapers && (
-                <Container className="p-0 mt-3">
-                    <Card>
-                        <div className="text-center mt-4 mb-4">Failed loading benchmark papers.</div>
-                    </Card>
+                <Container className="p-0 mt-3 rounded box">
+                    <div className="text-center mt-4 mb-4">Failed loading benchmark papers.</div>
                 </Container>
             )}
         </div>

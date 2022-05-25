@@ -3,9 +3,7 @@ import { CardTitle } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import useContributors from 'components/TopContributors/hooks/useContributors';
-import ContributorsDropdownFilter from './ContributorsDropdownFilter';
 import ContentLoader from 'react-content-loader';
-import ContributorsModal from './ContributorsModal';
 import ROUTES from 'constants/routes.js';
 import { StyledGravatar, StyledDotGravatar, ContributorsAvatars } from 'components/styled';
 import Tippy from '@tippyjs/react';
@@ -13,13 +11,15 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
+import ContributorsModal from './ContributorsModal';
+import ContributorsDropdownFilter from './ContributorsDropdownFilter';
 
 const Contributors = ({ researchFieldId }) => {
     const { contributors, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useContributors({
         researchFieldId,
         pageSize: 19,
         initialSort: 'all',
-        includeSubFields: true
+        includeSubFields: true,
     });
     const [openModal, setOpenModal] = useState(false);
 
@@ -127,7 +127,7 @@ const Contributors = ({ researchFieldId }) => {
 };
 
 Contributors.propTypes = {
-    researchFieldId: PropTypes.string.isRequired
+    researchFieldId: PropTypes.string.isRequired,
 };
 
 export default Contributors;

@@ -56,7 +56,7 @@ const RelatedFigures = props => {
             }
             // Fetch the data of each figure
             getStatementsBySubjects({
-                ids: props.figureStatements.map(resource => resource.id)
+                ids: props.figureStatements.map(resource => resource.id),
             })
                 .then(figuresStatements => {
                     setFigures(getRelatedFiguresData(figuresStatements));
@@ -72,17 +72,17 @@ const RelatedFigures = props => {
 
     const scrollTo = useCallback(
         header => {
-            const hash = location.hash;
+            const { hash } = location;
             const id = isString(hash) ? hash.replace('#', '') : null;
             if (!header || header.id !== id) {
                 return;
             }
             window.scrollTo({
                 behavior: 'smooth',
-                top: header.offsetTop - 90
+                top: header.offsetTop - 90,
             });
         },
-        [location.hash]
+        [location.hash],
     );
 
     if (props.figureStatements.length > 0) {
@@ -100,7 +100,7 @@ const RelatedFigures = props => {
                                     width="100%"
                                     src={figure.src}
                                     alt={`figure #${figure.figureId}`}
-                                    className={location.hash === '#' + figure.figureId ? 'blink-figure' : ''}
+                                    className={location.hash === `#${figure.figureId}` ? 'blink-figure' : ''}
                                 />
                             </CardStyled>
                         </div>
@@ -127,11 +127,11 @@ const RelatedFigures = props => {
 };
 
 RelatedFigures.propTypes = {
-    figureStatements: PropTypes.array.isRequired
+    figureStatements: PropTypes.array.isRequired,
 };
 
 RelatedFigures.defaultProps = {
-    figureStatements: []
+    figureStatements: [],
 };
 
 export default RelatedFigures;

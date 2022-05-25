@@ -17,7 +17,7 @@ const ScrollToTop = props => {
             ROUTES.FEATURED_COMPARISONS,
             ROUTES.REVIEW,
             ROUTES.LIST,
-            ROUTES.RESEARCH_FIELD
+            ROUTES.RESEARCH_FIELD,
         ];
         let preventScrollTop = false;
 

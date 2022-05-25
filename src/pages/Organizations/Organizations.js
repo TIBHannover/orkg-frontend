@@ -18,7 +18,7 @@ class Organizations extends Component {
 
         this.state = {
             organizations: [],
-            isNextPageLoading: false
+            isNextPageLoading: false,
         };
     }
 
@@ -34,17 +34,17 @@ class Organizations extends Component {
                 if (organizationsData.length > 0) {
                     this.setState({
                         organizations: organizationsData,
-                        isNextPageLoading: false
+                        isNextPageLoading: false,
                     });
                 } else {
                     this.setState({
-                        isNextPageLoading: false
+                        isNextPageLoading: false,
                     });
                 }
             })
             .catch(error => {
                 this.setState({
-                    isNextPageLoading: false
+                    isNextPageLoading: false,
                 });
             });
     };
@@ -63,7 +63,7 @@ class Organizations extends Component {
                                 className="btn btn-secondary btn-sm flex-shrink-0"
                                 to={ROUTES.ADD_ORGANIZATION}
                             >
-                                <Icon icon={faPlus} /> Create new organization
+                                <Icon icon={faPlus} /> Create organization
                             </RequireAuthentication>
                         )
                     }
@@ -73,13 +73,13 @@ class Organizations extends Component {
                 <Container className="box rounded pt-4 pb-4 ps-5 pe-5 clearfix">
                     {this.state.organizations.length > 0 && (
                         <div className="mt-3 row justify-content-center">
-                            {this.state.organizations.map(organization => {
-                                return <OrganizationCard key={organization.display_id} organization={{ ...organization }} />;
-                            })}
+                            {this.state.organizations.map(organization => (
+                                <OrganizationCard key={organization.display_id} organization={{ ...organization }} />
+                            ))}
                         </div>
                     )}
                     {this.state.organizations.length === 0 && !this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">No organizations yet!</div>
+                        <div className="text-center mt-4 mb-4">No organizations yet</div>
                     )}
                     {this.state.isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">
@@ -93,19 +93,19 @@ class Organizations extends Component {
 }
 
 const mapStateToProps = state => ({
-    user: state.auth.user
+    user: state.auth.user,
 });
 
 const mapDispatchToProps = dispatch => ({
-    openAuthDialog: payload => dispatch(openAuthDialog(payload))
+    openAuthDialog: payload => dispatch(openAuthDialog(payload)),
 });
 
 Organizations.propTypes = {
     openAuthDialog: PropTypes.func.isRequired,
-    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
 };
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(Organizations);

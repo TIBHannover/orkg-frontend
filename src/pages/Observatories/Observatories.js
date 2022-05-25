@@ -5,9 +5,7 @@ import { getAllObservatories, getObservatoriesStats } from 'services/backend/obs
 import { getAllOrganizations } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { useLocation } from 'react-router-dom';
-import { Container } from 'reactstrap';
-import { Col, Row } from 'reactstrap';
-import { TabContent, TabPane, NavLink } from 'reactstrap';
+import { Container, Col, Row, TabContent, TabPane, NavLink } from 'reactstrap';
 import styled from 'styled-components';
 import { groupBy } from 'lodash';
 import TitleBar from 'components/TitleBar/TitleBar';
@@ -173,7 +171,7 @@ const Observatories = () => {
                         </Col>
                     </Row>
                 )}
-                {Object.keys(observatories).length === 0 && !isNextPageLoading && <div className="text-center mt-4 mb-4">No observatories yet!</div>}
+                {Object.keys(observatories).length === 0 && !isNextPageLoading && <div className="text-center mt-4 mb-4">No observatories yet</div>}
                 {failedLoading && !isNextPageLoading && (
                     <div className="text-center mt-4 mb-4">Something went wrong while loading observatories!</div>
                 )}

@@ -12,6 +12,7 @@ import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import RDFDataCube from 'components/RDFDataCube/RDFDataCube';
 import { toast } from 'react-toastify';
 import InfoTippy from './InfoTippy';
+
 const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
     const value = useSelector(state => state.statementBrowser.values.byId[id]);
     const preferences = useSelector(state => state.statementBrowser.preferences);
@@ -24,28 +25,28 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
 
     const handleDeleteValue = async () => {
         if (syncBackend) {
-            dispatch(setIsDeletingValue({ id: id, status: true }));
+            dispatch(setIsDeletingValue({ id, status: true }));
             deleteStatementById(value.statementId)
                 .then(() => {
-                    //dispatch(setIsDeletingValue({ id: id, status: false }));
+                    // dispatch(setIsDeletingValue({ id: id, status: false }));
                     toast.success('Statement deleted successfully');
                     dispatch(
                         deleteValue({
-                            id: id,
-                            propertyId: value.propertyId
-                        })
+                            id,
+                            propertyId: value.propertyId,
+                        }),
                     );
                 })
                 .catch(() => {
-                    dispatch(setIsDeletingValue({ id: id, status: false }));
+                    dispatch(setIsDeletingValue({ id, status: false }));
                     toast.error('Something went wrong while deleting the value.');
                 });
         } else {
             dispatch(
                 deleteValue({
-                    id: id,
-                    propertyId: value.propertyId
-                })
+                    id,
+                    propertyId: value.propertyId,
+                }),
             );
         }
     };
@@ -74,7 +75,7 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                                     testId={id}
                                     icon={faPen}
                                     isDisabled={value.isDeleting}
-                                    action={hasFormattedLabel ? handleOnClick : () => dispatch(toggleEditValue({ id: id }))}
+                                    action={hasFormattedLabel ? handleOnClick : () => dispatch(toggleEditValue({ id }))}
                                 />
                             )}
 
@@ -116,13 +117,13 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                                         title: 'Delete',
                                         color: 'danger',
                                         icon: faCheck,
-                                        action: handleDeleteValue
+                                        action: handleDeleteValue,
                                     },
                                     {
                                         title: 'Cancel',
                                         color: 'secondary',
-                                        icon: faTimes
-                                    }
+                                        icon: faTimes,
+                                    },
                                 ]}
                             />
                         )}
@@ -132,7 +133,7 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                         )}
                     </>
                 )}
-                {preferences['showStatementInfo'] && <InfoTippy id={id} />}
+                {preferences.showStatementInfo && <InfoTippy id={id} />}
             </div>
         </>
     );
@@ -142,7 +143,7 @@ ValueItemOptions.propTypes = {
     id: PropTypes.string.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
-    handleOnClick: PropTypes.func
+    handleOnClick: PropTypes.func,
 };
 
 export default ValueItemOptions;

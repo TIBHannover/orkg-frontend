@@ -18,7 +18,7 @@ ClassRedirect.propTypes = {
     /** Classes of the resource */
     classes: PropTypes.array,
     targetClass: PropTypes.string.isRequired,
-    resourceId: PropTypes.string.isRequired
+    resourceId: PropTypes.string.isRequired,
 };
 
 export default ClassRedirect;

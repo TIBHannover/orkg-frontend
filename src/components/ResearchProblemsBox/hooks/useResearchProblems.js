@@ -23,46 +23,46 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
             if (sort === 'combined') {
                 // in case of combined sort we list 50% featured and 50% newest items (new not featured)
                 const newService = apiFunc({
-                    id: id,
-                    page: page,
+                    id,
+                    page,
                     items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     ...(by === 'ResearchField' ? { subfields: includeSubFields } : {}),
                     ...(by === 'Observatory' ? { classes: [CLASSES.PROBLEM] } : {}),
                     featured: false,
-                    unlisted: false
+                    unlisted: false,
                 });
                 const featuredService = apiFunc({
-                    id: id,
-                    page: page,
+                    id,
+                    page,
                     items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     ...(by === 'ResearchField' ? { subfields: includeSubFields } : {}),
                     ...(by === 'Observatory' ? { classes: [CLASSES.PROBLEM] } : {}),
                     featured: true,
-                    unlisted: false
+                    unlisted: false,
                 });
                 problemsService = Promise.all([newService, featuredService]).then(([newC, featuredC]) => {
                     const combinedC = mergeAlternate(newC.content, featuredC.content);
                     return {
                         content: combinedC,
                         totalElements: page === 0 ? newC.totalElements + featuredC.totalElements : total,
-                        last: newC.last && featuredC.last
+                        last: newC.last && featuredC.last,
                     };
                 });
             } else {
                 problemsService = apiFunc({
-                    id: id,
-                    page: page,
+                    id,
+                    page,
                     items: pageSize,
                     sortBy: 'created_at',
                     desc: true,
                     ...(by === 'ResearchField' ? { subfields: includeSubFields } : {}),
                     ...(by === 'Observatory' ? { classes: [CLASSES.PROBLEM] } : {}),
                     featured: sort === 'featured' ? true : null,
-                    unlisted: sort === 'unlisted' ? true : false
+                    unlisted: sort === 'unlisted',
                 });
             }
             problemsService
@@ -78,10 +78,10 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
                     setProblems([]);
                     setIsLoading(false);
                     setHasNextPage(false);
-                    setIsLastPageReached(page > 1 ? true : false);
+                    setIsLastPageReached(page > 1);
                 });
         },
-        [sort, id, pageSize, by, includeSubFields]
+        [sort, id, pageSize, by, includeSubFields],
     );
 
     // reset resources when the researchFieldId has changed
@@ -115,7 +115,7 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
         setProblems,
         handleLoadMore,
         setIncludeSubFields,
-        setSort
+        setSort,
     };
 }
 export default useResearchProblems;

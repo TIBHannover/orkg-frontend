@@ -36,65 +36,65 @@ const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
         label: 'Paper',
         route: ROUTES.VIEW_PAPER,
-        routeParams: 'resourceId'
+        routeParams: 'resourceId',
     },
     [CLASSES.PROBLEM]: {
         label: 'Research problem',
         route: ROUTES.RESEARCH_PROBLEM,
         routeParams: 'researchProblemId',
-        hasSlug: true
+        hasSlug: true,
     },
     [CLASSES.COMPARISON]: {
         label: 'Comparison',
         route: ROUTES.COMPARISON,
-        routeParams: 'comparisonId'
+        routeParams: 'comparisonId',
     },
     [CLASSES.AUTHOR]: {
         label: 'Author',
         route: ROUTES.AUTHOR_PAGE,
-        routeParams: 'authorId'
+        routeParams: 'authorId',
     },
     [CLASSES.RESEARCH_FIELD]: {
         label: 'Research field',
         route: ROUTES.RESEARCH_FIELD,
         routeParams: 'researchFieldId',
-        hasSlug: true
+        hasSlug: true,
     },
     [CLASSES.VENUE]: {
         label: 'Venue',
         route: ROUTES.VENUE_PAGE,
-        routeParams: 'venueId'
+        routeParams: 'venueId',
     },
     [CLASSES.TEMPLATE]: {
         label: 'Template',
         route: ROUTES.TEMPLATE,
-        routeParams: 'id'
+        routeParams: 'id',
     },
     [CLASSES.CONTRIBUTION]: {
         label: 'Contribution',
         route: ROUTES.CONTRIBUTION,
-        routeParams: 'id'
+        routeParams: 'id',
     },
     [CLASSES.SMART_REVIEW]: {
         label: 'Review',
         route: ROUTES.REVIEW,
-        routeParams: 'id'
+        routeParams: 'id',
     },
     [CLASSES.SMART_REVIEW_PUBLISHED]: {
         label: 'Review',
         route: ROUTES.REVIEW,
-        routeParams: 'id'
+        routeParams: 'id',
     },
     [CLASSES.LITERATURE_LIST]: {
         label: 'List',
         route: ROUTES.LIST,
-        routeParams: 'id'
+        routeParams: 'id',
     },
     [CLASSES.LITERATURE_LIST_PUBLISHED]: {
         label: 'List',
         route: ROUTES.LIST,
-        routeParams: 'id'
-    }
+        routeParams: 'id',
+    },
 };
 function Resource(props) {
     const params = useParams();
@@ -120,7 +120,7 @@ function Resource(props) {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: params.id,
         unlisted: resource?.unlisted,
-        featured: resource?.featured
+        featured: resource?.featured,
     });
 
     useEffect(() => {
@@ -226,7 +226,7 @@ function Resource(props) {
                                         tag={Link}
                                         to={reverseWithSlug(dedicatedLink.route, {
                                             [dedicatedLink.routeParams]: params.id,
-                                            slug: dedicatedLink.hasSlug ? resource.label : undefined
+                                            slug: dedicatedLink.hasSlug ? resource.label : undefined,
                                         })}
                                         style={{ marginRight: 2 }}
                                     >
@@ -252,7 +252,7 @@ function Resource(props) {
                                 ) : (
                                     <Tippy
                                         hideOnClick={false}
-                                        interactive={resource.classes.find(c => c.id === CLASSES.RESEARCH_FIELD) ? true : false}
+                                        interactive={!!resource.classes.find(c => c.id === CLASSES.RESEARCH_FIELD)}
                                         content={
                                             env('PWC_USER_ID') === createdBy ? (
                                                 'This resource cannot be edited because it is from an external source. Our provenance feature is in active development.'
@@ -331,7 +331,7 @@ function Resource(props) {
 
                         <ItemMetadata item={resource} showCreatedAt={true} showCreatedBy={true} />
                         <hr />
-                        {/*Adding Visualization Component here */}
+                        {/* Adding Visualization Component here */}
                         {hasVisualizationModelForGDC && (
                             <div className="mb-4">
                                 <GDCVisualizationRenderer model={visualizationModelForGDC} />
@@ -361,14 +361,14 @@ function Resource(props) {
 }
 
 Resource.propTypes = {
-    resetStatementBrowser: PropTypes.func.isRequired
+    resetStatementBrowser: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
-    resetStatementBrowser: data => dispatch(resetStatementBrowser())
+    resetStatementBrowser: data => dispatch(resetStatementBrowser()),
 });
 
 export default connect(
     null,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(Resource);

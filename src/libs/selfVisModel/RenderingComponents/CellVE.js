@@ -2,6 +2,11 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from 'reactstrap';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import { validateCellMapping } from 'libs/selfVisModel/ValidateCellMapping.js';
+import { usePrevious } from 'react-use';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faUndo } from '@fortawesome/free-solid-svg-icons';
+import Tippy from '@tippyjs/react';
+import PropTypes from 'prop-types';
 import {
     PropertyCellEditor,
     ContributionCell,
@@ -12,19 +17,14 @@ import {
     PropertyCellInput,
     ContributionCellInput,
     ValueCellInput,
-    TippyContainer
+    TippyContainer,
 } from './styledComponents';
-import { usePrevious } from 'react-use';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUndo } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippyjs/react';
-import PropTypes from 'prop-types';
 
 const CellVE = props => {
     const [selfVisModel] = useState(new SelfVisDataModel());
     const [renderingItem, setRenderingItem] = useState('text');
     const [cellLabelValue, setCellLabelValue] = useState(props.data && props.data.label ? props.data.label : '');
-    const [cellValueIsValid, setCellValueIsValid] = useState(props.data && props.data.cellValueIsValid ? true : false);
+    const [cellValueIsValid, setCellValueIsValid] = useState(!!(props.data && props.data.cellValueIsValid));
     const [errorMessage, setErrorMessage] = useState(null);
     const prevCellValueIsValid = usePrevious(cellValueIsValid);
     const inputRefs = useRef(null);
@@ -56,7 +56,7 @@ const CellVE = props => {
             // only validate based on the value;
             // get the mapper description of that thing;
             let isValid = false;
-            let err = undefined;
+            let err;
             if (mapper) {
                 // add handler for default mapper selector (if no mapper is selected remove col from gdc model and set validationFlag to false)
                 if (mapper === 'Select Mapper') {
@@ -64,7 +64,7 @@ const CellVE = props => {
                     setCellValueIsValid(false);
                 } else {
                     const { error } = validateCellMapping(mapper, props.data.label);
-                    let errorMessage = undefined;
+                    let errorMessage;
                     if (error) {
                         errorMessage = error.message;
                         isValid = false;
@@ -94,13 +94,8 @@ const CellVE = props => {
                 {cellValueIsValid === true
                     ? props.data.label === props.data.originalLabel
                         ? props.data.label ?? 'Empty'
-                        : (props.data.originalLabel ?? 'Empty') + ' >> ' + (props.data.label ?? 'Empty')
-                    : 'ERROR:' +
-                      errorMessage +
-                      '  (' +
-                      (props.data.label ?? 'Empty') +
-                      ') >> original label: ' +
-                      (props.data.originalLabel ?? 'Empty')}
+                        : `${props.data.originalLabel ?? 'Empty'} >> ${props.data.label ?? 'Empty'}`
+                    : `ERROR:${errorMessage}  (${props.data.label ?? 'Empty'}) >> original label: ${props.data.originalLabel ?? 'Empty'}`}
                 {props.data.label !== props.data.originalLabel && (
                     <div className="text-center">
                         <Button size="sm" onClick={cellUndoChange} style={{ padding: '4px 8px' }}>
@@ -111,7 +106,7 @@ const CellVE = props => {
             </>
         ) : (
             <>
-                {props.data.label === props.data.originalLabel ? props.data.label : props.data.originalLabel + ' >> ' + props.data.label}
+                {props.data.label === props.data.originalLabel ? props.data.label : `${props.data.originalLabel} >> ${props.data.label}`}
                 {props.data.label !== props.data.originalLabel && (
                     <div className="text-center">
                         <Button size="sm" onClick={cellUndoChange} style={{ padding: '4px 8px' }}>
@@ -128,7 +123,7 @@ const CellVE = props => {
             {(props.type === 'value' || props.type === 'property' || props.type === 'contribution') && (
                 <Tippy singleton={props.tippyTarget} content={tippyContent}>
                     <TippyContainer>
-                        {/*PROPERTY LABELS */}
+                        {/* PROPERTY LABELS */}
                         {props.type === 'property' && renderingItem === 'text' && (
                             <PropertyCellEditor
                                 className="noselect"
@@ -158,7 +153,7 @@ const CellVE = props => {
                                 }
                             />
                         )}
-                        {/*CONTRIBUTION LABELS */}
+                        {/* CONTRIBUTION LABELS */}
                         {props.type === 'contribution' && renderingItem === 'text' && (
                             <ContributionCell
                                 className="noselect"
@@ -188,7 +183,7 @@ const CellVE = props => {
                                 }
                             />
                         )}
-                        {/*CELL VALUE LABELS */}
+                        {/* CELL VALUE LABELS */}
                         {props.type === 'value' && renderingItem === 'text' && (
                             <ValueCellValidator
                                 className="noselect"
@@ -234,7 +229,7 @@ CellVE.propTypes = {
     data: PropTypes.object,
     children: PropTypes.any,
     tippyTarget: PropTypes.object,
-    tippySource: PropTypes.object
+    tippySource: PropTypes.object,
 };
 
 export default CellVE;

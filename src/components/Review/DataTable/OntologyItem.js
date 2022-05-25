@@ -14,8 +14,8 @@ const OntologyItem = ({ id, label, type, isEditable, sectionId }) => {
             dispatch(
                 reloadDataTableStatements({
                     id,
-                    sectionId
-                })
+                    sectionId,
+                }),
             );
         }
         setIsModalOpen(v => !v);
@@ -37,7 +37,7 @@ OntologyItem.propTypes = {
     label: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     sectionId: PropTypes.string.isRequired,
-    isEditable: PropTypes.bool.isRequired
+    isEditable: PropTypes.bool.isRequired,
 };
 
 export default memo(OntologyItem);

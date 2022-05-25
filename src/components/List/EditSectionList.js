@@ -5,9 +5,8 @@ import EditSectionListItem from 'components/List/EditSectionListItem';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { SortableElement } from 'react-sortable-hoc';
+import { SortableElement, SortableContainer } from 'react-sortable-hoc';
 import { Alert, Button, ListGroup } from 'reactstrap';
-import { SortableContainer } from 'react-sortable-hoc';
 import { sortListEntries } from 'slices/listSlice';
 import { createGlobalStyle } from 'styled-components';
 
@@ -77,7 +76,7 @@ const EditSectionList = ({ section }) => {
 };
 
 EditSectionList.propTypes = {
-    section: PropTypes.object.isRequired
+    section: PropTypes.object.isRequired,
 };
 
 export default SortableElement(EditSectionList);

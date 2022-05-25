@@ -57,7 +57,7 @@ const Unauthorized = () => {
                                     style={{
                                         cursor: 'pointer',
                                         color: 'inherit',
-                                        textDecoration: 'underline'
+                                        textDecoration: 'underline',
                                     }}
                                     onClick={handleSignUp}
                                     onKeyDown={e => (e.keyCode === 13 ? handleSignUp : undefined)}

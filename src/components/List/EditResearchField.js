@@ -18,8 +18,8 @@ const EditResearchField = () => {
             updateResearchField({
                 researchField,
                 statementId: researchField?.statementId,
-                listId: list.id
-            })
+                listId: list.id,
+            }),
         );
     };
 

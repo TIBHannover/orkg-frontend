@@ -43,8 +43,8 @@ const TableHeaderColumn = ({ contribution, paper }) => {
             paperUpdated({
                 id: paper.id,
                 title: newData.paper?.label,
-                researchField: newData.researchField
-            })
+                researchField: newData.researchField,
+            }),
         );
     };
 
@@ -124,7 +124,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
 
 TableHeaderColumn.propTypes = {
     contribution: PropTypes.object.isRequired,
-    paper: PropTypes.object.isRequired
+    paper: PropTypes.object.isRequired,
 };
 
 export default memo(TableHeaderColumn);

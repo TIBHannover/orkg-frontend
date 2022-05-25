@@ -33,32 +33,29 @@ class AsciiMath extends Component {
         }
 
         if (this.props.type === 'literal' && labelToText.match(this.supportedValues)) {
-            return ReactStringReplace(labelToText, this.supportedValues, (match, i) => {
-                return (
-                    <StyledMathJax
-                        key={i}
-                        config={{
-                            jax: ['input/AsciiMath', 'output/CommonHTML'],
-                            showMathMenu: false,
-                            SVG: {
-                                useFontCache: false,
-                                useGlobalCache: false
-                            },
-                            skipStartupTypeset: true
-                        }}
-                        math={match}
-                    />
-                );
-            });
-        } else {
-            return label;
+            return ReactStringReplace(labelToText, this.supportedValues, (match, i) => (
+                <StyledMathJax
+                    key={i}
+                    config={{
+                        jax: ['input/AsciiMath', 'output/CommonHTML'],
+                        showMathMenu: false,
+                        SVG: {
+                            useFontCache: false,
+                            useGlobalCache: false,
+                        },
+                        skipStartupTypeset: true,
+                    }}
+                    math={match}
+                />
+            ));
         }
+        return label;
     }
 }
 
 AsciiMath.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-    type: PropTypes.oneOf(['resource', 'literal'])
+    type: PropTypes.oneOf(['resource', 'literal']),
 };
 
 export default AsciiMath;

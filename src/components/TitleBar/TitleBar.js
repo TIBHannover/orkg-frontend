@@ -1,5 +1,6 @@
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { SubtitleSeparator } from 'components/styled';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Button, ButtonGroup, Container } from 'reactstrap';
@@ -73,7 +74,9 @@ const TitleBar = ({ buttonGroup = null, titleAddition = null, children = '', wra
 
     return (
         <ContainerStyled className={`d-flex mt-4 mb-4 align-items-center ${wrap ? 'flex-wrap' : ''}`}>
-            <H1Styled className={`${titleSize} m-0 me-3  ${!wrap ? 'flex-shrink-0' : ''} `}>{children}</H1Styled> {titleAddition}
+            <H1Styled className={`${titleSize} m-0 me-3  ${!wrap ? 'flex-shrink-0' : ''} `}>{children}</H1Styled>{' '}
+            {titleAddition && <SubtitleSeparator />}
+            {titleAddition}
             {buttonGroup && (
                 <MenuButton
                     aria-label="Open action menu"
@@ -98,7 +101,7 @@ TitleBar.propTypes = {
     titleAddition: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
     titleSize: PropTypes.string,
-    wrap: PropTypes.bool
+    wrap: PropTypes.bool,
 };
 
 export default TitleBar;

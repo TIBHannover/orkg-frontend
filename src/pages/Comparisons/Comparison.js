@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, Badge } from 'reactstrap';
+import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import {
     faEllipsisV,
@@ -9,7 +9,7 @@ import {
     faExternalLinkAlt,
     faFilter,
     faPlus,
-    faChevronRight
+    faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/Comparison';
@@ -57,6 +57,8 @@ import AppliedRule from 'components/Comparison/Filters/AppliedRule';
 import TitleBar from 'components/TitleBar/TitleBar';
 import SaveDraft from 'components/Comparison/SaveDraft/SaveDraft';
 import Confirm from 'components/Confirmation/Confirmation';
+import pluralize from 'pluralize';
+import { SubTitle } from 'components/styled';
 
 function Comparison(props) {
     const {
@@ -102,7 +104,7 @@ function Comparison(props) {
         loadVisualizations,
         handleEditContributions,
         fetchLiveData,
-        handleToggleGroupVisibility
+        handleToggleGroupVisibility,
     } = useComparison({});
 
     const params = useParams();
@@ -120,7 +122,7 @@ function Comparison(props) {
         }
     }, [metaData]);
 
-    /** adding some additional state for meta data **/
+    /** adding some additional state for meta data * */
 
     const [cookies, setCookie] = useCookies();
     const navigate = useNavigate();
@@ -220,18 +222,17 @@ function Comparison(props) {
 
     const removeRuleFactory = ({ propertyId, type, value }) => () => removeRule({ propertyId, type, value });
 
-    const displayRules = () => {
-        return []
+    const displayRules = () =>
+        []
             .concat(...filterControlData.map(item => item.rules))
             .map(({ propertyId, propertyName, type, value }) => (
                 <AppliedRule
                     key={`${propertyId}#${type}`}
-                    data={{ propertyId, propertyName, type: type, value, removeRule: removeRuleFactory({ propertyId, type, value }) }}
+                    data={{ propertyId, propertyName, type, value, removeRule: removeRuleFactory({ propertyId, type, value }) }}
                 />
             ));
-    };
 
-    const isPublished = metaData?.id || responseHash ? true : false;
+    const isPublished = !!(metaData?.id || responseHash);
     const publishedMessage = "Published comparisons cannot be edited, click 'Fetch live data' to reload the live comparison data";
 
     const ldJson = {
@@ -242,23 +243,24 @@ function Comparison(props) {
             author: metaData.authors?.map(author => ({
                 name: author.label,
                 ...(author.orcid ? { url: `http://orcid.org/${author.orcid}` } : {}),
-                '@type': 'Person'
+                '@type': 'Person',
             })),
             datePublished: metaData.createdAt ? moment(metaData.createdAt).format('DD MMMM YYYY') : '',
             about: researchField?.label,
-            '@type': 'ScholarlyArticle'
+            '@type': 'ScholarlyArticle',
         },
         '@context': 'https://schema.org',
-        '@type': 'WebPage'
+        '@type': 'WebPage',
     };
 
     const handleAddContribution = async () => {
         if (isPublished) {
             const isConfirmed = await Confirm({
                 title: 'This is a published comparison',
-                message: `The comparison you are viewing is published, which means it cannot be modified. To make changes, fetch the live comparison data and try this action again`,
+                message:
+                    'The comparison you are viewing is published, which means it cannot be modified. To make changes, fetch the live comparison data and try this action again',
                 cancelColor: 'light',
-                proceedLabel: 'Fetch live data'
+                proceedLabel: 'Fetch live data',
             });
 
             if (isConfirmed) {
@@ -289,7 +291,7 @@ function Comparison(props) {
                             <Button color="secondary" size="sm" style={{ marginRight: 2 }} onClick={handleAddContribution}>
                                 <Icon icon={faPlus} className="me-1" /> Add contribution
                             </Button>
-                            {!!metaData.id ? (
+                            {metaData.id ? (
                                 <Button
                                     color="secondary"
                                     size="sm"
@@ -426,9 +428,9 @@ function Comparison(props) {
                                                           title: metaData.title,
                                                           description: metaData.description,
                                                           creator: metaData.createdBy,
-                                                          date: metaData.createdAt
+                                                          date: metaData.createdAt,
                                                       }
-                                                    : { title: '', description: '', creator: '', date: '' }
+                                                    : { title: '', description: '', creator: '', date: '' },
                                             )
                                         }
                                     >
@@ -492,17 +494,12 @@ function Comparison(props) {
                         </>
                     )
                 }
+                titleAddition={
+                    !isFailedLoadingMetaData &&
+                    contributionsList.length > 1 && <SubTitle>{pluralize('contribution', contributionsList.length, true)}</SubTitle>
+                }
             >
-                Comparison{' '}
-                {!isFailedLoadingMetaData && contributionsList.length > 1 && (
-                    <Tippy content="The amount of compared contributions">
-                        <span>
-                            <Badge color="secondary" pill style={{ fontSize: '65%' }}>
-                                {contributionsList.length}
-                            </Badge>
-                        </span>
-                    </Tippy>
-                )}
+                Comparison
             </TitleBar>
 
             {!isLoadingVersions && hasNextVersion && (
@@ -547,17 +544,19 @@ function Comparison(props) {
                     {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && (
                         <div className="p-0 d-flex align-items-start">
                             <div className="flex-grow-1">
-                                <h2 className="h4 mb-4 mt-4">
-                                    {metaData.title ? metaData.title : 'Compare'}{' '}
-                                    {metaData.id && (
-                                        <MarkFeaturedUnlistedContainer
-                                            size="xs"
-                                            id={metaData?.id}
-                                            featured={metaData?.featured}
-                                            unlisted={metaData?.unlisted}
-                                        />
-                                    )}
-                                </h2>
+                                {(metaData.title || metaData.id) && (
+                                    <h2 className="h4 mb-4 mt-4">
+                                        {metaData.title}{' '}
+                                        {metaData.id && (
+                                            <MarkFeaturedUnlistedContainer
+                                                size="xs"
+                                                id={metaData?.id}
+                                                featured={metaData?.featured}
+                                                unlisted={metaData?.unlisted}
+                                            />
+                                        )}
+                                    </h2>
+                                )}
                                 {!isFailedLoadingMetaData && <ComparisonMetaData metaData={metaData} provenance={provenance} />}
                             </div>
 
@@ -597,7 +596,7 @@ function Comparison(props) {
                                             properties,
                                             data,
                                             contributionsList,
-                                            predicatesList
+                                            predicatesList,
                                         }) && (
                                             <PreviewVisualizationComparison
                                                 comparisonId={metaData.id}
@@ -753,7 +752,7 @@ function Comparison(props) {
                     properties,
                     data,
                     contributionsList,
-                    predicatesList
+                    predicatesList,
                 }}
                 closeOnExport={closeOnExport}
                 updatePreviewComponent={() => {
@@ -766,19 +765,19 @@ function Comparison(props) {
 }
 
 const mapStateToProps = state => ({
-    user: state.auth.user
+    user: state.auth.user,
 });
 
 const mapDispatchToProps = dispatch => ({
-    openAuthDialog: payload => dispatch(openAuthDialog(payload))
+    openAuthDialog: payload => dispatch(openAuthDialog(payload)),
 });
 
 Comparison.propTypes = {
     openAuthDialog: PropTypes.func.isRequired,
-    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
 };
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(Comparison);

@@ -18,13 +18,13 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
         isLastPageReached,
         setSort,
         setIncludeSubFields,
-        handleLoadMore
+        handleLoadMore,
     } = useResearchProblems({
         id,
         by,
         pageSize: 25,
         initialSort: 'combined',
-        initialIncludeSubFields: true
+        initialIncludeSubFields: true,
     });
 
     return (
@@ -77,7 +77,7 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
                             Load more research problems
                         </div>
                     )}
-                    {!hasNextPage && isLastPageReached && page !== 1 && <div className="text-center mt-3">You have reached the last page.</div>}
+                    {!hasNextPage && isLastPageReached && page !== 1 && <div className="text-center mt-3">You have reached the last page</div>}
                     {isLoading && (
                         <div className="mt-4 mb-4">
                             <ContentLoader
@@ -108,7 +108,7 @@ ResearchProblemsModal.propTypes = {
     id: PropTypes.string.isRequired,
     by: PropTypes.string.isRequired, // ResearchField || Observatory
     openModal: PropTypes.bool.isRequired,
-    setOpenModal: PropTypes.func.isRequired
+    setOpenModal: PropTypes.func.isRequired,
 };
 
 export default ResearchProblemsModal;

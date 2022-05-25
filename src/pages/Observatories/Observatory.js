@@ -9,7 +9,7 @@ import OrganizationsBox from 'components/Observatory/OrganizationsBox';
 import IntegratedList from 'components/Observatory/IntegratedList';
 import MembersBox from 'components/Observatory/MembersBox';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import { SubTitle, SubtitleSeparator } from 'components/styled';
+import { SubTitle } from 'components/styled';
 import NotFound from 'pages/NotFound';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -78,12 +78,7 @@ const Observatory = () => {
                 <>
                     <Breadcrumbs researchFieldId={researchField?.id} />
                     <TitleBar
-                        titleAddition={
-                            <>
-                                <SubtitleSeparator />
-                                <SubTitle>{label}</SubTitle>
-                            </>
-                        }
+                        titleAddition={<SubTitle>{label}</SubTitle>}
                         buttonGroup={
                             !!user &&
                             user.isCurationAllowed && (

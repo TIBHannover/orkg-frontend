@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import Confirm from 'components/Confirmation/Confirmation';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { updateResourceClasses } from 'services/backend/resources';
 import { toast } from 'react-toastify';
-import { PREDICATES } from 'constants/graphSettings';
 import { useNavigate } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import pluralize from 'pluralize';
@@ -19,8 +18,8 @@ function useDeletePapers({ paperIds, redirect = false, finishLoadingCallback = (
             message: `Are you sure you want to remove ${pluralize(
                 'paper',
                 paperIds.length,
-                true
-            )} from the ORKG? Deleting papers is bad practice so we encourage you to use this operation with caution!`
+                true,
+            )} from the ORKG? Deleting papers is bad practice so we encourage you to use this operation with caution!`,
         });
 
         if (confirm) {
@@ -32,9 +31,9 @@ function useDeletePapers({ paperIds, redirect = false, finishLoadingCallback = (
                 // set the class of paper of contributions to DeletedContribution
                 const promisesContributions = getStatementsBySubjectAndPredicate({
                     subjectId: id,
-                    predicateId: PREDICATES.HAS_CONTRIBUTION
+                    predicateId: PREDICATES.HAS_CONTRIBUTION,
                 }).then(contributions =>
-                    Promise.all(contributions.map(contribution => updateResourceClasses(contribution.object.id, [CLASSES.CONTRIBUTION_DELETED])))
+                    Promise.all(contributions.map(contribution => updateResourceClasses(contribution.object.id, [CLASSES.CONTRIBUTION_DELETED]))),
                 );
                 return Promise.all([promisePaper, promisesContributions]);
             });

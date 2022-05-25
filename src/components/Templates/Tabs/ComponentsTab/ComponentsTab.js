@@ -51,7 +51,7 @@ const ComponentsTab = () => {
     const handleClassOfPropertySelect = async (selected, action, index) => {
         if (action.action === 'create-option') {
             const newClass = await ConfirmClass({
-                label: selected.label
+                label: selected.label,
             });
             if (newClass) {
                 selected = { id: newClass.id, label: newClass.label };
@@ -74,7 +74,7 @@ const ComponentsTab = () => {
     const handleSelectNewProperty = ({ id, value: label }) => {
         const templateComponents = [
             ...components,
-            { property: { id, label: label }, value: {}, validationRules: {}, minOccurs: '0', maxOccurs: null, order: null }
+            { property: { id, label }, value: {}, validationRules: {}, minOccurs: '0', maxOccurs: null, order: null },
         ];
         dispatch(updateComponents(templateComponents));
         setShowAddProperty(false);
@@ -98,8 +98,8 @@ const ComponentsTab = () => {
                 validationRules: {},
                 minOccurs: '0',
                 maxOccurs: null,
-                order: null
-            }
+                order: null,
+            },
         ];
         dispatch(updateComponents(templateComponents));
         setShowAddProperty(false);
@@ -111,12 +111,12 @@ const ComponentsTab = () => {
             dispatch(
                 updateComponents(
                     update(components, {
-                        $splice: [[dragIndex, 1], [hoverIndex, 0, dragCard]]
-                    })
-                )
+                        $splice: [[dragIndex, 1], [hoverIndex, 0, dragCard]],
+                    }),
+                ),
             );
         },
-        [components, dispatch]
+        [components, dispatch],
     );
 
     const handleSwitchIsStrictTemplate = event => {
@@ -134,23 +134,21 @@ const ComponentsTab = () => {
                 )}
                 {components &&
                     components.length > 0 &&
-                    components.map((templateProperty, index) => {
-                        return (
-                            <TemplateComponent
-                                key={`tc${templateProperty.property.id}`}
-                                handleDeleteTemplateComponent={handleDeleteTemplateComponent}
-                                id={index}
-                                moveCard={moveCard}
-                                property={templateProperty.property}
-                                value={templateProperty.value}
-                                minOccurs={templateProperty.minOccurs}
-                                maxOccurs={templateProperty.maxOccurs}
-                                validationRules={templateProperty.validationRules}
-                                handlePropertiesSelect={handlePropertiesSelect}
-                                handleClassOfPropertySelect={handleClassOfPropertySelect}
-                            />
-                        );
-                    })}
+                    components.map((templateProperty, index) => (
+                        <TemplateComponent
+                            key={`tc${templateProperty.property.id}`}
+                            handleDeleteTemplateComponent={handleDeleteTemplateComponent}
+                            id={index}
+                            moveCard={moveCard}
+                            property={templateProperty.property}
+                            value={templateProperty.value}
+                            minOccurs={templateProperty.minOccurs}
+                            maxOccurs={templateProperty.maxOccurs}
+                            validationRules={templateProperty.validationRules}
+                            handlePropertiesSelect={handlePropertiesSelect}
+                            handleClassOfPropertySelect={handleClassOfPropertySelect}
+                        />
+                    ))}
                 {components && components.length === 0 && <i>No properties specified.</i>}
                 {editMode && (
                     <>

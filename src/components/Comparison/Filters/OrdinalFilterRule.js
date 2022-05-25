@@ -9,11 +9,11 @@ import { Col, FormFeedback, FormGroup, Input, Label, ModalBody } from 'reactstra
 
 const createOption = label => ({
     label,
-    value: label
+    value: label,
 });
 
 const OrdinalFilterRule = props => {
-    //change apply and reset
+    // change apply and reset
     const { property, rules, updateRulesOfProperty, typeIsDate, toggleFilterDialog } = props.dataController;
     const { label: propertyName, id: propertyId } = property;
 
@@ -38,7 +38,7 @@ const OrdinalFilterRule = props => {
 
             .required()
             .validate(str);
-        return !error ? true : false;
+        return !error;
     };
 
     const isNum = str => !isNaN(str) && !isNaN(parseFloat(str));
@@ -125,7 +125,7 @@ const OrdinalFilterRule = props => {
     };
 
     const handleDatePickerOnBlur = useCallback(event => {
-        const value = event.target.value;
+        const { value } = event.target;
         if (!value) {
             return;
         }
@@ -150,7 +150,7 @@ const OrdinalFilterRule = props => {
             return <components.Input {...innerProps} />;
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        []
+        [],
     );
 
     const customStyles = {
@@ -158,9 +158,9 @@ const OrdinalFilterRule = props => {
             ...provided,
             '& input': {
                 backgroundColor: 'transparent !important',
-                border: '0 !important'
-            }
-        })
+                border: '0 !important',
+            },
+        }),
     };
 
     return (
@@ -211,7 +211,7 @@ const OrdinalFilterRule = props => {
                             styles={customStyles}
                             components={{
                                 DropdownIndicator: null,
-                                Input: CustomInput
+                                Input: CustomInput,
                             }}
                             inputValue={nEqInputValue}
                             isClearable
@@ -233,6 +233,6 @@ const OrdinalFilterRule = props => {
 };
 
 OrdinalFilterRule.propTypes = {
-    dataController: PropTypes.object.isRequired
+    dataController: PropTypes.object.isRequired,
 };
 export default OrdinalFilterRule;

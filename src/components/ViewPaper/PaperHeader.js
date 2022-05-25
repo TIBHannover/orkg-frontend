@@ -31,7 +31,7 @@ const PaperHeader = props => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: viewPaper.paperResource.id,
         unlisted: viewPaper.paperResource.unlisted,
-        featured: viewPaper.paperResource.featured
+        featured: viewPaper.paperResource.featured,
     });
 
     useEffect(() => {
@@ -57,8 +57,8 @@ const PaperHeader = props => {
                 publishedIn: data.publishedIn,
                 url: { ...viewPaper.url, label: data.url?.label, id: data.url?.id },
                 researchField: data.researchField,
-                verified: data.isVerified
-            })
+                verified: data.isVerified,
+            }),
         );
         setIsOpenEditModal(false);
     };
@@ -153,7 +153,7 @@ const PaperHeader = props => {
                         publishedIn: viewPaper.publishedIn,
                         researchField: viewPaper.researchField,
                         url: viewPaper.url,
-                        isVerified: viewPaper.verified
+                        isVerified: viewPaper.verified,
                     }}
                     afterUpdate={handleUpdatePaper}
                     isOpen={isOpenEditModal}
@@ -165,7 +165,7 @@ const PaperHeader = props => {
 };
 
 PaperHeader.propTypes = {
-    editMode: PropTypes.bool.isRequired
+    editMode: PropTypes.bool.isRequired,
 };
 
 export default PaperHeader;

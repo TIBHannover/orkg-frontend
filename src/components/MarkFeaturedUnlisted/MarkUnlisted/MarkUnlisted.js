@@ -44,12 +44,12 @@ const MarkUnlisted = ({ unlisted, size, handleChangeStatus }) => {
 MarkUnlisted.propTypes = {
     unlisted: PropTypes.bool,
     size: PropTypes.string.isRequired,
-    handleChangeStatus: PropTypes.func.isRequired
+    handleChangeStatus: PropTypes.func.isRequired,
 };
 
 MarkUnlisted.defaultProps = {
     unlisted: false,
-    size: '1x'
+    size: '1x',
 };
 
 export default MarkUnlisted;

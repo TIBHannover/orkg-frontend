@@ -9,7 +9,7 @@ import {
     DropdownToggle,
     DropdownMenu,
     DropdownItem,
-    ListGroupItem
+    ListGroupItem,
 } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
 import ROUTES from 'constants/routes.js';
@@ -27,7 +27,7 @@ const VenuePage = () => {
     const [loading, setLoading] = useState(true);
     const [venue, setVenue] = useState(null);
     const { isNextPageLoading, hasNextPage, papers, page, totalElements, isLastPageReached, handleLoadMore } = useVenuePapers({
-        venueId: params.venueId
+        venueId: params.venueId,
     });
 
     const [menuOpen, setMenuOpen] = useState(false);
@@ -88,14 +88,14 @@ const VenuePage = () => {
                     <Container className="p-0">
                         {papers.length > 0 && (
                             <div>
-                                {papers.map(resource => {
-                                    return <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />;
-                                })}
+                                {papers.map(resource => (
+                                    <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />
+                                ))}
                             </div>
                         )}
                         {totalElements === 0 && !isNextPageLoading && (
                             <ListGroupItem tag="div" className="text-center p-4">
-                                There are no works of this author, yet.
+                                There are no works of this author, yet
                             </ListGroupItem>
                         )}
                         {isNextPageLoading && (
@@ -115,7 +115,7 @@ const VenuePage = () => {
                             </ListGroupItem>
                         )}
                         {!hasNextPage && isLastPageReached && page > 1 && totalElements !== 0 && (
-                            <div className="text-center mt-3">You have reached the last page.</div>
+                            <div className="text-center mt-3">You have reached the last page</div>
                         )}
                     </Container>
                     <ComparisonPopup />

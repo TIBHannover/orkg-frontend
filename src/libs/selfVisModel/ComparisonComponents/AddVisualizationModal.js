@@ -5,14 +5,14 @@ import CellEditor from 'libs/selfVisModel/RenderingComponents/CellEditor';
 import CellSelector from 'libs/selfVisModel/RenderingComponents/CellSelector';
 import VisualizationWidget from 'libs/selfVisModel/VisRenderer/VisualizationWidget';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import PublishVisualization from './PublishVisualization';
-import HelpVideoModal from './HelpVideoModal';
 import { usePrevious } from 'react-use';
 import Tippy from '@tippyjs/react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import HelpVideoModal from './HelpVideoModal';
+import PublishVisualization from './PublishVisualization';
 
 const TabButtons = styled.div`
     border-bottom: 2px solid ${props => props.theme.lightDarker};
@@ -23,7 +23,7 @@ const TabButton = styled.div`
     cursor: pointer;
     padding: 4px 20px;
     background-color: ${props => (props.active ? props.theme.primary : props.theme.light)};
-    border: ${props => (props.active ? 'none' : '1px solid ' + props.theme.lightDarker)};
+    border: ${props => (props.active ? 'none' : `1px solid ${props.theme.lightDarker}`)};
     border-bottom: 0;
     color: ${props => (props.active ? '#ffffff' : '')};
     font-size: 18px;
@@ -90,13 +90,11 @@ function AddVisualizationModal(props) {
                     new SelfVisDataModel().resetCustomizationModel();
                     setProcessStep(0);
                 }
-            } else {
-                if (prevProcessStep === 0 && processStep === 2) {
-                    // this shall trigger the cell validation
-                    // shall be done when the user switches between select directly to visualize
-                    new SelfVisDataModel().forceCellValidation(); // singleton call
-                    new SelfVisDataModel().createGDCDataModel(); // gets the singleton ptr and creates the gdc model
-                }
+            } else if (prevProcessStep === 0 && processStep === 2) {
+                // this shall trigger the cell validation
+                // shall be done when the user switches between select directly to visualize
+                new SelfVisDataModel().forceCellValidation(); // singleton call
+                new SelfVisDataModel().createGDCDataModel(); // gets the singleton ptr and creates the gdc model
             }
         }
 
@@ -145,7 +143,7 @@ function AddVisualizationModal(props) {
                 </ModalHeader>
                 <ModalBody id="selfVisServiceModalBody">
                     <TabButtons>
-                        {/*  TAB BUTTONS*/}
+                        {/*  TAB BUTTONS */}
                         <TabButton active={processStep === 0} onClick={() => setProcessStep(0)}>
                             Select
                         </TabButton>
@@ -156,7 +154,7 @@ function AddVisualizationModal(props) {
                             Visualize
                         </TabButton>
                     </TabButtons>
-                    {/*  renders different views based on the current step in the process*/}
+                    {/*  renders different views based on the current step in the process */}
                     {processStep === 0 && <CellSelector isLoading={!loadedModel} height={windowHeight - 50} />}
                     {processStep === 1 && <CellEditor isLoading={!loadedModel} height={windowHeight - 50} />}
                     {processStep === 2 && (
@@ -246,7 +244,7 @@ AddVisualizationModal.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     updatePreviewComponent: PropTypes.func.isRequired,
-    initialData: PropTypes.object
+    initialData: PropTypes.object,
 };
 
 export default AddVisualizationModal;

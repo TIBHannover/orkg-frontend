@@ -22,15 +22,15 @@ const ReferencesModal = ({ show, toggle }) => {
 
     useEffect(() => {
         setReferencesSorted(
-            [...references].sort((a, b) => a?.parsedReference?.author?.[0]?.family?.localeCompare(b?.parsedReference?.author?.[0]?.family))
+            [...references].sort((a, b) => a?.parsedReference?.author?.[0]?.family?.localeCompare(b?.parsedReference?.author?.[0]?.family)),
         );
     }, [references]);
 
     const dispatch = useDispatch();
 
     const parseBibtex = useCallback(
-        ({ bibtex, checkForDuplicate }) => {
-            return Cite.async(bibtex)
+        ({ bibtex, checkForDuplicate }) =>
+            Cite.async(bibtex)
                 .then(parsedReference => {
                     const hasMultipleCitations = parsedReference.data.length > 1;
                     parsedReference = parsedReference.data[0];
@@ -52,9 +52,8 @@ const ReferencesModal = ({ show, toggle }) => {
                     console.log(e);
                     toast.error(e.name === 'Error' ? e.message : 'An error occurred while parsing the BibTeX');
                     return null;
-                });
-        },
-        [references]
+                }),
+        [references],
     );
 
     const updateReference = useCallback(
@@ -68,8 +67,8 @@ const ReferencesModal = ({ show, toggle }) => {
                             updateReferenceAction({
                                 bibtex,
                                 literalId,
-                                parsedReference
-                            })
+                                parsedReference,
+                            }),
                         ).then(() => setIsParsingBibtex(false));
                     }
                 })
@@ -77,7 +76,7 @@ const ReferencesModal = ({ show, toggle }) => {
                     setIsParsingBibtex(false);
                 });
         },
-        [dispatch, parseBibtex]
+        [dispatch, parseBibtex],
     );
 
     const createReference = useCallback(
@@ -94,15 +93,15 @@ const ReferencesModal = ({ show, toggle }) => {
                         createReferenceAction({
                             contributionId,
                             bibtex,
-                            parsedReference
-                        })
+                            parsedReference,
+                        }),
                     ).then(() => setIsParsingBibtex(false));
                 })
                 .catch(() => {
                     setIsParsingBibtex(false);
                 });
         },
-        [contributionId, dispatch, parseBibtex]
+        [contributionId, dispatch, parseBibtex],
     );
 
     const handleSaveReference = useCallback(
@@ -113,13 +112,13 @@ const ReferencesModal = ({ show, toggle }) => {
                 updateReference({ bibtex, literalId });
             }
         },
-        [createReference, updateReference]
+        [createReference, updateReference],
     );
 
     const handleDelete = async statementId => {
         const isConfirmed = await Confirm({
             title: 'Are you sure?',
-            message: `Do you want to remove this reference? `
+            message: 'Do you want to remove this reference? ',
         });
 
         if (isConfirmed) {
@@ -150,31 +149,29 @@ const ReferencesModal = ({ show, toggle }) => {
                 </Alert>
 
                 <ListGroup>
-                    {referencesSorted.map(reference => {
-                        return (
-                            <ListGroupItem key={reference.literal.id} className="d-flex align-items-start pe-2">
-                                <div className="flex-grow-1">
-                                    <Badge color="light">@{reference.parsedReference['citation-label']}</Badge>{' '}
-                                    {reference.parsedReference.author?.[0]?.family} {reference.parsedReference.author?.length > 1 && 'et al.'}{' '}
-                                    <em>{reference.parsedReference.title}</em>
-                                </div>
-                                <div className="d-flex flex-shrink-0">
-                                    <Button color="link" className="me-1 px-1 py-0 text-secondary" onClick={() => handleEdit(reference)}>
-                                        <Icon icon={faPen} />
-                                    </Button>
-                                    <Button
-                                        color="link"
-                                        disabled={isDeletingIDs?.includes(reference.statementId)}
-                                        className="px-1 py-0 text-danger"
-                                        style={{ fontSize: '120%' }}
-                                        onClick={() => handleDelete(reference.statementId)}
-                                    >
-                                        {isDeletingIDs?.includes(reference.statementId) ? <Icon icon={faSpinner} spin /> : <Icon icon={faTimes} />}
-                                    </Button>
-                                </div>
-                            </ListGroupItem>
-                        );
-                    })}
+                    {referencesSorted.map(reference => (
+                        <ListGroupItem key={reference.literal.id} className="d-flex align-items-start pe-2">
+                            <div className="flex-grow-1">
+                                <Badge color="light">@{reference.parsedReference['citation-label']}</Badge>{' '}
+                                {reference.parsedReference.author?.[0]?.family} {reference.parsedReference.author?.length > 1 && 'et al.'}{' '}
+                                <em>{reference.parsedReference.title}</em>
+                            </div>
+                            <div className="d-flex flex-shrink-0">
+                                <Button color="link" className="me-1 px-1 py-0 text-secondary" onClick={() => handleEdit(reference)}>
+                                    <Icon icon={faPen} />
+                                </Button>
+                                <Button
+                                    color="link"
+                                    disabled={isDeletingIDs?.includes(reference.statementId)}
+                                    className="px-1 py-0 text-danger"
+                                    style={{ fontSize: '120%' }}
+                                    onClick={() => handleDelete(reference.statementId)}
+                                >
+                                    {isDeletingIDs?.includes(reference.statementId) ? <Icon icon={faSpinner} spin /> : <Icon icon={faTimes} />}
+                                </Button>
+                            </div>
+                        </ListGroupItem>
+                    ))}
                     {referencesSorted.length === 0 && <div className="text-center mt-3">No references added yet</div>}
                 </ListGroup>
                 <Button size="sm" disabled={isParsingBibtex} onClick={handleAdd} className="mt-4">
@@ -197,7 +194,7 @@ const ReferencesModal = ({ show, toggle }) => {
 
 ReferencesModal.propTypes = {
     toggle: PropTypes.func.isRequired,
-    show: PropTypes.bool.isRequired
+    show: PropTypes.bool.isRequired,
 };
 
 export default ReferencesModal;

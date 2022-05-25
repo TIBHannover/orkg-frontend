@@ -43,12 +43,12 @@ const FeaturedMark = ({ featured, size, handleChangeStatus }) => {
 FeaturedMark.propTypes = {
     featured: PropTypes.bool,
     size: PropTypes.string.isRequired,
-    handleChangeStatus: PropTypes.func.isRequired
+    handleChangeStatus: PropTypes.func.isRequired,
 };
 
 FeaturedMark.defaultProps = {
     featured: false,
-    size: '1x'
+    size: '1x',
 };
 
 export default FeaturedMark;

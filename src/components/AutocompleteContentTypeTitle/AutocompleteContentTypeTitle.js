@@ -26,7 +26,7 @@ function AutocompleteContentTypeTitle({
     placeholder = '',
     contentType = 'all',
     borderRadius = null,
-    theme
+    theme,
 }) {
     const [menuIsOpen, setMenuIsOpen] = useState(false);
     const [existingPaper, setExistingPaper] = useState(null);
@@ -38,8 +38,8 @@ function AutocompleteContentTypeTitle({
             options: prevOptions,
             hasMore: false,
             additional: {
-                page: 0
-            }
+                page: 0,
+            },
         };
 
         if (titleQuery.length < MIN_INPUT_LENGTH) {
@@ -50,7 +50,7 @@ function AutocompleteContentTypeTitle({
             const title = titleQuery.trim();
             let options = [];
             let hasMore = false;
-            //let resources = {};
+            // let resources = {};
 
             // TODO: deduplicate results from ORKG and semantic scholar (based on title or DOI)
             if (performOrkgLookup) {
@@ -61,10 +61,10 @@ function AutocompleteContentTypeTitle({
                     promises.push(
                         getResourcesByClass({
                             id: _class,
-                            page: page,
+                            page,
                             items: PAGE_SIZE,
-                            q: title
-                        })
+                            q: title,
+                        }),
                     );
                 }
                 for (const promise of await Promise.all(promises)) {
@@ -72,13 +72,13 @@ function AutocompleteContentTypeTitle({
                     hasMore = !hasMore ? !promise.last : hasMore;
                 }
 
-                /*resources = await getResources({
+                /* resources = await getResources({
                     page: page,
                     items: PAGE_SIZE,
                     q: title
                 });
                 options = resources.content.map(result => ({ ...result, isOrkgResource: true }));
-                hasMore = !resources.last;*/
+                hasMore = !resources.last; */
             }
             // only perform semantic scholar lookup if type type includes papers
             if ((!performOrkgLookup || !hasMore) && performSemanticScholarLookup) {
@@ -86,15 +86,15 @@ function AutocompleteContentTypeTitle({
                     title,
                     limit: PAGE_SIZE,
                     offset: page * PAGE_SIZE,
-                    fields: ['title', 'authors', 'venue', 'year', 'externalIds']
+                    fields: ['title', 'authors', 'venue', 'year', 'externalIds'],
                 });
                 options = [
                     ...options,
                     ...papers.data.map(item => ({
                         ...item,
                         label: item.title,
-                        id: item.paperId
-                    }))
+                        id: item.paperId,
+                    })),
                 ];
                 hasMore = !!papers.next;
             }
@@ -102,8 +102,8 @@ function AutocompleteContentTypeTitle({
                 options,
                 hasMore,
                 additional: {
-                    page: page + 1
-                }
+                    page: page + 1,
+                },
             };
         } catch (err) {
             console.error(err);
@@ -130,7 +130,7 @@ function AutocompleteContentTypeTitle({
                     const paperStatements = await getStatementsBySubject({ id: paper.id });
                     setExistingPaper({
                         ...getPaperData({ ...paper, label: paper.title }, paperStatements),
-                        title: paper.title
+                        title: paper.title,
                     });
                 } catch (e) {
                     setExistingPaper(null);
@@ -149,17 +149,17 @@ function AutocompleteContentTypeTitle({
             boxShadow: state.isFocused ? '0 0 0 0.2rem rgba(232, 97, 97, 0.25)' : 0,
             borderColor: state.isFocused ? '#f8d0d0!important' : '#ced4da!important',
             cursor: 'text!important',
-            borderRadius: borderRadius || theme.borderRadius
+            borderRadius: borderRadius || theme.borderRadius,
         }),
         container: provided => ({
             ...provided,
             borderRadius: 'inherit',
-            background: 'inherit'
+            background: 'inherit',
         }),
         menu: provided => ({
             ...provided,
-            fontSize: '0.875rem'
-        })
+            fontSize: '0.875rem',
+        }),
     };
 
     return (
@@ -172,7 +172,7 @@ function AutocompleteContentTypeTitle({
                     onChange={handleChange}
                     debounceTimeout={300}
                     additional={{
-                        page: 0
+                        page: 0,
                     }}
                     inputValue={value}
                     onInputChange={handleInputChange}
@@ -190,7 +190,7 @@ function AutocompleteContentTypeTitle({
                         DropdownIndicator: () => null,
                         IndicatorSeparator: () => null,
                         Option: PaperOption,
-                        Menu
+                        Menu,
                     }}
                 />
             </StyledAutoCompleteInputFormControl>
@@ -208,7 +208,7 @@ AutocompleteContentTypeTitle.propTypes = {
     performOrkgLookup: PropTypes.bool,
     placeholder: PropTypes.string,
     contentType: PropTypes.string,
-    borderRadius: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    borderRadius: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default withTheme(AutocompleteContentTypeTitle);

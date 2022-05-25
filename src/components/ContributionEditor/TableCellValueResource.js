@@ -41,9 +41,8 @@ const TableCellValueResource = ({ value }) => {
                 return value.label;
             }
             return generatedFormattedLabel(value, labelFormat);
-        } else {
-            return value.label;
         }
+        return value.label;
     }, [hasLabelFormat, labelFormat, value]);
 
     return (
@@ -68,7 +67,7 @@ const TableCellValueResource = ({ value }) => {
 };
 
 TableCellValueResource.propTypes = {
-    value: PropTypes.object.isRequired
+    value: PropTypes.object.isRequired,
 };
 
 export default memo(TableCellValueResource);

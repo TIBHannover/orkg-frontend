@@ -35,7 +35,7 @@ function MetadataTable({ title = '', authors = [], publicationMonth = null, publ
                             <td>
                                 <strong>Authors:</strong>{' '}
                                 {authors.map((author, index) => (
-                                    <span key={index}>{authors.length > index + 1 ? author.label + ', ' : author.label}</span>
+                                    <span key={index}>{authors.length > index + 1 ? `${author.label}, ` : author.label}</span>
                                 ))}
                             </td>
                         </tr>
@@ -67,7 +67,7 @@ MetadataTable.propTypes = {
     publicationMonth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     publicationYear: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     venue: PropTypes.string,
-    contentTypeId: PropTypes.string
+    contentTypeId: PropTypes.string,
 };
 
 export default MetadataTable;

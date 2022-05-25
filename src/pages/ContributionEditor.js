@@ -33,14 +33,13 @@ const ContributionEditor = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     const contributionIds = getContributionIds();
-    const numPWCStatement = useSelector(state => {
-        return (
+    const numPWCStatement = useSelector(
+        state =>
             Object.keys(state.contributionEditor?.statements).filter?.(
-                statementId => state.contributionEditor?.statements[statementId]?.created_by === env('PWC_USER_ID')
-            )?.length ?? 0
-        );
-    });
-    const hasPreviousVersion = queryString.parse(location.search).hasPreviousVersion;
+                statementId => state.contributionEditor?.statements[statementId]?.created_by === env('PWC_USER_ID'),
+            )?.length ?? 0,
+    );
+    const { hasPreviousVersion } = queryString.parse(location.search);
 
     useEffect(() => {
         document.title = 'Contribution editor - ORKG';
