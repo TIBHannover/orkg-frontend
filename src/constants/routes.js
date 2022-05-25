@@ -22,7 +22,7 @@ const routes = {
     ADD_OBSERVATORY: '/organizations/:id/addObservatory',
     OBSERVATORY: '/observatory/:id',
     ADD_PAPER: {
-        GENERAL_DATA: '/add-paper'
+        GENERAL_DATA: '/add-paper',
     },
     VIEW_PAPER: '/paper/:resourceId',
     VIEW_PAPER_CONTRIBUTION: '/paper/:resourceId/:contributionId',
@@ -83,7 +83,7 @@ const routes = {
     CONTENT_TYPE_NEW_NO_TYPE: '/content-type/new',
     CONTENT_TYPE: '/content-type/:type/:id/:mode',
     CONTENT_TYPE_NO_MODE: '/content-type/:type/:id',
-    CONTENT_TYPES: '/content-type/:type'
+    CONTENT_TYPES: '/content-type/:type',
 };
 /**
  * Legacy routes are used to redirect old URLs to new ones
@@ -98,7 +98,7 @@ const legacyRoutes = {
     LITERATURE_LIST: '/literature-list/:id/',
     LITERATURE_LIST_EMBED: '/literature-list/:id/:embed',
     LITERATURE_LIST_NEW: '/literature-list/new',
-    LITERATURE_LIST_DIFF: '/literature-list/diff/:oldId-:newId'
+    LITERATURE_LIST_DIFF: '/literature-list/diff/:oldId-:newId',
 };
 const allRoutes = { ...routes, ...legacyRoutes };
 

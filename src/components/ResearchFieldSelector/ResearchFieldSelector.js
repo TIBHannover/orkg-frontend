@@ -59,7 +59,7 @@ const ResearchFieldSelector = ({
     updateResearchField,
     researchFieldStats,
     insideModal,
-    showPreviouslySelected
+    showPreviouslySelected,
 }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [loadingId, setLoadingId] = useState(null);
@@ -78,9 +78,9 @@ const ResearchFieldSelector = ({
                 {
                     researchFields: fields,
                     selectedResearchField: selected.id,
-                    selectedResearchFieldLabel: selected.label
+                    selectedResearchFieldLabel: selected.label,
                 },
-                submit
+                submit,
             );
             setIsLoading(false);
         });
@@ -95,7 +95,7 @@ const ResearchFieldSelector = ({
 
         const payload = {
             researchFields: fields,
-            selectedResearchField: shouldSetActive ? fieldId : undefined
+            selectedResearchField: shouldSetActive ? fieldId : undefined,
         };
 
         updateResearchField(payload);
@@ -115,9 +115,9 @@ const ResearchFieldSelector = ({
                               id: statement.object.id,
                               parent: id,
                               hasChildren: null,
-                              isExpanded: false
+                              isExpanded: false,
                           })
-                        : {}
+                        : {},
                 );
             }
 
@@ -149,7 +149,7 @@ const ResearchFieldSelector = ({
 
             return await getFieldsByIds(childrenIds, fields);
         },
-        [getFieldsByIds]
+        [getFieldsByIds],
     );
 
     useEffect(() => {
@@ -162,7 +162,7 @@ const ResearchFieldSelector = ({
                 fields = await getChildFields(MISC.RESEARCH_FIELD_MAIN, fields);
 
                 updateResearchField({
-                    researchFields: fields
+                    researchFields: fields,
                 });
                 setIsLoading(false);
             };
@@ -216,9 +216,8 @@ const ResearchFieldSelector = ({
         if (f) {
             parents.push(f);
             return getParents(f, parents);
-        } else {
-            return parents;
         }
+        return parents;
     };
 
     let researchFieldLabel;
@@ -263,7 +262,7 @@ const ResearchFieldSelector = ({
                         onClick={() => {
                             const fields = cloneDeep(researchFields);
                             updateResearchField({
-                                researchFields: fields.map(f => set(f, 'isExpanded', false))
+                                researchFields: fields.map(f => set(f, 'isExpanded', false)),
                             });
                         }}
                     >
@@ -282,12 +281,12 @@ ResearchFieldSelector.propTypes = {
     updateResearchField: PropTypes.func,
     researchFieldStats: PropTypes.object,
     insideModal: PropTypes.bool.isRequired,
-    showPreviouslySelected: PropTypes.bool.isRequired
+    showPreviouslySelected: PropTypes.bool.isRequired,
 };
 
 ResearchFieldSelector.defaultProps = {
     insideModal: false,
-    showPreviouslySelected: true
+    showPreviouslySelected: true,
 };
 
 export default ResearchFieldSelector;

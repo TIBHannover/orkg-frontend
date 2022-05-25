@@ -14,11 +14,11 @@ function usePropertyStatements({ propertyId, pageSize = 10 }) {
             setIsLoading(true);
             const statementsService = getStatementsByPredicate({
                 id: propertyId,
-                page: page,
+                page,
                 items: pageSize,
                 sortBy: 'created_at',
                 desc: true,
-                returnContent: false
+                returnContent: false,
             });
 
             statementsService
@@ -33,12 +33,12 @@ function usePropertyStatements({ propertyId, pageSize = 10 }) {
                 .catch(error => {
                     setIsLoading(false);
                     setHasNextPage(false);
-                    setIsLastPageReached(page > 1 ? true : false);
+                    setIsLastPageReached(page > 1);
 
                     console.log(error);
                 });
         },
-        [propertyId, pageSize]
+        [propertyId, pageSize],
     );
 
     // reset resources when the researchFieldId has changed
@@ -67,7 +67,7 @@ function usePropertyStatements({ propertyId, pageSize = 10 }) {
         isLastPageReached,
         totalElements,
         page,
-        handleLoadMore
+        handleLoadMore,
     };
 }
 export default usePropertyStatements;

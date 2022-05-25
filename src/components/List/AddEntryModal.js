@@ -70,12 +70,12 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                             publishedIn: entity.publishedIn || undefined,
                             contributions: [
                                 {
-                                    name: 'Contribution'
-                                }
-                            ]
-                        }
+                                    name: 'Contribution',
+                                },
+                            ],
+                        },
                     },
-                    true
+                    true,
                 );
                 _entity.existingContentTypeId = savedPaper.id;
             }
@@ -94,8 +94,8 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
         dispatch(
             addListEntry({
                 contentTypeData: _contentTypeData,
-                sectionId
-            })
+                sectionId,
+            }),
         );
         setIsOpen(false);
     };
@@ -117,7 +117,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
             for (const paper of papers.data) {
                 let paperId = null;
                 const { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi, publishedIn } = parseCiteResult({
-                    data: [paper]
+                    data: [paper],
                 });
                 if (doi) {
                     paperId = await getPaperIdByDoi(doi);
@@ -135,7 +135,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                         paperPublicationYear,
                         doi,
                         publishedIn,
-                        paperId
+                        paperId,
                     });
                 }
             }
@@ -145,10 +145,10 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                 'This format is not supported or recognized':
                     "This format is not supported or recognized. Please enter a valid DOI or Bibtex or select 'Manual entry' to enter the paper details yourself",
                 'Server responded with status code 404': 'No paper has been found',
-                default: 'An error occurred, reload the page and try again'
+                default: 'An error occurred, reload the page and try again',
             };
             console.log(e);
-            toast.error(validationMessages[e.message] || validationMessages['default']);
+            toast.error(validationMessages[e.message] || validationMessages.default);
             setIsLoading(false);
             return;
         } finally {
@@ -168,8 +168,8 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                     title: selected.title,
                     paperPublicationYear: selected.year,
                     authors: selected.authors?.map(author => ({ label: author.name })),
-                    venue: selected.venue
-                }
+                    venue: selected.venue,
+                },
             ]);
         }
     };
@@ -186,7 +186,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
             paperPublicationYear: statements.find(statement => statement.predicate.id === PREDICATES.HAS_PUBLICATION_YEAR)?.object.label,
             doi: statements.find(statement => statement.predicate.id === PREDICATES.HAS_DOI)?.object.label,
             publishedIn: statements.find(statement => statement.predicate.id === PREDICATES.HAS_VENUE)?.object.label,
-            existingContentTypeId: id
+            existingContentTypeId: id,
         };
     };
 
@@ -307,7 +307,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
 AddEntryModal.propTypes = {
     sectionId: PropTypes.string.isRequired,
     isOpen: PropTypes.bool.isRequired,
-    setIsOpen: PropTypes.func.isRequired
+    setIsOpen: PropTypes.func.isRequired,
 };
 
 export default AddEntryModal;

@@ -68,6 +68,6 @@ const CodeURLsTooltip = ({ urls, title, id }) => {
 CodeURLsTooltip.propTypes = {
     title: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    urls: PropTypes.array.isRequired
+    urls: PropTypes.array.isRequired,
 };
 export default CodeURLsTooltip;

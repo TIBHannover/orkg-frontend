@@ -14,7 +14,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 
 const AuthorWorks = ({ authorId }) => {
     const { isNextPageLoading, hasNextPage, works, page, totalElements, isLastPageReached, handleLoadMore } = useAuthorWorks({
-        authorId
+        authorId,
     });
 
     const renderItem = useCallback(item => {
@@ -24,7 +24,7 @@ const AuthorWorks = ({ authorId }) => {
                     paper={{
                         id: item.id,
                         title: item.label,
-                        ...item
+                        ...item,
                     }}
                     showBadge={true}
                     showCurationFlags={false}
@@ -39,7 +39,7 @@ const AuthorWorks = ({ authorId }) => {
                     comparison={{
                         id: item.id,
                         title: item.label,
-                        ...item
+                        ...item,
                     }}
                     showBadge={true}
                     showCurationFlags={false}
@@ -54,7 +54,7 @@ const AuthorWorks = ({ authorId }) => {
                     visualization={{
                         id: item.id,
                         title: item.label,
-                        ...item
+                        ...item,
                     }}
                     showBadge={true}
                     showCurationFlags={false}
@@ -117,7 +117,7 @@ const AuthorWorks = ({ authorId }) => {
     );
 };
 AuthorWorks.propTypes = {
-    authorId: PropTypes.string.isRequired
+    authorId: PropTypes.string.isRequired,
 };
 
 export default AuthorWorks;

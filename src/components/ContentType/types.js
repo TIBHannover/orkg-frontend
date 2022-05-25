@@ -5,11 +5,11 @@ export const supportedContentTypes = [
     {
         id: CLASSES.DATASET,
         label: 'dataset',
-        icon: faTable
+        icon: faTable,
     },
     {
         id: CLASSES.SOFTWARE,
         label: 'software',
-        icon: faSave
-    }
+        icon: faSave,
+    },
 ];

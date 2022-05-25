@@ -18,19 +18,19 @@ const ResearchFieldSelectorModal = ({ isOpen, toggle, onSelectField }) => {
             if (submit) {
                 onSelectField({
                     id: data.selectedResearchField,
-                    label: data.selectedResearchFieldLabel || ''
+                    label: data.selectedResearchFieldLabel || '',
                 });
                 toggle();
             }
         },
-        [onSelectField, toggle]
+        [onSelectField, toggle],
     );
 
     const handleSelect = () => {
         const field = researchFields.find(rf => rf.id === selectedResearchField);
         onSelectField({
             id: selectedResearchField,
-            label: field.label || ''
+            label: field.label || '',
         });
         toggle();
     };
@@ -58,7 +58,7 @@ const ResearchFieldSelectorModal = ({ isOpen, toggle, onSelectField }) => {
 ResearchFieldSelectorModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    onSelectField: PropTypes.func.isRequired
+    onSelectField: PropTypes.func.isRequired,
 };
 
 export default ResearchFieldSelectorModal;

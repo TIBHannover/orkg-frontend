@@ -3,7 +3,7 @@ import { Component } from 'react';
 import { updateUserPassword } from 'services/backend/users';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { get_error_message } from 'utils';
+import { getErrorMessage } from 'utils';
 import { toast } from 'react-toastify';
 
 class Password extends Component {
@@ -15,13 +15,13 @@ class Password extends Component {
             new_password: '',
             new_matching_password: '',
             loading: false,
-            errors: null
+            errors: null,
         };
     }
 
     handleInputChange = e => {
         this.setState({
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
         });
     };
 
@@ -30,26 +30,26 @@ class Password extends Component {
 
         if (!current_password || !new_password || !new_matching_password) {
             this.setState({
-                errors: { message: 'Please fill out all fields' }
+                errors: { message: 'Please fill out all fields' },
             });
             return;
         }
 
         if (new_password !== new_matching_password) {
             this.setState({
-                errors: { message: 'The new passwords are not matching' }
+                errors: { message: 'The new passwords are not matching' },
             });
             return;
         }
         this.setState({
             loading: true,
-            errors: null
+            errors: null,
         });
 
         updateUserPassword({
             current_password,
             new_password,
-            new_matching_password
+            new_matching_password,
         })
             .then(response => {
                 toast.success('Your changes have been saved successfully');
@@ -58,13 +58,13 @@ class Password extends Component {
                     loading: false,
                     current_password: '',
                     new_password: '',
-                    new_matching_password: ''
+                    new_matching_password: '',
                 });
             })
             .catch(err => {
                 this.setState({
                     loading: false,
-                    errors: err
+                    errors: err,
                 });
             });
     };
@@ -72,7 +72,7 @@ class Password extends Component {
     render = () => (
         <>
             <h5 className="mb-4">Change password</h5>
-            {Boolean(get_error_message(this.state.errors)) && <Alert color="danger">{get_error_message(this.state.errors)}</Alert>}
+            {Boolean(getErrorMessage(this.state.errors)) && <Alert color="danger">{getErrorMessage(this.state.errors)}</Alert>}
             <Form>
                 <FormGroup>
                     <Label for="current_password">Current password</Label>
@@ -83,10 +83,10 @@ class Password extends Component {
                         name="current_password"
                         id="current_password"
                         placeholder="Current password"
-                        invalid={Boolean(get_error_message(this.state.errors, 'current_password'))}
+                        invalid={Boolean(getErrorMessage(this.state.errors, 'current_password'))}
                     />
-                    {Boolean(get_error_message(this.state.errors, 'current_password')) && (
-                        <FormFeedback>{get_error_message(this.state.errors, 'current_password')}</FormFeedback>
+                    {Boolean(getErrorMessage(this.state.errors, 'current_password')) && (
+                        <FormFeedback>{getErrorMessage(this.state.errors, 'current_password')}</FormFeedback>
                     )}
                 </FormGroup>
                 <Row>
@@ -100,10 +100,10 @@ class Password extends Component {
                                 name="new_password"
                                 id="new_password"
                                 placeholder="New password"
-                                invalid={Boolean(get_error_message(this.state.errors, 'new_password'))}
+                                invalid={Boolean(getErrorMessage(this.state.errors, 'new_password'))}
                             />
-                            {Boolean(get_error_message(this.state.errors, 'new_password')) && (
-                                <FormFeedback>{get_error_message(this.state.errors, 'new_password')}</FormFeedback>
+                            {Boolean(getErrorMessage(this.state.errors, 'new_password')) && (
+                                <FormFeedback>{getErrorMessage(this.state.errors, 'new_password')}</FormFeedback>
                             )}
                         </FormGroup>
                     </div>
@@ -117,10 +117,10 @@ class Password extends Component {
                                 name="new_matching_password"
                                 id="new_matching_password"
                                 placeholder="Confirm new password"
-                                invalid={Boolean(get_error_message(this.state.errors, 'new_matching_password'))}
+                                invalid={Boolean(getErrorMessage(this.state.errors, 'new_matching_password'))}
                             />
-                            {Boolean(get_error_message(this.state.errors, 'new_matching_password')) && (
-                                <FormFeedback>{get_error_message(this.state.errors, 'new_matching_password')}</FormFeedback>
+                            {Boolean(getErrorMessage(this.state.errors, 'new_matching_password')) && (
+                                <FormFeedback>{getErrorMessage(this.state.errors, 'new_matching_password')}</FormFeedback>
                             )}
                         </FormGroup>
                     </div>

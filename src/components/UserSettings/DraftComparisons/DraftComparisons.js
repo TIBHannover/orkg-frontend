@@ -37,12 +37,12 @@ const DraftComparisons = () => {
                 items: 10,
                 sortBy: 'created_at',
                 creator: userId,
-                desc: true
+                desc: true,
             });
             const draftComparisonUrls = await Promise.all(_draftComparisons.map(draftComparison => getResourceData(draftComparison.id)));
             setIsLast(last);
             setDraftComparisons(
-                _draftComparisons.map((draftComparison, index) => ({ ...draftComparison, url: draftComparisonUrls[index].data.url }))
+                _draftComparisons.map((draftComparison, index) => ({ ...draftComparison, url: draftComparisonUrls[index].data.url })),
             );
         } catch (e) {
             toast.error('An error occurred, reload the page and try again');
@@ -57,7 +57,7 @@ const DraftComparisons = () => {
     const handleDelete = async id => {
         const isConfirmed = await Confirm({
             title: 'Are you sure?',
-            message: `Are you sure to delete this draft comparison? If the comparison is published already, the comparison remains available`
+            message: 'Are you sure to delete this draft comparison? If the comparison is published already, the comparison remains available',
         });
 
         if (isConfirmed) {
@@ -70,7 +70,7 @@ const DraftComparisons = () => {
 
     const handleChange = ({ title, editItem }) =>
         setDraftComparisons(comparisons =>
-            comparisons.map(draftComparison => (draftComparison.id === editItem.id ? { ...draftComparison, label: title } : draftComparison))
+            comparisons.map(draftComparison => (draftComparison.id === editItem.id ? { ...draftComparison, label: title } : draftComparison)),
         );
 
     const handleEdit = draftComparison => {

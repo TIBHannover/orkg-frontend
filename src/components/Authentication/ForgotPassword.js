@@ -10,13 +10,13 @@ class ForgotPassword extends Component {
         super(props);
 
         this.state = {
-            email: ''
+            email: '',
         };
     }
 
     handleInputChange(e) {
         this.setState({
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
         });
     }
 
@@ -57,14 +57,14 @@ class ForgotPassword extends Component {
 }
 
 ForgotPassword.propTypes = {
-    toggleAuthDialog: PropTypes.func.isRequired
+    toggleAuthDialog: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
-    toggleAuthDialog: () => dispatch(toggleAuthDialog())
+    toggleAuthDialog: () => dispatch(toggleAuthDialog()),
 });
 
 export default connect(
     null,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(ForgotPassword);

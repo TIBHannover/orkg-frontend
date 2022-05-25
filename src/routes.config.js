@@ -27,7 +27,6 @@ import ROUTES from 'constants/routes';
 import RedirectShortLinks from 'pages/RedirectShortLinks';
 import ResearchField from 'pages/ResearchFields/ResearchField';
 import ResearchFields from 'pages/ResearchFields/ResearchFields';
-import ResearchProblem from './pages/ResearchProblem';
 import Resources from 'pages/Resources/Resources';
 import Organizations from 'pages/Organizations/Organizations';
 import Observatories from 'pages/Observatories/Observatories';
@@ -69,6 +68,7 @@ import ListDiff from 'pages/Lists/ListDiff';
 import ContentTypeNew from 'pages/ContentType/ContentTypeNew';
 import ContentType from 'pages/ContentType/ContentType';
 import ContentTypes from 'pages/ContentType/ContentTypes';
+import ResearchProblem from './pages/ResearchProblem';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -78,294 +78,294 @@ const PdfAnnotation = lazy(() => import('pages/PdfAnnotation')); // for dependen
 const routes = [
     {
         path: ROUTES.HOME,
-        element: Home
+        element: Home,
     },
     {
         path: ROUTES.RESOURCES,
-        element: Resources
+        element: Resources,
     },
     {
         path: ROUTES.RESOURCE,
-        element: ResourceDetails
+        element: ResourceDetails,
     },
     {
         path: ROUTES.ADD_RESOURCE,
-        element: requireAuthentication(AddResource)
+        element: requireAuthentication(AddResource),
     },
     {
         path: ROUTES.PROPERTIES,
-        element: Properties
+        element: Properties,
     },
     {
         path: ROUTES.PROPERTY,
-        element: PropertyDetails
+        element: PropertyDetails,
     },
     {
         path: ROUTES.ADD_PROPERTY,
-        element: requireAuthentication(AddProperty)
+        element: requireAuthentication(AddProperty),
     },
     {
         path: ROUTES.CLASSES,
-        element: Classes
+        element: Classes,
     },
     {
         path: ROUTES.CLASS,
-        element: ClassDetails
+        element: ClassDetails,
     },
     {
         path: ROUTES.ADD_CLASS,
-        element: requireAuthentication(AddClass)
+        element: requireAuthentication(AddClass),
     },
     {
         path: ROUTES.TEMPLATES,
-        element: Templates
+        element: Templates,
     },
     {
         path: ROUTES.TEMPLATE,
-        element: Template
+        element: Template,
     },
     {
         path: ROUTES.ADD_TEMPLATE,
-        element: Template
+        element: Template,
     },
     {
         path: ROUTES.USER_SETTINGS,
-        element: requireAuthentication(UserSettings)
+        element: requireAuthentication(UserSettings),
     },
     {
         path: ROUTES.USER_SETTINGS_DEFAULT,
-        element: requireAuthentication(UserSettings)
+        element: requireAuthentication(UserSettings),
     },
     {
         path: ROUTES.USER_PROFILE,
-        element: UserProfile
+        element: UserProfile,
     },
     {
         path: ROUTES.ADD_PAPER.GENERAL_DATA,
-        element: requireAuthentication(AddPaper)
+        element: requireAuthentication(AddPaper),
     },
     {
         /* TODO: slug for the paper title */
         path: ROUTES.VIEW_PAPER_CONTRIBUTION,
-        element: ViewPaper
+        element: ViewPaper,
     },
     {
         path: ROUTES.VIEW_PAPER,
-        element: ViewPaper
+        element: ViewPaper,
     },
     {
         path: ROUTES.COMPARISON_DIFF,
-        element: ComparisonDiff
+        element: ComparisonDiff,
     },
     {
         path: ROUTES.COMPARISON_SHORTLINK,
-        element: RedirectShortLinks
+        element: RedirectShortLinks,
     },
     {
         path: ROUTES.COMPARISON,
-        element: Comparison
+        element: Comparison,
     },
     {
         path: ROUTES.COMPARISON_NOT_PUBLISHED,
-        element: Comparison
+        element: Comparison,
     },
     {
         path: ROUTES.ORGANIZATIONS,
-        element: Organizations
+        element: Organizations,
     },
     {
         path: ROUTES.OBSERVATORIES,
-        element: Observatories
+        element: Observatories,
     },
     {
         path: ROUTES.PAPERS,
-        element: Papers
+        element: Papers,
     },
     {
         path: ROUTES.COMPARISONS,
-        element: Comparisons
+        element: Comparisons,
     },
 
     {
         path: ROUTES.VISUALIZATIONS,
-        element: Visualizations
+        element: Visualizations,
     },
     {
         path: ROUTES.VISUALIZATION,
-        element: Visualization
+        element: Visualization,
     },
     {
         path: ROUTES.RESEARCH_PROBLEM,
-        element: ResearchProblem
+        element: ResearchProblem,
     },
     {
         path: ROUTES.RESEARCH_PROBLEM_NO_SLUG,
-        element: ResearchProblem
+        element: ResearchProblem,
     },
     {
         path: ROUTES.RESEARCH_FIELD,
-        element: ResearchField
+        element: ResearchField,
     },
     {
         path: ROUTES.RESEARCH_FIELD_NO_SLUG,
-        element: ResearchField
+        element: ResearchField,
     },
     {
         path: ROUTES.RESEARCH_FIELDS,
-        element: ResearchFields
+        element: ResearchFields,
     },
     {
         path: ROUTES.VENUE_PAGE,
-        element: VenuePage
+        element: VenuePage,
     },
     {
         path: ROUTES.AUTHOR_PAGE,
-        element: AuthorPage
+        element: AuthorPage,
     },
     {
         path: ROUTES.CHANGELOG,
-        element: Changelog
+        element: Changelog,
     },
     {
         path: ROUTES.SEARCH,
-        element: SearchResults
+        element: SearchResults,
     },
     {
         path: ROUTES.STATS,
-        element: Stats
+        element: Stats,
     },
     /* Legacy routes, only used for debugging now */
     {
         path: ROUTES.FEATURED_COMPARISONS,
-        element: FeaturedComparisons
+        element: FeaturedComparisons,
     },
     {
         path: ROUTES.ORGANIZATION,
-        element: OrganizationDetails
+        element: OrganizationDetails,
     },
     {
         path: ROUTES.ADD_ORGANIZATION,
-        element: requireAuthentication(AddOrganization)
+        element: requireAuthentication(AddOrganization),
     },
     {
         path: ROUTES.ADD_OBSERVATORY,
-        element: requireAuthentication(AddObservatory)
+        element: requireAuthentication(AddObservatory),
     },
     {
         path: ROUTES.OBSERVATORY,
-        element: Observatory
+        element: Observatory,
     },
     {
         path: ROUTES.PDF_TEXT_ANNOTATION,
-        element: PdfTextAnnotation
+        element: PdfTextAnnotation,
     },
     {
         path: ROUTES.TPDL,
-        element: () => <Navigate to="/" />
+        element: () => <Navigate to="/" />,
     },
     {
         path: ROUTES.PDF_ANNOTATION,
-        element: requireAuthentication(PdfAnnotation)
+        element: requireAuthentication(PdfAnnotation),
     },
     {
         path: ROUTES.CONTRIBUTION,
-        element: Contribution
+        element: Contribution,
     },
     {
         path: ROUTES.EXPORT_DATA,
-        element: () => <Navigate to={{ pathname: reverse(ROUTES.DATA), state: { status: 301 } }} />
+        element: () => <Navigate to={{ pathname: reverse(ROUTES.DATA), state: { status: 301 } }} />,
     },
     {
         path: ROUTES.DATA,
-        element: Data
+        element: Data,
     },
     {
         path: ROUTES.CSV_IMPORT,
-        element: requireAuthentication(CsvImport)
+        element: requireAuthentication(CsvImport),
     },
     {
         path: ROUTES.BENCHMARKS,
-        element: Benchmarks
+        element: Benchmarks,
     },
     {
         path: ROUTES.BENCHMARK,
-        element: Benchmark
+        element: Benchmark,
     },
     {
         path: ROUTES.REVIEW_NEW,
-        element: requireAuthentication(ReviewNew)
+        element: requireAuthentication(ReviewNew),
     },
     {
         path: ROUTES.REVIEW_DIFF,
-        element: ReviewDiff
+        element: ReviewDiff,
     },
     {
         path: ROUTES.REVIEW,
-        element: Review
+        element: Review,
     },
     {
         path: ROUTES.REVIEWS,
-        element: Reviews
+        element: Reviews,
     },
     {
         path: ROUTES.CONTRIBUTION_EDITOR,
-        element: requireAuthentication(ContributionEditor)
+        element: requireAuthentication(ContributionEditor),
     },
     {
         path: ROUTES.ADD_COMPARISON,
-        element: AddComparison
+        element: AddComparison,
     },
     {
         path: ROUTES.TOOLS,
-        element: Tools
+        element: Tools,
     },
     {
         path: ROUTES.PAGE,
-        element: Page
+        element: Page,
     },
     {
         path: ROUTES.ABOUT,
-        element: About
+        element: About,
     },
     {
         path: ROUTES.ABOUT_NO_SLUG,
-        element: About
+        element: About,
     },
     {
         path: ROUTES.ABOUT_NO_SLUG_ID,
-        element: About
+        element: About,
     },
     {
         path: ROUTES.HELP_CENTER_CATEGORY,
-        element: HelpCenterCategory
+        element: HelpCenterCategory,
     },
     {
         path: ROUTES.HELP_CENTER_ARTICLE,
-        element: HelpCenterArticle
+        element: HelpCenterArticle,
     },
     {
         path: ROUTES.HELP_CENTER_SEARCH,
-        element: HelpCenterSearch
+        element: HelpCenterSearch,
     },
     {
         path: ROUTES.LISTS,
-        element: Lists
+        element: Lists,
     },
     {
         path: ROUTES.LIST_NEW,
-        element: ListNew
+        element: ListNew,
     },
     {
         path: ROUTES.LIST_DIFF,
-        element: ListDiff
+        element: ListDiff,
     },
     {
         path: ROUTES.LIST,
-        element: List
+        element: List,
     },
     {
         path: ROUTES.LIST_EMBED,
-        element: List
+        element: List,
     },
     // redirect legacy route
     {
@@ -373,46 +373,46 @@ const routes = [
         element: () => {
             window.location.replace('https://www.orkg.org/orkg/about/28/Curation_Grants');
             return null;
-        }
+        },
     },
     {
         path: ROUTES.HELP_CENTER,
-        element: HelpCenter
+        element: HelpCenter,
     },
     {
         path: ROUTES.WEBINAR_MAY_11,
-        element: WebinarMay11
+        element: WebinarMay11,
     },
     {
         path: ROUTES.USER_UNPUBLISHED_REVIEWS,
-        element: () => <Navigate to={{ pathname: reverse(ROUTES.USER_SETTINGS, { tab: 'draft-reviews' }), state: { status: 301 } }} />
+        element: () => <Navigate to={{ pathname: reverse(ROUTES.USER_SETTINGS, { tab: 'draft-reviews' }), state: { status: 301 } }} />,
     },
     {
         path: ROUTES.CONTENT_TYPE_NEW,
-        element: ContentTypeNew
+        element: ContentTypeNew,
     },
     {
         path: ROUTES.CONTENT_TYPE_NEW_NO_TYPE,
-        element: ContentTypeNew
+        element: ContentTypeNew,
     },
     {
         path: ROUTES.CONTENT_TYPE,
-        element: ContentType
+        element: ContentType,
     },
     {
         path: ROUTES.CONTENT_TYPE_NO_MODE,
-        element: ContentType
+        element: ContentType,
     },
     {
         path: ROUTES.CONTENT_TYPES,
-        element: ContentTypes
-    }
+        element: ContentTypes,
+    },
 ];
 
 const legacyRoutes = [
     {
         path: ROUTES.SMART_REVIEW_NEW,
-        element: () => <Navigate to={{ pathname: ROUTES.REVIEW_NEW, state: { status: 301 } }} />
+        element: () => <Navigate to={{ pathname: ROUTES.REVIEW_NEW, state: { status: 301 } }} />,
     },
     {
         path: ROUTES.SMART_REVIEW_DIFF,
@@ -420,31 +420,31 @@ const legacyRoutes = [
             <Navigate
                 to={{ pathname: reverse(ROUTES.REVIEW_DIFF, { oldId: match.params.oldId, newId: match.params.newId }), state: { status: 301 } }}
             />
-        )
+        ),
     },
     {
         path: ROUTES.SMART_REVIEW,
-        element: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.REVIEW, { id: match.params.id }), state: { status: 301 } }} />
+        element: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.REVIEW, { id: match.params.id }), state: { status: 301 } }} />,
     },
     {
         path: ROUTES.SMART_REVIEWS,
-        element: () => <Navigate to={{ pathname: ROUTES.REVIEWS, state: { status: 301 } }} />
+        element: () => <Navigate to={{ pathname: ROUTES.REVIEWS, state: { status: 301 } }} />,
     },
     {
         path: ROUTES.LITERATURE_LISTS,
-        element: () => <Navigate to={{ pathname: ROUTES.LISTS, state: { status: 301 } }} />
+        element: () => <Navigate to={{ pathname: ROUTES.LISTS, state: { status: 301 } }} />,
     },
     {
         path: ROUTES.LITERATURE_LIST,
-        element: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.LIST, { id: match.params.id }), state: { status: 301 } }} />
+        element: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.LIST, { id: match.params.id }), state: { status: 301 } }} />,
     },
     {
         path: ROUTES.LITERATURE_LIST_EMBED,
-        element: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.LIST_EMBED, { id: match.params.id }), state: { status: 301 } }} />
+        element: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.LIST_EMBED, { id: match.params.id }), state: { status: 301 } }} />,
     },
     {
         path: ROUTES.LITERATURE_LIST_NEW,
-        element: () => <Navigate to={{ pathname: ROUTES.LIST_NEW, state: { status: 301 } }} />
+        element: () => <Navigate to={{ pathname: ROUTES.LIST_NEW, state: { status: 301 } }} />,
     },
     {
         path: ROUTES.LITERATURE_LIST_DIFF,
@@ -452,8 +452,8 @@ const legacyRoutes = [
             <Navigate
                 to={{ pathname: reverse(ROUTES.LIST_DIFF, { oldId: match.params.oldId, newId: match.params.newId }), state: { status: 301 } }}
             />
-        )
-    }
+        ),
+    },
 ];
 
 const allRoutes = [
@@ -462,8 +462,8 @@ const allRoutes = [
     // NotFound must be the last route
     {
         path: '*',
-        element: NotFound
-    }
+        element: NotFound,
+    },
 ];
 
 export default allRoutes;

@@ -44,7 +44,7 @@ const GeneralSettings = () => {
             dispatch(updateClass(selected));
         } else if (action === 'create-option') {
             const newClass = await ConfirmClass({
-                label: selected.label
+                label: selected.label,
             });
             if (newClass) {
                 selected.id = newClass.id;

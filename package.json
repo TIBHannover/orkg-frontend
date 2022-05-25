@@ -26,6 +26,7 @@
         "detect-browser": "^5.3.0",
         "dompurify": "^2.3.6",
         "dot-prop-immutable": "^2.1.1",
+        "eslint-config-airbnb": "^19.0.4",
         "fast-text-encoding": "^1.0.2",
         "greeting-time": "^1.0.0",
         "handsontable": "^11.0.1",
@@ -118,8 +119,9 @@
         "test:ci": "react-scripts test --ci --env=jsdom --reporters=default --reporters=jest-junit --runInBand",
         "eject": "react-scripts eject",
         "flow": "flow",
-        "lint": "eslint src/**/*.js",
-        "lint:fix": "eslint src/**/*.js --fix",
+        "lint": "eslint src",
+        "lint:fix": "eslint src --fix",
+        "lint:quiet": "eslint src --quiet",
         "version": "auto-changelog -t keepachangelog.hbs && git add CHANGELOG.md",
         "prepare": "husky install"
     },
@@ -157,7 +159,7 @@
         "tagPrefix": "V"
     },
     "lint-staged": {
-        "src/**/*.{js,jsx}": [
+        "src": [
             "npm run --silent lint:fix"
         ]
     },
@@ -175,76 +177,104 @@
     "eslintConfig": {
         "extends": [
             "react-app",
-            "plugin:prettier/recommended"
+            "plugin:prettier/recommended",
+            "airbnb-base"
         ],
         "plugins": [
             "prettier",
             "jsx-a11y"
         ],
         "rules": {
-            "prettier/prettier": [
-                "error"
-            ],
-            "react/jsx-closing-bracket-location": [
-                "error"
-            ],
-            "react/jsx-closing-tag-location": [
-                "error"
-            ],
-            "react/sort-comp": [
-                "error"
-            ],
-            "jsx-quotes": [
-                "error"
-            ],
-            "no-multi-spaces": [
-                "error"
-            ],
-            "react/jsx-tag-spacing": [
-                "error"
-            ],
-            "react/jsx-curly-spacing": [
-                "error"
-            ],
-            "curly": [
-                "error"
-            ],
-            "react/jsx-wrap-multilines": [
-                "error"
-            ],
-            "react/self-closing-comp": [
-                "error"
-            ],
-            "react/prop-types": [
-                "error"
-            ],
-            "no-var": [
-                "error"
-            ],
-            "no-const-assign": [
-                "error"
-            ],
-            "prefer-const": [
-                1
-            ],
-            "react/jsx-curly-brace-presence": [
-                "error"
-            ],
+            "prettier/prettier": 1,
+            "react/jsx-closing-bracket-location": 2,
+            "react/jsx-closing-tag-location": 2,
+            "react/sort-comp": 2,
+            "jsx-quotes": 2,
+            "no-multi-spaces": 2,
+            "react/jsx-tag-spacing": 2,
+            "react/jsx-curly-spacing": 2,
+            "curly": 2,
+            "react/jsx-wrap-multilines": 2,
+            "react/self-closing-comp": 2,
+            "react/prop-types": 2,
+            "no-var": 2,
+            "no-const-assign": 2,
+            "prefer-const": 1,
+            "react/jsx-curly-brace-presence": 2,
             "jsx-a11y/no-autofocus": [
                 2,
                 {
                     "ignoreNonDOM": true
                 }
             ],
-            "jsx-a11y/click-events-have-key-events": [
-                "warn"
+            "jsx-a11y/click-events-have-key-events": 1,
+            "jsx-a11y/no-static-element-interactions": 1,
+            "jsx-a11y/no-noninteractive-element-interactions": 1,
+            "comma-dangle": [
+                2,
+                "always-multiline"
             ],
-            "jsx-a11y/no-static-element-interactions": [
-                "warn"
+            "max-len": [
+                1,
+                150
             ],
-            "jsx-a11y/no-noninteractive-element-interactions": [
-                "warn"
-            ]
+            "arrow-parens": [
+                2,
+                "as-needed"
+            ],
+            "import/no-unresolved": 0,
+            "indent": 0,
+            "operator-linebreak": 0,
+            "object-curly-newline": 0,
+            "implicit-arrow-linebreak": 0,
+            "function-paren-newline": 0,
+            "no-unused-vars": 1,
+            "no-await-in-loop": 1,
+            "no-nested-ternary": 1,
+            "no-param-reassign": 1,
+            "camelcase": 1,
+            "no-confusing-arrow": 1,
+            "no-prototype-builtins": 1,
+            "no-restricted-syntax": 1,
+            "prefer-destructuring": 1,
+            "space-before-function-paren": 1,
+            "class-methods-use-this": 1,
+            "no-shadow": 1,
+            "import/no-extraneous-dependencies": 0,
+            "no-empty": 1,
+            "consistent-return": 1,
+            "no-use-before-define": 1,
+            "no-underscore-dangle": 0,
+            "radix": 1,
+            "import/prefer-default-export": 1,
+            "import/extensions": 1,
+            "no-return-await": 1,
+            "no-unused-expressions": 1,
+            "no-lonely-if": 1,
+            "no-plusplus": 1,
+            "no-bitwise": 1,
+            "prefer-promise-reject-errors": 1,
+            "prefer-rest-params": 1,
+            "no-return-assign": 1,
+            "no-restricted-globals": 1,
+            "no-case-declarations": 1,
+            "no-continue": 1,
+            "import/no-duplicates": 1,
+            "import/no-cycle": 1,
+            "no-tabs": 1,
+            "no-cond-assign": 1,
+            "global-require": 1,
+            "new-cap": 1,
+            "guard-for-in": 1,
+            "operator-assignment": 1,
+            "import/no-named-as-default": 1,
+            "no-unsafe-optional-chaining": 1,
+            "default-case-last": 1,
+            "default-param-last": 1,
+            "import/no-import-module-exports": 1,
+            "prefer-regex-literals": 1,
+            "wrap-iife": 1,
+            "no-constructor-return": 1
         }
     }
 }

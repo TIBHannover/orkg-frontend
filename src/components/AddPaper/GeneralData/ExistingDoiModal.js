@@ -39,7 +39,7 @@ const ExistingDoiModal = props => {
 
 ExistingDoiModal.propTypes = {
     existingPaper: PropTypes.object.isRequired,
-    onContinue: PropTypes.func
+    onContinue: PropTypes.func,
 };
 
 export default ExistingDoiModal;

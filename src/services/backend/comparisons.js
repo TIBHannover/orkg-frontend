@@ -28,13 +28,13 @@ export const getComparisonVersionsById = comparisonId => {
                 nextStatement,
                 PREDICATES.HAS_PREVIOUS_VERSION,
                 false,
-                CLASSES.COMPARISON
+                CLASSES.COMPARISON,
             );
             const previousVersion = filterObjectOfStatementsByPredicateAndClass(
                 previousStatement,
                 PREDICATES.HAS_PREVIOUS_VERSION,
                 true,
-                CLASSES.COMPARISON
+                CLASSES.COMPARISON,
             );
             // Push the current version to checked
             checked.push(id);
@@ -48,7 +48,7 @@ export const getComparisonVersionsById = comparisonId => {
             });
             return Promise.all([
                 getVersions(previousVersion?.id, versions, checked),
-                ...nextVersions.map(nextVersion => getVersions(nextVersion?.id, versions, checked))
+                ...nextVersions.map(nextVersion => getVersions(nextVersion?.id, versions, checked)),
             ]).then(v => uniqBy(flatten(v), 'id'));
         });
     };
@@ -56,10 +56,9 @@ export const getComparisonVersionsById = comparisonId => {
         const currentNode = getResource(comparisonId);
         const restOfNodes = getVersions(comparisonId, []);
 
-        return Promise.all([currentNode, restOfNodes]).then(c => {
-            return uniqBy(flatten(c), 'id').sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-        });
-    } else {
-        return Promise.resolve([]);
+        return Promise.all([currentNode, restOfNodes]).then(c =>
+            uniqBy(flatten(c), 'id').sort((a, b) => new Date(b.created_at) - new Date(a.created_at)),
+        );
     }
+    return Promise.resolve([]);
 };

@@ -2,58 +2,53 @@ import { url } from 'constants/misc';
 import { submitGetRequest, submitPostRequest, submitDeleteRequest, submitPutRequest } from 'network';
 import queryString from 'query-string';
 import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
-import { filterStatementsBySubjectId, getTemplateComponentData, filterObjectOfStatementsByPredicateAndClass } from 'utils';
-import { sortMethod } from 'utils';
+import { filterStatementsBySubjectId, getTemplateComponentData, filterObjectOfStatementsByPredicateAndClass, sortMethod } from 'utils';
 
 export const statementsUrl = `${url}statements/`;
 
-export const createResourceStatement = (subjectId, predicateId, objectId) => {
-    return submitPostRequest(
+export const createResourceStatement = (subjectId, predicateId, objectId) =>
+    submitPostRequest(
         `${statementsUrl}`,
         { 'Content-Type': 'application/json' },
         {
             subject_id: subjectId,
             predicate_id: predicateId,
-            object_id: objectId
-        }
+            object_id: objectId,
+        },
     );
-};
 
-export const createLiteralStatement = (subjectId, predicateId, literalId) => {
-    return submitPostRequest(
+export const createLiteralStatement = (subjectId, predicateId, literalId) =>
+    submitPostRequest(
         `${statementsUrl}`,
         { 'Content-Type': 'application/json' },
         {
             subject_id: subjectId,
             predicate_id: predicateId,
-            object_id: literalId
-        }
+            object_id: literalId,
+        },
     );
-};
 
-export const updateStatement = (id, { subject_id = null, predicate_id = null, object_id = null }) => {
-    return submitPutRequest(
+export const updateStatement = (id, { subject_id = null, predicate_id = null, object_id = null }) =>
+    submitPutRequest(
         `${statementsUrl}${id}`,
         { 'Content-Type': 'application/json' },
         {
-            ...(subject_id ? { subject_id: subject_id } : null),
-            ...(predicate_id ? { predicate_id: predicate_id } : null),
-            ...(object_id ? { object_id: object_id } : null)
-        }
+            ...(subject_id ? { subject_id } : null),
+            ...(predicate_id ? { predicate_id } : null),
+            ...(object_id ? { object_id } : null),
+        },
     );
-};
 
-export const updateStatements = (statementIds, { subject_id = null, predicate_id = null, object_id = null }) => {
-    return submitPutRequest(
+export const updateStatements = (statementIds, { subject_id = null, predicate_id = null, object_id = null }) =>
+    submitPutRequest(
         `${statementsUrl}?ids=${statementIds.join()}`,
         { 'Content-Type': 'application/json' },
         {
-            ...(subject_id ? { subject_id: subject_id } : null),
-            ...(predicate_id ? { predicate_id: predicate_id } : null),
-            ...(object_id ? { object_id: object_id } : null)
-        }
+            ...(subject_id ? { subject_id } : null),
+            ...(predicate_id ? { predicate_id } : null),
+            ...(object_id ? { object_id } : null),
+        },
     );
-};
 
 export const getAllStatements = ({ page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
@@ -61,20 +56,16 @@ export const getAllStatements = ({ page = 0, items: size = 9999, sortBy = 'creat
         { page, size, sort },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
 
     return submitGetRequest(`${statementsUrl}?${params}`).then(res => res.content);
 };
 
-export const deleteStatementById = id => {
-    return submitDeleteRequest(statementsUrl + encodeURIComponent(id));
-};
+export const deleteStatementById = id => submitDeleteRequest(statementsUrl + encodeURIComponent(id));
 
-export const deleteStatementsByIds = ids => {
-    return submitDeleteRequest(`${statementsUrl}?ids=${ids.join()}`);
-};
+export const deleteStatementsByIds = ids => submitDeleteRequest(`${statementsUrl}?ids=${ids.join()}`);
 
 export const getStatementsBySubject = ({ id, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
@@ -82,8 +73,8 @@ export const getStatementsBySubject = ({ id, page = 0, items: size = 9999, sortB
         { page, size, sort },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
 
     return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`).then(res => res.content);
@@ -103,8 +94,8 @@ export const getStatementsBundleBySubject = ({ id, maxLevel = 10, blacklist = []
         { maxLevel, blacklist: blacklist?.join(',') },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
     return submitGetRequest(`${statementsUrl}${encodeURIComponent(id)}/bundle/?${params}`);
 };
@@ -115,14 +106,14 @@ export const getStatementsBySubjects = ({ ids, page = 0, items: size = 9999, sor
         { ids: ids.join(), page, size, sort },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
     return submitGetRequest(`${statementsUrl}subjects/?${params}`).then(res =>
         res.map(subjectStatements => ({
             ...subjectStatements,
-            statements: subjectStatements.statements.content
-        }))
+            statements: subjectStatements.statements.content,
+        })),
     );
 };
 
@@ -132,8 +123,8 @@ export const getStatementsByObject = async ({ id, page = 0, items: size = 9999, 
         { page, size, sort },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
 
     const statements = await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/?${params}`).then(res => res.content);
@@ -147,8 +138,8 @@ export const getStatementsByPredicate = ({ id, page = 0, items: size = 9999, sor
         { page, size, sort },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
 
     return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/?${params}`).then(res => (returnContent ? res.content : res));
@@ -160,8 +151,8 @@ export const getStatementsBySubjectAndPredicate = ({ subjectId, predicateId, pag
         { page, size, sort },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
 
     return submitGetRequest(`${statementsUrl}subject/${subjectId}/predicate/${predicateId}/?${params}`).then(res => res.content);
@@ -174,29 +165,29 @@ export const getStatementsByObjectAndPredicate = ({
     items: size = 9999,
     sortBy = 'created_at',
     desc = true,
-    returnContent = true
+    returnContent = true,
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
         { page, size, sort },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
 
     return submitGetRequest(`${statementsUrl}object/${objectId}/predicate/${predicateId}/?${params}`).then(res =>
-        returnContent ? res.content : res
+        returnContent ? res.content : res,
     );
 };
 
 export const getStatementsByPredicateAndLiteral = ({ predicateId, literal, subjectClass = null, items: size = 9999 }) => {
     const params = queryString.stringify(
-        { size, subjectClass: subjectClass },
+        { size, subjectClass },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
     return submitGetRequest(`${statementsUrl}predicate/${predicateId}/literal/${literal}/?${params}`).then(res => res.content);
 };
@@ -218,7 +209,7 @@ export const getTemplateById = async templateId => {
         PREDICATES.TEMPLATE_OF_PREDICATE,
         true,
         null,
-        templateId
+        templateId,
     );
 
     const templateClass = filterObjectOfStatementsByPredicateAndClass(response.statements, PREDICATES.TEMPLATE_OF_CLASS, true, null, templateId);
@@ -227,7 +218,7 @@ export const getTemplateById = async templateId => {
         PREDICATES.TEMPLATE_LABEL_FORMAT,
         true,
         null,
-        templateId
+        templateId,
     );
 
     const templateIsStrict = filterObjectOfStatementsByPredicateAndClass(response.statements, PREDICATES.TEMPLATE_STRICT, true, null, templateId);
@@ -236,7 +227,7 @@ export const getTemplateById = async templateId => {
         PREDICATES.HAS_TEMPLATE_COMPONENT,
         false,
         null,
-        templateId
+        templateId,
     );
 
     const researchFields = filterObjectOfStatementsByPredicateAndClass(
@@ -244,7 +235,7 @@ export const getTemplateById = async templateId => {
         PREDICATES.TEMPLATE_OF_RESEARCH_FIELD,
         false,
         null,
-        templateId
+        templateId,
     );
 
     const researchProblems = filterObjectOfStatementsByPredicateAndClass(
@@ -252,11 +243,11 @@ export const getTemplateById = async templateId => {
         PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM,
         false,
         null,
-        templateId
+        templateId,
     );
 
     const components = templateComponents.map(component =>
-        getTemplateComponentData(component, filterStatementsBySubjectId(response.statements, component.id))
+        getTemplateComponentData(component, filterStatementsBySubjectId(response.statements, component.id)),
     );
 
     return {
@@ -265,23 +256,23 @@ export const getTemplateById = async templateId => {
         statements: statements.map(s => s.id),
         predicate: templatePredicate,
         labelFormat: templateFormatLabel ? templateFormatLabel.label : '',
-        hasLabelFormat: templateFormatLabel ? true : false,
-        isStrict: templateIsStrict ? true : false,
+        hasLabelFormat: !!templateFormatLabel,
+        isStrict: !!templateIsStrict,
         components: components?.length > 0 ? components.sort((c1, c2) => sortMethod(c1.order, c2.order)) : [],
         class: templateClass
             ? {
                   id: templateClass.id,
-                  label: templateClass.label
+                  label: templateClass.label,
               }
             : {},
         researchFields: researchFields.map(statement => ({
             id: statement.id,
-            label: statement.label
+            label: statement.label,
         })),
         researchProblems: researchProblems.map(statement => ({
             id: statement.id,
-            label: statement.label
-        }))
+            label: statement.label,
+        })),
     };
 };
 
@@ -294,22 +285,20 @@ export const getParentResearchFields = (researchFieldId, parents = []) => {
     if (researchFieldId === MISC.RESEARCH_FIELD_MAIN) {
         parents.push({ id: researchFieldId, label: 'Research Field' });
         return Promise.resolve(parents);
-    } else {
-        return getStatementsByObjectAndPredicate({
-            objectId: researchFieldId,
-            predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD
-        }).then(parentResearchField => {
-            if (parentResearchField && parentResearchField[0]) {
-                parents.push(parentResearchField[0].object);
-                if (parents.find(p => p.id === parentResearchField[0].subject.id)) {
-                    return Promise.resolve(parents);
-                }
-                return getParentResearchFields(parentResearchField[0].subject.id, parents);
-            } else {
+    }
+    return getStatementsByObjectAndPredicate({
+        objectId: researchFieldId,
+        predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD,
+    }).then(parentResearchField => {
+        if (parentResearchField && parentResearchField[0]) {
+            parents.push(parentResearchField[0].object);
+            if (parents.find(p => p.id === parentResearchField[0].subject.id)) {
                 return Promise.resolve(parents);
             }
-        });
-    }
+            return getParentResearchFields(parentResearchField[0].subject.id, parents);
+        }
+        return Promise.resolve(parents);
+    });
 };
 
 /**
@@ -320,22 +309,20 @@ export const getParentResearchFields = (researchFieldId, parents = []) => {
 export const getParentResearchProblems = (researchProblemId, parents = []) => {
     if (parents.length > 5) {
         return Promise.resolve(parents);
-    } else {
-        return getStatementsByObjectAndPredicate({
-            objectId: researchProblemId,
-            predicateId: PREDICATES.SUB_PROBLEM
-        }).then(parentResearchProblem => {
-            if (parentResearchProblem && parentResearchProblem[0]) {
-                if (parents.length === 0) {
-                    parents.push(parentResearchProblem[0].object);
-                }
-                parents.push(parentResearchProblem[0].subject);
-                return getParentResearchProblems(parentResearchProblem[0].subject.id, parents);
-            } else {
-                return Promise.resolve(parents);
-            }
-        });
     }
+    return getStatementsByObjectAndPredicate({
+        objectId: researchProblemId,
+        predicateId: PREDICATES.SUB_PROBLEM,
+    }).then(parentResearchProblem => {
+        if (parentResearchProblem && parentResearchProblem[0]) {
+            if (parents.length === 0) {
+                parents.push(parentResearchProblem[0].object);
+            }
+            parents.push(parentResearchProblem[0].subject);
+            return getParentResearchProblems(parentResearchProblem[0].subject.id, parents);
+        }
+        return Promise.resolve(parents);
+    });
 };
 
 /**
@@ -343,16 +330,15 @@ export const getParentResearchProblems = (researchProblemId, parents = []) => {
  *
  * @param {String} classID class ID
  */
-export const getTemplatesByClass = classID => {
-    return getStatementsByObjectAndPredicate({
+export const getTemplatesByClass = classID =>
+    getStatementsByObjectAndPredicate({
         objectId: classID,
-        predicateId: PREDICATES.TEMPLATE_OF_CLASS
+        predicateId: PREDICATES.TEMPLATE_OF_CLASS,
     })
         .then(statements =>
             statements
                 .filter(statement => statement.subject.classes?.includes(CLASSES.TEMPLATE))
                 .map(st => st.subject.id)
-                .filter(c => c)
+                .filter(c => c),
         )
         .catch(() => []);
-};

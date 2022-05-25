@@ -34,17 +34,17 @@ const FeaturedComparisons = () => {
 
     const scrollTo = useCallback(
         header => {
-            const hash = location.hash;
+            const { hash } = location;
             const id = isString(hash) ? hash.replace('#', '') : null;
             if (!header || header.id !== id) {
                 return;
             }
             window.scrollTo({
                 behavior: 'smooth',
-                top: header.offsetTop - 90 // a little space between the select element and the top of the page
+                top: header.offsetTop - 90, // a little space between the select element and the top of the page
             });
         },
-        [location.hash]
+        [location.hash],
     );
 
     const handleClick = (e, id) => {
@@ -59,12 +59,12 @@ const FeaturedComparisons = () => {
             id: CLASSES.FEATURED_COMPARISON_CATEGORY,
             sortBy: 'created_at',
             desc: false,
-            returnContent: true
+            returnContent: true,
         });
 
         const categories = responseJson.map(item => ({
             label: item.label,
-            id: item.id
+            id: item.id,
         }));
 
         setCategories(categories);
@@ -75,12 +75,12 @@ const FeaturedComparisons = () => {
             id: CLASSES.FEATURED_COMPARISON,
             sortBy: 'created_at',
             desc: false,
-            returnContent: true
+            returnContent: true,
         });
 
         const ids = responseJson.map(comparison => comparison.id);
         const comparisonStatements = await getStatementsBySubjects({
-            ids
+            ids,
         });
 
         const comparisons = responseJson.map(comparison => {
@@ -92,7 +92,7 @@ const FeaturedComparisons = () => {
             for (const comparisonStatement of comparisonStatements) {
                 if (comparisonStatement.id === comparison.id) {
                     const descriptionStatement = comparisonStatement.statements.filter(
-                        statement => statement.predicate.id === PREDICATES.DESCRIPTION
+                        statement => statement.predicate.id === PREDICATES.DESCRIPTION,
                     );
                     description = descriptionStatement.length ? descriptionStatement[0].object.label : '';
 
@@ -115,7 +115,7 @@ const FeaturedComparisons = () => {
                 description,
                 contributions,
                 icon,
-                type
+                type,
             };
         });
 

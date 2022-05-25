@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor, waitForElementToBeRemoved } from 'testUtils';
-import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 import selectEvent from 'react-select-event';
+import StatementBrowser from '../StatementBrowser';
 import { statementBrowser1P7V } from '../ValueItem/__mocks__/StatementBrowserDataValueItem';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
@@ -15,8 +15,8 @@ const setup = (
         newStore: false,
         rootNodeType: ENTITIES.RESOURCE,
         enableEdit: true,
-        syncBackend: false
-    }
+        syncBackend: false,
+    },
 ) => {
     render(<StatementBrowser {...props} />, { initialState });
 };
@@ -36,24 +36,24 @@ const VALUE_IDS = {
     Boolean: 'd39d45d1-3e27-3b6a-b2c6-5f5134bad8bd',
     Text: '5b790dfb-82e6-256e-8458-60d78bfa5d37',
     Resource: 'c1aae3c4-4b49-8e5f-7d3f-ba4f8725899b',
-    URL: '1cf10225-1ef6-364e-b829-9797abbbc969'
+    URL: '1cf10225-1ef6-364e-b829-9797abbbc969',
 };
 
 describe('ValueItem', () => {
     it('should cancel editing on clicking Cancel', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['Date']);
+        await clickOnEditValueButton(screen, VALUE_IDS.Date);
         expect(screen.queryByText(/Cancel/i)).toBeInTheDocument();
         fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
         expect(screen.queryByText(/Cancel/i)).toBeNull();
-        expect(screen.getByTestId(VALUE_IDS['Date'])).toBeInTheDocument();
+        expect(screen.getByTestId(VALUE_IDS.Date)).toBeInTheDocument();
     });
 });
 
 describe('ValueItem', () => {
     it('should show edit form for date when editing a Date', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['Date']);
+        await clickOnEditValueButton(screen, VALUE_IDS.Date);
         const inputForm = screen.getByPlaceholderText(/enter a value/i);
         expect(inputForm).toHaveAttribute('type', 'date');
         expect(inputForm).toHaveValue('2021-11-12');
@@ -63,7 +63,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should change value of date after editing a Date', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['Date']);
+        await clickOnEditValueButton(screen, VALUE_IDS.Date);
         fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: '2018-10-25' } });
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
         await waitFor(() => expect(screen.getByText('2018-10-25')).toBeInTheDocument());
@@ -74,7 +74,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should show edit form for text when editing a Integer', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['Integer']);
+        await clickOnEditValueButton(screen, VALUE_IDS.Integer);
         const inputForm = screen.getByPlaceholderText(/enter a value/i);
         expect(inputForm).toBeInTheDocument();
         expect(inputForm).toHaveValue('213');
@@ -84,7 +84,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should change value of integer after editing a Integer', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['Integer']);
+        await clickOnEditValueButton(screen, VALUE_IDS.Integer);
         fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: '1' } });
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
         await waitFor(() => expect(screen.getByText('1')).toBeInTheDocument());
@@ -95,7 +95,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should show edit form for text when editing a Decimal', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['Decimal']);
+        await clickOnEditValueButton(screen, VALUE_IDS.Decimal);
         const inputForm = screen.getByPlaceholderText(/enter a value/i);
         expect(inputForm).toBeInTheDocument();
         expect(inputForm).toHaveValue('3.14');
@@ -105,7 +105,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should change value of decimal after editing a Decimal', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['Decimal']);
+        await clickOnEditValueButton(screen, VALUE_IDS.Decimal);
         fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: '1.5' } });
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
         await waitFor(() => expect(screen.getByText('1.5')).toBeInTheDocument());
@@ -116,7 +116,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should show edit form for text when editing a Text', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['Text']);
+        await clickOnEditValueButton(screen, VALUE_IDS.Text);
         const inputForm = screen.getByPlaceholderText(/enter a value/i);
         expect(inputForm).toBeInTheDocument();
         expect(inputForm).toHaveValue('Lorem ipsum');
@@ -126,7 +126,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should change value of text after editing a Text', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['Text']);
+        await clickOnEditValueButton(screen, VALUE_IDS.Text);
         fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: 'Literal 1' } });
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
         await waitFor(() => expect(screen.getByText('Literal 1')).toBeInTheDocument());
@@ -137,7 +137,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should show edit form for text when editing a Resource', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['Resource']);
+        await clickOnEditValueButton(screen, VALUE_IDS.Resource);
         const inputForm = screen.getByPlaceholderText(/enter a value/i);
         expect(inputForm).toBeInTheDocument();
         expect(inputForm).toHaveValue('Lorem ipsum Resource');
@@ -147,7 +147,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should change value of resource after editing a Resource', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['Resource']);
+        await clickOnEditValueButton(screen, VALUE_IDS.Resource);
         fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: 'resource label 1' } });
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
         await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
@@ -158,7 +158,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should show select form when editing a Boolean', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['Boolean']);
+        await clickOnEditValueButton(screen, VALUE_IDS.Boolean);
         expect(screen.getAllByRole('combobox')).toHaveLength(2);
         expect(screen.getByRole('option', { name: 'False' })).toBeInTheDocument();
         expect(screen.getByRole('option', { name: 'False' }).selected).toBe(true);
@@ -168,7 +168,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should change value of boolean after editing a Boolean', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['Boolean']);
+        await clickOnEditValueButton(screen, VALUE_IDS.Boolean);
         fireEvent.change(screen.getAllByRole('combobox')[1], { target: { value: 'true' } });
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
         await waitFor(() => expect(screen.getByLabelText('Check mark')).toBeInTheDocument());
@@ -179,7 +179,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should show edit form for text when editing a URL', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['URL']);
+        await clickOnEditValueButton(screen, VALUE_IDS.URL);
         const inputForm = screen.getByPlaceholderText(/enter a value/i);
         expect(inputForm).toBeInTheDocument();
         expect(inputForm).toHaveValue('www.orkg.org');
@@ -189,7 +189,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should change value of url after editing a URL', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['URL']);
+        await clickOnEditValueButton(screen, VALUE_IDS.URL);
         fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: 'www.tib.eu' } });
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
         await waitFor(() => expect(screen.getByText('www.tib.eu')).toBeInTheDocument());
@@ -200,7 +200,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should change type of value after editing the type', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['URL']);
+        await clickOnEditValueButton(screen, VALUE_IDS.URL);
         // Could be a bug in react-select-event
         await selectEvent.select(screen.getByText('URL'), ['Text']);
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
@@ -214,7 +214,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should change type of value after editing the type and value', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['Date']);
+        await clickOnEditValueButton(screen, VALUE_IDS.Date);
         // Could be a bug in react-select-event
         await selectEvent.select(screen.getByText('Date'), ['Text']);
         fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: 'New text' } });
@@ -228,7 +228,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should not show datatype selector on resource edit', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['Resource']);
+        await clickOnEditValueButton(screen, VALUE_IDS.Resource);
         expect(screen.queryByText(/Resource/i)).toBeNull();
     });
 });
@@ -236,7 +236,7 @@ describe('ValueItem', () => {
 describe('ValueItem', () => {
     it('should not show resource datatype on literal edit', async () => {
         setup();
-        await clickOnEditValueButton(screen, VALUE_IDS['Date']);
+        await clickOnEditValueButton(screen, VALUE_IDS.Date);
         await selectEvent.select(screen.getByText('Date'), ['Date']);
         await waitFor(() => expect(screen.queryAllByText(/Resource/i)).toHaveLength(1));
         expect(screen.getAllByText('Text')).toHaveLength(2);

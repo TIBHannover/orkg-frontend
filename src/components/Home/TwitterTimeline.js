@@ -39,10 +39,10 @@ const TwitterTimeline = () => {
             <Timeline
                 dataSource={{
                     sourceType: 'profile',
-                    screenName: 'orkg_org'
+                    screenName: 'orkg_org',
                 }}
                 options={{
-                    height: '400'
+                    height: '400',
                 }}
                 onLoad={() => setIsLoading(false)}
             />

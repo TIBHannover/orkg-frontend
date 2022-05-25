@@ -18,8 +18,8 @@ const Title = () => {
         dispatch(
             updateTitle({
                 id,
-                title: e.target.value
-            })
+                title: e.target.value,
+            }),
         );
     };
 

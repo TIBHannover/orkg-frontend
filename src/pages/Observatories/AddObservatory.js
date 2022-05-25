@@ -37,25 +37,25 @@ const AddObservatory = () => {
     const createNewObservatory = async () => {
         setEditorState('loading');
         if (!name && name.length === 0) {
-            toast.error(`Please enter an observatory name`);
+            toast.error('Please enter an observatory name');
             setEditorState('edit');
             return;
         }
 
         if (!new RegExp(REGEX.PERMALINK).test(permalink)) {
-            toast.error(`Only underscores ( _ ), numbers, and letters are allowed in the permalink field`);
+            toast.error('Only underscores ( _ ), numbers, and letters are allowed in the permalink field');
             setEditorState('edit');
             return;
         }
 
         if (!description && description.length === 0) {
-            toast.error(`Please enter an observatory description`);
+            toast.error('Please enter an observatory description');
             setEditorState('edit');
             return;
         }
 
         if (!researchField && researchField.length === 0) {
-            toast.error(`Please enter an observatory research field`);
+            toast.error('Please enter an observatory research field');
             setEditorState('edit');
             return;
         }
@@ -124,8 +124,8 @@ const AddObservatory = () => {
                                                 slugify(e.target.value.trim(), {
                                                     replacement: '_',
                                                     remove: /[*+~%\\<>/;.(){}?,'"!:@\\#\-^|]/g,
-                                                    lower: false
-                                                })
+                                                    lower: false,
+                                                }),
                                             );
                                         }}
                                         type="text"
@@ -188,7 +188,7 @@ const AddObservatory = () => {
                                 </Button>
                             </div>
                         )}
-                        {(!!!user || !user.isCurationAllowed) && (
+                        {(!user || !user.isCurationAllowed) && (
                             <>
                                 <Button
                                     color="link"

@@ -26,14 +26,14 @@ const Lists = () => {
             page,
             items: pageSize,
             sortBy: 'created_at',
-            desc: true
+            desc: true,
         });
 
         if (resources.length) {
             items = await getStatementsBySubjects({ ids: resources.map(item => item.id) }).then(statements =>
-                statements.map(statementsForSubject => {
-                    return getListData(resources.find(_resource => _resource.id === statementsForSubject.id), statementsForSubject.statements);
-                })
+                statements.map(statementsForSubject =>
+                    getListData(resources.find(_resource => _resource.id === statementsForSubject.id), statementsForSubject.statements),
+                ),
             );
             const groupedByPaper = groupBy(items, 'listId');
             items = Object.keys(groupedByPaper).map(listId => [...groupedByPaper[listId]]);
@@ -42,7 +42,7 @@ const Lists = () => {
         return {
             items,
             last,
-            totalElements
+            totalElements,
         };
     };
 

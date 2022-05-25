@@ -10,7 +10,7 @@ const ResearchProblemCard = props => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: props.problem.id,
         unlisted: props.problem.unlisted,
-        featured: props.problem.featured
+        featured: props.problem.featured,
     });
 
     return (
@@ -33,7 +33,7 @@ const ResearchProblemCard = props => {
 };
 
 ResearchProblemCard.propTypes = {
-    problem: PropTypes.object.isRequired
+    problem: PropTypes.object.isRequired,
 };
 
 export default ResearchProblemCard;

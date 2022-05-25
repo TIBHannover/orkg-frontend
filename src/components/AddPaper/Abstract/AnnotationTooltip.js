@@ -44,7 +44,7 @@ class AnnotationTooltip extends Component {
                                     label: this.props.range.class.label ? this.props.range.class.label : '',
                                     id: this.props.range.class.id,
                                     certainty: this.props.range.certainty,
-                                    range_id: this.props.range.id
+                                    range_id: this.props.range.id,
                                 }}
                                 key={value => value}
                                 isClearable
@@ -76,7 +76,7 @@ AnnotationTooltip.propTypes = {
     handleValidateAnnotation: PropTypes.func,
     getClassColor: PropTypes.func.isRequired,
     theme: PropTypes.object.isRequired,
-    defaultOptions: PropTypes.array.isRequired
+    defaultOptions: PropTypes.array.isRequired,
 };
 
 export default withTheme(AnnotationTooltip);

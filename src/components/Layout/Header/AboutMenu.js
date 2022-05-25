@@ -95,7 +95,7 @@ const AboutMenu = ({ closeMenu }) => {
 };
 
 AboutMenu.propTypes = {
-    closeMenu: PropTypes.func.isRequired
+    closeMenu: PropTypes.func.isRequired,
 };
 
 export default AboutMenu;

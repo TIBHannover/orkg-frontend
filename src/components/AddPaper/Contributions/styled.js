@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ListGroupItem } from 'reactstrap';
 
-/*propertyItem*/
+/* propertyItem */
 export const StyledStatementItem = styled(ListGroupItem)`
     padding: 0.5rem 0.75rem !important;
     cursor: default;

@@ -5,8 +5,7 @@ import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES } from 'constants/graphSettings';
 import { PropertyStyle } from 'components/StatementBrowser/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faArrowsAlt } from '@fortawesome/free-solid-svg-icons';
-import { faPen, faTrash, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faArrowsAlt, faPen, faTrash, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
@@ -58,13 +57,13 @@ function TemplateComponentProperty(props) {
                                         title: 'Delete',
                                         color: 'danger',
                                         icon: faCheck,
-                                        action: () => props.handleDeleteTemplateComponent(props.id)
+                                        action: () => props.handleDeleteTemplateComponent(props.id),
                                     },
                                     {
                                         title: 'Cancel',
                                         color: 'secondary',
-                                        icon: faTimes
-                                    }
+                                        icon: faTimes,
+                                    },
                                 ]}
                             />
                         </div>
@@ -101,7 +100,7 @@ TemplateComponentProperty.propTypes = {
     property: PropTypes.object.isRequired,
     handleDeleteTemplateComponent: PropTypes.func.isRequired,
     handlePropertiesSelect: PropTypes.func.isRequired,
-    dragRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })])
+    dragRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })]),
 };
 
 export default TemplateComponentProperty;

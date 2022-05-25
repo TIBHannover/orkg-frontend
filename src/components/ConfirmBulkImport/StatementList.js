@@ -36,7 +36,7 @@ const ListStatements = ({ property, idToLabel, values, validationErrors = [] }) 
                                     <>
                                         <Link
                                             to={reverse(ROUTES.RESOURCE, {
-                                                id: value['@id']
+                                                id: value['@id'],
                                             })}
                                             target="_blank"
                                         >
@@ -87,7 +87,7 @@ ListStatements.propTypes = {
     property: PropTypes.string.isRequired,
     idToLabel: PropTypes.object.isRequired,
     values: PropTypes.array.isRequired,
-    validationErrors: PropTypes.array
+    validationErrors: PropTypes.array,
 };
 
 export default ListStatements;

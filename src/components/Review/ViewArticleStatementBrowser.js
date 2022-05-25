@@ -32,7 +32,7 @@ const ViewArticleStatementBrowser = ({ id }) => {
             const property = properties[propertyId];
             properties[propertyId] = {
                 ...property,
-                values: orderBy(property.values, [_property => _property.label.toLowerCase()])
+                values: orderBy(property.values, [_property => _property.label.toLowerCase()]),
             };
         }
 
@@ -84,7 +84,7 @@ const ViewArticleStatementBrowser = ({ id }) => {
 };
 
 ViewArticleStatementBrowser.propTypes = {
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
 };
 
 export default ViewArticleStatementBrowser;

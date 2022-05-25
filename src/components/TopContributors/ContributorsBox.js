@@ -3,11 +3,11 @@ import useContributors from 'components/TopContributors/hooks/useContributors';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
-import ContributorsModal from './ContributorsModal';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import pluralize from 'pluralize';
+import ContributorsModal from './ContributorsModal';
 
 const ContributorsBox = ({ researchFieldId }) => {
     const { contributors, isLoading } = useContributors({ researchFieldId, pageSize: 5, initialSort: 'top' });
@@ -26,7 +26,7 @@ const ContributorsBox = ({ researchFieldId }) => {
                                 <ContributorCard
                                     contributor={{
                                         ...contributor.profile,
-                                        subTitle: `${pluralize('contribution', contributor.counts.total, true)}`
+                                        subTitle: `${pluralize('contribution', contributor.counts.total, true)}`,
                                     }}
                                 />
                                 {contributors.slice(0, 4).length - 1 !== index && <hr className="mb-0 mt-1" />}
@@ -67,7 +67,7 @@ const ContributorsBox = ({ researchFieldId }) => {
 };
 
 ContributorsBox.propTypes = {
-    researchFieldId: PropTypes.string.isRequired
+    researchFieldId: PropTypes.string.isRequired,
 };
 
 export default ContributorsBox;

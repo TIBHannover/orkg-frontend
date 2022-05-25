@@ -1,19 +1,19 @@
-import FeaturedItems from './FeaturedItems';
 import styled from 'styled-components';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
-import { ResponsiveTabs } from './styled';
 import { reverse } from 'named-urls';
 import Tabs from 'react-responsive-tabs';
+import { ResponsiveTabs } from './styled';
+import FeaturedItems from './FeaturedItems';
 
 const DEFAULT_CLASSES_FILTER = [
     {
         id: CLASSES.COMPARISON,
         label: 'Comparisons',
         tippyContent: 'Comparisons in ORKG provide an overview of state-of-the-art literature for a particular topic.',
-        link: reverse(ROUTES.COMPARISONS)
+        link: reverse(ROUTES.COMPARISONS),
     },
     /*
     {
@@ -27,9 +27,9 @@ const DEFAULT_CLASSES_FILTER = [
         label: 'Lists',
         tippyContent: 'Lists provide a way to organize and describe state-of-the-art literature for a specific research domain.',
         link: reverse(ROUTES.LISTS)
-    },*/
+    }, */
     { id: CLASSES.VISUALIZATION, label: 'Visualizations', tippyContent: false, link: reverse(ROUTES.VISUALIZATIONS) },
-    { id: CLASSES.PAPER, label: 'Papers', tippyContent: false, link: reverse(ROUTES.PAPERS) }
+    { id: CLASSES.PAPER, label: 'Papers', tippyContent: false, link: reverse(ROUTES.PAPERS) },
 ];
 
 const SidebarStyledBox = styled.div`
@@ -40,10 +40,10 @@ const SidebarStyledBox = styled.div`
 `;
 
 const FeaturedItemsBox = ({ researchFieldId, researchFieldLabel }) => {
-    const getTabs = () => {
-        return DEFAULT_CLASSES_FILTER.map(featuredClass => ({
+    const getTabs = () =>
+        DEFAULT_CLASSES_FILTER.map(featuredClass => ({
             title: (
-                <Tippy content={featuredClass.tippyContent} disabled={!featuredClass.tippyContent ? true : false}>
+                <Tippy content={featuredClass.tippyContent} disabled={!featuredClass.tippyContent}>
                     <div className="text-center">{featuredClass.label}</div>
                 </Tippy>
             ),
@@ -51,9 +51,8 @@ const FeaturedItemsBox = ({ researchFieldId, researchFieldLabel }) => {
                 <FeaturedItems researchFieldLabel={researchFieldLabel} researchFieldId={researchFieldId} featuredClass={featuredClass} />
             ),
             key: featuredClass.id,
-            tabClassName: 'tab h6'
+            tabClassName: 'tab h6',
         }));
-    };
 
     return (
         <SidebarStyledBox className="box rounded-3 mt-3">
@@ -66,7 +65,7 @@ const FeaturedItemsBox = ({ researchFieldId, researchFieldLabel }) => {
 
 FeaturedItemsBox.propTypes = {
     researchFieldId: PropTypes.string.isRequired,
-    researchFieldLabel: PropTypes.string.isRequired
+    researchFieldLabel: PropTypes.string.isRequired,
 };
 
 export default FeaturedItemsBox;

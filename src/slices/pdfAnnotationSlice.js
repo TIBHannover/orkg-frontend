@@ -20,7 +20,7 @@ const initialState = {
     pdfParseIsFetching: false, // in case PDF is currently being parsed
     pdfParseFailed: false,
     pdfConvertIsFetching: false, // convert PDF is fetching
-    pdfConvertFailed: false
+    pdfConvertFailed: false,
 };
 
 export const pdfAnnotationSlice = createSlice({
@@ -34,16 +34,16 @@ export const pdfAnnotationSlice = createSlice({
             state.tableData[payload.id] = payload.tableData;
         },
         updateTableData: (state, { payload: { id, dataChanges } }) => {
-            //const newData = cloneDeep([...state.tableData[id].slice(0)]);
+            // const newData = cloneDeep([...state.tableData[id].slice(0)]);
             for (const [row, column, , newValue] of dataChanges) {
                 state.tableData[id][row][column] = newValue;
             }
-            //state.tableData[id] = newData;
+            // state.tableData[id] = newData;
         },
         addTableRegion: (state, { payload }) => {
             state.tableRegions[guid()] = {
                 region: payload.region,
-                page: payload.page
+                page: payload.page,
             };
         },
         deleteTableRegion: (state, { payload }) => {
@@ -84,8 +84,8 @@ export const pdfAnnotationSlice = createSlice({
         resetPdfAnnotation: state => {
             window.URL.revokeObjectURL(state.pdf);
             return initialState;
-        }
-    }
+        },
+    },
 });
 
 export const {
@@ -101,7 +101,7 @@ export const {
     setFile,
     fetchPDFConvertRequest,
     failedToConvertPdf,
-    resetPdfAnnotation
+    resetPdfAnnotation,
 } = pdfAnnotationSlice.actions;
 
 export default pdfAnnotationSlice.reducer;
@@ -123,20 +123,20 @@ export const convertPdf = ({ files }) => dispatch => {
     const form = new FormData();
     form.append('pdf', pdf);
 
-    fetch(env('ANNOTATION_SERVICE_URL') + 'convertPdf/', {
+    fetch(`${env('ANNOTATION_SERVICE_URL')}convertPdf/`, {
         method: 'POST',
-        body: form
+        body: form,
     })
         .then(response => {
             if (!response.ok) {
-                throw new Error(`Error while converting PDF to HTML`);
+                throw new Error('Error while converting PDF to HTML');
             } else {
                 return response.text();
             }
         })
-        .then(function(data) {
+        .then(data => {
             const parseData = parse(data, {
-                style: true // retrieve content in <style> (hurts performance but required)
+                style: true, // retrieve content in <style> (hurts performance but required)
             });
             const pages = parseData.querySelectorAll('.pf').map(page => page.outerHTML);
             const styles = parseData.querySelectorAll('style').map(style => style.outerHTML);
@@ -145,15 +145,15 @@ export const convertPdf = ({ files }) => dispatch => {
                 setFile({
                     pdf: window.URL.createObjectURL(pdf),
                     pages,
-                    styles
-                })
+                    styles,
+                }),
             );
 
             dispatch(parsePdf({ pdf }));
         })
         .catch(err => {
             console.log(err);
-            toast.error(`Unexpected error occurred, the PDF could not be converted. Please try it again`);
+            toast.error('Unexpected error occurred, the PDF could not be converted. Please try it again');
             dispatch(failedToConvertPdf());
         });
 };
@@ -169,23 +169,23 @@ export const parsePdf = ({ pdf }) => dispatch => {
     const form = new FormData();
     form.append('input', pdf);
 
-    fetch(env('GROBID_URL') + 'api/processFulltextDocument', {
+    fetch(`${env('GROBID_URL')}api/processFulltextDocument`, {
         method: 'POST',
-        body: form
+        body: form,
     })
         .then(response => {
             if (!response.ok) {
-                throw new Error(`Error fetching Grobid parse`);
+                throw new Error('Error fetching Grobid parse');
             } else {
                 return response.text();
             }
         })
-        .then(function(data) {
+        .then(data => {
             dispatch(setParsedPdfData(data));
         })
         .catch(err => {
             console.log(err);
-            toast.error(`The references from the uploaded PDF could not be extracted`);
+            toast.error('The references from the uploaded PDF could not be extracted');
             dispatch(fetchPDFParseFailure());
         });
 };

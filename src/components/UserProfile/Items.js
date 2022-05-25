@@ -35,12 +35,12 @@ const Items = props => {
 
     const [deletePapers, loadingDeletePapers] = useDeletePapers({
         paperIds: selectedItems,
-        finishLoadingCallback
+        finishLoadingCallback,
     });
 
     const comparePapers = () => {
         const contributionIds = flatten(resources.filter(r => selectedItems.includes(r.id))?.map(c => c.contributions?.map(c => c.id)));
-        navigate(reverse(ROUTES.COMPARISON_NOT_PUBLISHED) + `?contributions=${contributionIds.join(',')}`);
+        navigate(`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionIds.join(',')}`);
     };
 
     const loadItems = useCallback(
@@ -49,11 +49,11 @@ const Items = props => {
 
             getResourcesByClass({
                 id: props.filterClass,
-                page: page,
+                page,
                 items: pageSize,
                 sortBy: 'created_at',
                 desc: true,
-                creator: props.userId
+                creator: props.userId,
             }).then(result => {
                 // Resources
                 if (result.totalElements === 0) {
@@ -63,7 +63,7 @@ const Items = props => {
                 }
                 // Fetch the data of each resource
                 getStatementsBySubjects({
-                    ids: result.content.map(p => p.id)
+                    ids: result.content.map(p => p.id),
                 })
                     .then(resourcesStatements => {
                         const new_resources = resourcesStatements.map(resourceStatements => {
@@ -78,7 +78,7 @@ const Items = props => {
                         });
                         if (props.filterClass === CLASSES.COMPARISON) {
                             setResources(prevResources =>
-                                groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...new_resources])
+                                groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...new_resources]),
                             );
                         } else {
                             setResources(prevResources => [...prevResources, ...new_resources]);
@@ -96,7 +96,7 @@ const Items = props => {
                     });
             });
         },
-        [pageSize, props.filterClass, props.userId]
+        [pageSize, props.filterClass, props.userId],
     );
 
     useEffect(() => {
@@ -207,10 +207,10 @@ Items.propTypes = {
     userId: PropTypes.string.isRequired,
     filterLabel: PropTypes.string.isRequired,
     filterClass: PropTypes.string.isRequired,
-    showDelete: PropTypes.bool
+    showDelete: PropTypes.bool,
 };
 
 Items.defaultProps = {
-    showDelete: false
+    showDelete: false,
 };
 export default Items;

@@ -27,7 +27,7 @@ const AddResearchProblem = props => {
                     toast.error(`Error updating an observatory ${error.message}`);
                 });
         } else {
-            toast.error(`Please select a research problem`);
+            toast.error('Please select a research problem');
         }
     };
 
@@ -67,7 +67,7 @@ AddResearchProblem.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     id: PropTypes.string,
-    setProblems: PropTypes.func.isRequired
+    setProblems: PropTypes.func.isRequired,
 };
 
 export default AddResearchProblem;

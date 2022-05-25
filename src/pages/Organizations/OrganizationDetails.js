@@ -5,13 +5,12 @@ import InternalServerError from 'pages/InternalServerError';
 import Members from 'components/Organization/Members';
 import Observatories from 'components/Organization/Observatories';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt, faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { faExternalLinkAlt, faGlobe, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Link, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import NotFound from 'pages/NotFound';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes';
-import { faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import EditOrganization from 'components/Organization/EditOrganization';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import { reverse } from 'named-urls';
@@ -175,9 +174,9 @@ const OrganizationDetails = () => {
                 url={url}
                 previewSrc={logo}
                 updateOrganizationMetadata={updateOrganizationMetadata}
-                type={type ? type : ''}
-                date={date ? date : ''}
-                isDoubleBlind={isDoubleBlind ? isDoubleBlind : false}
+                type={type || ''}
+                date={date || ''}
+                isDoubleBlind={isDoubleBlind || false}
             />
         </>
     );

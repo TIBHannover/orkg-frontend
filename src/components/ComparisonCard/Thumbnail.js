@@ -48,12 +48,12 @@ const Thumbnail = props => {
             } else if (props.figures?.length > 0) {
                 setIsLoading(true);
                 getStatementsBySubject({
-                    id: props.figures[0].id
+                    id: props.figures[0].id,
                 })
                     .then(figuresStatements => {
                         const img = filterObjectOfStatementsByPredicateAndClass(figuresStatements, PREDICATES.IMAGE, true);
                         setThumbnail({
-                            src: img ? img.label : ''
+                            src: img ? img.label : '',
                         });
                         setIsLoading(false);
                     })
@@ -68,7 +68,7 @@ const Thumbnail = props => {
     return (
         <>
             {!isLoading && thumbnail && thumbnail.src && (
-                <Link to={reverse(ROUTES.COMPARISON, { comparisonId: props.id }) + '#' + props.figures[0].id}>
+                <Link to={`${reverse(ROUTES.COMPARISON, { comparisonId: props.id })}#${props.figures[0].id}`}>
                     <Tippy content={props.figures[0].label}>
                         <ResourceItem key={props.figures[0].id}>
                             <ThumbnailImg src={thumbnail.src} alt={props.figures[0].label} />
@@ -93,7 +93,7 @@ const Thumbnail = props => {
 Thumbnail.propTypes = {
     id: PropTypes.string.isRequired,
     visualizations: PropTypes.array,
-    figures: PropTypes.array
+    figures: PropTypes.array,
 };
 
 export default memo(Thumbnail, isEqual);

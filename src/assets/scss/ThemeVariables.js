@@ -23,7 +23,7 @@ const theme = {
         secondaryDarker: 'rgb(80, 85, 101)',
         lightDarker: 'rgb(219, 221, 229)',
         lightLighter: 'rgb(248, 249, 251)',
-        body: 'rgb(79, 79, 79)'
+        body: 'rgb(79, 79, 79)',
     },
     formFeedbackFontSize: '90%',
     inputBorderRadius: '6px',
@@ -52,8 +52,8 @@ const theme = {
         md: '768px',
         lg: '992px',
         xl: '1200px',
-        xxl: '1400px'
-    }
+        xxl: '1400px',
+    },
 };
 
 export default theme;

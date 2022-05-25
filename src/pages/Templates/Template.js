@@ -68,12 +68,12 @@ const Template = () => {
             }
             getDefaultClass();
             dispatch(setEditMode(true));
-            document.title = `Create Contribution Template - ORKG`;
+            document.title = 'Create Contribution Template - ORKG';
         }
     }, [dispatch, location.search, navigate, id, templateID]);
 
     useEffect(() => {
-        document.title = `${label ? label + ' - ' : ''}Contribution Template - ORKG`;
+        document.title = `${label ? `${label} - ` : ''}Contribution Template - ORKG`;
     }, [label]);
 
     const toggleTab = tab => {

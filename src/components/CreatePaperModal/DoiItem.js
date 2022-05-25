@@ -37,7 +37,7 @@ const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, 
                 const paperStatements = await getStatementsBySubject({ id: paper.id });
                 setExistingPaper({
                     ...getPaperData({ ...paper, label: paper.title }, paperStatements),
-                    title: paper.title
+                    title: paper.title,
                 });
             } catch (e) {
                 setExistingPaper(null);
@@ -59,7 +59,7 @@ const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, 
                     year: parseResult.paperPublicationYear,
                     doi: parseResult.doi,
                     publishedIn: parseResult.publishedIn,
-                    url: parseResult.url
+                    url: parseResult.url,
                 });
 
                 setIsValid(true);
@@ -88,7 +88,7 @@ const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, 
     }, [handleLookup, shouldPerformLookup]);
 
     return (
-        <ListItem toggleItem={toggleItem} label="Paper DOI or BibTeX" open={isExpanded} value={truncate(value ? value : '', { length: 60 })}>
+        <ListItem toggleItem={toggleItem} label="Paper DOI or BibTeX" open={isExpanded} value={truncate(value || '', { length: 60 })}>
             <InputGroup>
                 <Input value={value} onChange={e => onChange(e.target.value)} disabled={isLoading} valid={isValid} invalid={isValid === false} />
                 <Button color="secondary" onClick={handleLookup} disabled={isLoading}>
@@ -107,11 +107,11 @@ DoiItem.propTypes = {
     onPopulateMetadata: PropTypes.func.isRequired,
     value: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
-    lookupOnMount: PropTypes.bool
+    lookupOnMount: PropTypes.bool,
 };
 
 DoiItem.defaultProps = {
-    lookupOnMount: false
+    lookupOnMount: false,
 };
 
 export default DoiItem;

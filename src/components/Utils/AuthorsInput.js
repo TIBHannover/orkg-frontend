@@ -127,9 +127,7 @@ const DragHandle = sortableHandle(() => (
     </StyledDragHandle>
 ));
 
-const SortableContainer = sortableContainer(({ children }) => {
-    return <AuthorTags>{children}</AuthorTags>;
-});
+const SortableContainer = sortableContainer(({ children }) => <AuthorTags>{children}</AuthorTags>);
 
 class AuthorsInput extends Component {
     constructor(props) {
@@ -143,13 +141,13 @@ class AuthorsInput extends Component {
             authorAutocompleteLabel: '',
             authorNameLoading: false,
             editMode: false,
-            editIndex: 0
+            editIndex: 0,
         };
     }
 
     toggle = type => {
         this.setState(prevState => ({
-            [type]: !prevState[type]
+            [type]: !prevState[type],
         }));
     };
 
@@ -180,17 +178,17 @@ class AuthorsInput extends Component {
                         const newAuthor = {
                             label: authorFullName,
                             id: authorFullName,
-                            orcid: orcid,
+                            orcid,
                             statementId:
                                 this.state.editMode && this.props.value[this.state.editIndex] && this.props.value[this.state.editIndex].statementId
                                     ? this.props.value[this.state.editIndex].statementId
-                                    : ''
+                                    : '',
                         };
                         if (this.state.editMode) {
                             this.props.handler([
                                 ...this.props.value.slice(0, this.state.editIndex),
                                 newAuthor,
-                                ...this.props.value.slice(this.state.editIndex + 1)
+                                ...this.props.value.slice(this.state.editIndex + 1),
                             ]);
                         } else {
                             this.props.handler([...this.props.value, newAuthor]);
@@ -198,13 +196,13 @@ class AuthorsInput extends Component {
                         this.setState({
                             authorNameLoading: false,
                             authorInput: '',
-                            editMode: false
+                            editMode: false,
                         });
                         this.toggle('showAuthorForm');
                     })
                     .catch(e => {
                         this.setState({
-                            authorNameLoading: false
+                            authorNameLoading: false,
                         });
                         toast.error(`Invalid ORCID ID. Please enter the ${this.props.itemLabel} name`);
                     });
@@ -217,13 +215,13 @@ class AuthorsInput extends Component {
                     statementId:
                         this.state.editMode && this.props.value[this.state.editIndex] && this.props.value[this.state.editIndex].statementId
                             ? this.props.value[this.state.editIndex].statementId
-                            : ''
+                            : '',
                 };
                 if (this.state.editMode) {
                     this.props.handler([
                         ...this.props.value.slice(0, this.state.editIndex),
                         newAuthor,
-                        ...this.props.value.slice(this.state.editIndex + 1)
+                        ...this.props.value.slice(this.state.editIndex + 1),
                     ]);
                 } else {
                     this.props.handler([...this.props.value, newAuthor]);
@@ -237,18 +235,14 @@ class AuthorsInput extends Component {
     };
 
     removeAuthor = key => {
-        this.props.handler(
-            this.props.value.filter(a => {
-                return a.id !== key;
-            })
-        );
+        this.props.handler(this.props.value.filter(a => a.id !== key));
     };
 
     editAuthor = key => {
         this.setState({
             editIndex: key,
             authorInput: { ...this.props.value[key], label: this.props.value[key].orcid ? this.props.value[key].orcid : this.props.value[key].label },
-            editMode: true
+            editMode: true,
         });
         this.toggle('showAuthorForm');
     };
@@ -271,19 +265,17 @@ class AuthorsInput extends Component {
                             onClick={this.props.value.length === 0 ? () => this.toggle('showAuthorForm') : undefined}
                             lockAxis="y"
                         >
-                            {this.props.value.map((author, index) => {
-                                return (
-                                    <SortableItem
-                                        key={`author-${index}`}
-                                        author={author}
-                                        index={index}
-                                        authorIndex={index}
-                                        itemLabel={this.props.itemLabel}
-                                        editAuthor={() => this.editAuthor(index)}
-                                        removeAuthor={() => this.removeAuthor(author.id)}
-                                    />
-                                );
-                            })}
+                            {this.props.value.map((author, index) => (
+                                <SortableItem
+                                    key={`author-${index}`}
+                                    author={author}
+                                    index={index}
+                                    authorIndex={index}
+                                    itemLabel={this.props.itemLabel}
+                                    editAuthor={() => this.editAuthor(index)}
+                                    removeAuthor={() => this.removeAuthor(author.id)}
+                                />
+                            ))}
                         </SortableContainer>
                     )}
                 </div>
@@ -347,11 +339,11 @@ AuthorsInput.propTypes = {
     handler: PropTypes.func.isRequired,
     value: PropTypes.array.isRequired,
     theme: PropTypes.object.isRequired,
-    itemLabel: PropTypes.string
+    itemLabel: PropTypes.string,
 };
 
 AuthorsInput.defaultProps = {
-    itemLabel: 'author'
+    itemLabel: 'author',
 };
 
 export default withTheme(AuthorsInput);

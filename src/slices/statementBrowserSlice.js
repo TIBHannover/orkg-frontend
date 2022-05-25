@@ -1,12 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LOCATION_CHANGE } from 'utils';
+import { LOCATION_CHANGE, guid, filterStatementsBySubjectId } from 'utils';
 import { ENTITIES, PREDICATES, CLASSES } from 'constants/graphSettings';
 import { match } from 'path-to-regexp';
-import { last, flatten, uniqBy } from 'lodash';
+import { last, flatten, uniqBy, orderBy, uniq } from 'lodash';
 import ROUTES from 'constants/routes';
 import { Cookies } from 'react-cookie';
-import { guid, filterStatementsBySubjectId } from 'utils';
-import { orderBy, uniq } from 'lodash';
 import { getEntity } from 'services/backend/misc';
 import { createLiteral } from 'services/backend/literals';
 import { createPredicate } from 'services/backend/predicates';
@@ -16,7 +14,7 @@ import {
     getTemplatesByClass,
     getStatementsBundleBySubject,
     createResourceStatement,
-    createLiteralStatement
+    createLiteralStatement,
 } from 'services/backend/statements';
 import { createResource as createResourceApi, updateResourceClasses as updateResourceClassesApi } from 'services/backend/resources';
 import DATA_TYPES from 'constants/DataTypes.js';
@@ -47,29 +45,29 @@ const initialState = {
         showClasses: getPreferenceFromCookies('showClasses') ?? false,
         showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
         showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
-        showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? true
+        showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? true,
     },
     resources: {
         byId: {},
-        allIds: []
+        allIds: [],
     },
     properties: {
         byId: {},
-        allIds: []
+        allIds: [],
     },
     values: {
         byId: {},
-        allIds: []
+        allIds: [],
     },
     resourceHistory: {
         byId: {},
-        allIds: []
+        allIds: [],
     },
     templates: {},
     classes: {},
     // adding contribution object plus selected contributionId;
     contributions: {},
-    selectedContributionId: ''
+    selectedContributionId: '',
 };
 
 export const statementBrowserSlice = createSlice({
@@ -92,7 +90,7 @@ export const statementBrowserSlice = createSlice({
                 showStatementInfo: typeof payload.showStatementInfo === 'boolean' ? payload.showStatementInfo : state.preferences.showStatementInfo,
                 showValueInfo: typeof payload.showValueInfo === 'boolean' ? payload.showValueInfo : state.preferences.showValueInfo,
                 showLiteralDataTypes:
-                    typeof payload.showLiteralDataTypes === 'boolean' ? payload.showLiteralDataTypes : state.preferences.showLiteralDataTypes
+                    typeof payload.showLiteralDataTypes === 'boolean' ? payload.showLiteralDataTypes : state.preferences.showLiteralDataTypes,
             };
         },
         createResource: (state, { payload }) => {
@@ -102,7 +100,7 @@ export const statementBrowserSlice = createSlice({
                 shared: payload.shared ? payload.shared : 1,
                 propertyIds: [],
                 classes: payload.classes ? payload.classes : [],
-                _class: payload._class ? payload._class : ENTITIES.RESOURCE
+                _class: payload._class ? payload._class : ENTITIES.RESOURCE,
             };
             state.resources.allIds.push(payload.resourceId);
         },
@@ -119,7 +117,7 @@ export const statementBrowserSlice = createSlice({
                     isExistingProperty: payload.isExistingProperty ? payload.isExistingProperty : false,
                     isEditing: false,
                     isSaving: false,
-                    isAnimated: payload.isAnimated !== undefined ? payload.isAnimated : false
+                    isAnimated: payload.isAnimated !== undefined ? payload.isAnimated : false,
                 };
                 state.properties.allIds.push(payload.propertyId);
             }
@@ -166,18 +164,18 @@ export const statementBrowserSlice = createSlice({
                     statementId: payload.statementId,
                     isEditing: false,
                     isSaving: false,
-                    shared: payload.shared ? payload.shared : 1
+                    shared: payload.shared ? payload.shared : 1,
                 };
                 state.values.allIds.push(payload.valueId);
                 // TODO: is the same as creating a resource in the contributions, so make a function
                 // add a new resource when a object value is created
-                //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
+                // only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
                 if (payload.__class !== ENTITIES.LITERAL && !state.resources.byId[payload.resourceId]) {
                     state.resources.allIds.push(payload.resourceId);
                     state.resources.byId[payload.resourceId] = {
                         ...payload,
                         existingResourceId: payload.existingResourceId && payload.isExistingValue ? payload.existingResourceId : null,
-                        propertyIds: []
+                        propertyIds: [],
                     };
                 }
             }
@@ -219,7 +217,7 @@ export const statementBrowserSlice = createSlice({
                 state.values.byId[payload.valueId].datatype = payload.datatype;
             }
             // Update all the labels of the same resource ID
-            const resourceId = state.values.byId[payload.valueId].resourceId;
+            const { resourceId } = state.values.byId[payload.valueId];
             if (resourceId) {
                 state.resources.byId[resourceId].label = payload.label;
                 for (const valueId of state.values.allIds) {
@@ -261,13 +259,13 @@ export const statementBrowserSlice = createSlice({
             state.level = 0;
         },
         addResourceHistory: (state, { payload }) => {
-            const resourceId = payload.resourceId ? payload.resourceId : null; //state.contributions.byId[state.selectedContribution].resourceId
+            const resourceId = payload.resourceId ? payload.resourceId : null; // state.contributions.byId[state.selectedContribution].resourceId
             const lastResourceId = state.resourceHistory.allIds[state.resourceHistory.allIds.length - 1];
             state.resourceHistory.byId[resourceId] = { id: resourceId, label: payload.label, propertyLabel: payload.propertyLabel };
             if (lastResourceId) {
                 state.resourceHistory.byId[lastResourceId] = {
                     ...state.resourceHistory.byId[lastResourceId],
-                    selectedProperty: state.selectedProperty
+                    selectedProperty: state.selectedProperty,
                 };
             }
             state.resourceHistory.allIds.push(resourceId);
@@ -277,11 +275,9 @@ export const statementBrowserSlice = createSlice({
 
                 if (!isContributionResource) {
                     state.contributions[state.selectedContributionId].resourceHistory = state.resourceHistory;
-                } else {
-                    if (state.contributions[state.selectedContributionId].resourceHistory.allIds.length === 0) {
-                        // will ignore history updates if there is already some data;
-                        state.contributions[state.selectedContributionId].resourceHistory = state.resourceHistory;
-                    }
+                } else if (state.contributions[state.selectedContributionId].resourceHistory.allIds.length === 0) {
+                    // will ignore history updates if there is already some data;
+                    state.contributions[state.selectedContributionId].resourceHistory = state.resourceHistory;
                 }
             }
         },
@@ -290,7 +286,7 @@ export const statementBrowserSlice = createSlice({
             if (lastResourceId) {
                 state.resourceHistory.byId[lastResourceId] = {
                     ...state.resourceHistory.byId[lastResourceId],
-                    propertyLabel: last(payload.filter(pt => pt._class === ENTITIES.PREDICATE))?.label
+                    propertyLabel: last(payload.filter(pt => pt._class === ENTITIES.PREDICATE))?.label,
                 };
             }
             state.resourceHistory.allIds.unshift(...payload.filter(pt => pt._class !== ENTITIES.PREDICATE).map(pt => pt.id));
@@ -299,7 +295,7 @@ export const statementBrowserSlice = createSlice({
                     state.resourceHistory.byId[pt.id] = {
                         id: pt.id,
                         label: pt.label,
-                        propertyLabel: payload[index - 1]?.label
+                        propertyLabel: payload[index - 1]?.label,
                     };
                 }
                 return null;
@@ -307,7 +303,7 @@ export const statementBrowserSlice = createSlice({
             state.level = payload.length - 1;
         },
         gotoResourceHistory: (state, { payload }) => {
-            const ids = state.resourceHistory.allIds.slice(0, payload.historyIndex + 1); //TODO: it looks like historyIndex can be derived, so remove it from payload
+            const ids = state.resourceHistory.allIds.slice(0, payload.historyIndex + 1); // TODO: it looks like historyIndex can be derived, so remove it from payload
             if (!state.initOnLocationChange && state.contributions[state.selectedContributionId]) {
                 state.contributions[state.selectedContributionId].resourceHistory.byId = state.resourceHistory.byId; // TODO: remove the history item from byId object (not really necessary, but it is cleaner)
                 state.contributions[state.selectedContributionId].resourceHistory.allIds = ids;
@@ -321,8 +317,8 @@ export const statementBrowserSlice = createSlice({
             state.resourceHistory = {
                 allIds: ids,
                 byId: {
-                    ...state.resourceHistory.byId // TODO: remove the history item from byId object (not really necessary, but it is cleaner)
-                }
+                    ...state.resourceHistory.byId, // TODO: remove the history item from byId object (not really necessary, but it is cleaner)
+                },
             };
         },
         updateSettings: (state, { payload }) => {
@@ -340,12 +336,10 @@ export const statementBrowserSlice = createSlice({
             state.level = 0;
             state.resourceHistory = {
                 allIds: [],
-                byId: {}
+                byId: {},
             };
         },
-        loadData: (state, { payload }) => {
-            return { ...payload };
-        },
+        loadData: (state, { payload }) => ({ ...payload }),
         setIsFetchedStatements: (state, { payload: { resourceId, depth } }) => {
             state.resources.byId[resourceId].isFetched = true;
             state.resources.byId[resourceId].fetchedDepth = depth;
@@ -372,18 +366,16 @@ export const statementBrowserSlice = createSlice({
         doneFetchingStatements: (state, { payload: { resourceId } }) => {
             state.isFetchingStatements = false;
         },
-        resetStatementBrowser: state => {
-            return {
-                ...initialState,
-                preferences: {
-                    showClasses: getPreferenceFromCookies('showClasses') ?? false,
-                    showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
-                    showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
-                    showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? false
-                }
-            };
-        },
-        /** -- Handling for creation of contribution objects**/
+        resetStatementBrowser: state => ({
+            ...initialState,
+            preferences: {
+                showClasses: getPreferenceFromCookies('showClasses') ?? false,
+                showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
+                showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
+                showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? false,
+            },
+        }),
+        /** -- Handling for creation of contribution objects* */
         createContributionObject: (state, { payload }) => {
             state.selectedContributionId = payload.id;
             if (!state.contributions.hasOwnProperty(payload.id)) {
@@ -394,8 +386,8 @@ export const statementBrowserSlice = createSlice({
                     level: 0,
                     resourceHistory: {
                         byId: {},
-                        allIds: []
-                    }
+                        allIds: [],
+                    },
                 };
                 state.contributions[payload.id] = initData;
             }
@@ -433,11 +425,11 @@ export const statementBrowserSlice = createSlice({
                 state.templates[templateID] = {};
             }
             state.templates[templateID].isFetching = status;
-        }
+        },
     },
     extraReducers: {
         [LOCATION_CHANGE]: (state, { payload }) => {
-            //from redux-first-history, reset the wizard when the page is changed
+            // from redux-first-history, reset the wizard when the page is changed
             const matchViewPaper = match(ROUTES.VIEW_PAPER);
             const contributionChange = matchViewPaper(payload.location.pathname);
 
@@ -451,22 +443,21 @@ export const statementBrowserSlice = createSlice({
                     isFetchingStatements: false,
                     resourceHistory: {
                         byId: {},
-                        allIds: []
-                    }
-                };
-            } else {
-                return {
-                    ...initialState,
-                    preferences: {
-                        showClasses: getPreferenceFromCookies('showClasses') ?? false,
-                        showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
-                        showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
-                        showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? false
-                    }
+                        allIds: [],
+                    },
                 };
             }
-        }
-    }
+            return {
+                ...initialState,
+                preferences: {
+                    showClasses: getPreferenceFromCookies('showClasses') ?? false,
+                    showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
+                    showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
+                    showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? false,
+                },
+            };
+        },
+    },
 });
 
 export const {
@@ -510,7 +501,7 @@ export const {
     loadContributionHistory,
     createTemplate,
     setIsFetchingTemplatesOfClass,
-    setIsFetchingTemplateData
+    setIsFetchingTemplateData,
 } = statementBrowserSlice.actions;
 
 export default statementBrowserSlice.reducer;
@@ -532,9 +523,9 @@ export const initializeWithoutContribution = data => dispatch => {
     // 2. Select this resource (only a selected resource is shown)
     // 3. Fetch the statements related to this resource
 
-    const label = data.label;
-    const resourceId = data.resourceId;
-    const rootNodeType = data.rootNodeType;
+    const { label } = data;
+    const { resourceId } = data;
+    const { rootNodeType } = data;
     let classes = [];
     if (rootNodeType === ENTITIES.PREDICATE) {
         classes = [CLASSES.PREDICATE];
@@ -545,28 +536,28 @@ export const initializeWithoutContribution = data => dispatch => {
 
     dispatch(
         createResourceAction({
-            label: label,
+            label,
             existingResourceId: resourceId,
-            resourceId: resourceId,
-            classes: classes,
-            _class: data.rootNodeType
-        })
+            resourceId,
+            classes,
+            _class: data.rootNodeType,
+        }),
     );
 
     dispatch(
         selectResourceAction({
             increaseLevel: false,
-            resourceId: resourceId,
-            label: label
-        })
+            resourceId,
+            label,
+        }),
     );
 
     dispatch(
         fetchStatementsForResource({
             existingResourceId: resourceId,
-            resourceId: resourceId,
-            rootNodeType: rootNodeType
-        })
+            resourceId,
+            rootNodeType,
+        }),
     );
 };
 
@@ -580,17 +571,17 @@ export const initializeWithoutContribution = data => dispatch => {
  */
 export function initializeWithResource(data) {
     return dispatch => {
-        const label = data.label;
-        const resourceId = data.resourceId;
+        const { label } = data;
+        const { resourceId } = data;
 
         dispatch(clearResourceHistory());
 
         dispatch(
             selectResourceAction({
                 increaseLevel: false,
-                resourceId: resourceId,
-                label: label
-            })
+                resourceId,
+                label,
+            }),
         ).then(() => dispatch(createRequiredPropertiesInResource(resourceId)));
     };
 }
@@ -608,7 +599,7 @@ export function getNewPropertiesList(state) {
         if (!property.existingPredicateId) {
             newPropertiesList.push({
                 id: null,
-                label: property.label
+                label: property.label,
             });
         }
     }
@@ -631,7 +622,7 @@ export function getExistingPredicatesByResource(state, resourceId) {
     if (!resource) {
         return [];
     }
-    let propertyIds = resource.propertyIds;
+    let { propertyIds } = resource;
     if (propertyIds) {
         propertyIds = resource.propertyIds ? resource.propertyIds : [];
         propertyIds = propertyIds.map(propertyId => {
@@ -639,9 +630,8 @@ export function getExistingPredicatesByResource(state, resourceId) {
             return property.existingPredicateId;
         });
         return propertyIds.filter(p => p); // return a list without null values (predicates that aren't in the database)
-    } else {
-        return [];
     }
+    return [];
 }
 
 /**
@@ -660,11 +650,11 @@ export const fillStatements = ({ statements, resourceId, syncBackend = false }) 
             createProperty({
                 propertyId: property.propertyId ? property.propertyId : guid(),
                 existingPredicateId: property.existingPredicateId,
-                resourceId: resourceId,
+                resourceId,
                 label: property.label,
                 isAnimated: property.isAnimated !== undefined ? property.isAnimated : false,
-                canDuplicate: property.canDuplicate ? true : false
-            })
+                canDuplicate: !!property.canDuplicate,
+            }),
         );
     }
 
@@ -716,8 +706,8 @@ export const fillStatements = ({ statements, resourceId, syncBackend = false }) 
                 propertyId: value.propertyId,
                 existingResourceId: syncBackend && newObject ? newObject.id : value.existingResourceId ? value.existingResourceId : null,
                 isExistingValue: syncBackend ? true : value.isExistingValue ? value.isExistingValue : false,
-                statementId: newStatement ? newStatement.id : null
-            })
+                statementId: newStatement ? newStatement.id : null,
+            }),
         );
     }
 
@@ -749,9 +739,8 @@ export function getPropertyIdByByResourceAndPredicateId(state, resourceId, exist
             return property.existingPredicateId === existingPredicateId;
         });
         return propertyId ?? null; // return a list without null values (predicates that aren't in the database)
-    } else {
-        return null;
     }
+    return null;
 }
 
 /**
@@ -768,7 +757,7 @@ export function removeEmptyPropertiesOfClass({ resourceId, classId }) {
         if (!resource) {
             return [];
         }
-        let propertyIds = resource.propertyIds;
+        let { propertyIds } = resource;
         if (propertyIds) {
             propertyIds = resource.propertyIds ? resource.propertyIds : [];
             for (const propertyId of propertyIds) {
@@ -777,8 +766,8 @@ export function removeEmptyPropertiesOfClass({ resourceId, classId }) {
                     dispatch(
                         deleteProperty({
                             id: property.propertyId,
-                            resourceId: resourceId
-                        })
+                            resourceId,
+                        }),
                     );
                 }
             }
@@ -808,17 +797,17 @@ export function createRequiredPropertiesInResource(resourceId) {
                     const propertyId = guid();
                     dispatch(
                         createProperty({
-                            propertyId: propertyId,
-                            resourceId: resourceId,
+                            propertyId,
+                            resourceId,
                             existingPredicateId: mp.property.id,
                             label: mp.property.label,
                             isExistingProperty: true,
-                            isTemplate: false
-                        })
+                            isTemplate: false,
+                        }),
                     );
                     createdProperties.push({
                         existingPredicateId: mp.property.id,
-                        propertyId
+                        propertyId,
                     });
                 }
                 return null;
@@ -845,7 +834,7 @@ export function getResearchProblemsOfContribution(state, resourceId) {
     }
     if (resource && resource.propertyIds) {
         const researchProblemProperty = resource.propertyIds.find(
-            p => state.statementBrowser.properties.byId[p].existingPredicateId === PREDICATES.HAS_RESEARCH_PROBLEM
+            p => state.statementBrowser.properties.byId[p].existingPredicateId === PREDICATES.HAS_RESEARCH_PROBLEM,
         );
         if (researchProblemProperty) {
             const resourcesId = state.statementBrowser.properties.byId[researchProblemProperty].valueIds
@@ -966,9 +955,8 @@ export function createPropertyAction(data) {
                 const isExistingProperty = resource.propertyIds.find(p => {
                     if (getState().statementBrowser.properties.byId[p].existingPredicateId === data.existingPredicateId) {
                         return true;
-                    } else {
-                        return false;
                     }
+                    return false;
                 });
                 if (isExistingProperty) {
                     // Property exists already
@@ -980,8 +968,8 @@ export function createPropertyAction(data) {
         dispatch(
             createProperty({
                 propertyId: data.propertyId ? data.propertyId : guid(),
-                ...data
-            })
+                ...data,
+            }),
         );
     };
 }
@@ -1022,14 +1010,12 @@ export function canAddValue(state, resourceId, propertyId) {
         if (typeComponents && typeComponents.length > 0) {
             if (typeComponents[0].maxOccurs && property.valueIds.length >= parseInt(typeComponents[0].maxOccurs)) {
                 return false;
-            } else {
-                return true;
             }
+            return true;
         }
         return true;
-    } else {
-        return true;
     }
+    return true;
 }
 
 /**
@@ -1047,14 +1033,12 @@ export function canDeleteProperty(state, resourceId, propertyId) {
         if (typeComponents && typeComponents.length > 0) {
             if (typeComponents[0].minOccurs >= 1) {
                 return false;
-            } else {
-                return true;
             }
+            return true;
         }
         return true;
-    } else {
-        return true;
     }
+    return true;
 }
 
 /**
@@ -1109,9 +1093,9 @@ export function createValueAction(data) {
         dispatch(
             createValue({
                 valueId: data.valueId ? data.valueId : guid(),
-                resourceId: resourceId,
-                ...data
-            })
+                resourceId,
+                ...data,
+            }),
         );
 
         // Dispatch loading template of classes
@@ -1138,8 +1122,8 @@ export const createResourceAction = data => dispatch => {
             existingResourceId: data.existingResourceId,
             shared: data.shared ? data.shared : 1,
             classes: data.classes ? data.classes : [],
-            _class: data._class ? data._class : ENTITIES.RESOURCE
-        })
+            _class: data._class ? data._class : ENTITIES.RESOURCE,
+        }),
     );
 };
 
@@ -1154,9 +1138,8 @@ function shouldFetchTemplate(state, templateID) {
     const template = state.statementBrowser.templates[templateID];
     if (!template) {
         return true;
-    } else {
-        return false;
     }
+    return false;
 }
 
 /**
@@ -1175,11 +1158,10 @@ export function fetchTemplateIfNeeded(templateID) {
             dispatch(createTemplate(template));
             dispatch(setIsFetchingTemplateData({ templateID, status: false }));
             return template;
-        } else {
-            // Let the calling code know there's nothing to wait for.
-            const template = getState().statementBrowser.templates[templateID];
-            return Promise.resolve(template);
         }
+        // Let the calling code know there's nothing to wait for.
+        const template = getState().statementBrowser.templates[templateID];
+        return Promise.resolve(template);
     };
 }
 
@@ -1219,8 +1201,8 @@ export function isTemplateContextProperty(state, propertyId) {
  * @return {Promise} Promise object
  */
 export function fillResourceWithTemplate({ templateID, resourceId, syncBackend = false }) {
-    return async (dispatch, getState) => {
-        return dispatch(fetchTemplateIfNeeded(templateID)).then(async templateDate => {
+    return async (dispatch, getState) =>
+        dispatch(fetchTemplateIfNeeded(templateID)).then(async templateDate => {
             const template = templateDate;
             // Check if it's a template
             if (template && template?.components?.length > 0) {
@@ -1231,15 +1213,15 @@ export function fillResourceWithTemplate({ templateID, resourceId, syncBackend =
                         updateResourceClasses({
                             resourceId,
                             classes: [...getState().statementBrowser.resources.byId[resourceId].classes, template.class.id],
-                            syncBackend: syncBackend
-                        })
+                            syncBackend,
+                        }),
                     );
                     // Add properties
                     const statements = { properties: [], values: [] };
                     for (const component of template?.components) {
-                        statements['properties'].push({
+                        statements.properties.push({
                             existingPredicateId: component.property.id,
-                            label: component.property.label
+                            label: component.property.label,
                         });
                     }
                     dispatch(fillStatements({ statements, resourceId, syncBackend }));
@@ -1249,46 +1231,45 @@ export function fillResourceWithTemplate({ templateID, resourceId, syncBackend =
                     const pID = guid();
                     const vID = guid();
                     let instanceResourceId = guid();
-                    statements['properties'].push({
+                    statements.properties.push({
                         propertyId: pID,
                         existingPredicateId: template.predicate.id,
                         label: template.predicate.label,
                         isAnimated: false,
-                        canDuplicate: true
+                        canDuplicate: true,
                     });
                     if (syncBackend) {
                         const newObject = await createResourceApi(template.label, template.class ? [template.class.id] : []);
                         instanceResourceId = newObject.id;
                     }
-                    statements['values'].push({
+                    statements.values.push({
                         valueId: vID,
                         label: template.label,
                         existingResourceId: instanceResourceId,
                         _class: ENTITIES.RESOURCE,
                         propertyId: pID,
-                        classes: template.class ? [template.class.id] : []
+                        classes: template.class ? [template.class.id] : [],
                     });
-                    await dispatch(fillStatements({ statements, resourceId: resourceId, syncBackend }));
+                    await dispatch(fillStatements({ statements, resourceId, syncBackend }));
                     // Add properties
                     const instanceStatements = { properties: [], values: [] };
                     for (const component of template?.components) {
-                        instanceStatements['properties'].push({
+                        instanceStatements.properties.push({
                             existingPredicateId: component.property.id,
-                            label: component.property.label
+                            label: component.property.label,
                         });
                     }
                     await dispatch(
                         fillStatements({
                             statements: instanceStatements,
                             resourceId: instanceResourceId,
-                            syncBackend: syncBackend
-                        })
+                            syncBackend,
+                        }),
                     );
                 }
             }
             return Promise.resolve();
         });
-    };
 }
 
 /**
@@ -1302,9 +1283,8 @@ function shouldFetchTemplatesOfClass(state, classID) {
     const classObj = state.statementBrowser.classes[classID];
     if (!classObj) {
         return true;
-    } else {
-        return false;
     }
+    return false;
 }
 
 /**
@@ -1320,10 +1300,9 @@ export function fetchTemplatesOfClassIfNeeded(classID) {
             dispatch(setIsFetchingTemplatesOfClass({ classID, status: false }));
             const templates = await Promise.all(templateIds.map(templateId => dispatch(fetchTemplateIfNeeded(templateId)))).catch(e => []);
             return templates;
-        } else {
-            // Let the calling code know there's nothing to wait for.
-            return Promise.resolve();
         }
+        // Let the calling code know there's nothing to wait for.
+        return Promise.resolve();
     };
 }
 
@@ -1344,16 +1323,16 @@ export function selectResourceAction(data) {
             selectResource({
                 increaseLevel: data.increaseLevel,
                 resourceId: data.resourceId,
-                label: data.label
-            })
+                label: data.label,
+            }),
         );
 
         dispatch(
             addResourceHistory({
                 resourceId: data.resourceId,
                 label: data.label,
-                propertyLabel: data.propertyLabel
-            })
+                propertyLabel: data.propertyLabel,
+            }),
         );
 
         if (data.resetLevel) {
@@ -1367,8 +1346,8 @@ export const goToResourceHistory = data => (dispatch, getState) => {
     if (!getState().statementBrowser.resources.byId[data.id]) {
         dispatch(
             fetchStatementsForResource({
-                resourceId: data.id
-            })
+                resourceId: data.id,
+            }),
         );
     }
     dispatch(gotoResourceHistory(data));
@@ -1390,9 +1369,8 @@ function shouldFetchStatementsForResource(state, resourceId, depth, nodeType) {
         (!resource || (resource.existingResourceId && !resource.isFetched) || (resource.isFetched && resource.fetchedDepth < depth))
     ) {
         return true;
-    } else {
-        return false;
     }
+    return false;
 }
 
 /**
@@ -1421,9 +1399,9 @@ export function addStatements(statements, resourceId, depth) {
             resourceStatements,
             [
                 resourceStatements => resourceStatements.predicate.label.toLowerCase(),
-                resourceStatements => resourceStatements.object.label.toLowerCase()
+                resourceStatements => resourceStatements.object.label.toLowerCase(),
             ],
-            ['asc']
+            ['asc'],
         );
 
         return Promise.all(
@@ -1435,12 +1413,12 @@ export function addStatements(statements, resourceId, depth) {
                     propertyId = guid();
                     dispatch(
                         createProperty({
-                            propertyId: propertyId,
-                            resourceId: resourceId,
+                            propertyId,
+                            resourceId,
                             existingPredicateId: statement.predicate.id,
                             isExistingProperty: true,
-                            ...statement.predicate
-                        })
+                            ...statement.predicate,
+                        }),
                     );
                 }
                 let addStatement = Promise.resolve();
@@ -1449,24 +1427,24 @@ export function addStatements(statements, resourceId, depth) {
                     const valueId = guid();
                     addStatement = dispatch(
                         createValueAction({
-                            valueId: valueId,
+                            valueId,
                             existingResourceId: statement.object.id,
-                            propertyId: propertyId,
+                            propertyId,
                             isExistingValue: true,
                             existingStatement: true,
                             statementId: statement.id,
                             statementCreatedBy: statement.created_by,
                             statementCreatedAt: statement.created_at,
-                            isFetched: depth > 1 ? true : false,
+                            isFetched: depth > 1,
                             fetchedDepth: depth - 1,
-                            ...statement.object
-                        })
+                            ...statement.object,
+                        }),
                     );
                 }
                 return addStatement.then(() => {
                     // check if statement.object.id is not already loaded (propertyIds.length===0)
                     const resource = getState().statementBrowser.resources.byId[statement.object.id];
-                    //resource.propertyIds?.length === 0
+                    // resource.propertyIds?.length === 0
                     if (filterStatementsBySubjectId(statements, statement.object.id)?.length && resource?.propertyIds?.length === 0) {
                         // Add required properties and add statements
                         return dispatch(createRequiredPropertiesInResource(statement.object.id))
@@ -1476,15 +1454,14 @@ export function addStatements(statements, resourceId, depth) {
                                 dispatch(
                                     setIsFetchedStatements({
                                         resourceId: statement.object.id,
-                                        depth: depth - 1
-                                    })
+                                        depth: depth - 1,
+                                    }),
                                 );
                             });
-                    } else {
-                        return Promise.resolve();
                     }
+                    return Promise.resolve();
                 });
-            })
+            }),
         );
     };
 }
@@ -1497,72 +1474,69 @@ export function addStatements(statements, resourceId, depth) {
  * @param {Number} depth - The required depth
  * @return {Promise} Promise object
  */
-export const fetchStatementsForResource = ({ resourceId, rootNodeType = ENTITIES.RESOURCE, depth = 1 }) => {
-    return (dispatch, getState) => {
-        if (shouldFetchStatementsForResource(getState(), resourceId, depth, rootNodeType)) {
-            dispatch(setIsFetchingStatements({ resourceId }));
-            // Get the resource classes
-            return getEntity(rootNodeType, resourceId)
-                .then(root => {
-                    // We have custom templates for predicates and classes
-                    // so add the corresponding classes on the root node
-                    const mapEntitiesClasses = {
-                        [ENTITIES.PREDICATE]: [CLASSES.PREDICATE],
-                        [ENTITIES.CLASS]: [CLASSES.CLASS],
-                        [ENTITIES.RESOURCE]: root.classes ?? []
-                    };
-                    let allClasses = mapEntitiesClasses[rootNodeType];
-                    // set the resource classes (initialize doesn't set the classes)
-                    dispatch(updateResourceClasses({ resourceId, classes: allClasses, syncBackend: false }));
-                    // update shared counter
+export const fetchStatementsForResource = ({ resourceId, rootNodeType = ENTITIES.RESOURCE, depth = 1 }) => (dispatch, getState) => {
+    if (shouldFetchStatementsForResource(getState(), resourceId, depth, rootNodeType)) {
+        dispatch(setIsFetchingStatements({ resourceId }));
+        // Get the resource classes
+        return getEntity(rootNodeType, resourceId)
+            .then(root => {
+                // We have custom templates for predicates and classes
+                // so add the corresponding classes on the root node
+                const mapEntitiesClasses = {
+                    [ENTITIES.PREDICATE]: [CLASSES.PREDICATE],
+                    [ENTITIES.CLASS]: [CLASSES.CLASS],
+                    [ENTITIES.RESOURCE]: root.classes ?? [],
+                };
+                let allClasses = mapEntitiesClasses[rootNodeType];
+                // set the resource classes (initialize doesn't set the classes)
+                dispatch(updateResourceClasses({ resourceId, classes: allClasses, syncBackend: false }));
+                // update shared counter
 
-                    dispatch(
-                        updateResourceShared({
-                            resourceId: resourceId,
-                            shared: root.shared ?? 1
-                        })
-                    );
-                    // fetch the statements
-                    return getStatementsBundleBySubject({ id: resourceId, maxLevel: depth }).then(response => {
-                        // 1 - collect all classes Ids
-                        allClasses = uniq([
-                            ...allClasses,
-                            ...flatten(
-                                response.statements
-                                    .map(s => s.object)
-                                    .filter(o => o.classes)
-                                    .map(o => o.classes)
-                            )
-                        ]);
-                        // 3 - load templates
-                        const templatesOfClassesLoading = allClasses && allClasses?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
-                        return Promise.all(templatesOfClassesLoading)
-                            .then(() => dispatch(createRequiredPropertiesInResource(resourceId))) // Add required properties
-                            .then(() => dispatch(addStatements(response.statements, resourceId, depth))) // Add statements
-                            .then(() => {
-                                // Set fetching is done
-                                dispatch(doneFetchingStatements({ resourceId }));
-                                dispatch(
-                                    setIsFetchedStatements({
-                                        resourceId: resourceId,
-                                        depth: depth
-                                    })
-                                );
-                            });
-                    });
-                })
-                .catch(e => {
-                    console.log(e);
-                    dispatch(
-                        setFailedFetchingStatements({
-                            resourceId: resourceId
-                        })
-                    );
+                dispatch(
+                    updateResourceShared({
+                        resourceId,
+                        shared: root.shared ?? 1,
+                    }),
+                );
+                // fetch the statements
+                return getStatementsBundleBySubject({ id: resourceId, maxLevel: depth }).then(response => {
+                    // 1 - collect all classes Ids
+                    allClasses = uniq([
+                        ...allClasses,
+                        ...flatten(
+                            response.statements
+                                .map(s => s.object)
+                                .filter(o => o.classes)
+                                .map(o => o.classes),
+                        ),
+                    ]);
+                    // 3 - load templates
+                    const templatesOfClassesLoading = allClasses && allClasses?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+                    return Promise.all(templatesOfClassesLoading)
+                        .then(() => dispatch(createRequiredPropertiesInResource(resourceId))) // Add required properties
+                        .then(() => dispatch(addStatements(response.statements, resourceId, depth))) // Add statements
+                        .then(() => {
+                            // Set fetching is done
+                            dispatch(doneFetchingStatements({ resourceId }));
+                            dispatch(
+                                setIsFetchedStatements({
+                                    resourceId,
+                                    depth,
+                                }),
+                            );
+                        });
                 });
-        } else {
-            return Promise.resolve();
-        }
-    };
+            })
+            .catch(e => {
+                console.log(e);
+                dispatch(
+                    setFailedFetchingStatements({
+                        resourceId,
+                    }),
+                );
+            });
+    }
+    return Promise.resolve();
 };
 
 /**
@@ -1591,9 +1565,8 @@ export const isLiteral = components => {
  * @param {Object[]} components Array of components
  * @return {Object=} the class of value or null
  */
-export const getValueClass = components => {
-    return components && components.length > 0 && components[0].value && components[0].value.id ? components[0].value : null;
-};
+export const getValueClass = components =>
+    (components && components.length > 0 && components[0].value && components[0].value.id ? components[0].value : null);
 
 /**
  * Check if the class has an inline format
@@ -1610,8 +1583,8 @@ export function isInlineResource(state, valueClass) {
             .includes(valueClass.id)
     ) {
         if (state.statementBrowser.classes[valueClass.id] && state.statementBrowser.classes[valueClass.id].templateIds) {
-            const templateIds = state.statementBrowser.classes[valueClass.id].templateIds;
-            //check if it's an inline resource
+            const { templateIds } = state.statementBrowser.classes[valueClass.id];
+            // check if it's an inline resource
             for (const templateId of templateIds) {
                 const template = state.statementBrowser.templates[templateId];
                 if (template && template.hasLabelFormat) {
@@ -1653,9 +1626,8 @@ export function generatedFormattedLabel(resource, labelFormat) {
         }
         if (Object.keys(valueObject).length > 0) {
             return format(labelFormat, valueObject);
-        } else {
-            return resource.label;
         }
+        return resource.label;
     };
 }
 

@@ -64,7 +64,7 @@ PublishModal.propTypes = {
     id: PropTypes.string.isRequired,
     toggle: PropTypes.func.isRequired,
     show: PropTypes.bool.isRequired,
-    listId: PropTypes.string.isRequired
+    listId: PropTypes.string.isRequired,
 };
 
 export default PublishModal;

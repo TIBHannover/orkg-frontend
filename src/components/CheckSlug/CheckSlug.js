@@ -24,7 +24,7 @@ CheckSlug.propTypes = {
     label: PropTypes.string,
 
     /** Route used for redirect */
-    route: PropTypes.string.isRequired
+    route: PropTypes.string.isRequired,
 };
 
 export default CheckSlug;

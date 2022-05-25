@@ -3,12 +3,12 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert } from 'react
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import TableEditor from './TableEditor';
-import ExtractReferencesModal from './ExtractReferencesModal';
 import { Link } from 'react-router-dom';
-import useExtractionModal from './hooks/useExtractionModal';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
+import TableEditor from './TableEditor';
+import ExtractReferencesModal from './ExtractReferencesModal';
+import useExtractionModal from './hooks/useExtractionModal';
 import useTableEditor from './hooks/useTableEditor';
 
 const ExtractionModal = props => {
@@ -21,7 +21,7 @@ const ExtractionModal = props => {
         handleCsvDownload,
         handleImportData,
         importError,
-        clearImportError
+        clearImportError,
     ] = useExtractionModal(props);
 
     const [extractReferencesModalOpen, setExtractReferencesModalOpen] = useState(false);
@@ -31,7 +31,7 @@ const ExtractionModal = props => {
     const { removeEmptyRows } = useTableEditor(props.id, editorRef);
 
     const comparisonUrl = importedData
-        ? reverse(ROUTES.COMPARISON_NOT_PUBLISHED) + '?contributions=' + importedData.map(entry => entry.contributionId)
+        ? `${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${importedData.map(entry => entry.contributionId)}`
         : null;
 
     return (
@@ -129,8 +129,8 @@ ExtractionModal.propTypes = {
         x: PropTypes.number.isRequired,
         y: PropTypes.number.isRequired,
         w: PropTypes.number.isRequired,
-        h: PropTypes.number.isRequired
-    })
+        h: PropTypes.number.isRequired,
+    }),
 };
 
 export default ExtractionModal;

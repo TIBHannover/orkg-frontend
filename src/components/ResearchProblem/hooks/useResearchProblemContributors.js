@@ -15,21 +15,21 @@ function useResearchProblemContributors({ researchProblemId, pageSize = 30 }) {
             // Get the Contributors of research problem
             getContributorsByResearchProblemId({
                 id: researchProblemId,
-                page: page,
-                items: pageSize
+                page,
+                items: pageSize,
             })
                 .then(result => {
                     if (result.length > 0) {
                         setContributors(prevResources => [...prevResources, ...result]);
                         setIsLoading(false);
-                        setHasNextPage(result.length < pageSize || result.length === 0 ? false : true);
+                        setHasNextPage(!(result.length < pageSize || result.length === 0));
                         setIsLastPageReached(false);
                         setPage(page + 1);
                         setIsLoadingFailed(false);
                     } else {
                         setIsLoading(false);
                         setHasNextPage(false);
-                        setIsLastPageReached(page > 0 ? true : false);
+                        setIsLastPageReached(page > 0);
                         setIsLoadingFailed(false);
                     }
                 })
@@ -41,7 +41,7 @@ function useResearchProblemContributors({ researchProblemId, pageSize = 30 }) {
                     setIsLoadingFailed(true);
                 });
         },
-        [researchProblemId, pageSize]
+        [researchProblemId, pageSize],
     );
 
     // reset resources when the researchProblemId has changed

@@ -17,25 +17,25 @@ const Comparisons = () => {
     const fetchItems = async ({ page, pageSize }) => {
         const { items, last, totalElements } = await getResourcesByClass({
             id: CLASSES.COMPARISON,
-            page: page,
+            page,
             items: pageSize,
             sortBy: 'created_at',
-            desc: true
+            desc: true,
         }).then(async result => ({
             ...result,
             items: groupVersionsOfComparisons(
                 await getStatementsBySubjects({ ids: result.content.map(p => p.id) }).then(comparisonsStatements =>
                     comparisonsStatements.map(comparisonStatements =>
-                        getComparisonData(find(result.content, { id: comparisonStatements.id }), comparisonStatements.statements)
-                    )
-                )
-            )
+                        getComparisonData(find(result.content, { id: comparisonStatements.id }), comparisonStatements.statements),
+                    ),
+                ),
+            ),
         }));
 
         return {
             items,
             last,
-            totalElements
+            totalElements,
         };
     };
 

@@ -19,7 +19,7 @@ const TableHeaderRow = ({ property }) => {
     const statements = useSelector(state => state.contributionEditor.statements);
     const statementIds = Object.keys(statements).filter(statementId => statements[statementId].propertyId === property.id);
     const pwcStatementIds = Object.keys(statements).filter(
-        statementId => statements[statementId].propertyId === property.id && statements[statementId].created_by === env('PWC_USER_ID')
+        statementId => statements[statementId].propertyId === property.id && statements[statementId].created_by === env('PWC_USER_ID'),
     );
 
     const canDeleteProperty = useSelector(state => canDeletePropertyAction(state, property.id));
@@ -43,15 +43,15 @@ const TableHeaderRow = ({ property }) => {
                     The property <strong>{property.label}</strong> and its corresponding values will be deleted for <strong>all contributions</strong>{' '}
                     currently in the editor
                 </span>
-            )
+            ),
         });
 
         if (result) {
             dispatch(
                 deleteProperty({
                     id: property.id,
-                    statementIds
-                })
+                    statementIds,
+                }),
             );
         }
     };
@@ -69,8 +69,8 @@ const TableHeaderRow = ({ property }) => {
                 statementIds,
                 action,
                 newId: selected.id ?? null,
-                newLabel: inputValue
-            })
+                newLabel: inputValue,
+            }),
         );
     };
 
@@ -129,7 +129,7 @@ const TableHeaderRow = ({ property }) => {
 };
 
 TableHeaderRow.propTypes = {
-    property: PropTypes.object
+    property: PropTypes.object,
 };
 
 export default memo(TableHeaderRow);

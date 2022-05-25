@@ -26,7 +26,7 @@ const render = (ui, { initialState, store = configureStore(initialState), ...ren
     return {
         ...rendered,
         // so it is also possible to pass a state to the rerender function
-        rerender: (ui, options) => render(ui, { container: rendered.container, ...options })
+        rerender: (ui, options) => render(ui, { container: rendered.container, ...options }),
     };
 };
 

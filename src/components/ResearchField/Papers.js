@@ -14,16 +14,14 @@ import Tippy from '@tippyjs/react';
 import TitleBar from 'components/TitleBar/TitleBar';
 import PropTypes from 'prop-types';
 
-const SortButton = forwardRef((props, ref) => {
-    return (
-        <Button innerRef={ref} color="secondary" className="ps-3 pe-3" size="sm">
-            {stringifySort(props.sort)} <Icon icon={faChevronDown} />
-        </Button>
-    );
-});
+const SortButton = forwardRef((props, ref) => (
+    <Button innerRef={ref} color="secondary" className="ps-3 pe-3" size="sm">
+        {stringifySort(props.sort)} <Icon icon={faChevronDown} />
+    </Button>
+));
 
 SortButton.propTypes = {
-    sort: PropTypes.string.isRequired
+    sort: PropTypes.string.isRequired,
 };
 
 const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
@@ -38,7 +36,7 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
         page,
         handleLoadMore,
         setSort,
-        setIncludeSubFields
+        setIncludeSubFields,
     } = useResearchFieldPapers({ researchFieldId: id, initialSort: 'combined', initialIncludeSubFields: true });
     const [tippy, setTippy] = useState({});
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
@@ -115,21 +113,20 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
             <Container className="p-0">
                 {papers.length > 0 && (
                     <ListGroup className={boxShadow ? 'box' : ''}>
-                        {papers.map(paper => {
-                            return (
+                        {papers.map(
+                            paper =>
                                 paper && (
                                     <PaperCard
                                         paper={{
                                             id: paper.id,
                                             title: paper.label,
-                                            ...paper
+                                            ...paper,
                                         }}
                                         showBreadcrumbs={showBreadcrumbs}
                                         key={`pc${paper.id}`}
                                     />
-                                )
-                            );
-                        })}
+                                ),
+                        )}
                         {!isLoading && hasNextPage && (
                             <div
                                 style={{ cursor: 'pointer' }}
@@ -193,12 +190,12 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
 Papers.propTypes = {
     id: PropTypes.string.isRequired,
     boxShadow: PropTypes.bool,
-    showBreadcrumbs: PropTypes.bool
+    showBreadcrumbs: PropTypes.bool,
 };
 
 Papers.defaultProps = {
     boxShadow: false,
-    showBreadcrumbs: true
+    showBreadcrumbs: true,
 };
 
 export default Papers;

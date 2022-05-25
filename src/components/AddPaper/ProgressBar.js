@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 
-/* 
+/*
     This component is using React's native component styling, it is kind of a mess...
     TODO: replacing inline styles with styled components
 */
@@ -10,7 +10,7 @@ const labelStyle = {
     width: '33.33%',
     float: 'left',
     textAlign: 'center',
-    position: 'relative'
+    position: 'relative',
 };
 
 const numberStyle = {
@@ -18,24 +18,24 @@ const numberStyle = {
     height: '29px',
     width: '29px',
     borderRadius: '25px',
-    background: '#e9ecef', //#E86161
-    color: '#939393', //#fff
+    background: '#e9ecef', // #E86161
+    color: '#939393', // #fff
     fontSize: 20,
     textAlign: 'center',
     left: 'calc(50% - 15px)',
     position: 'absolute',
-    transition: '.5s background'
+    transition: '.5s background',
 };
 
 const textStyle = {
     display: 'inline-block',
     width: '100%',
-    marginTop: 35
+    marginTop: 35,
 };
 
 const labelGroupStyle = {
     position: 'absolute',
-    width: '100%'
+    width: '100%',
 };
 
 const lineStyle = {
@@ -47,16 +47,16 @@ const lineStyle = {
     left: '0%',
     top: 13,
     zIndex: 0,
-    transition: '.7s background'
+    transition: '.7s background',
 };
 
 const lineLeftStyle = {
-    left: '50%'
+    left: '50%',
 };
 
 const selectedStyle = {
     background: '#E86161',
-    color: '#fff'
+    color: '#fff',
 };
 
 class ProgressBar extends Component {
@@ -69,7 +69,7 @@ class ProgressBar extends Component {
             <div style={{ height: 65, margin: '30px 0 30px', position: 'relative' }}>
                 <div style={labelGroupStyle}>
                     <div style={labelStyle}>
-                        {/*<div style={{...lineStyle, ...styleSelectedOne}}></div>*/}
+                        {/* <div style={{...lineStyle, ...styleSelectedOne}}></div> */}
                         <div style={{ ...lineStyle, ...lineLeftStyle, ...styleSelectedTwo }} />
                         <div style={{ ...numberStyle, ...styleSelectedOne }}>1</div>
                         <div style={textStyle}>General</div>
@@ -92,7 +92,7 @@ class ProgressBar extends Component {
 }
 
 ProgressBar.propTypes = {
-    currentStep: PropTypes.number.isRequired
+    currentStep: PropTypes.number.isRequired,
 };
 
 export default ProgressBar;

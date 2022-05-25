@@ -7,14 +7,15 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
-import ROUTES from '../../../constants/routes.js';
 import { compose } from 'redux';
 import withMatomo from 'components/Matomo/withMatomo.js';
+import ROUTES from '../../../constants/routes.js';
 
 class Finish extends Component {
     componentDidMount() {
         this.props.trackEvent({ category: 'data-entry', action: 'add-paper-wizard' });
     }
+
     render() {
         if (!this.props.paperNewResourceId) {
             // no ID yet, thus loading...
@@ -27,40 +28,39 @@ class Finish extends Component {
                     <h2 className="h5">Loading...</h2> <br />
                 </div>
             );
-        } else {
-            return (
-                <div className="text-center text-primary">
-                    <span style={{ fontSize: 80 }}>
-                        <Icon icon={faCheckCircle} />
-                    </span>
-                    <br />
-                    <h2 className="h5">Paper has been added successfully</h2>
-                    <br />
-                    <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paperNewResourceId }) + '?comingFromWizard=true'}>
-                        <Button color="primary" className="mb-4">
-                            View paper
-                        </Button>
-                    </Link>
-                </div>
-            );
         }
+        return (
+            <div className="text-center text-primary">
+                <span style={{ fontSize: 80 }}>
+                    <Icon icon={faCheckCircle} />
+                </span>
+                <br />
+                <h2 className="h5">Paper has been added successfully</h2>
+                <br />
+                <Link to={`${reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paperNewResourceId })}?comingFromWizard=true`}>
+                    <Button color="primary" className="mb-4">
+                        View paper
+                    </Button>
+                </Link>
+            </div>
+        );
     }
 }
 
 Finish.propTypes = {
     paperNewResourceId: PropTypes.string,
-    trackEvent: PropTypes.func.isRequired
+    trackEvent: PropTypes.func.isRequired,
 };
 
 Finish.defaultProps = {
-    paperNewResourceId: null
+    paperNewResourceId: null,
 };
 
 const mapStateToProps = state => ({
-    paperNewResourceId: state.addPaper.paperNewResourceId
+    paperNewResourceId: state.addPaper.paperNewResourceId,
 });
 
 export default compose(
     connect(mapStateToProps),
-    withMatomo
+    withMatomo,
 )(Finish);

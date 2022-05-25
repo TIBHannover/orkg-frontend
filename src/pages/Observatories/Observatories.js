@@ -5,9 +5,7 @@ import { getAllObservatories, getObservatoriesStats } from 'services/backend/obs
 import { getAllOrganizations } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { useLocation } from 'react-router-dom';
-import { Container } from 'reactstrap';
-import { Col, Row } from 'reactstrap';
-import { TabContent, TabPane, NavLink } from 'reactstrap';
+import { Container, Col, Row, TabContent, TabPane, NavLink } from 'reactstrap';
 import styled from 'styled-components';
 import { groupBy } from 'lodash';
 import TitleBar from 'components/TitleBar/TitleBar';

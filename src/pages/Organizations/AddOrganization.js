@@ -31,7 +31,7 @@ class AddOrganization extends Component {
             editorState: 'edit',
             organizationType: ORGANIZATIONS_TYPES.find(t => ORGANIZATIONS_MISC.GENERAL === t.id)?.id,
             date: '',
-            isDoubleBlind: false
+            isDoubleBlind: false,
         };
 
         this.publicOrganizationRoute = `${getPublicUrl()}${reverse(ROUTES.ORGANIZATION, { id: ' ' })}`;
@@ -46,34 +46,34 @@ class AddOrganization extends Component {
         const { name, logo, website, permalink, organizationType, date, isDoubleBlind } = this.state;
 
         if (!name || name.length === 0) {
-            toast.error(`Please enter an organization name`);
+            toast.error('Please enter an organization name');
             this.setState({ editorState: 'edit' });
             return;
         }
         if (!new RegExp(REGEX.PERMALINK).test(permalink)) {
-            toast.error(`Only underscores ( _ ), numbers, and letters are allowed in the permalink field`);
+            toast.error('Only underscores ( _ ), numbers, and letters are allowed in the permalink field');
             this.setState({ editorState: 'edit' });
             return;
         }
         if (!new RegExp(REGEX.URL).test(website)) {
-            toast.error(`Please enter a valid website URL`);
+            toast.error('Please enter a valid website URL');
             this.setState({ editorState: 'edit' });
             return;
         }
         if (logo.length === 0) {
-            toast.error(`Please upload an organization logo`);
+            toast.error('Please upload an organization logo');
             this.setState({ editorState: 'edit' });
             return;
         }
 
         if (organizationType.length === 0) {
-            toast.error(`Please select an organization type`);
+            toast.error('Please select an organization type');
             this.setState({ editorState: 'edit' });
             return;
         }
 
         if (ORGANIZATIONS_TYPES.find(t => t.id === organizationType)?.requireDate && date.length === 0) {
-            toast.error(`Please select conference date`);
+            toast.error('Please select conference date');
             this.setState({ editorState: 'edit' });
             return;
         }
@@ -83,7 +83,7 @@ class AddOrganization extends Component {
             if (organizationType === ORGANIZATIONS_MISC.CONFERENCE) {
                 responseJson = await createConference(name, logo[0], this.props.user.id, website, permalink, organizationType, {
                     date,
-                    is_double_blind: isDoubleBlind
+                    is_double_blind: isDoubleBlind,
                 });
             } else {
                 responseJson = await createOrganization(name, logo[0], this.props.user.id, website, permalink, organizationType);
@@ -101,13 +101,13 @@ class AddOrganization extends Component {
         if (event.target.name === 'name') {
             this.setState({
                 // eslint-disable-next-line no-useless-escape
-                permalink: slugify(event.target.value.trim(), { replacement: '_', remove: /[*+~%\\<>/;.(){}?,'"!:@\#\-^|]/g, lower: false })
+                permalink: slugify(event.target.value.trim(), { replacement: '_', remove: /[*+~%\\<>/;.(){}?,'"!:@\#\-^|]/g, lower: false }),
             });
         }
     };
 
     navigateToOrganization = display_id => {
-        this.setState({ editorState: 'edit', display_id: display_id }, () => {
+        this.setState({ editorState: 'edit', display_id }, () => {
             this.setState({ redirect: true });
         });
     };
@@ -121,7 +121,7 @@ class AddOrganization extends Component {
         }
         reader.onloadend = e => {
             this.setState({
-                logo: [reader.result]
+                logo: [reader.result],
             });
         };
         reader.readAsDataURL(file);
@@ -135,7 +135,7 @@ class AddOrganization extends Component {
                 name: '',
                 display_id: '',
                 website: '',
-                permalink: ''
+                permalink: '',
             });
 
             return <Navigate to={reverse(ROUTES.ORGANIZATION, { id: this.state.display_id })} />;
@@ -256,7 +256,7 @@ class AddOrganization extends Component {
                         </Form>
                     )}
 
-                    {(!!!this.props.user || !this.props.user.isCurationAllowed) && (
+                    {(!this.props.user || !this.props.user.isCurationAllowed) && (
                         <>
                             <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog({ action: 'signin' })}>
                                 <Icon className="me-1" icon={faUser} /> Signin to create organization
@@ -270,19 +270,19 @@ class AddOrganization extends Component {
 }
 
 const mapStateToProps = state => ({
-    user: state.auth.user
+    user: state.auth.user,
 });
 
 const mapDispatchToProps = dispatch => ({
-    openAuthDialog: payload => dispatch(openAuthDialog(payload))
+    openAuthDialog: payload => dispatch(openAuthDialog(payload)),
 });
 
 AddOrganization.propTypes = {
     openAuthDialog: PropTypes.func.isRequired,
-    user: PropTypes.object
+    user: PropTypes.object,
 };
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(AddOrganization);

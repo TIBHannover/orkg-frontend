@@ -54,11 +54,11 @@ const StepContainer = props => {
     const activeClasses = active ? 'active' : '';
     const topClasses = classNames({
         top: true,
-        active
+        active,
     });
     const titleClasses = classNames({
         'h4 mt-4 mb-4': true,
-        active
+        active,
     });
 
     return (
@@ -87,14 +87,14 @@ StepContainer.propTypes = {
     topLine: PropTypes.bool,
     bottomLine: PropTypes.bool,
     active: PropTypes.bool,
-    children: PropTypes.node
+    children: PropTypes.node,
 };
 
 StepContainer.defaultProps = {
     topLine: false,
     bottomLine: false,
     active: false,
-    children: null
+    children: null,
 };
 
 export default StepContainer;

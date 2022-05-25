@@ -9,12 +9,12 @@ import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlis
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import Authors from 'components/PaperCard/Authors';
-import useCardData from './hooks/useCardData';
 import PropTypes from 'prop-types';
 import { CardBadge } from 'components/styled';
 import moment from 'moment';
 import Tippy from '@tippyjs/react';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
+import useCardData from './hooks/useCardData';
 
 const ReviewCardStyled = styled.div`
     &:last-child {
@@ -26,13 +26,13 @@ const ReviewCard = ({ versions, showCurationFlags, showBadge }) => {
     const { researchField, authors, isLoading: isLoadingMetaData } = useCardData({
         id: versions[0]?.id,
         initResearchField: versions[0]?.researchField,
-        initAuthors: versions[0]?.authors
+        initAuthors: versions[0]?.authors,
     });
 
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: versions[0]?.id,
         unlisted: versions[0]?.unlisted,
-        featured: versions[0]?.featured
+        featured: versions[0]?.featured,
     });
 
     return (
@@ -99,12 +99,12 @@ const ReviewCard = ({ versions, showCurationFlags, showBadge }) => {
 ReviewCard.propTypes = {
     versions: PropTypes.array.isRequired,
     showBadge: PropTypes.bool.isRequired,
-    showCurationFlags: PropTypes.bool.isRequired
+    showCurationFlags: PropTypes.bool.isRequired,
 };
 
 ReviewCard.defaultProps = {
     showBadge: false,
-    showCurationFlags: true
+    showCurationFlags: true,
 };
 
 export default ReviewCard;

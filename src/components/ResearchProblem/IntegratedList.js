@@ -15,7 +15,7 @@ import queryString from 'query-string';
 const DEFAULT_CLASSES_FILTER = [
     { id: CLASSES.PAPER, label: 'Paper' },
     { id: CLASSES.COMPARISON, label: 'Comparison' },
-    { id: CLASSES.VISUALIZATION, label: 'Visualization' }
+    { id: CLASSES.VISUALIZATION, label: 'Visualization' },
     /*
     { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Review' },
     { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'List' }
@@ -37,16 +37,16 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
         classesFilter,
         handleLoadMore,
         setClassesFilter,
-        setSort
+        setSort,
     } = useResearchProblemContent({
         researchProblemId: id,
-        slug: slug,
+        slug,
         initialSort: params.sort ?? 'combined',
         initialClassFilterOptions: DEFAULT_CLASSES_FILTER,
         initClassesFilter: params.classesFilter
             ? DEFAULT_CLASSES_FILTER.filter(i => params.classesFilter.split(',').includes(i.id))
             : DEFAULT_CLASSES_FILTER,
-        updateURL: true
+        updateURL: true,
     });
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
@@ -56,7 +56,7 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
             toast.info('At least one type should be selected');
         } else {
             setClassesFilter(prev =>
-                prev.map(i => i.id).includes(classFilter.id) ? prev.filter(item => item.id !== classFilter.id) : [...prev, classFilter]
+                prev.map(i => i.id).includes(classFilter.id) ? prev.filter(item => item.id !== classFilter.id) : [...prev, classFilter],
             );
         }
     };
@@ -177,11 +177,11 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
 IntegratedList.propTypes = {
     id: PropTypes.string.isRequired,
     slug: PropTypes.string,
-    boxShadow: PropTypes.bool
+    boxShadow: PropTypes.bool,
 };
 
 IntegratedList.defaultProps = {
-    boxShadow: false
+    boxShadow: false,
 };
 
 export default IntegratedList;

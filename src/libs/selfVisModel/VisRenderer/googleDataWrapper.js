@@ -8,18 +8,16 @@ export default class DataForChart {
         this.getChartData = this.getChartData.bind(this);
     }
 
-    useAllColumns = () => {
-        return {
-            cols: this.header,
-            rows: this.rowls
-        };
-    };
+    useAllColumns = () => ({
+        cols: this.header,
+        rows: this.rowls,
+    });
 
     createDataFromSharedCustomizer = customizer => {
         if (customizer.errorDataNotSupported || !customizer.xAxisSelector || !customizer.yAxisSelector || customizer.yAxisSelector.length === 0) {
             return {
                 cols: [],
-                rows: []
+                rows: [],
             };
         }
 
@@ -53,10 +51,10 @@ export default class DataForChart {
 
                 if (yax.intervals && yax.intervals.length > 0) {
                     yax.intervals.forEach((interval, id) => {
-                        //get label
+                        // get label
                         const i_label = interval.item.label;
                         if (headerMap[i_label] !== undefined) {
-                            newHeaders.push({ id: 'i' + id, type: 'number', role: 'interval' });
+                            newHeaders.push({ id: `i${id}`, type: 'number', role: 'interval' });
                             ySelectorIndices.push(headerMap[i_label]);
                         }
                     });
@@ -80,7 +78,7 @@ export default class DataForChart {
 
         return {
             cols: newHeaders,
-            rows: newRows
+            rows: newRows,
         };
     };
 
@@ -88,7 +86,7 @@ export default class DataForChart {
         if (state.xAxis === undefined || state.yAxis.length === 0) {
             return {
                 cols: [],
-                rows: []
+                rows: [],
             };
         }
         const oldHeaders = this.header;
@@ -125,7 +123,7 @@ export default class DataForChart {
 
                         // if we have such an interval label
                         if (headerMap[i_label] !== undefined) {
-                            newHeaders.push({ id: 'i' + i, type: 'number', role: 'interval' });
+                            newHeaders.push({ id: `i${i}`, type: 'number', role: 'interval' });
                             ySelectorIndices.push(headerMap[i_label]);
                         }
                     });
@@ -151,7 +149,7 @@ export default class DataForChart {
 
         return {
             cols: newHeaders,
-            rows: newRows
+            rows: newRows,
         };
     };
 
@@ -190,7 +188,7 @@ export default class DataForChart {
     getChartData() {
         return {
             cols: this.header,
-            rows: this.rowls
+            rows: this.rowls,
         };
     }
 }

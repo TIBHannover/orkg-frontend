@@ -55,26 +55,26 @@ const useListPage = ({ label, resourceClass, renderListItem }) => {
 
         const result = await getResourcesByClass({
             id: CLASSES.COMPARISON,
-            page: page,
+            page,
             items: pageSize,
             sortBy: 'created_at',
-            desc: true
+            desc: true,
         });
         if (result.content.length > 0) {
             // Fetch the data of each paper
             getStatementsBySubjects({ ids: result.content.map(p => p.id) })
                 .then(comparisonsStatements => {
-                    const comparisonsData = comparisonsStatements.map(comparisonStatements => {
-                        return getComparisonData(
+                    const comparisonsData = comparisonsStatements.map(comparisonStatements =>
+                        getComparisonData(
                             comparisonStatements.id,
                             find(result.content, { id: comparisonStatements.id }).label,
-                            comparisonStatements.statements
-                        );
-                    });
+                            comparisonStatements.statements,
+                        ),
+                    );
                     addResults({
                         results: comparisonsData,
                         last: result.last,
-                        totalElements: result.totalElements
+                        totalElements: result.totalElements,
                     });
                 })
                 .catch(error => {
