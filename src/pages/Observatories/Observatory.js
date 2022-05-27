@@ -115,7 +115,7 @@ const Observatory = () => {
                         </Row>
                     </Container>
 
-                    <IntegratedList id={observatoryId} boxShadow />
+                    <IntegratedList id={observatoryId} slug={id} boxShadow />
 
                     <EditObservatory
                         showDialog={showEditDialog}
