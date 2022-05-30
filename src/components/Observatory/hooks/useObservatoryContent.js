@@ -129,7 +129,7 @@ function useObservatoryContent({ observatoryId, slug, initialSort, initialClassF
             navigate(
                 `${reverseWithSlug(ROUTES.OBSERVATORY, {
                     id: slug,
-                })}?sort=${sort}&classesFilter=${classesFilter.map(c => c.id).join(',')}`
+                })}?sort=${sort}&classesFilter=${classesFilter.map(c => c.id).join(',')}`,
             );
         }
     }, [observatoryId, slug, sort, classesFilter, navigate, updateURL]);
