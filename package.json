@@ -114,7 +114,7 @@
         "analyze": "source-map-explorer 'build/static/js/*.js'",
         "prestart": "react-env",
         "start": "react-scripts start",
-        "build": "react-env && react-scripts build",
+        "build": "react-env && DISABLE_ESLINT_PLUGIN=true react-scripts build",
         "test": "react-scripts test --env=jsdom",
         "test:ci": "react-scripts test --ci --env=jsdom --reporters=default --reporters=jest-junit --runInBand",
         "eject": "react-scripts eject",
