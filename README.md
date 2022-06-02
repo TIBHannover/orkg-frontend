@@ -101,7 +101,7 @@ We use [React](https://reactjs.org/) as frontend framework. Additionally, we use
 -   Running lint on commit (you cannot commit when your code contains lint errors)
 -   Run Prettier rules on commit for coding style consistency
 -   The [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format is used to automatically generate [our changelog](https://gitlab.com/TIBHannover/orkg/orkg-frontend/blob/master/CHANGELOG.md)
--   We adhere to the [Airbnb JavaScript style guide](https://github.com/airbnb/javascript)
+-   We are transitioning to fully adhere to the [Airbnb JavaScript style guide](https://github.com/airbnb/javascript). Currently, some rules are displayed to warnings instead of errors because of the transition period. Please ensure your code does not contain any warnings before commiting.
 
 Happy coding! 😁☕️
 
