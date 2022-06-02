@@ -40,7 +40,7 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
         setSort,
     } = useObservatoryContent({
         observatoryId: id,
-        slug: slug,
+        slug,
         initialSort: params.sort ?? 'combined',
         initialClassFilterOptions: DEFAULT_CLASSES_FILTER,
         initClassesFilter: params.classesFilter
