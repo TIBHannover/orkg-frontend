@@ -1,12 +1,12 @@
 import { faCalendar, faCheckCircle, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { loadPaper } from 'slices/viewPaperSlice';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
-import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
-import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
+import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
+import OpenCitations from 'components/ViewPaper/OpenCitations/OpenCitations';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
@@ -16,6 +16,7 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
 import { getAltMetrics } from 'services/altmetric/index';
+import { loadPaper } from 'slices/viewPaperSlice';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
 
 const PaperHeader = props => {
@@ -62,6 +63,7 @@ const PaperHeader = props => {
         );
         setIsOpenEditModal(false);
     };
+    const hasDoi = viewPaper.doi && viewPaper.doi.label?.startsWith('10.');
 
     return (
         <>
@@ -88,11 +90,12 @@ const PaperHeader = props => {
 
             {(viewPaper.publicationMonth?.label || viewPaper.publicationYear?.label) && (
                 <span className="badge bg-light me-2">
-                    <Icon icon={faCalendar} className="text-primary" />{' '}
+                    <Icon icon={faCalendar} className="text-secondary" />{' '}
                     {viewPaper.publicationMonth?.label ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''}{' '}
                     {viewPaper.publicationYear?.label ? viewPaper.publicationYear.label : ''}
                 </span>
             )}
+            {hasDoi && <OpenCitations doi={viewPaper.doi.label} />}
             <ResearchFieldBadge researchField={viewPaper.researchField} />
             <AuthorBadges authors={viewPaper.authors} />
             <br />
@@ -110,7 +113,7 @@ const PaperHeader = props => {
                         </small>
                     </div>
                 )}
-                {viewPaper.doi && viewPaper.doi.label?.startsWith('10.') && (
+                {hasDoi && (
                     <div className="flex-shrink-0">
                         <small>
                             DOI:{' '}
