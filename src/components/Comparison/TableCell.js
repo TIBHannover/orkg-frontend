@@ -100,7 +100,7 @@ const TableCell = props => {
                             onKeyDown={e =>
                                 (e.keyCode === 13
                                     ? () =>
-                                          resourceType !== ENTITIES.PREDICATE
+                                          (resourceType !== ENTITIES.PREDICATE
                                               ? openStatementBrowser(
                                                     data.path[isEqualPaths ? index : index + 1],
                                                     path,
@@ -113,7 +113,7 @@ const TableCell = props => {
                                                           }))
                                                         : [],
                                                 )
-                                              : null
+                                              : null)
                                     : undefined)
                             }
                             role="button"

@@ -26,7 +26,6 @@
         "detect-browser": "^5.3.0",
         "dompurify": "^2.3.6",
         "dot-prop-immutable": "^2.1.1",
-        "eslint-config-airbnb": "^19.0.4",
         "fast-text-encoding": "^1.0.2",
         "greeting-time": "^1.0.0",
         "handsontable": "^11.0.1",
@@ -114,7 +113,7 @@
         "analyze": "source-map-explorer 'build/static/js/*.js'",
         "prestart": "react-env",
         "start": "react-scripts start",
-        "build": "react-env && react-scripts build",
+        "build": "react-env && DISABLE_ESLINT_PLUGIN=true react-scripts build",
         "test": "react-scripts test --env=jsdom",
         "test:ci": "react-scripts test --ci --env=jsdom --reporters=default --reporters=jest-junit --runInBand",
         "eject": "react-scripts eject",
@@ -132,6 +131,7 @@
         "@testing-library/react": "^12.1.2",
         "@testing-library/user-event": "^13.5.0",
         "auto-changelog": "^2.4.0",
+        "eslint-config-airbnb": "^19.0.4",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-jsx-a11y": "^6.5.1",
         "eslint-plugin-prettier": "^3.3.1",
@@ -159,8 +159,8 @@
         "tagPrefix": "V"
     },
     "lint-staged": {
-        "src": [
-            "npm run --silent lint:fix"
+        "src/**/*.{js,jsx}": [
+            "eslint --fix --quiet"
         ]
     },
     "browserslist": [
