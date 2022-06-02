@@ -429,11 +429,19 @@ export const statementBrowserSlice = createSlice({
     },
     extraReducers: {
         [LOCATION_CHANGE]: (state, { payload }) => {
-            // from redux-first-history, reset the wizard when the page is changed
-            const matchViewPaper = match(ROUTES.VIEW_PAPER);
-            const contributionChange = matchViewPaper(payload.location.pathname);
+            // prevent reset location for content type page (location change is trigger on edit mode)
+            if (
+                state.keyToKeepStateOnLocationChange === match(ROUTES.CONTENT_TYPE)(payload.location.pathname)?.params?.id ||
+                state.keyToKeepStateOnLocationChange === match(ROUTES.CONTENT_TYPE_NO_MODE)(payload.location.pathname)?.params?.id
+            ) {
+                return;
+            }
 
-            if (!state.initOnLocationChange && state.keyToKeepStateOnLocationChange === contributionChange?.params?.resourceId) {
+            // from redux-first-history, reset the wizard when the page is changed
+            if (
+                !state.initOnLocationChange &&
+                state.keyToKeepStateOnLocationChange === match(ROUTES.VIEW_PAPER)(payload.location.pathname)?.params?.resourceId
+            ) {
                 return {
                     ...state,
                     // returns current state but resets some variables :
@@ -1566,7 +1574,7 @@ export const isLiteral = components => {
  * @return {Object=} the class of value or null
  */
 export const getValueClass = components =>
-    (components && components.length > 0 && components[0].value && components[0].value.id ? components[0].value : null);
+    components && components.length > 0 && components[0].value && components[0].value.id ? components[0].value : null;
 
 /**
  * Check if the class has an inline format

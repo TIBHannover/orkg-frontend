@@ -126,6 +126,7 @@ function ContentType() {
                             propertiesAsLinks={true}
                             resourcesAsLinks={true}
                             propertySuggestionsComponent={<PropertySuggestions />}
+                            keyToKeepStateOnLocationChange={resourceId}
                         />
                     </Container>
                 </>
