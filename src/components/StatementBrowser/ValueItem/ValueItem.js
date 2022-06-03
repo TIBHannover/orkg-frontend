@@ -51,7 +51,7 @@ const ValueItem = props => {
     return (
         <>
             <ValueItemStyle>
-                {!value.isEditing ? (
+                {!value.isEditing || !props.enableEdit ? (
                     <div>
                         {!value.isSaving && (
                             <Tippy
