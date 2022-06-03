@@ -230,7 +230,7 @@ class EditorComponent extends BaseEditorComponent {
                         {this.state.valueType === 'resource' || this.state.type === 'property' ? (
                             <AutoComplete
                                 entityType={this.state.type === 'property' ? ENTITIES.PREDICATE : ENTITIES.RESOURCE}
-                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`}
+                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE},${CLASSES.TEMPLATE_COMPONENT},${CLASSES.PAPER_DELETED},${CLASSES.CONTRIBUTION_DELETED}`}
                                 optionsClass={this.state.valueClass ? this.state.valueClass : undefined}
                                 placeholder={this.state.type === 'property' ? 'Enter a property' : 'Enter a resource'}
                                 onChange={async i => {
