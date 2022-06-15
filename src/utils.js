@@ -1189,6 +1189,7 @@ export const getResourceLink = (classId, id) => {
         [ENTITIES.RESOURCE]: [ROUTES.RESOURCE, 'id'],
         [ENTITIES.PREDICATE]: [ROUTES.PROPERTY, 'id'],
         [ENTITIES.CLASS]: [ROUTES.CLASS, 'id'],
+        [CLASSES.RESEARCH_FIELD]: [ROUTES.RESEARCH_FIELD_NO_SLUG, 'researchFieldId'],
         default: [ROUTES.RESOURCE, 'id'],
     };
     const [route, idParam] = links[classId] || links.default;
