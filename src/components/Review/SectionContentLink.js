@@ -144,7 +144,9 @@ const SectionContentLink = props => {
             <SelectGlobalStyle />
             <Autocomplete
                 excludeClasses={
-                    props.type === 'resource' ? `${CLASSES.PAPER},${CLASSES.CONTRIBUTION},${CLASSES.TEMPLATE},${CLASSES.RESEARCH_FIELD}` : undefined
+                    props.type === 'resource'
+                        ? `${CLASSES.PAPER},${CLASSES.CONTRIBUTION},${CLASSES.TEMPLATE},${CLASSES.RESEARCH_FIELD},${CLASSES.TEMPLATE_COMPONENT},${CLASSES.PAPER_DELETED},${CLASSES.CONTRIBUTION_DELETED}`
+                        : undefined
                 }
                 entityType={entityType}
                 optionsClass={optionsClass}
