@@ -146,6 +146,7 @@ function useResearchProblemContent({
                               researchProblemId,
                           })
                 }?sort=${sort}&classesFilter=${classesFilter.map(c => c.id).join(',')}`,
+                { replace: true },
             );
         }
     }, [researchProblemId, sort, classesFilter, navigate, updateURL, slug]);

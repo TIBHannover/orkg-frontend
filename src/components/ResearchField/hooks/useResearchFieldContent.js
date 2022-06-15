@@ -151,6 +151,7 @@ function useResearchFieldContent({
                               researchFieldId,
                           })
                 }?sort=${sort}&includeSubFields=${includeSubFields}&classesFilter=${classesFilter.map(c => c.id).join(',')}`,
+                { replace: true },
             );
         }
     }, [researchFieldId, sort, includeSubFields, classesFilter, navigate, updateURL, slug]);
