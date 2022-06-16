@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.71.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.71.0...v0.71.1) - 2022-06-16
+
+### Changes
+
+- fix(Comparison): publish with property IDs starting with 'R' [`#863`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/863)
+
+---
 ## [v0.71.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.70.1...v0.71.0) - 2022-06-15
 
 ### Changes
