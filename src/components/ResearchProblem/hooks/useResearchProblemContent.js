@@ -19,7 +19,7 @@ function useResearchProblemContent({
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
-    const [page, setPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(0);
     const [items, setItems] = useState([]);
     const [sort, setSort] = useState(initialSort);
     const [classFilterOptions] = useState(initialClassFilterOptions);
@@ -102,7 +102,7 @@ function useResearchProblemContent({
                             setHasNextPage(!result.last);
                             setIsLastPageReached(result.last);
                             setTotalElements(result.totalElements);
-                            setPage(page + 1);
+                            setCurrentPage(page + 1);
                         })
                         .catch(error => {
                             setIsLoading(false);
@@ -128,7 +128,7 @@ function useResearchProblemContent({
         setItems([]);
         setHasNextPage(false);
         setIsLastPageReached(false);
-        setPage(0);
+        setCurrentPage(0);
         setTotalElements(0);
     }, [researchProblemId, sort, classesFilter]);
 
@@ -157,7 +157,7 @@ function useResearchProblemContent({
 
     const handleLoadMore = () => {
         if (!isLoading) {
-            loadData(page, totalElements);
+            loadData(currentPage, totalElements);
         }
     };
 
@@ -168,7 +168,7 @@ function useResearchProblemContent({
         isLastPageReached,
         sort,
         totalElements,
-        page,
+        page: currentPage,
         classFilterOptions,
         classesFilter,
         setClassesFilter,
