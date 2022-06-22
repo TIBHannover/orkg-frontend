@@ -16,7 +16,7 @@ jest:
     needs: [] # speed up, doesn't depend on other jobs
     script:
         - cp default.env .env
-        - npm install
+        - npm install --legacy-peer-deps
         - npm run test:ci
     artifacts:
         when: always
