@@ -220,10 +220,9 @@ export default function CustomOption(props) {
                             </Tippy>
                         </div>
                     )}
-
-                    {props.data.id && (
+                    {(props.data.id || props.data.existingResourceId) && (
                         <div onClick={onClick} className="badge" onKeyDown={e => (e.keyCode === 13 ? onClick : undefined)} role="button" tabIndex={0}>
-                            {props.data.id}
+                            {!props.data.existingResourceId ? props.data.id : 'New'}
                         </div>
                     )}
                     {props.data.external && props.data.source && (

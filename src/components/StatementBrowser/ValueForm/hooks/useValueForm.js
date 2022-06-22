@@ -135,12 +135,13 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
         for (const key in state.statementBrowser.resources.byId) {
             const resource = state.statementBrowser.resources.byId[key];
 
-            if (!resource.existingResourceId && resource.label && resource.id) {
+            if (!resource.existingResourceId && resource.label && resource.resourceId) {
                 newResourcesList.push({
-                    id: resource.id,
+                    id: resource.resourceId,
                     label: resource.label,
                     ...(resource.shared ? { shared: resource.shared } : {}),
                     ...(resource.classes ? { classes: resource.classes } : {}),
+                    existingResourceId: true,
                 });
             }
         }
