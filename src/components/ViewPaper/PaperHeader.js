@@ -27,7 +27,8 @@ const PaperHeader = props => {
     const [deletePapers] = useDeletePapers({ paperIds: [viewPaper.paperResource.id], redirect: true });
     const [altMetrics, setAltMetrics] = useState(null);
     const dispatch = useDispatch();
-    const userCreatedThisPaper = viewPaper.paperResource.created_by && userId && viewPaper.paperResource.created_by === userId; // make sure a user is signed in (not null)
+    // make sure a user is signed in (not null)
+    const userCreatedThisPaper = viewPaper.paperResource.created_by && userId && viewPaper.paperResource.created_by === userId;
     const showDeleteButton = props.editMode && (isCurationAllowed || userCreatedThisPaper);
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: viewPaper.paperResource.id,
@@ -40,8 +41,8 @@ const PaperHeader = props => {
             return;
         }
         const loadAltMetrics = async () => {
-            const altMetrics = await getAltMetrics(viewPaper.doi?.label);
-            setAltMetrics(altMetrics);
+            const altM = await getAltMetrics(viewPaper.doi?.label);
+            setAltMetrics(altM);
         };
         loadAltMetrics();
     }, [viewPaper.doi?.label]);
