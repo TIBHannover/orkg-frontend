@@ -203,6 +203,22 @@ function getOrder(paperStatements) {
 }
 
 /**
+ * Filter the objects and return one doi object
+ * @param {Array} objects Array of object of DOI statements
+ * @param {Boolean} isDataCite The doi type to filter on (DataCite is the doi given by orkg)
+ * @return {Object} Doi object
+ */
+export const filterDoiObjects = (objects, isDataCite = false) => {
+    if (!objects.length) {
+        return '';
+    }
+    if (isDataCite) {
+        return objects.find(doi => doi.label?.startsWith(env('DATACITE_DOI_PREFIX'))) ?? '';
+    }
+    return objects.find(doi => doi.label?.startsWith('10.')) ?? '';
+};
+
+/**
  * Parse paper statements and return a a paper object
  *
  * @param {Array} paperStatements
@@ -219,12 +235,12 @@ export const getPaperDataViewPaper = (paperResource, paperStatements) => {
         contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)),
         publicationMonth: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_MONTH, true),
         publicationYear: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_YEAR, true),
-        doi: getDoiStatement(doi),
+        doi: filterDoiObjects(doi),
         researchField: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD),
         publishedIn: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_VENUE, true),
         url: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.URL, true),
         hasVersion: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PREVIOUS_VERSION, true),
-        dataCiteDoi: getDoiStatement(doi, true),
+        dataCiteDoi: filterDoiObjects(doi, true),
     };
 };
 
@@ -265,22 +281,6 @@ export const getPaperData = (resource, paperStatements) => {
         publishedIn,
         url,
     };
-};
-
-/**
- * Filter the objects and return one doi object
- * @param {Array} objects Array of object of DOI statements
- * @param {Boolean} isDataCite The doi type to filter on (DataCite is the doi given by orkg)
- * @return {Object} Doi object
- */
-export const getDoiStatement = (objects, isDataCite = false) => {
-    if (!objects.length) {
-        return;
-    }
-    if (isDataCite) {
-        return objects.find(doi => doi.label?.startsWith(env('DATACITE_DOI_PREFIX'))) ?? '';
-    }
-        return objects.find(doi => doi.label?.startsWith('10.')) ?? '';
 };
 
 /**
