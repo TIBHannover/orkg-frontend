@@ -6,11 +6,11 @@ export const olsBaseUrl = env('OLS_BASE_URL');
 
 export const selectTerms = ({ page = 0, pageSize = 10, type = 'ontology', q = null, ontology = null }) => {
     const params = queryString.stringify(
-        { rows: pageSize, start: page * pageSize, type, ...(q ? { q: q } : {}), ontology },
+        { rows: pageSize, start: page * pageSize, type, ...(q ? { q } : {}), ontology },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
     const options = [];
     return submitGetRequest(`${olsBaseUrl}select?${params}`).then(res => {
@@ -22,14 +22,14 @@ export const selectTerms = ({ page = 0, pageSize = 10, type = 'ontology', q = nu
                     ontologyId: item.id,
                     ...(item.iri ? { uri: item.iri } : {}),
                     ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {}),
-                    external: true
+                    external: true,
                 });
             }
         }
         return {
             content: options,
-            last: Math.ceil(res.response.numFound / pageSize) <= page ? true : false,
-            totalElements: res.response.numFound
+            last: Math.ceil(res.response.numFound / pageSize) <= page,
+            totalElements: res.response.numFound,
         };
     });
 };
@@ -39,8 +39,8 @@ export const getAllOntologies = ({ page = 0, pageSize = 10 }) => {
         { page, size: pageSize },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
     const options = [];
 
@@ -51,11 +51,11 @@ export const getAllOntologies = ({ page = 0, pageSize = 10 }) => {
                     label: item.config.title,
                     id: item.config.preferredPrefix,
                     ontologyId: item.ontologyId,
-                    ...(item.config.fileLocation ? { uri: item.config.fileLocation } : {})
+                    ...(item.config.fileLocation ? { uri: item.config.fileLocation } : {}),
                 });
             }
         }
-        return { content: options, last: res.page.totalPages <= res.page.number ? true : false, totalElements: res.page.totalElements };
+        return { content: options, last: res.page.totalPages <= res.page.number, totalElements: res.page.totalElements };
     });
 };
 
@@ -64,8 +64,8 @@ export const getOntologyTerms = ({ ontology_id, page = 0, pageSize = 10 }) => {
         { page, size: pageSize },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
     const options = [];
 
@@ -77,11 +77,11 @@ export const getOntologyTerms = ({ ontology_id, page = 0, pageSize = 10 }) => {
                     label: item.label,
                     id: item.ontology_prefix,
                     ...(item.iri ? { uri: item.iri } : {}),
-                    ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {})
+                    ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {}),
                 });
             }
         }
-        return { content: options, last: res.page.totalPages <= res.page.number ? true : false, totalElements: res.page.totalElements };
+        return { content: options, last: res.page.totalPages <= res.page.number, totalElements: res.page.totalElements };
     });
 };
 
@@ -90,8 +90,8 @@ export const getTermMatchingAcrossOntologies = ({ page = 0, pageSize = 10 }) => 
         { page, size: pageSize },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
     const options = [];
 
@@ -103,10 +103,10 @@ export const getTermMatchingAcrossOntologies = ({ page = 0, pageSize = 10 }) => 
                     label: item.label,
                     id: item.ontology_prefix,
                     ...(item.iri ? { uri: item.iri } : {}),
-                    ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {})
+                    ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {}),
                 });
             }
         }
-        return { content: options, last: res.page.totalPages <= res.page.number ? true : false, totalElements: res.page.totalElements };
+        return { content: options, last: res.page.totalPages <= res.page.number, totalElements: res.page.totalElements };
     });
 };

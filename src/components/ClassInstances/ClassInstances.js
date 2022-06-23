@@ -27,11 +27,11 @@ const ClassInstances = props => {
 
             getResourcesByClass({
                 id: props.classId,
-                page: page,
+                page,
                 items: pageSize,
                 sortBy: 'id',
                 desc: true,
-                q: searchQuery
+                q: searchQuery,
             }).then(result => {
                 // Resources
                 setInstances(prevResources => [...prevResources, ...result.content]);
@@ -42,7 +42,7 @@ const ClassInstances = props => {
                 setIsLastPageReached(result.last);
             });
         }, 500),
-        [props.classId]
+        [props.classId],
     );
 
     // reset resources when the id has changed
@@ -130,7 +130,7 @@ const ClassInstances = props => {
                                 )}
                                 {!hasNextPage && isLastPageReached && page !== 0 && (
                                     <tr className="text-center mt-3">
-                                        <td colSpan="3">You have reached the last page.</td>
+                                        <td colSpan="3">You have reached the last page</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -147,7 +147,7 @@ const ClassInstances = props => {
                                 No result found for the term: <i>{searchQuery}</i>.
                             </>
                         ) : (
-                            'This class has no instances yet.'
+                            'This class has no instances yet'
                         )}
                     </div>
                 )}
@@ -157,7 +157,7 @@ const ClassInstances = props => {
 };
 
 ClassInstances.propTypes = {
-    classId: PropTypes.string.isRequired
+    classId: PropTypes.string.isRequired,
 };
 
 export default ClassInstances;

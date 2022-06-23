@@ -47,7 +47,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
 
         try {
             const { statements } = await getStatementsBundleBySubject({
-                id
+                id,
             });
             const paperTitle = statements.find(statement => statement.subject.id === id).subject.label;
             const authors = statements
@@ -56,8 +56,8 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                     ...authorStatement,
                     orcid:
                         statements.find(
-                            statement => statement.subject.id === authorStatement.object.id && statement.predicate.id === PREDICATES.HAS_ORCID
-                        )?.object?.label || null
+                            statement => statement.subject.id === authorStatement.object.id && statement.predicate.id === PREDICATES.HAS_ORCID,
+                        )?.object?.label || null,
                 }))
                 .map(author => ({ creator: author.object.label, orcid: author.orcid }))
                 .reverse();
@@ -68,7 +68,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
             await createResourceStatement(versionResource.id, PREDICATES.HAS_PAPER, id);
             await createResourceData({
                 resourceId: versionResource.id,
-                data: { rootResource: id, statements }
+                data: { rootResource: id, statements },
             });
 
             if (shouldAssignDoi) {
@@ -81,7 +81,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                         subject: researchField ? researchField.label : '',
                         description,
                         authors,
-                        url: `${getUrl()}${reverse(ROUTES.REVIEW, { id: versionResource.id })}`
+                        url: `${getUrl()}${reverse(ROUTES.REVIEW, { id: versionResource.id })}`,
                     });
                     setDoi(doiResponse.data.attributes.doi);
                     const doiLiteral = await createLiteral(doiResponse.data.attributes.doi);
@@ -89,7 +89,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                     toast.success('DOI has been registered successfully');
                     setIsLoading(false);
                 } catch (e) {
-                    toast.error(`Error publishing a DOI`);
+                    toast.error('Error publishing a DOI');
                     console.log(e);
                     setIsLoading(false);
                 }
@@ -169,7 +169,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                                 <Label for="doi_link">DOI</Label>
                                 <InputGroup>
                                     <Input id="doi_link" value={`https://doi.org/${doi}`} disabled />
-                                    <CopyToClipboard text={`https://doi.org/${doi}`} onCopy={() => toast.success(`DOI link copied`)}>
+                                    <CopyToClipboard text={`https://doi.org/${doi}`} onCopy={() => toast.success('DOI link copied')}>
                                         <Button color="primary" className="px-3">
                                             <Icon icon={faClipboard} />
                                         </Button>
@@ -199,7 +199,7 @@ PublishModal.propTypes = {
     toggle: PropTypes.func.isRequired,
     show: PropTypes.bool.isRequired,
     getVersions: PropTypes.func.isRequired,
-    paperId: PropTypes.string.isRequired
+    paperId: PropTypes.string.isRequired,
 };
 
 export default PublishModal;

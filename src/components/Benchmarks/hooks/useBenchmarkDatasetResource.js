@@ -29,10 +29,10 @@ function useBenchmarkDatasetResource({ datasetId = null, problemId = null }) {
                 });
 
             // Get description, same as of the dataset resource
-            //we need to make a check if it has a description perhaps
+            // we need to make a check if it has a description perhaps
             getStatementsBySubject({ id: datasetId }).then(statements => {
                 const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
-                //const sameAs = filterObjectOfStatementsByPredicate(statements, PREDICATES.SAME_AS, true);
+                // const sameAs = filterObjectOfStatementsByPredicate(statements, PREDICATES.SAME_AS, true);
                 setData(data => ({ ...data, description: description?.label }));
             });
         }

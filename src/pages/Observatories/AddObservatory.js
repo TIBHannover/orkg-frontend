@@ -37,25 +37,25 @@ const AddObservatory = () => {
     const createNewObservatory = async () => {
         setEditorState('loading');
         if (!name && name.length === 0) {
-            toast.error(`Please enter an observatory name`);
+            toast.error('Please enter an observatory name');
             setEditorState('edit');
             return;
         }
 
         if (!new RegExp(REGEX.PERMALINK).test(permalink)) {
-            toast.error(`Only underscores ( _ ), numbers, and letters are allowed in the permalink field`);
+            toast.error('Only underscores ( _ ), numbers, and letters are allowed in the permalink field');
             setEditorState('edit');
             return;
         }
 
         if (!description && description.length === 0) {
-            toast.error(`Please enter an observatory description`);
+            toast.error('Please enter an observatory description');
             setEditorState('edit');
             return;
         }
 
         if (!researchField && researchField.length === 0) {
-            toast.error(`Please enter an observatory research field`);
+            toast.error('Please enter an observatory research field');
             setEditorState('edit');
             return;
         }
@@ -109,7 +109,7 @@ const AddObservatory = () => {
             {!isLoadingOrganization && !errorLoadingOrganization && (
                 <>
                     <Container className="d-flex align-items-center">
-                        <h3 className="h4 my-4 flex-grow-1">Create an observatory in {organizationName}</h3>
+                        <h3 className="h4 my-4 flex-grow-1">Create observatory in {organizationName}</h3>
                     </Container>
 
                     <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
@@ -124,8 +124,8 @@ const AddObservatory = () => {
                                                 slugify(e.target.value.trim(), {
                                                     replacement: '_',
                                                     remove: /[*+~%\\<>/;.(){}?,'"!:@\\#\-^|]/g,
-                                                    lower: false
-                                                })
+                                                    lower: false,
+                                                }),
                                             );
                                         }}
                                         type="text"
@@ -133,7 +133,6 @@ const AddObservatory = () => {
                                         id="ObservatoryName"
                                         disabled={loading}
                                         value={name}
-                                        placeholder="Observatory name"
                                     />
                                 </FormGroup>
                                 <FormGroup>
@@ -158,11 +157,10 @@ const AddObservatory = () => {
                                 </FormGroup>
 
                                 <FormGroup>
-                                    <Label for="ObservatoryResearchField">Research Field</Label>
+                                    <Label for="ObservatoryResearchField">Research field</Label>
                                     <AutoComplete
                                         entityType={ENTITIES.RESOURCE}
                                         optionsClass={CLASSES.RESEARCH_FIELD}
-                                        placeholder="Observatory research field"
                                         onItemSelected={async rf => {
                                             setResearchField({ ...rf, label: rf.value });
                                         }}
@@ -170,6 +168,7 @@ const AddObservatory = () => {
                                         allowCreate={false}
                                         autoLoadOption={true}
                                         isDisabled={loading}
+                                        inputId="ObservatoryResearchField"
                                     />
                                 </FormGroup>
                                 <FormGroup>
@@ -180,15 +179,14 @@ const AddObservatory = () => {
                                         name="description"
                                         id="ObservatoryDescription"
                                         disabled={loading}
-                                        placeholder="Observatory description"
                                     />
                                 </FormGroup>
-                                <Button color="primary" onClick={createNewObservatory} outline className="mt-4 mb-2" block disabled={loading}>
-                                    {!loading ? 'Create Observatory' : <span>Loading</span>}
+                                <Button color="primary" onClick={createNewObservatory} className="mt-4 mb-2" disabled={loading}>
+                                    {!loading ? 'Create observatory' : <span>Loading</span>}
                                 </Button>
                             </div>
                         )}
-                        {(!!!user || !user.isCurationAllowed) && (
+                        {(!user || !user.isCurationAllowed) && (
                             <>
                                 <Button
                                     color="link"

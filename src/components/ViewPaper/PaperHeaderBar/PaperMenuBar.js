@@ -83,7 +83,7 @@ PaperMenuBar.propTypes = {
     paperLink: PropTypes.string,
     id: PropTypes.string,
     label: PropTypes.string,
-    toggle: PropTypes.func.isRequired
+    toggle: PropTypes.func.isRequired,
 };
 
 export default PaperMenuBar;

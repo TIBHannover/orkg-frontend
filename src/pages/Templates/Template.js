@@ -9,7 +9,7 @@ import Format from 'components/Templates/Tabs/Format/Format';
 import { StyledContainer } from 'components/Templates/styled';
 import { setEditMode, loadTemplate, saveTemplate, updateClass } from 'slices/templateEditorSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faSpinner, faQuestionCircle, faEllipsisV, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faSpinner, faQuestionCircle, faEllipsisV, faSave, faUser } from '@fortawesome/free-solid-svg-icons';
 import { getParamFromQueryString } from 'utils';
 import styled from 'styled-components';
 import VisibilitySensor from 'react-visibility-sensor';
@@ -21,6 +21,8 @@ import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import { NavLink as RouterNavLink, useParams, useNavigate, useLocation } from 'react-router-dom';
 import TitleBar from 'components/TitleBar/TitleBar';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
+import { MISC } from 'constants/graphSettings';
 import { EditModeContainer, Title } from 'components/EditModeHeader/EditModeHeader';
 
 const TabPaneStyled = styled(TabPane)`
@@ -34,13 +36,14 @@ const NavItemStyled = styled(NavItem)`
 
 const Template = () => {
     const location = useLocation();
-    const params = useParams();
+    const { id } = useParams();
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth.user);
     const editMode = useSelector(state => state.templateEditor.editMode);
     const isSaving = useSelector(state => state.templateEditor.isSaving);
     const templateID = useSelector(state => state.templateEditor.templateID);
     const label = useSelector(state => state.templateEditor.label);
+    const created_by = useSelector(state => state.templateEditor.created_by);
     const template = useSelector(state => state.templateEditor);
     const navigate = useNavigate();
 
@@ -57,20 +60,20 @@ const Template = () => {
                 });
             }
         };
-        if (params.id) {
-            dispatch(loadTemplate(params.id));
+        if (id) {
+            dispatch(loadTemplate(id));
         } else {
             if (templateID) {
                 navigate(reverse(ROUTES.TEMPLATE, { id: templateID }));
             }
             getDefaultClass();
             dispatch(setEditMode(true));
-            document.title = `Create Contribution Template - ORKG`;
+            document.title = 'Create Contribution Template - ORKG';
         }
-    }, [dispatch, location.search, navigate, params.id, templateID]);
+    }, [dispatch, location.search, navigate, id, templateID]);
 
     useEffect(() => {
-        document.title = `${label ? label + ' - ' : ''}Contribution Template - ORKG`;
+        document.title = `${label ? `${label} - ` : ''}Contribution Template - ORKG`;
     }, [label]);
 
     const toggleTab = tab => {
@@ -81,7 +84,7 @@ const Template = () => {
         setShowHeaderBar(!isVisible);
     };
 
-    if (!user && !params.id) {
+    if (!user && !id) {
         return <Unauthorized />;
     }
 
@@ -120,13 +123,13 @@ const Template = () => {
                                 {!isSaving ? ' Save' : ' Saving'}
                             </Button>
                         )}
-                        {params.id && (
+                        {id && (
                             <ButtonDropdown className="flex-shrink-0" isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
                                 <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                     <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu end>
-                                    <DropdownItem tag={RouterNavLink} end to={reverse(ROUTES.RESOURCE, { id: params.id })}>
+                                    <DropdownItem tag={RouterNavLink} end to={reverse(ROUTES.RESOURCE, { id })}>
                                         View resource
                                     </DropdownItem>
                                 </DropdownMenu>
@@ -135,23 +138,32 @@ const Template = () => {
                     </>
                 }
             >
-                {!params.id ? 'Create new template' : 'Template'}
+                {!id ? 'Create new template' : 'Template'}
             </TitleBar>
             <StyledContainer className="p-0">
-                {showHeaderBar && <TemplateEditorHeaderBar id={params.id} />}
+                {showHeaderBar && <TemplateEditorHeaderBar />}
                 {(editMode || isSaving) && (
                     <EditModeContainer className="box rounded-top">
-                        <Title>{params.id ? 'Edit mode' : 'Create template'}</Title>
+                        <Title>{id ? 'Edit mode' : 'Create template'}</Title>
                     </EditModeContainer>
                 )}
                 <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
                     <div className="mb-2">
-                        {!editMode ? (
-                            <h3 className="pb-2 mb-3" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                {label}
-                            </h3>
-                        ) : (
-                            ''
+                        {!editMode && (
+                            <>
+                                <h3 className="pb-2 mb-3" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                    {label}
+                                </h3>
+                                {created_by !== MISC.UNKNOWN_ID && (
+                                    <small className="d-inline-block me-2">
+                                        <Icon icon={faUser} /> Created by{' '}
+                                        <span className="ms-1">
+                                            <UserAvatar size={24} userId={created_by} showDisplayName={true} />
+                                        </span>
+                                    </small>
+                                )}
+                                <hr />
+                            </>
                         )}
                     </div>
 

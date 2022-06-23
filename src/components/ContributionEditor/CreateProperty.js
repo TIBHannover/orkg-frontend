@@ -27,8 +27,8 @@ export const CreateProperty = () => {
             createProperty({
                 id: selected.id ?? null,
                 label: inputValue,
-                action
-            })
+                action,
+            }),
         );
         setIsCreating(false);
         setInputValue('');

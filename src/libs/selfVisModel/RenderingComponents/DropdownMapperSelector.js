@@ -25,7 +25,7 @@ export default class DropDownMapperSelector extends Component {
 
         this.state = {
             isOpen: false,
-            selectedMapper: initMapper
+            selectedMapper: initMapper,
         };
         this.mapperTypes = ['Select Mapper', 'Number', 'String', 'Date'];
     }
@@ -38,22 +38,20 @@ export default class DropDownMapperSelector extends Component {
         }
     };
 
-    /** Rendering functions **/
-    /** render based on propFlag **/
+    /** Rendering functions * */
+    /** render based on propFlag * */
     render() {
-        const items = this.mapperTypes.map((item, id) => {
-            return (
-                <DropdownItem
-                    key={'dropdownItemIndexKey_' + id}
-                    onClick={() => {
-                        this.props.data.setPropertyMapperType(item);
-                        this.setState({ selectedMapper: item });
-                    }}
-                >
-                    {item}
-                </DropdownItem>
-            );
-        });
+        const items = this.mapperTypes.map((item, id) => (
+            <DropdownItem
+                key={`dropdownItemIndexKey_${id}`}
+                onClick={() => {
+                    this.props.data.setPropertyMapperType(item);
+                    this.setState({ selectedMapper: item });
+                }}
+            >
+                {item}
+            </DropdownItem>
+        ));
 
         return (
             <ButtonDropdown
@@ -63,7 +61,7 @@ export default class DropDownMapperSelector extends Component {
                 isOpen={this.state.isOpen}
                 toggle={() => {
                     this.setState({
-                        isOpen: !this.state.isOpen
+                        isOpen: !this.state.isOpen,
                     });
                 }}
             >
@@ -78,5 +76,5 @@ export default class DropDownMapperSelector extends Component {
 
 DropDownMapperSelector.propTypes = {
     data: PropTypes.object,
-    callBack: PropTypes.func
+    callBack: PropTypes.func,
 };

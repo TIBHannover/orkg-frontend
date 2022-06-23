@@ -1,12 +1,12 @@
 import { faCalendar, faCheckCircle, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { loadPaper } from 'slices/viewPaperSlice';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
-import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
-import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
+import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
+import OpenCitations from 'components/ViewPaper/OpenCitations/OpenCitations';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
@@ -16,6 +16,7 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
 import { getAltMetrics } from 'services/altmetric/index';
+import { loadPaper } from 'slices/viewPaperSlice';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
 
 const PaperHeader = props => {
@@ -26,12 +27,13 @@ const PaperHeader = props => {
     const [deletePapers] = useDeletePapers({ paperIds: [viewPaper.paperResource.id], redirect: true });
     const [altMetrics, setAltMetrics] = useState(null);
     const dispatch = useDispatch();
-    const userCreatedThisPaper = viewPaper.paperResource.created_by && userId && viewPaper.paperResource.created_by === userId; // make sure a user is signed in (not null)
+    // make sure a user is signed in (not null)
+    const userCreatedThisPaper = viewPaper.paperResource.created_by && userId && viewPaper.paperResource.created_by === userId;
     const showDeleteButton = props.editMode && (isCurationAllowed || userCreatedThisPaper);
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: viewPaper.paperResource.id,
         unlisted: viewPaper.paperResource.unlisted,
-        featured: viewPaper.paperResource.featured
+        featured: viewPaper.paperResource.featured,
     });
 
     useEffect(() => {
@@ -39,8 +41,8 @@ const PaperHeader = props => {
             return;
         }
         const loadAltMetrics = async () => {
-            const altMetrics = await getAltMetrics(viewPaper.doi?.label);
-            setAltMetrics(altMetrics);
+            const altM = await getAltMetrics(viewPaper.doi?.label);
+            setAltMetrics(altM);
         };
         loadAltMetrics();
     }, [viewPaper.doi?.label]);
@@ -57,11 +59,12 @@ const PaperHeader = props => {
                 publishedIn: data.publishedIn,
                 url: { ...viewPaper.url, label: data.url?.label, id: data.url?.id },
                 researchField: data.researchField,
-                verified: data.isVerified
-            })
+                verified: data.isVerified,
+            }),
         );
         setIsOpenEditModal(false);
     };
+    const hasDoi = viewPaper.doi && viewPaper.doi.label?.startsWith('10.');
 
     return (
         <>
@@ -88,11 +91,12 @@ const PaperHeader = props => {
 
             {(viewPaper.publicationMonth?.label || viewPaper.publicationYear?.label) && (
                 <span className="badge bg-light me-2">
-                    <Icon icon={faCalendar} className="text-primary" />{' '}
+                    <Icon icon={faCalendar} className="text-secondary" />{' '}
                     {viewPaper.publicationMonth?.label ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''}{' '}
                     {viewPaper.publicationYear?.label ? viewPaper.publicationYear.label : ''}
                 </span>
             )}
+            {hasDoi && <OpenCitations doi={viewPaper.doi.label} />}
             <ResearchFieldBadge researchField={viewPaper.researchField} />
             <AuthorBadges authors={viewPaper.authors} />
             <br />
@@ -110,8 +114,7 @@ const PaperHeader = props => {
                         </small>
                     </div>
                 )}
-
-                {viewPaper.doi && viewPaper.doi.label?.startsWith('10.') && (
+                {hasDoi && (
                     <div className="flex-shrink-0">
                         <small>
                             DOI:{' '}
@@ -154,7 +157,7 @@ const PaperHeader = props => {
                         publishedIn: viewPaper.publishedIn,
                         researchField: viewPaper.researchField,
                         url: viewPaper.url,
-                        isVerified: viewPaper.verified
+                        isVerified: viewPaper.verified,
                     }}
                     afterUpdate={handleUpdatePaper}
                     isOpen={isOpenEditModal}
@@ -166,7 +169,7 @@ const PaperHeader = props => {
 };
 
 PaperHeader.propTypes = {
-    editMode: PropTypes.bool.isRequired
+    editMode: PropTypes.bool.isRequired,
 };
 
 export default PaperHeader;

@@ -54,7 +54,7 @@ const SortableSection = ({ handleDelete, handleSort, children }) => {
 SortableSection.propTypes = {
     handleSort: PropTypes.func.isRequired,
     handleDelete: PropTypes.func.isRequired,
-    children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
 };
 
 export default SortableSection;

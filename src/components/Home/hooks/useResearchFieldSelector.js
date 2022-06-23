@@ -13,13 +13,7 @@ function useResearchFieldSelector({ id, label }) {
         getStatementsBySubjectAndPredicate({ subjectId: selected.id, predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD })
             .then(res => {
                 // sort research fields alphabetically
-                setResearchFields(
-                    res
-                        .map(elm => elm.object)
-                        .sort((a, b) => {
-                            return a.label.localeCompare(b.label);
-                        })
-                );
+                setResearchFields(res.map(elm => elm.object).sort((a, b) => a.label.localeCompare(b.label)));
                 setIsLoading(false);
             })
             .catch(error => {

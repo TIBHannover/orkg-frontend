@@ -10,7 +10,7 @@ class CheckboxSelector extends Component {
             isChecked = props.initializedValue.isSelectedColumn();
         }
         this.state = {
-            isChecked: isChecked
+            isChecked,
         };
     }
 
@@ -18,7 +18,7 @@ class CheckboxSelector extends Component {
         const { handleCheckboxChange } = this.props;
         handleCheckboxChange(!this.state.isChecked);
         this.setState(({ isChecked }) => ({
-            isChecked: !isChecked
+            isChecked: !isChecked,
         }));
     };
 
@@ -33,7 +33,7 @@ CheckboxSelector.propTypes = {
     label: PropTypes.string.isRequired,
     handleCheckboxChange: PropTypes.func.isRequired,
     initializedValue: PropTypes.any,
-    cbx_id: PropTypes.any
+    cbx_id: PropTypes.any,
 };
 
 export default CheckboxSelector;

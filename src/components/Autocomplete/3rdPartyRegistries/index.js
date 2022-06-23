@@ -30,7 +30,7 @@ export default function getExternalData(value, options, optionsClass) {
             items = getGeoNames(value, options);
             break;
         default:
-            //console.log('No third party registries');
+            // console.log('No third party registries');
             break;
     }
     return items;

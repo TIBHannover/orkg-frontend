@@ -8,12 +8,7 @@ import { useCallback } from 'react';
 import { CLASSES } from 'constants/graphSettings';
 
 const CardFactory = ({ item, showBadge, showCurationFlags, showAddToComparison }) => {
-    const findClass = useCallback(
-        classId => {
-            return item?.classes?.includes(classId);
-        },
-        [item?.classes]
-    );
+    const findClass = useCallback(classId => item?.classes?.includes(classId), [item?.classes]);
 
     if (findClass(CLASSES.PAPER)) {
         return (
@@ -21,7 +16,7 @@ const CardFactory = ({ item, showBadge, showCurationFlags, showAddToComparison }
                 paper={{
                     id: item.id,
                     title: item.label,
-                    ...item
+                    ...item,
                 }}
                 showBadge={showBadge}
                 showCurationFlags={showCurationFlags}
@@ -35,7 +30,7 @@ const CardFactory = ({ item, showBadge, showCurationFlags, showAddToComparison }
                 comparison={{
                     id: item.id,
                     title: item.label,
-                    ...item
+                    ...item,
                 }}
                 showBadge={showBadge}
                 showCurationFlags={showCurationFlags}
@@ -48,7 +43,7 @@ const CardFactory = ({ item, showBadge, showCurationFlags, showAddToComparison }
                 visualization={{
                     id: item.id,
                     title: item.label,
-                    ...item
+                    ...item,
                 }}
                 showBadge={showBadge}
                 showCurationFlags={showCurationFlags}
@@ -68,7 +63,7 @@ CardFactory.propTypes = {
     item: PropTypes.object.isRequired,
     showBadge: PropTypes.bool,
     showCurationFlags: PropTypes.bool,
-    showAddToComparison: PropTypes.bool
+    showAddToComparison: PropTypes.bool,
 };
 
 export default CardFactory;

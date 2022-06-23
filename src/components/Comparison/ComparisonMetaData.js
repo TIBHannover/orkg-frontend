@@ -67,7 +67,7 @@ function ComparisonMetaData(props) {
 ComparisonMetaData.propTypes = {
     metaData: PropTypes.object,
     authors: PropTypes.array,
-    provenance: PropTypes.object
+    provenance: PropTypes.object,
 };
 
 export default ComparisonMetaData;

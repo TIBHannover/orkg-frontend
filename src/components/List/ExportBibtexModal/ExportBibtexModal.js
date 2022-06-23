@@ -11,8 +11,8 @@ import { Button, Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
 const bibtexOptions = {
     output: {
         type: 'string',
-        style: 'bibtex'
-    }
+        style: 'bibtex',
+    },
 };
 
 const ExportBibtexModal = ({ isOpen, toggle }) => {
@@ -20,15 +20,14 @@ const ExportBibtexModal = ({ isOpen, toggle }) => {
     const [isLoading, setIsLoading] = useState(false);
     const contentTypes = useSelector(state => state.list.contentTypes);
 
-    const getCite = paper => {
-        return new Cite({
+    const getCite = paper =>
+        new Cite({
             type: 'article',
             id: paper.paper.id,
             title: paper.label,
             author: paper.authors.length > 0 ? paper.authors.map(author => ({ name: author.label })) : null,
-            year: paper.publicationYear?.label
+            year: paper.publicationYear?.label,
         });
-    };
 
     useEffect(() => {
         const parse = () => {
@@ -39,9 +38,7 @@ const ExportBibtexModal = ({ isOpen, toggle }) => {
                           const contentType = contentTypes[contentTypeId];
 
                           if (contentType?.doi?.label) {
-                              return new Cite.async(contentType.doi.label).catch(() => {
-                                  return getCite(contentType);
-                              });
+                              return new Cite.async(contentType.doi.label).catch(() => getCite(contentType));
                           }
 
                           return getCite(contentType);
@@ -84,7 +81,7 @@ const ExportBibtexModal = ({ isOpen, toggle }) => {
 
 ExportBibtexModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
-    toggle: PropTypes.func.isRequired
+    toggle: PropTypes.func.isRequired,
 };
 
 export default ExportBibtexModal;

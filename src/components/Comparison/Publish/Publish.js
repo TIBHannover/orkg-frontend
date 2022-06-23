@@ -7,7 +7,7 @@ import {
     createLiteralStatement,
     createResourceStatement,
     getStatementsByPredicateAndLiteral,
-    getStatementsBySubjectAndPredicate
+    getStatementsBySubjectAndPredicate,
 } from 'services/backend/statements';
 import { generateDoi, createObject } from 'services/backend/misc';
 import { createLiteral } from 'services/backend/literals';
@@ -25,16 +25,17 @@ import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useNavigate, Link } from 'react-router-dom';
-import { getPropertyObjectFromData, filterObjectOfStatementsByPredicateAndClass } from 'utils';
+import { getPropertyObjectFromData, filterObjectOfStatementsByPredicateAndClass, slugify } from 'utils';
 import styled from 'styled-components';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { slugify } from 'utils';
 import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 import Select from 'react-select';
 import { getConferences } from 'services/backend/organizations';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { useSelector } from 'react-redux';
+import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 
 const StyledCustomInput = styled(Input)`
     margin-right: 0;
@@ -79,16 +80,20 @@ function Publish(props) {
     const [title, setTitle] = useState(props.metaData && props.metaData.title ? props.metaData.title : '');
     const [description, setDescription] = useState(props.metaData && props.metaData.description ? props.metaData.description : '');
     const [references, setReferences] = useState(
-        props.metaData?.references && props.metaData.references.length > 0 ? props.metaData.references : ['']
+        props.metaData?.references && props.metaData.references.length > 0 ? props.metaData.references : [''],
     );
     const [subject, setSubject] = useState(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
     const [comparisonCreators, setComparisonCreators] = useState(props.authors ?? []);
     const [conferencesList, setConferencesList] = useState([]);
     const [conference, setConference] = useState(null);
+    const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
+    const [inputValue, setInputValue] = useState(null);
+
     const { trackEvent } = useMatomo();
+    const displayName = useSelector(state => state.auth.user.displayName);
 
     const handleCreatorsChange = creators => {
-        creators = creators ? creators : [];
+        creators = creators || [];
         setComparisonCreators(creators);
     };
 
@@ -97,8 +102,8 @@ function Publish(props) {
         setDescription(props.metaData && props.metaData.description ? props.metaData.description : '');
         setReferences(props.metaData?.references?.length > 0 ? props.metaData.references.map(r => r.label) : ['']);
         setSubject(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
-        setComparisonCreators(props.authors ? props.authors : []);
-    }, [props.metaData, props.authors]);
+        setComparisonCreators(props.authors ? props.authors : [{ label: displayName, id: displayName, orcid: '', statementId: '' }]);
+    }, [props.metaData, props.authors, displayName]);
 
     useEffect(() => {
         const getConferencesList = () => {
@@ -121,7 +126,7 @@ function Publish(props) {
                     predicateId: PREDICATES.HAS_ORCID,
                     literal: author.orcid,
                     subjectClass: CLASSES.AUTHOR,
-                    items: 1
+                    items: 1,
                 });
                 if (responseJson.length > 0) {
                     // Author resource exists
@@ -164,7 +169,6 @@ function Publish(props) {
             }
         }
     };
-
     const handleSubmit = async e => {
         e.preventDefault();
         setIsLoading(true);
@@ -177,13 +181,13 @@ function Publish(props) {
                         const comparison = await getComparison({
                             contributionIds: props.contributionsList,
                             type: props.comparisonType,
-                            save_response: true
+                            save_response: true,
                         });
                         response_hash = comparison.response_hash;
                     } else {
                         response_hash = props.responseHash;
                     }
-                    const comparison_obj = {
+                    const comparisonObject = {
                         predicates: [],
                         resource: {
                             name: title,
@@ -191,59 +195,61 @@ function Publish(props) {
                             values: {
                                 [PREDICATES.DESCRIPTION]: [
                                     {
-                                        text: description
-                                    }
+                                        text: description,
+                                    },
                                 ],
                                 ...(references &&
                                     references.length > 0 && {
                                         [PREDICATES.REFERENCE]: references
                                             .filter(reference => reference && reference.trim() !== '')
                                             .map(reference => ({
-                                                text: reference
-                                            }))
+                                                text: reference,
+                                            })),
                                     }),
                                 ...(subject &&
                                     subject.id && {
                                         [PREDICATES.HAS_SUBJECT]: [
                                             {
-                                                '@id': subject.id
-                                            }
-                                        ]
+                                                '@id': subject.id,
+                                            },
+                                        ],
                                     }),
                                 [PREDICATES.COMPARE_CONTRIBUTION]: props.contributionsList.map(contributionID => ({
-                                    '@id': contributionID
+                                    '@id': contributionID,
                                 })),
+                                /*
                                 [PREDICATES.HAS_PROPERTY]: props.predicatesList.map(predicateID => {
                                     const property =
                                         props.comparisonType === 'merge' ? predicateID : getPropertyObjectFromData(props.data, { id: predicateID });
                                     return { '@id': property.id };
                                 }),
+                                */
                                 ...(props.metaData.hasPreviousVersion && {
                                     [PREDICATES.HAS_PREVIOUS_VERSION]: [
                                         {
-                                            '@id': props.metaData.hasPreviousVersion.id
-                                        }
-                                    ]
+                                            '@id': props.metaData.hasPreviousVersion.id,
+                                        },
+                                    ],
                                 }),
                                 ...(conference &&
                                     conference.metadata?.is_double_blind && {
                                         [PREDICATES.IS_ANONYMIZED]: [
                                             {
                                                 text: true,
-                                                datatype: 'xsd:boolean'
-                                            }
-                                        ]
-                                    })
+                                                datatype: 'xsd:boolean',
+                                            },
+                                        ],
+                                    }),
                             },
                             observatoryId: MISC.UNKNOWN_ID,
-                            organizationId: conference ? conference.id : MISC.UNKNOWN_ID
-                        }
+                            organizationId: conference ? conference.id : MISC.UNKNOWN_ID,
+                        },
                     };
-                    const createdComparison = await createObject(comparison_obj);
+                    const createdComparison = await createObject(comparisonObject);
                     await saveCreators(comparisonCreators, createdComparison.id);
                     await createResourceData({
                         resourceId: createdComparison.id,
-                        data: { url: `${props.comparisonURLConfig}&response_hash=${response_hash}` }
+                        data: { url: `${props.comparisonURLConfig}&response_hash=${response_hash}` },
                     });
                     trackEvent({ category: 'data-entry', action: 'publish-comparison' });
                     toast.success('Comparison saved successfully');
@@ -275,9 +281,8 @@ function Publish(props) {
                 if (!curator.orcid && curator._class === ENTITIES.RESOURCE) {
                     const statements = await getStatementsBySubjectAndPredicate({ subjectId: curator.id, predicateId: PREDICATES.HAS_ORCID });
                     return { ...curator, orcid: filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_ORCID, true)?.label };
-                } else {
-                    return curator;
                 }
+                return curator;
             });
             comparisonCreatorsORCID = await Promise.all(comparisonCreatorsORCID);
             if (title && title.trim() !== '' && description && description.trim() !== '' && comparisonCreators?.length > 0) {
@@ -290,12 +295,12 @@ function Publish(props) {
                     description,
                     related_resources: props.contributionsList,
                     authors: comparisonCreatorsORCID.map(c => ({ creator: c.label, orcid: c.orcid })),
-                    url: `${props.publicURL}${reverse(ROUTES.COMPARISON, { comparisonId: comparisonId })}`
+                    url: `${props.publicURL}${reverse(ROUTES.COMPARISON, { comparisonId })}`,
                 })
                     .then(doiResponse => {
                         props.setMetaData(prevMetaData => ({
                             ...prevMetaData,
-                            doi: doiResponse.data.attributes.doi
+                            doi: doiResponse.data.attributes.doi,
                         }));
                         createLiteral(doiResponse.data.attributes.doi).then(doiLiteral => {
                             createResourceStatement(comparisonId, PREDICATES.HAS_DOI, doiLiteral.id);
@@ -305,7 +310,7 @@ function Publish(props) {
                     })
                     .catch(error => {
                         console.log('error', error);
-                        toast.error(`Error publishing a DOI`);
+                        toast.error('Error publishing a DOI');
                         setIsLoading(false);
                     });
             } else {
@@ -313,7 +318,7 @@ function Publish(props) {
             }
         } catch (error) {
             console.error(error);
-            toast.error(`Error publishing a comparison : ${error.message}`);
+            toast.error(`Error publishing a comparison: ${error.message}`);
             setIsLoading(false);
         }
     };
@@ -331,6 +336,12 @@ function Publish(props) {
         setReferences(list);
     };
 
+    const handleSelectField = ({ id, label }) =>
+        setSubject({
+            id,
+            label,
+        });
+
     return (
         <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>Publish comparison</ModalHeader>
@@ -342,15 +353,13 @@ function Publish(props) {
                     {!props.comparisonId && (
                         <>
                             A published comparison is made public to other users. The state of the comparison is saved and a persistent link is
-                            created.
+                            created
                         </>
                     )}
                     {props.comparisonId && !props.doi && (
-                        <>This comparison is already published, you can find the persistent link below, or create a DOI for this comparison.</>
+                        <>This comparison is already published, you can find the persistent link below, or create a DOI for this comparison</>
                     )}
-                    {props.comparisonId && props.doi && (
-                        <>This comparison is already published, you can find the persistent link and the DOI below.</>
-                    )}
+                    {props.comparisonId && props.doi && <>This comparison is already published, you can find the persistent link and the DOI below</>}
                 </Alert>
                 {!props.comparisonId && props.metaData.hasPreviousVersion && (
                     <Alert color="info">
@@ -365,7 +374,6 @@ function Publish(props) {
                                 <UserAvatar showDisplayName={true} userId={props.metaData.hasPreviousVersion.created_by} />
                             </>
                         )}
-                        .
                     </Alert>
                 )}
                 {props.comparisonId && (
@@ -381,7 +389,7 @@ function Publish(props) {
                                 text={`${props.publicURL}${reverse(ROUTES.COMPARISON, { comparisonId: props.comparisonId })}`}
                                 onCopy={() => {
                                     toast.dismiss();
-                                    toast.success(`Comparison link copied!`);
+                                    toast.success('Comparison link copied!');
                                 }}
                             >
                                 <Button color="primary" className="ps-3 pe-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
@@ -400,7 +408,7 @@ function Publish(props) {
                                 text={`https://doi.org/${props.doi}`}
                                 onCopy={() => {
                                     toast.dismiss();
-                                    toast.success(`DOI link copied!`);
+                                    toast.success('DOI link copied!');
                                 }}
                             >
                                 <Button color="primary" className="ps-3 pe-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
@@ -470,90 +478,42 @@ function Publish(props) {
                             />
                         </FormGroup>
                         <FormGroup>
-                            <Label>
-                                <Tooltip message="Enter a reference to the data sources from which the comparison is generated">
-                                    Reference (optional)
-                                </Tooltip>
-                            </Label>
-                            {references &&
-                                references.map((x, i) => {
-                                    return (
-                                        <InputGroup className="mb-1" key={`ref${i}`}>
-                                            <Input
-                                                disabled={Boolean(props.comparisonId)}
-                                                type="text"
-                                                name="reference"
-                                                value={x}
-                                                onChange={e => handleReferenceChange(e, i)}
-                                            />
-                                            {!Boolean(props.comparisonId) && (
-                                                <>
-                                                    {references.length !== 1 && (
-                                                        <Button
-                                                            color="light"
-                                                            onClick={() => handleRemoveReferenceClick(i)}
-                                                            className="ps-3 pe-3"
-                                                            style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                                                        >
-                                                            <Icon icon={faTrash} />
-                                                        </Button>
-                                                    )}
-                                                    {references.length - 1 === i && (
-                                                        <Button
-                                                            color="secondary"
-                                                            onClick={() => setReferences([...references, ''])}
-                                                            className="ps-3 pe-3"
-                                                            outline
-                                                            style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                                                        >
-                                                            <Icon icon={faPlus} />
-                                                        </Button>
-                                                    )}
-                                                </>
-                                            )}
-                                        </InputGroup>
-                                    );
-                                })}
-                        </FormGroup>
-                        <FormGroup>
                             <Label for="research-field">
-                                <Tooltip message="Enter a subject of the comparison">Research Field</Tooltip>
+                                <Tooltip message="Enter the research field of the comparison">Research field</Tooltip>
                             </Label>
+                            <InputGroup>
+                                <Autocomplete
+                                    allowCreate={false}
+                                    entityType={ENTITIES.RESOURCE}
+                                    optionsClass={CLASSES.RESEARCH_FIELD}
+                                    onItemSelected={i => {
+                                        setSubject({ ...i, label: i.value });
+                                    }}
+                                    placeholder="Search or choose a research field"
+                                    autoFocus
+                                    cacheOptions
+                                    value={subject || null}
+                                    isClearable={false}
+                                    onBlur={() => setInputValue('')}
+                                    onChangeInputValue={e => setInputValue(e)}
+                                    inputValue={inputValue}
+                                />
+                                <Button color="secondary" onClick={() => setIsOpenResearchFieldModal(true)}>
+                                    Choose
+                                </Button>
 
-                            <Autocomplete
-                                entityType={ENTITIES.RESOURCE}
-                                optionsClass={CLASSES.RESEARCH_FIELD}
-                                placeholder="Enter a research field"
-                                onItemSelected={i => {
-                                    setSubject({ ...i, label: i.value });
-                                }}
-                                value={subject}
-                                autoLoadOption={true}
-                                openMenuOnFocus={false}
-                                allowCreate={false}
-                                inputId="research-field"
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="conference">
-                                <Tooltip message="Select a conference">Conference</Tooltip>
-                            </Label>
-                            <Select
-                                options={conferencesList}
-                                onChange={e => {
-                                    setConference(e);
-                                }}
-                                getOptionValue={({ id }) => id}
-                                isSearchable={true}
-                                getOptionLabel={({ name }) => name}
-                                isClearable={true}
-                                classNamePrefix="react-select"
-                            />
-                            <SelectGlobalStyle />
+                                {isOpenResearchFieldModal && (
+                                    <ResearchFieldSelectorModal
+                                        isOpen
+                                        toggle={() => setIsOpenResearchFieldModal(v => !v)}
+                                        onSelectField={handleSelectField}
+                                    />
+                                )}
+                            </InputGroup>
                         </FormGroup>
                         <FormGroup>
                             <Label for="Creator">
-                                <Tooltip message="The creator or creators of the comparison. Enter both the first and last name">Creators</Tooltip>
+                                <Tooltip message="The creator(s) of the comparison. Enter both the first and last name">Creators</Tooltip>
                             </Label>
                             {!props.doi && (!props.comparisonId || props.authors.length === 0) && (
                                 <AuthorsInput
@@ -597,6 +557,69 @@ function Publish(props) {
                                 </div>
                             </FormGroup>
                         )}
+                        <FormGroup>
+                            <Label for="publish-reference">
+                                <Tooltip message="Enter a reference to the data sources from which the comparison is generated. Leave empty if the comparison is created from scratch">
+                                    References <span className="text-muted fst-italic">(optional)</span>
+                                </Tooltip>
+                            </Label>
+                            {references &&
+                                references.map((x, i) => (
+                                    <InputGroup className="mb-1" key={`ref${i}`}>
+                                        <Input
+                                            disabled={Boolean(props.comparisonId)}
+                                            type="text"
+                                            name="reference"
+                                            value={x}
+                                            onChange={e => handleReferenceChange(e, i)}
+                                            id="publish-reference"
+                                        />
+                                        {!props.comparisonId && (
+                                            <>
+                                                {references.length !== 1 && (
+                                                    <Button
+                                                        color="light"
+                                                        onClick={() => handleRemoveReferenceClick(i)}
+                                                        className="ps-3 pe-3"
+                                                        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                                                    >
+                                                        <Icon icon={faTrash} />
+                                                    </Button>
+                                                )}
+                                                {references.length - 1 === i && (
+                                                    <Button
+                                                        color="secondary"
+                                                        onClick={() => setReferences([...references, ''])}
+                                                        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                                                    >
+                                                        <Icon icon={faPlus} /> Add
+                                                    </Button>
+                                                )}
+                                            </>
+                                        )}
+                                    </InputGroup>
+                                ))}
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="conference">
+                                <Tooltip message="Select a conference">
+                                    Conference <span className="text-muted fst-italic">(optional)</span>
+                                </Tooltip>
+                            </Label>
+                            <Select
+                                options={conferencesList}
+                                onChange={e => {
+                                    setConference(e);
+                                }}
+                                getOptionValue={({ id }) => id}
+                                isSearchable={true}
+                                getOptionLabel={({ name }) => name}
+                                isClearable={true}
+                                classNamePrefix="react-select"
+                                inputId="conference"
+                            />
+                            <SelectGlobalStyle />
+                        </FormGroup>
                     </>
                 )}
 
@@ -642,7 +665,7 @@ Publish.propTypes = {
     loadProvenanceInfos: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
     nextVersions: PropTypes.array.isRequired,
-    anonymized: PropTypes.bool
+    anonymized: PropTypes.bool,
 };
 
 export default Publish;

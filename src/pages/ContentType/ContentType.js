@@ -63,8 +63,8 @@ function ContentType() {
             reverse(params.mode !== 'edit' ? ROUTES.CONTENT_TYPE : ROUTES.CONTENT_TYPE_NO_MODE, {
                 type: params.type,
                 id: params.id,
-                mode: params.mode !== 'edit' ? 'edit' : null
-            })
+                mode: params.mode !== 'edit' ? 'edit' : null,
+            }),
         );
     };
 
@@ -126,6 +126,7 @@ function ContentType() {
                             propertiesAsLinks={true}
                             resourcesAsLinks={true}
                             propertySuggestionsComponent={<PropertySuggestions />}
+                            keyToKeepStateOnLocationChange={resourceId}
                         />
                     </Container>
                 </>

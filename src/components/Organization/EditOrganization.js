@@ -6,7 +6,7 @@ import {
     updateOrganizationLogo,
     updateOrganizationType,
     updateConferenceProcess,
-    updateConferenceDate
+    updateConferenceDate,
 } from 'services/backend/organizations';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -32,7 +32,7 @@ class EditOrganization extends Component {
             isLoadingProcess: false,
             type: '',
             date: '',
-            isDoubleBlind: false
+            isDoubleBlind: false,
         };
     }
 
@@ -78,7 +78,7 @@ class EditOrganization extends Component {
 
         reader.onloadend = e => {
             this.setState({
-                previewSrc: [reader.result]
+                previewSrc: [reader.result],
             });
         };
 
@@ -88,11 +88,11 @@ class EditOrganization extends Component {
     handleSubmit = async e => {
         const value = this.state.label;
         const image = this.state.previewSrc;
-        const url = this.state.url;
-        const id = this.props.id;
-        const type = this.state.type;
-        const date = this.state.date;
-        const isDoubleBlind = this.state.isDoubleBlind;
+        const { url } = this.state;
+        const { id } = this.props;
+        const { type } = this.state;
+        const { date } = this.state;
+        const { isDoubleBlind } = this.state;
 
         let isUpdatedLabel = false;
         let isUpdatedImage = false;
@@ -106,27 +106,27 @@ class EditOrganization extends Component {
 
         // validate label
         if (value !== this.props.label && value.length === 0) {
-            toast.error(`Please enter an organization name`);
+            toast.error('Please enter an organization name');
             return false;
         }
         // validate url
         if (url !== this.props.url && !url.match(URL_REGEX)) {
-            toast.error(`Please enter a valid organization url`);
+            toast.error('Please enter a valid organization url');
             return false;
         }
         // validate image
         if (image !== this.props.previewSrc && image.length === 0) {
-            toast.error(`Please enter an organization image`);
+            toast.error('Please enter an organization image');
             return false;
         }
 
         if (type !== this.props.type && type.length === 0) {
-            toast.error(`Please enter an organization type`);
+            toast.error('Please enter an organization type');
             return false;
         }
 
         if (ORGANIZATIONS_TYPES.find(t => t.id === type)?.requireDate && date.length === 0) {
-            toast.error(`Please select conference date`);
+            toast.error('Please select conference date');
             return false;
         }
 
@@ -161,14 +161,14 @@ class EditOrganization extends Component {
         }
 
         if (isUpdatedLabel || isUpdatedUrl || isUpdatedImage || isUpdatedType || isUpdatedDate || isUpdatedProcess) {
-            toast.success(`Organization updated successfully`);
+            toast.success('Organization updated successfully');
             this.props.updateOrganizationMetadata(
                 value,
                 url,
                 image !== this.props.previewSrc && image.length !== 0 ? image[0] : this.props.previewSrc,
                 type,
                 date,
-                isDoubleBlind
+                isDoubleBlind,
             );
             this.props.toggle();
         } else {
@@ -260,12 +260,12 @@ class EditOrganization extends Component {
         return (
             <>
                 <Modal isOpen={this.props.showDialog} toggle={this.props.toggle}>
-                    <ModalHeader toggle={this.props.toggle}>Update an Organization</ModalHeader>
+                    <ModalHeader toggle={this.props.toggle}>Update organization</ModalHeader>
                     <ModalBody>
                         <>
                             {' '}
                             <FormGroup>
-                                <Label for="ResourceLabel">Organization Name</Label>
+                                <Label for="ResourceLabel">Organization name</Label>
                                 <Input
                                     onChange={this.handleChange}
                                     type="text"
@@ -289,13 +289,14 @@ class EditOrganization extends Component {
                                 />
                             </FormGroup>
                             <FormGroup>
-                                <Label for="type">Type</Label>
+                                <Label for="organization-type">Type</Label>
                                 <Input
                                     onChange={e => {
                                         this.setState({ type: ORGANIZATIONS_TYPES.find(t => t.id === e.target.value)?.id });
                                     }}
                                     value={this.state.type}
                                     name="type"
+                                    id="organization-type"
                                     type="select"
                                 >
                                     {ORGANIZATIONS_TYPES.map(option => (
@@ -365,7 +366,7 @@ EditOrganization.propTypes = {
     updateOrganizationMetadata: PropTypes.func.isRequired,
     type: PropTypes.string.isRequired,
     date: PropTypes.string,
-    isDoubleBlind: PropTypes.bool
+    isDoubleBlind: PropTypes.bool,
 };
 
 export default EditOrganization;

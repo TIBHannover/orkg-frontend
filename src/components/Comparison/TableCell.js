@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
-import ValuePlugins from '../ValuePlugins/ValuePlugins';
 import Tippy from '@tippyjs/react';
 import { ENTITIES } from 'constants/graphSettings';
 import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleUp, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
+import ValuePlugins from '../ValuePlugins/ValuePlugins';
+import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
 
 export const Item = styled.div`
     padding-right: 10px;
@@ -50,7 +50,7 @@ const TableCell = props => {
     const openStatementBrowser = (id, label, type = null, path = []) => {
         setDialogResourceId(id);
         setDialogResourceLabel(label);
-        setDialogResourceType(type ? type : ENTITIES.RESOURCE);
+        setDialogResourceType(type || ENTITIES.RESOURCE);
         setPath(path);
         setModal(true);
     };
@@ -65,70 +65,68 @@ const TableCell = props => {
         }
     };
 
-    const PathTooltipContent = (data, cellDataValue) => {
-        return (
-            <div className="fullPath">
-                Path of this value:{' '}
-                {data.pathLabels?.map((path, index) => {
-                    const resourceType = isEqualPaths
-                        ? index % 2 === 0
-                            ? ENTITIES.RESOURCE
-                            : ENTITIES.PREDICATE
-                        : index % 2 !== 0
+    const PathTooltipContent = (data, cellDataValue) => (
+        <div className="fullPath">
+            Path of this value:{' '}
+            {data.pathLabels?.map((path, index) => {
+                const resourceType = isEqualPaths
+                    ? index % 2 === 0
                         ? ENTITIES.RESOURCE
-                        : ENTITIES.PREDICATE;
-                    return (
-                        <span key={index}>
-                            <span
-                                className={resourceType !== ENTITIES.PREDICATE ? 'btn-link' : ''}
-                                onClick={() =>
-                                    resourceType !== ENTITIES.PREDICATE
-                                        ? openStatementBrowser(
-                                              data.path[isEqualPaths ? index : index + 1],
-                                              path,
-                                              resourceType,
-                                              resourceType === ENTITIES.RESOURCE
-                                                  ? data.pathLabels.slice(0, isEqualPaths ? index : index + 1).map((l, i) => ({
-                                                        id: cellDataValue.path[i],
-                                                        label: l,
-                                                        _class: i % 2 === 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE
-                                                    }))
-                                                  : []
-                                          )
-                                        : null
-                                }
-                                style={{ cursor: resourceType !== ENTITIES.PREDICATE ? 'pointer' : 'default' }}
-                                onKeyDown={e =>
-                                    e.keyCode === 13
-                                        ? () =>
-                                              resourceType !== ENTITIES.PREDICATE
-                                                  ? openStatementBrowser(
-                                                        data.path[isEqualPaths ? index : index + 1],
-                                                        path,
-                                                        resourceType,
-                                                        resourceType === ENTITIES.RESOURCE
-                                                            ? data.pathLabels.slice(0, isEqualPaths ? index : index + 1).map((l, i) => ({
-                                                                  id: cellDataValue.path[i],
-                                                                  label: l,
-                                                                  _class: i % 2 === 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE
-                                                              }))
-                                                            : []
-                                                    )
-                                                  : null
-                                        : undefined
-                                }
-                                role="button"
-                                tabIndex={0}
-                            >
-                                {path}
-                            </span>
-                            {index !== data.pathLabels?.length - 1 && ' / '}
+                        : ENTITIES.PREDICATE
+                    : index % 2 !== 0
+                    ? ENTITIES.RESOURCE
+                    : ENTITIES.PREDICATE;
+                return (
+                    <span key={index}>
+                        <span
+                            className={resourceType !== ENTITIES.PREDICATE ? 'btn-link' : ''}
+                            onClick={() =>
+                                resourceType !== ENTITIES.PREDICATE
+                                    ? openStatementBrowser(
+                                          data.path[isEqualPaths ? index : index + 1],
+                                          path,
+                                          resourceType,
+                                          resourceType === ENTITIES.RESOURCE
+                                              ? data.pathLabels.slice(0, isEqualPaths ? index : index + 1).map((l, i) => ({
+                                                    id: cellDataValue.path[i],
+                                                    label: l,
+                                                    _class: i % 2 === 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE,
+                                                }))
+                                              : [],
+                                      )
+                                    : null
+                            }
+                            style={{ cursor: resourceType !== ENTITIES.PREDICATE ? 'pointer' : 'default' }}
+                            onKeyDown={e =>
+                                (e.keyCode === 13
+                                    ? () =>
+                                          (resourceType !== ENTITIES.PREDICATE
+                                              ? openStatementBrowser(
+                                                    data.path[isEqualPaths ? index : index + 1],
+                                                    path,
+                                                    resourceType,
+                                                    resourceType === ENTITIES.RESOURCE
+                                                        ? data.pathLabels.slice(0, isEqualPaths ? index : index + 1).map((l, i) => ({
+                                                              id: cellDataValue.path[i],
+                                                              label: l,
+                                                              _class: i % 2 === 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE,
+                                                          }))
+                                                        : [],
+                                                )
+                                              : null)
+                                    : undefined)
+                            }
+                            role="button"
+                            tabIndex={0}
+                        >
+                            {path}
                         </span>
-                    );
-                })}
-            </div>
-        );
-    };
+                        {index !== data.pathLabels?.length - 1 && ' / '}
+                    </span>
+                );
+            })}
+        </div>
+    );
 
     const onClickHandle = (date, index) => {
         openStatementBrowser(
@@ -138,8 +136,8 @@ const TableCell = props => {
             date.pathLabels.map((l, i) => ({
                 id: data[index].path[i],
                 label: l,
-                _class: isEqualPaths ? (i % 2 === 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE) : i % 2 !== 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE
-            }))
+                _class: isEqualPaths ? (i % 2 === 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE) : i % 2 !== 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE,
+            })),
         );
     };
 
@@ -158,8 +156,8 @@ const TableCell = props => {
                 <ItemInner cellPadding={cellPadding} className={data === undefined ? 'itemGroup' : ''}>
                     {data &&
                         data.length > 0 &&
-                        data.map((date, index) => {
-                            return (
+                        data.map(
+                            (date, index) =>
                                 Object.keys(date).length > 0 &&
                                 (date.type === ENTITIES.RESOURCE ? (
                                     <span key={`value-${date.resourceId}`}>
@@ -198,9 +196,8 @@ const TableCell = props => {
                                             </span>
                                         </Tippy>
                                     </span>
-                                ))
-                            );
-                        })}
+                                )),
+                        )}
                     {props.data?.length > MAX_ITEMS && (
                         <Button color="secondary" outline size="sm" className="mt-1 border-0" onClick={toggleExpand}>
                             {isExpanded ? 'Hide more' : `Show ${props.data.length - MAX_ITEMS} more`}{' '}
@@ -226,7 +223,7 @@ const TableCell = props => {
 
 TableCell.propTypes = {
     data: PropTypes.array,
-    viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact'])
+    viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact']),
 };
 
 export default TableCell;

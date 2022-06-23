@@ -45,8 +45,8 @@ const TemplateButton = props => {
 
         dispatch(
             fillContributionsWithTemplate({
-                templateID: props.id
-            })
+                templateID: props.id,
+            }),
         ).then(() => {
             toast.success('Template added successfully');
             ref.current?.removeAttribute('disabled');
@@ -131,12 +131,12 @@ TemplateButton.propTypes = {
     id: PropTypes.string.isRequired,
     classId: PropTypes.string,
     source: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-    tippyTarget: PropTypes.object
+    tippyTarget: PropTypes.object,
 };
 
 TemplateButton.defaultProps = {
     addMode: true,
-    label: ''
+    label: '',
 };
 
 export default TemplateButton;

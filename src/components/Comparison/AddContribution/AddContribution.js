@@ -73,25 +73,21 @@ export default function AddContribution(props) {
                 .then(result =>
                     getStatementsBySubjectAndPredicate({
                         subjectId: result.id,
-                        predicateId: PREDICATES.HAS_CONTRIBUTION
+                        predicateId: PREDICATES.HAS_CONTRIBUTION,
                     })
-                        .then(contributions => {
-                            return {
-                                ...result,
-                                contributions: contributions
-                                    .sort((a, b) => {
-                                        return a.object.label.localeCompare(b.object.label);
-                                    })
-                                    .map(contribution => ({ ...contribution.object, checked: false })),
-                                label: result.title
-                            };
-                        })
+                        .then(contributions => ({
+                            ...result,
+                            contributions: contributions
+                                .sort((a, b) => a.object.label.localeCompare(b.object.label))
+                                .map(contribution => ({ ...contribution.object, checked: false })),
+                            label: result.title,
+                        }))
                         .then(paperData => {
                             setPaperResult([paperData]);
                             setIsNextPageLoading(false);
                             setHasNextPage(false);
                             setCurrentPage(0);
-                        })
+                        }),
                 )
                 .catch(() => {
                     if (page === 0) {
@@ -108,29 +104,25 @@ export default function AddContribution(props) {
                 desc: true,
                 q: searchQuery,
                 id: CLASSES.PAPER,
-                returnContent: true
+                returnContent: true,
             })
                 .then(results => {
                     if (results.length > 0) {
                         const paper = results.map(resource =>
                             getStatementsBySubjectAndPredicate({
                                 subjectId: resource.id,
-                                predicateId: PREDICATES.HAS_CONTRIBUTION
-                            }).then(contributions => {
-                                return {
-                                    ...resource,
-                                    contributions: contributions
-                                        .sort((a, b) => {
-                                            return a.object.label.localeCompare(b.object.label);
-                                        })
-                                        .map(contribution => ({ ...contribution.object, checked: false }))
-                                };
-                            })
+                                predicateId: PREDICATES.HAS_CONTRIBUTION,
+                            }).then(contributions => ({
+                                ...resource,
+                                contributions: contributions
+                                    .sort((a, b) => a.object.label.localeCompare(b.object.label))
+                                    .map(contribution => ({ ...contribution.object, checked: false })),
+                            })),
                         );
                         Promise.all(paper).then(paperData => {
                             setPaperResult([...(page === 0 ? [] : paperResult), ...paperData]);
                             setIsNextPageLoading(false);
-                            setHasNextPage(results.length < numberOfPaper ? false : true);
+                            setHasNextPage(!(results.length < numberOfPaper));
                             setCurrentPage(page);
                         });
                     } else {
@@ -164,7 +156,7 @@ export default function AddContribution(props) {
         if (paper.contributions.length > 0) {
             paper.contributions.map(contribution => {
                 if (e.target.checked && !selectedContributions.includes(contribution.id)) {
-                    //setSelectedContributions(prev => [...prev, contribution.id]);
+                    // setSelectedContributions(prev => [...prev, contribution.id]);
                     newSelectedContributions = [...newSelectedContributions, contribution.id];
                 } else if (!e.target.checked) {
                     newSelectedContributions = [...newSelectedContributions.filter(i => i !== contribution.id)];
@@ -245,58 +237,54 @@ export default function AddContribution(props) {
                                 )}
                             </Alert>
                             <ListGroup>
-                                {paperResult.map((paper, index) => {
-                                    return (
-                                        <StyledListGroupItem key={`result-${index}`} className="pt-2 pb-2">
-                                            <Label check className="pe-2 ps-2">
-                                                <Input type="checkbox" onChange={e => togglePaper(paper, e)} /> {paper.label}{' '}
-                                                <Tippy content="Open paper in new window">
-                                                    <span>
-                                                        <Link
-                                                            title="View the paper page"
-                                                            target="_blank"
-                                                            to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.id })}
+                                {paperResult.map((paper, index) => (
+                                    <StyledListGroupItem key={`result-${index}`} className="pt-2 pb-2">
+                                        <Label check className="pe-2 ps-2">
+                                            <Input type="checkbox" onChange={e => togglePaper(paper, e)} /> {paper.label}{' '}
+                                            <Tippy content="Open paper in new window">
+                                                <span>
+                                                    <Link
+                                                        title="View the paper page"
+                                                        target="_blank"
+                                                        to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.id })}
+                                                    >
+                                                        <Icon icon={faExternalLinkAlt} />
+                                                    </Link>
+                                                </span>
+                                            </Tippy>
+                                            {props.allowCreate && (
+                                                <Tippy content="Create new contribution for this paper">
+                                                    <span className="ms-2">
+                                                        <Button
+                                                            color="link"
+                                                            className="p-0"
+                                                            size="lg"
+                                                            onClick={() => props.onCreateContribution(paper.id)}
                                                         >
-                                                            <Icon icon={faExternalLinkAlt} />
-                                                        </Link>
+                                                            <Icon icon={faPlusCircle} />
+                                                        </Button>
                                                     </span>
                                                 </Tippy>
-                                                {props.allowCreate && (
-                                                    <Tippy content="Create new contribution for this paper">
-                                                        <span className="ms-2">
-                                                            <Button
-                                                                color="link"
-                                                                className="p-0"
-                                                                size="lg"
-                                                                onClick={() => props.onCreateContribution(paper.id)}
-                                                            >
-                                                                <Icon icon={faPlusCircle} />
-                                                            </Button>
-                                                        </span>
-                                                    </Tippy>
-                                                )}
-                                            </Label>
-                                            {paper.contributions.length > 1 && (
-                                                <ul style={{ listStyle: 'none' }}>
-                                                    {paper.contributions.map(contribution => {
-                                                        return (
-                                                            <li key={`ccb${contribution.id}`}>
-                                                                <Input
-                                                                    type="checkbox"
-                                                                    checked={selectedContributions.includes(contribution.id)}
-                                                                    onChange={() => toggleContribution(contribution.id)}
-                                                                />{' '}
-                                                                <Label check className="pe-1 ps-1 mb-0">
-                                                                    {contribution.label}
-                                                                </Label>
-                                                            </li>
-                                                        );
-                                                    })}
-                                                </ul>
                                             )}
-                                        </StyledListGroupItem>
-                                    );
-                                })}
+                                        </Label>
+                                        {paper.contributions.length > 1 && (
+                                            <ul style={{ listStyle: 'none' }}>
+                                                {paper.contributions.map(contribution => (
+                                                    <li key={`ccb${contribution.id}`}>
+                                                        <Input
+                                                            type="checkbox"
+                                                            checked={selectedContributions.includes(contribution.id)}
+                                                            onChange={() => toggleContribution(contribution.id)}
+                                                        />{' '}
+                                                        <Label check className="pe-1 ps-1 mb-0">
+                                                            {contribution.label}
+                                                        </Label>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </StyledListGroupItem>
+                                ))}
                             </ListGroup>
                         </>
                     )}
@@ -351,11 +339,11 @@ AddContribution.propTypes = {
     onAddContributions: PropTypes.func.isRequired,
     allowCreate: PropTypes.bool,
     onCreateContribution: PropTypes.func,
-    onCreatePaper: PropTypes.func
+    onCreatePaper: PropTypes.func,
 };
 
 AddContribution.defaultProps = {
     allowCreate: false,
     onCreateContribution: () => {},
-    onCreatePaper: () => {}
+    onCreatePaper: () => {},
 };

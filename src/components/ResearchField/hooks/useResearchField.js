@@ -34,19 +34,15 @@ function useResearchField(initialVal = {}) {
             getStatementsBySubject({ id: rfId }).then(statements => {
                 const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
                 const sameAs = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.SAME_AS, true);
-                setData(data => ({ ...data, description: description?.label, sameAs: sameAs }));
+                setData(data => ({ ...data, description: description?.label, sameAs }));
             });
 
             getStatementsBySubjectAndPredicate({ subjectId: rfId, predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD }).then(result => {
                 if (result.length > 0) {
                     getResearchFieldsStats().then(stats => {
-                        const orderedSubRF = orderBy(
-                            result.map(s => {
-                                return { ...s.object, numPapers: stats[s.object.id] };
-                            }),
-                            item => item.numPapers,
-                            ['desc']
-                        );
+                        const orderedSubRF = orderBy(result.map(s => ({ ...s.object, numPapers: stats[s.object.id] })), item => item.numPapers, [
+                            'desc',
+                        ]);
                         setSubResearchFields(orderedSubRF);
                     });
                 } else {

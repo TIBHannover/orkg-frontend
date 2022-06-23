@@ -3,6 +3,49 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.71.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.71.0...v0.71.1) - 2022-06-16
+
+### Changes
+
+- fix(Comparison): publish with property IDs starting with 'R' [`#863`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/863)
+
+---
+## [v0.71.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.70.1...v0.71.0) - 2022-06-15
+
+### Changes
+
+- feat(Search): support research field filter [`#859`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/859)
+- fix(StatementBrowser): Hide input on stop edit [`#856`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/856)
+- fix(Autocomplete): Prevent selecting template components [`#857`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/857)
+- chore: update version command, set package.json version [`#854`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/854)
+- fix(ContentType): statement browser keeps loading on edit mode [`#851`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/851)
+- fix: pre-commit hook [`#852`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/852)
+- chore: allow building with lint errors [`#853`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/853)
+- fix(Observatory): Problem with URLs [`#848`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/848)
+- ux: consolidate UI components [`#849`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/849)
+- style: adopt Airbnb lint rules [`#850`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/850)
+- feat(Home): add Twitter timeline [`#846`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/846)
+- Review: add link to SmartReview methodology [`#847`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/847)
+
+---
+## [V0.70.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.70...V0.70.1) - 2022-05-20
+
+### Changes
+
+- fix: circular store dependency [`#845`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/845)
+
+---
+## [V0.70](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.69.2...V0.70) - 2022-05-20
+
+### Changes
+
+- Resolve "Issue with reset redux state on location change" [`#844`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/844)
+- refactor(Templates): type resources of “TemplateComponentClass” [`#841`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/841)
+- feat(Observatories): Combined lists and paginate content [`#804`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/804)
+- feat(HelpArticle): support articles without category [`#842`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/842)
+- feat(Observatory): link contributors and organizations with observatories from the UI [`#549`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/549)
+
+---
 ## [V0.69.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.69.1...V0.69.2) - 2022-05-16
 
 ### Changes

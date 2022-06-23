@@ -26,7 +26,7 @@ export const PREDICATES = {
     TEMPLATE_OF_PREDICATE: 'TemplateOfPredicate',
     TEMPLATE_OF_CLASS: 'TemplateOfClass',
     TEMPLATE_SUB_TEMPLATE: 'TemplateSub',
-    TEMPLATE_COMPONENT: 'TemplateComponent',
+    HAS_TEMPLATE_COMPONENT: 'TemplateComponent',
     TEMPLATE_COMPONENT_PROPERTY: 'TemplateComponentProperty',
     TEMPLATE_COMPONENT_VALUE: 'TemplateComponentValue',
     TEMPLATE_COMPONENT_VALIDATION_RULE: 'TemplateComponentValidationRule',
@@ -64,7 +64,7 @@ export const PREDICATES = {
     HAS_ENTRY: 'HasEntry',
     HAS_HEADING_LEVEL: 'HasHeadingLevel',
     HAS_VIDEO: 'HasVideo',
-    IS_ANONYMIZED: 'IsAnonymized'
+    IS_ANONYMIZED: 'IsAnonymized',
 };
 
 export const CLASSES = {
@@ -83,6 +83,7 @@ export const CLASSES = {
     FEATURED_COMPARISON_CATEGORY: 'FeaturedComparisonCategory',
     FEATURED_COMPARISON_HOME_PAGE: 'FeaturedComparisonHomePage',
     TEMPLATE: 'ContributionTemplate',
+    TEMPLATE_COMPONENT: 'TemplateComponentClass',
     PREDICATE: 'Predicates',
     CLASS: 'Classes',
     RESOURCE: 'Resources',
@@ -117,13 +118,13 @@ export const CLASSES = {
     BOOLEAN: 'Boolean',
     URI: 'URI',
     PAPER_VERSION: 'PaperVersion',
-    SOFTWARE: 'Software'
+    SOFTWARE: 'Software',
 };
 
 export const MISC = {
     RESEARCH_FIELD_MAIN: 'R11',
     DEFAULT_LITERAL_DATATYPE: 'xsd:string',
-    UNKNOWN_ID: '00000000-0000-0000-0000-000000000000'
+    UNKNOWN_ID: '00000000-0000-0000-0000-000000000000',
 };
 
 /* entities usually are returned by the backend (in _class) to specify the type of node  */
@@ -131,5 +132,5 @@ export const ENTITIES = {
     CLASS: 'class',
     PREDICATE: 'predicate',
     RESOURCE: 'resource',
-    LITERAL: 'literal'
+    LITERAL: 'literal',
 };

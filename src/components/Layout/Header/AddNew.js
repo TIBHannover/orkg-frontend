@@ -162,7 +162,7 @@ const AddNew = ({ isHomePageStyle, onAdd = null }) => {
 
 AddNew.propTypes = {
     isHomePageStyle: PropTypes.bool.isRequired,
-    onAdd: PropTypes.func
+    onAdd: PropTypes.func,
 };
 
 export default AddNew;

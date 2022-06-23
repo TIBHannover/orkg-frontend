@@ -9,14 +9,14 @@ export const getCitationByDOI = (DOI, style = '', header = 'text/x-bibliography'
     return new Promise((resolve, reject) => {
         fetch(url, {
             method: 'GET',
-            headers: myHeaders
+            headers: myHeaders,
         })
             .then(response => {
                 if (!response.ok) {
                     reject({
                         error: new Error(`Error response. (${response.status}) ${response.statusText}`),
                         statusCode: response.status,
-                        statusText: response.statusText
+                        statusText: response.statusText,
                     });
                 } else {
                     const text = response.text();

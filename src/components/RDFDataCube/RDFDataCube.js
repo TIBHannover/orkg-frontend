@@ -13,12 +13,12 @@ import {
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
-    InputGroup
+    InputGroup,
 } from 'reactstrap';
 import {
     selectResourceAction as selectResource,
     fetchStatementsForResource,
-    createResourceAction as createResource
+    createResourceAction as createResource,
 } from 'slices/statementBrowserSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
@@ -61,7 +61,7 @@ const RDFDataCube = props => {
     const value = useSelector(state => state.statementBrowser.values.byId[props.id]);
     const resource = useSelector(state => state.statementBrowser.resources.byId[value.resourceId]);
     const property = useSelector(state => state.statementBrowser.properties.byId[resource.propertyId]);
-    const existingResourceId = resource.existingResourceId;
+    const { existingResourceId } = resource;
     const dispatch = useDispatch();
 
     const handleResourceClick = r => {
@@ -69,8 +69,8 @@ const RDFDataCube = props => {
             createResource({
                 label: r.rlabel ? r.rlabel : r.label,
                 existingResourceId: r.id,
-                resourceId: r.id
-            })
+                resourceId: r.id,
+            }),
         );
 
         dispatch(
@@ -78,14 +78,14 @@ const RDFDataCube = props => {
                 increaseLevel: true,
                 resourceId: r.id,
                 label: r.rlabel ? r.rlabel : r.label,
-                propertyLabel: property?.label
-            })
+                propertyLabel: property?.label,
+            }),
         );
 
         dispatch(
             fetchStatementsForResource({
-                resourceId: r.id
-            })
+                resourceId: r.id,
+            }),
         );
     };
 
@@ -98,11 +98,11 @@ const RDFDataCube = props => {
         const label2Resource = r => {
             if ((typeof r === 'string' || r instanceof String) && r in resources) {
                 return resources[r];
-            } else if (typeof r === 'object' && r !== null) {
-                return r;
-            } else {
-                return { id: r, label: r, rlabel: r };
             }
+            if (typeof r === 'object' && r !== null) {
+                return r;
+            }
+            return { id: r, label: r, rlabel: r };
         };
         return !isDataCubeLoading && !isDataCubeFailedLoading
             ? dataCube.rows.map(r => {
@@ -113,9 +113,7 @@ const RDFDataCube = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isDataCubeFailedLoading, isDataCubeLoading]);
 
-    const columnsSortMethod = useCallback((rowA, rowB, id, desc) => {
-        return sortMethod(rowA.original[id].label, rowB.original[id].label);
-    }, []);
+    const columnsSortMethod = useCallback((rowA, rowB, id, desc) => sortMethod(rowA.original[id].label, rowB.original[id].label), []);
 
     const columns = useMemo(() => {
         const handleCellClick = r => {
@@ -126,50 +124,47 @@ const RDFDataCube = props => {
         };
 
         return !isDataCubeLoading && !isDataCubeFailedLoading
-            ? dataCube.header.map(h => {
-                  return {
-                      id: h,
-                      Header: { ...measures, ...dimensions, ...attributes }[h].label,
-                      accessor: h,
-                      sortType: columnsSortMethod,
-                      filter: 'text',
-                      Cell: innerProps => (
-                          <span
-                              onKeyDown={e => (e.keyCode === 13 ? handleCellClick(innerProps.value) : undefined)}
-                              role="button"
-                              tabIndex={0}
-                              onClick={() => handleCellClick(innerProps.value)}
-                          >
-                              {innerProps.value.label}
-                          </span>
-                      )
-                  };
-              })
+            ? dataCube.header.map(h => ({
+                  id: h,
+                  Header: { ...measures, ...dimensions, ...attributes }[h].label,
+                  accessor: h,
+                  sortType: columnsSortMethod,
+                  filter: 'text',
+                  Cell: innerProps => (
+                      <span
+                          onKeyDown={e => (e.keyCode === 13 ? handleCellClick(innerProps.value) : undefined)}
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => handleCellClick(innerProps.value)}
+                      >
+                          {innerProps.value.label}
+                      </span>
+                  ),
+              }))
             : [];
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isDataCubeFailedLoading, isDataCubeLoading]);
 
     const defaultColumn = useMemo(
         () => ({
-            Filter: DefaultColumnFilter
+            Filter: DefaultColumnFilter,
         }),
-        []
+        [],
     );
 
     const filterTypes = useMemo(
         () => ({
-            text: (rows, id, filterValue) => {
-                return rows.filter(row => {
+            text: (rows, id, filterValue) =>
+                rows.filter(row => {
                     const rowValue = row.values[id].label;
                     return rowValue !== undefined
                         ? String(rowValue)
                               .toLowerCase()
                               .startsWith(String(filterValue).toLowerCase())
                         : true;
-                });
-            }
+                }),
         }),
-        []
+        [],
     );
     const {
         getTableProps,
@@ -187,7 +182,7 @@ const RDFDataCube = props => {
         previousPage,
         setPageSize,
         rows,
-        state: { pageIndex, pageSize }
+        state: { pageIndex, pageSize },
     } = useTable(
         {
             columns,
@@ -199,17 +194,17 @@ const RDFDataCube = props => {
                         ? [
                               {
                                   id: dataCube.header[0],
-                                  desc: false
-                              }
+                                  desc: false,
+                              },
                           ]
-                        : []
+                        : [],
             },
             defaultColumn,
-            filterTypes
+            filterTypes,
         },
         useFilters,
         useSortBy,
-        usePagination
+        usePagination,
     );
 
     const toggleDropdown = () => {
@@ -230,15 +225,15 @@ const RDFDataCube = props => {
             classes = Object.assign({}, ...classes.map(item => ({ [item.label]: item.id })));
             // Get Data Structure Definition (DSD)
             const dsd = await getStatementsBySubject({ id: existingResourceId }).then(
-                s_dataset => s_dataset.find(s => s.object.classes && s.object.classes.includes(classes['qb:DataStructureDefinition'])).object
+                s_dataset => s_dataset.find(s => s.object.classes && s.object.classes.includes(classes['qb:DataStructureDefinition'])).object,
             );
             // Get Component Specification
             let cSpecifications = await getStatementsBySubject({ id: dsd.id })
                 .then(s_dataset => s_dataset.filter(s => s.object.classes && s.object.classes.includes(classes['qb:ComponentSpecification'])))
                 .then(css => css.map(cs => cs.object));
             // Fetch Statements of each component specification
-            cSpecifications = cSpecifications.map(cs => {
-                return getStatementsBySubject({ id: cs.id }).then(css => {
+            cSpecifications = cSpecifications.map(cs =>
+                getStatementsBySubject({ id: cs.id }).then(css => {
                     // Get order of component specification
                     let order = css.filter(statement => statement.predicate.label === 'order');
                     if (order.length > 0) {
@@ -246,10 +241,10 @@ const RDFDataCube = props => {
                     } else {
                         order = css[0].subject.id;
                     }
-                    css = css.map(cs => ({ ...cs.object, order: order }));
+                    css = css.map(cs => ({ ...cs.object, order }));
                     return css;
-                });
-            });
+                }),
+            );
             Promise.all(cSpecifications)
                 .then(cso => cso.flat(1))
                 .then(cso => {
@@ -264,21 +259,22 @@ const RDFDataCube = props => {
                 })
                 .then(({ sMeasures, sDimensions, sAttributes }) => {
                     // Observations (fetch statements of the dataset resource by object)
-                    const allDim = Object.assign({}, sDimensions, sMeasures, sAttributes);
+                    const allDim = { ...sDimensions, ...sMeasures, ...sAttributes };
                     getStatementsByObject({
                         id: existingResourceId,
                         items: 9999,
                         sortBy: 'created_at',
-                        desc: true
+                        desc: true,
                     }).then(statements => {
                         // Filter observations
                         const observations = statements.filter(
                             statement =>
-                                statement.predicate.label.toLowerCase() === 'dataset' && statement.subject.classes.includes(classes['qb:Observation'])
+                                statement.predicate.label.toLowerCase() === 'dataset' &&
+                                statement.subject.classes.includes(classes['qb:Observation']),
                         );
                         // Fetch the data of each observation todo : check for const correctness
-                        const observations_data = observations.map(observation => {
-                            return getStatementsBySubject({ id: observation.subject.id }).then(observationStatements => {
+                        const observations_data = observations.map(observation =>
+                            getStatementsBySubject({ id: observation.subject.id }).then(observationStatements => {
                                 // Measure
                                 const os_m = observationStatements.filter(statement => statement.predicate.label in sMeasures);
                                 // Dimensions
@@ -290,62 +286,56 @@ const RDFDataCube = props => {
                                     data: [
                                         ...os_m
                                             .sort((first, second) =>
-                                                sortMethod(allDim[first.predicate.label].order, allDim[second.predicate.label].order)
+                                                sortMethod(allDim[first.predicate.label].order, allDim[second.predicate.label].order),
                                             )
-                                            .map(o_m => {
-                                                return {
-                                                    id: observation.subject.id,
-                                                    rlabel: observation.subject.label,
-                                                    label: o_m.object.label
-                                                };
-                                            })
+                                            .map(o_m => ({
+                                                id: observation.subject.id,
+                                                rlabel: observation.subject.label,
+                                                label: o_m.object.label,
+                                            })),
                                     ],
                                     point: [
                                         // sort by order or predicate label because statements are not ordered by default
                                         ...os_d
                                             .sort((first, second) =>
-                                                sortMethod(allDim[first.predicate.label].order, allDim[second.predicate.label].order)
+                                                sortMethod(allDim[first.predicate.label].order, allDim[second.predicate.label].order),
                                             )
                                             .map(o_d => o_d.object.id),
                                         ...os_a
                                             .sort((first, second) =>
-                                                sortMethod(allDim[first.predicate.label].order, allDim[second.predicate.label].order)
+                                                sortMethod(allDim[first.predicate.label].order, allDim[second.predicate.label].order),
                                             )
-                                            .map(o_a => o_a.object.id)
+                                            .map(o_a => o_a.object.id),
                                     ],
                                     point_label: [
-                                        ...os_d.map(o_d => {
-                                            return { id: o_d.object.id, label: o_d.object.label, type: o_d.object._class };
-                                        }),
-                                        ...os_a.map(o_a => {
-                                            return { id: o_a.object.id, label: o_a.object.label, type: o_a.object._class };
-                                        })
-                                    ] // Resource labels
+                                        ...os_d.map(o_d => ({ id: o_d.object.id, label: o_d.object.label, type: o_d.object._class })),
+                                        ...os_a.map(o_a => ({ id: o_a.object.id, label: o_a.object.label, type: o_a.object._class })),
+                                    ], // Resource labels
                                 };
                                 return ob;
-                            });
-                        });
+                            }),
+                        );
 
                         return Promise.all(observations_data).then(observations => {
                             try {
                                 const table = new CUBE.model.Table({
                                     dimensions: [
                                         ...Object.keys(sDimensions).sort((first, second) => sortMethod(allDim[first].order, allDim[second].order)),
-                                        ...Object.keys(sAttributes).sort((first, second) => sortMethod(allDim[first].order, allDim[second].order))
+                                        ...Object.keys(sAttributes).sort((first, second) => sortMethod(allDim[first].order, allDim[second].order)),
                                     ],
                                     fields: Object.keys(sMeasures).sort((first, second) => sortMethod(allDim[first].order, allDim[second].order)),
                                     points: observations.map(o => o.point),
-                                    data: observations.map(o => o.data)
+                                    data: observations.map(o => o.data),
                                 });
-                                //const onlyFebruary = (point) => point[2] === 'R1415'
-                                //table = table.dice(onlyFebruary)
+                                // const onlyFebruary = (point) => point[2] === 'R1415'
+                                // table = table.dice(onlyFebruary)
                                 // Resources labels
                                 resources = Object.assign(
                                     {},
                                     ...observations
                                         .map(o => o.point_label)
                                         .flat(1)
-                                        .map(item => ({ [item.id]: item }))
+                                        .map(item => ({ [item.id]: item })),
                                 );
 
                                 setMeasures(sMeasures);
@@ -387,11 +377,12 @@ const RDFDataCube = props => {
                                         <DropdownItem header>Export</DropdownItem>
                                         {rows.length > 0 ? (
                                             <CSVLink
-                                                headers={dataCube.header.map(h => {
-                                                    return { label: { ...measures, ...dimensions, ...attributes }[h].label, key: h + '.label' };
-                                                })}
+                                                headers={dataCube.header.map(h => ({
+                                                    label: { ...measures, ...dimensions, ...attributes }[h].label,
+                                                    key: `${h}.label`,
+                                                }))}
                                                 data={rows.map(r => r.values)}
-                                                filename={value.label + '.csv'}
+                                                filename={`${value.label}.csv`}
                                                 className="dropdown-item"
                                                 target="_blank"
                                                 onClick={exportAsCsv}
@@ -438,9 +429,9 @@ const RDFDataCube = props => {
                                             prepareRow(row);
                                             return (
                                                 <tr {...row.getRowProps()}>
-                                                    {row.cells.map(cell => {
-                                                        return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-                                                    })}
+                                                    {row.cells.map(cell => (
+                                                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                                    ))}
                                                 </tr>
                                             );
                                         })}
@@ -523,7 +514,7 @@ const RDFDataCube = props => {
 RDFDataCube.propTypes = {
     id: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
-    toggleModal: PropTypes.func.isRequired
+    toggleModal: PropTypes.func.isRequired,
 };
 
 export default RDFDataCube;

@@ -49,13 +49,12 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                                         </Badge>
                                     </Link>
                                 );
-                            } else {
-                                return (
-                                    <Badge key={`author${author.id}`} color="light" className="me-2 mb-2">
-                                        <Icon icon={faUser} /> {author.label}
-                                    </Badge>
-                                );
                             }
+                            return (
+                                <Badge key={`author${author.id}`} color="light" className="me-2 mb-2">
+                                    <Icon icon={faUser} /> {author.label}
+                                </Badge>
+                            );
                         })}
                 </div>
                 <hr />
@@ -77,7 +76,7 @@ ViewVisualizationModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     onEditVisualization: PropTypes.func.isRequired,
-    data: PropTypes.object
+    data: PropTypes.object,
 };
 
 export default ViewVisualizationModal;

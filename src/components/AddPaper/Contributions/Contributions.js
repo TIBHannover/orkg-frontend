@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Row, Col, Button } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import ContributionsHelpTour from './ContributionsHelpTour';
 import Tooltip from 'components/Utils/Tooltip';
 import {
     nextStep,
@@ -12,7 +11,7 @@ import {
     updateContributionLabelAction as updateContributionLabel,
     saveAddPaperAction as saveAddPaper,
     openTour,
-    toggleAbstractDialog
+    toggleAbstractDialog,
 } from 'slices/addPaperSlice';
 import { updateSettings } from 'slices/statementBrowserSlice';
 import Abstract from 'components/AddPaper/Abstract/Abstract';
@@ -24,6 +23,7 @@ import { StyledContributionTabs } from 'components/ContributionTabs/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faMagic, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import Tabs, { TabPane } from 'rc-tabs';
+import ContributionsHelpTour from './ContributionsHelpTour';
 
 const Contributions = () => {
     const {
@@ -36,7 +36,7 @@ const Contributions = () => {
         url,
         selectedResearchField,
         contributions,
-        selectedContribution
+        selectedContribution,
     } = useSelector(state => state.addPaper);
     const { resources, properties, values } = useSelector(state => state.statementBrowser);
 
@@ -49,13 +49,13 @@ const Contributions = () => {
                 createContribution({
                     selectAfterCreation: true,
                     prefillStatements: true,
-                    researchField: selectedResearchField
-                })
+                    researchField: selectedResearchField,
+                }),
             );
             dispatch(
                 updateSettings({
-                    openExistingResourcesInDialog: true
-                })
+                    openExistingResourcesInDialog: true,
+                }),
             );
         }
     }, [contributions.allIds.length, dispatch, selectedResearchField]);
@@ -64,19 +64,19 @@ const Contributions = () => {
         // save add paper
         dispatch(
             saveAddPaper({
-                title: title,
-                authors: authors,
-                publicationMonth: publicationMonth,
-                publicationYear: publicationYear,
-                doi: doi,
-                publishedIn: publishedIn,
-                url: url,
-                selectedResearchField: selectedResearchField,
-                contributions: contributions,
-                resources: resources,
-                properties: properties,
-                values: values
-            })
+                title,
+                authors,
+                publicationMonth,
+                publicationYear,
+                doi,
+                publishedIn,
+                url,
+                selectedResearchField,
+                contributions,
+                resources,
+                properties,
+                values,
+            }),
         );
         dispatch(nextStep());
     };
@@ -84,7 +84,7 @@ const Contributions = () => {
     const toggleDeleteContribution = async id => {
         const result = await Confirm({
             title: 'Are you sure?',
-            message: 'Are you sure you want to delete this contribution?'
+            message: 'Are you sure you want to delete this contribution?',
         });
 
         if (result) {
@@ -102,10 +102,10 @@ const Contributions = () => {
         const contribution = contributions.byId[contributionId];
         dispatch(
             updateContributionLabel({
-                label: label,
-                contributionId: contributionId,
-                resourceId: contribution.resourceId
-            })
+                label,
+                contributionId,
+                resourceId: contribution.resourceId,
+            }),
         );
     };
 

@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from 'testUtils';
-import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
+import StatementBrowser from '../StatementBrowser';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
@@ -11,8 +11,8 @@ const setup = (
         initialSubjectId: 'R1',
         initialSubjectLabel: null,
         newStore: true,
-        rootNodeType: ENTITIES.RESOURCE
-    }
+        rootNodeType: ENTITIES.RESOURCE,
+    },
 ) => {
     render(<StatementBrowser {...props} />, { initialState });
 };
@@ -23,7 +23,7 @@ describe('statement browser', () => {
             initialSubjectId: 'R1',
             initialSubjectLabel: null,
             newStore: true,
-            rootNodeType: ENTITIES.RESOURCE
+            rootNodeType: ENTITIES.RESOURCE,
         };
         setup({}, config);
         await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());

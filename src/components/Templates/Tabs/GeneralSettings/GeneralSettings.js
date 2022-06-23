@@ -44,7 +44,7 @@ const GeneralSettings = () => {
             dispatch(updateClass(selected));
         } else if (action === 'create-option') {
             const newClass = await ConfirmClass({
-                label: selected.label
+                label: selected.label,
             });
             if (newClass) {
                 selected.id = newClass.id;
@@ -74,12 +74,14 @@ const GeneralSettings = () => {
     return (
         <div className="p-4">
             <FormGroup className="mb-4">
-                <Label>Name of template</Label>
-                <Input innerRef={inputRef} value={label} onChange={handleChangeLabel} disabled={!editMode} />
+                <Label for="template-name">Name of template</Label>
+                <Input innerRef={inputRef} value={label} onChange={handleChangeLabel} disabled={!editMode} id="template-name" />
             </FormGroup>
 
             <FormGroup className="mb-4">
-                <Label>Target class</Label>
+                <Label for="target-class">
+                    Target class <span className="text-muted fst-italic">(optional)</span>
+                </Label>
                 <AutoComplete
                     entityType={ENTITIES.CLASS}
                     placeholder={editMode ? 'Select or type to enter a class' : 'No Classes'}
@@ -95,6 +97,7 @@ const GeneralSettings = () => {
                     autoFocus={false}
                     linkButton={clasS && clasS.id ? reverse(ROUTES.CLASS, { id: clasS.id }) : ''}
                     linkButtonTippy="Go to class page"
+                    inputId="target-class"
                 />
                 {editMode && <FormText>Specify the class of this template. If not specified, a class is generated automatically.</FormText>}
             </FormGroup>
@@ -108,7 +111,9 @@ const GeneralSettings = () => {
                         </small>
                     </p>
                     <FormGroup className="mb-4">
-                        <Label>Property</Label>
+                        <Label for="template-property">
+                            Property <span className="text-muted fst-italic">(optional)</span>
+                        </Label>
                         <AutoComplete
                             entityType={ENTITIES.PREDICATE}
                             placeholder={editMode ? 'Select or type to enter a property' : 'No Property'}
@@ -121,6 +126,7 @@ const GeneralSettings = () => {
                             autoFocus={false}
                             isClearable
                             innerRef={predicateAutocompleteRef}
+                            inputId="template-property"
                         />
                         {editMode && (
                             <FormText>
@@ -129,7 +135,9 @@ const GeneralSettings = () => {
                         )}
                     </FormGroup>
                     <FormGroup className="mb-4">
-                        <Label>Research fields</Label>
+                        <Label for="template-field">
+                            Research fields <span className="text-muted fst-italic">(optional)</span>
+                        </Label>
                         <AutoComplete
                             entityType={ENTITIES.RESOURCE}
                             optionsClass={CLASSES.RESEARCH_FIELD}
@@ -143,11 +151,14 @@ const GeneralSettings = () => {
                             isDisabled={!editMode}
                             isClearable
                             isMulti
+                            inputId="template-field"
                         />
                         {editMode && <FormText>Specify the research fields that uses this template.</FormText>}
                     </FormGroup>
                     <FormGroup className="mb-4">
-                        <Label>Research problems</Label>
+                        <Label for="template-problems">
+                            Research problems <span className="text-muted fst-italic">(optional)</span>
+                        </Label>
                         <AutoComplete
                             entityType={ENTITIES.RESOURCE}
                             optionsClass={CLASSES.PROBLEM}
@@ -161,6 +172,7 @@ const GeneralSettings = () => {
                             isDisabled={!editMode}
                             isClearable
                             isMulti
+                            inputId="template-problems"
                         />
                         {editMode && <FormText>Specify the research problems that uses this template.</FormText>}
                     </FormGroup>

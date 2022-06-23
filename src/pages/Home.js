@@ -14,13 +14,14 @@ import { Helmet } from 'react-helmet';
 import env from '@beam-australia/react-env';
 import HomeAlerts from 'components/HomeAlerts/HomeAlerts';
 import { useEffect } from 'react';
+import TwitterTimeline from 'components/Home/TwitterTimeline';
 
 export default function Home() {
     const location = useLocation();
     const navigate = useNavigate();
     const { selectedResearchField, handleFieldSelect, researchFields, isLoadingFields } = useResearchFieldSelector({
         id: MISC.RESEARCH_FIELD_MAIN,
-        label: 'Main'
+        label: 'Main',
     });
 
     useEffect(() => {
@@ -65,6 +66,8 @@ export default function Home() {
                     </div>
                 </Col>
                 <Col md="4">
+                    <TwitterTimeline />
+
                     <div className="mt-3 box rounded d-flex flex-column overflow-hidden">
                         <News />
                     </div>

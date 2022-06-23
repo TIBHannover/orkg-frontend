@@ -16,7 +16,7 @@ class StatementBrowserDialog extends Component {
         super(props);
         this.state = {
             // clone the original value of openExistingResourcesInDialog
-            previousOpenExistingResourcesInDialog: Boolean(JSON.stringify(props.openExistingResourcesInDialog))
+            previousOpenExistingResourcesInDialog: Boolean(JSON.stringify(props.openExistingResourcesInDialog)),
         };
     }
 
@@ -45,7 +45,7 @@ class StatementBrowserDialog extends Component {
                     this.props.onCloseModal();
                     // return the original value of openExistingResourcesInDialog
                     this.props.updateSettings({
-                        openExistingResourcesInDialog: this.state.previousOpenExistingResourcesInDialog
+                        openExistingResourcesInDialog: this.state.previousOpenExistingResourcesInDialog,
                     });
                 }}
             >
@@ -105,10 +105,10 @@ StatementBrowserDialog.propTypes = {
     initialPath: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string.isRequired,
-            label: PropTypes.string.isRequired
-        })
+            label: PropTypes.string.isRequired,
+        }),
     ),
-    canEditSharedRootLevel: PropTypes.bool.isRequired
+    canEditSharedRootLevel: PropTypes.bool.isRequired,
 };
 
 StatementBrowserDialog.defaultProps = {
@@ -119,18 +119,16 @@ StatementBrowserDialog.defaultProps = {
     initialPath: [],
     showExternalDescriptions: true,
     canEditSharedRootLevel: true,
-    onCloseModal: () => {}
+    onCloseModal: () => {},
 };
 
-const mapStateToProps = state => {
-    return { openExistingResourcesInDialog: state.statementBrowser.openExistingResourcesInDialog };
-};
+const mapStateToProps = state => ({ openExistingResourcesInDialog: state.statementBrowser.openExistingResourcesInDialog });
 
 const mapDispatchToProps = dispatch => ({
-    updateSettings: data => dispatch(updateSettings(data))
+    updateSettings: data => dispatch(updateSettings(data)),
 });
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(StatementBrowserDialog);

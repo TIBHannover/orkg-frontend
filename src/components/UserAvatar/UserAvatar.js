@@ -72,7 +72,7 @@ const UserAvatar = ({ userId, size, appendToTooltip, showDisplayName, linkTarget
                     plugins={[hideOnEsc]}
                 >
                     <StyledUserAvatar tabIndex="0">
-                        <Link to={reverse(ROUTES.USER_PROFILE, { userId: userId })} target={linkTarget}>
+                        <Link to={reverse(ROUTES.USER_PROFILE, { userId })} target={linkTarget}>
                             {!isLoadingContributor && (
                                 <>
                                     <StyledGravatar className="rounded-circle" md5={contributor?.gravatar_id ?? 'example@example.com'} size={size} />
@@ -97,14 +97,14 @@ UserAvatar.propTypes = {
     size: PropTypes.number,
     appendToTooltip: PropTypes.string,
     showDisplayName: PropTypes.bool,
-    linkTarget: PropTypes.string
+    linkTarget: PropTypes.string,
 };
 
 UserAvatar.defaultProps = {
     size: 28,
     appendToTooltip: '',
     showDisplayName: false,
-    linkTarget: '_self'
+    linkTarget: '_self',
 };
 
 export default UserAvatar;

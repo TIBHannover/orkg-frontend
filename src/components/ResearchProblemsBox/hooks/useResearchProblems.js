@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { mergeAlternate } from 'utils';
+import { getContentByObservatoryIdAndClasses } from 'services/backend/observatories';
 import { getResearchProblemsByResearchFieldId } from 'services/backend/researchFields';
+import { CLASSES } from 'constants/graphSettings';
 
-function useResearchFieldProblems({ researchFieldId, initialSort, initialIncludeSubFields, pageSize = 10 }) {
+function useResearchProblems({ id, by = 'ResearchField', initialSort, initialIncludeSubFields, pageSize = 10 }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
@@ -14,49 +16,53 @@ function useResearchFieldProblems({ researchFieldId, initialSort, initialInclude
 
     const loadData = useCallback(
         (page, total) => {
+            const apiFunc = by === 'ResearchField' ? getResearchProblemsByResearchFieldId : getContentByObservatoryIdAndClasses;
             setIsLoading(true);
             // problems
             let problemsService;
             if (sort === 'combined') {
                 // in case of combined sort we list 50% featured and 50% newest items (new not featured)
-                const newService = getResearchProblemsByResearchFieldId({
-                    id: researchFieldId,
-                    page: page,
+                const newService = apiFunc({
+                    id,
+                    page,
                     items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
-                    subfields: includeSubFields,
+                    ...(by === 'ResearchField' ? { subfields: includeSubFields } : {}),
+                    ...(by === 'Observatory' ? { classes: [CLASSES.PROBLEM] } : {}),
                     featured: false,
-                    unlisted: false
+                    unlisted: false,
                 });
-                const featuredService = getResearchProblemsByResearchFieldId({
-                    id: researchFieldId,
-                    page: page,
+                const featuredService = apiFunc({
+                    id,
+                    page,
                     items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
-                    subfields: includeSubFields,
+                    ...(by === 'ResearchField' ? { subfields: includeSubFields } : {}),
+                    ...(by === 'Observatory' ? { classes: [CLASSES.PROBLEM] } : {}),
                     featured: true,
-                    unlisted: false
+                    unlisted: false,
                 });
                 problemsService = Promise.all([newService, featuredService]).then(([newC, featuredC]) => {
                     const combinedC = mergeAlternate(newC.content, featuredC.content);
                     return {
                         content: combinedC,
                         totalElements: page === 0 ? newC.totalElements + featuredC.totalElements : total,
-                        last: newC.last && featuredC.last
+                        last: newC.last && featuredC.last,
                     };
                 });
             } else {
-                problemsService = getResearchProblemsByResearchFieldId({
-                    id: researchFieldId,
-                    page: page,
+                problemsService = apiFunc({
+                    id,
+                    page,
                     items: pageSize,
                     sortBy: 'created_at',
                     desc: true,
-                    subfields: includeSubFields,
+                    ...(by === 'ResearchField' ? { subfields: includeSubFields } : {}),
+                    ...(by === 'Observatory' ? { classes: [CLASSES.PROBLEM] } : {}),
                     featured: sort === 'featured' ? true : null,
-                    unlisted: sort === 'unlisted' ? true : false
+                    unlisted: sort === 'unlisted',
                 });
             }
             problemsService
@@ -72,10 +78,10 @@ function useResearchFieldProblems({ researchFieldId, initialSort, initialInclude
                     setProblems([]);
                     setIsLoading(false);
                     setHasNextPage(false);
-                    setIsLastPageReached(page > 1 ? true : false);
+                    setIsLastPageReached(page > 1);
                 });
         },
-        [includeSubFields, sort, researchFieldId, pageSize]
+        [sort, id, pageSize, by, includeSubFields],
     );
 
     // reset resources when the researchFieldId has changed
@@ -85,7 +91,7 @@ function useResearchFieldProblems({ researchFieldId, initialSort, initialInclude
         setIsLastPageReached(false);
         setPage(0);
         setTotalElements(0);
-    }, [researchFieldId, includeSubFields, sort]);
+    }, [id, includeSubFields, sort]);
 
     useEffect(() => {
         loadData(0);
@@ -106,9 +112,10 @@ function useResearchFieldProblems({ researchFieldId, initialSort, initialInclude
         includeSubFields,
         totalElements,
         page,
+        setProblems,
         handleLoadMore,
         setIncludeSubFields,
-        setSort
+        setSort,
     };
 }
-export default useResearchFieldProblems;
+export default useResearchProblems;

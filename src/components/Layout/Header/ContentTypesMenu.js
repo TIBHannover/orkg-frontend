@@ -20,25 +20,23 @@ const StyledButtonDropdown = styled(UncontrolledButtonDropdown)`
     }
 `;
 
-const ContentTypesMenu = ({ closeMenu }) => {
-    return (
-        <StyledButtonDropdown direction="right" className="w-100 nav inNavbar">
-            <DropdownToggle tag="button" className="dropdown-item w-100">
-                More <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
-            </DropdownToggle>
-            <DropdownMenu>
-                {supportedContentTypes.map(({ id, label }) => (
-                    <DropdownItem key={id} tag={RouterNavLink} end to={reverse(ROUTES.CONTENT_TYPES, { type: id })} onClick={closeMenu}>
-                        {upperFirst(pluralize(label || '', 0, false))}
-                    </DropdownItem>
-                ))}
-            </DropdownMenu>
-        </StyledButtonDropdown>
-    );
-};
+const ContentTypesMenu = ({ closeMenu }) => (
+    <StyledButtonDropdown direction="right" className="w-100 nav inNavbar">
+        <DropdownToggle tag="button" className="dropdown-item w-100">
+            More <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
+        </DropdownToggle>
+        <DropdownMenu>
+            {supportedContentTypes.map(({ id, label }) => (
+                <DropdownItem key={id} tag={RouterNavLink} end to={reverse(ROUTES.CONTENT_TYPES, { type: id })} onClick={closeMenu}>
+                    {upperFirst(pluralize(label || '', 0, false))}
+                </DropdownItem>
+            ))}
+        </DropdownMenu>
+    </StyledButtonDropdown>
+);
 
 ContentTypesMenu.propTypes = {
-    closeMenu: PropTypes.func.isRequired
+    closeMenu: PropTypes.func.isRequired,
 };
 
 export default ContentTypesMenu;

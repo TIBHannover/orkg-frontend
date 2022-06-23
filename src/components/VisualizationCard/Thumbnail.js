@@ -58,7 +58,7 @@ const Thumbnail = props => {
 };
 
 Thumbnail.propTypes = {
-    visualization: PropTypes.object
+    visualization: PropTypes.object,
 };
 
 export default memo(Thumbnail, isEqual);

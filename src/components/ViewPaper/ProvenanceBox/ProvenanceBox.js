@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { AnimationContainer, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
 import { TransitionGroup } from 'react-transition-group';
-import Provenance from './Provenance';
-import Timeline from './Timeline';
 import env from '@beam-australia/react-env';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
 import useProvenance from 'components/ViewPaper/hooks/useProvenance';
+import Provenance from './Provenance';
+import Timeline from './Timeline';
+import { AnimationContainer, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
 
 const ProvenanceBox = () => {
     const {
@@ -16,7 +16,7 @@ const ProvenanceBox = () => {
         organizationInfo,
         createdBy,
         versions,
-        contributors
+        contributors,
     } = useProvenance();
 
     const [activeTab, setActiveTab] = useState(1);

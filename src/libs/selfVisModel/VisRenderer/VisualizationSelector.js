@@ -15,7 +15,7 @@ export default class VisualizationSelector extends Component {
             xAxisSelector: undefined,
             yAxisSelector: undefined,
             errorMessage: '',
-            errorCode: -1
+            errorCode: -1,
         };
         this.supportedVisualizationMethods = ['Table', 'BarChart', 'ColumnChart', 'ScatterChart', 'LineChart'];
         this.selfVisModel = new SelfVisDataModel(); // this access the instance of the data (its a singleton)
@@ -34,21 +34,19 @@ export default class VisualizationSelector extends Component {
     };
 
     createVisualizationSelector = () => {
-        const items = this.supportedVisualizationMethods.map((item, id) => {
-            return (
-                <div key={'visSelectionDropdownDivItemIndexKey_' + id}>
-                    <DropdownItem
-                        key={'visSelectionDropdownItemIndexKey_' + id}
-                        onClick={() => {
-                            this.selfVisModel.setRenderingMethod(item);
-                            this.setState({ visualizationMethod: item });
-                        }}
-                    >
-                        <span>{item}</span>
-                    </DropdownItem>
-                </div>
-            );
-        });
+        const items = this.supportedVisualizationMethods.map((item, id) => (
+            <div key={`visSelectionDropdownDivItemIndexKey_${id}`}>
+                <DropdownItem
+                    key={`visSelectionDropdownItemIndexKey_${id}`}
+                    onClick={() => {
+                        this.selfVisModel.setRenderingMethod(item);
+                        this.setState({ visualizationMethod: item });
+                    }}
+                >
+                    <span>{item}</span>
+                </DropdownItem>
+            </div>
+        ));
 
         return (
             <Dropdown
@@ -58,7 +56,7 @@ export default class VisualizationSelector extends Component {
                 className="mt-1"
                 toggle={() => {
                     this.setState({
-                        visSelectionOpen: !this.state.visSelectionOpen
+                        visSelectionOpen: !this.state.visSelectionOpen,
                     });
                 }}
             >
@@ -70,7 +68,7 @@ export default class VisualizationSelector extends Component {
         );
     };
 
-    /** component rendering entrance point **/
+    /** component rendering entrance point * */
     render() {
         return (
             <div className="px-3">
@@ -83,5 +81,5 @@ export default class VisualizationSelector extends Component {
 }
 
 VisualizationSelector.propTypes = {
-    propagationFunction: PropTypes.func
+    propagationFunction: PropTypes.func,
 };

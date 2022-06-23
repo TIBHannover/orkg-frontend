@@ -1,11 +1,13 @@
 import ContentLoader from 'react-content-loader';
-import useResearchFieldProblems from 'components/ResearchProblemsBox/hooks/useResearchFieldProblems';
+import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
 import ResearchProblemCard from 'components/ResearchProblemsBox/ResearchProblemCard';
-import ProblemsDropdownFilter from './ProblemsDropdownFilter';
-import { Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { MISC } from 'constants/graphSettings';
+import { FormGroup, Label, Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-const ResearchProblemsModal = ({ researchFieldId, openModal, setOpenModal }) => {
+const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenModal }) => {
+    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const {
         problems,
         page,
@@ -16,26 +18,43 @@ const ResearchProblemsModal = ({ researchFieldId, openModal, setOpenModal }) => 
         isLastPageReached,
         setSort,
         setIncludeSubFields,
-        handleLoadMore
-    } = useResearchFieldProblems({
-        researchFieldId,
+        handleLoadMore,
+    } = useResearchProblems({
+        id,
+        by,
         pageSize: 25,
         initialSort: 'combined',
-        initialIncludeSubFields: true
+        initialIncludeSubFields: true,
     });
 
     return (
         <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
             <ModalHeader toggle={() => setOpenModal(v => !v)}>
-                Research problems
-                <div style={{ display: 'inline-block', marginLeft: '20px' }}>
-                    <ProblemsDropdownFilter
-                        sort={sort}
-                        isLoading={isLoading}
-                        includeSubFields={includeSubFields}
-                        setSort={setSort}
-                        setIncludeSubFields={setIncludeSubFields}
-                    />
+                <div className="d-flex justify-content-end mb-2 me-2">
+                    <div>Research problems</div>
+                    <div className="mb-0 ms-2 me-2">
+                        <Input value={sort} onChange={e => setSort(e.target.value)} bsSize="sm" type="select" name="sort" disabled={isLoading}>
+                            <option value="combined">Top recent</option>
+                            <option value="newest">Recently added</option>
+                            <option value="featured">Featured</option>
+                            {isCurationAllowed && <option value="unlisted">Unlisted</option>}
+                        </Input>
+                    </div>
+                    {id !== MISC.RESEARCH_FIELD_MAIN && by === 'ResearchField' && (
+                        <div className="d-flex rounded" style={{ fontSize: '0.875rem', padding: '0.25rem 0' }}>
+                            <FormGroup check className="mb-0">
+                                <Label check className="mb-0">
+                                    <Input
+                                        onChange={e => setIncludeSubFields(e.target.checked)}
+                                        checked={includeSubFields}
+                                        type="checkbox"
+                                        disabled={isLoading}
+                                    />
+                                    Include subfields
+                                </Label>
+                            </FormGroup>
+                        </div>
+                    )}
                 </div>
             </ModalHeader>
             <ModalBody>
@@ -58,7 +77,7 @@ const ResearchProblemsModal = ({ researchFieldId, openModal, setOpenModal }) => 
                             Load more research problems
                         </div>
                     )}
-                    {!hasNextPage && isLastPageReached && page !== 1 && <div className="text-center mt-3">You have reached the last page.</div>}
+                    {!hasNextPage && isLastPageReached && page !== 1 && <div className="text-center mt-3">You have reached the last page</div>}
                     {isLoading && (
                         <div className="mt-4 mb-4">
                             <ContentLoader
@@ -86,9 +105,10 @@ const ResearchProblemsModal = ({ researchFieldId, openModal, setOpenModal }) => 
 };
 
 ResearchProblemsModal.propTypes = {
-    researchFieldId: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    by: PropTypes.string.isRequired, // ResearchField || Observatory
     openModal: PropTypes.bool.isRequired,
-    setOpenModal: PropTypes.func.isRequired
+    setOpenModal: PropTypes.func.isRequired,
 };
 
 export default ResearchProblemsModal;

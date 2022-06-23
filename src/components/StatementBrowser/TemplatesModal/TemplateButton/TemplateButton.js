@@ -1,11 +1,10 @@
 import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
-import TemplateDetailsTooltip from './TemplateDetailsTooltip';
 import {
     fillResourceWithTemplate,
     removeEmptyPropertiesOfClass,
-    updateResourceClassesAction as updateResourceClasses
+    updateResourceClassesAction as updateResourceClasses,
 } from 'slices/statementBrowserSlice';
 import { getTemplateById } from 'services/backend/statements';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,6 +13,7 @@ import { useState, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import TemplateDetailsTooltip from './TemplateDetailsTooltip';
 
 const IconWrapper = styled.span`
     background-color: ${props => (props.addMode ? '#d1d5e4' : '#dc3545')};
@@ -51,8 +51,8 @@ const TemplateButton = props => {
             fillResourceWithTemplate({
                 templateID: props.id,
                 resourceId: props.resourceId,
-                syncBackend: props.syncBackend
-            })
+                syncBackend: props.syncBackend,
+            }),
         ).then(() => {
             toast.success('Template added successfully');
             ref.current?.removeAttribute('disabled');
@@ -68,8 +68,8 @@ const TemplateButton = props => {
             updateResourceClasses({
                 resourceId: props.resourceId,
                 classes: resource.classes?.filter(c => c !== props.classId) ?? [],
-                syncBackend: props.syncBackend
-            })
+                syncBackend: props.syncBackend,
+            }),
         )
             .then(() => {
                 ref.current?.removeAttribute('disabled');
@@ -144,13 +144,13 @@ TemplateButton.propTypes = {
     classId: PropTypes.string,
     source: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     syncBackend: PropTypes.bool.isRequired,
-    tippyTarget: PropTypes.object
+    tippyTarget: PropTypes.object,
 };
 
 TemplateButton.defaultProps = {
     addMode: true,
     label: '',
-    syncBackend: false
+    syncBackend: false,
 };
 
 export default TemplateButton;

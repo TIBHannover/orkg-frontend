@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Alert } from 'reactstrap';
 // TODO: add mouse area selection from :  import Selection from '@simonwep/selection-js';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import CellVE from './CellVE';
 import Tippy, { useSingleton } from '@tippyjs/react';
-import DropDownMapperSelector from './DropdownMapperSelector';
 import PropTypes from 'prop-types';
+import CellVE from './CellVE';
+import DropDownMapperSelector from './DropdownMapperSelector';
 
 const CellEditor = props => {
     const [selfVisModel] = useState(new SelfVisDataModel());
@@ -17,7 +17,7 @@ const CellEditor = props => {
         setUpdateFlipFlop(prevUpdateFlipFlop => !prevUpdateFlipFlop);
     };
 
-    /** Rendering functions for the frame (headers for rows and cols ) **/
+    /** Rendering functions for the frame (headers for rows and cols ) * */
     const createTable = () => {
         const filteredProperties = selfVisModel.mrrModel.propertyAnchors.filter(item => item.isSelectedColumnForUse === true);
         const renderingDimX = filteredProperties.length + 1;
@@ -32,7 +32,7 @@ const CellEditor = props => {
             if (i === -1) {
                 for (let j = 0; j < renderingDimX; j++) {
                     // renders the cell
-                    const keyVal = 'key_cellIdMeta' + i + '_' + j;
+                    const keyVal = `key_cellIdMeta${i}_${j}`;
                     if (j === 0) {
                         rowArray.push(<CellVE key={keyVal} type="metaNode" data={null} tippyTarget={target} tippySource={source} />);
                     } else {
@@ -40,11 +40,11 @@ const CellEditor = props => {
                         rowArray.push(
                             <CellVE key={keyVal} type="metaNodeSelectorSimple" data={null} tippyTarget={target} tippySource={source}>
                                 <DropDownMapperSelector
-                                    key={keyVal + 'dropdown' + propertyItem.positionPropertyAnchor}
+                                    key={`${keyVal}dropdown${propertyItem.positionPropertyAnchor}`}
                                     data={propertyItem}
                                     callBack={validationCallback}
                                 />
-                            </CellVE>
+                            </CellVE>,
                         );
                     }
                 }
@@ -52,7 +52,7 @@ const CellEditor = props => {
 
             for (let j = 0; j < renderingDimX; j++) {
                 // renders the cell
-                const keyVal = 'key_cellId' + i + '_' + j;
+                const keyVal = `key_cellId${i}_${j}`;
 
                 if (i === 0 && j === 0) {
                     rowArray.push(<CellVE key={keyVal} type="metaNode" data={null} tippyTarget={target} tippySource={source} />);
@@ -72,20 +72,20 @@ const CellEditor = props => {
                     const colIndex = propertyItem.positionPropertyAnchor;
                     rowArray.push(
                         <CellVE
-                            key={keyVal + '_' + rowIndex + '_' + colIndex}
+                            key={`${keyVal}_${rowIndex}_${colIndex}`}
                             type="value"
                             data={selfVisModel.modelAccess.getItem(rowIndex, colIndex)}
                             tippyTarget={target}
                             tippySource={source}
-                        />
+                        />,
                     );
                 }
             }
 
             itemsToRender.push(
-                <div key={i + '_row'} style={{ display: 'flex' }}>
+                <div key={`${i}_row`} style={{ display: 'flex' }}>
                     {rowArray}
-                </div>
+                </div>,
             );
         }
 
@@ -107,7 +107,7 @@ const CellEditor = props => {
             <Alert color="info" fade={false}>
                 Optionally edit header labels. Valid cell entries corresponding to selected mapper are displayed in green.
             </Alert>
-            <div style={{ height: props.height + 'px', overflow: 'auto' }}>
+            <div style={{ height: `${props.height}px`, overflow: 'auto' }}>
                 {props.isLoading ? <div>Loading...</div> : <div>{createTable()} </div>}
             </div>
         </div>
@@ -116,7 +116,7 @@ const CellEditor = props => {
 
 CellEditor.propTypes = {
     isLoading: PropTypes.bool,
-    height: PropTypes.number
+    height: PropTypes.number,
 };
 
 export default CellEditor;

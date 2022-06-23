@@ -150,7 +150,7 @@ export default function CustomOption(props) {
                                             props.data.statements
                                                 .filter(
                                                     statement =>
-                                                        statement.predicate.id === PREDICATES.URL || statement.predicate.id === PREDICATES.SAME_AS
+                                                        statement.predicate.id === PREDICATES.URL || statement.predicate.id === PREDICATES.SAME_AS,
                                                 )
                                                 .map((statement, index) => (
                                                     <div key={`s${index}`}>
@@ -189,7 +189,7 @@ export default function CustomOption(props) {
                                                                 <li key={s.id}>
                                                                     {s.predicate.label}:{' '}
                                                                     {truncate(s.object.label ? s.object.label : '', {
-                                                                        length: MAXIMUM_DESCRIPTION_LENGTH
+                                                                        length: MAXIMUM_DESCRIPTION_LENGTH,
                                                                     })}
                                                                 </li>
                                                             ))}
@@ -220,10 +220,9 @@ export default function CustomOption(props) {
                             </Tippy>
                         </div>
                     )}
-
-                    {props.data.id && (
+                    {(props.data.id || props.data.existingResourceId) && (
                         <div onClick={onClick} className="badge" onKeyDown={e => (e.keyCode === 13 ? onClick : undefined)} role="button" tabIndex={0}>
-                            {props.data.id}
+                            {!props.data.existingResourceId ? props.data.id : 'New'}
                         </div>
                     )}
                     {props.data.external && props.data.source && (
@@ -240,5 +239,5 @@ export default function CustomOption(props) {
 CustomOption.propTypes = {
     children: PropTypes.node.isRequired,
     data: PropTypes.object.isRequired,
-    innerProps: PropTypes.object.isRequired
+    innerProps: PropTypes.object.isRequired,
 };

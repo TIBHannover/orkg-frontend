@@ -5,7 +5,7 @@ const setup = () => {
     const label = 'resource label';
     const value = {
         id: 'R1',
-        label: label
+        label,
     };
 
     render(<TableCellValueResource value={value} />);

@@ -19,7 +19,7 @@ import {
     getSuggestedProperties,
     initializeWithoutContribution,
     initializeWithResource,
-    setInitialPath
+    setInitialPath,
 } from 'slices/statementBrowserSlice';
 import { ENTITIES } from 'constants/graphSettings';
 import ClassesItem from 'components/StatementBrowser/ClassesItem/ClassesItem';
@@ -39,15 +39,15 @@ const Statements = props => {
                     initializeWithoutContribution({
                         resourceId: props.initialSubjectId,
                         label: props.initialSubjectLabel,
-                        rootNodeType: props.rootNodeType
-                    })
+                        rootNodeType: props.rootNodeType,
+                    }),
                 );
             } else {
                 dispatch(
                     initializeWithResource({
                         resourceId: props.initialSubjectId,
-                        label: props.initialSubjectLabel
-                    })
+                        label: props.initialSubjectLabel,
+                    }),
                 );
             }
             dispatch(
@@ -56,8 +56,8 @@ const Statements = props => {
                     propertiesAsLinks: props.propertiesAsLinks,
                     resourcesAsLinks: props.resourcesAsLinks,
                     initOnLocationChange: props.initOnLocationChange,
-                    keyToKeepStateOnLocationChange: props.keyToKeepStateOnLocationChange
-                })
+                    keyToKeepStateOnLocationChange: props.keyToKeepStateOnLocationChange,
+                }),
             );
 
             dispatch(setInitialPath(props.initialPath));
@@ -65,8 +65,8 @@ const Statements = props => {
             dispatch(
                 updateSettings({
                     initOnLocationChange: props.initOnLocationChange,
-                    keyToKeepStateOnLocationChange: props.keyToKeepStateOnLocationChange
-                })
+                    keyToKeepStateOnLocationChange: props.keyToKeepStateOnLocationChange,
+                }),
             );
         }
     }, [
@@ -80,7 +80,7 @@ const Statements = props => {
         props.propertiesAsLinks,
         props.resourcesAsLinks,
         props.rootNodeType,
-        props.initialPath
+        props.initialPath,
     ]);
 
     const statements = () => {
@@ -105,23 +105,19 @@ const Statements = props => {
                                 <>
                                     <FlipMove>
                                         {propertyIds.length > 0 &&
-                                            propertyIds.map((propertyId, index) => {
-                                                return (
-                                                    <StatementItemWrapper
-                                                        key={`statement-p${propertyId}r${selectedResource}`}
-                                                        enableEdit={
-                                                            (shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit
-                                                        }
-                                                        openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                                                        isLastItem={propertyIds.length === index + 1}
-                                                        isFirstItem={index === 0}
-                                                        resourceId={selectedResource}
-                                                        propertyId={propertyId}
-                                                        syncBackend={props.syncBackend}
-                                                        renderTemplateBox={props.renderTemplateBox}
-                                                    />
-                                                );
-                                            })}
+                                            propertyIds.map((propertyId, index) => (
+                                                <StatementItemWrapper
+                                                    key={`statement-p${propertyId}r${selectedResource}`}
+                                                    enableEdit={(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit}
+                                                    openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+                                                    isLastItem={propertyIds.length === index + 1}
+                                                    isFirstItem={index === 0}
+                                                    resourceId={selectedResource}
+                                                    propertyId={propertyId}
+                                                    syncBackend={props.syncBackend}
+                                                    renderTemplateBox={props.renderTemplateBox}
+                                                />
+                                            ))}
                                     </FlipMove>
 
                                     {!resource.isFailedFetching && propertyIds.length === 0 && <NoData enableEdit={props.enableEdit} />}
@@ -147,16 +143,15 @@ const Statements = props => {
         );
     };
 
-    const addLevel = (_level, maxLevel) => {
-        return maxLevel !== 0 ? (
+    const addLevel = (_level, maxLevel) =>
+        (maxLevel !== 0 ? (
             <StyledLevelBox>
                 {maxLevel !== _level + 1 && addLevel(_level + 1, maxLevel)}
                 {maxLevel === _level + 1 && statements()}
             </StyledLevelBox>
         ) : (
             statements()
-        );
-    };
+        ));
 
     const elements = addLevel(0, level);
 
@@ -190,8 +185,8 @@ Statements.propTypes = {
     initialPath: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string.isRequired,
-            label: PropTypes.string.isRequired
-        })
+            label: PropTypes.string.isRequired,
+        }),
     ),
     syncBackend: PropTypes.bool.isRequired,
     newStore: PropTypes.bool,
@@ -202,7 +197,7 @@ Statements.propTypes = {
     propertySuggestionsComponent: PropTypes.node,
     keyToKeepStateOnLocationChange: PropTypes.string,
     renderTemplateBox: PropTypes.bool,
-    canEditSharedRootLevel: PropTypes.bool.isRequired
+    canEditSharedRootLevel: PropTypes.bool.isRequired,
 };
 
 Statements.defaultProps = {
@@ -221,7 +216,7 @@ Statements.defaultProps = {
     renderTemplateBox: false,
     initialPath: [],
     canEditSharedRootLevel: true,
-    propertySuggestionsComponent: null
+    propertySuggestionsComponent: null,
 };
 
 export default Statements;

@@ -32,12 +32,12 @@ const ValueForm = props => {
         newResources,
         disabledCreate,
         handleCreateExistingLabel,
-        commitChangeLabel
+        commitChangeLabel,
     } = useValueForm({
         valueId: props.id,
         resourceId: props.resourceId,
         propertyId: props.propertyId,
-        syncBackend: props.syncBackend
+        syncBackend: props.syncBackend,
     });
 
     const dispatch = useDispatch();
@@ -56,9 +56,7 @@ const ValueForm = props => {
     const [suggestionType, setSuggestionType] = useState(null);
 
     /* Select component reference can be used to check if menu is opened */
-    const isMenuOpen = () => {
-        return autocompleteInputRef.current.state.menuIsOpen && autocompleteInputRef.current.props.options.length > 0;
-    };
+    const isMenuOpen = () => autocompleteInputRef.current.state.menuIsOpen && autocompleteInputRef.current.props.options.length > 0;
 
     const onSubmit = () => {
         const { error } = schema.validate(inputValue);
@@ -66,7 +64,7 @@ const ValueForm = props => {
             setFormFeedback(error.message);
             setIsValid(false);
         } else {
-            //setInputValue(value);
+            // setInputValue(value);
             setFormFeedback(null);
             setIsValid(true);
             // Check for a possible conversion possible
@@ -74,14 +72,12 @@ const ValueForm = props => {
             if (suggestions.length > 0 && !valueClass) {
                 setSuggestionType(suggestions[0]);
                 confirmConversion.current.show();
+            } else if (!editMode) {
+                handleAddValue(entityType, { label: inputValue, datatype: getDataType() });
+                props.setShowAddValue?.(false);
             } else {
-                if (!editMode) {
-                    handleAddValue(entityType, { label: inputValue, datatype: getDataType() });
-                    props.setShowAddValue?.(false);
-                } else {
-                    commitChangeLabel(inputValue, getDataType(inputDataType));
-                    dispatch(toggleEditValue({ id: props.id }));
-                }
+                commitChangeLabel(inputValue, getDataType(inputDataType));
+                dispatch(toggleEditValue({ id: props.id }));
             }
         }
     };
@@ -136,7 +132,9 @@ const ValueForm = props => {
                     <AutoComplete
                         entityType={entityType}
                         excludeClasses={
-                            entityType === ENTITIES.RESOURCE && valueClass ? `${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}` : null
+                            entityType === ENTITIES.RESOURCE && !valueClass
+                                ? `${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE},${CLASSES.TEMPLATE_COMPONENT},${CLASSES.PAPER_DELETED},${CLASSES.CONTRIBUTION_DELETED}`
+                                : null
                         }
                         optionsClass={entityType === ENTITIES.RESOURCE && valueClass ? valueClass.id : undefined}
                         placeholder={`Enter a ${entityType}`}
@@ -144,11 +142,11 @@ const ValueForm = props => {
                             handleAddValue(entityType, { ...i, label: i.value, selected: true });
                             props.setShowAddValue?.(false);
                         }}
-                        ols={entityType === ENTITIES.CLASS ? true : false}
+                        ols={entityType === ENTITIES.CLASS}
                         onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                         value={inputValue}
                         additionalData={newResources}
-                        autoLoadOption={valueClass ? true : false}
+                        autoLoadOption={!!valueClass}
                         openMenuOnFocus={true}
                         disableBorderRadiusRight
                         disableBorderRadiusLeft={!valueClass}
@@ -222,14 +220,14 @@ const ValueForm = props => {
                                             title: 'Convert',
                                             color: 'success',
                                             icon: faCheck,
-                                            action: acceptSuggestion
+                                            action: acceptSuggestion,
                                         },
                                         {
                                             title: 'Keep',
                                             color: 'secondary',
                                             icon: faTimes,
-                                            action: rejectSuggestion
-                                        }
+                                            action: rejectSuggestion,
+                                        },
                                     ]}
                                 />
                             }
@@ -254,7 +252,7 @@ ValueForm.propTypes = {
     resourceId: PropTypes.string,
     syncBackend: PropTypes.bool.isRequired,
     setShowAddValue: PropTypes.func,
-    showAddValue: PropTypes.bool
+    showAddValue: PropTypes.bool,
 };
 
 export default ValueForm;

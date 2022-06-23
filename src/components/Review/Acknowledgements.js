@@ -27,7 +27,10 @@ const Acknowledgements = () => {
                 <a href="https://doi.org/10.1145/3360901.3364435" target="_blank" rel="noopener noreferrer">
                     Open Research Knowledge Graph
                 </a>{' '}
-                reviews
+                and the{' '}
+                <a href="https://arxiv.org/abs/2111.15342" target="_blank" rel="noreferrer">
+                    SmartReview methodology
+                </a>
             </Alert>
         </>
     );

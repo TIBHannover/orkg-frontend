@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import arrayMove from 'array-move';
-import { LOCATION_CHANGE } from 'redux-first-history';
+import { LOCATION_CHANGE } from 'utils';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import dotProp from 'dot-prop-immutable';
@@ -17,7 +17,7 @@ import {
     getStatementsByObject,
     getStatementsBySubject,
     getStatementsBySubjectAndPredicate,
-    updateStatement
+    updateStatement,
 } from 'services/backend/statements';
 
 const initialState = {
@@ -33,19 +33,17 @@ const initialState = {
     isEditing: false,
     isPublished: false,
     isOpenHistoryModal: false,
-    statements: []
+    statements: [],
 };
 
 export const listSlice = createSlice({
     name: 'list',
     initialState,
     reducers: {
-        listLoaded: (state, { payload }) => {
-            return {
-                ...state,
-                ...payload
-            };
-        },
+        listLoaded: (state, { payload }) => ({
+            ...state,
+            ...payload,
+        }),
         setIsEditing: (state, { payload }) => {
             state.isEditing = payload;
         },
@@ -90,19 +88,19 @@ export const listSlice = createSlice({
                         content: markdownId
                             ? {
                                   id: markdownId,
-                                  text: ''
+                                  text: '',
                               }
                             : undefined,
                         heading: headingId
                             ? {
                                   id: headingId,
-                                  level: headingLevel
+                                  level: headingLevel,
                               }
                             : undefined,
-                        entries: []
+                        entries: [],
                     },
-                    ...state.sections.slice(afterIndex)
-                ]
+                    ...state.sections.slice(afterIndex),
+                ],
             };
         },
         sectionsSorted: (state, { payload }) => {
@@ -123,7 +121,7 @@ export const listSlice = createSlice({
             state.sections[index].entries.push({
                 entry,
                 statementId,
-                contentTypeId: contentTypeData.contentType.id
+                contentTypeId: contentTypeData.contentType.id,
             });
             state.contentTypes[contentTypeData.contentType.id] = contentTypeData;
         },
@@ -145,7 +143,7 @@ export const listSlice = createSlice({
             const { sectionId, entries } = payload;
             const sectionIndex = state.sections.findIndex(section => section.id === sectionId);
             state.sections[sectionIndex].entries = entries;
-        }
+        },
     },
     extraReducers: {
         [LOCATION_CHANGE]: (state, { payload }) => {
@@ -155,8 +153,8 @@ export const listSlice = createSlice({
                 return state;
             }
             return initialState;
-        }
-    }
+        },
+    },
 });
 
 export const {
@@ -179,7 +177,7 @@ export const {
     listEntryDeleted,
     listEntryUpdated,
     listEntryDescriptionUpdated,
-    listEntriesSorted
+    listEntriesSorted,
 } = listSlice.actions;
 
 export default listSlice.reducer;
@@ -196,7 +194,7 @@ export const updateResearchField = ({ statementId, listId, researchField }) => a
         updateStatement(statementId, {
             subject_id: listId,
             predicate_id: PREDICATES.HAS_RESEARCH_FIELD,
-            object_id: researchField.id
+            object_id: researchField.id,
         });
     } else {
         const statement = await createResourceStatement(listId, PREDICATES.HAS_RESEARCH_FIELD, researchField.id);
@@ -211,8 +209,8 @@ export const updateSectionTitle = ({ sectionId, title }) => async dispatch => {
     dispatch(
         sectionTitleUpdated({
             title,
-            sectionId
-        })
+            sectionId,
+        }),
     );
     dispatch(setIsLoading(true));
     await updateResource(sectionId, title);
@@ -223,8 +221,8 @@ export const updateSectionHeadingLevel = ({ id, level }) => async dispatch => {
     dispatch(
         sectionHeadingLevelUpdated({
             level,
-            id
-        })
+            id,
+        }),
     );
     dispatch(setIsLoading(true));
     await updateLiteral(id, level);
@@ -235,8 +233,8 @@ export const updateSectionMarkdown = ({ id, markdown }) => async dispatch => {
     dispatch(
         sectionMarkdownUpdated({
             markdown,
-            id
-        })
+            id,
+        }),
     );
     dispatch(setIsLoading(true));
     await updateLiteral(id, markdown);
@@ -251,8 +249,8 @@ export const deleteSection = id => async dispatch => {
         const sectionObjectStatementIds = sectionObjectStatement.map(stmt => stmt.id);
         const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
         await deleteStatementsByIds([...sectionObjectStatementIds, ...sectionSubjectStatementIds]);
-        //the resource isn't deleted, because deleting resources can only be done with the is_curation_allowed flag
-        //await deleteResource(id);
+        // the resource isn't deleted, because deleting resources can only be done with the is_curation_allowed flag
+        // await deleteResource(id);
         dispatch(sectionDeleted(id));
         dispatch(setIsLoading(false));
         toast.success('Section successfully deleted');
@@ -298,15 +296,15 @@ export const createSection = ({ listId, afterIndex, sectionType }) => async (dis
             markdownId: markdownLiteralId,
             headingId: headingLiteralId,
             headingLevel,
-            typeId
-        })
+            typeId,
+        }),
     );
     // sort the sections after adding a new section
     dispatch(
         sortSections({
             listId,
-            sections: getState().list.sections
-        })
+            sections: getState().list.sections,
+        }),
     );
     dispatch(setIsLoading(false));
 };
@@ -343,8 +341,8 @@ export const addListEntry = ({ contentTypeData, sectionId }) => async dispatch =
             entry: entryResource,
             statementId: statement.id,
             sectionId,
-            contentTypeData
-        })
+            contentTypeData,
+        }),
     );
 };
 
@@ -354,8 +352,8 @@ export const deleteListEntry = ({ statementId, sectionId }) => async dispatch =>
         dispatch(
             listEntryDeleted({
                 statementId,
-                sectionId
-            })
+                sectionId,
+            }),
         );
         toast.success('The entry has been deleted successfully');
     } catch (e) {
@@ -376,8 +374,8 @@ export const updateListEntryDescription = ({ description, entryId, descriptionLi
         listEntryDescriptionUpdated({
             description,
             entryId,
-            sectionId
-        })
+            sectionId,
+        }),
     );
     dispatch(setIsLoading(false));
 };
@@ -399,8 +397,8 @@ export const sortListEntries = ({ sectionId, entries, oldIndex, newIndex }) => a
     dispatch(
         listEntriesSorted({
             entries: entriesNewOrder,
-            sectionId
-        })
+            sectionId,
+        }),
     );
 
     dispatch(setIsLoading(false));

@@ -88,7 +88,7 @@ const UserProfile = props => {
     const [isLoadingUserData, setIsLoadingUserData] = useState(false);
     const [notFound, setNotFound] = useState(false);
     const params = useParams();
-    const userId = params.userId;
+    const { userId } = params;
     const currentUserId = useSelector(state => state.auth.user?.id);
 
     useEffect(() => {
@@ -140,7 +140,7 @@ const UserProfile = props => {
                     document.title = `${userData.display_name} - ORKG`;
                 })
                 .catch(e => {
-                    document.title = `User profile - ORKG`;
+                    document.title = 'User profile - ORKG';
                     setNotFound(true);
                 });
         };
@@ -247,7 +247,7 @@ const UserProfile = props => {
                 <div className={'time'}>5 JULY 2019</div>
                 <div>John Doe joined ORKG, welcome!</div>
             </StyledActivity>
-            </Container>*/}
+            </Container> */}
         </>
     );
 };

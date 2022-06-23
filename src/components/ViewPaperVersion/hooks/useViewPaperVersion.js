@@ -1,12 +1,11 @@
 import { useEffect, useState, useCallback } from 'react';
-import { getStatementsBundleBySubject } from 'services/backend/statements';
+import { getStatementsBundleBySubject, getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getResource } from 'services/backend/resources';
 import { useDispatch } from 'react-redux';
 import { loadPaper, setPaperAuthors } from 'slices/viewPaperSlice';
-import { getPaperData_ViewPaper, filterObjectOfStatementsByPredicateAndClass, filterSubjectOfStatementsByPredicateAndClass } from 'utils';
+import { getPaperDataViewPaper, filterObjectOfStatementsByPredicateAndClass, filterSubjectOfStatementsByPredicateAndClass } from 'utils';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { getVisualization } from 'services/similarity';
-import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 
 const useViewPaperVersion = ({ paperId }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -29,7 +28,7 @@ const useViewPaperVersion = ({ paperId }) => {
             authorsArray = authorsArray.length ? authorsArray.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [];
             dispatch(setPaperAuthors(authorsArray));
         },
-        [dispatch]
+        [dispatch],
     );
 
     const loadPaperData = useCallback(() => {
@@ -47,21 +46,21 @@ const useViewPaperVersion = ({ paperId }) => {
                         r.data.statements,
                         PREDICATES.HAS_CONTRIBUTION,
                         false,
-                        CLASSES.CONTRIBUTION
+                        CLASSES.CONTRIBUTION,
                     );
                     // remove duplicates becasue contributions subject could be multiple
                     const pp = contributions.filter((ele, ind) => ind === contributions.findIndex(elem => elem.id === ele.id));
                     setContributions(pp.reverse());
                 });
                 Promise.all([
-                    getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD, CLASSES.CONTRIBUTION] })
+                    getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD, CLASSES.CONTRIBUTION] }),
                 ]).then(async ([paperStatements]) => {
-                    const paperData = getPaperData_ViewPaper(paperResource, paperStatements.statements?.filter(s => s.subject.id === paperId));
+                    const paperData = getPaperDataViewPaper(paperResource, paperStatements.statements?.filter(s => s.subject.id === paperId));
                     let statement = await getStatementsByObjectAndPredicate({ objectId: paperId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION });
-                    for (; !statement[0].subject.classes.find(s => s === CLASSES.PAPER); ) {
+                    for (; !statement[0].subject.classes.find(s => s === CLASSES.PAPER);) {
                         statement = await getStatementsByObjectAndPredicate({
                             objectId: statement[0].subject.id,
-                            predicateId: PREDICATES.HAS_PREVIOUS_VERSION
+                            predicateId: PREDICATES.HAS_PREVIOUS_VERSION,
                         });
                     }
                     dispatch(loadPaper({ ...paperData, originalPaperId: statement && statement[0].subject.id ? statement[0].subject.id : '' }));
@@ -82,7 +81,7 @@ const useViewPaperVersion = ({ paperId }) => {
     return {
         isLoading,
         isLoadingFailed,
-        contributions
+        contributions,
     };
 };
 

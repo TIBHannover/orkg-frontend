@@ -44,7 +44,7 @@ ReferenceModal.propTypes = {
     toggle: PropTypes.func.isRequired,
     show: PropTypes.bool.isRequired,
     onSave: PropTypes.func.isRequired,
-    reference: PropTypes.object
+    reference: PropTypes.object,
 };
 
 export default ReferenceModal;
