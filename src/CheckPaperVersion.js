@@ -21,7 +21,6 @@ export default function CheckPaperVersion() {
 
     if (paperType === CLASSES.PAPER_VERSION) {
         return <ViewPaperVersion />;
-    } else {
-        return <ViewPaper />;
     }
+    return <ViewPaper />;
 }
