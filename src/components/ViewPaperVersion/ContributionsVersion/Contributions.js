@@ -1,21 +1,19 @@
-import { Alert, Col, Container, FormGroup, Row } from 'reactstrap';
+import { Alert, Col, Container, FormGroup, Row, ListGroup } from 'reactstrap';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import { StyledContributionTabs } from 'components/ContributionTabs/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
-import useContributions from './hooks/useContributions';
 import Tabs, { TabPane } from 'rc-tabs';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { ENTITIES } from 'constants/graphSettings';
-import { ListGroup } from 'reactstrap';
-import { useNavigate } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
+import useContributions from './hooks/useContributions';
 
 const Contributions = props => {
     const { resourceId, contributionId } = useParams();
@@ -23,16 +21,16 @@ const Contributions = props => {
     const { isLoading, isLoadingContributionFailed, selectedContribution, contributionData } = useContributions({
         paperId: resourceId,
         contributionId,
-        contributions: props.contributions
+        contributions: props.contributions,
     });
     const navigate = useNavigate();
 
     const onTabChange = key => {
         navigate(
             reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
-                resourceId: resourceId,
-                contributionId: key
-            })
+                resourceId,
+                contributionId: key,
+            }),
         );
     };
 
@@ -151,7 +149,7 @@ const Contributions = props => {
 };
 
 Contributions.propTypes = {
-    contributions: PropTypes.array
+    contributions: PropTypes.array,
 };
 
 export default Contributions;

@@ -3,7 +3,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormG
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
-import { generateDoi } from 'services/backend/misc';
+import { generateDoi, createObject } from 'services/backend/misc';
 import { createLiteral } from 'services/backend/literals';
 import Tooltip from 'components/Utils/Tooltip';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
@@ -11,14 +11,10 @@ import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getContributorsByResourceId } from 'services/backend/resources';
-import { getPublicUrl } from 'utils';
-import { getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
-import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
+import { getPublicUrl, filterObjectOfStatementsByPredicateAndClass } from 'utils';
+import { getStatementsBySubject, getStatementsBySubjects, createResourceStatement, deleteStatementById } from 'services/backend/statements';
 import { createResourceData } from 'services/similarity/index';
 import { useSelector } from 'react-redux';
-import { createObject } from 'services/backend/misc';
-import { createResourceStatement } from 'services/backend/statements';
-import { deleteStatementById } from 'services/backend/statements';
 import { Link } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
@@ -102,16 +98,15 @@ function Publish(props) {
             }
 
             return list;
-        } else {
-            return list;
         }
+        return list;
     };
 
     const getPaperStatements = async paperId => {
         const statements = await getStatementsBySubject({ id: paperId });
         const result = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
         const ids = result.map(stmt => stmt.id);
-        const c = await getStatementsBySubjects({ ids: ids });
+        const c = await getStatementsBySubjects({ ids });
         const data = [];
         for (let j = 0; j < c.length; j++) {
             const cids = c[j].statements;
@@ -129,7 +124,7 @@ function Publish(props) {
         if (title && title.trim() !== '' && description && description.trim() !== '') {
             const paperStatements = await getPaperStatements(paperId);
             if (paperStatements.length === 0) {
-                toast.error(`Paper must have at least one contribution to be persistently identified.`);
+                toast.error('Paper must have at least one contribution to be persistently identified.');
                 setIsLoading(false);
                 return;
             }
@@ -143,36 +138,36 @@ function Publish(props) {
                             subject.id && {
                                 [PREDICATES.HAS_RESEARCH_FIELD]: [
                                     {
-                                        '@id': subject.id
-                                    }
-                                ]
+                                        '@id': subject.id,
+                                    },
+                                ],
                             }),
                         ...(viewPaper.publicationMonth && {
                             [PREDICATES.HAS_PUBLICATION_MONTH]: [
                                 {
-                                    text: viewPaper.publicationMonth.label
-                                }
-                            ]
+                                    text: viewPaper.publicationMonth.label,
+                                },
+                            ],
                         }),
                         ...(viewPaper.publicationYear && {
                             [PREDICATES.HAS_PUBLICATION_YEAR]: [
                                 {
-                                    text: viewPaper.publicationYear.label
-                                }
-                            ]
+                                    text: viewPaper.publicationYear.label,
+                                },
+                            ],
                         }),
                         ...(viewPaper.doi && {
                             [PREDICATES.HAS_DOI]: [
                                 {
-                                    '@id': viewPaper.doi.id
-                                }
-                            ]
+                                    '@id': viewPaper.doi.id,
+                                },
+                            ],
                         }),
                         [PREDICATES.HAS_AUTHOR]: viewPaper.authors.map(author => ({
-                            '@id': author.id
-                        }))
-                    }
-                }
+                            '@id': author.id,
+                        })),
+                    },
+                },
             };
 
             const createdPaper = await createObject(paper_obj);
@@ -185,7 +180,7 @@ function Publish(props) {
                 description,
                 related_sources: viewPaper.contributions && viewPaper.contributions[0] ? [viewPaper.contributions[0].id] : [''],
                 authors: contributors.map(creator => ({ creator: creator.created_by.display_name, orcid: '' })),
-                url: `${getPublicUrl()}${reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaper.id })}`
+                url: `${getPublicUrl()}${reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaper.id })}`,
             })
                 .then(doiResponse => {
                     createLiteral(doiResponse.data.attributes.doi).then(async doiLiteral => {
@@ -199,18 +194,18 @@ function Publish(props) {
                         setCreatedPaperId(createdPaper.id);
                         createResourceData({
                             resourceId: createdPaper.id,
-                            data: { statements: paperStatements }
+                            data: { statements: paperStatements },
                         });
                         setIsLoading(false);
                         toast.success('DOI has been registered successfully');
                     });
                 })
                 .catch(error => {
-                    toast.error(`Error publishing a DOI`);
+                    toast.error('Error publishing a DOI');
                     setIsLoading(false);
                 });
         } else {
-            toast.error(`Title or a description is missing.`);
+            toast.error('Title or a description is missing.');
             setIsLoading(false);
         }
     };
@@ -242,7 +237,7 @@ function Publish(props) {
                                     text={`https://doi.org/${dataCiteDoi}`}
                                     onCopy={() => {
                                         toast.dismiss();
-                                        toast.success(`DOI link copied!`);
+                                        toast.success('DOI link copied!');
                                     }}
                                 >
                                     <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
@@ -336,7 +331,7 @@ Publish.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     paperId: PropTypes.string,
-    label: PropTypes.string
+    label: PropTypes.string,
 };
 
 export default Publish;

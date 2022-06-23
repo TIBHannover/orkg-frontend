@@ -12,21 +12,10 @@ const useContributions = ({ paperId, contributionId, contributions }) => {
         if (contributions?.length && (selectedContribution !== contributionId || !contributionId)) {
             try {
                 // apply selected contribution
-                if (
-                    contributionId &&
-                    !contributions.some(el => {
-                        return el.id === contributionId;
-                    })
-                ) {
+                if (contributionId && !contributions.some(el => el.id === contributionId)) {
                     throw new Error('Contribution not found');
                 }
-                const selected =
-                    contributionId &&
-                    contributions.some(el => {
-                        return el.id === contributionId;
-                    })
-                        ? contributionId
-                        : contributions[0].id;
+                const selected = contributionId && contributions.some(el => el.id === contributionId) ? contributionId : contributions[0].id;
                 setSelectedContribution(selected);
             } catch (error) {
                 console.log(error);
@@ -45,9 +34,8 @@ const useContributions = ({ paperId, contributionId, contributions }) => {
         if (statement.object._class === 'resource') {
             await getResourceStatements(statement.object.id, data, list);
             return list;
-        } else {
-            return list;
         }
+        return list;
     };
 
     useEffect(() => {
@@ -55,7 +43,7 @@ const useContributions = ({ paperId, contributionId, contributions }) => {
             setIsLoading(true);
             if (selectedContribution) {
                 const statement = r.data.statements.find(s => s.subject.id === selectedContribution);
-                //TODO
+                // TODO
                 const subjectId = statement.subject.id;
                 const list = [];
                 for (const r1 of r.data.statements) {
@@ -77,7 +65,7 @@ const useContributions = ({ paperId, contributionId, contributions }) => {
         isLoading,
         isLoadingContributionFailed,
         selectedContribution,
-        contributionData
+        contributionData,
     };
 };
 

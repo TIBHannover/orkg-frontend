@@ -82,7 +82,7 @@ const PaperVersionHeader = props => {
                                         </a>
                                     </small>
                                 </div>
-                            )
+                            ),
                     )}
             </div>
         </>

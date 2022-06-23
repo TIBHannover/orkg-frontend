@@ -70,7 +70,7 @@ function useProvenance() {
                         getContributorInformationById(response[0].object.created_by).then(user => {
                             list.push({ created_at: response[0].object.created_at, created_by: user, doi: response[0].object });
                         });
-                        loadVersions(response[0].object['id'], list);
+                        loadVersions(response[0].object.id, list);
                     } else {
                         setVersions(orderBy(list, ['created_at'], ['desc']));
                     }
@@ -92,7 +92,7 @@ function useProvenance() {
         organizationInfo,
         createdBy,
         versions: orderBy([...contributors, ...versions], ['created_at'], ['desc']), // combining contributors and published with DOI information
-        contributors
+        contributors,
     };
 }
 export default useProvenance;

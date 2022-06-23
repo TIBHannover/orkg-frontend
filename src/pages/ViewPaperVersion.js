@@ -12,11 +12,11 @@ import {
     ButtonDropdown,
     DropdownToggle,
     DropdownMenu,
-    DropdownItem
+    DropdownItem,
 } from 'reactstrap';
 import NotFound from 'pages/NotFound';
 import ContentLoader from 'react-content-loader';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import Contributions from 'components/ViewPaperVersion/ContributionsVersion/Contributions';
 import useViewPaperVersion from 'components/ViewPaperVersion/hooks/useViewPaperVersion';
 import PaperVersionHeader from 'components/ViewPaperVersion/PaperVersionHeader';
@@ -33,7 +33,6 @@ import { reverse } from 'named-urls';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { Link } from 'react-router-dom';
 
 const ViewPaperVersion = () => {
     const { resourceId } = useParams();
@@ -44,7 +43,7 @@ const ViewPaperVersion = () => {
     const dataCiteDoi = useSelector(state => state.viewPaper.dataCiteDoi);
 
     const { isLoading, isLoadingFailed, contributions } = useViewPaperVersion({
-        paperId: resourceId
+        paperId: resourceId,
     });
 
     return (
@@ -144,7 +143,7 @@ const ViewPaperVersion = () => {
                                         text={`${window.location.href}`}
                                         onCopy={() => {
                                             toast.dismiss();
-                                            toast.success(`Paper link copied!`);
+                                            toast.success('Paper link copied!');
                                         }}
                                     >
                                         <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
@@ -161,7 +160,7 @@ const ViewPaperVersion = () => {
                                         text={`https://doi.org/${dataCiteDoi.label}`}
                                         onCopy={() => {
                                             toast.dismiss();
-                                            toast.success(`DOI link copied!`);
+                                            toast.success('DOI link copied!');
                                         }}
                                     >
                                         <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
