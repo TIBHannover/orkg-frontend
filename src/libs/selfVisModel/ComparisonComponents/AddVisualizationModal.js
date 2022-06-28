@@ -40,7 +40,6 @@ const TabButton = styled.div`
 `;
 
 function AddVisualizationModal(props) {
-    const [callingTimeoutCount, setCallingTimeoutCount] = useState(0);
     const [processStep, setProcessStep] = useState(0);
     const [windowHeight, setWindowHeight] = useState(0);
     const [windowWidth, setWindowWidth] = useState(0);
@@ -51,19 +50,12 @@ function AddVisualizationModal(props) {
     const prevShowDialog = usePrevious(props.showDialog);
 
     const updateDimensions = () => {
-        // test
         const offset = 300;
-        let width = 800;
-        // try to find the element int the dom
         const modalBody = document.getElementById('selfVisServiceModalBody');
+        let width = 800;
+
         if (modalBody) {
             width = modalBody.getBoundingClientRect().width;
-        } else {
-            // using a timeout to force an update when the modalBody is present and provides its width
-            if (callingTimeoutCount < 10) {
-                setTimeout(setTimeout(updateDimensions, 500));
-                setCallingTimeoutCount(callingTimeoutCount + 1);
-            }
         }
         setWindowHeight(window.innerHeight - offset);
         setWindowWidth(width);
@@ -76,7 +68,6 @@ function AddVisualizationModal(props) {
         return () => {
             window.removeEventListener('resize', updateDimensions);
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
