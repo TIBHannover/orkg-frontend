@@ -1,7 +1,6 @@
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
-import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from 'constants/graphSettings';
 import Video from 'components/ValuePlugins/Video/Video';
 import moment from 'moment';
@@ -40,9 +39,9 @@ function ComparisonMetaData(props) {
                                 <div className="mb-1" style={{ lineHeight: 1.5 }}>
                                     <small>
                                         DOI:{' '}
-                                        <i>
-                                            <ValuePlugins type="literal">{props.metaData.doi}</ValuePlugins>
-                                        </i>
+                                        <a href={`https://doi.org/${props.metaData.doi}`} target="_blank" rel="noopener noreferrer">
+                                            https://doi.org/{props.metaData.doi}
+                                        </a>
                                     </small>
                                 </div>
                             )}

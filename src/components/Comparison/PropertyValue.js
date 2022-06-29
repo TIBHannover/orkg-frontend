@@ -88,7 +88,7 @@ const PropertyValue = ({
                         <DescriptionTooltip
                             id={property?.id}
                             typeId={ENTITIES.PREDICATE}
-                            extraContent={similar && similar.length ? `This property is merged with : ${similar.join(', ')}` : ''}
+                            extraContent={similar && similar.length ? `This property is merged with: ${similar.join(', ')}` : ''}
                         >
                             <div className={grouped ? 'ms-2' : ''}>
                                 {grouped && <Icon icon={faLevelUpAlt} rotation={90} className="me-2" />}

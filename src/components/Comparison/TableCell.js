@@ -167,6 +167,7 @@ const TableCell = props => {
                                             arrow={true}
                                             disabled={date.pathLabels?.length <= 1}
                                             interactive={true}
+                                            appendTo={document.body}
                                         >
                                             <div
                                                 className="btn-link"
@@ -188,6 +189,7 @@ const TableCell = props => {
                                             arrow={true}
                                             disabled={date.pathLabels?.length <= 1}
                                             interactive={true}
+                                            appendTo={document.body}
                                         >
                                             <span>
                                                 <ValuePlugins type="literal" options={{ inModal: true }}>
