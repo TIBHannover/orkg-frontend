@@ -119,7 +119,7 @@ const PaperHeader = props => {
                         <small>
                             DOI:{' '}
                             <a href={`https://doi.org/${viewPaper.doi.label}`} target="_blank" rel="noopener noreferrer">
-                                {viewPaper.doi.label}
+                                https://doi.org/{viewPaper.doi.label}
                             </a>
                         </small>
                     </div>
