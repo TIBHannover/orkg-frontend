@@ -124,6 +124,7 @@ export const MISC = {
     RESEARCH_FIELD_MAIN: 'R11',
     DEFAULT_LITERAL_DATATYPE: 'xsd:string',
     UNKNOWN_ID: '00000000-0000-0000-0000-000000000000',
+    EMPTY_RESOURCE: 'empty',
 };
 
 /* entities usually are returned by the backend (in _class) to specify the type of node  */
