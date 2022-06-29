@@ -51,7 +51,7 @@ const CsvImport = () => {
             CSV import
             <Tippy content="Open help center">
                 <span className="ms-3">
-                    <a href="https://www.orkg.org/orkg/help-center/article/16/Import_CSV_files_in_ORKG" target="_blank" rel="noopener noreferrer">
+                    <a href="https://www.orkg.org/help-center/article/16/Import_CSV_files_in_ORKG" target="_blank" rel="noopener noreferrer">
                         <Icon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1, marginTop: -4 }} className="text-secondary p-0" />
                     </a>
                 </span>
@@ -64,7 +64,7 @@ const CsvImport = () => {
             <StepContainer step="1" title={title} bottomLine active>
                 <Alert color="info" fade={false}>
                     With this tool, you can import a CSV file with papers to the ORKG. Make sure to have a look at the{' '}
-                    <a href="https://www.orkg.org/orkg/help-center/article/16/Import_CSV_files_in_ORKG" target="_blank" rel="noopener noreferrer">
+                    <a href="https://www.orkg.org/help-center/article/16/Import_CSV_files_in_ORKG" target="_blank" rel="noopener noreferrer">
                         help guide
                     </a>{' '}
                     for formatting your CSV file
