@@ -12,66 +12,66 @@ const Timeline = ({ versions, paperResource, isLoadingContributors }) => (
         <div className="pt-3 pb-3 ps-3 pe-3">
             {!isLoadingContributors &&
                 versions?.length > 0 &&
-                versions.map((contributor, index) => (
+                versions.map((version, index) => (
                     <StyledActivity key={`prov-${index}`} className="ps-3 pb-3">
-                        <div className="time">{moment(contributor.created_at).format('DD MMM YYYY')}</div>
+                        <div className="time">{moment(version.created_at).format('DD MMM YYYY')}</div>
                         <div>
-                            {paperResource.created_by && contributor.created_by === paperResource.created_by && (
+                            {paperResource.created_by && version.created_by === paperResource.created_by && (
                                 <>
                                     Added by{' '}
                                     <Link
                                         to={reverse(ROUTES.USER_PROFILE, {
-                                            userId: contributor.created_by,
+                                            userId: version.created_by,
                                         })}
                                     >
-                                        <b>{contributor.created_by.display_name}</b>
+                                        <b>{version.created_by.display_name}</b>
                                     </Link>
                                 </>
                             )}
 
-                            {paperResource.created_by && contributor.doi && (
+                            {paperResource.created_by && version.publishedResource && (
                                 <>
                                     Published by{' '}
-                                    {contributor.created_by !== MISC.UNKNOWN_ID ? (
+                                    {version.created_by !== MISC.UNKNOWN_ID ? (
                                         <>
                                             <Link
                                                 to={reverse(ROUTES.USER_PROFILE, {
-                                                    userId: contributor.created_by,
+                                                    userId: version.created_by,
                                                 })}
                                             >
-                                                <b>{contributor.created_by.display_name}</b>
+                                                <b>{version.created_by.display_name}</b>
                                             </Link>
                                             <br />
                                             <small>
                                                 DOI:{' '}
                                                 <Link
                                                     to={reverse(ROUTES.VIEW_PAPER, {
-                                                        resourceId: contributor.doi.id,
+                                                        resourceId: version.publishedResource.id,
                                                     })}
                                                 >
-                                                    <b>{`${env('DATACITE_DOI_PREFIX')}/${contributor.doi.id}`}</b>
+                                                    <b>{`${env('DATACITE_DOI_PREFIX')}/${version.publishedResource.id}`}</b>
                                                 </Link>
                                             </small>
                                         </>
                                     ) : (
-                                        <b>{contributor.created_by.display_name}</b>
+                                        <b>{version.created_by.display_name}</b>
                                     )}
                                 </>
                             )}
 
-                            {paperResource.created_by && contributor.created_by !== paperResource.created_by && !contributor.doi && (
+                            {paperResource.created_by && version.created_by !== paperResource.created_by && !version.publishedResource && (
                                 <>
                                     Updated by{' '}
-                                    {contributor.created_by !== MISC.UNKNOWN_ID ? (
+                                    {version.created_by !== MISC.UNKNOWN_ID ? (
                                         <Link
                                             to={reverse(ROUTES.USER_PROFILE, {
-                                                userId: contributor.created_by,
+                                                userId: version.created_by,
                                             })}
                                         >
-                                            <b>{contributor.created_by.display_name}</b>
+                                            <b>{version.created_by.display_name}</b>
                                         </Link>
                                     ) : (
-                                        <b>{contributor.created_by.display_name}</b>
+                                        <b>{version.created_by.display_name}</b>
                                     )}
                                 </>
                             )}

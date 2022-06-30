@@ -22,11 +22,11 @@ function useProvenance() {
         const loadContributors = () => {
             setIsLoadingContributors(true);
             getContributorsByResourceId(paperResource.id)
-                .then(contributors => {
-                    setContributors(contributors ? contributors.reverse() : []);
+                .then(result => {
+                    setContributors(result ? result.reverse() : []);
                     setIsLoadingContributors(false);
                 })
-                .catch(error => {
+                .catch(() => {
                     setIsLoadingContributors(false);
                 });
         };
@@ -34,12 +34,12 @@ function useProvenance() {
             setIsLoadingProvenance(true);
             const observatoryCall =
                 paperResource.observatory_id !== MISC.UNKNOWN_ID
-                    ? getObservatoryById(paperResource.observatory_id).catch(e => null)
+                    ? getObservatoryById(paperResource.observatory_id).catch(() => null)
                     : Promise.resolve(null);
 
             const organizationCall =
                 paperResource.organization_id !== MISC.UNKNOWN_ID
-                    ? getOrganization(paperResource.organization_id).catch(e => null)
+                    ? getOrganization(paperResource.organization_id).catch(() => null)
                     : Promise.resolve(null);
 
             Promise.all([observatoryCall, organizationCall])
@@ -57,7 +57,7 @@ function useProvenance() {
                     .then(creator => {
                         setCreatedBy(creator);
                     })
-                    .catch(e => setCreatedBy(null));
+                    .catch(() => setCreatedBy(null));
             } else {
                 setCreatedBy(null);
             }
@@ -68,14 +68,14 @@ function useProvenance() {
                 .then(response => {
                     if (response.length > 0) {
                         getContributorInformationById(response[0].object.created_by).then(user => {
-                            list.push({ created_at: response[0].object.created_at, created_by: user, doi: response[0].object });
+                            list.push({ created_at: response[0].object.created_at, created_by: user, publishedResource: response[0].object });
                         });
                         loadVersions(response[0].object.id, list);
                     } else {
-                        setVersions(orderBy(list, ['created_at'], ['desc']));
+                        setVersions(list);
                     }
                 })
-                .catch(e => setVersions(null));
+                .catch(() => setVersions(null));
         };
 
         loadContributors();
@@ -91,7 +91,7 @@ function useProvenance() {
         observatoryInfo,
         organizationInfo,
         createdBy,
-        versions: orderBy([...contributors, ...versions], ['created_at'], ['desc']), // combining contributors and published with DOI information
+        versions: orderBy([...contributors, ...versions], ['created_at'], ['desc']), // combining contributors and version with DOI information
         contributors,
     };
 }
