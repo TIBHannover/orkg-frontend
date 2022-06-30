@@ -262,7 +262,7 @@ function Resource(props) {
                                                     <a
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        href="https://www.orkg.org/orkg/help-center/article/20/ORKG_Research_fields_taxonomy"
+                                                        href="https://www.orkg.org/help-center/article/20/ORKG_Research_fields_taxonomy"
                                                     >
                                                         ORKG help center
                                                     </a>{' '}

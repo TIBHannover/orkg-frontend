@@ -144,11 +144,7 @@ function ObservatoriesCarousel(props) {
                         No observatories yet
                         <br />
                         <small>
-                            <a
-                                href="https://www.orkg.org/orkg/help-center/article/8/Observatories_for_specific_research_fields"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
+                            <a href="https://orkg.org/about/27/Observatories" target="_blank" rel="noopener noreferrer">
                                 How observatories are managed?
                             </a>
                         </small>

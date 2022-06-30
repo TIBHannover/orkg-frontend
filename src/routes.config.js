@@ -371,7 +371,7 @@ const routes = [
     {
         path: ROUTES.CURATION_CALL,
         element: () => {
-            window.location.replace('https://www.orkg.org/orkg/about/28/Curation_Grants');
+            window.location.replace('https://www.orkg.org/about/28/Curation_Grants');
             return null;
         },
     },

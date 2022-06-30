@@ -94,11 +94,7 @@ const Template = () => {
                 titleAddition={
                     <Tippy content="Open help center">
                         <span>
-                            <a
-                                href="https://www.orkg.org/orkg/help-center/article/9/Templates_for_structuring_contribution_descriptions"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
+                            <a href="https://orkg.org/about/19/Templates" target="_blank" rel="noopener noreferrer">
                                 <Icon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1 }} className="text-secondary p-0" />
                             </a>
                         </span>

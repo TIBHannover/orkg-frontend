@@ -160,7 +160,7 @@ class ContributionsHelpTour extends Component {
                             title="ORKG - How to add contribution data"
                         />
                         <hr />
-                        <a href="https://www.orkg.org/orkg/paper/R8186" target="_blank" rel="noopener noreferrer">
+                        <a href="https://www.orkg.org/paper/R8186" target="_blank" rel="noopener noreferrer">
                             View paper that has been used in this example <Icon size="sm" icon={faExternalLinkAlt} />
                         </a>
                     </ModalBody>

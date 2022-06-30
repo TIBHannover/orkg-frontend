@@ -406,7 +406,7 @@ function Benchmark() {
                                 No papers that addresses {problemData.label} on {resourceData.label} yet.
                                 <div className="pt-3">
                                     Add your benchmark dataset and its evaluations to the ORKG by following the steps found in the{' '}
-                                    <a href="https://www.orkg.org/orkg/help-center/article/21/Benchmarks" target="_blank" rel="noopener noreferrer">
+                                    <a href="https://orkg.org/about/18/Benchmarks" target="_blank" rel="noopener noreferrer">
                                         ORKG help center
                                     </a>
                                     .

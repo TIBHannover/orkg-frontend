@@ -31,7 +31,7 @@ const AddComparison = () => {
                     <Col md="8">
                         Comparisons in ORKG provide an overview of state-of-the-art literature for a particular topic. Comparisons are dynamic and
                         FAIR. A comparison is created from contributions,{' '}
-                        <a href="https://www.orkg.org/orkg/comparison/R44930" target="_blank" rel="noreferrer">
+                        <a href="https://www.orkg.org/comparison/R44930" target="_blank" rel="noreferrer">
                             view example of comparison <Icon icon={faExternalLinkAlt} />
                         </a>
                         . To create your own comparisons in ORKG, you can either import existing data (via CSV import) or start from scratch by adding
