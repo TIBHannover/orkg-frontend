@@ -67,10 +67,7 @@ export default function Home() {
                 </Col>
                 <Col md="4">
                     <TwitterTimeline />
-
-                    <div className="mt-3 box rounded d-flex flex-column overflow-hidden">
-                        <News />
-                    </div>
+                    <News />
 
                     <div className="mt-3 box rounded d-flex flex-column overflow-hidden">
                         <Benefits />
