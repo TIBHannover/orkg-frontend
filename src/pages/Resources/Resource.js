@@ -11,13 +11,11 @@ import NotFound from 'pages/NotFound';
 import { useLocation, Link, useParams } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes.js';
-import { connect, useSelector } from 'react-redux';
-import { resetStatementBrowser } from 'slices/statementBrowserSlice';
+import { useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
-import PropTypes from 'prop-types';
 import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import env from '@beam-australia/react-env';
@@ -101,7 +99,7 @@ const DEDICATED_PAGE_LINKS = {
         routeParams: 'id',
     },
 };
-function Resource(props) {
+function Resource() {
     const params = useParams();
     const resourceId = params.id;
     const location = useLocation();
@@ -365,15 +363,4 @@ function Resource(props) {
     );
 }
 
-Resource.propTypes = {
-    resetStatementBrowser: PropTypes.func.isRequired,
-};
-
-const mapDispatchToProps = dispatch => ({
-    resetStatementBrowser: data => dispatch(resetStatementBrowser()),
-});
-
-export default connect(
-    null,
-    mapDispatchToProps,
-)(Resource);
+export default Resource;

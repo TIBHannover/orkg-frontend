@@ -19,10 +19,6 @@ import { Helmet } from 'react-helmet';
 import moment from 'moment';
 import TitleBar from 'components/TitleBar/TitleBar';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import { Alert } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
 
 const ViewPaper = () => {
     const { resourceId } = useParams();
@@ -144,20 +140,6 @@ const ViewPaper = () => {
                                 <rect x="24" y="6" rx="1" ry="1" width="10" height="2" />
                                 <rect x="36" y="6" rx="1" ry="1" width="10" height="2" />
                             </ContentLoader>
-                        )}
-                        {!isLoading && (
-                            <>
-                                {viewPaper.hasVersion && (
-                                    <Alert color="warning" className="container d-flex">
-                                        <div className="flex-grow-1">
-                                            A published version of this paper is available.{' '}
-                                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: viewPaper.hasVersion.id })}>
-                                                View published version
-                                            </Link>
-                                        </div>
-                                    </Alert>
-                                )}
-                            </>
                         )}
                         {!isLoading && !isLoadingFailed && (
                             <>
