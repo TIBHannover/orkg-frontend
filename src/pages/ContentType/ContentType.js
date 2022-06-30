@@ -113,7 +113,7 @@ function ContentType() {
                                     </h3>
                                 </div>
                             ) : (
-                                <EditableHeader id={params.id} value={resource.label} onChange={handleHeaderChange} />
+                                <EditableHeader id={params.id} value={resource.label} onChange={handleHeaderChange} entityType="resource" />
                             )}
                         </div>
                         <hr />

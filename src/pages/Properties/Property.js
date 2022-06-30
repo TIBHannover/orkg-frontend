@@ -13,8 +13,9 @@ import { ENTITIES } from 'constants/graphSettings';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ItemMetadata from 'components/Search/ItemMetadata';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import EditableHeader from 'components/EditableHeader';
 
-function Property(props) {
+function Property() {
     const location = useLocation();
     const [error, setError] = useState(null);
     const [property, setProperty] = useState('');
@@ -41,6 +42,10 @@ function Property(props) {
         };
         findPredicate();
     }, [location, propertyId]);
+
+    const handleHeaderChange = value => {
+        setProperty(prev => ({ ...prev, label: value }));
+    };
 
     return (
         <>
@@ -72,13 +77,23 @@ function Property(props) {
                     <Container className="p-0 clearfix">
                         <EditModeHeader isVisible={editMode} />
                         <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
-                            <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                {property?.label || (
-                                    <i>
-                                        <small>No label</small>
-                                    </i>
-                                )}
-                            </h3>
+                            {!editMode ? (
+                                <h3 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                    {property?.label || (
+                                        <i>
+                                            <small>No label</small>
+                                        </i>
+                                    )}
+                                </h3>
+                            ) : (
+                                <EditableHeader
+                                    id={params.id}
+                                    value={property?.label}
+                                    onChange={handleHeaderChange}
+                                    entityType="property"
+                                    curatorsOnly={true}
+                                />
+                            )}
                             <ItemMetadata item={property} showCreatedAt={true} showCreatedBy={true} />
                             <hr />
                             <h3 className="h5">Statements</h3>

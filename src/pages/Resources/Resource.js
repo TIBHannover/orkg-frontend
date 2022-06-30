@@ -304,7 +304,7 @@ function Resource(props) {
                             </h3>
                         ) : (
                             <>
-                                <EditableHeader id={params.id} value={resource.label} onChange={handleHeaderChange} />
+                                <EditableHeader id={params.id} value={resource.label} onChange={handleHeaderChange} entityType="resource" />
                                 {showDeleteButton && (
                                     <ConditionalWrapper
                                         condition={!canBeDeleted}
