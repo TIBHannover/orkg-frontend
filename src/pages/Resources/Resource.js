@@ -183,8 +183,8 @@ function Resource(props) {
         setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && !hasObjectStatement);
     }, [values, properties, hasObjectStatement]);
 
-    const handleHeaderChange = event => {
-        setResource(prev => ({ ...prev, label: event.value }));
+    const handleHeaderChange = val => {
+        setResource(prev => ({ ...prev, label: val }));
     };
 
     const getDedicatedLink = useCallback(() => {

@@ -69,8 +69,8 @@ function ContentType() {
         );
     };
 
-    const handleHeaderChange = event => {
-        setResource(prev => ({ ...prev, label: event.value }));
+    const handleHeaderChange = val => {
+        setResource(prev => ({ ...prev, label: val }));
     };
 
     if (!isLoading && !user && editMode) {
