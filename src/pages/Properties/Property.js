@@ -90,7 +90,7 @@ function Property() {
                                     id={params.id}
                                     value={property?.label}
                                     onChange={handleHeaderChange}
-                                    entityType="property"
+                                    entityType={ENTITIES.PREDICATE}
                                     curatorsOnly={true}
                                 />
                             )}

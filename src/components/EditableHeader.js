@@ -2,6 +2,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import CuratorModal from 'components/CuratorModal/CuratorModal';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { StyledButton } from 'components/StatementBrowser/styled';
+import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -21,9 +22,9 @@ const EditableHeader = ({ entityType, id, onChange, curatorsOnly = false, value 
         setIsLoading(true);
 
         try {
-            if (entityType === 'resource') {
+            if (entityType === ENTITIES.RESOURCE) {
                 await updateResource(id, label);
-            } else if (entityType === 'property') {
+            } else if (entityType === ENTITIES.PREDICATE) {
                 await updatePredicate(id, label);
             }
             toast.success('Label updated successfully');
@@ -82,7 +83,7 @@ EditableHeader.propTypes = {
     id: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
-    entityType: PropTypes.oneOf(['resource', 'property']),
+    entityType: PropTypes.oneOf([ENTITIES.RESOURCE, ENTITIES.PREDICATE]),
     curatorsOnly: PropTypes.bool,
 };
 

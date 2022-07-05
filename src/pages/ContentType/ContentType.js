@@ -7,6 +7,7 @@ import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { upperFirst } from 'lodash';
 import { reverse } from 'named-urls';
@@ -113,7 +114,7 @@ function ContentType() {
                                     </h3>
                                 </div>
                             ) : (
-                                <EditableHeader id={params.id} value={resource.label} onChange={handleHeaderChange} entityType="resource" />
+                                <EditableHeader id={params.id} value={resource.label} onChange={handleHeaderChange} entityType={ENTITIES.RESOURCE} />
                             )}
                         </div>
                         <hr />
