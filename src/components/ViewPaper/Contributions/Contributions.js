@@ -1,13 +1,12 @@
 import { Alert, Col, Container, FormGroup, Row } from 'reactstrap';
 import ContentLoader from 'react-content-loader';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import ContributionComparisons from 'components/ViewPaper/ContirbutionComparisons/ContributionComparisons';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import { reverse } from 'named-urls';
-import styled from 'styled-components';
 import AddToComparison from 'components/PaperCard/AddToComparison';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
@@ -18,20 +17,6 @@ import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import Tabs, { TabPane } from 'rc-tabs';
 import SimilarContributions from '../SimilarContributions';
 import useContributions from './hooks/useContributions';
-
-const Title = styled.div`
-    font-size: 18px;
-    font-weight: 500;
-    margin-top: 30px;
-    margin-bottom: 5px;
-
-    a {
-        margin-left: 15px;
-        span {
-            font-size: 80%;
-        }
-    }
-`;
 
 const Contributions = props => {
     const { resourceId, contributionId } = useParams();
@@ -144,56 +129,12 @@ const Contributions = props => {
                                                     )}
                                                 </FormGroup>
 
-                                                <div>
-                                                    <Title>Similar contributions</Title>
-                                                    {isSimilarContributionsLoading && (
-                                                        <div>
-                                                            <ContentLoader
-                                                                height="100%"
-                                                                width="100%"
-                                                                viewBox="0 0 100 10"
-                                                                style={{ width: '100% !important' }}
-                                                                speed={2}
-                                                                backgroundColor="#f3f3f3"
-                                                                foregroundColor="#ecebeb"
-                                                            >
-                                                                <rect x="0" y="0" rx="2" ry="2" width="32" height="10" />
-                                                                <rect x="33" y="0" rx="2" ry="2" width="32" height="10" />
-                                                                <rect x="66" y="0" rx="2" ry="2" width="32" height="10" />
-                                                            </ContentLoader>
-                                                        </div>
-                                                    )}
-                                                    {!isSimilarContributionsLoading && (
-                                                        <>
-                                                            {!isSimilarContributionsFailedLoading ? (
-                                                                <SimilarContributions similarContributions={similarContributions.slice(0, 3)} />
-                                                            ) : (
-                                                                <Alert color="light">
-                                                                    Failed to connect to the similarity service, please try again later
-                                                                </Alert>
-                                                            )}
-                                                        </>
-                                                    )}
-                                                    {similarContributions.length > 0 && (
-                                                        <Link
-                                                            className="clearfix"
-                                                            to={`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${
-                                                                contribution.id
-                                                            },${similarContributions
-                                                                .slice(0, 3)
-                                                                .map(s => s.contributionId)
-                                                                .join(',')}`}
-                                                        >
-                                                            {/* TODO: use constants for URL */}
-                                                            <span
-                                                                style={{ margin: '7px 5px 0 0', fontSize: '95%' }}
-                                                                className="float-end btn btn-link p-0 border-0 align-baseline"
-                                                            >
-                                                                Compare these contributions
-                                                            </span>
-                                                        </Link>
-                                                    )}
-                                                </div>
+                                                <SimilarContributions
+                                                    similarContributions={similarContributions.slice(0, 3)}
+                                                    isLoading={isSimilarContributionsLoading}
+                                                    isFailed={isSimilarContributionsFailedLoading}
+                                                    contributionId={contribution.id}
+                                                />
 
                                                 {contribution.id && <ContributionComparisons contributionId={contribution.id} />}
                                             </div>
