@@ -15,7 +15,7 @@ import { connect, useSelector } from 'react-redux';
 import { resetStatementBrowser } from 'slices/statementBrowserSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
@@ -183,8 +183,8 @@ function Resource(props) {
         setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && !hasObjectStatement);
     }, [values, properties, hasObjectStatement]);
 
-    const handleHeaderChange = event => {
-        setResource(prev => ({ ...prev, label: event.value }));
+    const handleHeaderChange = val => {
+        setResource(prev => ({ ...prev, label: val }));
     };
 
     const getDedicatedLink = useCallback(() => {
@@ -304,7 +304,7 @@ function Resource(props) {
                             </h3>
                         ) : (
                             <>
-                                <EditableHeader id={params.id} value={resource.label} onChange={handleHeaderChange} />
+                                <EditableHeader id={params.id} value={resource.label} onChange={handleHeaderChange} entityType={ENTITIES.RESOURCE} />
                                 {showDeleteButton && (
                                     <ConditionalWrapper
                                         condition={!canBeDeleted}
