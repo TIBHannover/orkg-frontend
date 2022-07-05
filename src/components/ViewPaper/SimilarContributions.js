@@ -133,11 +133,9 @@ const SimilarContributions = ({ similarContributions = [], isLoading, contributi
                 <Link
                     className="clearfix"
                     to={`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionId},${similarContributions
-                        .slice(0, 3)
                         .map(s => s.contributionId)
                         .join(',')}`}
                 >
-                    {/* TODO: use constants for URL */}
                     <span style={{ margin: '7px 5px 0 0', fontSize: '95%' }} className="float-end btn btn-link p-0 border-0 align-baseline">
                         Compare these contributions
                     </span>
