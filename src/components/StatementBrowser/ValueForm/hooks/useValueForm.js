@@ -20,7 +20,7 @@ import { getConfigByType, getConfigByClassId } from 'constants/DataTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { guid } from 'utils';
 import { toast } from 'react-toastify';
-import { ENTITIES, CLASSES, MISC } from 'constants/graphSettings';
+import { ENTITIES, CLASSES, MISC, RESOURCES } from 'constants/graphSettings';
 import validationSchema from '../helpers/validationSchema';
 
 const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
@@ -247,7 +247,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                             apiCall = createClass(value.label);
                             break;
                         case 'empty':
-                            apiCall = getResource(MISC.EMPTY_RESOURCE);
+                            apiCall = getResource(RESOURCES.EMPTY_RESOURCE);
                             _class = ENTITIES.RESOURCE;
                             break;
                         default:

@@ -1,7 +1,7 @@
 import { url } from 'constants/misc';
 import { submitGetRequest, submitPostRequest, submitDeleteRequest, submitPutRequest } from 'network';
 import queryString from 'query-string';
-import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
+import { PREDICATES, MISC, CLASSES, RESOURCES } from 'constants/graphSettings';
 import { filterStatementsBySubjectId, getTemplateComponentData, filterObjectOfStatementsByPredicateAndClass, sortMethod } from 'utils';
 
 export const statementsUrl = `${url}statements/`;
@@ -282,7 +282,7 @@ export const getTemplateById = async templateId => {
  * @param {String} researchFieldId research field Id
  */
 export const getParentResearchFields = (researchFieldId, parents = []) => {
-    if (researchFieldId === MISC.RESEARCH_FIELD_MAIN) {
+    if (researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN) {
         parents.push({ id: researchFieldId, label: 'Research Field' });
         return Promise.resolve(parents);
     }

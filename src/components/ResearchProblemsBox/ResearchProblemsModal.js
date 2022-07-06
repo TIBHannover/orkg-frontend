@@ -1,7 +1,7 @@
 import ContentLoader from 'react-content-loader';
 import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
 import ResearchProblemCard from 'components/ResearchProblemsBox/ResearchProblemCard';
-import { MISC } from 'constants/graphSettings';
+import { RESOURCES } from 'constants/graphSettings';
 import { FormGroup, Label, Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -40,7 +40,7 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
                             {isCurationAllowed && <option value="unlisted">Unlisted</option>}
                         </Input>
                     </div>
-                    {id !== MISC.RESEARCH_FIELD_MAIN && by === 'ResearchField' && (
+                    {id !== RESOURCES.RESEARCH_FIELD_MAIN && by === 'ResearchField' && (
                         <div className="d-flex rounded" style={{ fontSize: '0.875rem', padding: '0.25rem 0' }}>
                             <FormGroup check className="mb-0">
                                 <Label check className="mb-0">

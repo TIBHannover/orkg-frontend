@@ -4,7 +4,7 @@ import Papers from 'components/ResearchField/Papers';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import ResearchFieldSelector from 'components/ResearchFieldSelector/ResearchFieldSelector';
 import { getResearchFieldsStats } from 'services/backend/stats';
-import { MISC } from 'constants/graphSettings';
+import { RESOURCES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useCallback, useEffect, useState } from 'react';
@@ -54,7 +54,7 @@ const ResearchFields = () => {
                             <Icon icon={faEllipsisV} />
                         </DropdownToggle>
                         <DropdownMenu end>
-                            <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: MISC.RESEARCH_FIELD_MAIN })}>
+                            <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: RESOURCES.RESEARCH_FIELD_MAIN })}>
                                 View resource
                             </DropdownItem>
                         </DropdownMenu>
@@ -100,7 +100,7 @@ const ResearchFields = () => {
                                 <>
                                     <div className="d-flex justify-content-between align-items-start mb-3">
                                         <h2 className="h5">{researchFieldLabel} papers</h2>
-                                        {selectedResearchField !== MISC.RESEARCH_FIELD_MAIN && (
+                                        {selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN && (
                                             <Button
                                                 tag={Link}
                                                 to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
