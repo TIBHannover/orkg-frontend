@@ -78,7 +78,7 @@ const Observatory = () => {
                 <>
                     <Breadcrumbs researchFieldId={researchField?.id} />
                     <TitleBar
-                        titleAddition={<SubTitle>{label}</SubTitle>}
+                        titleAddition={<SubTitle>Observatory</SubTitle>}
                         buttonGroup={
                             !!user &&
                             user.isCurationAllowed && (
@@ -89,7 +89,7 @@ const Observatory = () => {
                         }
                         wrap={false}
                     >
-                        Observatory
+                        {label}
                     </TitleBar>
                     {description && (
                         <Container className="box rounded py-3 px-4 mb-4" style={{ whiteSpace: 'pre-wrap' }}>
