@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, MISC, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { omit, isString } from 'lodash';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { getPaperByDOI } from 'services/backend/misc';
@@ -90,7 +90,7 @@ const useImportBulkData = ({ data, onFinish }) => {
             let publicationYear = getFirstValue(rowObject, 'paper:publication_year');
             const doi = getFirstValue(rowObject, 'paper:doi');
             const url = getFirstValue(rowObject, 'paper:url');
-            let researchField = getFirstValue(rowObject, 'paper:research_field', MISC.RESEARCH_FIELD_MAIN);
+            let researchField = getFirstValue(rowObject, 'paper:research_field', RESOURCES.RESEARCH_FIELD_MAIN);
             let publishedIn = getFirstValue(rowObject, 'paper:published_in');
             let paperMetadata = null;
             if (doi) {

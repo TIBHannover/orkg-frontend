@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getChangelogs } from 'services/backend/stats';
 import { orderBy } from 'lodash';
-import { MISC } from 'constants/graphSettings';
+import { RESOURCES } from 'constants/graphSettings';
 
 function useTopChangelog({ researchFieldId, pageSize = 30, sortBy = 'createdAt', desc = true }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -15,10 +15,10 @@ function useTopChangelog({ researchFieldId, pageSize = 30, sortBy = 'createdAt',
         page => {
             setIsLoading(true);
             getChangelogs({
-                researchFieldId: researchFieldId === MISC.RESEARCH_FIELD_MAIN ? null : researchFieldId,
+                researchFieldId: researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN ? null : researchFieldId,
                 page,
                 items: pageSize,
-                sortBy: researchFieldId === MISC.RESEARCH_FIELD_MAIN ? null : sortBy,
+                sortBy: researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN ? null : sortBy,
                 desc,
             })
                 .then(result => {

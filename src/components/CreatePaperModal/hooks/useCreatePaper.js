@@ -1,4 +1,4 @@
-import { MISC, PREDICATES } from 'constants/graphSettings';
+import { RESOURCES, PREDICATES } from 'constants/graphSettings';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { saveFullPaper } from 'services/backend/papers';
@@ -30,7 +30,7 @@ const useCreatePaper = () => {
             })),
             publicationMonth: month,
             publicationYear: year,
-            researchField: researchField?.id || MISC.RESEARCH_FIELD_MAIN,
+            researchField: researchField?.id || RESOURCES.RESEARCH_FIELD_MAIN,
             url,
             publishedIn,
             contributions: [

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { MISC } from 'constants/graphSettings';
+import { RESOURCES } from 'constants/graphSettings';
 import ContentLoader from 'react-content-loader';
 import CardFactory from 'components/CardFactory/CardFactory';
 import useResearchFieldContent from 'components/ResearchField/hooks/useResearchFieldContent';
@@ -29,7 +29,7 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
     return (
         <div className="pt-2 pb-3">
             <div className="d-flex justify-content-end mb-2 me-2">
-                {researchFieldId !== MISC.RESEARCH_FIELD_MAIN && (
+                {researchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN && (
                     <div className="d-flex me-2 rounded" style={{ fontSize: '0.875rem', padding: '0.25rem 1.25rem' }}>
                         <FormGroup check className="mb-0">
                             <Label check className="mb-0">
@@ -81,7 +81,7 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
                             <Button
                                 tag={Link}
                                 to={
-                                    researchFieldId !== MISC.RESEARCH_FIELD_MAIN
+                                    researchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN
                                         ? `${reverseWithSlug(ROUTES.RESEARCH_FIELD, {
                                               researchFieldId,
                                               slug: researchFieldLabel,

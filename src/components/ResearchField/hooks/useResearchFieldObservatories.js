@@ -6,7 +6,7 @@ import {
     getUsersByObservatoryId,
 } from 'services/backend/observatories';
 import { getAllOrganizations } from 'services/backend/organizations';
-import { MISC } from 'constants/graphSettings';
+import { RESOURCES } from 'constants/graphSettings';
 import { set, orderBy } from 'lodash';
 
 function useResearchFieldObservatories({ researchFieldId }) {
@@ -19,7 +19,7 @@ function useResearchFieldObservatories({ researchFieldId }) {
             if (rfId) {
                 setIsLoading(true);
                 let obsCalls;
-                if (researchFieldId !== MISC.RESEARCH_FIELD_MAIN) {
+                if (researchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN) {
                     const observatories = getObservatoriesByResearchFieldId(rfId);
                     const obsStats = getObservatoriesStats();
                     const organizations = getAllOrganizations();
@@ -36,7 +36,7 @@ function useResearchFieldObservatories({ researchFieldId }) {
                 obsCalls
                     .then(data => {
                         let observatoriesData;
-                        if (researchFieldId !== MISC.RESEARCH_FIELD_MAIN) {
+                        if (researchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN) {
                             observatoriesData = data[0].map(ob => {
                                 const obsStat = data[1].find(el => el.observatory_id === ob.id);
                                 return { ...ob, ...obsStat, orgs: data[2].filter(o => ob.organization_ids.includes(o.id)) };

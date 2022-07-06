@@ -58,6 +58,7 @@ export default function InputField(props) {
                 </Input>
             </>
         ),
+        empty: <Input value="Value not reported in paper" type="text" bsSize="sm" className="flex-grow-1 d-flex" disabled />,
         default: (
             <>
                 <Input
