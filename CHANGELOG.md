@@ -3,6 +3,25 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.72.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.71.1...v0.72.0) - 2022-07-06
+
+### Changes
+
+- feat(DatatypeSelector): support for 'empty' resource [`#869`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/869)
+- feat(Property): support updating property labels for curators [`#870`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/870)
+- SimilarContributions: hide on error and no results; News: hide when no recent news is available [`#874`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/874)
+- chore: replace react-meta-tags with helmet [`#876`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/876)
+- fix(Comparison): disable save draft for published comparisons [`#877`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/877)
+- docs: update API documentation url [`#868`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/868)
+- fix: follow DOI display guidelines [`#865`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/865)
+- fix(Comparison): tooltip is displayed behind comparison header [`#864`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/864)
+- refactor(Comparison): remove setTimeout for checking window size [`#866`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/866)
+- feat(ViewPaper): show citation count [`#855`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/855)
+- fix: use replace for navigation actions with redirect [`#860`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/860)
+- fix(AddPaper): show new resources in autocomplete [`#862`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/862)
+- Use sandbox in default.env [`#861`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/861)
+
+---
 ## [v0.71.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.71.0...v0.71.1) - 2022-06-16
 
 ### Changes
