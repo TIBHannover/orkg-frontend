@@ -89,7 +89,9 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
     const deleteResearchProblem = async researchProblem => {
         await addResourceToObservatory({ observatory_id: MISC.UNKNOWN_ID, organization_id: MISC.UNKNOWN_ID, id: researchProblem.id })
             .then(_ => {
-                setProblems(v => v.filter(t => t !== researchProblem));
+                const updatedProblems = problems.filter(t => t !== researchProblem);
+                setProblems(updatedProblems);
+                setTotalElements(updatedProblems.length);
                 toast.success('Research problem deleted successfully');
             })
             .catch(() => {
