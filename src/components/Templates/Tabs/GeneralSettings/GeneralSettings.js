@@ -1,20 +1,21 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { FormGroup, Label, FormText, Input } from 'reactstrap';
 import { updateLabel, updatePredicate, updateClass, updateResearchFields, updateResearchProblems } from 'slices/templateEditorSlice';
-import { createPredicate } from 'services/backend/predicates';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { useSelector, useDispatch } from 'react-redux';
-import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
+import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
 
 const GeneralSettings = () => {
     const inputRef = useRef(null);
     const classAutocompleteRef = useRef(null);
     const predicateAutocompleteRef = useRef(null);
-    const { confirmProperty } = useConfirmPropertyModal();
+    const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
+    const [propertyLabel, setPropertyLabel] = useState('');
+
     const dispatch = useDispatch();
     const { templateID, label, predicate, class: clasS, editMode, researchProblems, researchFields } = useSelector(state => state.templateEditor);
 
@@ -26,17 +27,16 @@ const GeneralSettings = () => {
         if (action === 'select-option') {
             dispatch(updatePredicate(selected));
         } else if (action === 'create-option') {
-            const confirmedProperty = await confirmProperty();
-            if (confirmedProperty) {
-                const newPredicate = await createPredicate(selected.label);
-                selected.id = newPredicate.id;
-                dispatch(updatePredicate(selected));
-            }
-            // blur the field allows to focus and open the menu again
-            predicateAutocompleteRef.current && predicateAutocompleteRef.current.blur();
+            setIsOpenConfirmModal(true);
+            setPropertyLabel(selected.label);
         } else if (action === 'clear') {
             dispatch(updatePredicate(null));
         }
+    };
+
+    const handleCreate = ({ id }) => {
+        dispatch(updatePredicate({ label: propertyLabel, id }));
+        setIsOpenConfirmModal(false);
     };
 
     const handleClassSelect = async (selected, { action }) => {
@@ -73,6 +73,14 @@ const GeneralSettings = () => {
 
     return (
         <div className="p-4">
+            {isOpenConfirmModal && (
+                <ConfirmCreatePropertyModal
+                    onCreate={handleCreate}
+                    label={propertyLabel}
+                    toggle={() => setIsOpenConfirmModal(v => !v)}
+                    shouldPerformCreate
+                />
+            )}
             <FormGroup className="mb-4">
                 <Label for="template-name">Name of template</Label>
                 <Input innerRef={inputRef} value={label} onChange={handleChangeLabel} disabled={!editMode} id="template-name" />
