@@ -5,17 +5,23 @@ import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
 import AddResearchProblem from 'components/Observatory/AddResearchProblem';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faCheck, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 import { reverseWithSlug } from 'utils';
 import Tippy from '@tippyjs/react';
 import { useSelector } from 'react-redux';
+import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import ResearchProblemsModal from './ResearchProblemsModal';
 
 const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) => {
-    const { problems, isLoading, totalElements, setProblems } = useResearchProblems({ id, by, initialSort: 'combined', pageSize: 10 });
+    const { problems, isLoading, totalElements, setProblems, deleteResearchProblem } = useResearchProblems({
+        id,
+        by,
+        initialSort: 'combined',
+        pageSize: 10,
+    });
     const [openModal, setOpenModal] = useState(false);
     const user = useSelector(state => state.auth.user);
     const [showAddResearchProblemDialog, setShowAddResearchProblemDialog] = useState(false);
@@ -47,7 +53,27 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) =>
                                     <Link to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>
                                         {truncate(rp.label, { length: 70 })}
                                     </Link>
-                                </Tippy>
+                                </Tippy>{' '}
+                                <StatementActionButton
+                                    title="Delete this research problem from the observatory"
+                                    icon={faTrash}
+                                    key={`problem${rp.id}`}
+                                    requireConfirmation={true}
+                                    confirmationMessage="Are you sure?"
+                                    confirmationButtons={[
+                                        {
+                                            title: 'Delete',
+                                            color: 'danger',
+                                            icon: faCheck,
+                                            action: () => deleteResearchProblem(rp),
+                                        },
+                                        {
+                                            title: 'Cancel',
+                                            color: 'secondary',
+                                            icon: faTimes,
+                                        },
+                                    ]}
+                                />
                             </li>
                         ))}
                     </ul>
@@ -71,7 +97,15 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) =>
                     <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
                         View more
                     </Button>
-                    {openModal && <ResearchProblemsModal openModal={openModal} setOpenModal={setOpenModal} id={id} by={by} />}
+                    {openModal && (
+                        <ResearchProblemsModal
+                            openModal={openModal}
+                            setOpenModal={setOpenModal}
+                            id={id}
+                            by={by}
+                            deleteResearchProblem={deleteResearchProblem}
+                        />
+                    )}
                 </div>
             )}
         </div>

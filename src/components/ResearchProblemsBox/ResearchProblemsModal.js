@@ -5,8 +5,9 @@ import { RESOURCES } from 'constants/graphSettings';
 import { FormGroup, Label, Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
-const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenModal }) => {
+const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenModal, deleteResearchProblem }) => {
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const {
         problems,
@@ -61,7 +62,21 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
                 <div className="ps-3 pe-3">
                     {problems.map((rp, index) => (
                         <div className="pt-2 pb-2" key={`rp${rp.id}`}>
-                            <ResearchProblemCard problem={rp} />
+                            <ResearchProblemCard
+                                problem={rp}
+                                options={
+                                    isCurationAllowed
+                                        ? [
+                                              {
+                                                  label: 'Delete this research problem from the observatory',
+                                                  action: () => deleteResearchProblem(rp),
+                                                  icon: faTrash,
+                                                  requireConfirmation: true,
+                                              },
+                                          ]
+                                        : []
+                                }
+                            />
                             {problems.length - 1 !== index && <hr className="mb-0 mt-3" />}
                         </div>
                     ))}
@@ -109,6 +124,7 @@ ResearchProblemsModal.propTypes = {
     by: PropTypes.string.isRequired, // ResearchField || Observatory
     openModal: PropTypes.bool.isRequired,
     setOpenModal: PropTypes.func.isRequired,
+    deleteResearchProblem: PropTypes.func,
 };
 
 export default ResearchProblemsModal;
