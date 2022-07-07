@@ -16,6 +16,7 @@ import { SubTitle } from 'components/styled';
 import { reverse } from 'named-urls';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
+import ConferenceEvents from 'components/Organization/ConferenceEvents';
 
 const StyledOrganizationHeader = styled.div`
     .logoContainer {
@@ -56,6 +57,7 @@ const Organization = () => {
     const [type, setType] = useState(null);
     const [date, setDate] = useState(null);
     const [isDoubleBlind, setIsDoubleBlind] = useState(false);
+    const [doi, setDoi] = useState(null);
     const { id } = useParams();
     const user = useSelector(state => state.auth.user);
 
@@ -74,6 +76,7 @@ const Organization = () => {
                     setType(responseJson.type);
                     setDate(responseJson.metadata && responseJson.metadata.date ? responseJson.metadata.date : '');
                     setIsDoubleBlind(responseJson.metadata && responseJson.metadata.is_double_blind && responseJson.metadata.is_double_blind);
+                    setDoi(responseJson.doi);
                 })
                 .catch(error => {
                     setIsLoading(false);
@@ -130,13 +133,6 @@ const Organization = () => {
                                     <a className="p-0 mt-2" href={url} target="_blank" rel="noopener noreferrer">
                                         <Icon size="sm" icon={faGlobe} /> {url} {url && <Icon size="sm" icon={faExternalLinkAlt} />}
                                     </a>
-
-                                    {type === ORGANIZATIONS_MISC.CONFERENCE && date && (
-                                        <p className="mb-0 mt-2">
-                                            <b>Conference date</b>: {date} <br />
-                                            <b>Review Process</b>: {isDoubleBlind ? 'Double-blind' : 'Single-blind'}
-                                        </p>
-                                    )}
                                 </Col>
                                 {logo && (
                                     <Col md={{ size: 4, order: 2 }} sm={{ size: 12, order: 1 }} xs={{ size: 12, order: 1 }}>
@@ -153,7 +149,11 @@ const Organization = () => {
 
                         <Members organizationsId={organizationId} />
                     </Container>
-                    <Observatories organizationsId={organizationId} />
+                    {type === ORGANIZATIONS_MISC.CONFERENCE && doi ? (
+                        <ConferenceEvents organizationId={organizationId} conferenceDoi={doi} />
+                    ) : (
+                        <Observatories organizationsId={organizationId} />
+                    )}
                 </>
             )}
             <EditOrganization

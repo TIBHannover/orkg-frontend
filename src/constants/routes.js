@@ -87,6 +87,7 @@ const routes = {
     DIAGRAMS: '/diagrams',
     DIAGRAM: '/diagram/:id',
     NEW_DIAGRAM: '/diagram/',
+    CONFERENCE: '/conference/:id',
 };
 /**
  * Legacy routes are used to redirect old URLs to new ones
