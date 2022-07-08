@@ -66,7 +66,7 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
                             <ResearchProblemCard
                                 problem={rp}
                                 options={
-                                    isCurationAllowed
+                                    isCurationAllowed && by === 'Observatory'
                                         ? [
                                               {
                                                   label: 'Delete this research problem from the observatory',

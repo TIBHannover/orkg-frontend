@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import ResearchProblemsModal from './ResearchProblemsModal';
 
-const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) => {
+const ResearchProblemsBox = ({ id, by = 'ResearchField' }) => {
     const { problems, isLoading, totalElements, setProblems, deleteResearchProblem, setTotalElements } = useResearchProblems({
         id,
         by,
@@ -55,7 +55,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) =>
                                         {truncate(rp.label, { length: 70 })}
                                     </Link>
                                 </Tippy>{' '}
-                                {!!user && user.isCurationAllowed && (
+                                {!!user && user.isCurationAllowed && by === 'Observatory' && (
                                     <StatementActionButton
                                         title="Delete this research problem from the observatory"
                                         icon={faTrash}
