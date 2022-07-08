@@ -18,6 +18,7 @@ const AddResearchProblem = props => {
                     toast.success('Research problem added successfully');
                     setIsSaving(false);
                     props.setProblems(v => [problem, ...v]);
+                    props.setTotalElements(t => t + 1);
                     props.toggle();
                     setProblem(null);
                 })
@@ -68,6 +69,7 @@ AddResearchProblem.propTypes = {
     toggle: PropTypes.func.isRequired,
     id: PropTypes.string,
     setProblems: PropTypes.func.isRequired,
+    setTotalElements: PropTypes.func.isRequired,
 };
 
 export default AddResearchProblem;

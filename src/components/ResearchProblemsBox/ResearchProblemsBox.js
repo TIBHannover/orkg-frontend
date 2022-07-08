@@ -16,7 +16,7 @@ import StatementActionButton from 'components/StatementBrowser/StatementActionBu
 import ResearchProblemsModal from './ResearchProblemsModal';
 
 const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) => {
-    const { problems, isLoading, totalElements, setProblems, deleteResearchProblem } = useResearchProblems({
+    const { problems, isLoading, totalElements, setProblems, deleteResearchProblem, setTotalElements } = useResearchProblems({
         id,
         by,
         initialSort: 'combined',
@@ -40,6 +40,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) =>
                             toggle={() => setShowAddResearchProblemDialog(v => !v)}
                             id={id}
                             setProblems={setProblems}
+                            setTotalElements={setTotalElements}
                         />
                     </>
                 )}
