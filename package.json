@@ -37,7 +37,7 @@
         "lodash": "^4.17.21",
         "make-latex": "^0.1.0",
         "marked": "^4.0.14",
-        "moment": "^2.29.3",
+        "moment": "^2.29.4",
         "named-urls": "^2.0.0",
         "node-html-parser": "^5.3.3",
         "olap-cube": "^1.0.0",
