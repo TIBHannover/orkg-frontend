@@ -98,15 +98,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) =>
                     <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
                         View more
                     </Button>
-                    {openModal && (
-                        <ResearchProblemsModal
-                            openModal={openModal}
-                            setOpenModal={setOpenModal}
-                            id={id}
-                            by={by}
-                            deleteResearchProblem={deleteResearchProblem}
-                        />
-                    )}
+                    {openModal && <ResearchProblemsModal openModal={openModal} setOpenModal={setOpenModal} id={id} by={by} />}
                 </div>
             )}
         </div>

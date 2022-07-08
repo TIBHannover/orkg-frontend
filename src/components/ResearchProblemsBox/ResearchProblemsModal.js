@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
-const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenModal, deleteResearchProblem }) => {
+const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenModal }) => {
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const {
         problems,
@@ -20,6 +20,7 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
         setSort,
         setIncludeSubFields,
         handleLoadMore,
+        deleteResearchProblem,
     } = useResearchProblems({
         id,
         by,
@@ -124,7 +125,6 @@ ResearchProblemsModal.propTypes = {
     by: PropTypes.string.isRequired, // ResearchField || Observatory
     openModal: PropTypes.bool.isRequired,
     setOpenModal: PropTypes.func.isRequired,
-    deleteResearchProblem: PropTypes.func,
 };
 
 export default ResearchProblemsModal;
