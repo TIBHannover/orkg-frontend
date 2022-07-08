@@ -55,26 +55,28 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) =>
                                         {truncate(rp.label, { length: 70 })}
                                     </Link>
                                 </Tippy>{' '}
-                                <StatementActionButton
-                                    title="Delete this research problem from the observatory"
-                                    icon={faTrash}
-                                    key={`problem${rp.id}`}
-                                    requireConfirmation={true}
-                                    confirmationMessage="Are you sure?"
-                                    confirmationButtons={[
-                                        {
-                                            title: 'Delete',
-                                            color: 'danger',
-                                            icon: faCheck,
-                                            action: () => deleteResearchProblem(rp),
-                                        },
-                                        {
-                                            title: 'Cancel',
-                                            color: 'secondary',
-                                            icon: faTimes,
-                                        },
-                                    ]}
-                                />
+                                {!!user && user.isCurationAllowed && (
+                                    <StatementActionButton
+                                        title="Delete this research problem from the observatory"
+                                        icon={faTrash}
+                                        key={`problem${rp.id}`}
+                                        requireConfirmation={true}
+                                        confirmationMessage="Are you sure?"
+                                        confirmationButtons={[
+                                            {
+                                                title: 'Delete',
+                                                color: 'danger',
+                                                icon: faCheck,
+                                                action: () => deleteResearchProblem(rp),
+                                            },
+                                            {
+                                                title: 'Cancel',
+                                                color: 'secondary',
+                                                icon: faTimes,
+                                            },
+                                        ]}
+                                    />
+                                )}
                             </li>
                         ))}
                     </ul>
