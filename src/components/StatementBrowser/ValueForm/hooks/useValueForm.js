@@ -225,7 +225,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     const handleAddValue = useCallback(
         async (entityType, value) => {
             let _class = entityType;
-            let newEntity = { id: value.id, label: value.label, shared: value.shared, classes: value.classes, datatype: value.datatype };
+            let newEntity = { id: value.id, label: value.label, shared: value.shared ?? 0, classes: value.classes, datatype: value.datatype };
             let newStatement = null;
             let apiError = false;
             const existingResourceId = guid();
