@@ -2,7 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { mergeAlternate } from 'utils';
 import { getContentByObservatoryIdAndClasses } from 'services/backend/observatories';
 import { getResearchProblemsByResearchFieldId } from 'services/backend/researchFields';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, MISC } from 'constants/graphSettings';
+import { addResourceToObservatory } from 'services/backend/resources';
+import { toast } from 'react-toastify';
 
 function useResearchProblems({ id, by = 'ResearchField', initialSort, initialIncludeSubFields, pageSize = 10 }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -84,6 +86,18 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
         [sort, id, pageSize, by, includeSubFields],
     );
 
+    const deleteResearchProblem = async researchProblem => {
+        await addResourceToObservatory({ observatory_id: MISC.UNKNOWN_ID, organization_id: MISC.UNKNOWN_ID, id: researchProblem.id })
+            .then(_ => {
+                setProblems(v => v.filter(t => t.id !== researchProblem.id));
+                setTotalElements(r => r - 1);
+                toast.success('Research problem deleted successfully');
+            })
+            .catch(() => {
+                toast.error('error deleting a research problem');
+            });
+    };
+
     // reset resources when the researchFieldId has changed
     useEffect(() => {
         setProblems([]);
@@ -116,6 +130,8 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
         handleLoadMore,
         setIncludeSubFields,
         setSort,
+        deleteResearchProblem,
+        setTotalElements,
     };
 }
 export default useResearchProblems;

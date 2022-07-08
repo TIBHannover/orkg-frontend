@@ -99,7 +99,7 @@ const Observatory = () => {
                     <Container className="p-0">
                         <Row className="mt-3">
                             <Col md="4" className="d-flex">
-                                <ResearchProblemsBox id={observatoryId} by="Observatory" organizationsList={organizationsList} />
+                                <ResearchProblemsBox id={observatoryId} by="Observatory" />
                             </Col>
                             <Col md="4" className="d-flex">
                                 <OrganizationsBox
