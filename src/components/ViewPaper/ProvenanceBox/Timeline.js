@@ -44,13 +44,9 @@ const Timeline = ({ versions, paperResource, isLoadingContributors }) => (
                                             <br />
                                             <small>
                                                 DOI:{' '}
-                                                <Link
-                                                    to={reverse(ROUTES.VIEW_PAPER, {
-                                                        resourceId: version.publishedResource.id,
-                                                    })}
-                                                >
-                                                    <b>{`${env('DATACITE_DOI_PREFIX')}/${version.publishedResource.id}`}</b>
-                                                </Link>
+                                                <a href={`https://doi.org/${version.publishedResource.id}`} target="_blank" rel="noopener noreferrer">
+                                                    https://doi.org/${env('DATACITE_DOI_PREFIX')}/${version.publishedResource.id}
+                                                </a>
                                             </small>
                                         </>
                                     ) : (

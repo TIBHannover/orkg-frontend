@@ -122,7 +122,9 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                         <div className="mb-1">
                             <b>DOI</b>
                         </div>
-                        {dataCiteDoi}
+                        <a href={`https://doi.org/${dataCiteDoi}`} target="_blank" rel="noopener noreferrer">
+                            https://doi.org/{dataCiteDoi}
+                        </a>
                     </StyledItemProvenanceBox>
                 )}
             </ul>
