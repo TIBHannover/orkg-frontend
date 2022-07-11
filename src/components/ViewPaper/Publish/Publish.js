@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getContributorsByResourceId } from 'services/backend/resources';
 import { getPublicUrl, filterObjectOfStatementsByPredicateAndClass } from 'utils';
-import { getStatementsBySubject, getStatementsBySubjects, createResourceStatement, deleteStatementById } from 'services/backend/statements';
+import { getStatementsBySubject, createResourceStatement, deleteStatementById, getStatementsBundleBySubject } from 'services/backend/statements';
 import { createResourceData } from 'services/similarity/index';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -87,36 +87,16 @@ function Publish(props) {
         }
     };
 
-    const getResourceAndStatements = async (resourceId, list) => {
-        const statements = await getStatementsBySubject({ id: resourceId });
-        list.push(...statements);
-        if (statements.length > 0) {
-            for (const statement of statements) {
-                if (statement.object._class === 'resource') {
-                    await getResourceAndStatements(statement.object.id, list);
-                }
-            }
-
-            return list;
-        }
-        return list;
-    };
-
     const getPaperStatements = async paperId => {
         const statements = await getStatementsBySubject({ id: paperId });
         const result = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
         const ids = result.map(stmt => stmt.id);
-        const c = await getStatementsBySubjects({ ids });
         const data = [];
-        for (let j = 0; j < c.length; j++) {
-            const cids = c[j].statements;
-            for (let i = 0; i < cids.length; i++) {
-                const ct = cids[i];
-                data.push(ct);
-                const st = await getResourceAndStatements(ct.object.id, []);
-                data.push(...st);
-            }
+        for (let j = 0; j < ids.length; j++) {
+            const bstatements = (await getStatementsBundleBySubject({ id: ids[j], maxLevel: 10, blacklist: [] })).statements;
+            data.push(...bstatements);
         }
+
         return data;
     };
 
