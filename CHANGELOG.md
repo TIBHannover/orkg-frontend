@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.73.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.72.0...v0.73.0) - 2022-07-11
+
+### Changes
+
+- fix(StatementBrowser): cannot edit new resources [`#885`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/885)
+- feat(Observatory): Allowing deleting research problems [`#884`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/884)
+- feat(Property): ability to provide a description when creating a property [`#875`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/875)
+- ui: Switch main and sub-title for organizations and observatories [`#881`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/881)
+
+---
 ## [v0.72.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.71.1...v0.72.0) - 2022-07-06
 
 ### Changes
