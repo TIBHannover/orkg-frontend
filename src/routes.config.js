@@ -60,7 +60,7 @@ import HelpCenterCategory from 'pages/HelpCenter/HelpCenterCategory';
 import HelpCenterArticle from 'pages/HelpCenter/HelpCenterArticle';
 import HelpCenterSearch from 'pages/HelpCenter/HelpCenterSearch';
 import WebinarMay11 from 'pages/WebinarMay11';
-import CheckPaperVersion from 'CheckPaperVersion';
+import CheckPaperVersion from 'pages/CheckPaperVersion';
 import Lists from 'pages/Lists/Lists';
 import ListNew from 'pages/Lists/ListNew';
 import List from 'pages/Lists/List';
