@@ -220,7 +220,7 @@ function Publish(props) {
                     )}
                     {createdPaperId && dataCiteDoi && (
                         <>
-                            DOI is assigned sucessfully.{' '}
+                            DOI is assigned successfully.{' '}
                             <Link target="_blank" to={reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaperId })}>
                                 View published version
                             </Link>
@@ -266,7 +266,7 @@ function Publish(props) {
                         </FormGroup>
                         <FormGroup>
                             <Label for="description">
-                                <Tooltip message="Describe the goal and what is being compared">Description</Tooltip>
+                                <Tooltip message="Description of the paper">Description</Tooltip>
                             </Label>
                             <Input
                                 type="textarea"
@@ -278,7 +278,7 @@ function Publish(props) {
                         </FormGroup>
                         <FormGroup>
                             <Label for="research-field">
-                                <Tooltip message="Enter a subject of the comparison">Research Field</Tooltip>
+                                <Tooltip message="Enter a subject of the paper">Research Field</Tooltip>
                             </Label>
 
                             <Autocomplete
@@ -297,7 +297,7 @@ function Publish(props) {
                         </FormGroup>
                         <FormGroup>
                             <Label for="Creator">
-                                <Tooltip message="The creator or creators of ORKG paper. Enter both the first and last name">Creators</Tooltip>
+                                <Tooltip message="The creator or creators of ORKG paper.">Creators</Tooltip>
                             </Label>
                             {!dataCiteDoi &&
                                 props.paperId &&
