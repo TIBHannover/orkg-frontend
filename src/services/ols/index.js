@@ -6,7 +6,7 @@ export const olsBaseUrl = env('OLS_BASE_URL');
 
 export const selectTerms = ({ page = 0, pageSize = 10, type = 'ontology', q = null, ontology = null }) => {
     const params = queryString.stringify(
-        { rows: pageSize, start: page * pageSize, type, ...(q ? { q } : {}), ontology },
+        { rows: pageSize, start: page * pageSize, type, ...(q ? { q } : {}), ontology, fieldList: 'label,ontology_prefix,id,iri,description' },
         {
             skipNull: true,
             skipEmptyString: true,
