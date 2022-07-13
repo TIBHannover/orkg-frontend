@@ -121,8 +121,12 @@ export const CLASSES = {
     SOFTWARE: 'Software',
 };
 
-export const MISC = {
+export const RESOURCES = {
     RESEARCH_FIELD_MAIN: 'R11',
+    EMPTY_RESOURCE: 'empty',
+};
+
+export const MISC = {
     DEFAULT_LITERAL_DATATYPE: 'xsd:string',
     UNKNOWN_ID: '00000000-0000-0000-0000-000000000000',
 };

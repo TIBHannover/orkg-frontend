@@ -127,11 +127,7 @@ const Observatories = () => {
                 </p>
                 <p>
                     Further information about observatories can be also found in the{' '}
-                    <a
-                        href="https://www.orkg.org/orkg/help-center/article/8/Observatories_for_specific_research_fields"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
+                    <a href="https://orkg.org/about/27/Observatories" target="_blank" rel="noopener noreferrer">
                         ORKG help center
                     </a>
                     .

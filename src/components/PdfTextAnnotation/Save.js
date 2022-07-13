@@ -5,7 +5,7 @@ import { createLiteralStatement } from 'services/backend/statements';
 import { saveFullPaper } from 'services/backend/papers';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
-import { CLASSES, PREDICATES, MISC } from 'constants/graphSettings';
+import { CLASSES, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
@@ -69,7 +69,7 @@ const Save = props => {
 
         const paper = {
             title: _title,
-            researchField: MISC.RESEARCH_FIELD_MAIN,
+            researchField: RESOURCES.RESEARCH_FIELD_MAIN,
             authors: paperAuthors.length
                 ? paperAuthors.map(author => ({ label: author.label, ...(author.orcid ? { orcid: author.orcid } : {}) }))
                 : null,

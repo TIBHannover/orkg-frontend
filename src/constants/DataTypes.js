@@ -78,6 +78,16 @@ const DATA_TYPES = [
         inputFormType: 'text',
         weight: 1,
     },
+    {
+        name: 'Empty',
+        tooltip: 'Choose Empty to indicate that no value exists',
+        type: 'empty',
+        _class: 'empty',
+        classId: CLASSES.RESOURCE,
+        schema: null,
+        inputFormType: 'empty',
+        weight: 0,
+    },
 ];
 /*
 {
@@ -116,7 +126,10 @@ export const getConfigByClassId = classId =>
 export const getSuggestionByTypeAndValue = (type, value) => {
     const suggestions = DATA_TYPES.filter(dt => dt.type !== type)
         .filter(dt => {
-            const { error } = dt.schema.validate(value);
+            let error;
+            if (dt.schema) {
+                error = dt.schema.validate(value).error;
+            }
             return !error;
         })
         .filter(dt => getConfigByType(type).weight < dt.weight);

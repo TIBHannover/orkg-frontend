@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { usePapaParse } from 'react-papaparse';
 import { useSelector, useDispatch } from 'react-redux';
 import { zip, omit, isString, cloneDeep } from 'lodash';
-import { PREDICATES, MISC } from 'constants/graphSettings';
+import { PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { saveFullPaper } from 'services/backend/papers';
 import env from '@beam-australia/react-env';
@@ -169,7 +169,7 @@ function useExtractionModal(props) {
             const publicationMonth = getFirstValue(rowObject, 'paper:publication_month');
             const publicationYear = getFirstValue(rowObject, 'paper:publication_year');
             const doi = getFirstValue(rowObject, 'paper:doi');
-            let researchField = getFirstValue(rowObject, 'paper:research_field', MISC.RESEARCH_FIELD_MAIN);
+            let researchField = getFirstValue(rowObject, 'paper:research_field', RESOURCES.RESEARCH_FIELD_MAIN);
             let researchProblem = getFirstValue(rowObject, 'contribution:research_problem');
 
             if (!title) {

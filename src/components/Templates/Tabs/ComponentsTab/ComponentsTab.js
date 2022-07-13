@@ -3,19 +3,20 @@ import { Row, Col, FormGroup, Input, Label } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import { updateComponents, updateIsStrict } from 'slices/templateEditorSlice';
-import { createPredicate } from 'services/backend/predicates';
 import TemplateComponent from 'components/Templates/TemplateComponent/TemplateComponent';
 import AddPropertyView from 'components/StatementBrowser/AddProperty/AddPropertyView';
 import update from 'immutability-helper';
-import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
+import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
 
 const ComponentsTab = () => {
     const [showAddProperty, setShowAddProperty] = useState(false);
-    const { confirmProperty } = useConfirmPropertyModal();
     const dispatch = useDispatch();
     const components = useSelector(state => state.templateEditor.components);
     const editMode = useSelector(state => state.templateEditor.editMode);
     const isStrictTemplate = useSelector(state => state.templateEditor.isStrict);
+    const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
+    const [propertyLabel, setPropertyLabel] = useState('');
+    const [propertyIndex, setPropertyIndex] = useState(null);
 
     const handleDeleteTemplateComponent = index => {
         dispatch(updateComponents(components.filter((item, j) => index !== j)));
@@ -23,19 +24,9 @@ const ComponentsTab = () => {
 
     const handlePropertiesSelect = async (selected, action, index) => {
         if (action.action === 'create-option') {
-            const confirmedProperty = await confirmProperty();
-            if (confirmedProperty) {
-                const newPredicate = await createPredicate(selected.label);
-                selected = { id: newPredicate.id, label: selected.label };
-                const templateComponents = components.map((item, j) => {
-                    const _item = { ...item };
-                    if (j === index) {
-                        _item.property = !selected ? null : selected;
-                    }
-                    return _item;
-                });
-                dispatch(updateComponents(templateComponents));
-            }
+            setIsOpenConfirmModal(true);
+            setPropertyLabel(selected.label);
+            setPropertyIndex(index);
         } else {
             const templateComponents = components.map((item, j) => {
                 const _item = { ...item };
@@ -46,6 +37,38 @@ const ComponentsTab = () => {
             });
             dispatch(updateComponents(templateComponents));
         }
+    };
+
+    const handleCreate = ({ id }) => {
+        let templateComponents = [];
+
+        // when updating existing components the propertyIndex is set, otherwise a new component is added
+        if (propertyIndex) {
+            const selected = { id, label: propertyLabel };
+            templateComponents = components.map((item, j) => {
+                const _item = { ...item };
+                if (j === propertyIndex) {
+                    _item.property = !selected ? null : selected;
+                }
+                return _item;
+            });
+        } else {
+            templateComponents = [
+                ...components,
+                {
+                    property: { id, label: propertyLabel },
+                    value: {},
+                    validationRules: {},
+                    minOccurs: '0',
+                    maxOccurs: null,
+                    order: null,
+                },
+            ];
+            setShowAddProperty(false);
+        }
+        dispatch(updateComponents(templateComponents));
+        setIsOpenConfirmModal(false);
+        setPropertyIndex(null);
     };
 
     const handleClassOfPropertySelect = async (selected, action, index) => {
@@ -81,28 +104,9 @@ const ComponentsTab = () => {
     };
 
     const toggleConfirmNewProperty = async label => {
-        const confirmNewProperty = await confirmProperty();
-
-        if (confirmNewProperty) {
-            handleCreateNewProperty(label);
-        }
-    };
-
-    const handleCreateNewProperty = async label => {
-        const newPredicate = await createPredicate(label);
-        const templateComponents = [
-            ...components,
-            {
-                property: { id: newPredicate.id, label: newPredicate.label },
-                value: {},
-                validationRules: {},
-                minOccurs: '0',
-                maxOccurs: null,
-                order: null,
-            },
-        ];
-        dispatch(updateComponents(templateComponents));
-        setShowAddProperty(false);
+        setIsOpenConfirmModal(true);
+        setPropertyLabel(label);
+        setPropertyIndex(null);
     };
 
     const moveCard = useCallback(
@@ -125,6 +129,14 @@ const ComponentsTab = () => {
 
     return (
         <div className="p-4">
+            {isOpenConfirmModal && (
+                <ConfirmCreatePropertyModal
+                    onCreate={handleCreate}
+                    label={propertyLabel}
+                    toggle={() => setIsOpenConfirmModal(v => !v)}
+                    shouldPerformCreate
+                />
+            )}
             <div className="pb-4">
                 {components && components.length > 0 && (
                     <Row className="text-center">

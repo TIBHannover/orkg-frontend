@@ -40,7 +40,7 @@ const ExtractionModal = props => {
                 <ModalHeader toggle={props.toggle}>
                     Table extraction{' '}
                     <a
-                        href="https://www.orkg.org/orkg/help-center/article/7/Extracting_and_importing_tables_from_survey_articles"
+                        href="https://www.orkg.org/help-center/article/7/Extracting_and_importing_tables_from_survey_articles"
                         target="_blank"
                         rel="noopener noreferrer"
                     >

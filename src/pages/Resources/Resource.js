@@ -14,7 +14,7 @@ import ROUTES from 'constants/routes.js';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
 import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
@@ -186,8 +186,8 @@ function Resource() {
         setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && !hasObjectStatement);
     }, [values, properties, hasObjectStatement]);
 
-    const handleHeaderChange = event => {
-        setResource(prev => ({ ...prev, label: event.value }));
+    const handleHeaderChange = val => {
+        setResource(prev => ({ ...prev, label: val }));
     };
 
     const getDedicatedLink = useCallback(() => {
@@ -265,7 +265,7 @@ function Resource() {
                                                     <a
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        href="https://www.orkg.org/orkg/help-center/article/20/ORKG_Research_fields_taxonomy"
+                                                        href="https://www.orkg.org/help-center/article/20/ORKG_Research_fields_taxonomy"
                                                     >
                                                         ORKG help center
                                                     </a>{' '}
@@ -307,7 +307,7 @@ function Resource() {
                             </h3>
                         ) : (
                             <>
-                                <EditableHeader id={params.id} value={resource.label} onChange={handleHeaderChange} />
+                                <EditableHeader id={params.id} value={resource.label} onChange={handleHeaderChange} entityType={ENTITIES.RESOURCE} />
                                 {showDeleteButton && (
                                     <ConditionalWrapper
                                         condition={!canBeDeleted}

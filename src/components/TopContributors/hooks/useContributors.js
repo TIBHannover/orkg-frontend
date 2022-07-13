@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getTopContributors } from 'services/backend/stats';
 import { orderBy } from 'lodash';
-import { MISC } from 'constants/graphSettings';
+import { RESOURCES } from 'constants/graphSettings';
 
 function useContributors({ researchFieldId, pageSize = 30, initialSort = 'top', initialIncludeSubFields = true }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -18,7 +18,7 @@ function useContributors({ researchFieldId, pageSize = 30, initialSort = 'top', 
             setIsLoading(true);
 
             const contributorsCall = getTopContributors({
-                researchFieldId: researchFieldId === MISC.RESEARCH_FIELD_MAIN ? null : researchFieldId,
+                researchFieldId: researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN ? null : researchFieldId,
                 page,
                 size: pageSize,
                 sortBy: 'contributions',

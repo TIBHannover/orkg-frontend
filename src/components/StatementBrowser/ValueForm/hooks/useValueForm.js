@@ -12,7 +12,7 @@ import {
     updateValueLabel,
 } from 'slices/statementBrowserSlice';
 import { createResourceStatement } from 'services/backend/statements';
-import { createResource, updateResource } from 'services/backend/resources';
+import { createResource, getResource, updateResource } from 'services/backend/resources';
 import { createLiteral, updateLiteral } from 'services/backend/literals';
 import { createClass } from 'services/backend/classes';
 import { createPredicate } from 'services/backend/predicates';
@@ -20,7 +20,7 @@ import { getConfigByType, getConfigByClassId } from 'constants/DataTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { guid } from 'utils';
 import { toast } from 'react-toastify';
-import { ENTITIES, CLASSES, MISC } from 'constants/graphSettings';
+import { ENTITIES, CLASSES, MISC, RESOURCES } from 'constants/graphSettings';
 import validationSchema from '../helpers/validationSchema';
 
 const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
@@ -42,6 +42,12 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
         !valueClass?.id
             ? getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE)._class
             : getConfigByClassId(valueClass.id)._class,
+    );
+
+    const [inputFormType, setInputFormType] = useState(
+        !valueClass?.id
+            ? getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE).inputFormType
+            : getConfigByClassId(valueClass.id).inputFormType,
     );
 
     const [inputValue, setInputValue] = useState(editMode ? value.label : '');
@@ -218,7 +224,8 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
      */
     const handleAddValue = useCallback(
         async (entityType, value) => {
-            let newEntity = { id: value.id, label: value.label, shared: value.shared, classes: value.classes, datatype: value.datatype };
+            let _class = entityType;
+            let newEntity = { id: value.id, label: value.label, shared: value.shared ?? 0, classes: value.classes, datatype: value.datatype };
             let newStatement = null;
             let apiError = false;
             const existingResourceId = guid();
@@ -238,6 +245,10 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                             break;
                         case ENTITIES.CLASS:
                             apiCall = createClass(value.label);
+                            break;
+                        case 'empty':
+                            apiCall = getResource(RESOURCES.EMPTY_RESOURCE);
+                            _class = ENTITIES.RESOURCE;
                             break;
                         default:
                             apiCall = createLiteral(value.label, value.datatype);
@@ -265,7 +276,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                         ...newEntity,
                         // valueId: newEntity.id ?? existingResourceId,
                         classes: newEntity.classes ?? (valueClass ? [valueClass?.id] : []),
-                        _class: entityType,
+                        _class,
                         propertyId,
                         existingResourceId: newEntity.id ?? existingResourceId,
                         isExistingValue: !!newEntity.id,
@@ -330,6 +341,8 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
         disabledCreate,
         handleCreateExistingLabel,
         commitChangeLabel,
+        inputFormType,
+        setInputFormType,
     };
 };
 

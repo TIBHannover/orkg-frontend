@@ -60,7 +60,7 @@ Once you are finished with your merge request, there are a few more steps you ha
 While editing, make sure you are doing the following:
 
 1. Remove `draft:` from the title, to indicate your merge request is ready.
-2. Change the title of the merge request to also follow the [Conventional Commits format](https://www.conventionalcommits.org/en/v1.0.0/). It is important to specify a title that is understandable by all users. The title of the merge request is used to automatically create the [ORKG changelog](https://www.orkg.org/orkg/changelog).
+2. Change the title of the merge request to also follow the [Conventional Commits format](https://www.conventionalcommits.org/en/v1.0.0/). It is important to specify a title that is understandable by all users. The title of the merge request is used to automatically create the [ORKG changelog](https://www.orkg.org/changelog).
 3. Provide a clear description of the merge request. You don't have to explain the issue again (that is already part of the issue), but explain what you did to fix it. More importantly, also explain what is needed for the reviewer to test the merge request. For example, provide steps to the reviewer.
 4. Set the `Assignees` field to yourself
 5. Set the `Reviewers` field to the person you want to review the merge request. This should be an ORKG team member.

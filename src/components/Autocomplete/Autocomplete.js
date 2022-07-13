@@ -6,6 +6,8 @@ import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { getEntity, getEntities } from 'services/backend/misc';
 import { createClass, getClasses } from 'services/backend/classes';
 import { getResourcesByClass } from 'services/backend/resources';
+import { createLiteral } from 'services/backend/literals';
+import { createLiteralStatement } from 'services/backend/statements';
 import { olsBaseUrl, selectTerms, getAllOntologies, getOntologyTerms, getTermMatchingAcrossOntologies } from 'services/ols/index';
 import { AsyncPaginate, withAsyncPaginate } from 'react-select-async-paginate';
 import Creatable from 'react-select/creatable';
@@ -19,7 +21,7 @@ import { Link } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import REGEX from 'constants/regex';
 import NativeListener from 'react-native-listener';
-import { ENTITIES } from 'constants/graphSettings';
+import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import CustomOption from './CustomOption';
 import getExternalData from './3rdPartyRegistries/index';
@@ -383,10 +385,12 @@ function Autocomplete(props) {
                     selected = internalClass;
                 }
             } catch (error) {
-                const newClass = await createClass(
-                    props.isMulti ? action.option.label : selected.label,
-                    props.isMulti ? (action.option.uri ? action.option.uri : null) : selected.uri ? selected.uri : null,
-                );
+                const n = props.isMulti ? action.option : selected;
+                const newClass = await createClass(n.label, n.uri ? n.uri : null);
+                if (n.description && n.description.trim() !== '') {
+                    const descriptionLiteral = await createLiteral(n.description);
+                    createLiteralStatement(newClass.id, PREDICATES.DESCRIPTION, descriptionLiteral.id);
+                }
                 if (props.isMulti) {
                     selected[foundIndex] = newClass;
                 } else {

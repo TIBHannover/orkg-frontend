@@ -462,17 +462,22 @@ function Comparison(props) {
                                     >
                                         Publish
                                     </DropdownItem>
-                                    <DropdownItem
-                                        onClick={() => {
-                                            if (!props.user) {
-                                                props.openAuthDialog({ action: 'signin', signInRequired: true });
-                                            } else {
-                                                setShowSaveDraftDialog(true);
-                                            }
-                                        }}
-                                    >
-                                        Save as draft
-                                    </DropdownItem>
+                                    <Tippy disabled={!isPublished} content="A published comparison cannot be saved as draft">
+                                        <span>
+                                            <DropdownItem
+                                                onClick={() => {
+                                                    if (!props.user) {
+                                                        props.openAuthDialog({ action: 'signin', signInRequired: true });
+                                                    } else {
+                                                        setShowSaveDraftDialog(true);
+                                                    }
+                                                }}
+                                                disabled={isPublished}
+                                            >
+                                                Save as draft
+                                            </DropdownItem>
+                                        </span>
+                                    </Tippy>
                                     {!isLoadingVersions && versions?.length > 1 && (
                                         <>
                                             <DropdownItem divider />

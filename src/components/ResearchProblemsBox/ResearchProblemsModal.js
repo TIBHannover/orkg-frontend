@@ -1,10 +1,11 @@
 import ContentLoader from 'react-content-loader';
 import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
 import ResearchProblemCard from 'components/ResearchProblemsBox/ResearchProblemCard';
-import { MISC } from 'constants/graphSettings';
+import { RESOURCES } from 'constants/graphSettings';
 import { FormGroup, Label, Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenModal }) => {
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
@@ -19,6 +20,7 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
         setSort,
         setIncludeSubFields,
         handleLoadMore,
+        deleteResearchProblem,
     } = useResearchProblems({
         id,
         by,
@@ -40,7 +42,7 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
                             {isCurationAllowed && <option value="unlisted">Unlisted</option>}
                         </Input>
                     </div>
-                    {id !== MISC.RESEARCH_FIELD_MAIN && by === 'ResearchField' && (
+                    {id !== RESOURCES.RESEARCH_FIELD_MAIN && by === 'ResearchField' && (
                         <div className="d-flex rounded" style={{ fontSize: '0.875rem', padding: '0.25rem 0' }}>
                             <FormGroup check className="mb-0">
                                 <Label check className="mb-0">
@@ -61,7 +63,21 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
                 <div className="ps-3 pe-3">
                     {problems.map((rp, index) => (
                         <div className="pt-2 pb-2" key={`rp${rp.id}`}>
-                            <ResearchProblemCard problem={rp} />
+                            <ResearchProblemCard
+                                problem={rp}
+                                options={
+                                    isCurationAllowed && by === 'Observatory'
+                                        ? [
+                                              {
+                                                  label: 'Delete this research problem from the observatory',
+                                                  action: () => deleteResearchProblem(rp),
+                                                  icon: faTrash,
+                                                  requireConfirmation: true,
+                                              },
+                                          ]
+                                        : []
+                                }
+                            />
                             {problems.length - 1 !== index && <hr className="mb-0 mt-3" />}
                         </div>
                     ))}

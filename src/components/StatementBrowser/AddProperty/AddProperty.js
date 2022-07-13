@@ -4,13 +4,13 @@ import useAddProperty from './hooks/useAddProperty';
 
 const AddProperty = props => {
     const {
-        isLoading,
         showAddProperty,
         newProperties,
         canAddProperty,
         setShowAddProperty,
         handlePropertySelect,
         toggleConfirmNewProperty,
+        ConfirmPropertyModal,
     } = useAddProperty({
         resourceId: props.resourceId,
         syncBackend: props.syncBackend,
@@ -21,13 +21,13 @@ const AddProperty = props => {
             <AddPropertyView
                 inTemplate={props.inTemplate}
                 isDisabled={!canAddProperty}
-                isLoading={isLoading}
                 showAddProperty={showAddProperty}
                 handlePropertySelect={handlePropertySelect}
                 toggleConfirmNewProperty={toggleConfirmNewProperty}
                 setShowAddProperty={setShowAddProperty}
                 newProperties={newProperties}
             />
+            <ConfirmPropertyModal />
         </>
     );
 };

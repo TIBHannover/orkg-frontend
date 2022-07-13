@@ -8,7 +8,7 @@ import Benefits from 'components/Home/Benefits';
 import News from 'components/Home/News';
 import ContributorsBox from 'components/TopContributors/ContributorsBox';
 import useResearchFieldSelector from 'components/Home/hooks/useResearchFieldSelector';
-import { MISC } from 'constants/graphSettings';
+import { RESOURCES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
 import { Helmet } from 'react-helmet';
 import env from '@beam-australia/react-env';
@@ -20,7 +20,7 @@ export default function Home() {
     const location = useLocation();
     const navigate = useNavigate();
     const { selectedResearchField, handleFieldSelect, researchFields, isLoadingFields } = useResearchFieldSelector({
-        id: MISC.RESEARCH_FIELD_MAIN,
+        id: RESOURCES.RESEARCH_FIELD_MAIN,
         label: 'Main',
     });
 
@@ -58,7 +58,7 @@ export default function Home() {
                     </div>
                 </Col>
             </Row>
-            {selectedResearchField.id !== MISC.RESEARCH_FIELD_MAIN && <div className="h4 mt-4 mb-2 ps-3">{selectedResearchField.label}</div>}
+            {selectedResearchField.id !== RESOURCES.RESEARCH_FIELD_MAIN && <div className="h4 mt-4 mb-2 ps-3">{selectedResearchField.label}</div>}
             <Row>
                 <Col md="8">
                     <div className="mt-3 mt-md-0 d-flex flex-column">
@@ -67,10 +67,7 @@ export default function Home() {
                 </Col>
                 <Col md="4">
                     <TwitterTimeline />
-
-                    <div className="mt-3 box rounded d-flex flex-column overflow-hidden">
-                        <News />
-                    </div>
+                    <News />
 
                     <div className="mt-3 box rounded d-flex flex-column overflow-hidden">
                         <Benefits />

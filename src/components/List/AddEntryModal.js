@@ -4,7 +4,7 @@ import Cite from 'citation-js';
 import AutocompleteContentTypeTitle from 'components/AutocompleteContentTypeTitle/AutocompleteContentTypeTitle';
 import useList from 'components/List/hooks/useList';
 import MetadataTable from 'components/List/MetadataTable/MetadataTable';
-import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, RESOURCES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
@@ -60,7 +60,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                     {
                         paper: {
                             title: entity.title,
-                            researchField: MISC.RESEARCH_FIELD_MAIN,
+                            researchField: RESOURCES.RESEARCH_FIELD_MAIN,
                             authors: entity.authors
                                 ? entity.authors.map(author => ({ label: author.label, ...(author.orcid ? { orcid: author.orcid } : {}) }))
                                 : null,

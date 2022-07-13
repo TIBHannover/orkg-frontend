@@ -4,7 +4,7 @@ import { getStatementsBySubjects } from 'services/backend/statements';
 import { getPapersByResearchFieldId } from 'services/backend/researchFields';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getPaperData, mergeAlternate } from 'utils';
-import { MISC, CLASSES } from 'constants/graphSettings';
+import { RESOURCES, CLASSES } from 'constants/graphSettings';
 
 function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSubFields, pageSize = 10 }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -52,7 +52,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                         last: noFeaturedPapers.last && featuredPapers.last,
                     };
                 });
-            } else if (researchFieldId === MISC.RESEARCH_FIELD_MAIN) {
+            } else if (researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN) {
                 papersService = getResourcesByClass({
                     id: sort === 'featured' ? CLASSES.FEATURED_PAPER : CLASSES.PAPER,
                     sortBy: 'created_at',
