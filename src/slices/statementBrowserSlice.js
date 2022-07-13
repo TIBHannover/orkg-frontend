@@ -1218,7 +1218,7 @@ export function fillResourceWithTemplate({ templateID, resourceId, syncBackend =
                 if (!template.predicate || template?.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
                     // update the class of the current resource
                     dispatch(
-                        updateResourceClasses({
+                        updateResourceClassesAction({
                             resourceId,
                             classes: [...getState().statementBrowser.resources.byId[resourceId].classes, template.class.id],
                             syncBackend,
