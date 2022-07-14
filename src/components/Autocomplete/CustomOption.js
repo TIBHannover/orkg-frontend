@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle, faTags, faArrowRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faTags, faArrowRight, faSpinner, faStar, faClipboard, faExternalLink } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import { components } from 'react-select';
 import styled from 'styled-components';
 import { truncate } from 'lodash';
-import { truncStringPortion } from 'utils';
+import { getLinkByEntityType } from 'utils';
 import { PREDICATES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { getStatementsBySubject } from 'services/backend/statements';
 import pluralize from 'pluralize';
+import { Button } from 'reactstrap';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { toast } from 'react-toastify';
 
 const StyledSelectOption = styled.div`
     display: flex;
@@ -50,7 +53,6 @@ export default function CustomOption(props) {
     const { innerProps, ...propsWithoutInnerProps } = props;
     const { onClick, ...newInnerProps } = innerProps;
     const truncatedDescription = truncate(props.data.description ? props.data.description : '', { length: MAXIMUM_DESCRIPTION_LENGTH });
-    const truncatedURI = truncStringPortion(props.data.uri ? props.data.uri : '', 15, 50, 3);
     const [statements, setStatements] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -75,21 +77,17 @@ export default function CustomOption(props) {
         <components.Option {...propsWithoutInnerProps} innerProps={newInnerProps}>
             <StyledSelectOption>
                 <StyledLabel onClick={onClick}>
-                    {props.children}
+                    {props.children}{' '}
+                    {props.data.isRecommended && (
+                        <span style={{ color: '#E8AD15' }}>
+                            <Icon icon={faStar} /> Recommended
+                        </span>
+                    )}
                     {truncatedDescription && (
                         <div>
                             <small className={!propsWithoutInnerProps.isFocused && !propsWithoutInnerProps.isSelected ? 'text-muted' : undefined}>
                                 {truncatedDescription}
                             </small>
-                        </div>
-                    )}
-                    {truncatedURI && (
-                        <div>
-                            <i>
-                                <small className={!propsWithoutInnerProps.isFocused && !propsWithoutInnerProps.isSelected ? 'text-muted' : undefined}>
-                                    {truncatedURI}
-                                </small>
-                            </i>
                         </div>
                     )}
                     <div>
@@ -220,16 +218,34 @@ export default function CustomOption(props) {
                             </Tippy>
                         </div>
                     )}
-                    {(props.data.id || props.data.existingResourceId) && (
-                        <div onClick={onClick} className="badge" onKeyDown={e => (e.keyCode === 13 ? onClick : undefined)} role="button" tabIndex={0}>
-                            {!props.data.existingResourceId ? props.data.id : 'New'}
-                        </div>
-                    )}
-                    {props.data.external && props.data.source && (
-                        <div onClick={onClick} className="badge" onKeyDown={e => (e.keyCode === 13 ? onClick : undefined)} role="button" tabIndex={0}>
-                            {props.data.source}
-                        </div>
-                    )}
+                    <Tippy
+                        interactive
+                        content={
+                            <div className="d-flex align-items-center text-break">
+                                {props.data.id}
+                                <CopyToClipboard
+                                    text={props.data.id}
+                                    onCopy={() => {
+                                        toast.dismiss();
+                                        toast.success('ID copied to clipboard');
+                                    }}
+                                >
+                                    <Button className="py-0 border border-light-darker px-2 ms-2" size="sm" color="light">
+                                        <Icon icon={faClipboard} color="#6c757d" size="xs" />
+                                    </Button>
+                                </CopyToClipboard>
+                            </div>
+                        }
+                    >
+                        <a
+                            href={props.data.ontology ? props.data.uri : getLinkByEntityType(props.data._class, props.data.id)}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="badge"
+                        >
+                            {props.data.ontology ?? 'ORKG'} <Icon icon={faExternalLink} color="#6c757d" size="xs" />
+                        </a>
+                    </Tippy>
                 </span>
             </StyledSelectOption>
         </components.Option>

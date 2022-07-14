@@ -8,9 +8,11 @@ import env from '@beam-australia/react-env';
  * @param {Array} prevOptions Loaded options for current search.
  * @return {Array} The list of loaded options including the options from geonames.org
  */
-export default async function getGeoNames(value, options) {
+export default async function getGeoNames({ value, pageSize, page }) {
+    const options = [];
     let responseXML = await fetch(
-        `${env('GEONAMES_API_SEARCH_URL')}?q=${encodeURIComponent(value.trim())}&maxRows=10&type=rdf&username=${env('GEONAMES_API_USERNAME')}`,
+        `${env('GEONAMES_API_SEARCH_URL')}?q=${encodeURIComponent(value.trim())}&maxRows=${pageSize}&startRow=${page *
+            pageSize}&type=rdf&username=${env('GEONAMES_API_USERNAME')}`,
     );
     const data = await responseXML.text();
     responseXML = new window.DOMParser().parseFromString(data, 'text/xml'); // parse as xml
@@ -20,7 +22,7 @@ export default async function getGeoNames(value, options) {
     const populations = responseXML.getElementsByTagName('gn:population');
     const lat = responseXML.getElementsByTagName('wgs84_pos:lat');
     const long = responseXML.getElementsByTagName('wgs84_pos:long');
-    names?.forEach?.((name, i) => {
+    Array.from(names)?.forEach?.((name, i) => {
         const itemData = {
             id: null,
             label: name.childNodes[0].nodeValue,
@@ -28,6 +30,7 @@ export default async function getGeoNames(value, options) {
             source: 'GeoNames',
             statements: [],
             tooltipData: [],
+            ontology: 'GeoNames',
         };
         // load statements
         if (docs[i] && docs[i].attributes) {
@@ -68,5 +71,5 @@ export default async function getGeoNames(value, options) {
         }
         options.push(itemData);
     });
-    return options;
+    return { options, hasMore: options.length > 0 };
 }

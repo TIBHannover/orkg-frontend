@@ -138,9 +138,9 @@ const ValueForm = props => {
                     <AutoComplete
                         entityType={entityType}
                         excludeClasses={
-                            entityType === ENTITIES.RESOURCE && !valueClass
+                            entityType === ENTITIES.RESOURCE && valueClass
                                 ? `${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE},${CLASSES.TEMPLATE_COMPONENT},${CLASSES.PAPER_DELETED},${CLASSES.CONTRIBUTION_DELETED}`
-                                : null
+                                : CLASSES.EXTERNAL
                         }
                         optionsClass={entityType === ENTITIES.RESOURCE && valueClass ? valueClass.id : undefined}
                         placeholder={`Enter a ${entityType}`}
@@ -148,7 +148,7 @@ const ValueForm = props => {
                             handleAddValue(entityType, { ...i, label: i.value, selected: true });
                             props.setShowAddValue?.(false);
                         }}
-                        ols={entityType === ENTITIES.CLASS}
+                        ols={true}
                         onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                         value={inputValue}
                         additionalData={newResources}
