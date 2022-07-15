@@ -636,6 +636,7 @@ function Autocomplete(props) {
                                 <div className="overflow-hidden">
                                     {selectedOntologies.map(ontology => (
                                         <Tippy
+                                            key={ontology.id}
                                             content={
                                                 <div className="text-break">
                                                     <strong>Label:</strong> {ontology.label} <br />
@@ -667,48 +668,6 @@ function Autocomplete(props) {
                                 </Tippy>
                             )}
                         </div>
-                        {inputValue && props.allowCreate && (
-                            <Button
-                                color="secondary"
-                                onClick={() => {
-                                    if (props.onNewItemSelected) {
-                                        props.onNewItemSelected(inputValue);
-                                    } else {
-                                        props.onChange(
-                                            props.isMulti ? [...props.value, { label: inputValue, __isNew__: true }] : { label: inputValue },
-                                            { action: 'create-option' },
-                                        );
-                                        setInputValue('');
-                                    }
-                                }}
-                                size="sm"
-                                className="py-1 flex-shrink-0 ms-1"
-                            >
-                                Create new
-                            </Button>
-                        )}
-                        {props.requestUrl !== olsBaseUrl && (
-                            <>
-                                <Button
-                                    outline
-                                    color="info"
-                                    className="justify-content-end"
-                                    onClick={() => setOntologySelectorIsOpen(v => !v)}
-                                    size="sm"
-                                >
-                                    <Tippy
-                                        content={
-                                            selectedOntologies.length > 0 ? `${selectedOntologies.length} ontologies selected` : 'Select an ontology'
-                                        }
-                                    >
-                                        <span>
-                                            <Icon color={selectedOntologies.length > 0 ? props.theme.primary : undefined} icon={faAtom} size="sm" />{' '}
-                                            Ontologies
-                                        </span>
-                                    </Tippy>
-                                </Button>
-                            </>
-                        )}
                     </StyledMenuListHeader>
                 )}
             </components.Menu>
@@ -804,7 +763,7 @@ function Autocomplete(props) {
     };
 
     // Creatable with adding new options : https://codesandbox.io/s/6pznz
-    const Select = useMemo(() => (props.allowCreate && !props.ols ? withAsyncPaginate(Creatable) : AsyncPaginate), [props.allowCreate, props.ols]);
+    const Select = useMemo(() => (props.allowCreate ? withAsyncPaginate(Creatable) : AsyncPaginate), [props.allowCreate]);
 
     return (
         <ConditionalWrapper

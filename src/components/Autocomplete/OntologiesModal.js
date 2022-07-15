@@ -1,7 +1,7 @@
 import AutoComplete, { DEFAULT_SOURCES } from 'components/Autocomplete/Autocomplete';
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Button, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { olsBaseUrl } from 'services/ols/index';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
@@ -34,7 +34,9 @@ function OntologiesModal(props) {
             <ModalHeader toggle={props.toggle}>Select sources</ModalHeader>
             <ModalBody>
                 <div className="d-flex justify-content-between align-items-end">
-                    <label for="source-selector">Select search sources from below</label>
+                    <Label for="source-selector" className="mb-0">
+                        Select search sources from below
+                    </Label>
                     <Button color="light" onClick={handleReset} size="sm" className="mt-2" disabled={isEqual(value, defaultSelection)}>
                         <Icon icon={faArrowRotateLeft} /> Reset
                     </Button>

@@ -13,6 +13,7 @@ import pluralize from 'pluralize';
 import { Button } from 'reactstrap';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 
 const StyledSelectOption = styled.div`
     display: flex;
@@ -218,8 +219,46 @@ export default function CustomOption(props) {
                             </Tippy>
                         </div>
                     )}
+                    <ConditionalWrapper
+                        condition={props.data.id}
+                        wrapper={children => (
+                            <Tippy
+                                interactive
+                                appendTo={document.body}
+                                content={
+                                    <div className="d-flex align-items-center text-break">
+                                        {props.data.id}
+                                        <CopyToClipboard
+                                            text={props.data.id}
+                                            onCopy={() => {
+                                                toast.dismiss();
+                                                toast.success('ID copied to clipboard');
+                                            }}
+                                        >
+                                            <Button className="py-0 border border-light-darker px-2 ms-2" size="sm" color="light">
+                                                <Icon icon={faClipboard} color="#6c757d" size="xs" />
+                                            </Button>
+                                        </CopyToClipboard>
+                                    </div>
+                                }
+                            >
+                                {children}
+                            </Tippy>
+                        )}
+                    >
+                        <a
+                            href={props.data.ontology ? props.data.uri : getLinkByEntityType(props.data._class, props.data.id)}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="badge"
+                        >
+                            {props.data.ontology ?? 'ORKG'} <Icon icon={faExternalLink} color="#6c757d" size="xs" />
+                        </a>
+                    </ConditionalWrapper>
+                    {/*
                     <Tippy
                         interactive
+                        appendTo={document.body}
                         content={
                             <div className="d-flex align-items-center text-break">
                                 {props.data.id}
@@ -246,6 +285,7 @@ export default function CustomOption(props) {
                             {props.data.ontology ?? 'ORKG'} <Icon icon={faExternalLink} color="#6c757d" size="xs" />
                         </a>
                     </Tippy>
+                    */}
                 </span>
             </StyledSelectOption>
         </components.Option>

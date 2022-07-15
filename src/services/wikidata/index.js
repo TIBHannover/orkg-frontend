@@ -3,9 +3,8 @@ import { submitGetRequest } from 'network';
 
 export const wikidataUrl = env('WIKIDATA_URL');
 
-export const searchEntity = async ({ value, page, pageSize, options, type }) => {
+export const searchEntity = async ({ value, page, pageSize, type }) => {
     if (!type) {
-        console.log('none');
         return { options: [], hasMore: false };
     }
     const newOptions = [];
