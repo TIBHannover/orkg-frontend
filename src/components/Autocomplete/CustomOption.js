@@ -255,37 +255,6 @@ export default function CustomOption(props) {
                             {props.data.ontology ?? 'ORKG'} <Icon icon={faExternalLink} color="#6c757d" size="xs" />
                         </a>
                     </ConditionalWrapper>
-                    {/*
-                    <Tippy
-                        interactive
-                        appendTo={document.body}
-                        content={
-                            <div className="d-flex align-items-center text-break">
-                                {props.data.id}
-                                <CopyToClipboard
-                                    text={props.data.id}
-                                    onCopy={() => {
-                                        toast.dismiss();
-                                        toast.success('ID copied to clipboard');
-                                    }}
-                                >
-                                    <Button className="py-0 border border-light-darker px-2 ms-2" size="sm" color="light">
-                                        <Icon icon={faClipboard} color="#6c757d" size="xs" />
-                                    </Button>
-                                </CopyToClipboard>
-                            </div>
-                        }
-                    >
-                        <a
-                            href={props.data.ontology ? props.data.uri : getLinkByEntityType(props.data._class, props.data.id)}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="badge"
-                        >
-                            {props.data.ontology ?? 'ORKG'} <Icon icon={faExternalLink} color="#6c757d" size="xs" />
-                        </a>
-                    </Tippy>
-                    */}
                 </span>
             </StyledSelectOption>
         </components.Option>
