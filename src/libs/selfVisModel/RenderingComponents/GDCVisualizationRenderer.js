@@ -16,6 +16,15 @@ const GDCVisualizationRenderer = props => {
         }
     });
 
+    const chartEvents = [
+        {
+            eventName: 'ready',
+            callback({ chartWrapper }) {
+                props.chartWrapperFunction(chartWrapper.getChart());
+            },
+        },
+    ];
+
     return (
         <div>
             <Chart
@@ -28,6 +37,7 @@ const GDCVisualizationRenderer = props => {
                     width: props.width ?? '100%',
                     ...(props.height ? { height: props.height } : {}),
                 }}
+                chartEvents={chartEvents}
             />
         </div>
     );
@@ -38,6 +48,7 @@ GDCVisualizationRenderer.propTypes = {
     height: PropTypes.string,
     width: PropTypes.string,
     disableInteractivity: PropTypes.bool,
+    chartWrapperFunction: PropTypes.func,
 };
 
 export default GDCVisualizationRenderer;
