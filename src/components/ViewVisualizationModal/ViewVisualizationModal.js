@@ -1,4 +1,4 @@
-import { faCalendar, faLink, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faLink, faUser, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { ENTITIES } from 'constants/graphSettings';
@@ -7,15 +7,20 @@ import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCV
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Badge, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { downloadJPG, downloadPNG, downloadSVG, downloadPDF } from 'libs/GoogleChartDownloadFunctions';
+import { Badge, Button, Modal, ModalBody, ModalFooter, ModalHeader, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) => {
     const handleEditVisualization = () => {
         onEditVisualization();
         toggle();
     };
+
+    const [chart, setChartWrapper] = useState(null);
+
+    let [downloadDropDownOpen, setDropDownOpen] = useState(false);
 
     return (
         <Modal size="lg" isOpen={isOpen} toggle={toggle} style={{ maxWidth: '90%' }}>
@@ -58,9 +63,25 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                         })}
                 </div>
                 <hr />
-                <GDCVisualizationRenderer height="500px" model={data.reconstructionModel} />
+                <GDCVisualizationRenderer height="500px" model={data.reconstructionModel} chartWrapperFunction={setChartWrapper} />
             </ModalBody>
             <ModalFooter>
+                <Dropdown
+                    isOpen={downloadDropDownOpen}
+                    toggle={function noRefCheck() {
+                        setDropDownOpen(!downloadDropDownOpen);
+                    }}
+                >
+                    <DropdownToggle>
+                        <Icon icon={faDownload} /> Download
+                    </DropdownToggle>
+                    <DropdownMenu>
+                        <DropdownItem onClick={() => downloadPDF(chart, data.label)}>Download as PDF</DropdownItem>
+                        <DropdownItem onClick={() => console.log('Download as SVG')}>Download as SVG</DropdownItem>
+                        <DropdownItem onClick={() => console.log('Download as PNG')}>Download as PNG</DropdownItem>
+                        <DropdownItem onClick={() => downloadJPG(chart, data.label)}>Download as JPG</DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
                 <Button onClick={handleEditVisualization} color="light">
                     Edit visualization
                 </Button>
