@@ -26,7 +26,7 @@ const GDCVisualizationRenderer = props => {
     ];
 
     return (
-        <div>
+        <div id="google-chart-rendered">
             <Chart
                 chartType={props.model.data.visMethod}
                 data={props.model.data.googleChartsData}

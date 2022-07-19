@@ -20,7 +20,11 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
 
     const [chart, setChartWrapper] = useState(null);
 
-    let [downloadDropDownOpen, setDropDownOpen] = useState(false);
+    // BackupChartRenderer.drawChart()
+
+    const chartSVGDOMElement = document.querySelector('#google-chart-rendered svg');
+
+    const [downloadDropDownOpen, setDropDownOpen] = useState(false);
 
     return (
         <Modal size="lg" isOpen={isOpen} toggle={toggle} style={{ maxWidth: '90%' }}>
@@ -77,8 +81,8 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                     </DropdownToggle>
                     <DropdownMenu>
                         <DropdownItem onClick={() => downloadPDF(chart, data.label)}>Download as PDF</DropdownItem>
-                        <DropdownItem onClick={() => console.log('Download as SVG')}>Download as SVG</DropdownItem>
-                        <DropdownItem onClick={() => console.log('Download as PNG')}>Download as PNG</DropdownItem>
+                        <DropdownItem onClick={() => downloadSVG(chartSVGDOMElement, data.label)}>Download as SVG</DropdownItem>
+                        <DropdownItem onClick={() => downloadPNG(chartSVGDOMElement, data.label)}>Download as PNG</DropdownItem>
                         <DropdownItem onClick={() => downloadJPG(chart, data.label)}>Download as JPG</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
