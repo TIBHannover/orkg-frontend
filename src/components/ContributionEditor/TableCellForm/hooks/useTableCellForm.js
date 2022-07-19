@@ -43,6 +43,12 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
     );
     const [disabledCreate] = useState(false);
 
+    const [inputFormType, setInputFormType] = useState(
+        !valueClass?.id
+            ? getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE).inputFormType
+            : getConfigByClassId(valueClass.id).inputFormType,
+    );
+
     const createBlankNode = () => {
         // 1 - create a resource
         dispatch(
@@ -175,6 +181,8 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
         updateResourceStatements,
         disabledCreate,
         commitChangeLabel,
+        inputFormType,
+        setInputFormType,
     };
 };
 
