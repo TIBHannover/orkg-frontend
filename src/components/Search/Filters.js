@@ -21,6 +21,11 @@ const Filters = () => {
                     placeholder="Search..."
                     id="searchQuery"
                     name="value"
+                    onKeyDown={e => {
+                        if (e.keyCode === 13) {
+                            submitSearch(value);
+                        }
+                    }}
                 />
                 <Button onClick={() => submitSearch(value)} color="secondary" className="ps-2 pe-2">
                     <FontAwesomeIcon icon={faSearch} />
