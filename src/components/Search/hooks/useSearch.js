@@ -84,9 +84,10 @@ export const useSearch = () => {
             }
 
             // for papers, try to find a DOI
-            if (filterType === CLASSES.PAPER && REGEX.DOI.test(searchQuery)) {
+            const doi = searchQuery.startsWith('http') ? searchQuery.trim().substring(searchQuery.trim().indexOf('10.')) : searchQuery;
+            if (filterType === CLASSES.PAPER && REGEX.DOI.test(doi)) {
                 try {
-                    const paper = await getPaperByDOI(searchQuery);
+                    const paper = await getPaperByDOI(doi);
                     resultsResponse.push({ label: paper.title, id: paper.id, class: CLASSES.PAPER });
                 } catch (e) {}
             }
