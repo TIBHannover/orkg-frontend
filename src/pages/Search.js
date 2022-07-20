@@ -79,25 +79,26 @@ export default function Search() {
                                         })}
                                     {allFilters.filter(
                                         filter => (results[filter.id] || [])?.length === 0 && selectedFilters.map(c => c && c.id).includes(filter.id),
-                                    ).length > 0 && (
-                                        <>
-                                            <h2 className="h5">No results</h2>
-                                            <div className="text-center mt-4 mb-4">
-                                                There are no results for the remaining filters (
-                                                <i>
-                                                    {allFilters
-                                                        .filter(
-                                                            filter =>
-                                                                (results[filter.id] || [])?.length === 0 &&
-                                                                selectedFilters.map(c => c && c.id).includes(filter.id),
-                                                        )
-                                                        .map(f => f.label)
-                                                        .join(', ')}
-                                                </i>
-                                                )
-                                            </div>
-                                        </>
-                                    )}
+                                    ).length > 0 &&
+                                        !isLoading() && (
+                                            <>
+                                                <h2 className="h5">No results</h2>
+                                                <div className="text-center mt-4 mb-4">
+                                                    There are no results for the remaining filters (
+                                                    <i>
+                                                        {allFilters
+                                                            .filter(
+                                                                filter =>
+                                                                    (results[filter.id] || [])?.length === 0 &&
+                                                                    selectedFilters.map(c => c && c.id).includes(filter.id),
+                                                            )
+                                                            .map(f => f.label)
+                                                            .join(', ')}
+                                                    </i>
+                                                    )
+                                                </div>
+                                            </>
+                                        )}
                                 </div>
                             )}
                         </div>
