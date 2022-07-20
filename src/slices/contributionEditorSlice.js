@@ -13,7 +13,7 @@ import {
     updateStatement,
     deleteStatementsByIds,
 } from 'services/backend/statements';
-import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, MISC, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { uniq, flatten, intersection, uniqBy } from 'lodash';
 import {
     createResource as createResourceApi,
@@ -378,6 +378,9 @@ export const addValue = (entityType, value, valueClass, contributionId, property
                 break;
             case ENTITIES.CLASS:
                 apiCall = createClass(value.label);
+                break;
+            case 'empty':
+                apiCall = getResource(RESOURCES.EMPTY_RESOURCE);
                 break;
             default:
                 apiCall = createLiteralApi(value.label, value.datatype);

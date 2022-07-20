@@ -31,6 +31,8 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
         setEntityType,
         setInputValue,
         commitChangeLabel,
+        inputFormType,
+        setInputFormType,
     } = useTableCellForm({ value, contributionId, propertyId });
 
     const dispatch = useDispatch();
@@ -51,7 +53,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
     useClickAway(refContainer, () => {
         // setIsCreating(false);
         if (!editMode) {
-            if (inputValue === '') {
+            if (inputValue === '' && inputFormType !== 'empty') {
                 closeForm(false);
             }
             createValue();
@@ -63,13 +65,16 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
     });
 
     const createValue = () => {
-        if (entityType === ENTITIES.LITERAL && inputValue.trim()) {
+        if ((entityType === ENTITIES.LITERAL && inputValue.trim()) || (entityType === ENTITIES.RESOURCE || inputFormType === 'empty')) {
             onSubmit();
         }
     };
 
     const onSubmit = () => {
-        const { error } = schema.validate(inputValue);
+        let error;
+        if (schema) {
+            error = schema.validate(inputValue).error;
+        }
         if (error) {
             setFormFeedback(error.message);
             setIsValid(false);
@@ -126,10 +131,11 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
         setFormFeedback(null);
         setIsValid(true);
         setEntityType(getConfigByType(inputDataType)._class);
+        setInputFormType(getConfigByType(inputDataType).inputFormType);
         if (inputDataType === 'xsd:boolean') {
             setInputValue(v => Boolean(v === 'true').toString());
         }
-    }, [inputDataType, setEntityType, setInputValue]);
+    }, [inputDataType, setEntityType, setInputValue, setInputFormType]);
 
     return (
         <div ref={refContainer} style={{ minHeight: 35 }}>
@@ -169,7 +175,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
             >
                 <span>
                     <InputGroup size="sm" style={{ minWidth: 295, zIndex: 100 }}>
-                        {!editMode && entityType !== ENTITIES.LITERAL ? (
+                        {!editMode && inputFormType === 'autocomplete' ? (
                             <AutoComplete
                                 entityType={entityType}
                                 excludeClasses={
