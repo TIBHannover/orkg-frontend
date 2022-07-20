@@ -138,7 +138,7 @@ const ValueForm = props => {
                     <AutoComplete
                         entityType={entityType}
                         excludeClasses={
-                            entityType === ENTITIES.RESOURCE && valueClass
+                            entityType === ENTITIES.RESOURCE && !valueClass
                                 ? `${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE},${CLASSES.TEMPLATE_COMPONENT},${CLASSES.PAPER_DELETED},${CLASSES.CONTRIBUTION_DELETED},${CLASSES.EXTERNAL}`
                                 : null
                         }
