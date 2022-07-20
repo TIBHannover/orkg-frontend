@@ -1,4 +1,4 @@
-import { faClipboard, faGear, faLink, faAtom } from '@fortawesome/free-solid-svg-icons';
+import { faClipboard, faGear, faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
@@ -331,7 +331,7 @@ function Autocomplete(props) {
                 responseItems = result.content;
                 hasMore = !result.last;
             } else {
-                if (selectedOntologies.find(ontology => ontology.id === 'ORKG')) {
+                if (selectedOntologies.find(ontology => ontology.id === 'ORKG') || props.optionsClass) {
                     const orkgResponseItems = await orkgLookup(value, page);
                     responseItems.push(...orkgResponseItems.content);
 
@@ -373,7 +373,9 @@ function Autocomplete(props) {
             options = AddAdditionalData(value, options, page);
 
             // Add resources from third party registries
-            if (props.requestUrl !== olsBaseUrl) {
+            // get ExternalData only when ols is true or the optionsClass exist
+            // to load data from Geonames in case of optionsClass set to Location
+            if (props.requestUrl !== olsBaseUrl && (props.ols || props.optionsClass)) {
                 try {
                     const promises = await Promise.all(
                         getExternalData({
@@ -383,7 +385,7 @@ function Autocomplete(props) {
                             options,
                             optionsClass: props.optionsClass,
                             entityType: props.entityType,
-                            selectedOntologies,
+                            selectedOntologies: props.ols ? selectedOntologies : [],
                         }),
                     );
                     for (const data of promises) {
@@ -465,6 +467,38 @@ function Autocomplete(props) {
         }
     };
 
+    const findOrCreateProperty = async ({ id, label, description, sameAsUri }) => {
+        let property;
+        try {
+            property = await getPredicate(id);
+        } catch (e) {
+            property = await createPredicate(label, id);
+            if (sameAsUri) {
+                createLiteralStatement(property.id, PREDICATES.SAME_AS, (await createLiteral(sameAsUri)).id);
+            }
+            if (description) {
+                createLiteralStatement(property.id, PREDICATES.DESCRIPTION, (await createLiteral(description)).id);
+            }
+        }
+        return property;
+    };
+
+    const findOrCreateResource = async ({ id, label, description, sameAsUri }) => {
+        let resource;
+        try {
+            resource = await getResource(id);
+        } catch (e) {
+            resource = await createResource(label, [CLASSES.EXTERNAL], id);
+            if (sameAsUri) {
+                createLiteralStatement(resource.id, PREDICATES.SAME_AS, (await createLiteral(sameAsUri)).id);
+            }
+            if (description) {
+                createLiteralStatement(resource.id, PREDICATES.DESCRIPTION, (await createLiteral(description)).id);
+            }
+        }
+        return resource;
+    };
+
     /**
      * Handle change events on the select
      *
@@ -472,8 +506,6 @@ function Autocomplete(props) {
      * @param {String} Object.action Change action, one of : "select-option","deselect-option", "remove-value", "pop-value", "set-value", "clear", "create-option"
      */
     const handleChange = async (selected, { action }) => {
-        console.log(selected);
-
         if (action === 'select-option') {
             let id;
             let label;
@@ -520,38 +552,6 @@ function Autocomplete(props) {
         } else if (action === 'create-option') {
             props.onNewItemSelected && props.onNewItemSelected(selected.label);
         }
-    };
-
-    const findOrCreateProperty = async ({ id, label, description, sameAsUri }) => {
-        let property;
-        try {
-            property = await getPredicate(id);
-        } catch (e) {
-            property = await createPredicate(label, id);
-            if (sameAsUri) {
-                createLiteralStatement(property.id, PREDICATES.SAME_AS, (await createLiteral(sameAsUri)).id);
-            }
-            if (description) {
-                createLiteralStatement(property.id, PREDICATES.DESCRIPTION, (await createLiteral(description)).id);
-            }
-        }
-        return property;
-    };
-
-    const findOrCreateResource = async ({ id, label, description, sameAsUri }) => {
-        let resource;
-        try {
-            resource = await getResource(id);
-        } catch (e) {
-            resource = await createResource(label, [CLASSES.EXTERNAL], id);
-            if (sameAsUri) {
-                createLiteralStatement(resource.id, PREDICATES.SAME_AS, (await createLiteral(sameAsUri)).id);
-            }
-            if (description) {
-                createLiteralStatement(resource.id, PREDICATES.DESCRIPTION, (await createLiteral(description)).id);
-            }
-        }
-        return resource;
     };
 
     /**

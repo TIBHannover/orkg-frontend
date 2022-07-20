@@ -64,6 +64,8 @@ export const getAllOntologies = ({ page = 0, pageSize = 10 }) => {
                     ontologyId: item.ontologyId,
                     ...(item.config.fileLocation ? { uri: item.config.fileLocation } : {}),
                     external: true,
+                    ontology: item.ontologyId,
+                    ...(item.config.homepage ? { uri: item.config.homepage } : { uri: item.config.id }),
                 });
             }
         }
@@ -85,11 +87,16 @@ export const getOntologyTerms = ({ ontology_id, page = 0, pageSize = 10 }) => {
         if (res._embedded.terms.length > 0) {
             for (const item of res._embedded.terms) {
                 options.push({
-                    external: true,
                     label: item.label,
-                    id: item.ontology_prefix,
+                    id: item.short_form,
+                    ontologyId: item.id,
                     ...(item.iri ? { uri: item.iri } : {}),
                     ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {}),
+                    external: true,
+                    source: 'ols-api',
+                    ontology: item.ontology_prefix,
+                    shortForm: item.short_form,
+                    tooltipData: [],
                 });
             }
         }
