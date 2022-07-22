@@ -497,6 +497,7 @@ function Publish(props) {
                                     onBlur={() => setInputValue('')}
                                     onChangeInputValue={e => setInputValue(e)}
                                     inputValue={inputValue}
+                                    ols={false}
                                 />
                                 <Button color="secondary" onClick={() => setIsOpenResearchFieldModal(true)}>
                                     Choose

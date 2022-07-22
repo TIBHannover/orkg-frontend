@@ -166,6 +166,7 @@ const AddObservatory = () => {
                                         }}
                                         value={researchField}
                                         allowCreate={false}
+                                        ols={false}
                                         autoLoadOption={true}
                                         isDisabled={loading}
                                         inputId="ObservatoryResearchField"

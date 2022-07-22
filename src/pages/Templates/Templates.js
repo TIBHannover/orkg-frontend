@@ -199,6 +199,7 @@ const Templates = () => {
                                     isClearable
                                     autoFocus={false}
                                     inputId="filter-research-field"
+                                    ols={false}
                                 />
                             </FormGroup>
                         </Col>
@@ -214,6 +215,7 @@ const Templates = () => {
                                     autoLoadOption={true}
                                     openMenuOnFocus={true}
                                     allowCreate={false}
+                                    ols={false}
                                     isClearable
                                     autoFocus={false}
                                     inputId="filter-research-problem"
@@ -239,6 +241,7 @@ const Templates = () => {
                                     autoLoadOption={true}
                                     openMenuOnFocus={true}
                                     allowCreate={false}
+                                    ols={false}
                                     isClearable
                                     autoFocus={false}
                                     inputId="filter-class"
