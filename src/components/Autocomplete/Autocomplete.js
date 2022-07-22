@@ -251,7 +251,12 @@ function Autocomplete(props) {
                     pageSize: PAGE_SIZE,
                     type: classes[props.entityType] || classes.default,
                     q: encodeURIComponent(value.trim()),
-                    ontology: selectedOntologies ? selectedOntologies.map(o => o.ontologyId.replace(':', '')).join(',') : null,
+                    ontology: selectedOntologies
+                        ? selectedOntologies
+                              .filter(c => c.ontologyId !== 'orkg' && c.ontologyId !== 'wikidata')
+                              ?.map(o => o.ontologyId.replace(':', ''))
+                              .join(',')
+                        : null ?? null,
                 });
             } catch (error) {
                 // No matching class
@@ -260,9 +265,15 @@ function Autocomplete(props) {
         } else {
             // list all external classes
             try {
-                if (selectedOntologies && selectedOntologies.length > 0) {
+                if (
+                    selectedOntologies.filter(c => c.ontologyId !== 'orkg' && c.ontologyId !== 'wikidata') &&
+                    selectedOntologies.filter(c => c.ontologyId !== 'orkg' && c.ontologyId !== 'wikidata').length > 0
+                ) {
                     return await getOntologyTerms({
-                        ontology_id: selectedOntologies.map(s => s.ontologyId.replace(':', ''))[0],
+                        ontology_id:
+                            selectedOntologies
+                                .filter(c => c.ontologyId !== 'orkg' && c.ontologyId !== 'wikidata')
+                                ?.map(s => s.ontologyId.replace(':', ''))[0] ?? '',
                         page,
                         PAGE_SIZE,
                     });
@@ -344,7 +355,8 @@ function Autocomplete(props) {
                 }
                 if (
                     selectedOntologies.filter(ontology => ontology.id !== 'ORKG' && ontology.id !== 'Wikidata' && ontology.id !== 'GeoNames').length >
-                    0
+                        0 ||
+                    props.entityType === ENTITIES.CLASS
                 ) {
                     const olsResponseItems = await olsLookup(value, page);
                     responseItems.push(...olsResponseItems.content);

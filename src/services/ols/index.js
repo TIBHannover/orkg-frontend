@@ -118,11 +118,16 @@ export const getTermMatchingAcrossOntologies = ({ page = 0, pageSize = 10 }) => 
         if (res._embedded.terms.length > 0) {
             for (const item of res._embedded.terms) {
                 options.push({
-                    external: true,
                     label: item.label,
-                    id: item.ontology_prefix,
+                    id: item.short_form,
+                    ontologyId: item.id,
                     ...(item.iri ? { uri: item.iri } : {}),
                     ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {}),
+                    external: true,
+                    source: 'ols-api',
+                    ontology: item.ontology_prefix,
+                    shortForm: item.short_form,
+                    tooltipData: [],
                 });
             }
         }
