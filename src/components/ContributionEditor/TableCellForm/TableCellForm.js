@@ -174,7 +174,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                 entityType={entityType}
                                 excludeClasses={
                                     entityType === ENTITIES.RESOURCE && !valueClass
-                                        ? `${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE},${CLASSES.TEMPLATE_COMPONENT},${CLASSES.PAPER_DELETED},${CLASSES.CONTRIBUTION_DELETED}`
+                                        ? `${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE},${CLASSES.TEMPLATE_COMPONENT},${CLASSES.PAPER_DELETED},${CLASSES.CONTRIBUTION_DELETED},${CLASSES.EXTERNAL}`
                                         : null
                                 }
                                 optionsClass={entityType === ENTITIES.RESOURCE && valueClass ? valueClass.id : undefined}
@@ -187,7 +187,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                     dispatch(addValue(entityType, { label, selected: false }, valueClass, contributionId, propertyId));
                                     closeForm?.(false);
                                 }}
-                                ols={entityType === ENTITIES.CLASS}
+                                ols={!valueClass}
                                 onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                                 menuPortalTarget={document.body}
                                 value={inputValue}
