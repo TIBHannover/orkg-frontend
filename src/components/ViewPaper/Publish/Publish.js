@@ -54,50 +54,43 @@ const AuthorTag = styled.div`
 
 function Publish(props) {
     const [isLoading, setIsLoading] = useState(false);
-    const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [subject, setSubject] = useState('');
     const [contributors, setContributors] = useState([]);
     const viewPaper = useSelector(state => state.viewPaper);
     const [dataCiteDoi, setDataCiteDoi] = useState('');
     const [createdPaperId, setCreatedPaperId] = useState('');
+    const title = viewPaper.paperResource.label;
 
     useEffect(() => {
         const loadContributors = () => {
-            getContributorsByResourceId(props.paperId)
-                .then(contributors => {
-                    contributors = contributors.filter(c => c.created_by.display_name !== 'Unknown');
-                    setContributors(contributors ? contributors.reverse() : []);
+            getContributorsByResourceId(viewPaper.paperResource.id)
+                .then(contrs => {
+                    const contributorsList = contrs.filter(c => c.created_by.display_name !== 'Unknown');
+                    setContributors(contributorsList ? contributorsList.reverse() : []);
                 })
                 .catch(error => {});
         };
-        setTitle(props.label);
         setSubject(viewPaper.researchField);
         loadContributors();
-    }, [props.label, props.paperId, viewPaper]);
-
-    const handleSubmit = async e => {
-        e.preventDefault();
-        setIsLoading(true);
-        try {
-            publishDOI(props.paperId);
-        } catch (error) {
-            toast.error(`Error publishing a paper : ${error.message}`);
-            setIsLoading(false);
-        }
-    };
+    }, [props.label, viewPaper]);
 
     const getPaperStatements = async paperId => {
         const statements = await getStatementsBySubject({ id: paperId });
         const result = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
-        const ids = result.map(stmt => stmt.id);
+        const ids = result.map(c => c.id);
         const data = [];
-        for (let j = 0; j < ids.length; j++) {
-            const bstatements = (await getStatementsBundleBySubject({ id: ids[j], maxLevel: 10, blacklist: [] })).statements;
-            data.push(...bstatements);
+        for (let j = 0; j < ids.length; j += 1) {
+            const bstatements = getStatementsBundleBySubject({ id: ids[j], maxLevel: 10, blacklist: [CLASSES.RESEARCH_FIELD] });
+            data.push(bstatements);
         }
-
-        return data;
+        const res = [];
+        await Promise.all(data).then(r => {
+            for (let t = 0; t < r.length; t += 1) {
+                res.push(...r[t].statements);
+            }
+        });
+        return res;
     };
 
     const publishDOI = async paperId => {
@@ -108,7 +101,7 @@ function Publish(props) {
                 setIsLoading(false);
                 return;
             }
-            const paper_obj = {
+            const paperObj = {
                 predicates: [],
                 resource: {
                     name: title,
@@ -150,7 +143,7 @@ function Publish(props) {
                 },
             };
 
-            const createdPaper = await createObject(paper_obj);
+            const createdPaper = await createObject(paperObj);
             generateDoi({
                 type: CLASSES.PAPER,
                 resource_type: CLASSES.DATASET,
@@ -190,12 +183,23 @@ function Publish(props) {
         }
     };
 
+    const handleSubmit = e => {
+        e.preventDefault();
+        setIsLoading(true);
+        try {
+            publishDOI(viewPaper.paperResource.id);
+        } catch (error) {
+            toast.error(`Error publishing a paper : ${error.message}`);
+            setIsLoading(false);
+        }
+    };
+
     return (
         <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>Publish ORKG paper</ModalHeader>
             <ModalBody>
                 <Alert color="info">
-                    {props.paperId && !dataCiteDoi && (
+                    {viewPaper.paperResource.id && !dataCiteDoi && (
                         <>Persistently identified paper will be findable in global scholarly infrastructures (DataCite, OpenAIRE and ORCID).</>
                     )}
                     {createdPaperId && dataCiteDoi && (
@@ -235,14 +239,7 @@ function Publish(props) {
                             <Label for="title">
                                 <Tooltip message="Title of the paper">Title</Tooltip>
                             </Label>
-                            <Input
-                                type="text"
-                                name="title"
-                                value={`${title} [ORKG]`}
-                                disabled={Boolean(props.paperId)}
-                                id="title"
-                                onChange={e => setTitle(e.target.value)}
-                            />
+                            <Input type="text" name="title" value={`${title} [ORKG]`} disabled={true} id="title" />
                         </FormGroup>
                         <FormGroup>
                             <Label for="description">
@@ -280,7 +277,7 @@ function Publish(props) {
                                 <Tooltip message="The creator or creators of ORKG paper.">Creators</Tooltip>
                             </Label>
                             {!dataCiteDoi &&
-                                props.paperId &&
+                                viewPaper.paperResource.id &&
                                 contributors.map((creator, index) => (
                                     <AuthorTag key={`creator${index}`}>
                                         <div className="name"> {creator.created_by.display_name} </div>
@@ -310,7 +307,6 @@ function Publish(props) {
 Publish.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    paperId: PropTypes.string,
     label: PropTypes.string,
 };
 
