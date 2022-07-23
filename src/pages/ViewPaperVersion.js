@@ -16,7 +16,7 @@ import {
 } from 'reactstrap';
 import NotFound from 'pages/NotFound';
 import ContentLoader from 'react-content-loader';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, NavLink } from 'react-router-dom';
 import Contributions from 'components/ViewPaperVersion/ContributionsVersion/Contributions';
 import useViewPaperVersion from 'components/ViewPaperVersion/hooks/useViewPaperVersion';
 import PaperVersionHeader from 'components/ViewPaperVersion/PaperVersionHeader';
@@ -42,7 +42,7 @@ const ViewPaperVersion = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const dataCiteDoi = useSelector(state => state.viewPaper.dataCiteDoi);
 
-    const { isLoading, isLoadingFailed, contributions } = useViewPaperVersion({
+    const { isLoading, isLoadingFailed, contributions, paperStatements } = useViewPaperVersion({
         paperId: resourceId,
     });
 
@@ -62,16 +62,16 @@ const ViewPaperVersion = () => {
                                 <DropdownMenu>
                                     <DropdownItem onClick={() => setShowExportCitationsDialog(v => !v)}>Export citations</DropdownItem>
                                     <DropdownItem onClick={() => setShowPublishDialog(v => !v)}>Publish</DropdownItem>
+                                    <DropdownItem tag={NavLink} to={reverse(ROUTES.RESOURCE, { id: resourceId })}>
+                                        View resource
+                                    </DropdownItem>
                                 </DropdownMenu>
                             </ButtonDropdown>
                         }
                     >
                         View paper
                     </TitleBar>
-                    <Container
-                        className={`box pt-md-4 pb-md-4 ps-md-5 pe-md-5 pt-sm-2 pb-sm-2 ps-sm-2 pe-sm-2 clearfix position-relative 
-                                ${false ? 'rounded-bottom' : 'rounded'}`}
-                    >
+                    <Container className="box pt-md-4 pb-md-4 ps-md-5 pe-md-5 pt-sm-2 pb-sm-2 ps-sm-2 pe-sm-2 clearfix position-relative rounded">
                         {!isLoading && <ShareLinkMarker typeOfLink="paper" title={viewPaper.paperResource.label} />}
 
                         {isLoading && (
@@ -111,7 +111,7 @@ const ViewPaperVersion = () => {
                         {!isLoading && (
                             <>
                                 <hr className="mt-3" />
-                                <Contributions contributions={contributions} />
+                                <Contributions contributions={contributions} paperStatements={paperStatements} />
                             </>
                         )}
                     </Container>

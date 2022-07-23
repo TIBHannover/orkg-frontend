@@ -1,24 +1,27 @@
 import { useEffect, useState, useCallback } from 'react';
-import { getStatementsBundleBySubject, getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { getStatementsBundleBySubject } from 'services/backend/statements';
 import { getResource } from 'services/backend/resources';
 import { useDispatch } from 'react-redux';
 import { loadPaper, setPaperAuthors } from 'slices/viewPaperSlice';
 import { getPaperDataViewPaper, filterObjectOfStatementsByPredicateAndClass, filterSubjectOfStatementsByPredicateAndClass } from 'utils';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { getVisualization } from 'services/similarity';
+import { uniqBy } from 'lodash';
+import { getOriginalPaperId } from 'services/backend/papers';
 
 const useViewPaperVersion = ({ paperId }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingFailed, setIsLoadingFailed] = useState(false);
     const dispatch = useDispatch();
     const [contributions, setContributions] = useState([]);
+    const [paperStatements, setPaperStatements] = useState([]);
 
     const setAuthorsORCID = useCallback(
-        (paperStatements, pId) => {
+        (pStatements, pId) => {
             let authorsArray = [];
-            const paperAuthors = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHOR, false, null, pId);
+            const paperAuthors = filterObjectOfStatementsByPredicateAndClass(pStatements, PREDICATES.HAS_AUTHOR, false, null, pId);
             for (const author of paperAuthors) {
-                const orcid = paperStatements.find(s => s.subject.id === author.id && s.predicate.id === PREDICATES.HAS_ORCID);
+                const orcid = pStatements.find(s => s.subject.id === author.id && s.predicate.id === PREDICATES.HAS_ORCID);
                 if (orcid) {
                     authorsArray.push({ ...author, orcid: orcid.object.label });
                 } else {
@@ -42,31 +45,27 @@ const useViewPaperVersion = ({ paperId }) => {
                 }
                 // Load the paper metadata but skip the research field and contribution data
                 getVisualization(paperId).then(async r => {
-                    const contributions = filterSubjectOfStatementsByPredicateAndClass(
+                    setPaperStatements(r.data.statements);
+                    const cntrbs = filterSubjectOfStatementsByPredicateAndClass(
                         r.data.statements,
                         PREDICATES.HAS_CONTRIBUTION,
                         false,
                         CLASSES.CONTRIBUTION,
                     );
-                    // remove duplicates becasue contributions subject could be multiple
-                    const pp = contributions.filter((ele, ind) => ind === contributions.findIndex(elem => elem.id === ele.id));
+                    // const pp = ctrbs.filter((ele, ind) => ind === ctrbs.findIndex(elem => elem.id === ele.id));
+                    const pp = uniqBy(cntrbs);
                     setContributions(pp.reverse());
                 });
-                Promise.all([
-                    getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD, CLASSES.CONTRIBUTION] }),
-                ]).then(async ([paperStatements]) => {
-                    const paperData = getPaperDataViewPaper(paperResource, paperStatements.statements?.filter(s => s.subject.id === paperId));
-                    let statement = await getStatementsByObjectAndPredicate({ objectId: paperId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION });
-                    for (; !statement[0].subject.classes.find(s => s === CLASSES.PAPER);) {
-                        statement = await getStatementsByObjectAndPredicate({
-                            objectId: statement[0].subject.id,
-                            predicateId: PREDICATES.HAS_PREVIOUS_VERSION,
-                        });
-                    }
-                    dispatch(loadPaper({ ...paperData, originalPaperId: statement && statement[0].subject.id ? statement[0].subject.id : '' }));
-                    setAuthorsORCID(paperStatements.statements, paperId);
-                    setIsLoading(false);
-                });
+                getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD, CLASSES.CONTRIBUTION] }).then(
+                    async pStatements => {
+                        const paperData = getPaperDataViewPaper(paperResource, pStatements.statements?.filter(s => s.subject.id === paperId));
+                        const livePaperId = await getOriginalPaperId(paperId);
+                        dispatch(loadPaper({ ...paperData, originalPaperId: livePaperId }));
+                        setAuthorsORCID(pStatements.statements, paperId);
+                        setIsLoading(false);
+                        document.title = paperData.paperResource.label;
+                    },
+                );
             })
             .catch(error => {
                 setIsLoadingFailed(true);
@@ -82,6 +81,7 @@ const useViewPaperVersion = ({ paperId }) => {
         isLoading,
         isLoadingFailed,
         contributions,
+        paperStatements,
     };
 };
 
