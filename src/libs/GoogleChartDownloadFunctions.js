@@ -84,7 +84,7 @@ export const downloadPNG = (svg, imageTitle) => {
 
         ctx.drawImage(img, 0, 0);
         let link = document.createElement('a');
-        link.download = `${imageTitle}.jpg`;
+        link.download = `${imageTitle}.png`;
         link.href = canvas.toDataURL('image/png');
         console.log(imageTitle);
         link.click();
