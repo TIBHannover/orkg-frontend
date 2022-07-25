@@ -40,7 +40,6 @@ describe('AddProperty', () => {
         userEvent.type(screen.getByRole('combobox'), 'property 1');
         await selectEvent.select(screen.getByRole('combobox'), /property 1/i);
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
         await waitFor(() => expect(screen.getByText('property 1')).toBeInTheDocument());
         // Add the same property ('Property 1')
         const addButton2 = screen.getByRole('button', { name: 'Add property' });
@@ -63,7 +62,6 @@ describe('AddProperty no syncBackend', () => {
         await waitFor(() => expect(screen.queryByText(/Create/i)).toBeInTheDocument());
         const createButton = screen.getByRole('button', { name: /Create/i });
         userEvent.click(createButton);
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
         await waitFor(() => expect(screen.getByText('test property')).toBeInTheDocument());
     });
 });
