@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.75.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.75.0...v0.75.1) - 2022-07-25
+
+### Changes
+
+- fix(CsvImport): broken validation solved [`#895`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/895)
+- CI: Send ref name when release is triggered [`#894`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/894)
+- feat(Search): support DOI lookup by full URL, fix loading indicator [`#893`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/893)
+
+---
 ## [v0.75.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.74.1...v0.75.0) - 2022-07-20
 
 ### Changes
