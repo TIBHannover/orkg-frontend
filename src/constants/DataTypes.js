@@ -139,7 +139,7 @@ export const getSuggestionByTypeAndValue = (type, value) => {
 
 export const getSuggestionByValue = value =>
     orderBy(
-        DATA_TYPES.filter(dataType => dataType.type !== ENTITIES.RESOURCE).filter(dataType => !dataType.schema.validate(value)?.error),
+        DATA_TYPES.filter(dataType => dataType.type !== ENTITIES.RESOURCE).filter(dataType => !dataType.schema?.validate(value)?.error),
         ['weight'],
         ['desc'],
     );
