@@ -14,20 +14,23 @@ const Timeline = ({ versions, paperResource, isLoadingContributors }) => (
                 versions?.length > 0 &&
                 versions.map((version, index) => (
                     <StyledActivity key={`prov-${index}`} className="ps-3 pb-3">
+                        {console.log(paperResource.created_by)}
                         <div className="time">{moment(version.created_at).format('DD MMM YYYY')}</div>
                         <div>
-                            {paperResource.created_by && version.created_by === paperResource.created_by && (
-                                <>
-                                    Added by{' '}
-                                    <Link
-                                        to={reverse(ROUTES.USER_PROFILE, {
-                                            userId: version.created_by,
-                                        })}
-                                    >
-                                        <b>{version.created_by.display_name}</b>
-                                    </Link>
-                                </>
-                            )}
+                            {paperResource.created_by &&
+                                version.created_by.id === paperResource.created_by &&
+                                moment(paperResource.created_at).format('DD MMM YYYY') === moment(version.created_at).format('DD MMM YYYY') && (
+                                    <>
+                                        Added by{' '}
+                                        <Link
+                                            to={reverse(ROUTES.USER_PROFILE, {
+                                                userId: version.created_by,
+                                            })}
+                                        >
+                                            <b>{version.created_by.display_name}</b>
+                                        </Link>
+                                    </>
+                                )}
 
                             {paperResource.created_by && version.publishedResource && (
                                 <>
@@ -55,22 +58,25 @@ const Timeline = ({ versions, paperResource, isLoadingContributors }) => (
                                 </>
                             )}
 
-                            {paperResource.created_by && version.created_by !== paperResource.created_by && !version.publishedResource && (
-                                <>
-                                    Updated by{' '}
-                                    {version.created_by !== MISC.UNKNOWN_ID ? (
-                                        <Link
-                                            to={reverse(ROUTES.USER_PROFILE, {
-                                                userId: version.created_by,
-                                            })}
-                                        >
+                            {paperResource.created_by &&
+                                (moment(paperResource.created_at).format('DD MMM YYYY') !== moment(version.created_at).format('DD MMM YYYY') ||
+                                    version.created_by.id !== paperResource.created_by) &&
+                                !version.publishedResource && (
+                                    <>
+                                        Updated by{' '}
+                                        {version.created_by !== MISC.UNKNOWN_ID ? (
+                                            <Link
+                                                to={reverse(ROUTES.USER_PROFILE, {
+                                                    userId: version.created_by,
+                                                })}
+                                            >
+                                                <b>{version.created_by.display_name}</b>
+                                            </Link>
+                                        ) : (
                                             <b>{version.created_by.display_name}</b>
-                                        </Link>
-                                    ) : (
-                                        <b>{version.created_by.display_name}</b>
-                                    )}
-                                </>
-                            )}
+                                        )}
+                                    </>
+                                )}
                         </div>
                     </StyledActivity>
                 ))}
