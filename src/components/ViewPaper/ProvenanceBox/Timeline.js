@@ -14,7 +14,6 @@ const Timeline = ({ versions, paperResource, isLoadingContributors }) => (
                 versions?.length > 0 &&
                 versions.map((version, index) => (
                     <StyledActivity key={`prov-${index}`} className="ps-3 pb-3">
-                        {console.log(paperResource.created_by)}
                         <div className="time">{moment(version.created_at).format('DD MMM YYYY')}</div>
                         <div>
                             {paperResource.created_by &&
@@ -67,7 +66,7 @@ const Timeline = ({ versions, paperResource, isLoadingContributors }) => (
                                         {version.created_by !== MISC.UNKNOWN_ID ? (
                                             <Link
                                                 to={reverse(ROUTES.USER_PROFILE, {
-                                                    userId: version.created_by,
+                                                    userId: version.created_by.id,
                                                 })}
                                             >
                                                 <b>{version.created_by.display_name}</b>
