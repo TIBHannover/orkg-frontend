@@ -38,6 +38,7 @@ describe('AddProperty', () => {
         const addButton = screen.getByRole('button', { name: 'Add property' });
         userEvent.click(addButton);
         userEvent.type(screen.getByRole('combobox'), 'property 1');
+        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         await selectEvent.select(screen.getByRole('combobox'), /property 1/i);
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
         await waitFor(() => expect(screen.getByText('property 1')).toBeInTheDocument());
@@ -45,6 +46,7 @@ describe('AddProperty', () => {
         const addButton2 = screen.getByRole('button', { name: 'Add property' });
         userEvent.click(addButton2);
         userEvent.type(screen.getByRole('combobox'), 'property 1');
+        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         await selectEvent.select(screen.getByRole('combobox'), /property 1/i);
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
         await waitFor(() => expect(screen.getByText(/The property property 1 exists already/i)).toBeInTheDocument());
