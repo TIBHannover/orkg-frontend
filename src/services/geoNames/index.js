@@ -1,6 +1,9 @@
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 
+export const geonamesUrl = env('GEONAMES_API_SEARCH_URL');
+export const geonamesUsername = env('GEONAMES_API_USERNAME');
+
 /**
  * Fetch 10 autocomplete options from geonames.org API
  *
@@ -11,11 +14,15 @@ import env from '@beam-australia/react-env';
 export default async function getGeoNames({ value, pageSize, page }) {
     const options = [];
     let responseXML = await fetch(
-        `${env('GEONAMES_API_SEARCH_URL')}?q=${encodeURIComponent(value.trim())}&maxRows=${pageSize}&startRow=${page *
-            pageSize}&type=rdf&username=${env('GEONAMES_API_USERNAME')}`,
+        `${geonamesUrl}?q=${encodeURIComponent(value.trim())}&maxRows=${pageSize}&startRow=${page * pageSize}&type=rdf&username=${geonamesUsername}`,
     );
-    const data = await responseXML.text();
-    responseXML = new window.DOMParser().parseFromString(data, 'text/xml'); // parse as xml
+    try {
+        const data = await responseXML.text();
+        responseXML = new window.DOMParser().parseFromString(data, 'text/xml'); // parse as xml
+    } catch (e) {
+        return { options, hasMore: options.length > 0 };
+    }
+
     const names = responseXML.getElementsByTagName('gn:name');
     const docs = responseXML.getElementsByTagName('gn:Feature');
     const countryCodes = responseXML.getElementsByTagName('gn:countryCode');
