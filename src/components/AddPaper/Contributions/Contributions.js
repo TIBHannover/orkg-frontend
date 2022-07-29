@@ -26,21 +26,7 @@ import {
     updateContributionLabelAction as updateContributionLabel,
 } from 'slices/addPaperSlice';
 import { updateSettings } from 'slices/statementBrowserSlice';
-import styled from 'styled-components';
 import ContributionsHelpTour from './ContributionsHelpTour';
-
-// const AnimationContainer = styled(CSSTransition)`
-//     transition: 0.3s background-color, 0.3s border-color;
-
-//     &.fadeIn-enter {
-//         opacity: 0;
-//     }
-
-//     &.fadeIn-enter-active {
-//         opacity: 1;
-//         transition: 0.7s opacity;
-//     }
-// `;
 
 const Contributions = () => {
     const {
@@ -234,7 +220,7 @@ const Contributions = () => {
                     </StyledContributionTabs>
                 </Col>
 
-                <Col lg="3" className="ps-lg-3">
+                <Col lg="3" className="ps-lg-3 mt-5">
                     {isComputerScienceField && !showAbstractWarning && <EntityRecognition />}
                 </Col>
             </Row>

@@ -3,9 +3,11 @@
  * https://gitlab.com/TIBHannover/orkg/annotation
  */
 
-import { submitPostRequest, submitPutRequest } from 'network';
 import env from '@beam-australia/react-env';
 import { PREDICATES } from 'constants/graphSettings';
+import { keyBy, mapValues, uniq } from 'lodash';
+import { submitPostRequest, submitPutRequest } from 'network';
+import { getPredicate } from 'services/backend/predicates';
 import { getResources } from 'services/backend/resources';
 import { guid } from 'utils';
 
@@ -36,53 +38,53 @@ export const summarizeText = ({ text, ratio }) => {
 };
 
 export const getNerResults = async ({ title = '', abstract = '' }) => {
+    // TODO: update with new NER service URI
+    const data = await submitPostRequest('https://orkg.org/nlp/api/annotation/csner', { 'Content-Type': 'application/json' }, { title, abstract });
+    const titleConcepts = mapValues(keyBy(data.payload.annotations.title, 'concept'), 'entities');
+    const abstractConcepts = mapValues(keyBy(data.payload.annotations.abstract, 'concept'), 'entities');
+
     const propertyMapping = {
         RESEARCH_PROBLEM: PREDICATES.HAS_RESEARCH_PROBLEM,
-        METHOD: PREDICATES.HAS_METHOD,
-        LANGUAGE: PREDICATES.HAS_LANGUAGE,
-        RESOURCE: PREDICATES.HAS_RESOURCE,
-        TOOL: PREDICATES.HAS_TOOL,
-        SOLUTION: PREDICATES.HAS_SOLUTION,
+        METHOD: PREDICATES.METHOD,
+        LANGUAGE: PREDICATES.LANGUAGE,
+        RESOURCE: PREDICATES.RESOURCE,
+        TOOL: PREDICATES.TOOL,
+        SOLUTION: PREDICATES.SOLUTION,
         DATASET: PREDICATES.HAS_DATASET,
-    };
-
-    // dummy data
-    // TODO: capitalize the first letter of each resource
-    const entities = {
-        RESEARCH_PROBLEM: ['Statistical machine translation', 'POS', 'GermanEnglish translation task'],
-        LANGUAGE: ['Filipino'],
-        METHOD: ['Probabilistic Approaches'],
     };
 
     const mappedEntities = {};
     const mappedResourcePromises = [];
-    for (const [type, resources] of Object.entries(entities)) {
-        if (!propertyMapping[type]) {
-            continue;
-        }
+
+    for (const type of Object.keys(propertyMapping)) {
+        const resources = uniq([...(titleConcepts?.[type] || []), ...(abstractConcepts?.[type] || [])]);
         mappedResourcePromises.push(
             ...resources.map(resource => ({ type, label: resource, data: getResources({ q: resource, exact: true, returnContent: true }) })),
         );
     }
 
-    await Promise.all(mappedResourcePromises.map(promise => promise.data)).then(resources => {
-        for (const [index, resourceResults] of resources.entries()) {
-            if (!mappedEntities[propertyMapping[mappedResourcePromises[index].type]]) {
-                mappedEntities[propertyMapping[mappedResourcePromises[index].type]] = [];
-            }
-            let resource;
-            if (resourceResults.length > 0) {
-                resource = { ...resourceResults[0], isExistingValue: true };
-            } else {
-                resource = {
-                    id: guid(),
-                    label: mappedResourcePromises[index].label,
-                    isExistingValue: false,
-                };
-            }
-            mappedEntities[propertyMapping[mappedResourcePromises[index].type]].push(resource);
-        }
-    });
+    const resources = await Promise.all(mappedResourcePromises.map(promise => promise.data));
 
-    return mappedEntities;
+    for (const [index, resourceResults] of resources.entries()) {
+        if (!mappedEntities[propertyMapping[mappedResourcePromises[index].type]]) {
+            mappedEntities[propertyMapping[mappedResourcePromises[index].type]] = [];
+        }
+        let resource;
+        if (resourceResults.length > 0) {
+            resource = { ...resourceResults[0], isExistingValue: true };
+        } else {
+            resource = {
+                id: guid(),
+                label: mappedResourcePromises[index].label,
+                isExistingValue: false,
+            };
+        }
+        mappedEntities[propertyMapping[mappedResourcePromises[index].type]].push(resource);
+    }
+
+    const propertyPromises = Object.keys(mappedEntities).map(propertyId => getPredicate(propertyId));
+    let properties = await Promise.all(propertyPromises);
+    properties = keyBy(properties, 'id');
+
+    return { resources: mappedEntities, properties };
 };
