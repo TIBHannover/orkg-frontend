@@ -1,26 +1,25 @@
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import { useSelector } from 'react-redux';
 import { Fragment } from 'react';
-import useValueItem from './hooks/useValueItem';
 import PropTypes from 'prop-types';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import DATA_TYPES from 'constants/DataTypes';
 import { Button, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import { ValueItemStyle } from 'components/StatementBrowser/styled';
+import { ValueItemStyle, PulsateIcon } from 'components/StatementBrowser/styled';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { Link } from 'react-router-dom';
-import { getResourceLink } from 'utils';
+import { getResourceLink, reverseWithSlug } from 'utils';
 import capitalize from 'capitalize';
 import Tippy from '@tippyjs/react';
-import { reverseWithSlug } from 'utils';
 import ROUTES from 'constants/routes';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
 import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
+import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
+import useValueItem from './hooks/useValueItem';
 
 const cookies = new Cookies();
 
@@ -35,7 +34,7 @@ const ValueItem = props => {
         openExistingResourcesInDialog,
         handleExistingResourceClick,
         handleResourceClick,
-        formattedLabel
+        formattedLabel,
     } = useValueItem({ valueId: props.id, propertyId: props.propertyId, syncBackend: props.syncBackend, contextStyle: props.contextStyle });
 
     const resourcesAsLinks = useSelector(state => state.statementBrowser.resourcesAsLinks);
@@ -52,11 +51,13 @@ const ValueItem = props => {
     return (
         <>
             <ValueItemStyle>
-                {!value.isEditing ? (
+                {!value.isEditing || !props.enableEdit ? (
                     <div>
                         {!value.isSaving && (
                             <Tippy
-                                disabled={!preferences['showValueInfo'] || (!value.id && !value.classes?.length)}
+                                disabled={
+                                    !preferences.showValueInfo || (!value.id && !value.classes?.length) || value?.classes?.includes(CLASSES.PROBLEM)
+                                }
                                 delay={[500, 0]}
                                 interactive={true}
                                 content={
@@ -91,16 +92,17 @@ const ValueItem = props => {
                                                 <Link
                                                     to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
                                                         researchProblemId: existingResourceId,
-                                                        slug: resource.label
+                                                        slug: resource.label,
                                                     })}
+                                                    target="_blank"
                                                 >
                                                     <DescriptionTooltip id={existingResourceId} typeId={CLASSES.PROBLEM}>
-                                                        {resource.label}
+                                                        {resource.label} <Icon icon={faExternalLinkAlt} />
                                                     </DescriptionTooltip>
                                                 </Link>
                                             ) : (
                                                 <Button
-                                                    className="p-0 text-left objectLabel"
+                                                    className="p-0 text-start objectLabel"
                                                     color="link"
                                                     onClick={() => {
                                                         cookies.set('showedValueHelp', true, { path: env('PUBLIC_URL'), maxAge: 604800 });
@@ -112,7 +114,7 @@ const ValueItem = props => {
                                                     {value._class === ENTITIES.PREDICATE && <div className="typeCircle">P</div>}
                                                     {props.showHelp && value._class === ENTITIES.RESOURCE ? (
                                                         <span style={{ position: 'relative' }}>
-                                                            <span className="pulsate-css" />
+                                                            <PulsateIcon />
                                                             <ValuePlugins type="resource">
                                                                 {formattedLabel !== '' ? formattedLabel.toString() : <i>No label</i>}
                                                             </ValuePlugins>
@@ -148,9 +150,9 @@ const ValueItem = props => {
                                             <ValuePlugins type={ENTITIES.LITERAL}>
                                                 {value.label !== '' ? value.label.toString() : <i>No label</i>}
                                             </ValuePlugins>
-                                            {preferences['showLiteralDataTypes'] && (
+                                            {preferences.showLiteralDataTypes && (
                                                 <small>
-                                                    <Badge color="light" className="ml-2" title={value.datatype}>
+                                                    <Badge color="light" className="ms-2" title={value.datatype}>
                                                         {DATA_TYPES.find(dt => dt.type === value.datatype)?.name ?? value.datatype}
                                                     </Badge>
                                                 </small>
@@ -190,12 +192,12 @@ ValueItem.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     contextStyle: PropTypes.string.isRequired,
-    showHelp: PropTypes.bool
+    showHelp: PropTypes.bool,
 };
 
 ValueItem.defaultProps = {
     contextStyle: 'StatementBrowser',
-    showHelp: false
+    showHelp: false,
 };
 
 export default ValueItem;

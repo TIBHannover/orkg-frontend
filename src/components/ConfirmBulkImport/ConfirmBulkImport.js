@@ -11,17 +11,19 @@ import PaperList from 'components/ConfirmBulkImport/PaperList';
 
 const ConfirmBulkImport = props => {
     const { data, isOpen, toggle, onFinish } = props;
-    const { papers, existingPaperIds, idToLabel, isLoading, createdContributions, makePaperList, handleImport } = useImportBulkData({
-        data,
-        onFinish
-    });
+    const { papers, existingPaperIds, idToLabel, isLoading, createdContributions, makePaperList, handleImport, validationErrors } = useImportBulkData(
+        {
+            data,
+            onFinish,
+        },
+    );
 
     useEffect(() => {
         makePaperList();
     }, [data, makePaperList]);
 
     const comparisonUrl = createdContributions
-        ? reverse(ROUTES.CONTRIBUTION_EDITOR) + '?contributions=' + createdContributions.map(entry => entry.contributionId)
+        ? `${reverse(ROUTES.CONTRIBUTION_EDITOR)}?contributions=${createdContributions.map(entry => entry.contributionId)}`
         : null;
 
     const progressPercentage =
@@ -30,7 +32,7 @@ const ConfirmBulkImport = props => {
     const isFinished = createdContributions.length > 0 && createdContributions.length === papers.length;
 
     return (
-        <Modal isOpen={isOpen} toggle={toggle} size="lg">
+        <Modal isOpen={isOpen} size="lg" backdrop="static">
             <ModalHeader toggle={toggle}>Review import</ModalHeader>
             <ModalBody>
                 {!isLoading && createdContributions.length === 0 && (
@@ -38,7 +40,7 @@ const ConfirmBulkImport = props => {
                         <Alert color="info" fade={false}>
                             The following contributions will be imported, please review the content carefully
                         </Alert>
-                        <PaperList papers={papers} existingPaperIds={existingPaperIds} idToLabel={idToLabel} />
+                        <PaperList papers={papers} existingPaperIds={existingPaperIds} idToLabel={idToLabel} validationErrors={validationErrors} />
                     </>
                 )}
                 {isLoading && (
@@ -81,11 +83,11 @@ ConfirmBulkImport.propTypes = {
     data: PropTypes.array.isRequired,
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    onFinish: PropTypes.func
+    onFinish: PropTypes.func,
 };
 
 ConfirmBulkImport.defaultProps = {
-    onFinish: () => {}
+    onFinish: () => {},
 };
 
 export default ConfirmBulkImport;

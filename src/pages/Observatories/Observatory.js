@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Col, Row, Container, Button, Card, CardBody } from 'reactstrap';
+import { Col, Row, Container, Button } from 'reactstrap';
 import { getOrganization } from 'services/backend/organizations';
 import { getObservatoryById } from 'services/backend/observatories';
 import InternalServerError from 'pages/InternalServerError';
 import EditObservatory from 'components/Observatory/EditObservatory';
-import Comparisons from 'components/Observatory/Comparisons';
-import Papers from 'components/Observatory/Papers';
-import ResearchProblemsBox from 'components/Observatory/ResearchProblemsBox';
+import ResearchProblemsBox from 'components/ResearchProblemsBox/ResearchProblemsBox';
 import OrganizationsBox from 'components/Observatory/OrganizationsBox';
+import IntegratedList from 'components/Observatory/IntegratedList';
 import MembersBox from 'components/Observatory/MembersBox';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import { SubTitle, SubtitleSeparator } from 'components/styled';
+import { SubTitle } from 'components/styled';
 import NotFound from 'pages/NotFound';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -67,20 +66,19 @@ const Observatory = () => {
         setResearchField(researchField);
     };
 
+    const toggleOrganizationItem = organization => {
+        setOrganizationsList(v => (v.map(o => o.id).includes(organization.id) ? v.filter(t => t !== organization) : [organization, ...v]));
+    };
+
     return (
         <>
-            {isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
+            {isLoading && <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>}
             {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
             {!isLoading && !error && label && (
                 <>
                     <Breadcrumbs researchFieldId={researchField?.id} />
                     <TitleBar
-                        titleAddition={
-                            <>
-                                <SubtitleSeparator />
-                                <SubTitle>{label}</SubTitle>
-                            </>
-                        }
+                        titleAddition={<SubTitle>Observatory</SubTitle>}
                         buttonGroup={
                             !!user &&
                             user.isCurationAllowed && (
@@ -91,27 +89,24 @@ const Observatory = () => {
                         }
                         wrap={false}
                     >
-                        Observatory
+                        {label}
                     </TitleBar>
                     {description && (
-                        <Container className="p-0">
-                            <Card>
-                                <CardBody>
-                                    <div className="mb-4">{description}</div>
-                                </CardBody>
-                            </Card>
+                        <Container className="box rounded py-3 px-4 mb-4" style={{ whiteSpace: 'pre-wrap' }}>
+                            <p className="m-0">{description}</p>
                         </Container>
                     )}
                     <Container className="p-0">
                         <Row className="mt-3">
                             <Col md="4" className="d-flex">
-                                <ResearchProblemsBox observatoryId={observatoryId} organizationsList={organizationsList} />
+                                <ResearchProblemsBox id={observatoryId} by="Observatory" />
                             </Col>
                             <Col md="4" className="d-flex">
                                 <OrganizationsBox
                                     observatoryId={observatoryId}
                                     organizationsList={organizationsList}
                                     isLoadingOrganizations={isLoadingOrganizations}
+                                    toggleOrganizationItem={toggleOrganizationItem}
                                 />
                             </Col>
                             <Col md="4" className="d-flex">
@@ -119,8 +114,9 @@ const Observatory = () => {
                             </Col>
                         </Row>
                     </Container>
-                    <Comparisons observatoryId={observatoryId} />
-                    <Papers observatoryId={observatoryId} />
+
+                    <IntegratedList id={observatoryId} slug={id} boxShadow />
+
                     <EditObservatory
                         showDialog={showEditDialog}
                         toggle={() => setShowEditDialog(v => !v)}

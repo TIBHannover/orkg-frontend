@@ -1,40 +1,36 @@
-import { useState } from 'react';
-import FeaturedComparisons from './FeaturedComparisons';
-import FeaturedPapers from './FeaturedPapers';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
+import { CLASSES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
+import { reverse } from 'named-urls';
+import Tabs from 'react-responsive-tabs';
+import { ResponsiveTabs } from './styled';
+import FeaturedItems from './FeaturedItems';
 
-const AnimationContainer = styled(CSSTransition)`
-    &.fadeIn-enter {
-        opacity: 0;
-    }
-
-    &.fadeIn-enter.fadeIn-enter-active {
-        opacity: 1;
-        transition: 1s opacity;
-    }
-`;
-
-const FeaturedTabs = styled.div`
-    .tab {
-        margin-bottom: 0;
-        padding: 15px;
-        color: #bebbac;
-        cursor: pointer;
-        border-bottom: 2px solid ${props => props.theme.lightDarker};
-        -webkit-transition: border 500ms ease-out;
-        -moz-transition: border 500ms ease-out;
-        -o-transition: border 500ms ease-out;
-        transition: border 500ms ease-out;
-        &.active,
-        &:hover {
-            border-bottom: 2px solid #e86161;
-            color: #646464;
-        }
-    }
-`;
+const DEFAULT_CLASSES_FILTER = [
+    {
+        id: CLASSES.COMPARISON,
+        label: 'Comparisons',
+        tippyContent: 'Comparisons in ORKG provide an overview of state-of-the-art literature for a particular topic.',
+        link: reverse(ROUTES.COMPARISONS),
+    },
+    /*
+    {
+        id: CLASSES.SMART_REVIEW_PUBLISHED,
+        label: 'Reviews',
+        tippyContent: 'Reviews are dynamic, community maintained scholarly articles and are especially suitable for survey papers.',
+        link: reverse(ROUTES.SMART_REVIEWS)
+    },
+    {
+        id: CLASSES.LITERATURE_LIST_PUBLISHED,
+        label: 'Lists',
+        tippyContent: 'Lists provide a way to organize and describe state-of-the-art literature for a specific research domain.',
+        link: reverse(ROUTES.LISTS)
+    }, */
+    { id: CLASSES.VISUALIZATION, label: 'Visualizations', tippyContent: false, link: reverse(ROUTES.VISUALIZATIONS) },
+    { id: CLASSES.PAPER, label: 'Papers', tippyContent: false, link: reverse(ROUTES.PAPERS) },
+];
 
 const SidebarStyledBox = styled.div`
     flex-grow: 1;
@@ -43,50 +39,33 @@ const SidebarStyledBox = styled.div`
     }
 `;
 
-const FeaturedItemsBox = ({ researchFieldId }) => {
-    const [activeTab, setActiveState] = useState(2);
+const FeaturedItemsBox = ({ researchFieldId, researchFieldLabel }) => {
+    const getTabs = () =>
+        DEFAULT_CLASSES_FILTER.map(featuredClass => ({
+            title: (
+                <Tippy content={featuredClass.tippyContent} disabled={!featuredClass.tippyContent}>
+                    <div className="text-center">{featuredClass.label}</div>
+                </Tippy>
+            ),
+            getContent: () => (
+                <FeaturedItems researchFieldLabel={researchFieldLabel} researchFieldId={researchFieldId} featuredClass={featuredClass} />
+            ),
+            key: featuredClass.id,
+            tabClassName: 'tab h6',
+        }));
 
     return (
-        <SidebarStyledBox className="box rounded-lg mt-3">
-            <FeaturedTabs className="clearfix d-flex">
-                <Tippy content="Comparisons in ORKG provide an overview of state-of-the-art literature for a particular topic.">
-                    <div
-                        role="button"
-                        tabIndex="0"
-                        onKeyDown={e => e.keyCode === 13 && setActiveState(2)}
-                        className={`h6 col-md-6 text-center tab ${activeTab === 2 ? 'active' : ''}`}
-                        onClick={() => setActiveState(2)}
-                    >
-                        Comparisons
-                    </div>
-                </Tippy>
-                <div
-                    role="button"
-                    tabIndex="0"
-                    onKeyDown={e => e.keyCode === 13 && setActiveState(1)}
-                    className={`h6 col-md-6 text-center tab ${activeTab === 1 ? 'active' : ''}`}
-                    onClick={() => setActiveState(1)}
-                >
-                    Papers
-                </div>
-            </FeaturedTabs>
-            <TransitionGroup exit={false}>
-                {activeTab === 1 ? (
-                    <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        <FeaturedPapers researchFieldId={researchFieldId} />
-                    </AnimationContainer>
-                ) : (
-                    <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        <FeaturedComparisons researchFieldId={researchFieldId} />
-                    </AnimationContainer>
-                )}
-            </TransitionGroup>
+        <SidebarStyledBox className="box rounded-3 mt-3">
+            <ResponsiveTabs>
+                <Tabs items={getTabs()} />
+            </ResponsiveTabs>
         </SidebarStyledBox>
     );
 };
 
 FeaturedItemsBox.propTypes = {
-    researchFieldId: PropTypes.string.isRequired
+    researchFieldId: PropTypes.string.isRequired,
+    researchFieldLabel: PropTypes.string.isRequired,
 };
 
 export default FeaturedItemsBox;

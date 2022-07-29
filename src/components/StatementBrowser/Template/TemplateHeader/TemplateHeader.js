@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { deleteValue, toggleEditValue, updateValueLabel, isSavingValue, doneSavingValue, deleteProperty } from 'actions/statementBrowser';
+import { deleteProperty, deleteValue, setSavingValue, toggleEditValue, updateValueLabel } from 'slices/statementBrowserSlice';
 import { Input } from 'reactstrap';
 import { faTrash, faPen, faQuestion, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
@@ -20,16 +20,16 @@ export default function TemplateHeader(props) {
             dispatch(
                 updateValueLabel({
                     label: draftLabel,
-                    valueId: props.id
-                })
+                    valueId: props.id,
+                }),
             );
             if (props.syncBackend) {
-                dispatch(isSavingValue({ id: props.id })); // To show the saving message instead of the value label
+                dispatch(setSavingValue({ id: props.id, status: true })); // To show the saving message instead of the value label
                 if (props.resourceId) {
                     await updateResource(props.resourceId, props.value.label);
                     toast.success('Resource label updated successfully');
                 }
-                dispatch(doneSavingValue({ id: props.id }));
+                dispatch(setSavingValue({ id: props.id, status: false }));
             }
         }
     };
@@ -42,21 +42,21 @@ export default function TemplateHeader(props) {
         dispatch(
             deleteValue({
                 id: props.id,
-                propertyId: props.propertyId
-            })
+                propertyId: props.propertyId,
+            }),
         );
         dispatch(
             deleteProperty({
                 id: props.propertyId,
-                resourceId: props.resourceId
-            })
+                resourceId: props.resourceId,
+            }),
         );
     };
 
     return (
         <div>
             <TemplateHeaderStyle className="d-flex">
-                <div className="flex-grow-1 mr-4">
+                <div className="flex-grow-1 me-4">
                     {!props.value.isEditing ? (
                         <>
                             {props.value.label}{' '}
@@ -77,13 +77,13 @@ export default function TemplateHeader(props) {
                                                 title: 'Delete',
                                                 color: 'danger',
                                                 icon: faCheck,
-                                                action: handleDeleteTemplate
+                                                action: handleDeleteTemplate,
                                             },
                                             {
                                                 title: 'Cancel',
                                                 color: 'secondary',
-                                                icon: faTimes
-                                            }
+                                                icon: faTimes,
+                                            },
                                         ]}
                                     />
                                 </div>
@@ -124,5 +124,5 @@ TemplateHeader.propTypes = {
     propertyId: PropTypes.string.isRequired,
     statementId: PropTypes.string,
     syncBackend: PropTypes.bool.isRequired,
-    enableEdit: PropTypes.bool.isRequired
+    enableEdit: PropTypes.bool.isRequired,
 };

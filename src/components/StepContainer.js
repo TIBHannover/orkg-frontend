@@ -54,11 +54,11 @@ const StepContainer = props => {
     const activeClasses = active ? 'active' : '';
     const topClasses = classNames({
         top: true,
-        active
+        active,
     });
     const titleClasses = classNames({
         'h4 mt-4 mb-4': true,
-        active
+        active,
     });
 
     return (
@@ -73,7 +73,7 @@ const StepContainer = props => {
                 <TitleStyled className={titleClasses}>{title}</TitleStyled>
             </Container>
             {active && (
-                <Container className="box rounded pt-4 pb-4 pl-5 pr-5 position-relative" style={{ zIndex: 1 }}>
+                <Container className="box rounded pt-4 pb-4 ps-5 pe-5 position-relative" style={{ zIndex: 1 }}>
                     {children}
                 </Container>
             )}
@@ -87,14 +87,14 @@ StepContainer.propTypes = {
     topLine: PropTypes.bool,
     bottomLine: PropTypes.bool,
     active: PropTypes.bool,
-    children: PropTypes.node
+    children: PropTypes.node,
 };
 
 StepContainer.defaultProps = {
     topLine: false,
     bottomLine: false,
     active: false,
-    children: null
+    children: null,
 };
 
 export default StepContainer;

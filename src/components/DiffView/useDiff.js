@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { isString } from 'lodash';
 
 const useDiff = () => {
-    const smartReviewToPlainText = useCallback(article => {
+    const reviewToPlainText = useCallback(article => {
         let articleText = '';
         articleText += `Title: ${article.paper.title}\n\n`;
 
@@ -30,9 +30,9 @@ const useDiff = () => {
         return articleText;
     }, []);
 
-    const literatureListToPlainText = useCallback(article => {
+    const listToPlainText = useCallback(article => {
         let articleText = '';
-        articleText += `Title: ${article.literatureList.title}\n\n`;
+        articleText += `Title: ${article.list.title}\n\n`;
 
         if (article.researchField) {
             articleText += `Research field: ${article.researchField.label}\n\n`;
@@ -50,13 +50,13 @@ const useDiff = () => {
                 articleText += `Content:\n${section.content.text}\n\n`;
             }
             if (section.entries) {
-                articleText += `Section entries:\n`;
+                articleText += 'Section entries:\n';
                 for (const entry of section.entries) {
-                    articleText += `Paper: ${article?.papers?.[entry.paperId]?.paper?.label}`;
+                    articleText += `Entry: ${article?.contentTypes?.[entry.contentTypeId]?.label}`;
                     if (entry.description) {
                         articleText += `\nDescription: ${entry.description.label}`;
                     }
-                    articleText += `\n\n`;
+                    articleText += '\n\n';
                 }
             }
         }
@@ -106,7 +106,7 @@ const useDiff = () => {
         return numericOldId > numericNewId;
     }, []);
 
-    return { smartReviewToPlainText, comparisonToPlainText, isOldIdHigherThanNewId, literatureListToPlainText };
+    return { reviewToPlainText, comparisonToPlainText, isOldIdHigherThanNewId, listToPlainText };
 };
 
 export default useDiff;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, ModalHeader, ModalBody, Input, InputGroup, InputGroupAddon, Button, Alert } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, Input, InputGroup, Button, Alert } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
@@ -23,20 +23,22 @@ function Share(props) {
             setShortLinkIsLoading(false);
             setShortLinkIsFailed(false);
         } else {
-            let link = ``;
+            let link = '';
             if (!props.responseHash) {
                 const saveComparison = await getComparison({
                     contributionIds: props.contributionsList,
                     type: props.comparisonType,
-                    save_response: true
+                    save_response: true,
                 });
-                link = `${props.publicURL}${reverse(ROUTES.COMPARISON)}${props.comparisonURLConfig}&response_hash=${saveComparison.response_hash}`;
+                link = `${props.publicURL}${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}${props.comparisonURLConfig}&response_hash=${
+                    saveComparison.response_hash
+                }`;
                 props.setResponseHash(saveComparison.response_hash);
             } else {
-                link = `${props.publicURL}${reverse(ROUTES.COMPARISON)}${props.comparisonURLConfig}`;
+                link = `${props.publicURL}${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}${props.comparisonURLConfig}`;
             }
             createShortLink({
-                long_url: link
+                long_url: link,
             })
                 .then(data => {
                     const shortLink = `${props.publicURL}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
@@ -68,18 +70,16 @@ function Share(props) {
 
                 <InputGroup>
                     <Input value={!shortLinkIsLoading ? props.shortLink : 'Loading share link...'} disabled />
-                    <InputGroupAddon addonType="append">
-                        <CopyToClipboard
-                            text={!shortLinkIsLoading ? props.shortLink : 'Loading share link...'}
-                            onCopy={() => {
-                                toast.success('Share link copied!');
-                            }}
-                        >
-                            <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                <Icon icon={faClipboard} />
-                            </Button>
-                        </CopyToClipboard>
-                    </InputGroupAddon>
+                    <CopyToClipboard
+                        text={!shortLinkIsLoading ? props.shortLink : 'Loading share link...'}
+                        onCopy={() => {
+                            toast.success('Share link copied!');
+                        }}
+                    >
+                        <Button color="primary" className="ps-3 pe-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+                            <Icon icon={faClipboard} />
+                        </Button>
+                    </CopyToClipboard>
                 </InputGroup>
 
                 {!shortLinkIsLoading && (
@@ -111,7 +111,7 @@ Share.propTypes = {
     setResponseHash: PropTypes.func.isRequired,
     shortLink: PropTypes.string.isRequired,
     subject: PropTypes.object,
-    setShortLink: PropTypes.func.isRequired
+    setShortLink: PropTypes.func.isRequired,
 };
 
 export default Share;

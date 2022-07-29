@@ -1,5 +1,5 @@
 import { useState, Fragment, useRef, useEffect } from 'react';
-import { Button, InputGroup, InputGroupAddon } from 'reactstrap';
+import { Button, InputGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTags, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
@@ -8,7 +8,7 @@ import { getClassById } from 'services/backend/classes';
 import { reverse } from 'named-urls';
 import { CSSTransition } from 'react-transition-group';
 import ROUTES from 'constants/routes.js';
-import { updateResourceClasses, removeEmptyPropertiesOfClass } from 'actions/statementBrowser';
+import { updateResourceClassesAction as updateResourceClasses, removeEmptyPropertiesOfClass } from 'slices/statementBrowserSlice';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
@@ -58,7 +58,6 @@ const ClassesItem = props => {
     const [isSaving, setIsSaving] = useState(false);
     const dispatch = useDispatch();
     const preferences = useSelector(state => state.statementBrowser.preferences);
-    const shared = resource?.shared ?? 0;
 
     useEffect(() => {
         let isMounted = true;
@@ -80,7 +79,7 @@ const ClassesItem = props => {
                     }
                 });
         };
-        if (preferences['showClasses'] && resource?._class === ENTITIES.RESOURCE) {
+        if (preferences.showClasses && resource?._class === ENTITIES.RESOURCE) {
             findClasses();
         }
         return () => {
@@ -93,7 +92,7 @@ const ClassesItem = props => {
         if (action.action === 'create-option') {
             const foundIndex = selected.findIndex(x => x.__isNew__);
             const newClass = await Confirm({
-                label: selected[foundIndex].label
+                label: selected[foundIndex].label,
             });
             if (newClass) {
                 const foundIndex = selected.findIndex(x => x.__isNew__);
@@ -123,11 +122,11 @@ const ClassesItem = props => {
     };
 
     return (
-        <AnimationContainer in={preferences['showClasses']} timeout={300} classNames="zoom" unmountOnExit>
+        <AnimationContainer in={preferences.showClasses} timeout={300} classNames="zoom" unmountOnExit>
             <div>
                 {selectedResource && resource._class === ENTITIES.RESOURCE && (
                     <ClassesStyle className="text-muted mb-2 d-flex align-items-center clearfix">
-                        <Icon icon={faTags} className="mr-1" />
+                        <Icon icon={faTags} className="me-1" />
                         <span className="text-secondary-darker"> Instance of: </span>
                         {!editMode && !isLoading && (
                             <div className="mx-1" style={{ padding: '3.5px 0' }}>
@@ -148,7 +147,7 @@ const ClassesItem = props => {
                             </div>
                         )}
                         {props.enableEdit && editMode && (
-                            <div className="flex-grow-1 ml-1 ">
+                            <div className="flex-grow-1 ms-1 ">
                                 <InputGroup size="sm">
                                     <AutoComplete
                                         entityType={ENTITIES.CLASS}
@@ -171,15 +170,13 @@ const ClassesItem = props => {
                                         inputId="classes-autocomplete"
                                     />
 
-                                    <InputGroupAddon addonType="append">
-                                        <Button onClick={() => setEditMode(false)} disabled={isSaving}>
-                                            {!isSaving ? 'Done' : <Icon icon={faSpinner} spin={true} />}
-                                        </Button>
-                                    </InputGroupAddon>
+                                    <Button onClick={() => setEditMode(false)} disabled={isSaving}>
+                                        {!isSaving ? 'Done' : <Icon icon={faSpinner} spin={true} />}
+                                    </Button>
                                 </InputGroup>
                             </div>
                         )}
-                        {shared <= 1 && props.enableEdit && !editMode && (
+                        {props.enableEdit && !editMode && (
                             <StatementActionButton title="Edit classes" icon={faPen} action={() => setEditMode(true)} />
                         )}
                     </ClassesStyle>
@@ -191,12 +188,12 @@ const ClassesItem = props => {
 
 ClassesItem.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
-    syncBackend: PropTypes.bool.isRequired
+    syncBackend: PropTypes.bool.isRequired,
 };
 
 ClassesItem.defaultProps = {
     enableEdit: false,
-    syncBackend: false
+    syncBackend: false,
 };
 
 export default ClassesItem;

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert, Form, FormGroup, Label, Input } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { updateTableData } from '../../actions/pdfAnnotation';
+import { updateTableData } from 'slices/pdfAnnotationSlice';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import { cloneDeep, isString } from 'lodash';
@@ -70,7 +70,7 @@ const ExtractReferencesModal = props => {
             'paper:publication_year',
             'paper:doi',
             'paper:research_field',
-            'contribution:research_problem'
+            'contribution:research_problem',
         ];
         const paperColumnsIndex = {};
 
@@ -112,15 +112,15 @@ const ExtractReferencesModal = props => {
 
             if (reference) {
                 foundCount++;
-                tableUpdates.push([rowNumber, paperColumnsIndex['paper:title'], null, reference['title']]);
-                tableUpdates.push([rowNumber, paperColumnsIndex['paper:publication_month'], null, reference['publicationMonth']]);
-                tableUpdates.push([rowNumber, paperColumnsIndex['paper:publication_year'], null, reference['publicationYear']]);
-                tableUpdates.push([rowNumber, paperColumnsIndex['paper:doi'], null, reference['doi']]);
-                tableUpdates.push([rowNumber, paperColumnsIndex['paper:authors'], null, reference['authors'].join(';')]);
+                tableUpdates.push([rowNumber, paperColumnsIndex['paper:title'], null, reference.title]);
+                tableUpdates.push([rowNumber, paperColumnsIndex['paper:publication_month'], null, reference.publicationMonth]);
+                tableUpdates.push([rowNumber, paperColumnsIndex['paper:publication_year'], null, reference.publicationYear]);
+                tableUpdates.push([rowNumber, paperColumnsIndex['paper:doi'], null, reference.doi]);
+                tableUpdates.push([rowNumber, paperColumnsIndex['paper:authors'], null, reference.authors.join(';')]);
             }
         }
 
-        dispatch(updateTableData(props.id, tableUpdates));
+        dispatch(updateTableData({ id: props.id, dataChanges: tableUpdates }));
 
         // close the modal
         props.toggle();
@@ -141,7 +141,8 @@ const ExtractReferencesModal = props => {
             value = value[0];
             value = value.replace('[', '').replace(']', '');
             return value;
-        } else if (formattingType === 'author-names' && isString(value)) {
+        }
+        if (formattingType === 'author-names' && isString(value)) {
             value = value.replace(/\s/g, ''); // remove spaces
             value = value.replace('&amp;', '&');
             value = value.replace('(', '');
@@ -204,7 +205,7 @@ const ExtractReferencesModal = props => {
                 doi,
                 publicationMonth,
                 publicationYear,
-                authors
+                authors,
             };
         }
 
@@ -229,14 +230,14 @@ const ExtractReferencesModal = props => {
 
                 if (formattingType === 'author-names') {
                     if (authors.length >= 2) {
-                        key = key + 'etal';
+                        key += 'etal';
                     }
                     break;
                 }
             } else if (index === 1 && authors.length === 2) {
-                key = key + 'and' + lastName;
+                key = `${key}and${lastName}`;
             } else if (index === 2) {
-                key = key + 'etal';
+                key += 'etal';
                 break;
             }
         }
@@ -257,12 +258,12 @@ const ExtractReferencesModal = props => {
 
             const _firstName = author.querySelector('forename[type="first"]');
             if (_firstName) {
-                firstName = _firstName.innerHTML + ' ';
+                firstName = `${_firstName.innerHTML} `;
             }
 
             const _middleName = author.querySelector('forename[type="middle"]');
             if (_middleName) {
-                middleName = _middleName.innerHTML + ' ';
+                middleName = `${_middleName.innerHTML} `;
             }
 
             const _lastName = author.querySelector('surname');
@@ -304,7 +305,7 @@ const ExtractReferencesModal = props => {
                         <Input type="select" value={formattingType} onChange={e => setFormattingType(e.target.value)} id="columnFormatting">
                             <option value="numerical">Numerical ([1]; [2])</option>
                             <option value="author-names">Author last name (Doe, 2020; Doe et al., 2020)</option>
-                            {/* 
+                            {/*
                             <option value="author-names2">Author last name (Doe, 2020; Doe and Reed, 2020; Doe et al., 2020)</option>
                             <option value="author-names3">
                                 Author last name (Doe, 2020; Doe and Reed, 2020; Doe and Reed and Li 2020; Doe et al. 2020)
@@ -328,7 +329,7 @@ ExtractReferencesModal.propTypes = {
     id: PropTypes.string.isRequired,
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    clearImportError: PropTypes.func.isRequired
+    clearImportError: PropTypes.func.isRequired,
 };
 
 export default ExtractReferencesModal;

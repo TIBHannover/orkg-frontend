@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
-import { openAuthDialog } from 'actions/auth';
+import { openAuthDialog } from 'slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import TitleBar from 'components/TitleBar/TitleBar';
 
@@ -31,7 +31,7 @@ const Unauthorized = () => {
     return (
         <>
             <TitleBar>Authentication required</TitleBar>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <div className="container">
                     <div className="row justify-content-center">
                         <div className="col-md-12 text-center">
@@ -41,13 +41,13 @@ const Unauthorized = () => {
                             ) : (
                                 <>
                                     <h2 className="mb-4 h4">You need to sign in to continue</h2>
-                                    <Button color="primary" className="mr-3" onClick={handleSignIn}>
+                                    <Button color="primary" className="me-3" onClick={handleSignIn}>
                                         Sign in
                                     </Button>
                                 </>
                             )}
                             <Link to={ROUTES.HOME}>
-                                <Button color="primary" outline className="mr-3">
+                                <Button color="primary" outline className="me-3">
                                     Go to home
                                 </Button>
                             </Link>
@@ -57,7 +57,7 @@ const Unauthorized = () => {
                                     style={{
                                         cursor: 'pointer',
                                         color: 'inherit',
-                                        textDecoration: 'underline'
+                                        textDecoration: 'underline',
                                     }}
                                     onClick={handleSignUp}
                                     onKeyDown={e => (e.keyCode === 13 ? handleSignUp : undefined)}

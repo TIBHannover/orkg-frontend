@@ -57,11 +57,11 @@ function PaperMenuBar(props) {
             )}
 
             <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
-                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right">
+                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                     <Icon icon={faEllipsisV} />
                 </DropdownToggle>
-                <DropdownMenu right>
-                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: props.id })}>
+                <DropdownMenu end>
+                    <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: props.id })}>
                         View resource
                     </DropdownItem>
                 </DropdownMenu>
@@ -78,7 +78,7 @@ PaperMenuBar.propTypes = {
     paperLink: PropTypes.string,
     id: PropTypes.string,
     label: PropTypes.string,
-    toggle: PropTypes.func.isRequired
+    toggle: PropTypes.func.isRequired,
 };
 
 export default PaperMenuBar;

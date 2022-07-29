@@ -1,32 +1,36 @@
 import { useRef, useEffect } from 'react';
 import Tippy from '@tippyjs/react';
-import { CustomInput } from 'reactstrap';
+import { Input, Label, FormGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Select, { components } from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
-import { addToComparison, removeFromComparison } from 'actions/viewPaper';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+import { addToComparison, removeFromComparison } from 'slices/viewPaperSlice';
 
-const Option = ({ children, data, ...props }) => {
-    return (
-        <components.Option {...props}>
-            <div>{children}</div>
-            <div>
-                <small>{data.value}</small>
-            </div>
-        </components.Option>
-    );
-};
+const Option = ({ children, data, ...props }) => (
+    <components.Option {...props}>
+        <div>{children}</div>
+        <div>
+            <small>{data.value}</small>
+        </div>
+    </components.Option>
+);
 
-const CustomInputStyled = styled(CustomInput)`
+const CustomInputStyled = styled(Input)`
     &.custom-control {
         z-index: 0;
     }
 `;
 
+const SelectStyled = styled(Select)`
+    width: 300px;
+    color: ${props => props.theme.bodyColor};
+`;
+
 Option.propTypes = {
     data: PropTypes.object.isRequired,
-    children: PropTypes.string.isRequired
+    children: PropTypes.string.isRequired,
 };
 
 const AddToComparison = ({ contributionId, paper, showLabel }) => {
@@ -49,7 +53,7 @@ const AddToComparison = ({ contributionId, paper, showLabel }) => {
 
     const options = paper.contributions?.map((contribution, index) => ({
         label: contribution.label,
-        value: contribution.id
+        value: contribution.id,
     }));
 
     const toggleCompare = cId => {
@@ -62,9 +66,9 @@ const AddToComparison = ({ contributionId, paper, showLabel }) => {
                     contributionData: {
                         paperId: paper.id,
                         paperTitle: paper.label,
-                        contributionTitle: paper.contributions.find(c => c.id === cId)?.label ?? ''
-                    }
-                })
+                        contributionTitle: paper.contributions.find(c => c.id === cId)?.label ?? '',
+                    },
+                }),
             );
         }
     };
@@ -97,14 +101,14 @@ const AddToComparison = ({ contributionId, paper, showLabel }) => {
 
     return (
         <Tippy
-            theme={!contributionId && paper.contributions?.length > 1 ? 'visualizationPreview' : undefined}
             placement="bottom-start"
             interactiveDebounce={75}
-            interactive={!contributionId && paper.contributions?.length > 1 ? true : false}
+            interactive={!!(!contributionId && paper.contributions?.length > 1)}
             content={
                 !contributionId && paper.contributions?.length > 1 ? (
-                    <div style={{ width: '300px' }}>
-                        <Select
+                    <>
+                        <SelectGlobalStyle />
+                        <SelectStyled
                             value={options.filter(o => comparison.allIds.includes(o.value))}
                             onChange={(selected, { action, option, removedValue }) => {
                                 if (option) {
@@ -127,27 +131,33 @@ const AddToComparison = ({ contributionId, paper, showLabel }) => {
                             placeholder="Select contribution to compare"
                             classNamePrefix="react-select"
                         />
-                    </div>
+                    </>
                 ) : isSelected ? (
                     'Remove from comparison'
                 ) : (
-                    `Add to comparison`
+                    'Add to comparison'
                 )
             }
         >
             <span>
-                <CustomInputStyled
-                    onChange={() =>
-                        !contributionId && paper.contributions?.length > 1
-                            ? toggleAllCompare()
-                            : toggleCompare(contributionId || paper.contributions?.[0].id)
-                    }
-                    checked={!!isSelected}
-                    type="checkbox"
-                    label={showLabel ? 'Add to comparison' : ''}
-                    innerRef={inputCheckboxRef}
-                    id={`add2CPid${paper.id}cid${contributionId ?? ''}`}
-                />
+                <FormGroup check>
+                    <CustomInputStyled
+                        onChange={() =>
+                            !contributionId && paper.contributions?.length > 1
+                                ? toggleAllCompare()
+                                : toggleCompare(contributionId || paper.contributions?.[0].id)
+                        }
+                        checked={!!isSelected}
+                        type="checkbox"
+                        innerRef={inputCheckboxRef}
+                        id={`add2CPid${paper.id}cid${contributionId ?? ''}`}
+                    />
+                    {showLabel && (
+                        <Label check for={`add2CPid${paper.id}cid${contributionId ?? ''}`} className="mb-0">
+                            {showLabel ? 'Add to comparison' : ''}
+                        </Label>
+                    )}
+                </FormGroup>
             </span>
         </Tippy>
     );
@@ -156,11 +166,11 @@ const AddToComparison = ({ contributionId, paper, showLabel }) => {
 AddToComparison.propTypes = {
     contributionId: PropTypes.string,
     paper: PropTypes.object.isRequired,
-    showLabel: PropTypes.bool.isRequired
+    showLabel: PropTypes.bool.isRequired,
 };
 
 AddToComparison.defaultProps = {
-    showLabel: false
+    showLabel: false,
 };
 
 export default AddToComparison;

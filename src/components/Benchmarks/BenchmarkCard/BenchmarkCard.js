@@ -30,11 +30,11 @@ const BenchmarkCardStyled = styled.div`
 
 function BenchmarkCard(props) {
     return (
-        <BenchmarkCardStyled className="col-3 mb-4">
+        <BenchmarkCardStyled className="col-md-3 mb-4">
             <Link
                 to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
                     researchProblemId: props.benchmark.research_problem.id,
-                    slug: props.benchmark.research_problem.label
+                    slug: props.benchmark.research_problem.label,
                 })}
                 style={{ textDecoration: 'none' }}
             >
@@ -57,7 +57,7 @@ function BenchmarkCard(props) {
 }
 
 BenchmarkCard.propTypes = {
-    benchmark: PropTypes.object.isRequired
+    benchmark: PropTypes.object.isRequired,
 };
 
 export default BenchmarkCard;

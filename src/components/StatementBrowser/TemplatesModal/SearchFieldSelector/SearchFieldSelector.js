@@ -1,8 +1,9 @@
 import { useContext } from 'react';
 import Select from 'react-select';
-//import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { ThemeContext } from 'styled-components';
 import PropTypes from 'prop-types';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
 const SearchFieldSelector = props => {
     const theme = useContext(ThemeContext);
@@ -14,7 +15,7 @@ const SearchFieldSelector = props => {
             padding: '0',
             border: '0',
             fontSize: '0.875rem',
-            position: 'relative'
+            position: 'relative',
         }),
         control: provided => ({
             ...provided,
@@ -24,42 +25,42 @@ const SearchFieldSelector = props => {
             borderBottomRightRadius: props.disableBorderRadiusRight ? 0 : undefined,
             ...(props.disableBorderRadiusRight ? { borderRight: 0 } : {}),
             backgroundColor: theme.light,
-            color: theme.secondaryDarker
+            color: theme.secondaryDarker,
         }),
         valueContainer: provided => ({
             ...provided,
             marginTop: '0',
             marginLeft: '6px',
             padding: '0',
-            border: '0'
+            border: '0',
         }),
         input: provided => ({
             ...provided,
-            color: theme.secondaryDarker
+            color: theme.secondaryDarker,
         }),
         dropdownIndicator: provided => ({
             ...provided,
             marginTop: '0',
             padding: '0',
             border: '0',
-            width: '16px'
+            width: '16px',
         }),
         clearIndicator: provided => ({
             ...provided,
             marginTop: '0',
             padding: '0',
             border: '0',
-            width: '16px'
+            width: '16px',
         }),
         indicatorsContainer: provided => ({
             ...provided,
             paddingRight: '4px',
-            border: '0'
+            border: '0',
         }),
         menu: provided => ({
             ...provided,
-            fontSize: '0.875rem'
-        })
+            fontSize: '0.875rem',
+        }),
     };
 
     return (
@@ -74,6 +75,7 @@ const SearchFieldSelector = props => {
                 getOptionLabel={({ label }) => `By ${label}`}
                 isClearable={false}
             />
+            <SelectGlobalStyle />
         </>
     );
 };
@@ -83,12 +85,12 @@ SearchFieldSelector.propTypes = {
     setValue: PropTypes.func,
     options: PropTypes.array,
     disableBorderRadiusLeft: PropTypes.bool,
-    disableBorderRadiusRight: PropTypes.bool
+    disableBorderRadiusRight: PropTypes.bool,
 };
 
 SearchFieldSelector.defaultProps = {
     disableBorderRadiusLeft: false,
-    disableBorderRadiusRight: true
+    disableBorderRadiusRight: true,
 };
 
 export default SearchFieldSelector;

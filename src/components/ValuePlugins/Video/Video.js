@@ -4,6 +4,7 @@ import { renderToString } from 'react-dom/server';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faVideo } from '@fortawesome/free-solid-svg-icons';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { ENTITIES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import styled from 'styled-components';
 
@@ -26,13 +27,13 @@ class Video extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showVideoDialog: false
+            showVideoDialog: false,
         };
     }
 
     toggleVideoDialog = () => {
         this.setState(prevState => ({
-            showVideoDialog: !prevState.showVideoDialog
+            showVideoDialog: !prevState.showVideoDialog,
         }));
     };
 
@@ -73,44 +74,42 @@ class Video extends Component {
                         <IframeFullWidth title="Video" scrolling="no" src={`${providerUrl}${videoId}`} allowFullScreen />
                     </VideoContainer>
                 );
-            } else {
-                return (
-                    <>
-                        <span
-                            className="btn-link"
-                            onClick={this.toggleVideoDialog}
-                            style={{ cursor: 'pointer' }}
-                            onKeyDown={e => (e.keyCode === 13 ? this.toggleVideoDialog : undefined)}
-                            role="button"
-                            tabIndex={0}
-                        >
-                            {labelToText} <Icon icon={faVideo} />
-                        </span>
-                        <Modal isOpen={this.state.showVideoDialog} toggle={this.toggleVideoDialog} size="lg">
-                            <ModalHeader toggle={this.toggleVideoDialog}>Video Preview</ModalHeader>
-                            <ModalBody>
-                                <VideoContainer>
-                                    <IframeFullWidth title="Video" scrolling="no" src={`${providerUrl}${videoId}`} allowFullScreen />
-                                </VideoContainer>
-                            </ModalBody>
-                        </Modal>
-                    </>
-                );
             }
-        } else {
-            return label;
+            return (
+                <>
+                    <span
+                        className="btn-link"
+                        onClick={this.toggleVideoDialog}
+                        style={{ cursor: 'pointer' }}
+                        onKeyDown={e => (e.keyCode === 13 ? this.toggleVideoDialog : undefined)}
+                        role="button"
+                        tabIndex={0}
+                    >
+                        {labelToText} <Icon icon={faVideo} />
+                    </span>
+                    <Modal isOpen={this.state.showVideoDialog} toggle={this.toggleVideoDialog} size="lg">
+                        <ModalHeader toggle={this.toggleVideoDialog}>Video Preview</ModalHeader>
+                        <ModalBody>
+                            <VideoContainer>
+                                <IframeFullWidth title="Video" scrolling="no" src={`${providerUrl}${videoId}`} allowFullScreen />
+                            </VideoContainer>
+                        </ModalBody>
+                    </Modal>
+                </>
+            );
         }
+        return label;
     }
 }
 
 Video.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-    type: PropTypes.oneOf(['resource', 'literal']),
-    options: PropTypes.object.isRequired
+    type: PropTypes.oneOf([ENTITIES.RESOURCE, ENTITIES.LITERAL]),
+    options: PropTypes.object.isRequired,
 };
 
 Video.defaultProps = {
-    options: { inModal: false }
+    options: { inModal: false },
 };
 
 export default Video;

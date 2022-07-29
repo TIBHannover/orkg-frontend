@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { Label, FormFeedback, Alert } from 'reactstrap';
 import Textarea from 'react-textarea-autosize';
-import { updateAbstract } from 'actions/addPaper';
+import { updateAbstract } from 'slices/addPaperSlice';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Tooltip from 'components/Utils/Tooltip';
@@ -40,7 +40,7 @@ class AbstractInputView extends Component {
                 </Label>
                 <Textarea
                     id="paperAbstract"
-                    className={`form-control pl-2 pr-2 ${!this.props.validation ? 'is-invalid' : ''}`}
+                    className={`form-control ps-2 pe-2 ${!this.props.validation ? 'is-invalid' : ''}`}
                     minRows={8}
                     value={this.props.abstract}
                     onChange={this.handleChange}
@@ -57,18 +57,18 @@ AbstractInputView.propTypes = {
     updateAbstract: PropTypes.func.isRequired,
     validation: PropTypes.bool.isRequired,
     isAbstractLoading: PropTypes.bool.isRequired,
-    isAbstractFailedLoading: PropTypes.bool.isRequired
+    isAbstractFailedLoading: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
-    abstract: state.addPaper.abstract
+    abstract: state.addPaper.abstract,
 });
 
 const mapDispatchToProps = dispatch => ({
-    updateAbstract: data => dispatch(updateAbstract(data))
+    updateAbstract: data => dispatch(updateAbstract(data)),
 });
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(AbstractInputView);

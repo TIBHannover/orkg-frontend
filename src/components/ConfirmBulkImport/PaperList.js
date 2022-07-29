@@ -1,11 +1,11 @@
 import { Fragment, useState } from 'react';
-import { Button, ListGroup } from 'reactstrap';
+import { Button, ListGroup, Alert } from 'reactstrap';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import moment from 'moment';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faArrowsAltV } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faCalendar, faArrowsAltV, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import StatementList from 'components/ConfirmBulkImport/StatementList';
@@ -25,8 +25,7 @@ const PaperCardStyled = styled.div`
     }
 `;
 
-const PaperList = props => {
-    const { papers, existingPaperIds, idToLabel } = props;
+const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} }) => {
     const [showContributions, setShowContributions] = useState([]);
 
     const handleCardClick = i => {
@@ -45,9 +44,18 @@ const PaperList = props => {
         setShowContributions([]);
     };
 
+    const hasValidationErrorsForPaper = i =>
+        validationErrors?.[i] && Object.keys(validationErrors?.[i]).find(property => validationErrors?.[i][property]?.find(error => error));
+
+    const hasValidationErrors = validationErrors && Object.keys(validationErrors).find((_, i) => hasValidationErrorsForPaper(i));
+
     return (
         <>
-            <div className="w-100 text-right">
+            {hasValidationErrors && (
+                <Alert color="warning">Some provided data types are not matching cell values. Please check papers with a warning icon</Alert>
+            )}
+
+            <div className="w-100 text-end">
                 {showContributions.length === 0 ? (
                     <Button size="sm" color="secondary" className="mb-2" onClick={handleExpandAll}>
                         <Icon icon={faArrowsAltV} /> Expand all data
@@ -69,6 +77,8 @@ const PaperList = props => {
                         >
                             <div className="d-flex">
                                 <span className="flex-grow-1">
+                                    {hasValidationErrorsForPaper(i) && <Icon icon={faExclamationTriangle} className="text-warning me-2" />}
+
                                     {existingPaperIds[i] ? (
                                         <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: existingPaperIds[i] })} target="_blank">
                                             {paper.title ? paper.title : <i>No title</i>}
@@ -79,14 +89,14 @@ const PaperList = props => {
                                         'No title'
                                     )}
                                 </span>
-                                <div className="flex-shrink-1 text-muted pl-3" style={{ fontSize: '140%', opacity: 0.7 }}>
+                                <div className="flex-shrink-1 text-muted ps-3" style={{ fontSize: '140%', opacity: 0.7 }}>
                                     #{i + 1}
                                 </div>
                             </div>
                             <small>
                                 <Icon size="sm" icon={faUser} />{' '}
-                                {paper.authors.length > 0 ? paper.authors.map(a => a.label).join(' • ') : <i className="ml-1">No authors provided</i>}
-                                {(paper.publicationMonth || paper.publicationYear) && <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />}
+                                {paper.authors.length > 0 ? paper.authors.map(a => a.label).join(' • ') : <i className="ms-1">No authors provided</i>}
+                                {(paper.publicationMonth || paper.publicationYear) && <Icon size="sm" icon={faCalendar} className="ms-2 me-1" />}
                                 {paper.publicationMonth && paper.publicationMonth > 0 ? moment(paper.publicationMonth, 'M').format('MMMM') : ''}{' '}
                                 {paper.publicationYear}
                             </small>
@@ -102,6 +112,7 @@ const PaperList = props => {
                                                     property={property}
                                                     idToLabel={idToLabel}
                                                     values={paper.contributions[0].values[property]}
+                                                    validationErrors={validationErrors?.[i]?.[property]}
                                                 />
                                             ))}
                                         </>
@@ -120,7 +131,8 @@ const PaperList = props => {
 PaperList.propTypes = {
     papers: PropTypes.array.isRequired,
     existingPaperIds: PropTypes.array.isRequired,
-    idToLabel: PropTypes.object.isRequired
+    idToLabel: PropTypes.object.isRequired,
+    validationErrors: PropTypes.object,
 };
 
 export default PaperList;

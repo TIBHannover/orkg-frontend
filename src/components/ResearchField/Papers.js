@@ -7,22 +7,21 @@ import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFi
 import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
-import { SubTitle, SubtitleSeparator } from 'components/styled';
+import { SubTitle } from 'components/styled';
+import { useSelector } from 'react-redux';
 import { stringifySort } from 'utils';
 import Tippy from '@tippyjs/react';
 import TitleBar from 'components/TitleBar/TitleBar';
 import PropTypes from 'prop-types';
 
-const SortButton = forwardRef((props, ref) => {
-    return (
-        <Button innerRef={ref} color="secondary" className="pl-3 pr-3" size="sm">
-            {stringifySort(props.sort)} <Icon icon={faChevronDown} />
-        </Button>
-    );
-});
+const SortButton = forwardRef((props, ref) => (
+    <Button innerRef={ref} color="secondary" className="ps-3 pe-3" size="sm">
+        {stringifySort(props.sort)} <Icon icon={faChevronDown} />
+    </Button>
+));
 
 SortButton.propTypes = {
-    sort: PropTypes.string.isRequired
+    sort: PropTypes.string.isRequired,
 };
 
 const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
@@ -37,23 +36,21 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
         page,
         handleLoadMore,
         setSort,
-        setIncludeSubFields
-    } = useResearchFieldPapers({ researchFieldId: id, initialSort: 'newest', initialIncludeSubFields: true });
+        setIncludeSubFields,
+    } = useResearchFieldPapers({ researchFieldId: id, initialSort: 'combined', initialIncludeSubFields: true });
     const [tippy, setTippy] = useState({});
+    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
     return (
         <>
             <TitleBar
                 titleSize="h5"
                 titleAddition={
-                    <>
-                        <SubtitleSeparator />
-                        <SubTitle className="mb-0">
-                            <small className="text-muted mb-0 text-small">
-                                {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : <>{`${totalElements} papers`}</>}
-                            </small>
-                        </SubTitle>
-                    </>
+                    <SubTitle className="mb-0">
+                        <small className="text-muted mb-0 text-small">
+                            {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : <>{`${totalElements} papers`}</>}
+                        </small>
+                    </SubTitle>
                 }
                 buttonGroup={
                     <>
@@ -78,8 +75,10 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
                                             id="sortPapers"
                                             disabled={isLoading}
                                         >
-                                            <option value="newest">Newest first</option>
-                                            <option value="oldest">Oldest first</option>
+                                            <option value="combined">Top recent</option>
+                                            <option value="newest">Recently added</option>
+                                            <option value="featured">Featured</option>
+                                            {isCurationAllowed && <option value="unlisted">Unlisted</option>}
                                         </Input>
                                     </FormGroup>
                                     <FormGroup check>
@@ -111,21 +110,20 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
             <Container className="p-0">
                 {papers.length > 0 && (
                     <ListGroup className={boxShadow ? 'box' : ''}>
-                        {papers.map(paper => {
-                            return (
+                        {papers.map(
+                            paper =>
                                 paper && (
                                     <PaperCard
                                         paper={{
                                             id: paper.id,
                                             title: paper.label,
-                                            ...paper
+                                            ...paper,
                                         }}
                                         showBreadcrumbs={showBreadcrumbs}
                                         key={`pc${paper.id}`}
                                     />
-                                )
-                            );
-                        })}
+                                ),
+                        )}
                         {!isLoading && hasNextPage && (
                             <div
                                 style={{ cursor: 'pointer' }}
@@ -138,17 +136,18 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
                                 Load more papers
                             </div>
                         )}
-                        {!hasNextPage && isLastPageReached && page !== 1 && <div className="text-center mt-3">You have reached the last page.</div>}
+                        {!hasNextPage && isLastPageReached && page !== 1 && <div className="text-center mt-3">You have reached the last page</div>}
                     </ListGroup>
                 )}
                 {papers.length === 0 && !isLoading && (
                     <div className={boxShadow ? 'container box rounded' : ''}>
                         <div className="p-5 text-center mt-4 mb-4">
-                            There are no papers for this research field, yet.
+                            There are no {sort === 'featured' ? 'featured' : sort === 'unlisted' ? 'unlisted' : ''} papers for this research field,
+                            yet
                             <br />
                             <br />
                             <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
-                                <Button size="sm" color="primary " className="mr-3">
+                                <Button size="sm" color="primary " className="me-3">
                                     Add paper
                                 </Button>
                             </Link>
@@ -163,7 +162,7 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
                             </>
                         )}
                         {page === 0 && (
-                            <div className="text-left">
+                            <div className="text-start">
                                 <ContentLoader
                                     speed={2}
                                     width={400}
@@ -188,12 +187,12 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
 Papers.propTypes = {
     id: PropTypes.string.isRequired,
     boxShadow: PropTypes.bool,
-    showBreadcrumbs: PropTypes.bool
+    showBreadcrumbs: PropTypes.bool,
 };
 
 Papers.defaultProps = {
     boxShadow: false,
-    showBreadcrumbs: true
+    showBreadcrumbs: true,
 };
 
 export default Papers;

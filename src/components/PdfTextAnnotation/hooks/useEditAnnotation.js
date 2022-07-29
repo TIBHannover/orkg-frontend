@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import EditAnnotationTextModal from 'components/PdfTextAnnotation/EditAnnotationTextModal';
-import { updateAnnotationText } from 'actions/pdfTextAnnotation';
+import { updateAnnotationText } from 'slices/pdfTextAnnotationSlice';
 
 const useEditAnnotation = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -29,8 +29,8 @@ const useEditAnnotation = () => {
         dispatch(
             updateAnnotationText({
                 id: annotationId,
-                text: value
-            })
+                text: value,
+            }),
         );
 
         toggleIsOpen();

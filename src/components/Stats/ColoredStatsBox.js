@@ -42,45 +42,43 @@ const Label = styled.div`
     font-size: 18px;
 `;
 
-const ColoredStatsBox = props => {
-    return (
-        <StatsBoxStyled className={`d-flex flex-grow-1 ${props.className} text-center box rounded mb-3 mx-2`}>
-            <ConditionalWrapper
-                condition={props.link}
-                wrapper={children => (
-                    <Link className="flex-grow-1" to={props.link}>
-                        {children}
-                    </Link>
-                )}
-            >
-                <div className="d-flex flex-grow-1 mt-2 mb-2" style={{ minHeight: '74px' }}>
-                    <LabelWrapper className="flex-grow-1">
-                        {!props.isLoading ? (
-                            <div className="number">
-                                <CountUp duration={1.1} end={props.number} separator=" " />
-                            </div>
-                        ) : (
-                            'Loading...'
-                        )}
-                        <Label>{props.label}</Label>
-                    </LabelWrapper>
-                </div>
-            </ConditionalWrapper>
-        </StatsBoxStyled>
-    );
-};
+const ColoredStatsBox = props => (
+    <StatsBoxStyled className={`d-flex flex-grow-1 ${props.className} text-center box rounded mb-3 mx-2`}>
+        <ConditionalWrapper
+            condition={props.link}
+            wrapper={children => (
+                <Link className="flex-grow-1" to={props.link}>
+                    {children}
+                </Link>
+            )}
+        >
+            <div className="d-flex flex-grow-1 mt-2 mb-2" style={{ minHeight: '74px' }}>
+                <LabelWrapper className="flex-grow-1">
+                    {!props.isLoading ? (
+                        <div className="number">
+                            <CountUp duration={1.1} end={props.number} separator=" " />
+                        </div>
+                    ) : (
+                        'Loading...'
+                    )}
+                    <Label>{props.label}</Label>
+                </LabelWrapper>
+            </div>
+        </ConditionalWrapper>
+    </StatsBoxStyled>
+);
 
 ColoredStatsBox.propTypes = {
     label: PropTypes.string.isRequired,
     number: PropTypes.number,
     className: PropTypes.string,
     isLoading: PropTypes.bool,
-    link: PropTypes.string
+    link: PropTypes.string,
 };
 
 ColoredStatsBox.defaultProps = {
     className: null,
-    number: 0
+    number: 0,
 };
 
 export default ColoredStatsBox;

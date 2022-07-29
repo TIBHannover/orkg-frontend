@@ -1,20 +1,18 @@
-import { useState, useEffect } from 'react';
-import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Card, CardBody, CardTitle, Badge } from 'reactstrap';
+import { useState } from 'react';
+import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Badge } from 'reactstrap';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import { SubTitle, SubtitleSeparator } from 'components/styled';
+import { SubTitle } from 'components/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
 import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
 import Contributors from 'components/TopContributors/Contributors';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import { useSelector } from 'react-redux';
 import ROUTES from 'constants/routes.js';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import { usePrevious } from 'react-use';
 import PropTypes from 'prop-types';
 import CheckSlug from 'components/CheckSlug/CheckSlug';
 import CheckClasses from 'components/CheckClasses/CheckClasses';
@@ -28,13 +26,6 @@ const ResearchFieldHeader = ({ id }) => {
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const [showMoreFields, setShowMoreFields] = useState(false);
     const [researchFieldData, subResearchFields, isLoading, isFailedLoading, loadResearchFieldData] = useResearchField();
-    const prevEditMode = usePrevious({ editMode });
-    useEffect(() => {
-        if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
-            loadResearchFieldData(id);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [editMode]);
 
     return (
         <>
@@ -58,7 +49,7 @@ const ResearchFieldHeader = ({ id }) => {
                         </ContentLoader>
                     </div>
                     <div className="text-center mt-4 mb-4 p-5 container box rounded">
-                        <div className="text-left">
+                        <div className="text-start">
                             <ContentLoader
                                 speed={2}
                                 width={400}
@@ -85,15 +76,11 @@ const ResearchFieldHeader = ({ id }) => {
                             label={researchFieldData.label}
                             enableEdit={true}
                             syncBackend={true}
+                            onCloseModal={() => loadResearchFieldData(id)}
                         />
                     )}
                     <TitleBar
-                        titleAddition={
-                            <>
-                                <SubtitleSeparator />
-                                <SubTitle>{researchFieldData.label}</SubTitle>
-                            </>
-                        }
+                        titleAddition={<SubTitle>Research field</SubTitle>}
                         buttonGroup={
                             <>
                                 {isCurationAllowed && (
@@ -101,19 +88,19 @@ const ResearchFieldHeader = ({ id }) => {
                                         component={Button}
                                         size="sm"
                                         color="secondary"
-                                        className="float-right"
+                                        className="float-end"
                                         onClick={() => setEditMode(v => !v)}
                                         style={{ marginRight: 2 }}
                                     >
                                         <Icon icon={faPen} /> Edit
                                     </RequireAuthentication>
                                 )}
-                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right">
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
-                                    <DropdownMenu right>
-                                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
+                                    <DropdownMenu end>
+                                        <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id })}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>
@@ -122,77 +109,71 @@ const ResearchFieldHeader = ({ id }) => {
                         }
                         wrap={false}
                     >
-                        Research field
+                        {researchFieldData.label}
                     </TitleBar>
 
-                    <Container className="p-0">
-                        <Card>
-                            {(researchFieldData.description || researchFieldData.sameAs) && (
-                                <>
-                                    <CardBody>
-                                        {researchFieldData.description && (
-                                            <>
-                                                <CardTitle tag="h5">Description</CardTitle>
-                                                {researchFieldData.description && <p className="m-0">{researchFieldData.description}</p>}
-                                            </>
-                                        )}
-                                        {researchFieldData.sameAs && (
-                                            <ExternalDescription
-                                                query={researchFieldData.sameAs ? researchFieldData.sameAs.label : researchFieldData.label}
-                                            />
-                                        )}
-                                    </CardBody>
-                                    <hr className="m-0" />
-                                </>
-                            )}
-                            {subResearchFields && subResearchFields.length > 0 && (
-                                <>
-                                    <CardBody>
-                                        <CardTitle tag="h5">Subfields</CardTitle>
-                                        <div>
-                                            {subResearchFields.slice(0, 9).map(subfield => (
-                                                <Link
-                                                    key={`index${subfield.id}`}
-                                                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                                                        researchFieldId: subfield.id,
-                                                        slug: subfield.label
-                                                    })}
-                                                >
-                                                    <Badge color="light" className="mr-2 mb-2">
-                                                        {subfield.label}
-                                                    </Badge>
-                                                </Link>
-                                            ))}
-                                            {subResearchFields.length > 9 &&
-                                                showMoreFields &&
-                                                subResearchFields.slice(9).map(subfield => (
-                                                    <Link
-                                                        key={`index${subfield.id}`}
-                                                        to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                                                            researchFieldId: subfield.id,
-                                                            slug: subfield.label
-                                                        })}
-                                                    >
-                                                        <Badge color="light" className="mr-2 mb-2">
-                                                            {subfield.label}
-                                                        </Badge>
-                                                    </Link>
-                                                ))}
-                                            {subResearchFields.length > 9 && (
-                                                <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm">
-                                                    {showMoreFields ? 'Show less subfields' : 'Show more subfields'}
-                                                </Button>
-                                            )}
-                                        </div>
-                                    </CardBody>
-                                    <hr className="m-0" />
-                                </>
-                            )}
+                    <Container className="p-3 box rounded">
+                        {(researchFieldData.description || researchFieldData.sameAs) && (
+                            <>
+                                {researchFieldData.description && (
+                                    <>
+                                        <h2 className="h5">Description</h2>
+                                        {researchFieldData.description && <p className="m-0">{researchFieldData.description}</p>}
+                                    </>
+                                )}
+                                {researchFieldData.sameAs && (
+                                    <ExternalDescription
+                                        query={researchFieldData.sameAs ? researchFieldData.sameAs.label : researchFieldData.label}
+                                    />
+                                )}
 
-                            <CardBody>
-                                <Contributors researchFieldId={id} />
-                            </CardBody>
-                        </Card>
+                                <hr className="my-3" />
+                            </>
+                        )}
+                        {subResearchFields && subResearchFields.length > 0 && (
+                            <>
+                                <h2 className="h5">Subfields</h2>
+                                <div>
+                                    {subResearchFields.slice(0, 9).map(subfield => (
+                                        <Link
+                                            key={`index${subfield.id}`}
+                                            to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                                researchFieldId: subfield.id,
+                                                slug: subfield.label,
+                                            })}
+                                        >
+                                            <Badge color="light" className="me-2 mb-2">
+                                                {subfield.label}
+                                            </Badge>
+                                        </Link>
+                                    ))}
+                                    {subResearchFields.length > 9 &&
+                                        showMoreFields &&
+                                        subResearchFields.slice(9).map(subfield => (
+                                            <Link
+                                                key={`index${subfield.id}`}
+                                                to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                                    researchFieldId: subfield.id,
+                                                    slug: subfield.label,
+                                                })}
+                                            >
+                                                <Badge color="light" className="me-2 mb-2">
+                                                    {subfield.label}
+                                                </Badge>
+                                            </Link>
+                                        ))}
+                                    {subResearchFields.length > 9 && (
+                                        <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm" className="p-0 ms-2">
+                                            {showMoreFields ? 'Show less subfields' : 'Show more subfields'}
+                                        </Button>
+                                    )}
+                                </div>
+
+                                <hr className="my-3" />
+                            </>
+                        )}
+
+                        <Contributors researchFieldId={id} />
                     </Container>
                 </>
             )}
@@ -201,7 +182,7 @@ const ResearchFieldHeader = ({ id }) => {
 };
 
 ResearchFieldHeader.propTypes = {
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
 };
 
 export default ResearchFieldHeader;

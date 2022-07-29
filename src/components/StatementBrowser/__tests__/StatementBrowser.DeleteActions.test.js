@@ -1,8 +1,7 @@
 import { render, screen, fireEvent, waitFor } from 'testUtils';
-import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
+import StatementBrowser from '../StatementBrowser';
 import { statementBrowser1P2V } from '../ValueItem/__mocks__/StatementBrowserDataValueItem';
-import { ToastContainer } from 'react-toastify';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
@@ -15,15 +14,10 @@ const setup = (
         newStore: false,
         rootNodeType: ENTITIES.RESOURCE,
         enableEdit: true,
-        syncBackend: false
-    }
+        syncBackend: false,
+    },
 ) => {
-    render(
-        <>
-            <StatementBrowser {...props} /> <ToastContainer position="top-right" autoClose={5000} hideProgressBar className="toast-container" />
-        </>,
-        { initialState }
-    );
+    render(<StatementBrowser {...props} />, { initialState });
 };
 
 const clickOnDeleteValueButton = async screen => {

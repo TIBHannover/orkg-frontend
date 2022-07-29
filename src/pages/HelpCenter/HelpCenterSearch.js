@@ -2,8 +2,7 @@ import HelpCenterSearchInput from 'components/HelpCenterSearchInput/HelpCenterSe
 import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
 import { getHelpArticles } from 'services/cms';
 import { reverseWithSlug } from 'utils';
@@ -25,10 +24,10 @@ const HelpCenterSearch = () => {
                         .map(word => {
                             const where = `_where[_or][${whereCount}][title_contains]=${word}&_where[_or][${whereCount +
                                 1}][content_contains]=${word}`;
-                            whereCount = whereCount + 2;
+                            whereCount += 2;
                             return where;
                         })
-                        .join('&')
+                        .join('&'),
                 });
                 setArticles(_articles);
             } catch (e) {
@@ -44,7 +43,7 @@ const HelpCenterSearch = () => {
         <div>
             <TitleBar>Help center</TitleBar>
 
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 {isLoading && 'Loading...'}
                 <HelpCenterSearchInput />
 
@@ -64,7 +63,7 @@ const HelpCenterSearch = () => {
                                 <Link
                                     to={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                         id: article.id,
-                                        slug: article.title
+                                        slug: article.title,
                                     })}
                                 >
                                     {article.title}

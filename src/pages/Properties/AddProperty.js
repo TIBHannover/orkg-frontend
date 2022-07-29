@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Container, Button, FormGroup, Input, Label } from 'reactstrap';
 import { createPredicate } from 'services/backend/predicates';
-import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import TitleBar from 'components/TitleBar/TitleBar';
+import requireAuthentication from 'requireAuthentication';
+import { useNavigate } from 'react-router-dom';
 
 const AddProperty = () => {
     const [label, setLabel] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Set document title
@@ -24,7 +25,7 @@ const AddProperty = () => {
                 const newProperty = await createPredicate(label);
                 toast.success('Property created successfully');
                 setIsLoading(false);
-                history.push(reverse(ROUTES.PROPERTY, { id: newProperty.id }));
+                navigate(reverse(ROUTES.PROPERTY, { id: newProperty.id }));
             } catch (error) {
                 console.error(error);
                 toast.error(`Error creating property ${error.message}`);
@@ -39,10 +40,10 @@ const AddProperty = () => {
     return (
         <>
             <TitleBar>Create property</TitleBar>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <div className="pt-2">
                     <FormGroup>
-                        <Label for="propertyLabel">Property Label</Label>
+                        <Label for="propertyLabel">Property label</Label>
                         <Input
                             onChange={e => setLabel(e.target.value)}
                             onKeyDown={e => (e.keyCode === 13 ? handleAdd : undefined)}
@@ -50,11 +51,10 @@ const AddProperty = () => {
                             name="value"
                             id="propertyLabel"
                             disabled={isLoading}
-                            placeholder="Property label"
                         />
                     </FormGroup>
                     <Button color="primary" onClick={handleAdd} className="mt-3 mb-2" disabled={isLoading}>
-                        {!isLoading ? 'Create Property' : <span>Loading</span>}
+                        {!isLoading ? 'Create property' : <span>Loading</span>}
                     </Button>
                 </div>
             </Container>
@@ -62,4 +62,4 @@ const AddProperty = () => {
     );
 };
 
-export default AddProperty;
+export default requireAuthentication(AddProperty);

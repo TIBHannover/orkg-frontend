@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { InputGroup, InputGroupAddon, FormFeedback } from 'reactstrap';
-import { toggleEditValue } from 'actions/statementBrowser';
+import { InputGroup, FormFeedback } from 'reactstrap';
+import { toggleEditValue } from 'slices/statementBrowserSlice';
 import { StyledButton } from 'components/StatementBrowser/styled';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
@@ -32,12 +32,14 @@ const ValueForm = props => {
         newResources,
         disabledCreate,
         handleCreateExistingLabel,
-        commitChangeLabel
+        commitChangeLabel,
+        inputFormType,
+        setInputFormType,
     } = useValueForm({
         valueId: props.id,
         resourceId: props.resourceId,
         propertyId: props.propertyId,
-        syncBackend: props.syncBackend
+        syncBackend: props.syncBackend,
     });
 
     const dispatch = useDispatch();
@@ -56,17 +58,18 @@ const ValueForm = props => {
     const [suggestionType, setSuggestionType] = useState(null);
 
     /* Select component reference can be used to check if menu is opened */
-    const isMenuOpen = () => {
-        return autocompleteInputRef.current.state.menuIsOpen && autocompleteInputRef.current.props.options.length > 0;
-    };
+    const isMenuOpen = () => autocompleteInputRef.current.state.menuIsOpen && autocompleteInputRef.current.props.options.length > 0;
 
     const onSubmit = () => {
-        const { error } = schema.validate(inputValue);
+        let error;
+        if (schema) {
+            error = schema.validate(inputValue).error;
+        }
         if (error) {
             setFormFeedback(error.message);
             setIsValid(false);
         } else {
-            //setInputValue(value);
+            // setInputValue(value);
             setFormFeedback(null);
             setIsValid(true);
             // Check for a possible conversion possible
@@ -74,14 +77,12 @@ const ValueForm = props => {
             if (suggestions.length > 0 && !valueClass) {
                 setSuggestionType(suggestions[0]);
                 confirmConversion.current.show();
+            } else if (!editMode) {
+                handleAddValue(entityType, { label: inputValue, datatype: getDataType() });
+                props.setShowAddValue?.(false);
             } else {
-                if (!editMode) {
-                    handleAddValue(entityType, { label: inputValue, datatype: getDataType() });
-                    props.setShowAddValue?.(false);
-                } else {
-                    commitChangeLabel(inputValue, getDataType(inputDataType));
-                    dispatch(toggleEditValue({ id: props.id }));
-                }
+                commitChangeLabel(inputValue, getDataType(inputDataType));
+                dispatch(toggleEditValue({ id: props.id }));
             }
         }
     };
@@ -121,10 +122,11 @@ const ValueForm = props => {
         setFormFeedback(null);
         setIsValid(true);
         setEntityType(getConfigByType(inputDataType)._class);
+        setInputFormType(getConfigByType(inputDataType).inputFormType);
         if (inputDataType === 'xsd:boolean') {
             setInputValue(v => Boolean(v === 'true').toString());
         }
-    }, [inputDataType, setEntityType, setInputValue]);
+    }, [inputDataType, setEntityType, setInputFormType, setInputValue]);
 
     return (
         <div>
@@ -132,11 +134,13 @@ const ValueForm = props => {
                 {((!editMode && !valueClass) || (editMode && !valueClass && value._class === ENTITIES.LITERAL)) && (
                     <DatatypeSelector entity={editMode ? value._class : null} valueType={inputDataType} setValueType={setInputDataType} />
                 )}
-                {!editMode && entityType !== ENTITIES.LITERAL ? (
+                {!editMode && inputFormType === 'autocomplete' ? (
                     <AutoComplete
                         entityType={entityType}
                         excludeClasses={
-                            entityType === ENTITIES.RESOURCE && valueClass ? `${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}` : null
+                            entityType === ENTITIES.RESOURCE && !valueClass
+                                ? `${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE},${CLASSES.TEMPLATE_COMPONENT},${CLASSES.PAPER_DELETED},${CLASSES.CONTRIBUTION_DELETED}`
+                                : null
                         }
                         optionsClass={entityType === ENTITIES.RESOURCE && valueClass ? valueClass.id : undefined}
                         placeholder={`Enter a ${entityType}`}
@@ -144,11 +148,11 @@ const ValueForm = props => {
                             handleAddValue(entityType, { ...i, label: i.value, selected: true });
                             props.setShowAddValue?.(false);
                         }}
-                        ols={entityType === ENTITIES.CLASS ? true : false}
+                        ols={entityType === ENTITIES.CLASS}
                         onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                         value={inputValue}
                         additionalData={newResources}
-                        autoLoadOption={valueClass ? true : false}
+                        autoLoadOption={!!valueClass}
                         openMenuOnFocus={true}
                         disableBorderRadiusRight
                         disableBorderRadiusLeft={!valueClass}
@@ -183,66 +187,65 @@ const ValueForm = props => {
                         }}
                     />
                 )}
-                <InputGroupAddon addonType="append">
-                    <StyledButton
-                        outline
-                        onClick={() => {
-                            if (!editMode) {
-                                props.setShowAddValue?.(false);
-                            } else {
-                                dispatch(toggleEditValue({ id: props.id }));
+
+                <StyledButton
+                    outline
+                    onClick={() => {
+                        if (!editMode) {
+                            props.setShowAddValue?.(false);
+                        } else {
+                            dispatch(toggleEditValue({ id: props.id }));
+                        }
+                        setIsValid(true);
+                        setFormFeedback(null);
+                    }}
+                >
+                    Cancel
+                </StyledButton>
+                <StyledButton outline disabled={inputFormType !== 'empty' && (!inputValue?.toString() || disabledCreate)} onClick={() => onSubmit()}>
+                    {disabledCreate ? (
+                        <Tippy hideOnClick={false} content="Please use the existing research problem that has this label." arrow={true}>
+                            <span>Create</span>
+                        </Tippy>
+                    ) : (
+                        <Tippy
+                            onShown={onShown}
+                            onCreate={instance => (confirmConversion.current = instance)}
+                            content={
+                                <ConfirmationTooltip
+                                    message={
+                                        <p className="mb-2">
+                                            The value you entered looks like {a(suggestionType?.name || '', { articleOnly: true })}{' '}
+                                            <b>{suggestionType?.name}</b>. Do you want to convert it?
+                                        </p>
+                                    }
+                                    closeTippy={() => confirmConversion.current.hide()}
+                                    ref={confirmButtonRef}
+                                    buttons={[
+                                        {
+                                            title: 'Convert',
+                                            color: 'success',
+                                            icon: faCheck,
+                                            action: acceptSuggestion,
+                                        },
+                                        {
+                                            title: 'Keep',
+                                            color: 'secondary',
+                                            icon: faTimes,
+                                            action: rejectSuggestion,
+                                        },
+                                    ]}
+                                />
                             }
-                            setIsValid(true);
-                            setFormFeedback(null);
-                        }}
-                    >
-                        Cancel
-                    </StyledButton>
-                    <StyledButton outline disabled={!inputValue?.toString() || disabledCreate} onClick={() => onSubmit()}>
-                        {disabledCreate ? (
-                            <Tippy hideOnClick={false} content="Please use the existing research problem that has this label." arrow={true}>
-                                <span>Create</span>
-                            </Tippy>
-                        ) : (
-                            <Tippy
-                                onShown={onShown}
-                                onCreate={instance => (confirmConversion.current = instance)}
-                                content={
-                                    <ConfirmationTooltip
-                                        message={
-                                            <p className="mb-2">
-                                                The value you entered looks like {a(suggestionType?.name || '', { articleOnly: true })}{' '}
-                                                <b>{suggestionType?.name}</b>. Do you want to convert it?
-                                            </p>
-                                        }
-                                        closeTippy={() => confirmConversion.current.hide()}
-                                        ref={confirmButtonRef}
-                                        buttons={[
-                                            {
-                                                title: 'Convert',
-                                                color: 'success',
-                                                icon: faCheck,
-                                                action: acceptSuggestion
-                                            },
-                                            {
-                                                title: 'Keep',
-                                                color: 'secondary',
-                                                icon: faTimes,
-                                                action: rejectSuggestion
-                                            }
-                                        ]}
-                                    />
-                                }
-                                interactive={true}
-                                appendTo={document.body}
-                                trigger="manual"
-                                placement="top"
-                            >
-                                <span tabIndex="0">{editMode ? 'Done' : 'Create'}</span>
-                            </Tippy>
-                        )}
-                    </StyledButton>
-                </InputGroupAddon>
+                            interactive={true}
+                            appendTo={document.body}
+                            trigger="manual"
+                            placement="top"
+                        >
+                            <span tabIndex="0">{editMode ? 'Done' : 'Create'}</span>
+                        </Tippy>
+                    )}
+                </StyledButton>
             </InputGroup>
             {!isValid && <FormFeedback className="d-block">{formFeedback}</FormFeedback>}
         </div>
@@ -255,7 +258,7 @@ ValueForm.propTypes = {
     resourceId: PropTypes.string,
     syncBackend: PropTypes.bool.isRequired,
     setShowAddValue: PropTypes.func,
-    showAddValue: PropTypes.bool
+    showAddValue: PropTypes.bool,
 };
 
 export default ValueForm;

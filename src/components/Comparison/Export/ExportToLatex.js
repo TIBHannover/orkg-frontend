@@ -1,21 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink } from 'reactstrap';
+import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, Label, FormGroup } from 'reactstrap';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { createShortLink, getComparison } from 'services/similarity/index';
 import Cite from 'citation-js';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { CustomInput } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import MakeLatex from 'make-latex';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
-import Tooltip from '../../Utils/Tooltip';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { PREDICATES } from 'constants/graphSettings';
+import Tooltip from '../../Utils/Tooltip';
 
 const Textarea = styled(Input)`
     font-family: 'Courier New';
@@ -105,8 +104,8 @@ function ExportToLatex(props) {
                     .fill('c')
                     .join('|')}|`,
                 captionPlacement: 'top',
-                caption: caption,
-                label: label
+                caption,
+                label,
             };
 
             if (newTitles) {
@@ -125,22 +124,22 @@ function ExportToLatex(props) {
                     setLatexTableLoading(false);
                 } else {
                     if (!props.shortLink) {
-                        let link = ``;
+                        let link = '';
                         if (!props.responseHash) {
                             const saveComparison = await getComparison({
                                 contributionIds: props.contributionsList,
                                 type: props.comparisonType,
-                                save_response: true
+                                save_response: true,
                             });
-                            link = `${props.publicURL}${reverse(ROUTES.COMPARISON)}${props.comparisonURLConfig}&response_hash=${
+                            link = `${props.publicURL}${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}${props.comparisonURLConfig}&response_hash=${
                                 saveComparison.response_hash
                             }`;
                             props.setResponseHash(saveComparison.response_hash);
                         } else {
-                            link = `${props.publicURL}${reverse(ROUTES.COMPARISON)}${props.comparisonURLConfig}`;
+                            link = `${props.publicURL}${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}${props.comparisonURLConfig}`;
                         }
                         return createShortLink({
-                            long_url: link
+                            long_url: link,
                         })
                             .then(data => {
                                 const shortLink = `${props.publicURL}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
@@ -155,11 +154,10 @@ function ExportToLatex(props) {
                                 setLatexTable(latexTable);
                                 setLatexTableLoading(false);
                             });
-                    } else {
-                        latexTable += `\n\\footnotetext{${props.shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
-                        setLatexTable(latexTable);
-                        setLatexTableLoading(false);
                     }
+                    latexTable += `\n\\footnotetext{${props.shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
+                    setLatexTable(latexTable);
+                    setLatexTableLoading(false);
                 }
             } else {
                 setLatexTable(latexTable);
@@ -204,12 +202,12 @@ function ExportToLatex(props) {
                 id: contribution.paperId,
                 title: contribution.title,
                 author: authors.length > 0 ? authors : null,
-                issued: { 'date-parts': [[contributionData.publicationYear]] }
+                issued: { 'date-parts': [[contributionData.publicationYear]] },
             });
         } else {
             ref = new Cite({
                 id: contribution.paperId,
-                title: contribution.title
+                title: contribution.title,
             });
         }
         return ref;
@@ -222,18 +220,16 @@ function ExportToLatex(props) {
             setBibtexReferencesLoading(false);
             return '';
         }
-        const contributions = props.contributions.map(contribution => {
+        const contributions = props.contributions.map(contribution =>
             // Fetch the data of each contribution
-            return getStatementsBySubject({ id: contribution.paperId })
+            getStatementsBySubject({ id: contribution.paperId })
                 .then(paperStatements => {
                     let publicationDOI = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_DOI);
                     if (publicationDOI.length > 0) {
                         publicationDOI = publicationDOI[0].object.label;
                         if (publicationDOI !== '') {
                             return Cite.async(publicationDOI)
-                                .catch(() => {
-                                    return createCiteBibtex(contribution, paperStatements);
-                                })
+                                .catch(() => createCiteBibtex(contribution, paperStatements))
                                 .then(data => {
                                     contribution.bibtex = data;
                                     return contribution;
@@ -246,8 +242,8 @@ function ExportToLatex(props) {
                 .catch(error => {
                     contribution.bibtex = createCiteBibtex(contribution, null);
                     return contribution;
-                });
-        });
+                }),
+        );
         const orkgCitation = Cite.async('10.1145/3360901.3364435').then();
         return Promise.all([...contributions, orkgCitation]).then(contributions => {
             const res = [];
@@ -255,8 +251,8 @@ function ExportToLatex(props) {
             const bibtexOptions = {
                 output: {
                     type: 'string',
-                    style: 'bibtex'
-                }
+                    style: 'bibtex',
+                },
             };
             contributions.forEach((contribution, i) => {
                 if (contribution.paperId) {
@@ -320,28 +316,33 @@ function ExportToLatex(props) {
                             <Textarea type="textarea" value={!latexTableLoading ? latexTable : 'Loading...'} disabled rows="15" />
                         </p>
 
-                        <div className="float-left mt-1">
-                            <Tooltip message="Since contribution titles can be long, it is sometimes better to replace the title by a reference like: Paper [1], Paper [2]...">
-                                <CustomInput
-                                    className="float-left"
+                        <div className="float-start mt-1">
+                            <FormGroup check>
+                                <Tooltip message="Since contribution titles can be long, it is sometimes better to replace the title by a reference like: Paper [1], Paper [2]...">
+                                    <Input
+                                        className="float-start"
+                                        type="checkbox"
+                                        id="replaceTitles"
+                                        onChange={() => setReplaceTitles(v => !v)}
+                                        checked={replaceTitles}
+                                    />{' '}
+                                    <Label check for="replaceTitles" className="mb-0">
+                                        Replace contribution titles by reference.
+                                    </Label>
+                                </Tooltip>
+                            </FormGroup>
+                            <FormGroup check>
+                                <Input
+                                    className="float-start"
                                     type="checkbox"
-                                    id="replaceTitles"
-                                    label="Replace contribution titles by reference "
-                                    onChange={() => setReplaceTitles(v => !v)}
-                                    checked={replaceTitles}
-                                />
-                                {'. '}
-                            </Tooltip>
-                            <br />
-                            <CustomInput
-                                className="float-left"
-                                type="checkbox"
-                                id="includeFootnote"
-                                label="Include a persistent link to this page as a footnote "
-                                onChange={() => setIncludeFootnote(v => !v)}
-                                checked={includeFootnote}
-                            />
-                            {'. '}
+                                    id="includeFootnote"
+                                    onChange={() => setIncludeFootnote(v => !v)}
+                                    checked={includeFootnote}
+                                />{' '}
+                                <Label check for="includeFootnote" className="mb-0">
+                                    Include a persistent link to this page as a footnote.
+                                </Label>
+                            </FormGroup>
                         </div>
 
                         <CopyToClipboard
@@ -349,10 +350,10 @@ function ExportToLatex(props) {
                             text={latexTable}
                             onCopy={() => {
                                 toast.dismiss();
-                                toast.success(`Latex copied!`);
+                                toast.success('Latex copied!');
                             }}
                         >
-                            <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
+                            <Button color="primary" className="ps-3 pe-3 float-end" size="sm">
                                 <Icon icon={faClipboard} /> Copy to clipboard
                             </Button>
                         </CopyToClipboard>
@@ -368,10 +369,10 @@ function ExportToLatex(props) {
                             text={!bibtexReferencesLoading ? bibTexReferences : 'Loading...'}
                             onCopy={() => {
                                 toast.dismiss();
-                                toast.success(`Bibtex copied!`);
+                                toast.success('Bibtex copied!');
                             }}
                         >
-                            <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
+                            <Button color="primary" className="ps-3 pe-3 float-end" size="sm">
                                 <Icon icon={faClipboard} /> Copy to clipboard
                             </Button>
                         </CopyToClipboard>
@@ -399,7 +400,7 @@ ExportToLatex.propTypes = {
     setShortLink: PropTypes.func.isRequired,
     comparisonType: PropTypes.string,
     comparisonURLConfig: PropTypes.string.isRequired,
-    publicURL: PropTypes.string.isRequired
+    publicURL: PropTypes.string.isRequired,
 };
 
 export default ExportToLatex;

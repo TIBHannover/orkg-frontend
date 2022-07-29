@@ -4,7 +4,7 @@ import { faStream } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components/macro';
 import { getResearchFieldsStats } from 'services/backend/stats';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { MISC, CLASSES } from 'constants/graphSettings';
+import { CLASSES, RESOURCES } from 'constants/graphSettings';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { resourcesUrl } from 'services/backend/resources';
 import { has } from 'lodash';
@@ -110,11 +110,10 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
         fetchResearchFieldsStats();
     }, []);
 
-    const fetchResearchFieldsStats = () => {
-        return getResearchFieldsStats().then(results => {
+    const fetchResearchFieldsStats = () =>
+        getResearchFieldsStats().then(results => {
             setStats(results);
         });
-    };
 
     return (
         <>
@@ -122,41 +121,43 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                 <h1 className="col-md-8 h5 flex-shrink-0 mb-0">
                     <Icon icon={faStream} className="text-primary" /> Browse by research field
                 </h1>
-                <div className="col-md-4 mt-2 mt-md-0 flex-end d-flex">
-                    {selectedResearchField.id !== MISC.RESEARCH_FIELD_MAIN && (
+                <div className="col-md-4 mt-2 mt-md-0 flex-row-reverse d-flex">
+                    <div style={{ minWidth: 300 }}>
+                        <Autocomplete
+                            requestUrl={resourcesUrl}
+                            optionsClass={CLASSES.RESEARCH_FIELD}
+                            placeholder="Search for fields..."
+                            onItemSelected={selected => {
+                                // blur the field allows to focus and open the menu again
+                                rfAutocompleteRef.current && rfAutocompleteRef.current.blur();
+                                handleFieldSelect(selected);
+                            }}
+                            value={selectedResearchField.id !== RESOURCES.RESEARCH_FIELD_MAIN ? selectedResearchField : null}
+                            allowCreate={false}
+                            autoLoadOption={true}
+                            cssClasses="form-control-sm"
+                            isDisabled={isLoading}
+                            innerRef={rfAutocompleteRef}
+                        />
+                    </div>
+                    {selectedResearchField.id !== RESOURCES.RESEARCH_FIELD_MAIN && (
                         <Button
                             tag={Link}
                             to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
                                 researchFieldId: selectedResearchField.id,
-                                slug: selectedResearchField.label
+                                slug: selectedResearchField.label,
                             })}
                             color="light"
                             size="sm"
-                            className="flex-shrink-0 mr-2"
+                            className="flex-shrink-0 me-2"
                         >
                             Visit field page
                         </Button>
                     )}
-                    <Autocomplete
-                        requestUrl={resourcesUrl}
-                        optionsClass={CLASSES.RESEARCH_FIELD}
-                        placeholder="Search for fields..."
-                        onItemSelected={selected => {
-                            // blur the field allows to focus and open the menu again
-                            rfAutocompleteRef.current && rfAutocompleteRef.current.blur();
-                            handleFieldSelect(selected);
-                        }}
-                        value={selectedResearchField.id !== MISC.RESEARCH_FIELD_MAIN ? selectedResearchField : null}
-                        allowCreate={false}
-                        autoLoadOption={true}
-                        cssClasses="form-control-sm"
-                        isDisabled={isLoading}
-                        innerRef={rfAutocompleteRef}
-                    />
                 </div>
             </div>
             <hr className="mt-3 mb-1" />
-            {MISC.RESEARCH_FIELD_MAIN !== selectedResearchField.id && (
+            {RESOURCES.RESEARCH_FIELD_MAIN !== selectedResearchField.id && (
                 <>
                     <Breadcrumbs backgroundWhite researchFieldId={selectedResearchField.id} onFieldClick={handleFieldSelect} disableLastField />
                     <hr className="mt-1 mb-1" />
@@ -166,20 +167,18 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                 <div className="mt-3">
                     <div>
                         <TransitionGroup id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap" exit={false}>
-                            {researchFields.slice(0, 9).map(field => {
-                                return (
-                                    <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
-                                        <Card
-                                            role="button"
-                                            disabled={has(stats, field.id) && stats[field.id] === 0}
-                                            onClick={() => handleFieldSelect(field)}
-                                        >
-                                            <CardTitle className="card-title m-0 text-center">{field.label}</CardTitle>
-                                            <PaperAmount>{has(stats, field.id) ? stats[field.id] : 0} papers</PaperAmount>
-                                        </Card>
-                                    </AnimationContainer>
-                                );
-                            })}
+                            {researchFields.slice(0, 9).map(field => (
+                                <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
+                                    <Card
+                                        role="button"
+                                        disabled={has(stats, field.id) && stats[field.id] === 0}
+                                        onClick={() => handleFieldSelect(field)}
+                                    >
+                                        <CardTitle className="card-title m-0 text-center">{field.label}</CardTitle>
+                                        <PaperAmount>{has(stats, field.id) ? stats[field.id] : 0} papers</PaperAmount>
+                                    </Card>
+                                </AnimationContainer>
+                            ))}
                             {researchFields.length > 9 &&
                                 showMoreFields &&
                                 researchFields.slice(9).map(field => (
@@ -205,7 +204,7 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                     </div>
                 </div>
             )}
-            {selectedResearchField.id !== MISC.RESEARCH_FIELD_MAIN && <ArrowCards />}
+            {selectedResearchField.id !== RESOURCES.RESEARCH_FIELD_MAIN && <ArrowCards />}
             {isLoading && (
                 <div className="mt-3">
                     <div>
@@ -234,7 +233,7 @@ ResearchFieldCards.propTypes = {
     selectedResearchField: PropTypes.object,
     researchFields: PropTypes.array,
     handleFieldSelect: PropTypes.func,
-    isLoading: PropTypes.bool.isRequired
+    isLoading: PropTypes.bool.isRequired,
 };
 
 export default ResearchFieldCards;

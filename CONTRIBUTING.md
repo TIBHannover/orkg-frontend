@@ -60,7 +60,7 @@ Once you are finished with your merge request, there are a few more steps you ha
 While editing, make sure you are doing the following:
 
 1. Remove `draft:` from the title, to indicate your merge request is ready.
-2. Change the title of the merge request to also follow the [Conventional Commits format](https://www.conventionalcommits.org/en/v1.0.0/). It is important to specify a title that is understandable by all users. The title of the merge request is used to automatically create the [ORKG changelog](https://www.orkg.org/orkg/changelog).
+2. Change the title of the merge request to also follow the [Conventional Commits format](https://www.conventionalcommits.org/en/v1.0.0/). It is important to specify a title that is understandable by all users. The title of the merge request is used to automatically create the [ORKG changelog](https://www.orkg.org/changelog).
 3. Provide a clear description of the merge request. You don't have to explain the issue again (that is already part of the issue), but explain what you did to fix it. More importantly, also explain what is needed for the reviewer to test the merge request. For example, provide steps to the reviewer.
 4. Set the `Assignees` field to yourself
 5. Set the `Reviewers` field to the person you want to review the merge request. This should be an ORKG team member.
@@ -74,3 +74,38 @@ Nice, you did it! Now, you have to wait a bit until a team member reviews your m
 ## What is next?
 
 -   [Consider writing tests for your code](https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Contributing:-automated-testing) to increase the code quality and maintainability
+
+# Architecture
+
+To get familiar with the code structure of ORKG, here’s a short summary of how the ORKG front-end code base is organized. This will help you to know where to look and where you should change the code.
+
+Another resource is this video about an introduction to ORKG frontend development: https://www.youtube.com/watch?v=3eec1OJUQ4Y
+
+## Bird's Eye View
+
+On the highest level, ORKG front-end is the interface that uses the ORKG backend API besides other internal and external services to provide tools for users to explore and curate the knowledge graph.
+
+![Create MR](./docs/ORKG-services.jpg)
+
+The internal services are maintained in separate repositories, and each one of these services is providing an API for specific features.
+
+-   [Annotation](https://gitlab.com/TIBHannover/orkg/annotation): for abstract annotation feature.
+-   [SimComp](https://gitlab.com/TIBHannover/orkg/orkg-similarity): for the similarity and comparison services features and also the persistent storage of objects related to comparison configuration and result, visualizations, url shortener, reviews and literature list.
+-   [Backend API](https://gitlab.com/TIBHannover/orkg/orkg-backend): the main backend API.
+-   [GROBID](https://gitlab.com/TIBHannover/orkg/annotation/-/blob/master/docker-compose.yml#L12): used to parse pdf, mainly for Survey table extractor.
+-   [Strapi](https://gitlab.com/TIBHannover/orkg/strapi): the CMS for the help center and some other content like `Latest news`
+
+## Code Map
+
+This section talks briefly about various important directories and files in the source code.
+
+-   **src/slices** : This directory deals with [react-redux](https://redux.js.org/) using [Redux Toolkit](https://redux-toolkit.js.org/) approach.
+-   **src/assets**: for any assets like images, csv or something related to scss and bootstrap customization.
+-   **src/components**: small components or reusable components.
+-   **src/constants**: any constant values that we are used in the frontend
+-   **src/libs**: mostly code related to visualization
+-   **src/pages**: we dedicate a separated file for each ORKG page
+-   **src/services**: ORKG and external services API wrappers
+-   **src/index.js**: entry point of the application
+-   **src/network.js**: wrappers for fetch functions of HTTP methods like POST,GET.
+-   **widget**: code related to [orkg widget](https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/blob/master/widget/README.md).

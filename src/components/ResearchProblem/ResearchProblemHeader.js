@@ -1,43 +1,31 @@
-import { useState, useEffect } from 'react';
-import {
-    Container,
-    Button,
-    ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    Card,
-    CardBody,
-    CardTitle,
-    Badge,
-    Row,
-    Col
-} from 'reactstrap';
+import { useState } from 'react';
+import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Badge, Row, Col } from 'reactstrap';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import { SubTitle, SubtitleSeparator } from 'components/styled';
+import { SubTitle } from 'components/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
-import Contributors from './Contributors';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import useResearchProblem from 'components/ResearchProblem/hooks/useResearchProblem';
 import useResearchProblemResearchFields from 'components/ResearchProblem/hooks/useResearchProblemResearchFields';
 import AuthorsBox from 'components/TopAuthors/AuthorsBox';
-import ResearchFieldsBox from './ResearchFieldBox/ResearchFieldsBox';
-import SuperResearchProblemBox from './SuperResearchProblemBox/SuperResearchProblemBox';
-import { NavLink } from 'react-router-dom';
+import FeaturedMark from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
+import { NavLink, Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes.js';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import { usePrevious } from 'react-use';
 import PropTypes from 'prop-types';
 import CheckSlug from 'components/CheckSlug/CheckSlug';
 import { reverseWithSlug } from 'utils';
 import CheckClasses from 'components/CheckClasses/CheckClasses';
 import { CLASSES } from 'constants/graphSettings';
 import TitleBar from 'components/TitleBar/TitleBar';
+import SuperResearchProblemBox from 'components/ResearchProblem/SuperResearchProblemBox/SuperResearchProblemBox';
+import ResearchFieldsBox from './ResearchFieldBox/ResearchFieldsBox';
+import Contributors from './Contributors';
 
 const ResearchProblemHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -45,14 +33,11 @@ const ResearchProblemHeader = ({ id }) => {
     const [showMoreFields, setShowMoreFields] = useState(false);
     const { researchProblemData, superProblems, isLoading, isFailedLoading, loadResearchProblemData } = useResearchProblem({ id });
     const [researchFields, isLoadingResearchFields] = useResearchProblemResearchFields({ researchProblemId: id });
-    const prevEditMode = usePrevious({ editMode });
-
-    useEffect(() => {
-        if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
-            loadResearchProblemData(id);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [editMode]);
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: id,
+        unlisted: researchProblemData?.unlisted,
+        featured: researchProblemData?.featured,
+    });
 
     return (
         <>
@@ -76,7 +61,7 @@ const ResearchProblemHeader = ({ id }) => {
                         </ContentLoader>
                     </div>
                     <div className="text-center mt-4 mb-4 p-5 container box rounded">
-                        <div className="text-left">
+                        <div className="text-start">
                             <ContentLoader
                                 speed={2}
                                 width={400}
@@ -99,8 +84,11 @@ const ResearchProblemHeader = ({ id }) => {
                     <TitleBar
                         titleAddition={
                             <>
-                                <SubtitleSeparator />
-                                <SubTitle>{researchProblemData.label}</SubTitle>
+                                <SubTitle>Research problem</SubTitle>
+                                <FeaturedMark size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />{' '}
+                                <div className="d-inline-block ms-1">
+                                    <MarkUnlisted size="sm" resourceId={id} unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                                </div>
                             </>
                         }
                         buttonGroup={
@@ -109,18 +97,18 @@ const ResearchProblemHeader = ({ id }) => {
                                     component={Button}
                                     size="sm"
                                     color="secondary"
-                                    className="float-right"
+                                    className="float-end"
                                     onClick={() => setEditMode(v => !v)}
                                     style={{ marginRight: 2 }}
                                 >
                                     <Icon icon={faPen} /> Edit
                                 </RequireAuthentication>
-                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right">
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
-                                    <DropdownMenu right>
-                                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
+                                    <DropdownMenu end>
+                                        <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id })}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>
@@ -129,7 +117,7 @@ const ResearchProblemHeader = ({ id }) => {
                         }
                         wrap={false}
                     >
-                        Research problem
+                        {researchProblemData.label}
                     </TitleBar>
                     {editMode && (
                         <StatementBrowserDialog
@@ -139,73 +127,65 @@ const ResearchProblemHeader = ({ id }) => {
                             label={researchProblemData.label}
                             enableEdit={true}
                             syncBackend={true}
+                            onCloseModal={() => loadResearchProblemData(id)}
                         />
                     )}
-                    <Container className="p-0">
-                        <Card>
-                            <CardBody>
-                                <CardTitle tag="h5">Description</CardTitle>
-                                {researchProblemData.description && <div className="mb-4">{researchProblemData.description}</div>}
-                                {!researchProblemData.description && <div className="mb-2">No description for this research problem yet!</div>}
-                                {researchProblemData.sameAs && (
-                                    <ExternalDescription
-                                        query={researchProblemData.sameAs ? researchProblemData.sameAs.label : researchProblemData.label}
-                                    />
-                                )}
-                            </CardBody>
+                    <Container className="p-3 rounded box">
+                        <h2 className="h5">Description</h2>
+                        {researchProblemData.description && <div className="mb-4">{researchProblemData.description}</div>}
+                        {!researchProblemData.description && <div className="mb-2">No description for this research problem yet</div>}
+                        {researchProblemData.sameAs && (
+                            <ExternalDescription query={researchProblemData.sameAs ? researchProblemData.sameAs.label : researchProblemData.label} />
+                        )}
 
-                            {researchProblemData.subProblems && researchProblemData.subProblems.length > 0 && (
-                                <>
-                                    <hr className="m-0" />
-                                    <CardBody>
-                                        <CardTitle tag="h5">Subfields</CardTitle>
-                                        <div>
-                                            {researchProblemData.subProblems.slice(0, 9).map(subfield => (
-                                                <Link
-                                                    key={`index${subfield.id}`}
-                                                    to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
-                                                        researchProblemId: subfield.id,
-                                                        slug: subfield.label
-                                                    })}
-                                                >
-                                                    <Badge color="light" className="mr-2 mb-2">
-                                                        {subfield.label}
-                                                    </Badge>
-                                                </Link>
-                                            ))}
-                                            {researchProblemData.subProblems.length > 9 &&
-                                                researchProblemData.subProblems &&
-                                                researchProblemData.subProblems.slice(9).map(subfield => (
-                                                    <Link
-                                                        key={`index${subfield.id}`}
-                                                        to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
-                                                            researchProblemId: subfield.id,
-                                                            slug: subfield.label
-                                                        })}
-                                                    >
-                                                        <Badge color="light" className="mr-2 mb-2">
-                                                            {subfield.label}
-                                                        </Badge>
-                                                    </Link>
-                                                ))}
-                                            {researchProblemData.subProblems.length > 9 && (
-                                                <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm">
-                                                    {showMoreFields ? 'Show less subfields' : 'Show more subfields'}
-                                                </Button>
-                                            )}
-                                        </div>
-                                    </CardBody>
-                                </>
-                            )}
+                        {researchProblemData.subProblems && researchProblemData.subProblems.length > 0 && (
+                            <>
+                                <hr />
 
-                            <hr className="m-0" />
-                            <CardBody>
-                                <Contributors researchProblemId={id} />
-                            </CardBody>
-                        </Card>
+                                <h2 className="h5">Subproblems</h2>
+                                <div>
+                                    {researchProblemData.subProblems.slice(0, 9).map(subfield => (
+                                        <Link
+                                            key={`index${subfield.id}`}
+                                            to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                                researchProblemId: subfield.id,
+                                                slug: subfield.label,
+                                            })}
+                                        >
+                                            <Badge color="light" className="me-2 mb-2">
+                                                {subfield.label}
+                                            </Badge>
+                                        </Link>
+                                    ))}
+                                    {researchProblemData.subProblems.length > 9 &&
+                                        showMoreFields &&
+                                        researchProblemData.subProblems.slice(9).map(subfield => (
+                                            <Link
+                                                key={`index${subfield.id}`}
+                                                to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                                    researchProblemId: subfield.id,
+                                                    slug: subfield.label,
+                                                })}
+                                            >
+                                                <Badge color="light" className="me-2 mb-2">
+                                                    {subfield.label}
+                                                </Badge>
+                                            </Link>
+                                        ))}
+                                    {researchProblemData.subProblems.length > 9 && (
+                                        <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm" className="p-0 ms-2">
+                                            {showMoreFields ? 'Show less subfields' : 'Show more subfields'}
+                                        </Button>
+                                    )}
+                                </div>
+                            </>
+                        )}
+
+                        <hr />
+                        <Contributors researchProblemId={id} />
                     </Container>
                     <Container className="p-0">
-                        <Row className="mt-3">
+                        <Row className="mt-4">
                             <Col md="4" className="d-flex ">
                                 <AuthorsBox researchProblemId={id} />
                             </Col>
@@ -224,7 +204,7 @@ const ResearchProblemHeader = ({ id }) => {
 };
 
 ResearchProblemHeader.propTypes = {
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
 };
 
 export default ResearchProblemHeader;

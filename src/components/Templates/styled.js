@@ -9,15 +9,6 @@ export const StyledContainer = styled(Container)`
         -webkit-box-shadow: 0px 0px 0px 0px #000;
         box-shadow: 0px 0px 0px 0px #000;
     }
-
-    legend.scheduler-border {
-        font-size: 1.2em !important;
-        font-weight: bold !important;
-        text-align: left !important;
-        width: auto;
-        padding: 0 10px;
-        border-bottom: none;
-    }
 `;
 
 export const StyledAutoCompleteInputFormControl = styled.div`

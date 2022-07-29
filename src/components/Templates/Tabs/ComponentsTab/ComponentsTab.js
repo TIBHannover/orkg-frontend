@@ -1,54 +1,80 @@
 import { useState, useCallback } from 'react';
-import { Row, Col, FormGroup, CustomInput } from 'reactstrap';
-import { connect } from 'react-redux';
+import { Row, Col, FormGroup, Input, Label } from 'reactstrap';
+import { useSelector, useDispatch } from 'react-redux';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import { setComponents, setIsStrictTemplate } from 'actions/addTemplate';
-import { createPredicate } from 'services/backend/predicates';
+import { updateComponents, updateIsStrict } from 'slices/templateEditorSlice';
 import TemplateComponent from 'components/Templates/TemplateComponent/TemplateComponent';
 import AddPropertyView from 'components/StatementBrowser/AddProperty/AddPropertyView';
 import update from 'immutability-helper';
-import PropTypes from 'prop-types';
-import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
+import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
 
-function ComponentsTab(props) {
+const ComponentsTab = () => {
     const [showAddProperty, setShowAddProperty] = useState(false);
-    const { confirmProperty } = useConfirmPropertyModal();
+    const dispatch = useDispatch();
+    const components = useSelector(state => state.templateEditor.components);
+    const editMode = useSelector(state => state.templateEditor.editMode);
+    const isStrictTemplate = useSelector(state => state.templateEditor.isStrict);
+    const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
+    const [propertyLabel, setPropertyLabel] = useState('');
+    const [propertyIndex, setPropertyIndex] = useState(null);
 
     const handleDeleteTemplateComponent = index => {
-        props.setComponents(props.components.filter((item, j) => index !== j));
+        dispatch(updateComponents(components.filter((item, j) => index !== j)));
     };
 
     const handlePropertiesSelect = async (selected, action, index) => {
         if (action.action === 'create-option') {
-            const confirmedProperty = await confirmProperty();
-            if (confirmedProperty) {
-                const newPredicate = await createPredicate(selected.label);
-                selected = { id: newPredicate.id, label: selected.label };
-                const templateComponents = props.components.map((item, j) => {
-                    const _item = { ...item };
-                    if (j === index) {
-                        _item.property = !selected ? null : selected;
-                    }
-                    return _item;
-                });
-                props.setComponents(templateComponents);
-            }
+            setIsOpenConfirmModal(true);
+            setPropertyLabel(selected.label);
+            setPropertyIndex(index);
         } else {
-            const templateComponents = props.components.map((item, j) => {
+            const templateComponents = components.map((item, j) => {
                 const _item = { ...item };
                 if (j === index) {
                     _item.property = !selected ? null : selected;
                 }
                 return _item;
             });
-            props.setComponents(templateComponents);
+            dispatch(updateComponents(templateComponents));
         }
+    };
+
+    const handleCreate = ({ id }) => {
+        let templateComponents = [];
+
+        // when updating existing components the propertyIndex is set, otherwise a new component is added
+        if (propertyIndex) {
+            const selected = { id, label: propertyLabel };
+            templateComponents = components.map((item, j) => {
+                const _item = { ...item };
+                if (j === propertyIndex) {
+                    _item.property = !selected ? null : selected;
+                }
+                return _item;
+            });
+        } else {
+            templateComponents = [
+                ...components,
+                {
+                    property: { id, label: propertyLabel },
+                    value: {},
+                    validationRules: {},
+                    minOccurs: '0',
+                    maxOccurs: null,
+                    order: null,
+                },
+            ];
+            setShowAddProperty(false);
+        }
+        dispatch(updateComponents(templateComponents));
+        setIsOpenConfirmModal(false);
+        setPropertyIndex(null);
     };
 
     const handleClassOfPropertySelect = async (selected, action, index) => {
         if (action.action === 'create-option') {
             const newClass = await ConfirmClass({
-                label: selected.label
+                label: selected.label,
             });
             if (newClass) {
                 selected = { id: newClass.id, label: newClass.label };
@@ -56,7 +82,7 @@ function ComponentsTab(props) {
                 return null;
             }
         }
-        const templateComponents = props.components.map((item, j) => {
+        const templateComponents = components.map((item, j) => {
             const _item = { ...item };
             if (j === index) {
                 _item.value = !selected ? null : selected;
@@ -65,90 +91,78 @@ function ComponentsTab(props) {
             return _item;
         });
 
-        props.setComponents(templateComponents);
+        dispatch(updateComponents(templateComponents));
     };
 
     const handleSelectNewProperty = ({ id, value: label }) => {
         const templateComponents = [
-            ...props.components,
-            { property: { id, label: label }, value: {}, validationRules: {}, minOccurs: '0', maxOccurs: null, order: null }
+            ...components,
+            { property: { id, label }, value: {}, validationRules: {}, minOccurs: '0', maxOccurs: null, order: null },
         ];
-        props.setComponents(templateComponents);
+        dispatch(updateComponents(templateComponents));
         setShowAddProperty(false);
     };
 
     const toggleConfirmNewProperty = async label => {
-        const confirmNewProperty = await confirmProperty();
-
-        if (confirmNewProperty) {
-            handleCreateNewProperty(label);
-        }
-    };
-
-    const handleCreateNewProperty = async label => {
-        const newPredicate = await createPredicate(label);
-        const templateComponents = [
-            ...props.components,
-            {
-                property: { id: newPredicate.id, label: newPredicate.label },
-                value: {},
-                validationRules: {},
-                minOccurs: '0',
-                maxOccurs: null,
-                order: null
-            }
-        ];
-        props.setComponents(templateComponents);
-        setShowAddProperty(false);
+        setIsOpenConfirmModal(true);
+        setPropertyLabel(label);
+        setPropertyIndex(null);
     };
 
     const moveCard = useCallback(
         (dragIndex, hoverIndex) => {
-            const dragCard = props.components[dragIndex];
-            props.setComponents(
-                update(props.components, {
-                    $splice: [[dragIndex, 1], [hoverIndex, 0, dragCard]]
-                })
+            const dragCard = components[dragIndex];
+            dispatch(
+                updateComponents(
+                    update(components, {
+                        $splice: [[dragIndex, 1], [hoverIndex, 0, dragCard]],
+                    }),
+                ),
             );
         },
-        [props]
+        [components, dispatch],
     );
 
     const handleSwitchIsStrictTemplate = event => {
-        props.setIsStrictTemplate(event.target.checked);
+        dispatch(updateIsStrict(event.target.checked));
     };
 
     return (
         <div className="p-4">
+            {isOpenConfirmModal && (
+                <ConfirmCreatePropertyModal
+                    onCreate={handleCreate}
+                    label={propertyLabel}
+                    toggle={() => setIsOpenConfirmModal(v => !v)}
+                    shouldPerformCreate
+                />
+            )}
             <div className="pb-4">
-                {props.components && props.components.length > 0 && (
+                {components && components.length > 0 && (
                     <Row className="text-center">
                         <Col md={6}>Property</Col>
                         <Col md={5}>Type</Col>
                     </Row>
                 )}
-                {props.components &&
-                    props.components.length > 0 &&
-                    props.components.map((templateProperty, index) => {
-                        return (
-                            <TemplateComponent
-                                key={`tc${templateProperty.property.id}`}
-                                enableEdit={props.editMode}
-                                handleDeleteTemplateComponent={handleDeleteTemplateComponent}
-                                id={index}
-                                moveCard={moveCard}
-                                property={templateProperty.property}
-                                value={templateProperty.value}
-                                minOccurs={templateProperty.minOccurs}
-                                maxOccurs={templateProperty.maxOccurs}
-                                validationRules={templateProperty.validationRules}
-                                handlePropertiesSelect={handlePropertiesSelect}
-                                handleClassOfPropertySelect={handleClassOfPropertySelect}
-                            />
-                        );
-                    })}
-                {props.components && props.components.length === 0 && <i>No properties specified.</i>}
-                {props.editMode && (
+                {components &&
+                    components.length > 0 &&
+                    components.map((templateProperty, index) => (
+                        <TemplateComponent
+                            key={`tc${templateProperty.property.id}`}
+                            handleDeleteTemplateComponent={handleDeleteTemplateComponent}
+                            id={index}
+                            moveCard={moveCard}
+                            property={templateProperty.property}
+                            value={templateProperty.value}
+                            minOccurs={templateProperty.minOccurs}
+                            maxOccurs={templateProperty.maxOccurs}
+                            validationRules={templateProperty.validationRules}
+                            handlePropertiesSelect={handlePropertiesSelect}
+                            handleClassOfPropertySelect={handleClassOfPropertySelect}
+                        />
+                    ))}
+                {components && components.length === 0 && <i>No properties specified.</i>}
+                {editMode && (
                     <>
                         <AddPropertyView
                             showAddProperty={showAddProperty}
@@ -160,44 +174,22 @@ function ComponentsTab(props) {
                 )}
                 <FormGroup className="mt-3">
                     <div>
-                        <CustomInput
+                        <Input
                             onChange={handleSwitchIsStrictTemplate}
-                            checked={props.isStrictTemplate}
+                            checked={isStrictTemplate}
                             id="switchIsStrictTemplate"
                             type="switch"
                             name="customSwitch"
-                            label="This template is strict (users cannot add additional properties themselves)"
-                            disabled={!props.editMode}
-                        />
+                            disabled={!editMode}
+                        />{' '}
+                        <Label for="switchIsStrictTemplate" className="mb-0">
+                            This template is strict (users cannot add additional properties themselves)
+                        </Label>
                     </div>
                 </FormGroup>
             </div>
         </div>
     );
-}
-
-ComponentsTab.propTypes = {
-    components: PropTypes.array.isRequired,
-    editMode: PropTypes.bool.isRequired,
-    setComponents: PropTypes.func.isRequired,
-    setIsStrictTemplate: PropTypes.func.isRequired,
-    isStrictTemplate: PropTypes.bool.isRequired
 };
 
-const mapStateToProps = state => {
-    return {
-        components: state.addTemplate.components,
-        editMode: state.addTemplate.editMode,
-        isStrictTemplate: state.addTemplate.isStrict
-    };
-};
-
-const mapDispatchToProps = dispatch => ({
-    setComponents: data => dispatch(setComponents(data)),
-    setIsStrictTemplate: data => dispatch(setIsStrictTemplate(data))
-});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ComponentsTab);
+export default ComponentsTab;

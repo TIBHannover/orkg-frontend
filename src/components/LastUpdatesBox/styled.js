@@ -5,13 +5,17 @@ export const StyledActivity = styled.div`
     color: ${props => props.theme.bodyColor};
     position: relative;
     font-size: 15px;
+    padding-top: 0.05px;
+
     .time {
         color: ${props => props.theme.secondaryDarker};
-        margin-top: -0.2rem;
+        margin-top: -8px;
         margin-bottom: 0.2rem;
         font-size: 16px;
+        color: rgba(100, 100, 100, 0.57);
+        font-size: 95%;
     }
-    .time::before {
+    &::before {
         width: 0.7rem;
         height: 0.7rem;
         margin-left: -1.45rem;
@@ -21,7 +25,7 @@ export const StyledActivity = styled.div`
         background-color: ${props => props.theme.lightDarker};
         display: inline-block;
         position: absolute;
-        margin-top: 3px;
+        margin-top: -2px;
     }
     a {
         color: ${props => props.theme.primary};

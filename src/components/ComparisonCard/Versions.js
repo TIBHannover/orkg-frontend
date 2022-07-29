@@ -16,7 +16,7 @@ const VersionTooltip = props => {
     const [isLoading, setIsLoading] = useState(false);
     const [version, setVersion] = useState(props.version);
     useEffect(() => {
-        if (!!!version?.contributions?.length) {
+        if (!version?.contributions?.length) {
             setIsLoading(true);
             getStatementsBySubject({ id: version.id }).then(statements => {
                 setVersion(getComparisonData(version, statements));
@@ -33,17 +33,17 @@ const VersionTooltip = props => {
                     <div className="flex-grow-1">
                         {version?.contributions?.length && (
                             <>
-                                <Icon size="sm" icon={faFile} className="mr-1" /> {version?.contributions?.length} Contributions
+                                <Icon size="sm" icon={faFile} className="me-1" /> {version?.contributions?.length} Contributions
                             </>
                         )}
                         {version.visualizations && (
                             <>
-                                <Icon size="sm" icon={faChartBar} className="ml-2 mr-1" /> {version.visualizations?.length} Visualizations
+                                <Icon size="sm" icon={faChartBar} className="ms-2 me-1" /> {version.visualizations?.length} Visualizations
                             </>
                         )}
                         {(version.resources?.length > 0 || version.figures?.length > 0) && (
                             <>
-                                <Icon size="sm" icon={faPaperclip} className="ml-2 mr-1" /> {version.resources.length + version.resources.length}{' '}
+                                <Icon size="sm" icon={faPaperclip} className="ms-2 me-1" /> {version.resources.length + version.resources.length}{' '}
                                 attachments
                             </>
                         )}
@@ -59,7 +59,7 @@ const VersionTooltip = props => {
 };
 
 VersionTooltip.propTypes = {
-    version: PropTypes.object
+    version: PropTypes.object,
 };
 
 const Versions = props => {
@@ -68,7 +68,7 @@ const Versions = props => {
     return (
         <div>
             <small>
-                <Icon size="sm" icon={faCodeBranch} className="mr-1" /> Versions:{' '}
+                <Icon size="sm" icon={faCodeBranch} className="me-1" /> Versions:{' '}
                 {props.versions.slice(1).map((version, index) => (
                     <span key={version.id}>
                         <Tippy content={<VersionTooltip version={version} />}>
@@ -97,11 +97,11 @@ const Versions = props => {
 
 Versions.propTypes = {
     id: PropTypes.string.isRequired,
-    versions: PropTypes.array
+    versions: PropTypes.array,
 };
 
 Versions.defaultProps = {
-    showHistory: true
+    showHistory: true,
 };
 
 export default Versions;

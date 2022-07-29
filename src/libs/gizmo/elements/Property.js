@@ -60,7 +60,7 @@ export default class Property extends BaseElement {
             this.y = 0.5 * (this.range.y + this.domain.y);
         }
         if (this.svgRoot) {
-            this.svgRoot.attr('transform', 'translate(' + this.x + ',' + this.y + ')');
+            this.svgRoot.attr('transform', `translate(${this.x},${this.y})`);
             this.link.updateDrawPosition();
         }
     };
@@ -71,8 +71,8 @@ export default class Property extends BaseElement {
             {
                 source: that.domain,
                 target: that.range,
-                propertyData: that
-            }
+                propertyData: that,
+            },
         ];
     };
 } // end of class definition

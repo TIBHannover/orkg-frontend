@@ -2,7 +2,7 @@ import Joi from 'joi';
 import { MISC, ENTITIES, CLASSES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import { orderBy } from 'lodash';
-//https://www.w3.org/TR/xmlschema-2
+// https://www.w3.org/TR/xmlschema-2
 
 const DATA_TYPES = [
     {
@@ -18,7 +18,7 @@ const DATA_TYPES = [
         classId: CLASSES.RESOURCE,
         schema: Joi.string(),
         inputFormType: 'autocomplete',
-        weight: 0
+        weight: 0,
     },
     {
         name: 'Text',
@@ -28,7 +28,7 @@ const DATA_TYPES = [
         classId: CLASSES.STRING,
         schema: Joi.string(),
         inputFormType: 'textarea',
-        weight: 0
+        weight: 0,
     },
     {
         name: 'Decimal',
@@ -37,7 +37,7 @@ const DATA_TYPES = [
         classId: CLASSES.DECIMAL,
         schema: Joi.number(),
         inputFormType: 'text',
-        weight: 2
+        weight: 2,
     },
     {
         name: 'Integer',
@@ -46,7 +46,7 @@ const DATA_TYPES = [
         classId: CLASSES.INTEGER,
         schema: Joi.number().integer(),
         inputFormType: 'text',
-        weight: 3
+        weight: 3,
     },
     {
         name: 'Boolean',
@@ -56,7 +56,7 @@ const DATA_TYPES = [
         classId: CLASSES.BOOLEAN,
         schema: Joi.boolean(),
         inputFormType: 'boolean',
-        weight: 1
+        weight: 1,
     },
     {
         name: 'Date',
@@ -65,7 +65,7 @@ const DATA_TYPES = [
         classId: CLASSES.DATE,
         schema: Joi.date().iso(),
         inputFormType: 'date',
-        weight: 1
+        weight: 1,
     },
     {
         name: 'URL',
@@ -74,59 +74,76 @@ const DATA_TYPES = [
         classId: CLASSES.URI,
         schema: Joi.string()
             .regex(REGEX.URL)
-            .message(`"value" must be a valid URL`),
+            .message('"value" must be a valid URL'),
         inputFormType: 'text',
-        weight: 1
-    } /*,
-    {
-        name: 'Class',
-        type: ENTITIES.CLASS,
-        _class: ENTITIES.CLASS,
-        classId: CLASSES.CLASS,
-        schema: Joi.string(),
-        inputFormType: 'autocomplete',
-        weight: 0
+        weight: 1,
     },
     {
-        name: 'Property',
-        type: ENTITIES.PREDICATE,
-        _class: ENTITIES.PREDICATE,
-        classId: CLASSES.PREDICATE,
+        name: 'Empty',
+        tooltip: 'Choose Empty to indicate that no value exists',
+        type: 'empty',
+        _class: 'empty',
+        classId: CLASSES.RESOURCE,
+        schema: null,
+        inputFormType: 'empty',
+        weight: 0,
+    },
+];
+/*
+{
+    name: 'Class',
+    type: ENTITIES.CLASS,
+    _class: ENTITIES.CLASS,
+    classId: CLASSES.CLASS,
+    schema: Joi.string(),
+    inputFormType: 'autocomplete',
+    weight: 0
+},
+{
+    name: 'Property',
+    type: ENTITIES.PREDICATE,
+    _class: ENTITIES.PREDICATE,
+    classId: CLASSES.PREDICATE,
+    schema: Joi.string(),
+    inputFormType: 'autocomplete',
+    weight: 0
+} */
+
+export const getConfigByType = type =>
+    DATA_TYPES.find(dt => dt.type === type) || { type: MISC.DEFAULT_LITERAL_DATATYPE, validation: Joi.string(), inputFormType: 'textarea' };
+
+export const getConfigByClassId = classId =>
+    DATA_TYPES.find(dt => dt.classId === classId) || {
+        name: 'Resource',
+        type: ENTITIES.RESOURCE,
+        _class: ENTITIES.RESOURCE,
+        classId,
         schema: Joi.string(),
         inputFormType: 'autocomplete',
-        weight: 0
-    }*/
-];
-
-export const getConfigByType = type => {
-    return DATA_TYPES.find(dt => dt.type === type) || { type: MISC.DEFAULT_LITERAL_DATATYPE, validation: Joi.string(), inputFormType: 'textarea' };
-};
-
-export const getConfigByClassId = classId => {
-    return (
-        DATA_TYPES.find(dt => dt.classId === classId) || {
-            name: 'Resource',
-            type: ENTITIES.RESOURCE,
-            _class: ENTITIES.RESOURCE,
-            classId: classId,
-            schema: Joi.string(),
-            inputFormType: 'autocomplete',
-            weight: 0
-        }
-    );
-};
+        weight: 0,
+    };
 
 export const getSuggestionByTypeAndValue = (type, value) => {
     const suggestions = DATA_TYPES.filter(dt => dt.type !== type)
         .filter(dt => {
-            const { error } = dt.schema.validate(value);
-            return error ? false : true;
+            let error;
+            if (dt.schema) {
+                error = dt.schema.validate(value).error;
+            }
+            return !error;
         })
-        .filter(dt => {
-            return getConfigByType(type).weight < dt.weight;
-        });
+        .filter(dt => getConfigByType(type).weight < dt.weight);
 
     return orderBy(suggestions, ['weight'], ['desc']);
 };
+
+export const getSuggestionByValue = value =>
+    orderBy(
+        DATA_TYPES.filter(dataType => dataType.type !== ENTITIES.RESOURCE).filter(dataType => !dataType.schema?.validate(value)?.error),
+        ['weight'],
+        ['desc'],
+    );
+
+export const checkDataTypeIsInValid = ({ value, dataType }) => !!getConfigByType(dataType).schema.validate(value)?.error;
 
 export default DATA_TYPES;

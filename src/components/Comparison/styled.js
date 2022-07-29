@@ -83,7 +83,7 @@ export const ReactTableWrapper = styled.div`
     &:not(.contribution-editor) {
         .table {
             .tr:hover .td > div > div {
-                background: #e7eaf1;
+                background: #f0f2f7;
             }
             .tr .td > div > .itemGroup,
             .tr:hover .td > div > .itemGroup {
@@ -225,6 +225,13 @@ export const Contribution = styled.div`
         color: ${props => props.theme.secondaryDarker};
         border-top-color: #d0d5e8;
     }
+`;
+
+export const ContributionButton = styled(Button)`
+    padding: 0;
+    color: inherit !important;
+    font-size: inherit;
+    text-decoration: none;
 `;
 
 export const Delete = styled.button`

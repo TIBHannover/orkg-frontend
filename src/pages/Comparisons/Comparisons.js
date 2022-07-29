@@ -17,38 +17,43 @@ const Comparisons = () => {
     const fetchItems = async ({ page, pageSize }) => {
         const { items, last, totalElements } = await getResourcesByClass({
             id: CLASSES.COMPARISON,
-            page: page,
+            page,
             items: pageSize,
             sortBy: 'created_at',
-            desc: true
+            desc: true,
         }).then(async result => ({
             ...result,
             items: groupVersionsOfComparisons(
                 await getStatementsBySubjects({ ids: result.content.map(p => p.id) }).then(comparisonsStatements =>
                     comparisonsStatements.map(comparisonStatements =>
-                        getComparisonData(find(result.content, { id: comparisonStatements.id }), comparisonStatements.statements)
-                    )
-                )
-            )
+                        getComparisonData(find(result.content, { id: comparisonStatements.id }), comparisonStatements.statements),
+                    ),
+                ),
+            ),
         }));
 
         return {
             items,
             last,
-            totalElements
+            totalElements,
         };
     };
 
     const buttons = (
-        <RequireAuthentication
-            component={Link}
-            color="secondary"
-            size="sm"
-            className="btn btn-secondary btn-sm flex-shrink-0"
-            to={ROUTES.ADD_COMPARISON}
-        >
-            <Icon icon={faPlus} /> Create comparison
-        </RequireAuthentication>
+        <>
+            <RequireAuthentication
+                component={Link}
+                color="secondary"
+                size="sm"
+                className="btn btn-secondary btn-sm flex-shrink-0"
+                to={ROUTES.ADD_COMPARISON}
+            >
+                <Icon icon={faPlus} /> Create comparison
+            </RequireAuthentication>
+            <Link style={{ marginLeft: '1px' }} className="btn btn-secondary btn-sm flex-shrink-0" to={ROUTES.FEATURED_COMPARISONS}>
+                Featured comparisons
+            </Link>
+        </>
     );
 
     return (

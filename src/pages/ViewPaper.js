@@ -1,7 +1,7 @@
 import { Container, UncontrolledAlert } from 'reactstrap';
 import NotFound from 'pages/NotFound';
 import ContentLoader from 'react-content-loader';
-import { useParams, useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import Contributions from 'components/ViewPaper/Contributions/Contributions';
 import useViewPaper from 'components/ViewPaper/hooks/useViewPaper';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
@@ -15,27 +15,10 @@ import queryString from 'query-string';
 import env from '@beam-australia/react-env';
 import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
 import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
-import styled from 'styled-components';
 import { Helmet } from 'react-helmet';
 import moment from 'moment';
 import TitleBar from 'components/TitleBar/TitleBar';
-
-export const EditModeHeader = styled(Container)`
-    background-color: #80869b !important;
-    color: #fff;
-    padding: 8px 25px !important;
-    display: flex;
-    align-items: center;
-`;
-
-export const Title = styled.div`
-    font-size: 1.1rem;
-    flex-grow: 1;
-    & span {
-        font-size: small;
-        color: ${props => props.theme.lightDarker};
-    }
-`;
+import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 
 const ViewPaper = () => {
     const { resourceId } = useParams();
@@ -45,8 +28,8 @@ const ViewPaper = () => {
         state.viewPaper.url
             ? state.viewPaper.url.label
             : state.viewPaper.doi && state.viewPaper.doi.label.startsWith('10.')
-            ? 'https://doi.org/' + state.viewPaper.doi.label
-            : ''
+            ? `https://doi.org/${state.viewPaper.doi.label}`
+            : '',
     );
 
     const {
@@ -58,19 +41,18 @@ const ViewPaper = () => {
         toggle,
         handleShowHeaderBar,
         setEditMode,
-        setShowGraphModal
+        setShowGraphModal,
     } = useViewPaper({
-        paperId: resourceId
+        paperId: resourceId,
     });
 
     let comingFromWizard = queryString.parse(location.search);
     comingFromWizard = comingFromWizard ? comingFromWizard.comingFromWizard === 'true' : false;
 
-    const getSEODescription = () => {
-        return `Published: ${viewPaper.publicationMonth ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''} ${
+    const getSEODescription = () =>
+        `Published: ${viewPaper.publicationMonth ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''} ${
             viewPaper.publicationYear ? viewPaper.publicationYear.label : ''
         } • Research field: ${viewPaper?.researchField?.label} • Authors: ${viewPaper?.authors?.map(author => author.label).join(', ')}`;
-    };
 
     const ldJson = {
         mainEntity: {
@@ -80,16 +62,16 @@ const ViewPaper = () => {
             author: viewPaper?.authors?.map(author => ({
                 name: author.label,
                 ...(author.orcid ? { url: `http://orcid.org/${author.orcid}` } : {}),
-                '@type': 'Person'
+                '@type': 'Person',
             })),
             datePublished: `${viewPaper?.publicationMonth ? moment(viewPaper?.publicationMonth?.label, 'M').format('MMMM') : ''} ${
                 viewPaper?.publicationYear ? viewPaper?.publicationYear?.label : ''
             }`,
             about: viewPaper?.researchField?.label,
-            '@type': 'ScholarlyArticle'
+            '@type': 'ScholarlyArticle',
         },
         '@context': 'https://schema.org',
-        '@type': 'WebPage'
+        '@type': 'WebPage',
     };
 
     return (
@@ -134,15 +116,10 @@ const ViewPaper = () => {
                         </TitleBar>
                     </VisibilitySensor>
 
-                    {editMode && (
-                        <EditModeHeader className="box rounded-top">
-                            <Title>
-                                Edit mode <span className="pl-2">Every change you make is automatically saved</span>
-                            </Title>
-                        </EditModeHeader>
-                    )}
+                    <EditModeHeader isVisible={editMode} />
+
                     <Container
-                        className={`box pt-md-4 pb-md-4 pl-md-5 pr-md-5 pt-sm-2 pb-sm-2 pl-sm-2 pr-sm-2 clearfix position-relative 
+                        className={`box pt-md-4 pb-md-4 ps-md-5 pe-md-5 pt-sm-2 pb-sm-2 ps-sm-2 pe-sm-2 clearfix position-relative 
                                 ${editMode ? 'rounded-bottom' : 'rounded'}`}
                     >
                         {!isLoading && <ShareLinkMarker typeOfLink="paper" title={viewPaper.paperResource.label} />}

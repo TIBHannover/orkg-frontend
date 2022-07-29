@@ -7,7 +7,7 @@ import { reverse } from 'named-urls';
 import React, { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import ReactDiffViewer from 'react-diff-viewer';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-use';
 import { Alert, Button } from 'reactstrap';
 import queryString from 'query-string';
@@ -24,7 +24,7 @@ const DiffView = ({ type, diffRoute, getData }) => {
     const [fullWidth, setFullWidth] = useState(false);
     const [hasFailed, setHasFailed] = useState(false);
     const { isOldIdHigherThanNewId } = useDiff();
-    const history = useHistory();
+    const navigate = useNavigate();
     const location = useLocation();
     const { switchedVersions } = queryString.parse(location.search);
 
@@ -38,7 +38,7 @@ const DiffView = ({ type, diffRoute, getData }) => {
         }
 
         if (isOldIdHigherThanNewId({ oldId, newId })) {
-            history.push(`${reverse(diffRoute, { oldId: newId, newId: oldId })}?switchedVersions=true`);
+            navigate(`${reverse(diffRoute, { oldId: newId, newId: oldId })}?switchedVersions=true`);
             return;
         }
 
@@ -58,10 +58,10 @@ const DiffView = ({ type, diffRoute, getData }) => {
         };
 
         getContent();
-    }, [oldId, newId, isOldIdHigherThanNewId, history, diffRoute, getData]);
+    }, [oldId, newId, isOldIdHigherThanNewId, navigate, diffRoute, getData]);
 
     const handleDismiss = () => {
-        history.push(reverse(diffRoute, { oldId, newId }));
+        navigate(reverse(diffRoute, { oldId, newId }));
     };
 
     const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 20px)' } : {};
@@ -72,7 +72,7 @@ const DiffView = ({ type, diffRoute, getData }) => {
             <TitleBar
                 buttonGroup={
                     <Button size="sm" color="secondary" onClick={() => setFullWidth(v => !v)}>
-                        <Icon icon={faArrowsAltH} className="mr-1" /> Full width
+                        <Icon icon={faArrowsAltH} className="me-1" /> Full width
                     </Button>
                 }
             >
@@ -119,7 +119,7 @@ const DiffView = ({ type, diffRoute, getData }) => {
 DiffView.propTypes = {
     type: PropTypes.string.isRequired,
     diffRoute: PropTypes.string.isRequired,
-    getData: PropTypes.func.isRequired
+    getData: PropTypes.func.isRequired,
 };
 
 export default DiffView;

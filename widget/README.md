@@ -21,7 +21,7 @@ Place the following code on your website and set the parameter data-doi.
         js.src = f;
         js.async = 1;
         fjs.parentNode.insertBefore(js, fjs);
-    })(window, document, 'script', 'orkgw', '//www.orkg.org/orkg/widget.js');
+    })(window, document, 'script', 'orkgw', '//www.orkg.org/widget.js');
     orkgw('paper', { language: 'en' });
 </script>
 ```
@@ -54,7 +54,7 @@ The orkg widget uses this following html template to render the widget:
 
 ### Building
 
-minimum supported Node.js version is 12.13.0
+minimum supported Node.js version is 12.20.0
 
 ```
 npm run build

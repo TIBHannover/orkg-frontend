@@ -23,10 +23,10 @@ const ObjectStatements = props => {
 
         const statements = await getStatementsByObject({
             id: resourceId,
-            page: page,
+            page,
             items: pageSize,
             sortBy: 'id',
-            desc: true
+            desc: true,
         });
 
         if (page === 0 && statements.length === 0) {
@@ -41,7 +41,7 @@ const ObjectStatements = props => {
         } else {
             setStatements(prevStatements => [...prevStatements, ...statements]);
             setIsLoading(false);
-            setHasNextPage(statements.length < pageSize || statements.length === 0 ? false : true);
+            setHasNextPage(!(statements.length < pageSize || statements.length === 0));
         }
     }, [page, resourceId, setHasObjectStatement]);
 
@@ -118,7 +118,7 @@ const ObjectStatements = props => {
 
                 {isLoading && loadingIndicator}
 
-                {statements.length === 0 && !isLoading && <div className="text-center mb-2">This resource isn't used as an object yet.</div>}
+                {statements.length === 0 && !isLoading && <div className="text-center mb-2">This resource isn't used as an object yet</div>}
             </Collapse>
         </div>
     );
@@ -126,11 +126,11 @@ const ObjectStatements = props => {
 
 ObjectStatements.propTypes = {
     resourceId: PropTypes.string.isRequired,
-    setHasObjectStatement: PropTypes.func
+    setHasObjectStatement: PropTypes.func,
 };
 
 ObjectStatements.defaultProps = {
-    setHasObjectStatement: () => {}
+    setHasObjectStatement: () => {},
 };
 
 export default ObjectStatements;

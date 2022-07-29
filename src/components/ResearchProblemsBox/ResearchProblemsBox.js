@@ -3,40 +3,85 @@ import { Button } from 'reactstrap';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
-import useResearchFieldProblems from 'components/ResearchProblemsBox/hooks/useResearchFieldProblems';
-import ResearchProblemsModal from './ResearchProblemsModal';
+import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
+import AddResearchProblem from 'components/Observatory/AddResearchProblem';
+import { faPlus, faCheck, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 import { reverseWithSlug } from 'utils';
 import Tippy from '@tippyjs/react';
+import { useSelector } from 'react-redux';
+import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import ResearchProblemsModal from './ResearchProblemsModal';
 
-const ResearchProblemsBox = ({ researchFieldId }) => {
-    const { problems, isLoading, totalElements } = useResearchFieldProblems({ researchFieldId, pageSize: 5 });
+const ResearchProblemsBox = ({ id, by = 'ResearchField' }) => {
+    const { problems, isLoading, totalElements, setProblems, deleteResearchProblem, setTotalElements } = useResearchProblems({
+        id,
+        by,
+        initialSort: 'combined',
+        pageSize: 10,
+    });
     const [openModal, setOpenModal] = useState(false);
+    const user = useSelector(state => state.auth.user);
+    const [showAddResearchProblemDialog, setShowAddResearchProblemDialog] = useState(false);
 
     return (
-        <div className="box rounded-lg p-3 flex-grow-1 d-flex flex-column">
-            <h5>Research problems</h5>
+        <div className="box rounded-3 p-3 flex-grow-1 d-flex flex-column">
+            <div className="d-flex">
+                <h5 className="flex-grow-1">Research problems</h5>{' '}
+                {!!user && user.isCurationAllowed && by === 'Observatory' && (
+                    <>
+                        <Button outline size="sm" className="d-inline-block" onClick={() => setShowAddResearchProblemDialog(v => !v)}>
+                            <Icon icon={faPlus} /> Add
+                        </Button>
+                        <AddResearchProblem
+                            showDialog={showAddResearchProblemDialog}
+                            toggle={() => setShowAddResearchProblemDialog(v => !v)}
+                            id={id}
+                            setProblems={setProblems}
+                            setTotalElements={setTotalElements}
+                        />
+                    </>
+                )}
+            </div>
             <div className="flex-grow-1">
                 {!isLoading && totalElements > 0 && (
-                    <div className="pl-3 pt-2">
-                        {problems.map(rp => (
+                    <ul className="ps-3 pt-2">
+                        {problems.slice(0, 5).map(rp => (
                             <li key={`rp${rp.id}`}>
                                 <Tippy content={rp.label} disabled={rp.label?.length <= 70}>
                                     <Link to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>
                                         {truncate(rp.label, { length: 70 })}
-                                        {/** <small>
-                                            <Badge className="ml-1" color="info" pill>
-                                                {rp.papers}
-                                            </Badge>
-                                        </small>*/}
                                     </Link>
-                                </Tippy>
+                                </Tippy>{' '}
+                                {!!user && user.isCurationAllowed && by === 'Observatory' && (
+                                    <StatementActionButton
+                                        title="Delete this research problem from the observatory"
+                                        icon={faTrash}
+                                        key={`problem${rp.id}`}
+                                        requireConfirmation={true}
+                                        confirmationMessage="Are you sure?"
+                                        confirmationButtons={[
+                                            {
+                                                title: 'Delete',
+                                                color: 'danger',
+                                                icon: faCheck,
+                                                action: () => deleteResearchProblem(rp),
+                                            },
+                                            {
+                                                title: 'Cancel',
+                                                color: 'secondary',
+                                                icon: faTimes,
+                                            },
+                                        ]}
+                                    />
+                                )}
                             </li>
                         ))}
-                    </div>
+                    </ul>
                 )}
-                {!isLoading && totalElements === 0 && <>No research problems.</>}
+                {!isLoading && totalElements === 0 && <div className="text-center my-4">No research problems yet</div>}
             </div>
             {isLoading && (
                 <div className="mt-4 mb-4">
@@ -55,7 +100,7 @@ const ResearchProblemsBox = ({ researchFieldId }) => {
                     <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
                         View more
                     </Button>
-                    {openModal && <ResearchProblemsModal openModal={openModal} setOpenModal={setOpenModal} researchFieldId={researchFieldId} />}
+                    {openModal && <ResearchProblemsModal openModal={openModal} setOpenModal={setOpenModal} id={id} by={by} />}
                 </div>
             )}
         </div>
@@ -63,7 +108,9 @@ const ResearchProblemsBox = ({ researchFieldId }) => {
 };
 
 ResearchProblemsBox.propTypes = {
-    researchFieldId: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
+    by: PropTypes.string.isRequired, // ResearchField || Observatory
+    organizationsList: PropTypes.array,
 };
 
 export default ResearchProblemsBox;

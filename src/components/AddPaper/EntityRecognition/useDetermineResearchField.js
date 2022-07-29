@@ -1,4 +1,4 @@
-import { MISC } from 'constants/graphSettings';
+import { RESOURCES } from 'constants/graphSettings';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getStatementsBySubject } from 'services/backend/statements';
@@ -8,12 +8,12 @@ const useDetermineResearchField = () => {
     const [isComputerScienceField, setIsComputerScienceField] = useState(false);
 
     useEffect(() => {
-        if (selectedResearchField === MISC.RESEARCH_FIELD_COMPUTER_SCIENCE) {
+        if (selectedResearchField === RESOURCES.RESEARCH_FIELD_COMPUTER_SCIENCE) {
             setIsComputerScienceField(true);
             return;
         }
         const getComputerScienceSubFields = async () => {
-            const computerScienceSubFields = await getStatementsBySubject({ id: MISC.RESEARCH_FIELD_COMPUTER_SCIENCE });
+            const computerScienceSubFields = await getStatementsBySubject({ id: RESOURCES.RESEARCH_FIELD_COMPUTER_SCIENCE });
             setIsComputerScienceField(computerScienceSubFields.some(statement => statement.object.id === selectedResearchField));
         };
         getComputerScienceSubFields();

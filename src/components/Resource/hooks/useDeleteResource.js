@@ -1,32 +1,31 @@
 import { useState } from 'react';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { deleteResource as deleteResourceNetwork } from 'services/backend/resources';
 import { toast } from 'react-toastify';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 
 function useDeleteResource({ resourceId, redirect = false }) {
-    const history = useHistory();
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
     const deleteResource = async () => {
         const confirm = await Confirm({
             title: 'Are you sure?',
-            message: `Are you sure you want to delete this resource?`,
-            cancelColor: 'light'
+            message: 'Are you sure you want to delete this resource?',
         });
 
         if (confirm) {
             setIsLoading(true);
             try {
                 await deleteResourceNetwork(resourceId);
-                toast.success(`Resource deleted successfully`);
+                toast.success('Resource deleted successfully');
 
                 if (redirect) {
-                    history.push(ROUTES.RESOURCES);
+                    navigate(ROUTES.RESOURCES);
                 }
             } catch (err) {
-                toast.error(`An error occurred, resource not deleted`);
+                toast.error('An error occurred, resource not deleted');
                 console.error(err);
             }
 

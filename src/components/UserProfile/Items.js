@@ -6,7 +6,7 @@ import { getStatementsBySubjects } from 'services/backend/statements';
 import { getPaperData, getComparisonData, groupVersionsOfComparisons } from 'utils';
 import { find, flatten } from 'lodash';
 import { Button, ListGroup } from 'reactstrap';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -22,7 +22,7 @@ const Items = props => {
     const [page, setPage] = useState(0);
     const [resources, setResources] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const finishLoadingCallback = () => {
         // reload the papers, in case page is already 0, manually call loadItems()
@@ -35,12 +35,12 @@ const Items = props => {
 
     const [deletePapers, loadingDeletePapers] = useDeletePapers({
         paperIds: selectedItems,
-        finishLoadingCallback
+        finishLoadingCallback,
     });
 
     const comparePapers = () => {
         const contributionIds = flatten(resources.filter(r => selectedItems.includes(r.id))?.map(c => c.contributions?.map(c => c.id)));
-        history.push(reverse(ROUTES.COMPARISON) + `?contributions=${contributionIds.join(',')}`);
+        navigate(`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionIds.join(',')}`);
     };
 
     const loadItems = useCallback(
@@ -49,11 +49,11 @@ const Items = props => {
 
             getResourcesByClass({
                 id: props.filterClass,
-                page: page,
+                page,
                 items: pageSize,
                 sortBy: 'created_at',
                 desc: true,
-                creator: props.userId
+                creator: props.userId,
             }).then(result => {
                 // Resources
                 if (result.totalElements === 0) {
@@ -63,7 +63,7 @@ const Items = props => {
                 }
                 // Fetch the data of each resource
                 getStatementsBySubjects({
-                    ids: result.content.map(p => p.id)
+                    ids: result.content.map(p => p.id),
                 })
                     .then(resourcesStatements => {
                         const new_resources = resourcesStatements.map(resourceStatements => {
@@ -78,7 +78,7 @@ const Items = props => {
                         });
                         if (props.filterClass === CLASSES.COMPARISON) {
                             setResources(prevResources =>
-                                groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...new_resources])
+                                groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...new_resources]),
                             );
                         } else {
                             setResources(prevResources => [...prevResources, ...new_resources]);
@@ -96,7 +96,7 @@ const Items = props => {
                     });
             });
         },
-        [pageSize, props.filterClass, props.userId]
+        [pageSize, props.filterClass, props.userId],
     );
 
     useEffect(() => {
@@ -180,8 +180,8 @@ const Items = props => {
             {isLoading && loadingIndicator}
 
             {resources.length === 0 && !isLoading && (
-                <div className="box rounded-lg p-5 text-center mt-4 mb-4">
-                    This user hasn't added any {props.filterLabel} to ORKG yet.
+                <div className="box rounded-3 p-5 text-center mt-4 mb-4">
+                    This user hasn't added any {props.filterLabel} to ORKG yet
                     <br />
                 </div>
             )}
@@ -189,7 +189,7 @@ const Items = props => {
             {selectedItems.length > 0 && (
                 <>
                     {props.filterClass === CLASSES.PAPER && (
-                        <Button size="sm" color="secondary" className="mt-2 mr-2" onClick={comparePapers}>
+                        <Button size="sm" color="secondary" className="mt-2 me-2" onClick={comparePapers}>
                             Compare selected {props.filterLabel} ({selectedItems.length})
                         </Button>
                     )}
@@ -207,10 +207,10 @@ Items.propTypes = {
     userId: PropTypes.string.isRequired,
     filterLabel: PropTypes.string.isRequired,
     filterClass: PropTypes.string.isRequired,
-    showDelete: PropTypes.bool
+    showDelete: PropTypes.bool,
 };
 
 Items.defaultProps = {
-    showDelete: false
+    showDelete: false,
 };
 export default Items;

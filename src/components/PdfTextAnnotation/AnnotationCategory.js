@@ -1,15 +1,15 @@
 import styled from 'styled-components';
-import { upperFirst } from 'lodash';
+import { upperFirst, filter } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faQuoteLeft, faTrash, faExclamationTriangle, faPen } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import { Button } from 'reactstrap';
 import { useSelector } from 'react-redux';
-import { filter } from 'lodash';
 import PropTypes from 'prop-types';
 import useDeleteAnnotation from 'components/PdfTextAnnotation/hooks/useDeleteAnnotation';
 import useEditAnnotation from 'components/PdfTextAnnotation/hooks/useEditAnnotation';
 import tokenizer from 'sbd';
+import pluralize from 'pluralize';
 
 const DEFAULT_HIGHLIGHT_COLOR = '#FFE28F';
 const MAX_SENTENCES_PER_ANNOTATION = 2;
@@ -93,7 +93,7 @@ const AnnotationCategory = props => {
                 </Tippy>
                 <Tippy content="It is recommended to have maximum 3 annotated sentences per type">
                     <AnnotationAmount>
-                        {amount > 3 ? <Icon icon={faExclamationTriangle} /> : ''} {amount} annotation{amount !== 1 ? 's' : ''}
+                        {amount > 3 ? <Icon icon={faExclamationTriangle} /> : ''} {pluralize('annotation', amount, true)}
                     </AnnotationAmount>
                 </Tippy>
             </h2>
@@ -116,7 +116,7 @@ const AnnotationCategory = props => {
                             </Tippy>
                         )}
 
-                        <div className="float-right">
+                        <div className="float-end">
                             <Tippy content="Edit annotation text">
                                 <span>
                                     <Button className="p-0 text-body" color="link" onClick={e => handleEditClick(e, annotation.id)}>
@@ -144,7 +144,7 @@ const AnnotationCategory = props => {
 
 AnnotationCategory.propTypes = {
     annotationClass: PropTypes.object.isRequired,
-    hideEmpty: PropTypes.bool.isRequired
+    hideEmpty: PropTypes.bool.isRequired,
 };
 
 export default AnnotationCategory;

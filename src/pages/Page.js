@@ -4,7 +4,7 @@ import { CmsPage } from 'components/styled';
 import TitleBar from 'components/TitleBar/TitleBar';
 import NotFound from 'pages/NotFound';
 import { useEffect } from 'react';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import { getPageByUrl } from 'services/cms';
 
@@ -32,7 +32,7 @@ const Page = () => {
         <div>
             <TitleBar>{page?.title}</TitleBar>
 
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 {isLoading && <PageContentLoader />}
 
                 <CmsPage>{!isLoading && page?.content}</CmsPage>

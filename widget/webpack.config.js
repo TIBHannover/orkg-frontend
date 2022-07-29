@@ -13,23 +13,23 @@ module.exports = (env, argv) => {
             entry: './src/main.js',
             output: {
                 filename: 'widget.js',
-                path: isDevBuild ? path.resolve(bundleOutputDir) : path.resolve(bundleReleaseOutputDir)
+                path: isDevBuild ? path.resolve(bundleOutputDir) : path.resolve(bundleReleaseOutputDir),
             },
             devServer: {
-                contentBase: bundleOutputDir
+                contentBase: bundleOutputDir,
             },
             plugins: [
                 new webpack.DefinePlugin({
-                    'process.env.SERVER_URL': isDevBuild
+                    'process.env.BACKEND_URL': isDevBuild
                         ? JSON.stringify('http://localhost:8080/api/')
-                        : JSON.stringify('https://www.orkg.org/orkg/api/'),
+                        : JSON.stringify('https://www.orkg.org/api/'),
                     'process.env.FRONTEND_SERVER_URL': isDevBuild
                         ? JSON.stringify('http://localhost:3000/')
-                        : JSON.stringify('https://www.orkg.org/orkg/')
+                        : JSON.stringify('https://www.orkg.org/'),
                 }),
                 ...(isDevBuild
                     ? [new webpack.SourceMapDevToolPlugin(), new copyWebpackPlugin({ patterns: [{ from: 'demo/' }] })]
-                    : [new TerserPlugin()])
+                    : [new TerserPlugin()]),
             ],
             module: {
                 rules: [
@@ -40,9 +40,9 @@ module.exports = (env, argv) => {
                         use: {
                             loader: 'url-loader',
                             options: {
-                                limit: 100000
-                            }
-                        }
+                                limit: 100000,
+                            },
+                        },
                     },
                     {
                         test: /\.js$/i,
@@ -55,16 +55,16 @@ module.exports = (env, argv) => {
                                         '@babel/env',
                                         {
                                             targets: {
-                                                browsers: ['ie 6', 'safari 7']
-                                            }
-                                        }
-                                    ]
-                                ]
-                            }
-                        }
-                    }
-                ]
-            }
-        }
+                                                browsers: ['ie 6', 'safari 7'],
+                                            },
+                                        },
+                                    ],
+                                ],
+                            },
+                        },
+                    },
+                ],
+            },
+        },
     ];
 };

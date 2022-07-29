@@ -3,14 +3,13 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert } from 'react
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import TableEditor from './TableEditor';
-import ExtractReferencesModal from './ExtractReferencesModal';
 import { Link } from 'react-router-dom';
-import useExtractionModal from './hooks/useExtractionModal';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
+import TableEditor from './TableEditor';
+import ExtractReferencesModal from './ExtractReferencesModal';
+import useExtractionModal from './hooks/useExtractionModal';
 import useTableEditor from './hooks/useTableEditor';
-import HelpModal from 'components/PdfAnnotation/HelpModal';
 
 const ExtractionModal = props => {
     const [
@@ -22,9 +21,8 @@ const ExtractionModal = props => {
         handleCsvDownload,
         handleImportData,
         importError,
-        clearImportError
+        clearImportError,
     ] = useExtractionModal(props);
-    const [helpModalOpen, setHelpModalOpen] = useState(false);
 
     const [extractReferencesModalOpen, setExtractReferencesModalOpen] = useState(false);
     const toggleExtractReferencesModal = () => {
@@ -32,20 +30,22 @@ const ExtractionModal = props => {
     };
     const { removeEmptyRows } = useTableEditor(props.id, editorRef);
 
-    const comparisonUrl = importedData ? reverse(ROUTES.COMPARISON) + '?contributions=' + importedData.map(entry => entry.contributionId) : null;
-
-    const toggleHelpModal = () => {
-        setHelpModalOpen(!helpModalOpen);
-    };
+    const comparisonUrl = importedData
+        ? `${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${importedData.map(entry => entry.contributionId)}`
+        : null;
 
     return (
         <>
             <Modal isOpen={props.isOpen} toggle={props.toggle} style={{ maxWidth: '95%' }}>
                 <ModalHeader toggle={props.toggle}>
                     Table extraction{' '}
-                    <Button color="link" outline size="sm" style={{ fontSize: 18, lineHeight: 1 }} className="p-0" onClick={toggleHelpModal}>
-                        <Icon icon={faQuestionCircle} />
-                    </Button>
+                    <a
+                        href="https://www.orkg.org/help-center/article/7/Extracting_and_importing_tables_from_survey_articles"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <Icon icon={faQuestionCircle} style={{ fontSize: 18, lineHeight: 1 }} className="p-0" />
+                    </a>
                 </ModalHeader>
 
                 {loading && (
@@ -116,8 +116,6 @@ const ExtractionModal = props => {
                 toggle={toggleExtractReferencesModal}
                 id={props.id}
             />
-
-            <HelpModal isOpen={helpModalOpen} toggle={toggleHelpModal} />
         </>
     );
 };
@@ -131,8 +129,8 @@ ExtractionModal.propTypes = {
         x: PropTypes.number.isRequired,
         y: PropTypes.number.isRequired,
         w: PropTypes.number.isRequired,
-        h: PropTypes.number.isRequired
-    })
+        h: PropTypes.number.isRequired,
+    }),
 };
 
 export default ExtractionModal;

@@ -20,7 +20,7 @@ const ListPage = ({
     disableSearch = false,
     hideTitleBar = false,
     reset = false,
-    setReset = () => {}
+    setReset = () => {},
 }) => {
     const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +43,7 @@ const ListPage = ({
                 addResults({
                     results: items,
                     last: _last,
-                    totalElements: _totalElements
+                    totalElements: _totalElements,
                 });
             } else {
                 noResults();
@@ -163,7 +163,7 @@ const ListPage = ({
 
                 {isLoading && page === 0 && (
                     <div className={`text-center ${page === 0 ? 'p-5 container rounded' : ''} ${boxShadow ? 'box' : ''}`}>
-                        <div className="text-left">
+                        <div className="text-start">
                             <ContentLoader
                                 speed={2}
                                 width={400}
@@ -195,7 +195,7 @@ ListPage.propTypes = {
     disableSearch: PropTypes.bool,
     reset: PropTypes.bool,
     setReset: PropTypes.func,
-    hideTitleBar: PropTypes.bool
+    hideTitleBar: PropTypes.bool,
 };
 
 export default ListPage;

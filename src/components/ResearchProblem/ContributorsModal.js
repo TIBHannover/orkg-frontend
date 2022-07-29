@@ -1,46 +1,43 @@
 import ContentLoader from 'react-content-loader';
-import useResearchProblemContributors from './hooks/useResearchProblemContributors';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PropTypes from 'prop-types';
+import pluralize from 'pluralize';
+import useResearchProblemContributors from './hooks/useResearchProblemContributors';
 
 const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
     const { contributors, isLoading, isLoadingFailed } = useResearchProblemContributors({
         researchProblemId,
-        pageSize: 19
+        pageSize: 19,
     });
 
     return (
         <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
             <ModalHeader toggle={() => setOpenModal(v => !v)}>
-                <Icon icon={faAward} className="text-primary mr-2" />
+                <Icon icon={faAward} className="text-primary me-2" />
                 Top 30 Contributors
             </ModalHeader>
             <ModalBody>
-                <div className="pl-3 pr-3">
+                <div className="ps-3 pe-3">
                     {!isLoading &&
-                        contributors.map((contributor, index) => {
-                            return (
-                                <div className="pt-2 pb-2" key={`rp${index}`}>
-                                    <div className="d-flex">
-                                        <div className="pl-4 pr-4 pt-2">{index + 1}.</div>
-                                        <div>
-                                            <ContributorCard
-                                                contributor={{
-                                                    ...contributor.user,
-                                                    subTitle: contributor.contributions
-                                                        ? `${contributor.contributions} contribution${contributor.contributions > 1 ? 's' : ''}`
-                                                        : ''
-                                                }}
-                                            />
-                                        </div>
+                        contributors.map((contributor, index) => (
+                            <div className="pt-2 pb-2" key={`rp${index}`}>
+                                <div className="d-flex">
+                                    <div className="ps-4 pe-4 pt-2">{index + 1}.</div>
+                                    <div>
+                                        <ContributorCard
+                                            contributor={{
+                                                ...contributor.user,
+                                                subTitle: contributor.contributions ? pluralize('contribution', contributor.contributions, true) : '',
+                                            }}
+                                        />
                                     </div>
-                                    {contributors.length - 1 !== index && <hr className="mb-0 mt-3" />}
                                 </div>
-                            );
-                        })}
+                                {contributors.length - 1 !== index && <hr className="mb-0 mt-3" />}
+                            </div>
+                        ))}
                     {!isLoading && !isLoadingFailed && contributors?.length === 0 && (
                         <div className="mt-4 mb-4">
                             No contributors yet.
@@ -72,7 +69,7 @@ ContributorsModal.propTypes = {
     openModal: PropTypes.bool.isRequired,
     setOpenModal: PropTypes.func.isRequired,
     initialSort: PropTypes.string,
-    initialIncludeSubFields: PropTypes.bool
+    initialIncludeSubFields: PropTypes.bool,
 };
 
 export default ContributorsModal;

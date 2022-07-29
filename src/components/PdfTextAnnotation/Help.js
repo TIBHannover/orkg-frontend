@@ -9,7 +9,7 @@ const Help = props => {
 
     const disableBody = target =>
         disableBodyScroll(target, {
-            reserveScrollBarGap: true
+            reserveScrollBarGap: true,
         });
 
     const enableBody = target => enableBodyScroll(target);
@@ -36,7 +36,7 @@ const Help = props => {
                     <p>Let's have a look at some of the features. Click the arrow below.</p>
                 </>
             ),
-            style: { ...tourStyle, maxWidth: 400 }
+            style: { ...tourStyle, maxWidth: 400 },
         },
         {
             selector: '#completion-bar',
@@ -51,9 +51,9 @@ const Help = props => {
                     </p>
                 </>
             ),
-            style: tourStyle
+            style: tourStyle,
         },
-        {
+        /* {
             selector: '#smart-sentence-detection',
             content: (
                 <>
@@ -78,7 +78,7 @@ const Help = props => {
                 </>
             ),
             style: tourStyle
-        },
+        }, */
         {
             selector: '#annotation-categories',
             content: (
@@ -91,7 +91,7 @@ const Help = props => {
                     <p>If you annotate one of the other 20 types, they will automatically appear at the bottom of this list.</p>
                 </>
             ),
-            style: tourStyle
+            style: tourStyle,
         },
         {
             selector: '#save-annotations',
@@ -105,8 +105,8 @@ const Help = props => {
                     </p>
                 </>
             ),
-            style: tourStyle
-        }
+            style: tourStyle,
+        },
     ];
 
     return (
@@ -120,7 +120,7 @@ const Help = props => {
                 onRequestClose={handleCloseTour}
                 isOpen={props.isOpen}
                 startAt={0}
-                maskClassName="reactourMask"
+                maskClassName="opacity-75"
                 steps={tourSteps}
             />
         </>
@@ -129,7 +129,7 @@ const Help = props => {
 
 Help.propTypes = {
     setIsOpen: PropTypes.func.isRequired,
-    isOpen: PropTypes.bool.isRequired
+    isOpen: PropTypes.bool.isRequired,
 };
 
 export default Help;

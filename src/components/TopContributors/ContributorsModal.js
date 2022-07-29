@@ -12,7 +12,7 @@ const ContributorsModal = ({ researchFieldId, openModal, setOpenModal, initialSo
         researchFieldId,
         pageSize: 50,
         initialSort,
-        initialIncludeSubFields
+        initialIncludeSubFields,
     });
 
     return (
@@ -31,26 +31,24 @@ const ContributorsModal = ({ researchFieldId, openModal, setOpenModal, initialSo
                 </div>
             </ModalHeader>
             <ModalBody>
-                <div className="pl-3 pr-3">
+                <div className="ps-3 pe-3">
                     {!isLoading &&
-                        contributors.map((contributor, index) => {
-                            return (
-                                <div className="pt-2 pb-2" key={`rp${index}`}>
-                                    <div className="d-flex">
-                                        <div className="pl-4 pr-4 pt-2 align-self-center">{index + 1}.</div>
-                                        <div>
-                                            <ContributorCard
-                                                contributor={{
-                                                    ...contributor.profile,
-                                                    counts: contributor?.counts
-                                                }}
-                                            />
-                                        </div>
+                        contributors.map((contributor, index) => (
+                            <div className="pt-2 pb-2" key={`rp${index}`}>
+                                <div className="d-flex">
+                                    <div className="ps-4 pe-4 pt-2 align-self-center">{index + 1}.</div>
+                                    <div>
+                                        <ContributorCard
+                                            contributor={{
+                                                ...contributor.profile,
+                                                counts: contributor?.counts,
+                                            }}
+                                        />
                                     </div>
-                                    {contributors.length - 1 !== index && <hr className="mb-0 mt-3" />}
                                 </div>
-                            );
-                        })}
+                                {contributors.length - 1 !== index && <hr className="mb-0 mt-3" />}
+                            </div>
+                        ))}
                     {!isLoading && contributors?.length === 0 && (
                         <div className="mt-4 mb-4">
                             No contributors yet.
@@ -81,7 +79,7 @@ ContributorsModal.propTypes = {
     openModal: PropTypes.bool.isRequired,
     setOpenModal: PropTypes.func.isRequired,
     initialSort: PropTypes.string,
-    initialIncludeSubFields: PropTypes.bool
+    initialIncludeSubFields: PropTypes.bool,
 };
 
 export default ContributorsModal;

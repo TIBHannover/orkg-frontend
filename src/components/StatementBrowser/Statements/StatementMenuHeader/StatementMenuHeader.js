@@ -7,24 +7,24 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faPuzzlePiece, faSlidersH, faTimes } from '@fortawesome/free-solid-svg-icons';
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsHelpModalOpen, setIsTemplateModalOpen, setIsPreferencesOpen } from 'actions/statementBrowser';
+import { setIsHelpModalOpen, setIsPreferencesOpen, setIsTemplateModalOpen } from 'slices/statementBrowserSlice';
 import { ENTITIES } from 'constants/graphSettings';
 import Preferences from 'components/StatementBrowser/Preferences/Preferences';
 import PropTypes from 'prop-types';
+
 export default function StatementMenuHeader(props) {
     const isPreferencesOpen = useSelector(state => state.statementBrowser.isPreferencesOpen);
     const isHelpModalOpen = useSelector(state => state.statementBrowser.isHelpModalOpen);
     const isTemplatesModalOpen = useSelector(state => state.statementBrowser.isTemplatesModalOpen);
     const dispatch = useDispatch();
     const preferencesTippy = useRef(null);
-    const shared = props.resource?.shared ?? 0;
 
     return (
         <>
-            <div className="mb-2 text-right">
+            <div className="mb-2 text-end">
                 <ButtonGroup>
-                    {/* We have custom templates for predicates and classes*/}
-                    {props.enableEdit && props.resource._class === ENTITIES.RESOURCE && (
+                    {/* We have custom templates for predicates and classes */}
+                    {props.canEdit && props.enableEdit && props.resource._class === ENTITIES.RESOURCE && (
                         <Button
                             className="p-0"
                             outline
@@ -34,19 +34,19 @@ export default function StatementMenuHeader(props) {
                         >
                             <Tippy content="Select a template to use in your data">
                                 <div className="px-3 py-1">
-                                    <Icon className="mr-1" icon={faPuzzlePiece} /> Templates
+                                    <Icon className="me-1" icon={faPuzzlePiece} /> Templates
                                 </div>
                             </Tippy>
                             {isTemplatesModalOpen && <TemplatesModal syncBackend={props.syncBackend} />}
                         </Button>
                     )}
-                    {props.enableEdit && (
+                    {props.canEdit && props.enableEdit && (
                         <Button outline color="secondary" size="sm" onClick={() => dispatch(setIsHelpModalOpen({ isOpen: true }))}>
-                            <Icon className="mr-1" icon={faQuestionCircle} /> Help
+                            <Icon className="me-1" icon={faQuestionCircle} /> Help
                         </Button>
                     )}
 
-                    <Button className="p-0" outline color={!props.enableEdit ? 'link' : 'secondary'} size="sm" onClick={() => null}>
+                    <Button className="p-0" outline color={!props.enableEdit || !props.canEdit ? 'link' : 'secondary'} size="sm" onClick={() => null}>
                         <Tippy
                             onCreate={instance => (preferencesTippy.current = instance)}
                             onShow={() => dispatch(setIsPreferencesOpen(true))}
@@ -57,14 +57,14 @@ export default function StatementMenuHeader(props) {
                             appendTo={document.body}
                         >
                             <div className={`${props.enableEdit ? 'px-3' : 'text-muted'} py-1`}>
-                                <Icon fixedWidth={true} className="mr-1" icon={!isPreferencesOpen ? faSlidersH : faTimes} /> Preferences
+                                <Icon fixedWidth={true} className="me-1" icon={!isPreferencesOpen ? faSlidersH : faTimes} /> Preferences
                             </div>
                         </Tippy>
                     </Button>
                 </ButtonGroup>
             </div>
 
-            {shared > 1 && props.enableEdit && (
+            {!props.canEdit && props.enableEdit && (
                 <UncontrolledAlert color="info">
                     A shared resource cannot be edited directly{' '}
                     <Button
@@ -85,5 +85,6 @@ export default function StatementMenuHeader(props) {
 StatementMenuHeader.propTypes = {
     resource: PropTypes.object.isRequired,
     enableEdit: PropTypes.bool.isRequired,
-    syncBackend: PropTypes.bool.isRequired
+    canEdit: PropTypes.bool.isRequired,
+    syncBackend: PropTypes.bool.isRequired,
 };

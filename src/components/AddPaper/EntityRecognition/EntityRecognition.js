@@ -62,9 +62,9 @@ const EntityRecognition = () => {
             [PREDICATES.HAS_RESOURCE]: 'Has resource',
             [PREDICATES.HAS_TOOL]: 'Has tool',
             [PREDICATES.HAS_SOLUTION]: 'Has solution',
-            [PREDICATES.HAS_DATASET]: 'Has dataset'
+            [PREDICATES.HAS_DATASET]: 'Has dataset',
         }),
-        []
+        [],
     );
 
     useEffect(() => {
@@ -81,9 +81,9 @@ const EntityRecognition = () => {
                 object: resource,
                 property: {
                     id: property,
-                    label: propertyLabelMapping[property]
-                }
-            }
+                    label: propertyLabelMapping[property],
+                },
+            },
         ]);
 
     const displayedEntities = useMemo(() => {
@@ -93,12 +93,12 @@ const EntityRecognition = () => {
                 item =>
                     !getExistingStatement({
                         object: {
-                            label: item.label
+                            label: item.label,
                         },
                         property: {
-                            label: propertyLabelMapping[key]
-                        }
-                    })
+                            label: propertyLabelMapping[key],
+                        },
+                    }),
             );
         }
         return _nerResults;
@@ -128,7 +128,7 @@ const EntityRecognition = () => {
                                     onClick={() =>
                                         handleInsert({
                                             property: key,
-                                            resource: item
+                                            resource: item,
                                         })
                                     }
                                 >

@@ -3,22 +3,23 @@ import { CardTitle } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import useContributors from 'components/TopContributors/hooks/useContributors';
-import ContributorsDropdownFilter from './ContributorsDropdownFilter';
 import ContentLoader from 'react-content-loader';
-import ContributorsModal from './ContributorsModal';
 import ROUTES from 'constants/routes.js';
 import { StyledGravatar, StyledDotGravatar, ContributorsAvatars } from 'components/styled';
 import Tippy from '@tippyjs/react';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
+import pluralize from 'pluralize';
+import ContributorsModal from './ContributorsModal';
+import ContributorsDropdownFilter from './ContributorsDropdownFilter';
 
 const Contributors = ({ researchFieldId }) => {
     const { contributors, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useContributors({
         researchFieldId,
         pageSize: 19,
         initialSort: 'all',
-        includeSubFields: true
+        includeSubFields: true,
     });
     const [openModal, setOpenModal] = useState(false);
 
@@ -50,29 +51,18 @@ const Contributors = ({ researchFieldId }) => {
                                         {contributor.profile.display_name}
                                         <br />
                                         {contributor?.counts && contributor.counts.total !== null && (
-                                            <ul className="p-0 pl-3 mb-0 mt-2">
-                                                <li>
-                                                    {contributor.counts.papers} paper{contributor.counts.papers > 1 ? 's' : ''}
-                                                </li>
-                                                <li>
-                                                    {contributor.counts.contributions} contribution{contributor.counts.contributions > 1 ? 's' : ''}
-                                                </li>
-                                                <li>
-                                                    {contributor.counts.comparisons} comparison{contributor.counts.comparisons > 1 ? 's' : ''}
-                                                </li>
-                                                <li>
-                                                    {contributor.counts.visualizations} visualization
-                                                    {contributor.counts.visualizations > 1 ? 's' : ''}
-                                                </li>
-                                                <li>
-                                                    {contributor.counts.problems} research problem{contributor.counts.problems > 1 ? 's' : ''}
-                                                </li>
+                                            <ul className="p-0 ps-3 mb-0 mt-2">
+                                                <li>{pluralize('paper', contributor.counts.papers, true)}</li>
+                                                <li>{pluralize('contribution', contributor.counts.contributions, true)}</li>
+                                                <li>{pluralize('comparison', contributor.counts.comparisons, true)}</li>
+                                                <li>{pluralize('visualization', contributor.counts.visualizations, true)}</li>
+                                                <li>{pluralize('research problem', contributor.counts.problems, true)}</li>
                                             </ul>
                                         )}
                                         {contributor?.counts && contributor.counts.total !== null && (
                                             <>
                                                 <hr className="mb-1 mt-1" style={{ background: '#fff' }} />
-                                                <ul className="p-0 pl-3 mb-0 mt-2">
+                                                <ul className="p-0 ps-3 mb-0 mt-2">
                                                     <li>
                                                         <i>
                                                             <b>{contributor.counts.total} </b>total contributions
@@ -137,7 +127,7 @@ const Contributors = ({ researchFieldId }) => {
 };
 
 Contributors.propTypes = {
-    researchFieldId: PropTypes.string.isRequired
+    researchFieldId: PropTypes.string.isRequired,
 };
 
 export default Contributors;

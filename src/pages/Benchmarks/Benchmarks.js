@@ -35,32 +35,33 @@ function Benchmarks() {
                 View all benchmarks
             </TitleBar>
             <Container className="box rounded p-4 clearfix">
-                <div className="d-flex">
-                    <div>
+                <div className="row">
+                    <div className="col-md-9">
                         <p>
                             <i>Benchmarks</i> organize the state-of-the-art empirical research within research fields and are powered in part by
                             automated information extraction within a human-in-the-loop curation model.{' '}
                         </p>
                         <div>
-                            Further information about benchmarks can be also found in the{' '}
-                            <a href="https://www.orkg.org/orkg/help-center/article/21/Benchmarks" target="_blank" rel="noopener noreferrer">
+                            Add your benchmark dataset and its evaluations to the ORKG by following the steps found in the{' '}
+                            <a href="https://orkg.org/about/18/Benchmarks" target="_blank" rel="noopener noreferrer">
                                 ORKG help center
                             </a>
+                            .
                         </div>
                     </div>
-                    <PWCProvenanceBox />
+                    <div className="col-md-3">
+                        <PWCProvenanceBox />
+                    </div>
                 </div>
                 <hr />
                 <Row className="mt-3 flex-grow-1 justify-content-center">
                     {benchmarks?.length > 0 &&
                         benchmarks
                             .filter(b => b.research_problem.label.toLowerCase().includes(filter.toLowerCase()) || filter === '')
-                            .map(benchmark => {
-                                return <BenchmarkCard key={`${benchmark.research_problem.id}`} benchmark={benchmark} />;
-                            })}
+                            .map(benchmark => <BenchmarkCard key={`${benchmark.research_problem.id}`} benchmark={benchmark} />)}
                 </Row>
 
-                {benchmarks.length === 0 && !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">No benchmarks yet!</div>}
+                {benchmarks.length === 0 && !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">No benchmarks yet</div>}
                 {benchmarks.length !== 0 &&
                     benchmarks.filter(b => b.research_problem.label.toLowerCase().includes(filter.toLowerCase())).length === 0 &&
                     !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">Sorry, no benchmarks found - try a different search query</div>}

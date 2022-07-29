@@ -63,7 +63,7 @@ function ObservatoryCard(props) {
 }
 
 ObservatoryCard.propTypes = {
-    observatory: PropTypes.object.isRequired
+    observatory: PropTypes.object.isRequired,
 };
 
 export default ObservatoryCard;

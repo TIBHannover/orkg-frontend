@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import requireAuthentication from 'requireAuthentication';
 import { Container, Button, FormGroup, Input, Label } from 'reactstrap';
-import { useHistory, useLocation } from 'react-router-dom';
 import { createLiteralStatement } from 'services/backend/statements';
 import { getClassById } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import { PREDICATES, ENTITIES, CLASSES } from 'constants/graphSettings';
 import { getArrayParamFromQueryString } from 'utils';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const AddResource = () => {
     const isDOI = new RegExp(REGEX.DOI);
@@ -25,7 +26,7 @@ const AddResource = () => {
     const [isLoading, setIsLoading] = useState(false);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const [isLoadingDefaultClasses, setIsLoadingDefaultClasses] = useState(false);
-    const history = useHistory();
+    const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
@@ -61,7 +62,7 @@ const AddResource = () => {
                     const newResource = await createResource(label.trim(), classes ? classes.map(c => c.id) : []);
                     toast.success('Resource created successfully');
                     setIsLoading(false);
-                    history.push(reverse(ROUTES.RESOURCE, { id: newResource.id }));
+                    navigate(reverse(ROUTES.RESOURCE, { id: newResource.id }));
                 } catch (error) {
                     console.error(error);
                     setIsLoading(false);
@@ -78,7 +79,7 @@ const AddResource = () => {
                         await createLiteralStatement(newResource.id, PREDICATES.HAS_DOI, responseJsonDoi.id);
                         toast.success('Resource created successfully');
                         setIsLoading(false);
-                        history.push(reverse(ROUTES.RESOURCE, { id: newResource.id }));
+                        navigate(reverse(ROUTES.RESOURCE, { id: newResource.id }));
                     } catch (error) {
                         console.error(error);
                         toast.error(`Error finding DOI : ${error.message}`);
@@ -100,7 +101,7 @@ const AddResource = () => {
         if (action === 'create-option') {
             const foundIndex = selected.findIndex(x => x.__isNew__);
             const newClass = await ConfirmClass({
-                label: selected[foundIndex].label
+                label: selected[foundIndex].label,
             });
             if (newClass) {
                 const foundIndex = selected.findIndex(x => x.__isNew__);
@@ -117,21 +118,16 @@ const AddResource = () => {
     return (
         <>
             <TitleBar>Create resource</TitleBar>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <div className="pt-2">
                     <FormGroup>
                         <Label for="ResourceLabel">Resource label or DOI</Label>
-                        <Input
-                            onChange={e => setLabel(e.target.value)}
-                            type="text"
-                            name="value"
-                            id="ResourceLabel"
-                            disabled={isLoading}
-                            placeholder="Resource label or DOI"
-                        />
+                        <Input onChange={e => setLabel(e.target.value)} type="text" name="value" id="ResourceLabel" disabled={isLoading} />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="select-classes">Classes</Label>
+                        <Label for="select-classes">
+                            Classes <span className="text-muted fst-italic">(optional)</span>
+                        </Label>
                         {!isLoadingDefaultClasses && (
                             <AutoComplete
                                 entityType={ENTITIES.CLASS}
@@ -164,4 +160,4 @@ const AddResource = () => {
     );
 };
 
-export default AddResource;
+export default requireAuthentication(AddResource);

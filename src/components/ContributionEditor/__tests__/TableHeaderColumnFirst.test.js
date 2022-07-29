@@ -5,8 +5,8 @@ describe('TableHeaderColumnFirst', () => {
     it('should show saved label by default', () => {
         render(<TableHeaderColumnFirst />, {
             initialState: {
-                contributionEditor: { isLoading: false }
-            }
+                contributionEditor: { isLoading: false },
+            },
         });
         expect(screen.queryByText(/saved/i)).toBeInTheDocument();
     });
@@ -14,8 +14,8 @@ describe('TableHeaderColumnFirst', () => {
     it('should show the loading label on loading', () => {
         render(<TableHeaderColumnFirst />, {
             initialState: {
-                contributionEditor: { isLoading: true }
-            }
+                contributionEditor: { isLoading: true },
+            },
         });
 
         expect(screen.getByText(/loading/i)).toBeInTheDocument();

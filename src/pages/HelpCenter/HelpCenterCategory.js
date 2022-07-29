@@ -2,8 +2,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import NotFound from 'pages/NotFound';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
 import { getHelpCategory } from 'services/cms';
 import { reverseWithSlug } from 'utils';
@@ -42,7 +41,7 @@ const HelpCenterCategory = () => {
         <div>
             <TitleBar>Help center</TitleBar>
 
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 {isLoading && 'Loading...'}
 
                 {!isLoading && category && (
@@ -60,7 +59,7 @@ const HelpCenterCategory = () => {
                                     <Link
                                         to={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                             id: article.id,
-                                            slug: article.title
+                                            slug: article.title,
                                         })}
                                     >
                                         {article.title}

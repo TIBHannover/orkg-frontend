@@ -6,12 +6,11 @@ import { faHeart, faTrash, faQuestionCircle } from '@fortawesome/free-solid-svg-
 import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import AnnotationCategory from 'components/PdfTextAnnotation/AnnotationCategory';
 import Completion from 'components/PdfTextAnnotation/ProgressBar';
-import Save from './Save';
-import SmartSentenceDetection from './SmartSentenceDetection';
-import { discardChanges } from 'actions/pdfTextAnnotation';
+import { discardChanges } from 'slices/pdfTextAnnotationSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import Help from './Help';
 import PropTypes from 'prop-types';
+import Help from './Help';
+import Save from './Save';
 
 const SideBarStyled = styled.div`
     height: calc(100vh - 73px);
@@ -31,7 +30,7 @@ const HeartsAreRed = styled.div`
     }
 `;
 
-const SideBar = ({ pdfViewer }) => {
+const SideBar = () => {
     const { recommendedClasses, nonRecommendedClasses } = useOntology();
     const [saveModalIsOpen, setSaveModalIsOpen] = useState(false);
     const [saveDropdownIsOpen, setSaveDropdownIsOpen] = useState(false);
@@ -66,14 +65,14 @@ const SideBar = ({ pdfViewer }) => {
                     <Button id="caret" color="primary" onClick={toggleSaveModal}>
                         Save
                     </Button>
-                    <DropdownToggle caret color="primary" className="pl-1 pr-2" />
-                    <DropdownMenu>
+                    <DropdownToggle caret color="primary" className="ps-1 pe-2" />
+                    <DropdownMenu end>
                         <DropdownItem onClick={() => setHelpIsOpen(true)}>
-                            <Icon icon={faQuestionCircle} className="mr-2 text-secondary" />
+                            <Icon icon={faQuestionCircle} className="me-2 text-secondary" />
                             Start help tour
                         </DropdownItem>
                         <DropdownItem onClick={handleDiscardChanges}>
-                            <Icon icon={faTrash} className="mr-2 text-secondary" />
+                            <Icon icon={faTrash} className="me-2 text-secondary" />
                             Discard changes
                         </DropdownItem>
                     </DropdownMenu>
@@ -82,7 +81,7 @@ const SideBar = ({ pdfViewer }) => {
 
             <Completion />
 
-            <SmartSentenceDetection pdfViewer={pdfViewer} />
+            {/* <SmartSentenceDetection pdfViewer={pdfViewer} /> */}
 
             <div id="annotation-categories">
                 {recommendedClasses.map(annotationClass => (
@@ -108,7 +107,7 @@ const SideBar = ({ pdfViewer }) => {
 };
 
 SideBar.propTypes = {
-    pdfViewer: PropTypes.object
+    pdfViewer: PropTypes.object,
 };
 
 export default SideBar;

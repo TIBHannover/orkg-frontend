@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Button } from 'reactstrap';
-import { toggleEditValue } from 'actions/statementBrowser';
-import { setIsHelpModalOpen, deleteValue, isValueHasFormattedLabel, isDeletingValue, doneDeletingValue } from 'actions/statementBrowser';
+import { deleteValue, setIsDeletingValue, setIsHelpModalOpen, toggleEditValue, isValueHasFormattedLabel } from 'slices/statementBrowserSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faTable, faCheck, faTimes, faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
@@ -26,28 +25,28 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
 
     const handleDeleteValue = async () => {
         if (syncBackend) {
-            dispatch(isDeletingValue({ id: id }));
+            dispatch(setIsDeletingValue({ id, status: true }));
             deleteStatementById(value.statementId)
                 .then(() => {
-                    dispatch(doneDeletingValue({ id: id }));
+                    // dispatch(setIsDeletingValue({ id: id, status: false }));
                     toast.success('Statement deleted successfully');
                     dispatch(
                         deleteValue({
-                            id: id,
-                            propertyId: value.propertyId
-                        })
+                            id,
+                            propertyId: value.propertyId,
+                        }),
                     );
                 })
                 .catch(() => {
-                    dispatch(doneDeletingValue({ id: id }));
+                    dispatch(setIsDeletingValue({ id, status: false }));
                     toast.error('Something went wrong while deleting the value.');
                 });
         } else {
             dispatch(
                 deleteValue({
-                    id: id,
-                    propertyId: value.propertyId
-                })
+                    id,
+                    propertyId: value.propertyId,
+                }),
             );
         }
     };
@@ -76,7 +75,7 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                                     testId={id}
                                     icon={faPen}
                                     isDisabled={value.isDeleting}
-                                    action={hasFormattedLabel ? handleOnClick : () => dispatch(toggleEditValue({ id: id }))}
+                                    action={hasFormattedLabel ? handleOnClick : () => dispatch(toggleEditValue({ id }))}
                                 />
                             )}
 
@@ -118,13 +117,13 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                                         title: 'Delete',
                                         color: 'danger',
                                         icon: faCheck,
-                                        action: handleDeleteValue
+                                        action: handleDeleteValue,
                                     },
                                     {
                                         title: 'Cancel',
                                         color: 'secondary',
-                                        icon: faTimes
-                                    }
+                                        icon: faTimes,
+                                    },
                                 ]}
                             />
                         )}
@@ -134,7 +133,7 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                         )}
                     </>
                 )}
-                {preferences['showStatementInfo'] && <InfoTippy id={id} />}
+                {preferences.showStatementInfo && <InfoTippy id={id} />}
             </div>
         </>
     );
@@ -144,7 +143,7 @@ ValueItemOptions.propTypes = {
     id: PropTypes.string.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
-    handleOnClick: PropTypes.func
+    handleOnClick: PropTypes.func,
 };
 
 export default ValueItemOptions;

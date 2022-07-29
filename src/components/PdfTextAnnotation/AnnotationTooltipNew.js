@@ -8,9 +8,8 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import { Button } from 'reactstrap';
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import { toast } from 'react-toastify';
-import { components } from 'react-select';
 import ContentLoader from 'react-content-loader';
 
 const Container = styled.div`
@@ -28,24 +27,22 @@ const StyledSelectOption = styled.div`
     justify-content: space-between;
 `;
 
-const Option = ({ children, ...props }) => {
-    return (
-        <components.Option {...props}>
-            <StyledSelectOption>
-                <span>{children}</span>
-                <Tippy content={props.data.comment}>
-                    <span>
-                        <Icon icon={faQuestionCircle} />
-                    </span>
-                </Tippy>
-            </StyledSelectOption>
-        </components.Option>
-    );
-};
+const Option = ({ children, ...props }) => (
+    <components.Option {...props}>
+        <StyledSelectOption>
+            <span>{children}</span>
+            <Tippy content={props.data.comment}>
+                <span>
+                    <Icon icon={faQuestionCircle} />
+                </span>
+            </Tippy>
+        </StyledSelectOption>
+    </components.Option>
+);
 
 Option.propTypes = {
     data: PropTypes.object.isRequired,
-    children: PropTypes.string.isRequired
+    children: PropTypes.string.isRequired,
 };
 
 const AnnotationTooltipNew = props => {
@@ -62,17 +59,17 @@ const AnnotationTooltipNew = props => {
             options: recommendedClasses.map(_class => ({
                 label: upperFirst(_class.label),
                 value: _class.iri,
-                comment: _class.comment
-            }))
+                comment: _class.comment,
+            })),
         },
         {
             label: 'All properties',
             options: classes.map(_class => ({
                 label: upperFirst(_class.label),
                 value: _class.iri,
-                comment: _class.comment
-            }))
-        }
+                comment: _class.comment,
+            })),
+        },
     ];
 
     const handleAnnotation = (value = null) => {
@@ -85,10 +82,10 @@ const AnnotationTooltipNew = props => {
         handleAnnotate({
             content: {
                 ...content,
-                text: isString(content.text) ? content.text.replace(/\s+/g, ' ').trim() : content.text // replace double white spaces that could occur when copying text from PDFs
+                text: isString(content.text) ? content.text.replace(/\s+/g, ' ').trim() : content.text, // replace double white spaces that could occur when copying text from PDFs
             },
             position,
-            type: valueType
+            type: valueType,
         });
         hideTipAndSelection();
     };
@@ -130,7 +127,7 @@ const AnnotationTooltipNew = props => {
                         suggestedClasses.map(suggestion => (
                             <Button
                                 active={type && type.value === suggestion.iri}
-                                className="rounded-pill mr-2 mb-1"
+                                className="rounded-pill me-2 mb-1"
                                 style={{ paddingTop: 2, paddingBottom: 2 }}
                                 size="sm"
                                 color="smart"
@@ -178,7 +175,7 @@ AnnotationTooltipNew.propTypes = {
     position: PropTypes.object.isRequired,
     hideTipAndSelection: PropTypes.func.isRequired,
     handleAnnotate: PropTypes.func.isRequired,
-    transformSelection: PropTypes.func.isRequired
+    transformSelection: PropTypes.func.isRequired,
 };
 
 export default AnnotationTooltipNew;

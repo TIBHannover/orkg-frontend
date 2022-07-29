@@ -3,7 +3,7 @@ import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
@@ -11,6 +11,7 @@ import { animateFill } from 'tippy.js';
 import AddPaperWizard from 'assets/img/tools/add-paper-wizard.png';
 import ContributionEditor from 'assets/img/tools/contribution-editor.png';
 import styled from 'styled-components';
+import { reverse } from 'named-urls';
 
 const TippyStyle = styled.div`
     flex-shrink: 0;
@@ -109,7 +110,7 @@ const AddNew = ({ isHomePageStyle, onAdd = null }) => {
                             <ImgContainer>
                                 <img src={ContributionEditor} width="90%" alt="Contribution editor preview" />
                             </ImgContainer>
-                            <TextContainer className="pl-2 pr-2">
+                            <TextContainer className="ps-2 pe-2">
                                 <Header>Comparison</Header>
                                 <p className="m-0">
                                     Create an overview of state-of-the-art literature for a particular topic by adding multiple contributions
@@ -126,9 +127,23 @@ const AddNew = ({ isHomePageStyle, onAdd = null }) => {
                             <ImgContainer>
                                 <img src={AddPaperWizard} width="90%" alt="Add paper wizard preview" />
                             </ImgContainer>
-                            <TextContainer className="pl-2 pr-2">
+                            <TextContainer className="ps-2 pe-2">
                                 <Header>Paper</Header>
                                 <p className="m-0">The add paper wizard guides you to the process of generating structured data for your paper.</p>
+                            </TextContainer>
+                        </RequireAuthentication>
+                        <RequireAuthentication
+                            onClick={handleClickMenuItem}
+                            component={ToolContainer}
+                            to={reverse(ROUTES.CONTENT_TYPE_NEW_NO_TYPE)}
+                            className="d-flex p-2"
+                        >
+                            <ImgContainer>
+                                <FontAwesomeIcon className="text-secondary" icon={faEllipsisH} style={{ fontSize: 40 }} />
+                            </ImgContainer>
+                            <TextContainer className="ps-2 pe-2">
+                                <Header>Other</Header>
+                                <p className="m-0">Add other artifacts, such as datasets, software or general resources.</p>
                             </TextContainer>
                         </RequireAuthentication>
                     </div>
@@ -136,7 +151,7 @@ const AddNew = ({ isHomePageStyle, onAdd = null }) => {
             >
                 <div className="mx-2 mb-2 mb-md-0">
                     <Button color={!isHomePageStyle ? 'primary' : 'light'}>
-                        <FontAwesomeIcon className="mr-1" icon={faPlus} />
+                        <FontAwesomeIcon className="me-1" icon={faPlus} />
                         <span className="label">Add new</span>
                     </Button>
                 </div>
@@ -147,7 +162,7 @@ const AddNew = ({ isHomePageStyle, onAdd = null }) => {
 
 AddNew.propTypes = {
     isHomePageStyle: PropTypes.bool.isRequired,
-    onAdd: PropTypes.func
+    onAdd: PropTypes.func,
 };
 
 export default AddNew;

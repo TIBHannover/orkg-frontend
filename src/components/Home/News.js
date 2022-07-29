@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselIndicators, CarouselItem } from 'reactstrap';
+import { Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselItem } from 'reactstrap';
 import { getNewsCards } from 'services/cms';
+import { CarouselIndicatorsStyled } from 'components/styled';
 import styled from 'styled-components';
 import * as Showdown from 'showdown';
+import moment from 'moment';
 
 const CarouselContainer = styled.div`
     width: 100%;
@@ -53,9 +55,9 @@ export default function News() {
         setActiveIndex(newIndex);
     };
 
-    return (
-        <>
-            <div className="d-flex align-items-center pt-3 pl-3 pr-3 pb-0">
+    return !isLoading && moment(items?.[0]?.published_at) > moment().subtract(2, 'months') ? (
+        <div className="mt-3 box rounded d-flex flex-column overflow-hidden">
+            <div className="d-flex align-items-center pt-3 ps-3 pe-3 pb-0">
                 <div className="flex-grow-1">
                     <h2 className="h6 mb-1 mt-0">Latest news</h2>
                 </div>
@@ -64,8 +66,7 @@ export default function News() {
             <hr className="mx-3 mt-1" />
 
             <CarouselContainer>
-                {!isLoading && items.length === 0 && <div className="text-center mt-3 mb-4">No news messages found</div>}
-                {isLoading && <div className="text-center mt-3 mb-4">Loading...</div>}
+                {items.length === 0 && <div className="text-center mt-3 mb-4">No news messages found</div>}
                 {items?.length > 0 && (
                     <Carousel activeIndex={activeIndex} next={next} previous={previous}>
                         {items.map((item, index) => (
@@ -84,10 +85,10 @@ export default function News() {
                                 </Card>
                             </CarouselItem>
                         ))}
-                        <CarouselIndicators className="bg-light-lighter m-0" items={items} activeIndex={activeIndex} onClickHandler={goToIndex} />
+                        <CarouselIndicatorsStyled items={items} activeIndex={activeIndex} onClickHandler={goToIndex} />
                     </Carousel>
                 )}
             </CarouselContainer>
-        </>
-    );
+        </div>
+    ) : null;
 }

@@ -1,12 +1,16 @@
 import PropTypes from 'prop-types';
 import 'handsontable/dist/handsontable.full.css';
 import { HotTable } from '@handsontable/react';
-import { updateTableData } from 'actions/pdfAnnotation';
+import { updateTableData } from 'slices/pdfAnnotationSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import EditorComponent from './EditorComponent';
 import Handsontable from 'handsontable';
 import { isString } from 'lodash';
+import { registerAllModules } from 'handsontable/registry';
+import EditorComponent from './EditorComponent';
 import useTableEditor from './hooks/useTableEditor';
+
+// register Handsontable's modules
+registerAllModules();
 
 const TableEditor = props => {
     const dispatch = useDispatch();
@@ -51,6 +55,7 @@ const TableEditor = props => {
             renderer={renderer}
             contextMenu={{
                 items: [
+                    /*
                     'row_above',
                     'row_below',
                     '---------',
@@ -62,45 +67,46 @@ const TableEditor = props => {
                     '---------',
                     'undo',
                     'redo',
+                    */
                     {
                         name: 'Merge cell values',
-                        callback: mergeCellValues
+                        callback: mergeCellValues,
                     },
-                    /*{
+                    /* {
                         name: 'Split into several columns',
                         callback: splitIntoSeveralColumns
-                    },*/
+                    }, */
                     {
                         name: 'Remove empty rows',
-                        callback: removeEmptyRows
-                    }
-                ]
+                        callback: removeEmptyRows,
+                    },
+                ],
             }}
             stretchH="all"
             ref={props.setRef}
-            beforeChange={changes => dispatch(updateTableData(props.id, changes))}
+            beforeChange={changes => dispatch(updateTableData({ id: props.id, dataChanges: changes }))}
             afterRemoveCol={() => renderTable()}
         >
             <EditorComponent hot-editor id={props.id} />
             {/*
                 Unfortunately, HotColumn isn't very well supported and it breaks quite a lot of default functionality (e.g., adding columns via the content menu)
-                Requires: 
+                Requires:
                 const columns = tableData.length > 0 ? tableData[0] : [];
                 const instance = props.setRef?.current?.hotInstance;
-                
+
                 Then the mapping
                 columns.map(column => (
                 <HotColumn>
                     <RendererComponent hot-renderer instance={instance} />
                 </HotColumn>
-            ))*/}
+            )) */}
         </HotTable>
     );
 };
 
 TableEditor.propTypes = {
     setRef: PropTypes.object.isRequired,
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
 };
 
 export default TableEditor;

@@ -53,7 +53,7 @@ const CreateContributionModal = ({ isOpen, toggle, paperId, onCreateContribution
                 )}
             </ModalBody>
             <ModalFooter className="d-flex">
-                <Button disabled={title.length === 0 || isLoading} color="primary" className="float-right" onClick={handleCreate}>
+                <Button disabled={title.length === 0 || isLoading} color="primary" className="float-end" onClick={handleCreate}>
                     {!isLoading ? 'Create' : 'Loading...'}
                 </Button>
             </ModalFooter>
@@ -65,7 +65,7 @@ CreateContributionModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     paperId: PropTypes.string.isRequired,
-    onCreateContribution: PropTypes.func.isRequired
+    onCreateContribution: PropTypes.func.isRequired,
 };
 
 export default CreateContributionModal;

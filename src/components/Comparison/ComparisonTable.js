@@ -8,19 +8,17 @@ import { functions, isEqual, omit } from 'lodash';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import { ScrollSyncPane } from 'react-scroll-sync';
-import { ReactTableWrapper, Contribution, Delete, ItemHeader, ItemHeaderInner, Properties, PropertiesInner } from './styled';
-import TableCell from './TableCell';
 import { useTable, useFlexLayout } from 'react-table';
 import { useSticky } from 'react-table-sticky';
 import { getPropertyObjectFromData, groupArrayByDirectoryPrefix } from 'utils';
 import PropTypes from 'prop-types';
 import { useMedia } from 'react-use';
+import TableCell from './TableCell';
+import { ReactTableWrapper, Contribution, Delete, ItemHeader, ItemHeaderInner, Properties, PropertiesInner } from './styled';
 
-const compareProps = (prevProps, nextProps) => {
+const compareProps = (prevProps, nextProps) =>
     // remove functions from equality check (mainly targeting "removeContribution"), otherwise it is always false
-    return isEqual(omit(prevProps, functions(prevProps)), omit(nextProps, functions(nextProps)));
-};
-
+    isEqual(omit(prevProps, functions(prevProps)), omit(nextProps, functions(nextProps)));
 const ComparisonTable = props => {
     const scrollContainerHead = useRef(null);
     const smallerFontSize = props.viewDensity === 'compact';
@@ -38,26 +36,22 @@ const ComparisonTable = props => {
             ...(!props.transpose
                 ? props.properties
                       .filter(property => property.active && props.data[property.id])
-                      .map((property, index) => {
-                          return {
-                              property: property,
-                              values: props.contributions.map((contribution, index2) => {
-                                  const data = props.data[property.id] ? props.data[property.id][index2] : null;
-                                  return data;
-                              })
-                          };
-                      })
-                : props.contributions.map((contribution, index) => {
-                      return {
-                          property: contribution,
-                          values: props.properties
-                              .filter(property => property.active)
-                              .map((property, index2) => {
-                                  const data = props.data[property.id] ? props.data[property.id][index] : null;
-                                  return data;
-                              })
-                      };
-                  }))
+                      .map((property, index) => ({
+                          property,
+                          values: props.contributions.map((contribution, index2) => {
+                              const data = props.data[property.id] ? props.data[property.id][index2] : null;
+                              return data.sort((a, b) => a?.label?.localeCompare(b?.label));
+                          }),
+                      }))
+                : props.contributions.map((contribution, index) => ({
+                      property: contribution,
+                      values: props.properties
+                          .filter(property => property.active)
+                          .map((property, index2) => {
+                              const data = props.data[property.id] ? props.data[property.id][index] : null;
+                              return data.sort((a, b) => a?.label?.localeCompare(b?.label));
+                          }),
+                  }))),
         ];
         if (!props.transpose && props.comparisonType === 'path') {
             let groups = omit(groupArrayByDirectoryPrefix(dataFrame.map((dO, index) => dO.property.id)), '');
@@ -77,7 +71,7 @@ const ComparisonTable = props => {
                 });
                 // find where to place the header
                 if (found) {
-                    dataFrame.splice(index, 0, { property: { id: null, label: key, similar: [], group: true }, values: [] });
+                    dataFrame.splice(index, 0, { property: { id: null, label: key, similar: [], group: true, groupId: key }, values: [] });
                 }
                 return null;
             });
@@ -88,24 +82,25 @@ const ComparisonTable = props => {
                         if (row.property.label.startsWith(key)) {
                             return {
                                 values: row.values,
-                                property: { ...row.property, label: row.property.label.replace(key + '/', ''), grouped: true }
+                                property: { ...row.property, label: row.property.label.replace(`${key}/`, ''), grouped: true, inGroupId: key },
                             };
                         }
                         return row;
                     });
                     return null;
                 });
+            dataFrame = dataFrame.filter(row => !props.hiddenGroups.includes(row.property.inGroupId) || row.property.group);
         }
         return dataFrame;
-    }, [props.transpose, props.properties, props.contributions, props.comparisonType, props.data]);
+    }, [props.transpose, props.properties, props.contributions, props.comparisonType, props.data, props.hiddenGroups]);
 
     const defaultColumn = useMemo(
         () => ({
             minWidth: 250,
             width: 1,
-            maxWidth: 2
+            maxWidth: 2,
         }),
-        []
+        [],
     );
 
     const columns = useMemo(() => {
@@ -123,8 +118,8 @@ const ComparisonTable = props => {
                 ),
                 accessor: 'property',
                 sticky: !isSmallScreen ? 'left' : undefined,
-                Cell: info => {
-                    return !props.transpose ? (
+                Cell: info =>
+                    (!props.transpose ? (
                         <Properties className={`columnProperty ${info.value.group ? 'columnPropertyGroup' : ''}`}>
                             <PropertiesInner className="d-flex flex-row align-items-start justify-content-between" cellPadding={cellPadding}>
                                 <PropertyValue
@@ -136,7 +131,10 @@ const ComparisonTable = props => {
                                     id={info.value.id}
                                     group={info.value.group ?? false}
                                     grouped={info.value.grouped ?? false}
+                                    groupId={info.value.groupId ?? null}
+                                    handleToggleShow={props.handleToggleGroupVisibility}
                                     property={props.comparisonType === 'merge' ? info.value : getPropertyObjectFromData(props.data, info.value)}
+                                    hiddenGroups={props.hiddenGroups}
                                 />
                             </PropertiesInner>
                         </Properties>
@@ -144,9 +142,9 @@ const ComparisonTable = props => {
                         <Properties className="columnContribution">
                             <PropertiesInner transpose={props.transpose}>
                                 <Link
-                                    to={reverse(ROUTES.VIEW_PAPER, {
+                                    to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                                         resourceId: info.value.paperId,
-                                        contributionId: info.value.id
+                                        contributionId: info.value.id,
                                     })}
                                 >
                                     {info.value.title ? info.value.title : <em>No title</em>}
@@ -163,8 +161,7 @@ const ComparisonTable = props => {
                                 </Delete>
                             )}
                         </Properties>
-                    );
-                }
+                    )),
             },
             ...(!props.transpose && props.contributions
                 ? props.contributions
@@ -172,89 +169,79 @@ const ComparisonTable = props => {
                           if (contribution.active) {
                               return {
                                   id: contribution.id, // <-here
-                                  Header: () => {
-                                      return (
-                                          <ItemHeader key={`contribution${contribution.id}`}>
-                                              <ItemHeaderInner>
-                                                  <Link
-                                                      to={reverse(ROUTES.VIEW_PAPER, {
-                                                          resourceId: contribution.paperId,
-                                                          contributionId: contribution.id
-                                                      })}
-                                                  >
-                                                      {contribution.title ? contribution.title : <em>No title</em>}
-                                                  </Link>
-                                                  <br />
-                                                  <Contribution>
-                                                      {contribution.year && `${contribution.year} - `}
-                                                      {contribution.contributionLabel}
-                                                  </Contribution>
-                                              </ItemHeaderInner>
+                                  Header: () => (
+                                      <ItemHeader key={`contribution${contribution.id}`}>
+                                          <ItemHeaderInner>
+                                              <Link
+                                                  to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
+                                                      resourceId: contribution.paperId,
+                                                      contributionId: contribution.id,
+                                                  })}
+                                              >
+                                                  {contribution.title ? contribution.title : <em>No title</em>}
+                                              </Link>
+                                              <br />
+                                              <Contribution>
+                                                  {contribution.year && `${contribution.year} - `}
+                                                  {contribution.contributionLabel}
+                                              </Contribution>
+                                          </ItemHeaderInner>
 
-                                              {!props.embeddedMode && props.contributions.filter(contribution => contribution.active).length > 2 && (
-                                                  <Delete onClick={() => props.removeContribution(contribution.id)}>
-                                                      <Icon icon={faTimes} />
-                                                  </Delete>
-                                              )}
-                                          </ItemHeader>
-                                      );
-                                  },
-                                  accessor: d => {
-                                      //return d.values[index].length > 0 ? d.values[index][0].label : '';
-                                      return d.values[index];
-                                  },
-                                  Cell: cell => <TableCell data={cell.value} viewDensity={props.viewDensity} /> // Custom cell components!
+                                          {!props.embeddedMode && props.contributions.filter(contribution => contribution.active).length > 2 && (
+                                              <Delete onClick={() => props.removeContribution(contribution.id)}>
+                                                  <Icon icon={faTimes} />
+                                              </Delete>
+                                          )}
+                                      </ItemHeader>
+                                  ),
+                                  accessor: d =>
+                                      // return d.values[index].length > 0 ? d.values[index][0].label : '';
+                                      d.values[index],
+                                  Cell: cell => <TableCell data={cell.value} viewDensity={props.viewDensity} />, // Custom cell components!
                               };
-                          } else {
-                              return null;
                           }
+                          return null;
                       })
                       .filter(Boolean)
                 : props.properties
                       .filter(property => property.active && props.data[property.id])
-                      .map((property, index) => {
-                          return {
-                              id: property.id, // <-here
-                              Header: () => (
-                                  <ItemHeader key={`property${property.id}`}>
-                                      <ItemHeaderInner
-                                          className="d-flex flex-row align-items-center justify-content-between"
-                                          transpose={props.transpose}
-                                      >
-                                          <PropertyValue
-                                              embeddedMode={props.embeddedMode}
-                                              filterControlData={props.filterControlData}
-                                              updateRulesOfProperty={props.updateRulesOfProperty}
-                                              similar={property.similar}
-                                              label={property.label}
-                                              id={property.id}
-                                              group={property.group ?? false}
-                                              grouped={property.grouped ?? false}
-                                              property={props.comparisonType === 'merge' ? property : getPropertyObjectFromData(props.data, property)}
-                                          />
-                                      </ItemHeaderInner>
-                                  </ItemHeader>
-                              ),
-                              accessor: d => {
-                                  //return d.values[index].length > 0 ? d.values[index][0].label : '';
-                                  return d.values[index];
-                              },
-                              Cell: cell => <TableCell data={cell.value} viewDensity={props.viewDensity} /> // Custom cell components!
-                          };
-                      }))
+                      .map((property, index) => ({
+                          id: property.id, // <-here
+                          Header: () => (
+                              <ItemHeader key={`property${property.id}`}>
+                                  <ItemHeaderInner className="d-flex flex-row align-items-center justify-content-between" transpose={props.transpose}>
+                                      <PropertyValue
+                                          embeddedMode={props.embeddedMode}
+                                          filterControlData={props.filterControlData}
+                                          updateRulesOfProperty={props.updateRulesOfProperty}
+                                          similar={property.similar}
+                                          label={property.label}
+                                          id={property.id}
+                                          group={property.group ?? false}
+                                          grouped={property.grouped ?? false}
+                                          property={props.comparisonType === 'merge' ? property : getPropertyObjectFromData(props.data, property)}
+                                      />
+                                  </ItemHeaderInner>
+                              </ItemHeader>
+                          ),
+                          accessor: d =>
+                              // return d.values[index].length > 0 ? d.values[index][0].label : '';
+                              d.values[index],
+                          Cell: cell => <TableCell data={cell.value} viewDensity={props.viewDensity} />, // Custom cell components!
+                      }))),
         ];
         // TODO: remove disable lint rule: useCallback for removeContribution and add used dependencies
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.transpose, props.properties, props.contributions, props.filterControlData, props.viewDensity, isSmallScreen]);
+    }, [props.transpose, props.properties, props.contributions, props.filterControlData, props.viewDensity, isSmallScreen, props.hiddenGroups]);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
             columns,
             data,
-            defaultColumn
+            defaultColumn,
         },
         useFlexLayout,
-        useSticky
+        useSticky,
     );
 
     return (
@@ -262,7 +249,7 @@ const ComparisonTable = props => {
             <div
                 id="comparisonTable"
                 {...getTableProps()}
-                className="table sticky mb-0"
+                className="table sticky mb-0 p-0"
                 style={{ height: 'max-content', fontSize: smallerFontSize ? '0.95rem' : '1rem' }}
             >
                 <ScrollSyncPane group="one">
@@ -274,7 +261,7 @@ const ComparisonTable = props => {
                         {headerGroups.map(headerGroup => (
                             <div className="header" {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup.headers.map(column => (
-                                    <div {...column.getHeaderProps()} className="th">
+                                    <div {...column.getHeaderProps()} className="th p-0">
                                         {column.render('Header')}
                                     </div>
                                 ))}
@@ -288,14 +275,12 @@ const ComparisonTable = props => {
                             {rows.map((row, i) => {
                                 prepareRow(row);
                                 return (
-                                    <div {...row.getRowProps()} className="tr">
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <div {...cell.getCellProps()} className="td">
-                                                    {cell.render('Cell')}
-                                                </div>
-                                            );
-                                        })}
+                                    <div {...row.getRowProps()} className="tr p-0">
+                                        {row.cells.map(cell => (
+                                            <div {...cell.getCellProps()} className="td p-0">
+                                                {cell.render('Cell')}
+                                            </div>
+                                        ))}
                                     </div>
                                 );
                             })}
@@ -323,11 +308,15 @@ ComparisonTable.propTypes = {
     scrollContainerBody: PropTypes.object.isRequired,
     filterControlData: PropTypes.array.isRequired,
     updateRulesOfProperty: PropTypes.func.isRequired,
-    embeddedMode: PropTypes.bool.isRequired
+    embeddedMode: PropTypes.bool.isRequired,
+    hiddenGroups: PropTypes.array,
+    handleToggleGroupVisibility: PropTypes.func,
 };
 
 ComparisonTable.defaultProps = {
-    embeddedMode: false
+    embeddedMode: false,
+    hiddenGroups: [],
+    handleToggleGroupVisibility: null,
 };
 
 export default memo(ComparisonTable, compareProps);

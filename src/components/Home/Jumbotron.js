@@ -42,7 +42,7 @@ export default class Jumbotron extends Component {
             backSpeed: 50,
             backDelay: 1500,
             loop: true,
-            loopCount: Infinity
+            loopCount: Infinity,
         };
         // this.el refers to the <span> in the render() method
         this.typed = new Typed(this.el, options);
@@ -62,7 +62,7 @@ export default class Jumbotron extends Component {
                         <HeaderStyled className="text-white">
                             <div className="row">
                                 <div className="col-md-7 definition">Scholarly Knowledge.</div>
-                                <div className="col-md-5 motto pl-0">
+                                <div className="col-md-5 motto ps-0">
                                     <span
                                         style={{ whiteSpace: 'pre' }}
                                         ref={el => {
@@ -73,7 +73,7 @@ export default class Jumbotron extends Component {
                             </div>
                         </HeaderStyled>
                         <div className="col-md-9 mx-auto mb-3 marketing-text">
-                            <p className="mr-n2 ml-n2">
+                            <p className="me-n2 ms-n2">
                                 The Open Research Knowledge Graph (ORKG) aims to describe research papers in a structured manner. With the ORKG,
                                 papers are easier to find and compare. <Video />{' '}
                             </p>

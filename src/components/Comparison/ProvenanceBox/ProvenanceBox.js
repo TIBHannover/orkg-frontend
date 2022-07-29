@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Row, Card, CardBody, CardTitle } from 'reactstrap';
+import { Row, Card, CardBody, CardTitle, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
@@ -9,8 +9,8 @@ import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { isEmpty } from 'lodash';
-import { Button } from 'reactstrap';
 import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 const StyledOrganizationCard = styled.div`
     border: 0;
@@ -51,10 +51,10 @@ function ProvenanceBox(props) {
     }
 
     return (
-        <div className="container box rounded-lg mt-4">
+        <div className="container box rounded-3 mt-4">
             <Row>
                 <div className="col-8 d-flex align-items-center ">
-                    <div className="pt-4 pb-4 pl-4 pr-4">
+                    <div className="pt-4 pb-4 ps-4 pe-4">
                         {props.provenance && (
                             <>
                                 <p>
@@ -70,13 +70,16 @@ function ProvenanceBox(props) {
                                 </h4>
                             </>
                         )}
-                        {props.creator && props.creator.id && (
-                            <>
-                                <i>Added by</i>
-                                <br />
-                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: props.creator.id })}>{props.creator.display_name}</Link>
-                            </>
-                        )}
+                        {props.creator &&
+                            props.creator.id &&
+                            (!props.provenance?.organization?.metadata?.is_double_blind ||
+                                moment().format('YYYY-MM-DD') >= props.provenance?.organization?.metadata?.date) && (
+                                <>
+                                    <i>Added by</i>
+                                    <br />
+                                    <Link to={reverse(ROUTES.USER_PROFILE, { userId: props.creator.id })}>{props.creator.display_name}</Link>
+                                </>
+                            )}
                         <br /> <br />
                         {isEmpty(props.provenance) && !!user && user.isCurationAllowed && (
                             <Button size="sm" outline onClick={() => setShowAssignObservatory(true)}>
@@ -134,7 +137,7 @@ ProvenanceBox.propTypes = {
     provenance: PropTypes.object,
     creator: PropTypes.object,
     changeObservatory: PropTypes.func,
-    resourceId: PropTypes.string
+    resourceId: PropTypes.string,
 };
 
 export default ProvenanceBox;

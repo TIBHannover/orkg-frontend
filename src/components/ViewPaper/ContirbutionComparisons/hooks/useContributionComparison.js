@@ -20,33 +20,33 @@ function useContributionComparison(contributionId) {
             getStatementsByObjectAndPredicate({
                 objectId: contributionId,
                 predicateId: PREDICATES.COMPARE_CONTRIBUTION,
-                page: page,
+                page,
                 items: pageSize,
                 sortBy: 'created_at',
-                desc: true
+                desc: true,
             }).then(result => {
                 // Comparisons
                 if (result.filter(contribution => contribution.subject.classes.includes(CLASSES.COMPARISON)).length > 0) {
                     // Fetch the data of each comparison
                     getStatementsBySubjects({
-                        ids: result.filter(contribution => contribution.subject.classes.includes(CLASSES.COMPARISON)).map(c => c.subject.id)
+                        ids: result.filter(contribution => contribution.subject.classes.includes(CLASSES.COMPARISON)).map(c => c.subject.id),
                     }).then(resourcesStatements => {
                         const comparisonsData = resourcesStatements.map(resourceStatements => {
                             const comparisonSubject = find(
                                 result.filter(contribution => contribution.subject.classes.includes(CLASSES.COMPARISON)).map(c => c.subject),
                                 {
-                                    id: resourceStatements.id
-                                }
+                                    id: resourceStatements.id,
+                                },
                             );
                             return getComparisonData(comparisonSubject, resourceStatements.statements);
                         });
                         Promise.all(comparisonsData).then(results => {
                             setComparisons(prevResources =>
-                                groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...results])
+                                groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...results]),
                             );
                             setIsLoading(false);
                             // use result instead of results because filtering by contribution class might reduce the number of items
-                            setHasNextPage(result.length < pageSize || result.length === 0 ? false : true);
+                            setHasNextPage(!(result.length < pageSize || result.length === 0));
                             setIsLastPageReached(false);
                             setPage(page + 1);
                         });
@@ -54,11 +54,11 @@ function useContributionComparison(contributionId) {
                 } else {
                     setIsLoading(false);
                     setHasNextPage(false);
-                    setIsLastPageReached(page > 1 ? true : false);
+                    setIsLastPageReached(page > 1);
                 }
             });
         },
-        [contributionId]
+        [contributionId],
     );
 
     // reset resources when the contributionId has changed

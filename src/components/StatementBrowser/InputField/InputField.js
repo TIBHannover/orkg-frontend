@@ -58,6 +58,7 @@ export default function InputField(props) {
                 </Input>
             </>
         ),
+        empty: <Input value="Value not reported in paper" type="text" bsSize="sm" className="flex-grow-1 d-flex" disabled />,
         default: (
             <>
                 <Input
@@ -75,7 +76,7 @@ export default function InputField(props) {
                     autoFocus
                 />
             </>
-        )
+        ),
     };
 
     return <>{Forms[inputFormType] || Forms.default}</>;
@@ -89,5 +90,5 @@ InputField.propTypes = {
     inputValue: PropTypes.string.isRequired,
     inputDataType: PropTypes.string.isRequired,
     isValid: PropTypes.bool.isRequired,
-    literalInputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })])
+    literalInputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })]),
 };

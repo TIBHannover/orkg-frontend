@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { AnimationContainer, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
 import { TransitionGroup } from 'react-transition-group';
 import { getContributorInformationById } from 'services/backend/contributors';
 import { getObservatoryById } from 'services/backend/observatories';
@@ -7,10 +6,11 @@ import { getContributorsByResourceId } from 'services/backend/resources';
 import { getOrganization } from 'services/backend/organizations';
 import { useSelector } from 'react-redux';
 import { MISC } from 'constants/graphSettings';
-import Provenance from './Provenance';
-import Timeline from './Timeline';
 import env from '@beam-australia/react-env';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
+import Provenance from './Provenance';
+import Timeline from './Timeline';
+import { AnimationContainer, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
 
 const ProvenanceBox = () => {
     const paperResource = useSelector(state => state.viewPaper.paperResource);
@@ -80,7 +80,7 @@ const ProvenanceBox = () => {
                     <PWCProvenanceBox />
                 </div>
             )}
-            <SidebarStyledBox className="box rounded-lg" style={{ minHeight: 430, backgroundColor: '#f8f9fb' }}>
+            <SidebarStyledBox className="box rounded-3" style={{ minHeight: 430, backgroundColor: '#f8f9fb' }}>
                 <ProvenanceBoxTabs className="clearfix d-flex">
                     <div
                         id="div1"

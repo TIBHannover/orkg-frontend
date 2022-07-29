@@ -4,6 +4,7 @@ import { getContributorInformationById } from 'services/backend/contributors';
 import Items from 'components/UserProfile/Items';
 import { getObservatoryById } from 'services/backend/observatories';
 import { getOrganization } from 'services/backend/organizations';
+import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 import NotFound from 'pages/NotFound';
 import ContentLoader from 'react-content-loader';
 import { useSelector } from 'react-redux';
@@ -13,8 +14,7 @@ import { CLASSES, MISC } from 'constants/graphSettings';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { Link, useParams } from 'react-router-dom';
 import TitleBar from 'components/TitleBar/TitleBar';
 
 const StyledGravatar = styled(Gravatar)`
@@ -87,7 +87,8 @@ const UserProfile = props => {
     const [organizationData, setOrganizationData] = useState(null);
     const [isLoadingUserData, setIsLoadingUserData] = useState(false);
     const [notFound, setNotFound] = useState(false);
-    const userId = props.match.params.userId;
+    const params = useParams();
+    const { userId } = params;
     const currentUserId = useSelector(state => state.auth.user?.id);
 
     useEffect(() => {
@@ -136,8 +137,10 @@ const UserProfile = props => {
                         setUserData(userData);
                         setIsLoadingUserData(false);
                     }
+                    document.title = `${userData.display_name} - ORKG`;
                 })
                 .catch(e => {
+                    document.title = 'User profile - ORKG';
                     setNotFound(true);
                 });
         };
@@ -152,6 +155,12 @@ const UserProfile = props => {
     return (
         <>
             <Container>
+                <Row className="justify-content-end">
+                    <div className="col-md-3 d-flex justify-content-end mb-3">
+                        <HeaderSearchButton placeholder="Search in this user content..." type={null} userId={userId} />
+                    </div>
+                </Row>
+
                 {!isLoadingUserData && (
                     <Row>
                         <div className="col-md-2 text-center d-flex align-items-center justify-content-center mb-3 mb-md-0">
@@ -187,7 +196,7 @@ const UserProfile = props => {
                     </Row>
                 )}
                 {isLoadingUserData && (
-                    <div className="mt-4 ml-3">
+                    <div className="mt-4 ms-3">
                         <ContentLoader
                             speed={2}
                             width={500}
@@ -217,15 +226,15 @@ const UserProfile = props => {
             <ComparisonPopup />
             {/*
             TODO: support for activity feed
-            <Container className="box mt-4 pt-4 pb-3 pl-5 pr-5">
+            <Container className="box mt-4 pt-4 pb-3 ps-5 pe-5">
             <h5 className="mb-4">Activity feed</h5>
-            <StyledActivity className="pl-3 pb-3">
+            <StyledActivity className="ps-3 pb-3">
                 <div className={'time'}>16 JULY 2019</div>
                 <div>
                     John Doe updated resource <Link to={'/'}>IoT research directions</Link>
                 </div>
             </StyledActivity>
-            <StyledActivity className="pl-3 pb-3">
+            <StyledActivity className="ps-3 pb-3">
                 <div className={'time'}>10 JULY 2019</div>
                 <div>
                     John Doe updated resource <Link to={'/'}>IoT research directions</Link>
@@ -234,21 +243,13 @@ const UserProfile = props => {
                     John Doe commented on predicate <Link to={'/'}>Has Problem</Link>
                 </div>
             </StyledActivity>
-            <StyledActivity className="pl-3 pb-3">
+            <StyledActivity className="ps-3 pb-3">
                 <div className={'time'}>5 JULY 2019</div>
                 <div>John Doe joined ORKG, welcome!</div>
             </StyledActivity>
-            </Container>*/}
+            </Container> */}
         </>
     );
-};
-
-UserProfile.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            userId: PropTypes.string
-        }).isRequired
-    }).isRequired
 };
 
 export default UserProfile;

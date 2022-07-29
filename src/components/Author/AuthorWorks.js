@@ -2,7 +2,7 @@ import { Container, ListGroupItem, ListGroup } from 'reactstrap';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import VisualizationCard from 'components/VisualizationCard/VisualizationCard';
-import SmartReviewCard from 'components/SmartReviewCard/SmartReviewCard';
+import ReviewCard from 'components/ReviewCard/ReviewCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { CLASSES } from 'constants/graphSettings';
@@ -14,7 +14,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 
 const AuthorWorks = ({ authorId }) => {
     const { isNextPageLoading, hasNextPage, works, page, totalElements, isLastPageReached, handleLoadMore } = useAuthorWorks({
-        authorId
+        authorId,
     });
 
     const renderItem = useCallback(item => {
@@ -24,7 +24,7 @@ const AuthorWorks = ({ authorId }) => {
                     paper={{
                         id: item.id,
                         title: item.label,
-                        ...item
+                        ...item,
                     }}
                     showBadge={true}
                     showCurationFlags={false}
@@ -39,7 +39,7 @@ const AuthorWorks = ({ authorId }) => {
                     comparison={{
                         id: item.id,
                         title: item.label,
-                        ...item
+                        ...item,
                     }}
                     showBadge={true}
                     showCurationFlags={false}
@@ -54,7 +54,7 @@ const AuthorWorks = ({ authorId }) => {
                     visualization={{
                         id: item.id,
                         title: item.label,
-                        ...item
+                        ...item,
                     }}
                     showBadge={true}
                     showCurationFlags={false}
@@ -64,7 +64,7 @@ const AuthorWorks = ({ authorId }) => {
             );
         }
         if (item?.classes?.includes(CLASSES.SMART_REVIEW)) {
-            return <SmartReviewCard versions={[item]} showBadge={true} showCurationFlags={false} showAddToComparison={false} key={`c${item.id}`} />;
+            return <ReviewCard versions={[item]} showBadge={true} showCurationFlags={false} showAddToComparison={false} key={`c${item.id}`} />;
         }
         return null;
     }, []);
@@ -86,7 +86,7 @@ const AuthorWorks = ({ authorId }) => {
                     {works.length > 0 && <ListGroup>{works.filter(r => r).map(resource => renderItem(resource))}</ListGroup>}
                     {totalElements === 0 && !isNextPageLoading && (
                         <ListGroupItem tag="div" className="text-center p-4">
-                            There are no works of this author, yet.
+                            There are no works of this author, yet
                         </ListGroupItem>
                     )}
                     {isNextPageLoading && (
@@ -107,7 +107,7 @@ const AuthorWorks = ({ authorId }) => {
                     )}
                     {!hasNextPage && isLastPageReached && page > 1 && totalElements !== 0 && (
                         <ListGroupItem tag="div" className="text-center">
-                            You have reached the last page.
+                            You have reached the last page
                         </ListGroupItem>
                     )}
                 </Container>
@@ -117,7 +117,7 @@ const AuthorWorks = ({ authorId }) => {
     );
 };
 AuthorWorks.propTypes = {
-    authorId: PropTypes.object.isRequired
+    authorId: PropTypes.string.isRequired,
 };
 
 export default AuthorWorks;

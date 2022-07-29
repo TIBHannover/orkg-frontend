@@ -4,13 +4,9 @@ import queryString from 'query-string';
 
 export const classesUrl = `${url}classes/`;
 
-export const getClassById = id => {
-    return submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/`);
-};
+export const getClassById = id => submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/`);
 
-export const createClass = (label, uri = null) => {
-    return submitPostRequest(classesUrl, { 'Content-Type': 'application/json' }, { label: label, uri: uri });
-};
+export const createClass = (label, uri = null) => submitPostRequest(classesUrl, { 'Content-Type': 'application/json' }, { label, uri });
 
 export const getClasses = ({
     page = 0,
@@ -20,15 +16,15 @@ export const getClasses = ({
     q = null,
     exact = false,
     uri = null,
-    returnContent = false
+    returnContent = false,
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
-        { page, size, sort, exact, ...(q ? { q: q } : {}), uri },
+        { page, size, sort, exact, ...(q ? { q } : {}), uri },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
 
     return submitGetRequest(`${classesUrl}?${params}`).then(res => (returnContent ? res.content : res));

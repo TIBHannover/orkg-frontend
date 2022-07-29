@@ -12,7 +12,7 @@ const Data = () => {
     return (
         <div>
             <TitleBar>Data Access</TitleBar>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <Row className="mb-4">
                     <Col sm="6" className="mt-4">
                         <Card body>
@@ -22,11 +22,11 @@ const Data = () => {
                             <CardText>You can access the Data by using the our REST API.</CardText>
                             <Button
                                 color="secondary"
-                                className="mr-3 pl-4 pr-4 flex-shrink-0"
+                                className="me-3 ps-4 pe-4 flex-shrink-0"
                                 tag="a"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                href="https://www.orkg.org/orkg/doc/api/"
+                                href="http://tibhannover.gitlab.io/orkg/orkg-backend/api-doc/"
                             >
                                 API Documentation
                             </Button>
@@ -40,7 +40,7 @@ const Data = () => {
                             <CardText>Python package wrapping the ORKG API</CardText>
                             <Button
                                 color="secondary"
-                                className="mr-3 pl-4 pr-4 flex-shrink-0"
+                                className="me-3 ps-4 pe-4 flex-shrink-0"
                                 tag="a"
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -60,11 +60,11 @@ const Data = () => {
                                 <Col>
                                     <Button
                                         color="secondary"
-                                        className="pl-4 pr-4 mb-1"
+                                        className="ps-4 pe-4 mb-1 d-block"
                                         tag="a"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        href="https://www.orkg.org/orkg/triplestore"
+                                        href="https://www.orkg.org/triplestore"
                                     >
                                         Virtuoso Query Editor
                                     </Button>
@@ -72,11 +72,11 @@ const Data = () => {
                                 <Col>
                                     <Button
                                         color="secondary"
-                                        className="pl-4 pr-4 "
+                                        className="ps-4 pe-4 d-block"
                                         tag="a"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        href="https://www.orkg.org/orkg/sparql"
+                                        href="https://www.orkg.org/sparql"
                                     >
                                         Visual SPARQL Editor
                                     </Button>
@@ -92,11 +92,11 @@ const Data = () => {
                             <CardText>You can download the Open Research Knowledge Graph RDF Dump in N-Triples format below</CardText>
                             <Button
                                 color="secondary"
-                                className="mr-3 pl-4 pr-4 flex-shrink-0"
+                                className="me-3 ps-4 pe-4 flex-shrink-0"
                                 tag="a"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                href="https://orkg.org/orkg/api/rdf/dump"
+                                href="https://orkg.org/api/rdf/dump"
                             >
                                 Download RDF dump
                             </Button>

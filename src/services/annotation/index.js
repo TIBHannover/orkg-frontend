@@ -11,18 +11,17 @@ import { guid } from 'utils';
 
 export const annotationServiceUrl = env('ANNOTATION_SERVICE_URL');
 
-export const getAnnotations = abstract => {
-    return submitPostRequest(`${annotationServiceUrl}annotator/`, { 'Content-Type': 'application/json' }, { text2annotate: abstract });
-};
+export const getAnnotations = abstract =>
+    submitPostRequest(`${annotationServiceUrl}annotator/`, { 'Content-Type': 'application/json' }, { text2annotate: abstract });
 
 export const classifySentence = ({ sentence, labels }) => {
     const headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
     };
 
     const data = {
         sentence,
-        labels
+        labels,
     };
 
     return submitPutRequest(`${annotationServiceUrl}classifySentence/`, headers, data);
@@ -30,7 +29,7 @@ export const classifySentence = ({ sentence, labels }) => {
 
 export const summarizeText = ({ text, ratio }) => {
     const headers = {
-        'Content-Type': 'text/plain'
+        'Content-Type': 'text/plain',
     };
 
     return submitPutRequest(`${annotationServiceUrl}summarizeText/?ratio=${ratio}`, headers, text, false);
@@ -44,7 +43,7 @@ export const getNerResults = async ({ title = '', abstract = '' }) => {
         RESOURCE: PREDICATES.HAS_RESOURCE,
         TOOL: PREDICATES.HAS_TOOL,
         SOLUTION: PREDICATES.HAS_SOLUTION,
-        DATASET: PREDICATES.HAS_DATASET
+        DATASET: PREDICATES.HAS_DATASET,
     };
 
     // dummy data
@@ -52,7 +51,7 @@ export const getNerResults = async ({ title = '', abstract = '' }) => {
     const entities = {
         RESEARCH_PROBLEM: ['Statistical machine translation', 'POS', 'GermanEnglish translation task'],
         LANGUAGE: ['Filipino'],
-        METHOD: ['Probabilistic Approaches']
+        METHOD: ['Probabilistic Approaches'],
     };
 
     const mappedEntities = {};
@@ -62,7 +61,7 @@ export const getNerResults = async ({ title = '', abstract = '' }) => {
             continue;
         }
         mappedResourcePromises.push(
-            ...resources.map(resource => ({ type, label: resource, data: getResources({ q: resource, exact: true, returnContent: true }) }))
+            ...resources.map(resource => ({ type, label: resource, data: getResources({ q: resource, exact: true, returnContent: true }) })),
         );
     }
 
@@ -78,7 +77,7 @@ export const getNerResults = async ({ title = '', abstract = '' }) => {
                 resource = {
                     id: guid(),
                     label: mappedResourcePromises[index].label,
-                    isExistingValue: false
+                    isExistingValue: false,
                 };
             }
             mappedEntities[propertyMapping[mappedResourcePromises[index].type]].push(resource);

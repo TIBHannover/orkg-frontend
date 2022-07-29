@@ -1,15 +1,20 @@
 import { configureStore } from '@reduxjs/toolkit';
-import rootReducer from './reducers/rootReducer';
-import { routerMiddleware } from 'connected-react-router';
+import { createReduxHistoryContext } from 'redux-first-history';
 import { createBrowserHistory } from 'history';
 import env from '@beam-australia/react-env';
+import combinedReducers from './slices/rootReducer';
 
-export const history = createBrowserHistory({ basename: env('PUBLIC_URL') });
+const { createReduxHistory, routerMiddleware, routerReducer } = createReduxHistoryContext({
+    history: createBrowserHistory({ basename: env('PUBLIC_URL') }),
+});
 
 export default function store(initialState = {}) {
-    return configureStore({
+    const store = configureStore({
         preloadedState: initialState,
-        reducer: rootReducer(history),
-        middleware: getDefaultMiddleware => getDefaultMiddleware().concat(routerMiddleware(history))
+        reducer: combinedReducers(routerReducer),
+        middleware: getDefaultMiddleware => getDefaultMiddleware().concat(routerMiddleware),
     });
+    const history = createReduxHistory(store);
+
+    return { store, history };
 }

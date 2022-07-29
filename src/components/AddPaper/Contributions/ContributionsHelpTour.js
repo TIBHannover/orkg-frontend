@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { Modal, ModalHeader, ModalBody, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { closeTour, openTour } from 'actions/addPaper';
+import { closeTour, openTour } from 'slices/addPaperSlice';
 import Tour from 'reactour';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
@@ -16,7 +16,7 @@ class ContributionsHelpTour extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showVideoDialog: false
+            showVideoDialog: false,
         };
     }
 
@@ -34,8 +34,9 @@ class ContributionsHelpTour extends Component {
 
     disableBody = target =>
         disableBodyScroll(target, {
-            reserveScrollBarGap: true
+            reserveScrollBarGap: true,
         });
+
     enableBody = target => enableBodyScroll(target);
 
     requestCloseTour = () => {
@@ -46,7 +47,7 @@ class ContributionsHelpTour extends Component {
     toggleVideoDialog = () => {
         this.props.closeTour();
         this.setState(prevState => ({
-            showVideoDialog: !prevState.showVideoDialog
+            showVideoDialog: !prevState.showVideoDialog,
         }));
     };
 
@@ -72,7 +73,7 @@ class ContributionsHelpTour extends Component {
                                           </span>
                                       ),
                                       style: { borderTop: '4px solid #E86161' },
-                                      action: node => (node ? node.focus() : null)
+                                      action: node => (node ? node.focus() : null),
                                   },
                                   {
                                       selector: '.contributionData',
@@ -91,8 +92,8 @@ class ContributionsHelpTour extends Component {
                                           </span>
                                       ),
                                       style: { borderTop: '4px solid #E86161' },
-                                      action: node => (node ? node.focus() : null)
-                                  }
+                                      action: node => (node ? node.focus() : null),
+                                  },
                               ]
                             : []),
                         ...(this.props.showAbstractDialog
@@ -105,7 +106,7 @@ class ContributionsHelpTour extends Component {
                                             ),
                                             style: { borderTop: '4px solid #E86161' },
                                             action: node => (node ? node.focus() : null),
-                                            position: 'right'
+                                            position: 'right',
                                         }
                                       : {
                                             selector: '#annotatedText',
@@ -130,10 +131,10 @@ class ContributionsHelpTour extends Component {
                                             ),
                                             style: { borderTop: '4px solid #E86161' },
                                             position: 'right',
-                                            action: node => (node ? node.focus() : null)
-                                        }
+                                            action: node => (node ? node.focus() : null),
+                                        },
                               ]
-                            : [])
+                            : []),
                     ]}
                     showNumber={false}
                     accentColor={this.props.theme.primary}
@@ -141,7 +142,7 @@ class ContributionsHelpTour extends Component {
                     onRequestClose={this.requestCloseTour}
                     isOpen={this.props.isTourOpen}
                     startAt={this.props.tourStartAt}
-                    maskClassName="reactourMask"
+                    maskClassName="opacity-75"
                     showButtons={!this.props.showAbstractDialog}
                     showNavigation={!this.props.showAbstractDialog}
                 />
@@ -159,7 +160,7 @@ class ContributionsHelpTour extends Component {
                             title="ORKG - How to add contribution data"
                         />
                         <hr />
-                        <a href="https://www.orkg.org/orkg/paper/R8186" target="_blank" rel="noopener noreferrer">
+                        <a href="https://www.orkg.org/paper/R8186" target="_blank" rel="noopener noreferrer">
                             View paper that has been used in this example <Icon size="sm" icon={faExternalLinkAlt} />
                         </a>
                     </ModalBody>
@@ -177,28 +178,26 @@ ContributionsHelpTour.propTypes = {
     isTourOpen: PropTypes.bool.isRequired,
     tourStartAt: PropTypes.number.isRequired,
     showAbstractDialog: PropTypes.bool.isRequired,
-    abstractDialogView: PropTypes.string.isRequired
+    abstractDialogView: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = state => {
-    return {
-        isTourOpen: state.addPaper.isTourOpen,
-        tourStartAt: state.addPaper.tourStartAt,
-        showAbstractDialog: state.addPaper.showAbstractDialog,
-        abstractDialogView: state.addPaper.abstractDialogView
-    };
-};
+const mapStateToProps = state => ({
+    isTourOpen: state.addPaper.isTourOpen,
+    tourStartAt: state.addPaper.tourStartAt,
+    showAbstractDialog: state.addPaper.showAbstractDialog,
+    abstractDialogView: state.addPaper.abstractDialogView,
+});
 
 const mapDispatchToProps = dispatch => ({
     openTour: data => dispatch(openTour(data)),
-    closeTour: () => dispatch(closeTour())
+    closeTour: () => dispatch(closeTour()),
 });
 
 export default compose(
     connect(
         mapStateToProps,
-        mapDispatchToProps
+        mapDispatchToProps,
     ),
     withTheme,
-    withCookies
+    withCookies,
 )(ContributionsHelpTour);

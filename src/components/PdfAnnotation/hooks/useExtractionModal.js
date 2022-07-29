@@ -1,12 +1,12 @@
 import { createRef, useState, useEffect } from 'react';
 import { ListGroup, ListGroupItem } from 'reactstrap';
-import Confirm from 'reactstrap-confirm';
-import { setTableData } from 'actions/pdfAnnotation';
+import Confirm from 'components/Confirmation/Confirmation';
+import { setTableData } from 'slices/pdfAnnotationSlice';
 import { toast } from 'react-toastify';
-import { readString } from 'react-papaparse';
+import { usePapaParse } from 'react-papaparse';
 import { useSelector, useDispatch } from 'react-redux';
 import { zip, omit, isString, cloneDeep } from 'lodash';
-import { PREDICATES, MISC } from 'constants/graphSettings';
+import { PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { saveFullPaper } from 'services/backend/papers';
 import env from '@beam-australia/react-env';
@@ -17,6 +17,7 @@ function useExtractionModal(props) {
     const [importedData, setImportedData] = useState(null);
     const editorRef = createRef();
     const dispatch = useDispatch();
+    const { readString } = usePapaParse();
     const pdf = useSelector(state => state.pdfAnnotation.pdf);
     const tableData = useSelector(state => state.pdfAnnotation.tableData[props.id]);
     const extractionSuccessful = tableData && tableData.length > 0;
@@ -32,10 +33,10 @@ function useExtractionModal(props) {
                 let fullData = [];
 
                 if (csv.length) {
-                    fullData = readString(csv, {})['data']; //.join('\n')
+                    fullData = readString(csv, {}).data; // .join('\n')
                 }
 
-                dispatch(setTableData(props.id, fullData));
+                dispatch(setTableData({ id: props.id, tableData: fullData }));
             };
 
             setLoading(true);
@@ -44,12 +45,12 @@ function useExtractionModal(props) {
 
             const form = new FormData();
             form.append('pdf', await fetch(pdf).then(content => content.blob()));
-            form.append('region', pxToPoint(y) + ',' + pxToPoint(x) + ',' + pxToPoint(y + h) + ',' + pxToPoint(x + w));
+            form.append('region', `${pxToPoint(y)},${pxToPoint(x)},${pxToPoint(y + h)},${pxToPoint(x + w)}`);
             form.append('page_number', props.pageNumber);
 
-            fetch(env('ANNOTATION_SERVICE_URL') + 'extractTable/', {
+            fetch(`${env('ANNOTATION_SERVICE_URL')}extractTable/`, {
                 method: 'POST',
-                body: form
+                body: form,
             })
                 .then(response => {
                     if (!response.ok) {
@@ -58,7 +59,7 @@ function useExtractionModal(props) {
                         return response.json();
                     }
                 })
-                .then(function(data) {
+                .then(data => {
                     csvTableToObject(data);
                     setLoading(false);
                 })
@@ -67,7 +68,7 @@ function useExtractionModal(props) {
                 });
         };
         performTableExtraction();
-    }, [props.region, props.pageNumber, props.id, pdf, dispatch, tableData]);
+    }, [props.region, props.pageNumber, props.id, pdf, dispatch, tableData, readString]);
 
     const pxToPoint = x => (x * 72) / 96;
 
@@ -87,23 +88,21 @@ function useExtractionModal(props) {
                 fileExtension: 'csv',
                 filename: 'extracted_table',
                 mimeType: 'text/csv',
-                rowDelimiter: '\r\n'
+                rowDelimiter: '\r\n',
             });
         }
     };
 
-    const confirmationModal = papers => {
-        return (
-            <div>
-                A contribution will be added for the following papers
-                <ListGroup className="mt-4">
-                    {papers.map((paper, index) => {
-                        return <ListGroupItem key={`paper${index}`}>{paper.title}</ListGroupItem>;
-                    })}
-                </ListGroup>
-            </div>
-        );
-    };
+    const confirmationModal = papers => (
+        <div>
+            A contribution will be added for the following papers
+            <ListGroup className="mt-4">
+                {papers.map((paper, index) => (
+                    <ListGroupItem key={`paper${index}`}>{paper.title}</ListGroupItem>
+                ))}
+            </ListGroup>
+        </div>
+    );
 
     const handleImportData = async () => {
         importTableData();
@@ -116,7 +115,7 @@ function useExtractionModal(props) {
         'paper:publication_year',
         'paper:doi',
         'paper:research_field',
-        'contribution:research_problem'
+        'contribution:research_problem',
     ];
 
     const importTableData = async () => {
@@ -140,10 +139,10 @@ function useExtractionModal(props) {
                         <br />
                         <ul className="mb-0">
                             <li>
-                                The column <b>{value ? value : `number ${1 + index}`}</b> is not mapped to an ORKG property.
+                                The column <b>{value || `number ${1 + index}`}</b> is not mapped to an ORKG property.
                             </li>
                         </ul>
-                    </>
+                    </>,
                 );
                 return;
             }
@@ -170,7 +169,7 @@ function useExtractionModal(props) {
             const publicationMonth = getFirstValue(rowObject, 'paper:publication_month');
             const publicationYear = getFirstValue(rowObject, 'paper:publication_year');
             const doi = getFirstValue(rowObject, 'paper:doi');
-            let researchField = getFirstValue(rowObject, 'paper:research_field', MISC.RESEARCH_FIELD_MAIN);
+            let researchField = getFirstValue(rowObject, 'paper:research_field', RESOURCES.RESEARCH_FIELD_MAIN);
             let researchProblem = getFirstValue(rowObject, 'contribution:research_problem');
 
             if (!title) {
@@ -184,7 +183,7 @@ function useExtractionModal(props) {
                                 The line <b>{`number ${1 + index}`}</b> will not be imported.
                             </li>
                         </ul>
-                    </>
+                    </>,
                 );
                 return;
             }
@@ -204,7 +203,7 @@ function useExtractionModal(props) {
                 if (researchProblem.startsWith('orkg:')) {
                     researchProblem = researchProblem.replace(/^(orkg:)/, '');
                     problemObject = {
-                        '@id': researchProblem
+                        '@id': researchProblem,
                     };
                 }
 
@@ -228,11 +227,11 @@ function useExtractionModal(props) {
 
                     if (isResource) {
                         contributionStatements[propertyId].push({
-                            '@id': value
+                            '@id': value,
                         });
                     } else {
                         contributionStatements[propertyId].push({
-                            text: value
+                            text: value,
                         });
                     }
                 }
@@ -250,9 +249,9 @@ function useExtractionModal(props) {
                 contributions: [
                     {
                         name: 'Contribution',
-                        values: contributionStatements
-                    }
-                ]
+                        values: contributionStatements,
+                    },
+                ],
             };
 
             papers.push(paper);
@@ -261,7 +260,6 @@ function useExtractionModal(props) {
         const confirm = await Confirm({
             title: 'Are you sure?',
             message: confirmationModal(papers),
-            cancelColor: 'light'
         });
 
         if (confirm) {
@@ -269,41 +267,37 @@ function useExtractionModal(props) {
 
             for (const paper of papers) {
                 try {
-                    const _paper = await saveFullPaper({ paper: paper }, true);
+                    const _paper = await saveFullPaper({ paper }, true);
                     const paperStatements = await getStatementsBySubject({ id: _paper.id });
 
                     for (const statement of paperStatements) {
                         if (statement.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
                             createdContributions.push({
                                 paperId: _paper.id,
-                                contributionId: statement.object.id
+                                contributionId: statement.object.id,
                             });
                             break;
                         }
                     }
                 } catch (e) {
                     console.log(e);
-                    toast.error('Something went wrong while adding the paper: ' + paper.paper.title);
+                    toast.error(`Something went wrong while adding the paper: ${paper.paper.title}`);
                 }
             }
             setLoading(false);
             setImportedData(createdContributions);
-            toast.success(`Successfully imported papers into the ORKG`);
+            toast.success('Successfully imported papers into the ORKG');
         }
     };
 
-    const getFirstValue = (object, key, defaultValue = '') => {
-        return key in object && object[key].length && object[key][0] ? object[key][0] : defaultValue;
-    };
+    const getFirstValue = (object, key, defaultValue = '') => (key in object && object[key].length && object[key][0] ? object[key][0] : defaultValue);
 
     const transposeTable = () => {
         const transposed = zip(...cloneDeep(tableData));
-        dispatch(setTableData(props.id, transposed));
+        dispatch(setTableData({ id: props.id, tableData: transposed }));
     };
 
-    const clearImportError = () => {
-        return setImportError(null);
-    };
+    const clearImportError = () => setImportError(null);
 
     return [
         loading,
@@ -314,7 +308,7 @@ function useExtractionModal(props) {
         handleCsvDownload,
         handleImportData,
         importError,
-        clearImportError
+        clearImportError,
     ];
 }
 export default useExtractionModal;

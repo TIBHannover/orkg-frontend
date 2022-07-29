@@ -40,21 +40,19 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
-const LoadingOverlay = ({ isLoading = false }) => {
-    return (
-        <AnimationContainer in={isLoading} unmountOnExit classNames="fade-in" timeout={800}>
-            <div>
-                <Overlay className="text-secondary">
-                    <Icon icon={faSpinner} className="mr-2" spin />
-                    Loading...
-                </Overlay>
-            </div>
-        </AnimationContainer>
-    );
-};
+const LoadingOverlay = ({ isLoading = false }) => (
+    <AnimationContainer in={isLoading} unmountOnExit classNames="fade-in" timeout={800}>
+        <div>
+            <Overlay className="text-secondary">
+                <Icon icon={faSpinner} className="me-2" spin />
+                Loading...
+            </Overlay>
+        </div>
+    </AnimationContainer>
+);
 
 LoadingOverlay.propTypes = {
-    isLoading: PropTypes.bool
+    isLoading: PropTypes.bool,
 };
 
 export default LoadingOverlay;

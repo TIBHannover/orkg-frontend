@@ -1,32 +1,33 @@
 import { Component } from 'react';
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
-import { semanticScholarUrl, submitGetRequest } from 'network';
+import { submitGetRequest } from 'network';
+import { semanticScholarUrl } from 'services/semanticScholar';
 import { getAnnotations } from 'services/annotation/index';
 import { connect } from 'react-redux';
 import {
     updateAbstract,
     nextStep,
     previousStep,
-    createContribution,
+    createContributionAction as createContribution,
     createAnnotation,
     clearAnnotations,
     toggleAbstractDialog,
-    setAbstractDialogView
-} from 'actions/addPaper';
-import { fillStatements } from 'actions/statementBrowser';
+    setAbstractDialogView,
+} from 'slices/addPaperSlice';
+import { fillStatements } from 'slices/statementBrowserSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faThList, faMagic } from '@fortawesome/free-solid-svg-icons';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import randomcolor from 'randomcolor';
 import styled from 'styled-components';
-import AbstractInputView from './AbstractInputView';
-import AbstractAnnotatorView from './AbstractAnnotatorView';
-import AbstractRangesList from './AbstractRangesList';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { guid } from 'utils';
 import toArray from 'lodash/toArray';
 import { ENTITIES } from 'constants/graphSettings';
+import AbstractRangesList from './AbstractRangesList';
+import AbstractAnnotatorView from './AbstractAnnotatorView';
+import AbstractInputView from './AbstractInputView';
 
 const AnimationContainer = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -54,25 +55,25 @@ class Abstract extends Component {
                 {
                     id: 'PROCESS',
                     label: 'Process',
-                    description: 'Natural phenomenon, or independent/dependent activities.E.g., growing(Bio), cured(MS), flooding(ES).'
+                    description: 'Natural phenomenon, or independent/dependent activities.E.g., growing(Bio), cured(MS), flooding(ES).',
                 },
                 {
                     id: 'DATA',
                     label: 'Data',
                     description:
-                        'The data themselves, or quantitative or qualitative characteristics of entities. E.g., rotational energy (Eng), tensile strength (MS), the Chern character (Mat).'
+                        'The data themselves, or quantitative or qualitative characteristics of entities. E.g., rotational energy (Eng), tensile strength (MS), the Chern character (Mat).',
                 },
                 {
                     id: 'MATERIAL',
                     label: 'Material',
-                    description: 'A physical or digital entity used for scientific experiments. E.g., soil (Agr), the moon (Ast), the set (Mat).'
+                    description: 'A physical or digital entity used for scientific experiments. E.g., soil (Agr), the moon (Ast), the set (Mat).',
                 },
                 {
                     id: 'METHOD',
                     label: 'Method',
                     description:
-                        'A commonly used procedure that acts on entities. E.g., powder X-ray (Che), the PRAM analysis (CS), magnetoencephalography (Med).'
-                }
+                        'A commonly used procedure that acts on entities. E.g., powder X-ray (Che), the PRAM analysis (CS), magnetoencephalography (Med).',
+                },
             ],
             certaintyThreshold: [0.5],
             validation: true,
@@ -80,8 +81,8 @@ class Abstract extends Component {
                 process: '#7fa2ff',
                 data: '	#9df28a',
                 material: '#EAB0A2',
-                method: '#D2B8E5'
-            }
+                method: '#D2B8E5',
+            },
         };
     }
 
@@ -109,30 +110,27 @@ class Abstract extends Component {
                                     rangeClass = { id: entity[1], label: entity[1] };
                                 }
                                 ranges[entity[0]] = {
-                                    text: text,
+                                    text,
                                     start: entity[2][0][0],
                                     end: entity[2][0][1] - 1,
                                     certainty: entity[3],
                                     class: rangeClass,
-                                    isEditing: false
+                                    isEditing: false,
                                 };
                                 return ranges[entity[0]];
-                            } else {
-                                return null;
                             }
+                            return null;
                         })
                         .filter(r => r);
                 }
-                //Clear annotations
+                // Clear annotations
                 this.props.clearAnnotations();
-                toArray(ranges).map(range => {
-                    return this.props.createAnnotation(range);
-                });
+                toArray(ranges).map(range => this.props.createAnnotation(range));
                 this.setState({
                     isAnnotationLoading: false,
                     isAnnotationFailedLoading: false,
                     isAbstractLoading: false,
-                    isAbstractFailedLoading: false
+                    isAbstractFailedLoading: false,
                 });
             })
             .catch(e => {
@@ -140,7 +138,7 @@ class Abstract extends Component {
                     this.setState({
                         annotationError: 'Failed to annotate the abstract, please change the abstract and try again',
                         isAnnotationLoading: false,
-                        isAnnotationFailedLoading: true
+                        isAnnotationFailedLoading: true,
                     });
                 } else {
                     this.setState({ annotationError: null, isAnnotationLoading: false, isAnnotationFailedLoading: true });
@@ -162,26 +160,9 @@ class Abstract extends Component {
                 return;
             }
             this.setState({
-                isAbstractLoading: true
+                isAbstractLoading: true,
             });
-            let lookupId = DOI;
-            if (this.props.title && !lookupId) {
-                let paperSearchResult = null;
-                try {
-                    paperSearchResult = await submitGetRequest(
-                        `${semanticScholarUrl}graph/v1/paper/search?query=${encodeURIComponent(this.props.title)}&limit=1`
-                    );
-                } catch (e) {}
-                if (paperSearchResult?.data?.length === 0) {
-                    this.setState({
-                        isAbstractLoading: false
-                    });
-                    this.props.setAbstractDialogView('input');
-                    return;
-                }
-                lookupId = paperSearchResult.data[0].paperId;
-            }
-            return submitGetRequest(`${semanticScholarUrl}v1/paper/${lookupId}`)
+            return submitGetRequest(`${semanticScholarUrl}v1/paper/${DOI}`)
                 .then((data, reject) => {
                     if (!data.abstract) {
                         return reject;
@@ -193,7 +174,7 @@ class Abstract extends Component {
                     abstract = abstract.replace(/(\r\n|\n|\r)/gm, ' ');
 
                     this.setState({
-                        isAbstractLoading: false
+                        isAbstractLoading: false,
                     });
                     this.props.updateAbstract(abstract);
                     this.getAnnotation();
@@ -202,9 +183,8 @@ class Abstract extends Component {
                     this.handleChangeAbstract();
                     this.setState({ isAbstractFailedLoading: true, isAbstractLoading: false });
                 });
-        } else {
-            this.getAnnotation();
         }
+        this.getAnnotation();
     };
 
     getClassColor = rangeClass => {
@@ -213,11 +193,10 @@ class Abstract extends Component {
         }
         if (this.state.classColors[rangeClass.toLowerCase()]) {
             return this.state.classColors[rangeClass.toLowerCase()];
-        } else {
-            const newColor = randomcolor({ luminosity: 'light', seed: rangeClass.toLowerCase() });
-            this.setState({ classColors: { ...this.state.classColors, [rangeClass.toLowerCase()]: newColor } });
-            return newColor;
         }
+        const newColor = randomcolor({ luminosity: 'light', seed: rangeClass.toLowerCase() });
+        this.setState({ classColors: { ...this.state.classColors, [rangeClass.toLowerCase()]: newColor } });
+        return newColor;
     };
 
     getExistingPredicateId = property => {
@@ -240,9 +219,8 @@ class Abstract extends Component {
                 const v = this.props.properties.byId[p[0]].valueIds.filter(id => {
                     if (this.props.values.byId[id].label === range.text) {
                         return id;
-                    } else {
-                        return false;
                     }
+                    return false;
                 });
                 if (v.length > 0) {
                     return true;
@@ -271,20 +249,20 @@ class Abstract extends Component {
                     if (!createdProperties[propertyId]) {
                         const existingPredicateId = this.getExistingPredicateId(range.class);
                         if (!existingPredicateId) {
-                            statements['properties'].push({
-                                propertyId: propertyId,
+                            statements.properties.push({
+                                propertyId,
                                 existingPredicateId: range.class.id.toLowerCase() !== range.class.label.toLowerCase() ? range.class.id : null,
-                                label: range.class.label
+                                label: range.class.label,
                             });
                         } else {
                             propertyId = existingPredicateId;
                         }
                         createdProperties[propertyId] = propertyId;
                     }
-                    statements['values'].push({
+                    statements.values.push({
                         label: range.text,
                         _class: ENTITIES.RESOURCE,
-                        propertyId: propertyId
+                        propertyId,
                     });
                 }
                 return null;
@@ -381,13 +359,13 @@ class Abstract extends Component {
                 <ModalFooter>
                     {this.props.abstractDialogView === 'input' ? (
                         <>
-                            <Button color="primary" className="float-right" onClick={this.handleChangeAbstract}>
+                            <Button color="primary" className="float-end" onClick={this.handleChangeAbstract}>
                                 Annotate Abstract
                             </Button>
                         </>
                     ) : this.props.abstractDialogView === 'list' ? (
                         <>
-                            <Button color="secondary" outline className="float-left" onClick={() => this.handleChangeView('annotator')}>
+                            <Button color="secondary" outline className="float-start" onClick={() => this.handleChangeView('annotator')}>
                                 <Icon icon={faMagic} /> Annotator
                             </Button>
 
@@ -401,7 +379,7 @@ class Abstract extends Component {
                         </>
                     ) : (
                         <>
-                            <Button color="secondary" outline className="float-left" onClick={() => this.handleChangeView('list')}>
+                            <Button color="secondary" outline className="float-start" onClick={() => this.handleChangeView('list')}>
                                 <Icon icon={faThList} /> List of annotations
                             </Button>
 
@@ -440,7 +418,7 @@ Abstract.propTypes = {
     showAbstractDialog: PropTypes.bool.isRequired,
     toggleAbstractDialog: PropTypes.func.isRequired,
     setAbstractDialogView: PropTypes.func.isRequired,
-    abstractDialogView: PropTypes.string.isRequired
+    abstractDialogView: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -454,7 +432,7 @@ const mapStateToProps = state => ({
     properties: state.statementBrowser.properties,
     values: state.statementBrowser.values,
     showAbstractDialog: state.addPaper.showAbstractDialog,
-    abstractDialogView: state.addPaper.abstractDialogView
+    abstractDialogView: state.addPaper.abstractDialogView,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -466,12 +444,12 @@ const mapDispatchToProps = dispatch => ({
     createAnnotation: data => dispatch(createAnnotation(data)),
     clearAnnotations: () => dispatch(clearAnnotations()),
     toggleAbstractDialog: () => dispatch(toggleAbstractDialog()),
-    setAbstractDialogView: data => dispatch(setAbstractDialogView(data))
+    setAbstractDialogView: data => dispatch(setAbstractDialogView(data)),
 });
 
 export default compose(
     connect(
         mapStateToProps,
-        mapDispatchToProps
-    )
+        mapDispatchToProps,
+    ),
 )(Abstract);

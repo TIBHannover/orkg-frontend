@@ -55,26 +55,26 @@ const useListPage = ({ label, resourceClass, renderListItem }) => {
 
         const result = await getResourcesByClass({
             id: CLASSES.COMPARISON,
-            page: page,
+            page,
             items: pageSize,
             sortBy: 'created_at',
-            desc: true
+            desc: true,
         });
         if (result.content.length > 0) {
             // Fetch the data of each paper
             getStatementsBySubjects({ ids: result.content.map(p => p.id) })
                 .then(comparisonsStatements => {
-                    const comparisonsData = comparisonsStatements.map(comparisonStatements => {
-                        return getComparisonData(
+                    const comparisonsData = comparisonsStatements.map(comparisonStatements =>
+                        getComparisonData(
                             comparisonStatements.id,
                             find(result.content, { id: comparisonStatements.id }).label,
-                            comparisonStatements.statements
-                        );
-                    });
+                            comparisonStatements.statements,
+                        ),
+                    );
                     addResults({
                         results: comparisonsData,
                         last: result.last,
-                        totalElements: result.totalElements
+                        totalElements: result.totalElements,
                     });
                 })
                 .catch(error => {
@@ -91,7 +91,7 @@ const useListPage = ({ label, resourceClass, renderListItem }) => {
             <Container className="d-flex align-items-center">
                 <div className="d-flex flex-grow-1 mt-4 mb-4">
                     <h1 className="h4">View {label}</h1>
-                    <div className="text-muted ml-3 mt-1">
+                    <div className="text-muted ms-3 mt-1">
                         {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} {label}
                     </div>
                 </div>
@@ -121,7 +121,7 @@ const useListPage = ({ label, resourceClass, renderListItem }) => {
                             Load more
                         </div>
                     )}
-                    {!hasNextPage && isLastPageReached && <div className="text-center mt-3">You have reached the last page.</div>}
+                    {!hasNextPage && isLastPageReached && <div className="text-center mt-3">You have reached the last page</div>}
                 </ListGroup>
             </Container>
         </>

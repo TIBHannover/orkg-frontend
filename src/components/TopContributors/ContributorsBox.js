@@ -3,17 +3,18 @@ import useContributors from 'components/TopContributors/hooks/useContributors';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
-import ContributorsModal from './ContributorsModal';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
+import pluralize from 'pluralize';
+import ContributorsModal from './ContributorsModal';
 
 const ContributorsBox = ({ researchFieldId }) => {
     const { contributors, isLoading } = useContributors({ researchFieldId, pageSize: 5, initialSort: 'top' });
     const [openModal, setOpenModal] = useState(false);
 
     return (
-        <div className="box rounded-lg p-3 flex-grow-1 d-flex flex-column">
+        <div className="box rounded-3 p-3 flex-grow-1 d-flex flex-column">
             <h5>
                 <Icon icon={faAward} className="text-primary" /> Top Contributors
             </h5>
@@ -21,11 +22,11 @@ const ContributorsBox = ({ researchFieldId }) => {
                 {!isLoading && contributors && contributors.length > 0 && (
                     <div className="mt-2">
                         {contributors.slice(0, 4).map((contributor, index) => (
-                            <div className="pt-1 pl-2 pr-2" key={`rp${index}`}>
+                            <div className="pt-1 ps-2 pe-2" key={`rp${index}`}>
                                 <ContributorCard
                                     contributor={{
                                         ...contributor.profile,
-                                        subTitle: `${contributor.counts.total} contribution${contributor.counts.total > 1 ? 's' : ''}`
+                                        subTitle: `${pluralize('contribution', contributor.counts.total, true)}`,
                                     }}
                                 />
                                 {contributors.slice(0, 4).length - 1 !== index && <hr className="mb-0 mt-1" />}
@@ -66,7 +67,7 @@ const ContributorsBox = ({ researchFieldId }) => {
 };
 
 ContributorsBox.propTypes = {
-    researchFieldId: PropTypes.string.isRequired
+    researchFieldId: PropTypes.string.isRequired,
 };
 
 export default ContributorsBox;

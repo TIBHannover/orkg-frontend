@@ -6,10 +6,9 @@ import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { kebabCase, isString } from 'lodash';
-import { useLocation, useHistory } from 'react-router';
 import styled from 'styled-components';
 import TitleBar from 'components/TitleBar/TitleBar';
 
@@ -24,7 +23,7 @@ const FeaturedComparisons = () => {
     const [categories, setCategories] = useState([]);
     const [comparisons, setComparisons] = useState([]);
     const location = useLocation();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         document.title = 'Featured comparisons - ORKG';
@@ -35,21 +34,21 @@ const FeaturedComparisons = () => {
 
     const scrollTo = useCallback(
         header => {
-            const hash = location.hash;
+            const { hash } = location;
             const id = isString(hash) ? hash.replace('#', '') : null;
             if (!header || header.id !== id) {
                 return;
             }
             window.scrollTo({
                 behavior: 'smooth',
-                top: header.offsetTop - 90 // a little space between the select element and the top of the page
+                top: header.offsetTop - 90, // a little space between the select element and the top of the page
             });
         },
-        [location.hash]
+        [location.hash],
     );
 
     const handleClick = (e, id) => {
-        history.push(`#${id}`);
+        navigate(`#${id}`);
         e.preventDefault();
     };
 
@@ -60,12 +59,12 @@ const FeaturedComparisons = () => {
             id: CLASSES.FEATURED_COMPARISON_CATEGORY,
             sortBy: 'created_at',
             desc: false,
-            returnContent: true
+            returnContent: true,
         });
 
         const categories = responseJson.map(item => ({
             label: item.label,
-            id: item.id
+            id: item.id,
         }));
 
         setCategories(categories);
@@ -76,12 +75,12 @@ const FeaturedComparisons = () => {
             id: CLASSES.FEATURED_COMPARISON,
             sortBy: 'created_at',
             desc: false,
-            returnContent: true
+            returnContent: true,
         });
 
         const ids = responseJson.map(comparison => comparison.id);
         const comparisonStatements = await getStatementsBySubjects({
-            ids
+            ids,
         });
 
         const comparisons = responseJson.map(comparison => {
@@ -93,7 +92,7 @@ const FeaturedComparisons = () => {
             for (const comparisonStatement of comparisonStatements) {
                 if (comparisonStatement.id === comparison.id) {
                     const descriptionStatement = comparisonStatement.statements.filter(
-                        statement => statement.predicate.id === PREDICATES.DESCRIPTION
+                        statement => statement.predicate.id === PREDICATES.DESCRIPTION,
                     );
                     description = descriptionStatement.length ? descriptionStatement[0].object.label : '';
 
@@ -116,7 +115,7 @@ const FeaturedComparisons = () => {
                 description,
                 contributions,
                 icon,
-                type
+                type,
             };
         });
 
@@ -135,7 +134,7 @@ const FeaturedComparisons = () => {
             >
                 Featured paper comparisons
             </TitleBar>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <Alert color="info" fade={false}>
                     With the paper data inside the ORKG, you can build powerful paper comparisons. On this page, we list the featured comparisons that
                     are created using the comparison functionality. The featured comparisons below are organized by category.
@@ -152,7 +151,7 @@ const FeaturedComparisons = () => {
                             <Fragment key={category.id}>
                                 <Header id={id} ref={scrollTo} className="h4 mt-4 mb-3">
                                     {category.label}
-                                    <a href={`#${id}`} className="ml-2 invisible" onClick={e => handleClick(e, id)}>
+                                    <a href={`#${id}`} className="ms-2 invisible" onClick={e => handleClick(e, id)}>
                                         <Icon icon={faLink} />
                                     </a>
                                 </Header>

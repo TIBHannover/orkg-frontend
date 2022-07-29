@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Alert, Button, ButtonGroup, ListGroup, ListGroupItem } from 'reactstrap';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { deleteResource, getResourcesByClass } from 'services/backend/resources';
 import { getResourceData } from 'services/similarity/index';
 
@@ -37,12 +37,12 @@ const DraftComparisons = () => {
                 items: 10,
                 sortBy: 'created_at',
                 creator: userId,
-                desc: true
+                desc: true,
             });
             const draftComparisonUrls = await Promise.all(_draftComparisons.map(draftComparison => getResourceData(draftComparison.id)));
             setIsLast(last);
             setDraftComparisons(
-                _draftComparisons.map((draftComparison, index) => ({ ...draftComparison, url: draftComparisonUrls[index].data.url }))
+                _draftComparisons.map((draftComparison, index) => ({ ...draftComparison, url: draftComparisonUrls[index].data.url })),
             );
         } catch (e) {
             toast.error('An error occurred, reload the page and try again');
@@ -57,8 +57,7 @@ const DraftComparisons = () => {
     const handleDelete = async id => {
         const isConfirmed = await Confirm({
             title: 'Are you sure?',
-            message: `Are you sure to delete this draft comparison? If the comparison is published already, the comparison remains available`,
-            cancelColor: 'light'
+            message: 'Are you sure to delete this draft comparison? If the comparison is published already, the comparison remains available',
         });
 
         if (isConfirmed) {
@@ -71,7 +70,7 @@ const DraftComparisons = () => {
 
     const handleChange = ({ title, editItem }) =>
         setDraftComparisons(comparisons =>
-            comparisons.map(draftComparison => (draftComparison.id === editItem.id ? { ...draftComparison, label: title } : draftComparison))
+            comparisons.map(draftComparison => (draftComparison.id === editItem.id ? { ...draftComparison, label: title } : draftComparison)),
         );
 
     const handleEdit = draftComparison => {
@@ -92,12 +91,12 @@ const DraftComparisons = () => {
             {(draftComparisons.length > 0 || isLoading) && (
                 <ListGroup className="mb-3 box">
                     {draftComparisons.map(draftComparison => (
-                        <ListGroupItem key={draftComparison.id} className="d-flex justify-content-between align-items-center py-2">
+                        <ListGroupItem key={draftComparison.id} className="d-flex justify-content-between align-items-center px-4 py-3">
                             <div>
-                                <Link to={reverse(ROUTES.COMPARISON) + draftComparison.url}>{draftComparison.label}</Link> <br />
+                                <Link to={reverse(ROUTES.COMPARISON_NOT_PUBLISHED) + draftComparison.url}>{draftComparison.label}</Link> <br />
                                 <small>
                                     <Icon icon={faCalendar} /> {moment(draftComparison.created_at).format('DD MMMM YYYY')}{' '}
-                                    <Icon icon={faClock} className="ml-2 mr-1" />
+                                    <Icon icon={faClock} className="ms-2 me-1" />
                                     {moment(draftComparison.created_at).format('H:mm')}
                                 </small>
                             </div>

@@ -1,4 +1,4 @@
-import { fillStatements, goToResourceHistory } from 'actions/statementBrowser';
+import { fillStatements, goToResourceHistory } from 'slices/statementBrowserSlice';
 import { ENTITIES } from 'constants/graphSettings';
 import { useDispatch, useSelector } from 'react-redux';
 import { guid } from 'utils';
@@ -51,10 +51,10 @@ const useInsertData = () => {
                         const existingPredicateId = getExistingPropertyId(statement.property);
                         if (!existingPredicateId) {
                             insertStatements.properties.push({
-                                propertyId: propertyId,
+                                propertyId,
                                 existingPredicateId:
                                     statement.property.id.toLowerCase() !== statement.property.label.toLowerCase() ? statement.property.id : null,
-                                label: statement.property.label
+                                label: statement.property.label,
                             });
                         } else {
                             propertyId = existingPredicateId;
@@ -66,7 +66,7 @@ const useInsertData = () => {
                         _class: ENTITIES.RESOURCE,
                         propertyId,
                         isExistingValue: statement.object.isExistingValue,
-                        existingResourceId: statement.object.id || undefined
+                        existingResourceId: statement.object.id || undefined,
                     });
                 }
                 return null;
@@ -78,8 +78,8 @@ const useInsertData = () => {
         dispatch(
             goToResourceHistory({
                 id: contributions.byId[selectedContribution].resourceId,
-                historyIndex: 0
-            })
+                historyIndex: 0,
+            }),
         );
     };
 

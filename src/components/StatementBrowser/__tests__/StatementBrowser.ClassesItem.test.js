@@ -1,8 +1,7 @@
 import { render, screen, waitFor, fireEvent, waitForElementToBeRemoved } from 'testUtils';
-import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 import selectEvent from 'react-select-event';
-import { ToastContainer } from 'react-toastify';
+import StatementBrowser from '../StatementBrowser';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
@@ -15,15 +14,10 @@ const setup = (
         newStore: true,
         rootNodeType: ENTITIES.RESOURCE,
         enableEdit: true,
-        syncBackend: true
-    }
+        syncBackend: true,
+    },
 ) => {
-    render(
-        <>
-            <StatementBrowser {...props} /> <ToastContainer position="top-right" autoClose={5000} hideProgressBar className="toast-container" />
-        </>,
-        { initialState }
-    );
+    render(<StatementBrowser {...props} />, { initialState });
 };
 
 describe('ClassesItem', () => {
@@ -76,7 +70,7 @@ describe('ClassesItem', () => {
         await waitFor(() => expect(screen.getByLabelText(/Specify the classes of the resource/i)).toBeInTheDocument());
         // Basic reproduction number estimate
         fireEvent.change(screen.getByLabelText(/Specify the classes of the resource/i), { target: { value: 'R40006' } });
-        await selectEvent.select(screen.getByRole('textbox', { name: /Specify the classes of the resource/i }), 'R40006');
+        await selectEvent.select(screen.getByRole('combobox', { name: /Specify the classes of the resource/i }), 'R40006');
         await waitFor(() => screen.getByRole('button', { name: 'Done' }));
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
         await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());

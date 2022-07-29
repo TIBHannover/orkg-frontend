@@ -1,12 +1,14 @@
 import { useRef } from 'react';
 import { StatementsGroupStyle } from 'components/StatementBrowser/styled';
 import PropTypes from 'prop-types';
-import TemplateComponentProperty from './Property/TemplateComponentProperty';
-import TemplateComponentValue from './Value/TemplateComponentValue';
 import { useDrag, useDrop } from 'react-dnd';
+import { useSelector } from 'react-redux';
 import ItemTypes from 'constants/dndTypes';
+import TemplateComponentValue from './Value/TemplateComponentValue';
+import TemplateComponentProperty from './Property/TemplateComponentProperty';
 
 function TemplateComponent(props) {
+    const editMode = useSelector(state => state.templateEditor.editMode);
     const ref = useRef(null);
     const [, drop] = useDrop({
         accept: ItemTypes.TEMPLATE_COMPONENT,
@@ -46,15 +48,15 @@ function TemplateComponent(props) {
             // but it's good here for the sake of performance
             // to avoid expensive index searches.
             item.index = hoverIndex;
-        }
+        },
     });
     const [{ isDragging }, drag, preview] = useDrag({
         type: ItemTypes.TEMPLATE_COMPONENT,
         item: { index: props.id },
         collect: monitor => ({
-            isDragging: monitor.isDragging()
+            isDragging: monitor.isDragging(),
         }),
-        canDrag: () => props.enableEdit
+        canDrag: () => editMode,
     });
     const opacity = isDragging ? 0 : 1;
 
@@ -62,12 +64,11 @@ function TemplateComponent(props) {
 
     return (
         <StatementsGroupStyle className="noTemplate list-group-item" style={{ opacity }}>
-            <div ref={ref} className="row no-gutters">
+            <div ref={ref} className="row gx-0">
                 <TemplateComponentProperty
                     handleDeleteTemplateComponent={props.handleDeleteTemplateComponent}
                     id={props.id}
                     property={props.property}
-                    enableEdit={props.enableEdit}
                     handlePropertiesSelect={props.handlePropertiesSelect}
                     dragRef={drag}
                 />
@@ -76,7 +77,6 @@ function TemplateComponent(props) {
                     value={props.value}
                     minOccurs={props.minOccurs}
                     maxOccurs={props.maxOccurs}
-                    enableEdit={props.enableEdit}
                     validationRules={props.validationRules}
                     handleClassOfPropertySelect={props.handleClassOfPropertySelect}
                 />
@@ -88,15 +88,14 @@ function TemplateComponent(props) {
 TemplateComponent.propTypes = {
     id: PropTypes.number.isRequired,
     property: PropTypes.object.isRequired,
-    value: PropTypes.object.isRequired,
+    value: PropTypes.object,
     minOccurs: PropTypes.string.isRequired,
     maxOccurs: PropTypes.string,
     validationRules: PropTypes.object,
     moveCard: PropTypes.func.isRequired,
     handleDeleteTemplateComponent: PropTypes.func.isRequired,
-    enableEdit: PropTypes.bool.isRequired,
     handlePropertiesSelect: PropTypes.func.isRequired,
-    handleClassOfPropertySelect: PropTypes.func.isRequired
+    handleClassOfPropertySelect: PropTypes.func.isRequired,
 };
 
 export default TemplateComponent;

@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { StyledItemProvenanceBox } from './styled';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { setPaperObservatory } from 'actions/viewPaper';
+import { setPaperObservatory } from 'slices/viewPaperSlice';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import PropTypes from 'prop-types';
@@ -13,6 +12,7 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { Button } from 'reactstrap';
 import { MISC } from 'constants/graphSettings';
+import { StyledItemProvenanceBox } from './styled';
 
 const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contributors, createdBy, isLoadingProvenance, isLoadingContributors }) => {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
@@ -32,7 +32,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                                 {observatoryInfo.display_id && (
                                     <Link
                                         to={reverse(ROUTES.OBSERVATORY, {
-                                            id: observatoryInfo.display_id
+                                            id: observatoryInfo.display_id,
                                         })}
                                     >
                                         {observatoryInfo.name}
@@ -50,7 +50,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                                 )}
                                 <Link
                                     to={reverse(ROUTES.ORGANIZATION, {
-                                        id: organizationInfo.display_id
+                                        id: organizationInfo.display_id,
                                     })}
                                 >
                                     <img
@@ -58,7 +58,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                                             marginTop: 8,
                                             marginBottom: 8,
                                             maxWidth: '80%',
-                                            height: 'auto'
+                                            height: 'auto',
                                         }}
                                         className="mx-auto d-block"
                                         src={organizationInfo.logo}
@@ -85,9 +85,9 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                         <UserAvatar userId={createdBy.id} />
                         <Link
                             to={reverse(ROUTES.USER_PROFILE, {
-                                userId: createdBy.id
+                                userId: createdBy.id,
                             })}
-                            className="ml-2"
+                            className="ms-2"
                         >
                             {createdBy.display_name}
                         </Link>
@@ -106,7 +106,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                                 <div key={`cntbrs-${contributor.id}${index}`}>
                                     <Link
                                         to={reverse(ROUTES.USER_PROFILE, {
-                                            userId: contributor.created_by.id
+                                            userId: contributor.created_by.id,
                                         })}
                                     >
                                         {contributor.created_by.display_name}
@@ -120,7 +120,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
             {!!user && user.isCurationAllowed && (
                 <div className="text-center">
                     <Button size="sm" className="mt-2 mb-2" onClick={() => setShowAssignObservatory(true)}>
-                        <Icon icon={faPen} /> {observatoryInfo ? `Edit` : `Assign to observatory`}
+                        <Icon icon={faPen} /> {observatoryInfo ? 'Edit' : 'Assign to observatory'}
                     </Button>
                 </div>
             )}
@@ -145,7 +145,7 @@ Provenance.propTypes = {
     paperResource: PropTypes.object,
     createdBy: PropTypes.object,
     isLoadingProvenance: PropTypes.bool,
-    isLoadingContributors: PropTypes.bool
+    isLoadingContributors: PropTypes.bool,
 };
 
 export default Provenance;

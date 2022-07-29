@@ -1,5 +1,5 @@
-import BaseElement from './BaseElement';
 import * as d3 from 'd3';
+import BaseElement from './BaseElement';
 import './nodeLoaderAnimation.css';
 import DrawTools from '../drawTools';
 
@@ -151,7 +151,7 @@ export default class Node extends BaseElement {
                 .append('path')
                 .attr(
                     'd',
-                    'M320 400c-75.85 0-137.25-58.71-142.9-133.11L72.2 185.82c-13.79 17.3-26.48 35.59-36.72 55.59a32.35 32.35 0 0 0 0 29.19C89.71 376.41 197.07 448 320 448c26.91 0 52.87-4 77.89-10.46L346 397.39a144.13 144.13 0 0 1-26 2.61zm313.82 58.1l-110.55-85.44a331.25 331.25 0 0 0 81.25-102.07 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64a308.15 308.15 0 0 0-147.32 37.7L45.46 3.37A16 16 0 0 0 23 6.18L3.37 31.45A16 16 0 0 0 6.18 53.9l588.36 454.73a16 16 0 0 0 22.46-2.81l19.64-25.27a16 16 0 0 0-2.82-22.45zm-183.72-142l-39.3-30.38A94.75 94.75 0 0 0 416 256a94.76 94.76 0 0 0-121.31-92.21A47.65 47.65 0 0 1 304 192a46.64 46.64 0 0 1-1.54 10l-73.61-56.89A142.31 142.31 0 0 1 320 112a143.92 143.92 0 0 1 144 144c0 21.63-5.29 41.79-13.9 60.11z'
+                    'M320 400c-75.85 0-137.25-58.71-142.9-133.11L72.2 185.82c-13.79 17.3-26.48 35.59-36.72 55.59a32.35 32.35 0 0 0 0 29.19C89.71 376.41 197.07 448 320 448c26.91 0 52.87-4 77.89-10.46L346 397.39a144.13 144.13 0 0 1-26 2.61zm313.82 58.1l-110.55-85.44a331.25 331.25 0 0 0 81.25-102.07 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64a308.15 308.15 0 0 0-147.32 37.7L45.46 3.37A16 16 0 0 0 23 6.18L3.37 31.45A16 16 0 0 0 6.18 53.9l588.36 454.73a16 16 0 0 0 22.46-2.81l19.64-25.27a16 16 0 0 0-2.82-22.45zm-183.72-142l-39.3-30.38A94.75 94.75 0 0 0 416 256a94.76 94.76 0 0 0-121.31-92.21A47.65 47.65 0 0 1 304 192a46.64 46.64 0 0 1-1.54 10l-73.61-56.89A142.31 142.31 0 0 1 320 112a143.92 143.92 0 0 1 144 144c0 21.63-5.29 41.79-13.9 60.11z',
                 )
                 .attr('transform', 'translate(-45,28), scale(0.03,0.03)');
 
@@ -164,9 +164,9 @@ export default class Node extends BaseElement {
                 }
                 // push back to origin;
                 this.singleCollapseGroup.attr('cx', -Math.sqrt(50 * 25));
-                this.singleCollapseGroup.attr('transform', 'translate(' + (offsetX - 15 - 0.5 * width) + ',' + -offsetX + ')');
+                this.singleCollapseGroup.attr('transform', `translate(${offsetX - 15 - 0.5 * width},${-offsetX})`);
             }
-            this.singleCollapseGroup.on('click', function() {
+            this.singleCollapseGroup.on('click', () => {
                 that.collapseThisNode();
             });
         }
@@ -199,11 +199,11 @@ export default class Node extends BaseElement {
                     icon.style('stroke-width', '0');
                     icon.attr(
                         'd',
-                        'M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'
+                        'M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z',
                     );
                     icon.attr('transform', 'translate(24,-48)');
 
-                    this.collapseExapandGroup.on('click', function() {
+                    this.collapseExapandGroup.on('click', () => {
                         that.graph.singleNodeExploration(that);
                     });
 
@@ -219,7 +219,7 @@ export default class Node extends BaseElement {
                         .attr('points', '8.5,5 4,5 9,12 4,19 8.5,19 13.5,12 ')
                         .attr('transform', 'translate(25,-48)');
 
-                    this.collapseExapandGroup.on('click', function() {
+                    this.collapseExapandGroup.on('click', () => {
                         that.graph.singleNodeExpansion(that);
                     });
                     break;
@@ -235,7 +235,7 @@ export default class Node extends BaseElement {
                         .attr('points', '8.5,5 4,5 9,12 4,19 8.5,19 13.5,12 ')
                         .attr('transform', 'translate(47,-48), scale(-1,1)');
 
-                    this.collapseExapandGroup.on('click', function() {
+                    this.collapseExapandGroup.on('click', () => {
                         that.graph.planCollapseOperations(that);
                     });
                     break;
@@ -254,9 +254,8 @@ export default class Node extends BaseElement {
     resourceId(val) {
         if (!arguments.length) {
             return this._resourceId;
-        } else {
-            this._resourceId = val;
         }
+        this._resourceId = val;
     }
 
     setExploreAnimation(val) {
@@ -273,10 +272,8 @@ export default class Node extends BaseElement {
 
             this.renderingAnimationGroup.style('stroke-width', '7px');
             this.renderingAnimationGroup.classed('loadingAnimation', true);
-        } else {
-            if (this.renderingAnimationGroup) {
-                this.renderingAnimationGroup.remove();
-            }
+        } else if (this.renderingAnimationGroup) {
+            this.renderingAnimationGroup.remove();
         }
     }
 
@@ -298,38 +295,40 @@ export default class Node extends BaseElement {
 
         that.svgRoot
             .transition()
-            .tween('attr.translate', function() {
-                return function(t) {
-                    const tr = d3.transform(that.svgRoot.attr('transform'));
-                    that.x = tr.translate[0];
-                    that.y = tr.translate[1];
-                    that.px = that.x;
-                    that.py = that.y;
+            .tween(
+                'attr.translate',
+                () =>
+                    function (t) {
+                        const tr = d3.transform(that.svgRoot.attr('transform'));
+                        that.x = tr.translate[0];
+                        that.y = tr.translate[1];
+                        that.px = that.x;
+                        that.py = that.y;
 
-                    that.linkElements.forEach(link => {
-                        link.updateDrawPosition();
-                    });
+                        that.linkElements.forEach(link => {
+                            link.updateDrawPosition();
+                        });
 
-                    if (collapse === true && t > 0.85 && notHidden === false) {
-                        if (!that.visible()) {
-                            that.makeInvisibleForAnimation();
-                            that.outgoingLink.forEach(item => {
-                                if (item.visible()) {
-                                    item.makeInvisibleForAnimation();
-                                }
-                            });
+                        if (collapse === true && t > 0.85 && notHidden === false) {
+                            if (!that.visible()) {
+                                that.makeInvisibleForAnimation();
+                                that.outgoingLink.forEach(item => {
+                                    if (item.visible()) {
+                                        item.makeInvisibleForAnimation();
+                                    }
+                                });
+                            }
+                            notHidden = true;
                         }
-                        notHidden = true;
-                    }
-                };
-            })
+                    },
+            )
             .duration(duration)
-            .each('end', function() {
+            .each('end', () => {
                 if (callback && id === max) {
                     callback();
                 }
             })
-            .attr('transform', 'translate(' + f_x + ',' + f_y + ')');
+            .attr('transform', `translate(${f_x},${f_y})`);
     }
 
     filterCollapsedLinks() {
@@ -362,9 +361,8 @@ export default class Node extends BaseElement {
     id(val) {
         if (!arguments.length) {
             return this.idValue;
-        } else {
-            this.idValue = val;
         }
+        this.idValue = val;
     }
 
     setLabel(val) {
@@ -378,7 +376,7 @@ export default class Node extends BaseElement {
 
     updateDrawPosition = function() {
         if (this.svgRoot) {
-            this.svgRoot.attr('transform', 'translate(' + this.x + ',' + this.y + ')');
+            this.svgRoot.attr('transform', `translate(${this.x},${this.y})`);
             this.linkElements.forEach(link => {
                 link.updateDrawPosition();
             });
@@ -457,7 +455,7 @@ export default class Node extends BaseElement {
 
     addDoubleClickAction = function() {
         const that = this;
-        that.svgRoot.on('dblclick', function() {
+        that.svgRoot.on('dblclick', () => {
             d3.event.stopPropagation();
 
             if (that._resourceId !== 'unknown') {

@@ -18,7 +18,7 @@ const ProgressBar = () => {
         return {
             label: _class.label,
             amount,
-            percentage
+            percentage,
         };
     });
 
@@ -35,12 +35,12 @@ const ProgressBar = () => {
                             <td>
                                 {upperFirst(_class.label)} ({_class.amount}/{RECOMMENDED_ANNOTATION_AMOUNT})
                             </td>
-                            <td className="text-right">{_class.percentage}%</td>
+                            <td className="text-end">{_class.percentage}%</td>
                         </tr>
                     ))}
                     <tr>
                         <td />
-                        <td className="text-right pt-2" style={{ borderTop: '2px solid #fff' }}>
+                        <td className="text-end pt-2" style={{ borderTop: '2px solid #fff' }}>
                             Total: {percentageTotal}%
                         </td>
                     </tr>

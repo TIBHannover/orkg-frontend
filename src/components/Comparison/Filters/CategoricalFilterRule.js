@@ -2,7 +2,7 @@ import FilterModalFooter from 'components/Comparison/Filters/FilterModalFooter';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Badge, Button, CustomInput, ModalBody } from 'reactstrap';
+import { Badge, Button, Input, ModalBody, Label, FormGroup } from 'reactstrap';
 
 const CategoricalFilterRule = props => {
     const { property, values, rules, updateRulesOfProperty, toggleFilterDialog } = props.dataController;
@@ -20,7 +20,7 @@ const CategoricalFilterRule = props => {
     const vals = Object.keys(values)
         .map(key => ({
             label: key,
-            checked: rules.filter(item => item.propertyId === propertyId && item.type === FILTER_TYPES.ONE_OF && item.value.includes(key)).length > 0
+            checked: rules.filter(item => item.propertyId === propertyId && item.type === FILTER_TYPES.ONE_OF && item.value.includes(key)).length > 0,
         }))
         .sort((a, b) => a.label.localeCompare(b.label));
 
@@ -56,30 +56,23 @@ const CategoricalFilterRule = props => {
         toggleFilterDialog();
     };
 
-    const checkboxList = () => {
-        return categoricalValues.slice(0, maxCategoryNumber).map(item => {
-            return (
-                <CustomInput
-                    className="col-form-label-sm"
-                    type="checkbox"
-                    id={item.label}
-                    key={item.label}
-                    label={item.label}
-                    onChange={handleCheckboxChange}
-                    checked={item.checked}
-                >
-                    <Badge color="light" className="ml-2" pill>
-                        {values[item.label].length}
-                    </Badge>
-                </CustomInput>
-            );
-        });
-    };
+    const checkboxList = () =>
+        categoricalValues.slice(0, maxCategoryNumber).map(item => (
+            <FormGroup key={item.label} check>
+                <Input className="col-form-label-sm" type="checkbox" id={item.label} onChange={handleCheckboxChange} checked={item.checked} />{' '}
+                <Label check for={item.label} className="mb-0">
+                    {item.label}
+                </Label>
+                <Badge color="light" className="ms-2" pill>
+                    {values[item.label].length}
+                </Badge>
+            </FormGroup>
+        ));
 
     return (
         <>
             <ModalBody>
-                <div className="ml-2">
+                <div className="ms-2">
                     {checkboxList()}
 
                     <Button className={getValuesNr() < DEFAULT_MAX_CATEGORIES ? 'd-none' : 'p-0'} color="link" size="sm" onClick={handleButtonChange}>
@@ -92,6 +85,6 @@ const CategoricalFilterRule = props => {
     );
 };
 CategoricalFilterRule.propTypes = {
-    dataController: PropTypes.object.isRequired
+    dataController: PropTypes.object.isRequired,
 };
 export default CategoricalFilterRule;

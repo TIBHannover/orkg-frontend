@@ -13,7 +13,7 @@ class WikidataDescription extends Component {
             description: '',
             collapsed: true,
             isLoading: false,
-            loadingFailed: false
+            loadingFailed: false,
         };
     }
 
@@ -43,13 +43,11 @@ class WikidataDescription extends Component {
             }
             LIMIT 500
         `;
-        const url = endpoint + '?query=' + encodeURIComponent(query) + '&format=json';
+        const url = `${endpoint}?query=${encodeURIComponent(query)}&format=json`;
         const self = this;
 
         fetch(url)
-            .then(function(response) {
-                return response.json();
-            })
+            .then(response => response.json())
             .then(function(data) {
                 if (
                     data.results &&
@@ -61,7 +59,7 @@ class WikidataDescription extends Component {
                     self.setState({
                         description: data.results.bindings[0].description.value,
                         isLoading: false,
-                        loadingFailed: false
+                        loadingFailed: false,
                     });
                 } else {
                     this.setState({ isLoading: false, loadingFailed: true });
@@ -74,7 +72,7 @@ class WikidataDescription extends Component {
 
     handleReadMore = () => {
         this.setState(prevState => ({
-            collapsed: !prevState.collapsed
+            collapsed: !prevState.collapsed,
         }));
     };
 
@@ -84,7 +82,7 @@ class WikidataDescription extends Component {
 
         return (
             <div>
-                <h2 className="h5 mt-2 float-left">Description from Wikidata</h2>
+                <h2 className="h5 mt-2 float-start">Description from Wikidata</h2>
                 <a href={this.props.externalResource} target="_blank" rel="noopener noreferrer">
                     <img alt="Wikidata logo" src={WIKIDATA_LOGO} style={{ height: 40, float: 'right' }} />
                 </a>
@@ -101,7 +99,7 @@ class WikidataDescription extends Component {
                     )}
                     {!this.state.isLoading && !this.state.loadingFailed && (
                         <>
-                            {this.state.collapsed && this.state.description.length > 550 ? shortDescription + '...' : this.state.description}
+                            {this.state.collapsed && this.state.description.length > 550 ? `${shortDescription}...` : this.state.description}
                             {showReadMore && (
                                 <Button color="link" className="p-0" style={{ fontSize: 'inherit' }} onClick={this.handleReadMore}>
                                     {this.state.collapsed ? 'Read more' : 'Read less'}
@@ -116,7 +114,7 @@ class WikidataDescription extends Component {
 }
 
 WikidataDescription.propTypes = {
-    externalResource: PropTypes.string.isRequired
+    externalResource: PropTypes.string.isRequired,
 };
 
 export default WikidataDescription;

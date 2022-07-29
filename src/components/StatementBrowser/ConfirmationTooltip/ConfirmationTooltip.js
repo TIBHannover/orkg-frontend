@@ -30,7 +30,7 @@ const ConfirmationTooltip = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
         focus: () => {
             buttonsRef.current[0].current.focus();
-        }
+        },
     }));
 
     useEffect(() => {
@@ -75,7 +75,7 @@ const ConfirmationTooltip = forwardRef((props, ref) => {
                         key={i}
                         color={button.color}
                     >
-                        <Icon icon={button.icon} className="mr-1" />
+                        <Icon icon={button.icon} className="me-1" />
                         {button.title}
                     </Button>
                 ))}
@@ -92,9 +92,9 @@ ConfirmationTooltip.propTypes = {
             title: PropTypes.string.isRequired,
             color: PropTypes.string.isRequired,
             icon: PropTypes.object.isRequired,
-            action: PropTypes.func
-        })
-    ).isRequired
+            action: PropTypes.func,
+        }),
+    ).isRequired,
 };
 
 export default ConfirmationTooltip;

@@ -4,17 +4,17 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
-import { useHistory } from 'react-router';
 import { useClickAway } from 'react-use';
 import { Button } from 'reactstrap';
+import { useNavigate } from 'react-router-dom';
 import { SearchStyled, InputStyled, SearchButtonStyled } from 'components/styled';
 
-const HeaderSearchButton = ({ placeholder, type }) => {
+const HeaderSearchButton = ({ placeholder, type, userId }) => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [value, setValue] = useState('');
     const refContainer = useRef(null);
     const refInput = useRef(null);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (isSearchOpen && refInput.current) {
@@ -42,7 +42,7 @@ const HeaderSearchButton = ({ placeholder, type }) => {
     };
 
     const goToResults = () => {
-        history.push(reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) }) + `?types=${type}`);
+        navigate(`${reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) })}?types=${type ?? ''}&createdBy=${userId ?? ''}`);
     };
 
     return isSearchOpen ? (
@@ -55,7 +55,7 @@ const HeaderSearchButton = ({ placeholder, type }) => {
                 value={value}
                 onChange={e => setValue(e.target.value)}
             />
-            <SearchButtonStyled size="sm" className="px-3" color="link" onClick={() => setIsSearchOpen(true)}>
+            <SearchButtonStyled size="sm" className="px-3" color="link" onClick={() => (isSearchOpen ? goToResults() : setIsSearchOpen(true))}>
                 <Icon icon={faSearch} />
             </SearchButtonStyled>
         </SearchStyled>
@@ -68,11 +68,12 @@ const HeaderSearchButton = ({ placeholder, type }) => {
 
 HeaderSearchButton.propTypes = {
     placeholder: PropTypes.string,
-    type: PropTypes.string.isRequired
+    type: PropTypes.string,
+    userId: PropTypes.string,
 };
 
 HeaderSearchButton.defaultProps = {
-    placeholder: ''
+    placeholder: '',
 };
 
 export default HeaderSearchButton;

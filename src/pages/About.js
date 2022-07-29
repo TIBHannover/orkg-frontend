@@ -6,10 +6,9 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import NotFound from 'pages/NotFound';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Container, Nav, Navbar, NavItem, Alert } from 'reactstrap';
-import { getAboutPage, getAboutPagesMenu, getAboutPages } from 'services/cms';
+import { getAboutPage, getAboutPagesMenu } from 'services/cms';
 import { reverseWithSlug } from 'utils';
 
 const About = () => {
@@ -22,33 +21,33 @@ const About = () => {
 
     // load page content
     useEffect(() => {
-        let aboutPageId = id;
-        // if not page ID is specified, load the first page from the menu
-        if (!id && menuItems.length > 0) {
-            aboutPageId = menuItems[0].id;
-        }
-        if (!aboutPageId || aboutPageId === page?.id) {
-            return;
-        }
-        const pagePromise = getAboutPage(aboutPageId);
-        loadPage({ pagePromise });
+        const load = async () => {
+            let aboutPageId = id;
+            // if not page ID is specified, load the first page from the menu
+            if (!id) {
+                const _menuItems = await getAboutPagesMenu();
+                aboutPageId = _menuItems[0].id;
+            }
+            if (!aboutPageId || aboutPageId === page?.id) {
+                return;
+            }
+            const pagePromise = getAboutPage(aboutPageId);
+            loadPage({ pagePromise });
+        };
+        load();
     }, [params, loadPage, menuItems, id, page]);
 
     // load menu items
     useEffect(() => {
-        // if the menu is loaded already, don't load it
-        if (menuItems.length > 0) {
+        if (!page?.category?.id) {
+            setMenuItems([]);
             return;
         }
 
         const getMenu = async () => {
             setIsLoadingMenu(true);
             try {
-                let _pages = await getAboutPagesMenu();
-                if (_pages?.length === 0) {
-                    _pages = await getAboutPages();
-                }
-                setMenuItems(_pages);
+                setMenuItems(await getAboutPagesMenu(page?.category?.id));
             } catch (e) {
                 console.log(e);
                 setIsFailedLoadingMenu(true);
@@ -58,7 +57,7 @@ const About = () => {
         };
 
         getMenu();
-    }, [menuItems.length]);
+    }, [page?.category?.id]);
 
     useEffect(() => {
         document.title = `${page?.title ?? ''} - ORKG`;
@@ -72,10 +71,10 @@ const About = () => {
         <div>
             {!isLoading && params?.id && page?.title && <CheckSlug label={page.title} route={ROUTES.ABOUT} />}
 
-            <TitleBar>About</TitleBar>
+            {!isLoading && <TitleBar>{page?.category?.label ?? page?.title}</TitleBar>}
 
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
-                {!isLoadingMenu && menuItems.length > 0 && (
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
+                {!isLoadingMenu && menuItems.length > 1 && (
                     <>
                         <Navbar color="white" expand="md" className="mb-3 p-0">
                             <Nav>

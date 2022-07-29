@@ -4,10 +4,10 @@ import { getStatementsBySubjects } from 'services/backend/statements';
 import { Card, CardImg, CardColumns } from 'reactstrap';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { isString } from 'lodash';
 import { getRelatedFiguresData } from 'utils';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 
 const CardStyled = styled(Card)`
     cursor: pointer;
@@ -32,6 +32,12 @@ const CardStyled = styled(Card)`
     }
 `;
 
+const GlobalStyle = createGlobalStyle`
+    .ril__image.ril-image-current:not(.ril-not-loaded) {
+        background: #fff;
+    }
+`;
+
 const RelatedFigures = props => {
     const [isOpen, setIsOpen] = useState(false);
     const [photoIndex, setPhotoIndex] = useState(0);
@@ -50,7 +56,7 @@ const RelatedFigures = props => {
             }
             // Fetch the data of each figure
             getStatementsBySubjects({
-                ids: props.figureStatements.map(resource => resource.id)
+                ids: props.figureStatements.map(resource => resource.id),
             })
                 .then(figuresStatements => {
                     setFigures(getRelatedFiguresData(figuresStatements));
@@ -66,26 +72,27 @@ const RelatedFigures = props => {
 
     const scrollTo = useCallback(
         header => {
-            const hash = location.hash;
+            const { hash } = location;
             const id = isString(hash) ? hash.replace('#', '') : null;
             if (!header || header.id !== id) {
                 return;
             }
             window.scrollTo({
                 behavior: 'smooth',
-                top: header.offsetTop - 90
+                top: header.offsetTop - 90,
             });
         },
-        [location.hash]
+        [location.hash],
     );
 
     if (props.figureStatements.length > 0) {
         return (
             <>
+                <GlobalStyle />
                 <h3 className="mt-5 h5">Related figures</h3>{' '}
-                <CardColumns>
+                <CardColumns className="d-flex row">
                     {figures.map((figure, index) => (
-                        <span key={`figure${figure.figureId}`} ref={scrollTo} id={figure.figureId}>
+                        <div className="col-sm-3" key={`figure${figure.figureId}`} ref={scrollTo} id={figure.figureId}>
                             <CardStyled onClick={() => openLightBox(index)}>
                                 <CardImg
                                     id={figure.figureId}
@@ -93,10 +100,10 @@ const RelatedFigures = props => {
                                     width="100%"
                                     src={figure.src}
                                     alt={`figure #${figure.figureId}`}
-                                    className={location.hash === '#' + figure.figureId ? 'blink-figure' : ''}
+                                    className={location.hash === `#${figure.figureId}` ? 'blink-figure' : ''}
                                 />
                             </CardStyled>
-                        </span>
+                        </div>
                     ))}
                 </CardColumns>
                 {isOpen && (
@@ -120,11 +127,11 @@ const RelatedFigures = props => {
 };
 
 RelatedFigures.propTypes = {
-    figureStatements: PropTypes.array.isRequired
+    figureStatements: PropTypes.array.isRequired,
 };
 
 RelatedFigures.defaultProps = {
-    figureStatements: []
+    figureStatements: [],
 };
 
 export default RelatedFigures;

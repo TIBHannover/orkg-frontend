@@ -20,7 +20,7 @@ class ExportCitation extends Component {
 
         this.state = {
             selectedTab: 'APA',
-            citations: {}
+            citations: {},
         };
 
         this.CITATION_STYLES = [
@@ -28,7 +28,7 @@ class ExportCitation extends Component {
             { styleID: 'ieee', styleTabID: 'IEEE', styleLabel: 'IEEE', header: null },
             { styleID: 'harvard3', styleTabID: 'Harvard', styleLabel: 'Harvard', header: null },
             { styleID: 'chicago-author-date', styleTabID: 'Chicago', styleLabel: 'Chicago', header: null },
-            { styleID: 'bibtex', styleTabID: 'BibTeX', styleLabel: 'BibTeX', header: 'application/x-bibtex' }
+            { styleID: 'bibtex', styleTabID: 'BibTeX', styleLabel: 'BibTeX', header: 'application/x-bibtex' },
         ];
     }
 
@@ -36,9 +36,9 @@ class ExportCitation extends Component {
         Promise.all(
             this.CITATION_STYLES.map(s =>
                 getCitationByDOI(this.props.DOI, s.header ? undefined : s.styleID, s.header ? s.header : undefined).catch(
-                    error => 'Failed to load citation'
-                )
-            )
+                    error => 'Failed to load citation',
+                ),
+            ),
         ).then(citations => {
             this.setState({ citations: zipObject(this.CITATION_STYLES.map(s => s.styleID), citations) });
         });
@@ -46,7 +46,7 @@ class ExportCitation extends Component {
 
     selectTab = tab => {
         this.setState({
-            selectedTab: tab
+            selectedTab: tab,
         });
     };
 
@@ -99,7 +99,7 @@ class ExportCitation extends Component {
                                         toast.success(`${style.styleLabel} Citation Copied`);
                                     }}
                                 >
-                                    <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
+                                    <Button color="primary" className="ps-3 pe-3 float-end" size="sm">
                                         <Icon icon={faClipboard} /> Copy to clipboard
                                     </Button>
                                 </CopyToClipboard>
@@ -115,7 +115,7 @@ class ExportCitation extends Component {
 ExportCitation.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    DOI: PropTypes.string
+    DOI: PropTypes.string,
 };
 
 export default ExportCitation;

@@ -1,8 +1,8 @@
-import { ListGroup, ListGroupItem, Badge } from 'reactstrap';
+import { ListGroup, ListGroupItem, Badge, Col } from 'reactstrap';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import { getSuggestedProperties, createProperty } from 'actions/statementBrowser';
+import { getSuggestedProperties, createPropertyAction as createProperty } from 'slices/statementBrowserSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { ENTITIES } from 'constants/graphSettings';
 
@@ -12,7 +12,7 @@ const PropertySuggestions = () => {
     const suggestedProperties = useSelector(state => getSuggestedProperties(state, selectedResource));
 
     return (
-        <>
+        <Col lg="12">
             <p className="text-muted mt-4">Suggested properties</p>
             <ListGroup>
                 {suggestedProperties.map((c, index) => (
@@ -25,8 +25,8 @@ const PropertySuggestions = () => {
                                     existingPredicateId: c.property.id,
                                     label: c.property.label,
                                     isTemplate: false,
-                                    createAndSelect: true
-                                })
+                                    createAndSelect: true,
+                                }),
                             );
                         }}
                         key={`suggested-property-${index}`}
@@ -36,10 +36,10 @@ const PropertySuggestions = () => {
                         <DescriptionTooltip id={c.property.id} typeId={ENTITIES.PREDICATE}>
                             <div className="d-flex">
                                 <div className="flex-grow-1">
-                                    <Icon icon={faPlus} className="mr-1 text-muted" /> {c.property.label}
+                                    <Icon icon={faPlus} className="me-1 text-muted" /> {c.property.label}
                                 </div>
-                                <small className="float-right">
-                                    <Badge pill className="ml-2">
+                                <small className="float-end">
+                                    <Badge pill className="ms-2">
                                         {c.value?.label ?? ''}
                                     </Badge>
                                 </small>
@@ -48,7 +48,7 @@ const PropertySuggestions = () => {
                     </ListGroupItem>
                 ))}
             </ListGroup>
-        </>
+        </Col>
     );
 };
 

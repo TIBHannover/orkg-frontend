@@ -1,28 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Row } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import CellEditor from 'libs/selfVisModel/RenderingComponents/CellEditor';
 import CellSelector from 'libs/selfVisModel/RenderingComponents/CellSelector';
 import VisualizationWidget from 'libs/selfVisModel/VisRenderer/VisualizationWidget';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import PublishVisualization from './PublishVisualization';
-import HelpVideoModal from './HelpVideoModal';
 import { usePrevious } from 'react-use';
 import Tippy from '@tippyjs/react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import HelpVideoModal from './HelpVideoModal';
+import PublishVisualization from './PublishVisualization';
 
-const TabButtons = styled(Row)`
+const TabButtons = styled.div`
     border-bottom: 2px solid ${props => props.theme.lightDarker};
+    display: flex;
 `;
 
 const TabButton = styled.div`
     cursor: pointer;
     padding: 4px 20px;
     background-color: ${props => (props.active ? props.theme.primary : props.theme.light)};
-    border: ${props => (props.active ? 'none' : '1px solid ' + props.theme.lightDarker)};
+    border: ${props => (props.active ? 'none' : `1px solid ${props.theme.lightDarker}`)};
     border-bottom: 0;
     color: ${props => (props.active ? '#ffffff' : '')};
     font-size: 18px;
@@ -39,7 +40,6 @@ const TabButton = styled.div`
 `;
 
 function AddVisualizationModal(props) {
-    const [callingTimeoutCount, setCallingTimeoutCount] = useState(0);
     const [processStep, setProcessStep] = useState(0);
     const [windowHeight, setWindowHeight] = useState(0);
     const [windowWidth, setWindowWidth] = useState(0);
@@ -50,19 +50,12 @@ function AddVisualizationModal(props) {
     const prevShowDialog = usePrevious(props.showDialog);
 
     const updateDimensions = () => {
-        // test
         const offset = 300;
-        let width = 800;
-        // try to find the element int the dom
         const modalBody = document.getElementById('selfVisServiceModalBody');
+        let width = 800;
+
         if (modalBody) {
             width = modalBody.getBoundingClientRect().width;
-        } else {
-            // using a timeout to force an update when the modalBody is present and provides its width
-            if (callingTimeoutCount < 10) {
-                setTimeout(setTimeout(updateDimensions, 500));
-                setCallingTimeoutCount(callingTimeoutCount + 1);
-            }
         }
         setWindowHeight(window.innerHeight - offset);
         setWindowWidth(width);
@@ -75,7 +68,6 @@ function AddVisualizationModal(props) {
         return () => {
             window.removeEventListener('resize', updateDimensions);
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -89,13 +81,11 @@ function AddVisualizationModal(props) {
                     new SelfVisDataModel().resetCustomizationModel();
                     setProcessStep(0);
                 }
-            } else {
-                if (prevProcessStep === 0 && processStep === 2) {
-                    // this shall trigger the cell validation
-                    // shall be done when the user switches between select directly to visualize
-                    new SelfVisDataModel().forceCellValidation(); // singleton call
-                    new SelfVisDataModel().createGDCDataModel(); // gets the singleton ptr and creates the gdc model
-                }
+            } else if (prevProcessStep === 0 && processStep === 2) {
+                // this shall trigger the cell validation
+                // shall be done when the user switches between select directly to visualize
+                new SelfVisDataModel().forceCellValidation(); // singleton call
+                new SelfVisDataModel().createGDCDataModel(); // gets the singleton ptr and creates the gdc model
             }
         }
 
@@ -134,17 +124,17 @@ function AddVisualizationModal(props) {
                         outline
                         color="secondary"
                         size="sm"
-                        className="ml-3"
+                        className="ms-3"
                         onClick={() => {
                             setShowVideoModal(!showVideoModal);
                         }}
                     >
-                        How to use <Icon className="ml-1" icon={faQuestionCircle} />
+                        How to use <Icon className="ms-1" icon={faQuestionCircle} />
                     </Button>
                 </ModalHeader>
                 <ModalBody id="selfVisServiceModalBody">
                     <TabButtons>
-                        {/*  TAB BUTTONS*/}
+                        {/*  TAB BUTTONS */}
                         <TabButton active={processStep === 0} onClick={() => setProcessStep(0)}>
                             Select
                         </TabButton>
@@ -155,7 +145,7 @@ function AddVisualizationModal(props) {
                             Visualize
                         </TabButton>
                     </TabButtons>
-                    {/*  renders different views based on the current step in the process*/}
+                    {/*  renders different views based on the current step in the process */}
                     {processStep === 0 && <CellSelector isLoading={!loadedModel} height={windowHeight - 50} />}
                     {processStep === 1 && <CellEditor isLoading={!loadedModel} height={windowHeight - 50} />}
                     {processStep === 2 && (
@@ -184,7 +174,7 @@ function AddVisualizationModal(props) {
                     {/*
                     <Button
                         color="primary"
-                        className="mr-2"
+                        className="me-2"
                         onClick={() => {
                             const mmr = new SelfVisDataModel(); // this is a singleton
                             mmr.debug();
@@ -199,12 +189,12 @@ function AddVisualizationModal(props) {
                     )}
                     <div className="d-flex justify-content-end">
                         {processStep > 0 && (
-                            <Button color="light" className="mr-2" onClick={() => setProcessStep(processStep - 1)}>
+                            <Button color="light" className="me-2" onClick={() => setProcessStep(processStep - 1)}>
                                 Previous
                             </Button>
                         )}
                         {processStep <= 1 && (
-                            <Button color="primary" className="mr-2" onClick={() => setProcessStep(processStep + 1)}>
+                            <Button color="primary" className="me-2" onClick={() => setProcessStep(processStep + 1)}>
                                 Next
                             </Button>
                         )}
@@ -214,7 +204,7 @@ function AddVisualizationModal(props) {
                                     <RequireAuthentication
                                         component={Button}
                                         color="primary"
-                                        className="mr-2"
+                                        className="me-2"
                                         onClick={() => {
                                             setShowPublishVisualizationDialog(!showPublishVisualizationDialog);
                                         }}
@@ -245,7 +235,7 @@ AddVisualizationModal.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     updatePreviewComponent: PropTypes.func.isRequired,
-    initialData: PropTypes.object
+    initialData: PropTypes.object,
 };
 
 export default AddVisualizationModal;

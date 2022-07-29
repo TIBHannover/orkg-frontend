@@ -1,31 +1,24 @@
 import { url } from 'constants/misc';
 import { ENTITIES } from 'constants/graphSettings';
+import { submitGetRequest, submitPostRequest } from 'network';
 import { getClasses, getClassById } from './classes';
 import { getPredicates, getPredicate } from './predicates';
 import { getResources, getResource } from './resources';
-import { submitGetRequest, submitPostRequest } from 'network';
 
 export const doisUrl = `${url}dois/`;
 
-export const getPaperByDOI = doi => {
-    return submitGetRequest(`${url}widgets/?doi=${doi}`);
-};
+export const getPaperByDOI = doi => submitGetRequest(`${url}widgets/?doi=${doi}`);
 
-export const getPaperByTitle = title => {
-    return submitGetRequest(`${url}widgets/?title=${title}`);
-};
+export const getPaperByTitle = title => submitGetRequest(`${url}widgets/?title=${title}`);
 
-export const generateDOIForComparison = (comparison_id, title, subject, description, related_resources, authors, url) => {
-    return submitPostRequest(
+export const generateDoi = ({ type, resource_type, resource_id, title, subject, description, related_resources = [], authors = [], url }) =>
+    submitPostRequest(
         doisUrl,
         { 'Content-Type': 'application/json' },
-        { comparison_id, title, subject, description, related_resources, authors, url }
+        { type, resource_type, resource_id, title, subject, description, related_resources, authors, url },
     );
-};
 
-export const createObject = payload => {
-    return submitPostRequest(`${url}objects/`, { 'Content-Type': 'application/json' }, payload);
-};
+export const createObject = payload => submitPostRequest(`${url}objects/`, { 'Content-Type': 'application/json' }, payload);
 
 export const getEntities = (entityType, params) => {
     // { page = 0, items: size = 9999, sortBy = 'created_at', desc = true, q = null, exact = false, returnContent = false }

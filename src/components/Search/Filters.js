@@ -1,65 +1,67 @@
-import { Input, InputGroup, InputGroupAddon, Button, Form, Label } from 'reactstrap';
+import { Input, InputGroup, Button, Label, FormGroup } from 'reactstrap';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { CustomInput } from 'reactstrap';
+import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
-import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
-import { isString } from 'lodash';
+import useFilters from 'components/Search/hooks/useFilters';
+import Tippy from '@tippyjs/react';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
 
-const Filters = props => {
-    const PROPERTY_PATTERN = /^#P([0-9])+$/;
-    const RESOURCE_PATTERN = /^#R([0-9])+$/;
-    const MINIMUM_LENGTH_PATTERN = 3;
-
-    const handleSubmit = e => {
-        e.preventDefault();
-
-        const value = decodeURIComponent(props.value);
-        if (isString(value) && value.length >= MINIMUM_LENGTH_PATTERN && (value.match(RESOURCE_PATTERN) || value.match(PROPERTY_PATTERN))) {
-            const id = value.substring(1);
-            props.history.push(reverse(value.match(RESOURCE_PATTERN) ? ROUTES.RESOURCE : ROUTES.PROPERTY, { id }));
-        } else {
-            props.history.push(
-                reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) }) + '?types=' + props.selectedFilters.map(sf => sf.id).join(',')
-            );
-        }
-    };
+const Filters = () => {
+    const { user, value, selectedFilters, createdBy, isLoadingFilterClasses, setValue, setCreatedBy, toggleFilter, submitSearch } = useFilters();
 
     return (
-        <Form onSubmit={handleSubmit}>
+        <FormGroup>
             <Label for="searchQuery">Search query</Label>
             <InputGroup>
                 <Input
-                    value={decodeURIComponent(props.value)}
-                    onChange={props.handleInputChange}
-                    aria-label="Search ORKG"
+                    value={decodeURIComponent(value)}
+                    onChange={e => setValue(e.target.value)}
+                    placeholder="Search..."
                     id="searchQuery"
                     name="value"
+                    onKeyDown={e => e.key === 'Enter' && submitSearch(value)}
                 />
-
-                <InputGroupAddon addonType="append">
-                    <Button type="submit" color="secondary" className="pl-2 pr-2">
-                        <FontAwesomeIcon icon={faSearch} />
-                    </Button>
-                </InputGroupAddon>
+                <Button onClick={() => submitSearch(value)} color="secondary" className="ps-2 pe-2">
+                    <FontAwesomeIcon icon={faSearch} />
+                </Button>
             </InputGroup>
-            <hr className="mt-4 mb-3" />
+            {((!!user && user.id) || createdBy) && (
+                <>
+                    <hr className="mt-3 mb-3" />
+                    <FormGroup check className="mb-0">
+                        <Input type="checkbox" id="createdBy" onChange={e => setCreatedBy(createdBy ? null : user.id)} checked={!!createdBy} />
+                        <Label check for="createdBy" className="mb-0">
+                            <span>
+                                Content created by <UserAvatar userId={createdBy || user.id} showDisplayName={true} />
+                            </span>
+                        </Label>
+                    </FormGroup>
+                </>
+            )}
+
+            <hr className="mt-3 mb-3" />
 
             <Label>Filter by type</Label>
 
-            {props.defaultsFilters.map(filter => (
-                <CustomInput
-                    type="checkbox"
-                    id={'filter' + filter.id}
-                    key={`filter-${filter.id}`}
-                    label={<span>{filter.label}</span>}
-                    onChange={() => props.toggleFilter(filter)}
-                    checked={props.selectedFilters.map(sf => sf.id).includes(filter.id)}
-                />
+            {DEFAULT_FILTERS.map(filter => (
+                <FormGroup key={`filter-${filter.id}`} check className="mb-0">
+                    <Tippy disabled={!(createdBy && !filter.isCreatedByActive)} content="This filter is not available for content created by a user.">
+                        <span>
+                            <Input
+                                disabled={createdBy && !filter.isCreatedByActive}
+                                type="checkbox"
+                                id={`filter${filter.id}`}
+                                onChange={() => toggleFilter(filter)}
+                                checked={selectedFilters.map(sf => sf.id).includes(filter.id) && (filter.isCreatedByActive || !createdBy)}
+                            />
+                            <Label check for={`filter${filter.id}`} className="mb-0">
+                                <span>{filter.label}</span>
+                            </Label>
+                        </span>
+                    </Tippy>
+                </FormGroup>
             ))}
             <br />
             <Label for="other-filters">Other filters</Label>
@@ -67,34 +69,26 @@ const Filters = props => {
                 entityType={ENTITIES.CLASS}
                 onChange={(_, action) => {
                     if (action.action === 'select-option') {
-                        props.toggleFilter(action.option);
+                        toggleFilter(action.option);
                     } else if (action.action === 'remove-value') {
-                        props.toggleFilter(action.removedValue);
+                        toggleFilter(action.removedValue);
                     } else if (action.action === 'clear') {
-                        props.toggleFilter(null);
+                        toggleFilter(null);
                     }
                 }}
                 placeholder="Select a filter"
-                value={props.selectedFilters.filter(sf => !props.defaultsFilters.map(df => df.id).includes(sf.id))}
+                value={selectedFilters.filter(sf => !DEFAULT_FILTERS.map(df => df.id).includes(sf.id))}
                 autoLoadOption={true}
                 openMenuOnFocus={true}
                 allowCreate={false}
                 isClearable
                 isMulti={true}
                 autoFocus={false}
+                isLoading={isLoadingFilterClasses}
                 inputId="other-filters"
             />
-        </Form>
+        </FormGroup>
     );
 };
 
-Filters.propTypes = {
-    value: PropTypes.string.isRequired,
-    defaultsFilters: PropTypes.array.isRequired,
-    selectedFilters: PropTypes.array.isRequired,
-    handleInputChange: PropTypes.func.isRequired,
-    toggleFilter: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired
-};
-
-export default withRouter(Filters);
+export default Filters;

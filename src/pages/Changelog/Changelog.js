@@ -1,23 +1,22 @@
 import { Component } from 'react';
 import { Container } from 'reactstrap';
-import changelogPath from './CHANGELOG.md';
-import marked from 'marked';
+import { marked } from 'marked';
 import TitleBar from 'components/TitleBar/TitleBar';
+import changelogPath from './CHANGELOG.md';
 
 class Changelog extends Component {
     state = {
-        changelogText: null
+        changelogText: null,
     };
+
     componentDidMount = () => {
         document.title = 'Changelog - ORKG';
 
         fetch(changelogPath)
-            .then(response => {
-                return response.text();
-            })
+            .then(response => response.text())
             .then(text => {
                 this.setState({
-                    changelogText: marked(text)
+                    changelogText: marked(text),
                 });
             });
     };
@@ -26,10 +25,10 @@ class Changelog extends Component {
         return (
             <div>
                 <TitleBar>Changelog</TitleBar>
-                <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+                <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                     <div
                         dangerouslySetInnerHTML={{
-                            __html: this.state.changelogText
+                            __html: this.state.changelogText,
                         }}
                     />
                 </Container>

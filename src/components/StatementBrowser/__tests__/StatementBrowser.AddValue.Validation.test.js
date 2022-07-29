@@ -1,9 +1,8 @@
 import { render, screen, fireEvent, waitFor } from 'testUtils';
-import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
-import { statementBrowserOneProperty } from '../AddValue/__mocks__/StatementBrowserDataAddValue';
-import { ToastContainer } from 'react-toastify';
 import selectEvent from 'react-select-event';
+import StatementBrowser from '../StatementBrowser';
+import { statementBrowserOneProperty } from '../AddValue/__mocks__/StatementBrowserDataAddValue';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
@@ -16,15 +15,10 @@ const setup = (
         newStore: false,
         rootNodeType: ENTITIES.RESOURCE,
         enableEdit: true,
-        syncBackend: false
-    }
+        syncBackend: false,
+    },
 ) => {
-    render(
-        <>
-            <StatementBrowser {...props} /> <ToastContainer position="top-right" autoClose={5000} hideProgressBar className="toast-container" />
-        </>,
-        { initialState }
-    );
+    render(<StatementBrowser {...props} />, { initialState });
 };
 
 const setValueAndClickOnCreate = async (screen, datatype = 'Resource', value = 'test') => {

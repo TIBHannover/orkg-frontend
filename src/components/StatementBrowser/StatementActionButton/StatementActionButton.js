@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import Tippy from '@tippyjs/react';
-import ActionButtonView from './ActionButtonView';
 import PropTypes from 'prop-types';
+import ActionButtonView from './ActionButtonView';
 import ConfirmationTooltip from '../ConfirmationTooltip/ConfirmationTooltip';
 
 const StatementActionButton = props => {
@@ -71,7 +71,7 @@ const StatementActionButton = props => {
         </Tippy>
     ) : (
         <>
-            <Tippy hideOnClick={false} interactive={props.interactive} trigger="mouseenter" content={props.title}>
+            <Tippy appendTo={props.appendTo} hideOnClick={false} interactive={props.interactive} trigger="mouseenter" content={props.title}>
                 {tippyChildren}
             </Tippy>
         </>
@@ -96,9 +96,9 @@ StatementActionButton.propTypes = {
             title: PropTypes.string.isRequired,
             color: PropTypes.string.isRequired,
             icon: PropTypes.object.isRequired,
-            action: PropTypes.func
-        })
-    )
+            action: PropTypes.func,
+        }),
+    ),
 };
 
 StatementActionButton.defaultProps = {
@@ -106,7 +106,7 @@ StatementActionButton.defaultProps = {
     requireConfirmation: false,
     interactive: false,
     appendTo: 'parent',
-    action: () => {}
+    action: () => {},
 };
 
 export default StatementActionButton;

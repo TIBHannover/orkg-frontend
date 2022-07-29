@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { addTableRegion, deleteTableRegion } from 'actions/pdfAnnotation';
+import { addTableRegion, deleteTableRegion } from 'slices/pdfAnnotationSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
 function useTableSelect(props) {
@@ -7,25 +7,25 @@ function useTableSelect(props) {
     const selectedTool = useSelector(state => state.pdfAnnotation.selectedTool);
     const [coordinates, setCoordinates] = useState({
         startX: -1,
-        startY: -1
+        startY: -1,
     });
     const [rect, setRect] = useState({
         x: null,
         y: null,
         w: null,
-        h: null
+        h: null,
     });
     const [extractionModal, setExtractionModal] = useState({
         show: false,
         id: null,
-        region: {}
+        region: {},
     });
     const dispatch = useDispatch();
 
     const onMouseDown = useCallback(e => {
         setCoordinates({
             startX: e.nativeEvent.offsetX,
-            startY: e.nativeEvent.offsetY
+            startY: e.nativeEvent.offsetY,
         });
         setIsDragging(true);
     }, []);
@@ -42,10 +42,10 @@ function useTableSelect(props) {
                 x: Math.min(coordinates.startX, event.offsetX),
                 y: Math.min(coordinates.startY, event.offsetY),
                 w: Math.abs(event.offsetX - coordinates.startX),
-                h: Math.abs(event.offsetY - coordinates.startY)
+                h: Math.abs(event.offsetY - coordinates.startY),
             });
         },
-        [coordinates, isDragging, selectedTool]
+        [coordinates, isDragging, selectedTool],
     );
 
     const onMouseUp = useCallback(
@@ -61,10 +61,10 @@ function useTableSelect(props) {
                 x: null,
                 y: null,
                 w: null,
-                h: null
+                h: null,
             });
         },
-        [rect, props.pageNumber, dispatch]
+        [rect, props.pageNumber, dispatch],
     );
 
     const handleExtract = useCallback((e, id, region) => {
@@ -73,14 +73,14 @@ function useTableSelect(props) {
         setExtractionModal({
             show: true,
             id,
-            region
+            region,
         });
     }, []);
 
     const toggleModel = useCallback(() => {
         setExtractionModal({
             ...extractionModal,
-            show: false
+            show: false,
         });
     }, [extractionModal]);
 
@@ -92,7 +92,7 @@ function useTableSelect(props) {
             e.stopPropagation();
             dispatch(deleteTableRegion(id));
         },
-        [dispatch]
+        [dispatch],
     );
 
     return [onMouseDown, onMouseUp, onMouseMove, pointerStyles, rect, handleExtract, deleteRegion, extractionModal, toggleModel];

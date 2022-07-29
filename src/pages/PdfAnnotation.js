@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Toolbar from 'components/PdfAnnotation/Toolbar';
 import TableSelect from 'components/PdfAnnotation/TableSelect';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import DragUpload from 'components/PdfAnnotation/DragUpload';
 import { useSelector } from 'react-redux';
 
@@ -14,6 +14,24 @@ const PdfContainer = styled.div`
 const ZoomContainer = styled.div`
     transform-origin: center top;
     transition: 0.2s;
+`;
+
+const GlobalStyle = createGlobalStyle`
+    #page-container {
+        //overwrite styles of returned pdf
+        position: initial !important;
+        background: transparent !important;
+        display: inline-block !important;
+        padding: 10px !important;
+    }
+
+    // PDF survey extraction
+    #sidebar {
+        display: none;
+    }
+    ::selection {
+        background: #e8616169 !important;
+    }
 `;
 
 const PdfAnnotation = () => {
@@ -50,14 +68,13 @@ const PdfAnnotation = () => {
         }
     };
 
-    const getFullPageScale = () => {
-        return window.innerWidth / (DEFAULT_PAGE_WIDTH + 20);
-    };
+    const getFullPageScale = () => window.innerWidth / (DEFAULT_PAGE_WIDTH + 20);
 
-    const zoomContainerStyle = { transform: 'scale(' + zoom + ')' };
+    const zoomContainerStyle = { transform: `scale(${zoom})` };
 
     return (
         <div style={{ paddingTop: 20 }}>
+            <GlobalStyle />
             <Toolbar changeZoom={handleZoomChange} zoom={zoom} />
 
             {pages && (

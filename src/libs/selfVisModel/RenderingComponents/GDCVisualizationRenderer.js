@@ -21,13 +21,12 @@ const GDCVisualizationRenderer = props => {
             <Chart
                 chartType={props.model.data.visMethod}
                 data={props.model.data.googleChartsData}
-                // width={this.state.windowWidth - 20 + 'px'}
-                // height={this.state.windowHeight + 'px'}
+                height={props.height ?? undefined}
                 options={{
                     showRowNumber: true,
-                    enableInteractivity: !!!props.disableInteractivity,
+                    enableInteractivity: !props.disableInteractivity,
                     width: props.width ?? '100%',
-                    ...(props.height ? { height: props.height } : {})
+                    ...(props.height ? { height: props.height } : {}),
                 }}
             />
         </div>
@@ -38,7 +37,7 @@ GDCVisualizationRenderer.propTypes = {
     model: PropTypes.any,
     height: PropTypes.string,
     width: PropTypes.string,
-    disableInteractivity: PropTypes.bool
+    disableInteractivity: PropTypes.bool,
 };
 
 export default GDCVisualizationRenderer;

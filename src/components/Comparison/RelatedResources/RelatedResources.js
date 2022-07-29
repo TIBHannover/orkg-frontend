@@ -11,7 +11,7 @@ class RelatedResources extends Component {
         this.urlRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/gi;
 
         this.state = {
-            relatedResources: []
+            relatedResources: [],
         };
     }
 
@@ -35,10 +35,10 @@ class RelatedResources extends Component {
             let relatedResources = this.props.resourcesStatements
                 .filter(r => r._class === 'literal')
                 .map(resource => ({
-                    url: resource.label
+                    url: resource.label,
                 }));
             await getStatementsBySubjects({
-                ids: this.props.resourcesStatements.filter(r => r._class !== 'literal').map(r => r.id)
+                ids: this.props.resourcesStatements.filter(r => r._class !== 'literal').map(r => r.id),
             }).then(resourcesStatements => {
                 relatedResources = [...relatedResources, ...getRelatedResourcesData(resourcesStatements)];
             });
@@ -51,27 +51,31 @@ class RelatedResources extends Component {
             this.state.relatedResources.length > 0 && (
                 <>
                     <h3 className="mt-5 h5">Related resources</h3>
-                    <CardColumns>
+                    <CardColumns className="d-flex row">
                         {this.state.relatedResources.map((resource, index) => {
                             const isLink = new RegExp(this.urlRegex).test(resource.url);
 
                             return (
-                                <Card key={`rr${index}`}>
-                                    {resource.image && <CardImg top width="100%" src={resource.image ? resource.image : ''} alt="Card image cap" />}
-                                    <CardBody>
-                                        {resource.title && <CardTitle>{resource.title}</CardTitle>}
-                                        {resource.description && <CardText>{resource.description}</CardText>}
-                                        {isLink ? (
-                                            <a href={resource.url} target="_blank" rel="noopener noreferrer">
-                                                <Button size="sm" color="secondary">
-                                                    Visit resource
-                                                </Button>
-                                            </a>
-                                        ) : (
-                                            resource.url
+                                <div className="col-sm-3" key={`rr${index}`}>
+                                    <Card>
+                                        {resource.image && (
+                                            <CardImg top width="100%" src={resource.image ? resource.image : ''} alt="Card image cap" />
                                         )}
-                                    </CardBody>
-                                </Card>
+                                        <CardBody>
+                                            {resource.title && <CardTitle>{resource.title}</CardTitle>}
+                                            {resource.description && <CardText>{resource.description}</CardText>}
+                                            {isLink ? (
+                                                <a href={resource.url} target="_blank" rel="noopener noreferrer">
+                                                    <Button size="sm" color="secondary">
+                                                        Visit resource
+                                                    </Button>
+                                                </a>
+                                            ) : (
+                                                resource.url
+                                            )}
+                                        </CardBody>
+                                    </Card>
+                                </div>
                             );
                         })}
                     </CardColumns>
@@ -82,7 +86,7 @@ class RelatedResources extends Component {
 }
 
 RelatedResources.propTypes = {
-    resourcesStatements: PropTypes.array.isRequired
+    resourcesStatements: PropTypes.array.isRequired,
 };
 
 export default RelatedResources;

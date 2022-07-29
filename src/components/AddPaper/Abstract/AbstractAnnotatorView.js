@@ -1,11 +1,9 @@
 import { Component } from 'react';
-import Tooltip from '../../Utils/Tooltip';
 import { Badge, Alert } from 'reactstrap';
 import capitalize from 'capitalize';
 import Tippy from '@tippyjs/react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import AbstractAnnotator from './AbstractAnnotator';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
@@ -13,13 +11,15 @@ import { Range, getTrackBackground } from 'react-range';
 import { withTheme } from 'styled-components';
 import toArray from 'lodash/toArray';
 import { compose } from 'redux';
+import AbstractAnnotator from './AbstractAnnotator';
+import Tooltip from '../../Utils/Tooltip';
 
 class AbstractAnnotatorView extends Component {
     render() {
         const rangeArray = toArray(this.props.ranges).filter(r => r.certainty >= this.props.certaintyThreshold);
         const rangesClasses = [...new Set(rangeArray.map(r => r.class.label))];
         return (
-            <div className="pl-2 pr-2">
+            <div className="ps-2 pe-2">
                 {this.props.abstract && !this.props.isAnnotationLoading && !this.props.isAnnotationFailedLoading && (
                     <div>
                         {rangesClasses.length > 0 && (
@@ -45,28 +45,25 @@ class AbstractAnnotatorView extends Component {
                 {!this.props.isAbstractLoading && !this.props.isAnnotationLoading && (
                     <div>
                         <div id="annotationBadges">
-                            <Tooltip className="mr-2" message="Annotation labels are the properties that will be used in the contribution data.">
+                            <Tooltip className="me-2" message="Annotation labels are the properties that will be used in the contribution data.">
                                 Annotation labels
                             </Tooltip>
-                            <span className="mr-1 ml-1" />
+                            <span className="me-1 ms-1" />
                             {rangesClasses.length > 0 &&
                                 rangesClasses.map(c => {
-                                    const aconcept = c
-                                        ? this.props.classOptions.filter(function(e) {
-                                              return e.label.toLowerCase() === c.toLowerCase();
-                                          })
-                                        : [];
+                                    const aconcept = c ? this.props.classOptions.filter(e => e.label.toLowerCase() === c.toLowerCase()) : [];
                                     if (c && aconcept.length > 0) {
                                         return (
                                             <Tippy key={`c${c}`} content={aconcept[0].description}>
                                                 <span>
                                                     <Badge
-                                                        className="mr-2"
+                                                        color={null}
+                                                        className="me-2"
                                                         style={{
                                                             cursor: 'pointer',
                                                             marginBottom: '4px',
                                                             color: '#333',
-                                                            background: this.props.getClassColor(c)
+                                                            background: this.props.getClassColor(c),
                                                         }}
                                                     >
                                                         {c ? capitalize(c) : 'Unlabeled'}{' '}
@@ -77,20 +74,20 @@ class AbstractAnnotatorView extends Component {
                                                 </span>
                                             </Tippy>
                                         );
-                                    } else {
-                                        return (
-                                            <Badge
-                                                className="mr-2"
-                                                key={`c${c}`}
-                                                style={{ marginBottom: '4px', color: '#333', background: this.props.getClassColor(c) }}
-                                            >
-                                                {c ? capitalize(c) : 'Unlabeled'}{' '}
-                                                <Badge pill color="secondary">
-                                                    {rangeArray.filter(rc => rc.class.label === c).length}
-                                                </Badge>
-                                            </Badge>
-                                        );
                                     }
+                                    return (
+                                        <Badge
+                                            color={null}
+                                            className="me-2"
+                                            key={`c${c}`}
+                                            style={{ marginBottom: '4px', color: '#333', background: this.props.getClassColor(c) }}
+                                        >
+                                            {c ? capitalize(c) : 'Unlabeled'}{' '}
+                                            <Badge pill color="secondary">
+                                                {rangeArray.filter(rc => rc.class.label === c).length}
+                                            </Badge>
+                                        </Badge>
+                                    );
                                 })}
                         </div>
                         <AbstractAnnotator
@@ -104,7 +101,7 @@ class AbstractAnnotatorView extends Component {
                     !this.props.isAnnotationLoading &&
                     !this.props.isAnnotationFailedLoading &&
                     toArray(this.props.ranges).length > 0 && (
-                        <div className="col-3 float-right">
+                        <div className="col-3 float-end">
                             <div className="mt-4">
                                 <Range
                                     step={0.025}
@@ -123,8 +120,8 @@ class AbstractAnnotatorView extends Component {
                                                     values: this.props.certaintyThreshold,
                                                     colors: [this.props.theme.smart, this.props.theme.lightDarker],
                                                     min: 0,
-                                                    max: 1
-                                                })
+                                                    max: 1,
+                                                }),
                                             }}
                                         >
                                             {children}
@@ -142,7 +139,7 @@ class AbstractAnnotatorView extends Component {
                                                 display: 'flex',
                                                 justifyContent: 'center',
                                                 alignItems: 'center',
-                                                boxShadow: '0px 2px 6px #AAA'
+                                                boxShadow: '0px 2px 6px #AAA',
                                             }}
                                         />
                                     )}
@@ -176,12 +173,12 @@ AbstractAnnotatorView.propTypes = {
     handleChangeCertaintyThreshold: PropTypes.func.isRequired,
     getClassColor: PropTypes.func.isRequired,
     theme: PropTypes.object.isRequired,
-    annotationError: PropTypes.string
+    annotationError: PropTypes.string,
 };
 
 const mapStateToProps = state => ({
     ranges: state.addPaper.ranges,
-    abstract: state.addPaper.abstract
+    abstract: state.addPaper.abstract,
 });
 
 const mapDispatchToProps = dispatch => ({});
@@ -189,7 +186,7 @@ const mapDispatchToProps = dispatch => ({});
 export default compose(
     connect(
         mapStateToProps,
-        mapDispatchToProps
+        mapDispatchToProps,
     ),
-    withTheme
+    withTheme,
 )(AbstractAnnotatorView);

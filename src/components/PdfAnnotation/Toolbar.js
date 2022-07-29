@@ -1,14 +1,12 @@
-import { useState } from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSearchMinus, faSearchPlus, faExpandArrowsAlt, faTimesCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { resetPdfAnnotation } from 'actions/pdfAnnotation';
+import { resetPdfAnnotation } from 'slices/pdfAnnotationSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
-import HelpModal from 'components/PdfAnnotation/HelpModal';
 
 const ToolbarStyled = styled.div`
     background: ${props => props.theme.secondary};
@@ -25,14 +23,12 @@ const ToolbarStyled = styled.div`
 const Toolbar = props => {
     const pdf = useSelector(state => state.pdfAnnotation.pdf);
     const dispatch = useDispatch();
-    const [helpModalOpen, setHelpModalOpen] = useState(false);
 
     // Reset the pdf Annotation state
     const discardPdfFile = async () => {
         const result = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure you want to discard this PDF file?',
-            cancelColor: 'light'
         });
 
         if (result) {
@@ -40,48 +36,25 @@ const Toolbar = props => {
         }
     };
 
-    const toggleHelpModal = () => {
-        setHelpModalOpen(!helpModalOpen);
-    };
-
     return (
         <ToolbarStyled>
-            <h1 className="h5 mb-0 ml-2" style={{ color: '#fff', height: 'auto' }}>
+            <h1 className="h5 mb-0 ms-2" style={{ color: '#fff', height: 'auto' }}>
                 {/* Set the height to overwrite styles from the PDF  */}
                 Survey table extractor
             </h1>
-            <Tippy content="Open help popup">
-                <span className="ml-3">
-                    <Button
-                        color="link"
-                        outline
-                        size="sm"
-                        style={{ fontSize: 22, lineHeight: 1, color: '#fff' }}
-                        className="p-0"
-                        onClick={toggleHelpModal}
+            <Tippy content="Open help center">
+                <span className="ms-3">
+                    <a
+                        href="https://www.orkg.org/help-center/article/7/Extracting_and_importing_tables_from_survey_articles"
+                        target="_blank"
+                        rel="noopener noreferrer"
                     >
-                        <Icon icon={faQuestionCircle} />
-                    </Button>
+                        <Icon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1, color: '#fff' }} className="p-0" />
+                    </a>
                 </span>
             </Tippy>
-            {/*
-            <Button color="secondary-darker" size="sm">
-                <Icon icon={faICursor} className="mr-2" />
-                Text select
-            </Button>
-            <Button
-                active={this.props.selectedTool === 'tableSelect'}
-                color="secondary-darker"
-                size="sm"
-                className="ml-2"
-                onClick={() => this.selectTool('tableSelect')}
-            >
-                <Icon icon={faVectorSquare} className="mr-2" />
-                Table select
-            </Button>
-            */}
-            <div className="ml-auto">
-                <ButtonGroup className="mr-2">
+            <div className="ms-auto">
+                <ButtonGroup className="me-2">
                     <Button
                         color="secondary-darker"
                         disabled={!pdf}
@@ -105,20 +78,18 @@ const Toolbar = props => {
                     </Button>
                 </ButtonGroup>
                 {pdf && (
-                    <Button className="mr-2" color="secondary-darker" disabled={!pdf} size="sm" onClick={discardPdfFile}>
-                        <Icon icon={faTimesCircle} className="mr-1" /> Discard PDF
+                    <Button className="me-2" color="secondary-darker" disabled={!pdf} size="sm" onClick={discardPdfFile}>
+                        <Icon icon={faTimesCircle} className="me-1" /> Discard PDF
                     </Button>
                 )}
             </div>
-
-            <HelpModal isOpen={helpModalOpen} toggle={toggleHelpModal} />
         </ToolbarStyled>
     );
 };
 
 Toolbar.propTypes = {
     changeZoom: PropTypes.func.isRequired,
-    zoom: PropTypes.number.isRequired
+    zoom: PropTypes.number.isRequired,
 };
 
 export default Toolbar;

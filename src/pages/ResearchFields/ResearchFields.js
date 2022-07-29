@@ -4,7 +4,7 @@ import Papers from 'components/ResearchField/Papers';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import ResearchFieldSelector from 'components/ResearchFieldSelector/ResearchFieldSelector';
 import { getResearchFieldsStats } from 'services/backend/stats';
-import { MISC } from 'constants/graphSettings';
+import { RESOURCES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useCallback, useEffect, useState } from 'react';
@@ -49,12 +49,12 @@ const ResearchFields = () => {
         <>
             <TitleBar
                 buttonGroup={
-                    <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                        <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                    <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                        <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                             <Icon icon={faEllipsisV} />
                         </DropdownToggle>
-                        <DropdownMenu right>
-                            <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: MISC.RESEARCH_FIELD_MAIN })}>
+                        <DropdownMenu end>
+                            <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: RESOURCES.RESEARCH_FIELD_MAIN })}>
                                 View resource
                             </DropdownItem>
                         </DropdownMenu>
@@ -64,7 +64,7 @@ const ResearchFields = () => {
                 Research fields taxonomy
             </TitleBar>
             <Container className="p-0">
-                <div className="box rounded-lg p-4">
+                <div className="box rounded-3 p-4">
                     <div className="d-flex">
                         <div>
                             <p>
@@ -74,7 +74,7 @@ const ResearchFields = () => {
                             <div>
                                 Further information about the taxonomy can be found in the{' '}
                                 <a
-                                    href="https://www.orkg.org/orkg/help-center/article/20/ORKG_Research_fields_taxonomy"
+                                    href="https://www.orkg.org/help-center/article/20/ORKG_Research_fields_taxonomy"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
@@ -91,6 +91,7 @@ const ResearchFields = () => {
                                 researchFields={researchFields}
                                 researchFieldStats={researchFieldStats}
                                 updateResearchField={handleUpdate}
+                                showPreviouslySelected={false}
                             />
                         </Col>
 
@@ -99,16 +100,16 @@ const ResearchFields = () => {
                                 <>
                                     <div className="d-flex justify-content-between align-items-start mb-3">
                                         <h2 className="h5">{researchFieldLabel} papers</h2>
-                                        {selectedResearchField !== MISC.RESEARCH_FIELD_MAIN && (
+                                        {selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN && (
                                             <Button
                                                 tag={Link}
                                                 to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
                                                     researchFieldId: selectedResearchField,
-                                                    slug: researchFieldLabel
+                                                    slug: researchFieldLabel,
                                                 })}
                                                 color="light"
                                                 size="sm"
-                                                className="flex-shrink-0 ml-2"
+                                                className="flex-shrink-0 ms-2"
                                             >
                                                 Visit field page
                                             </Button>

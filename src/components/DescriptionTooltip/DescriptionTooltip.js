@@ -82,7 +82,7 @@ DescriptionTooltip.propTypes = {
     children: PropTypes.node.isRequired,
     id: PropTypes.string.isRequired,
     extraContent: PropTypes.string,
-    typeId: PropTypes.string.isRequired
+    typeId: PropTypes.string.isRequired,
 };
 
 export default DescriptionTooltip;

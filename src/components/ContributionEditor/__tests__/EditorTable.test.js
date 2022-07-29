@@ -1,13 +1,14 @@
 import TableScrollContainer from 'components/Comparison/TableScrollContainer';
 import { fireEvent, render, screen, waitFor, within, waitForElementToBeRemoved } from 'testUtils';
 import EditTable from '../EditorTable';
-import { contribution, contributionLiteralOnly } from '../__mocks__/ComparisonData';
+import { contribution, contributionLiteralOnly } from '../__mocks__/ContributionEditorData';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
 
 // mock the ResizeObserver
 class ResizeObserver {
     observe() {}
+
     unobserve() {}
 }
 
@@ -18,7 +19,7 @@ const setup = (initialState = {}) => {
         <TableScrollContainer className="contribution-editor">
             <EditTable />
         </TableScrollContainer>,
-        { initialState }
+        { initialState },
     );
 };
 
@@ -35,8 +36,8 @@ describe('table', () => {
         expect(screen.getByText('test literal')).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'test paper' })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'test resource 2' })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'Test property' })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'Test property 2' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'test property' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'test property 2' })).toBeInTheDocument();
     });
 });
 
@@ -69,7 +70,9 @@ describe('literals', () => {
 
         expect(screen.getByRole('cell', { name: /new literal/i, hidden: true })).toBeInTheDocument();
     });
+});
 
+describe('literals', () => {
     it('should update table when literal is removed', async () => {
         setup(contributionLiteralOnly);
 
@@ -79,13 +82,12 @@ describe('literals', () => {
 
         // confirm deletion
         const tooltip = screen.getByRole('tooltip', { name: /are you sure to delete?/i });
+        expect(tooltip).toBeInTheDocument();
         fireEvent.click(within(tooltip).getByRole('button', { name: /delete/i }));
-
         await waitForElementToBeRemoved(() => screen.queryByRole('cell', { name: /test literal/i, hidden: true }));
         expect(screen.queryByRole('cell', { name: /test literal/i, hidden: true })).not.toBeInTheDocument();
     });
 });
-
 /*
 describe('resources', () => {
     test('should update table when resources is updated', async () => {

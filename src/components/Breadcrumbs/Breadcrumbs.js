@@ -50,7 +50,7 @@ function Breadcrumbs(props) {
             // get siblings of parent
             getStatementsBySubjectAndPredicate({
                 subjectId: parentResearchFields[index].id,
-                predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD
+                predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD,
             }).then(subRF => {
                 setSiblings(siblings.map((el, i) => (i === index ? subRF.map(s => s.object) : el)));
                 setIsLoadingSiblings(isLoadingSiblings.map((el, i) => (i === index ? false : el)));
@@ -67,15 +67,12 @@ function Breadcrumbs(props) {
                     {children}
                 </Button>
             );
-        } else {
-            return (
-                <Link
-                    to={index === 0 ? reverse(ROUTES.HOME) : reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}
-                >
-                    {children}
-                </Link>
-            );
         }
+        return (
+            <Link to={index === 0 ? reverse(ROUTES.HOME) : reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}>
+                {children}
+            </Link>
+        );
     };
 
     const renderDropdownItem = (field, children) => {
@@ -85,18 +82,17 @@ function Breadcrumbs(props) {
                     {children}
                 </StyledDropdownItem>
             );
-        } else {
-            return (
-                <StyledDropdownItem
-                    tag={NavLink}
-                    key={`rf-${field.id}`}
-                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}
-                    className="text-primary"
-                >
-                    {children}
-                </StyledDropdownItem>
-            );
         }
+        return (
+            <StyledDropdownItem
+                tag={NavLink}
+                key={`rf-${field.id}`}
+                to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}
+                className="text-primary"
+            >
+                {children}
+            </StyledDropdownItem>
+        );
     };
 
     if (!props.researchFieldId) {
@@ -115,17 +111,17 @@ function Breadcrumbs(props) {
                             parentResearchFields.map((field, index) => (
                                 <span key={field.id}>
                                     {index !== parentResearchFields.length - 1 || !props.disableLastField
-                                        ? renderLink(field, index === 0 ? <Icon className="mr-1" icon={faHome} /> : field.label, index)
+                                        ? renderLink(field, index === 0 ? <Icon className="me-1" icon={faHome} /> : field.label, index)
                                         : field.label}
                                     {index !== parentResearchFields.length - 1 && (
                                         <Dropdown tag="span" isOpen={isOpen[index]} toggle={() => handleClickArrow(index)}>
                                             <DropdownToggle
                                                 style={{ cursor: 'pointer', width: '15px', display: 'inline-block' }}
                                                 tag="span"
-                                                className="flex-1 ml-2 mr-2"
+                                                className="flex-1 ms-2 me-2"
                                             >
                                                 <Icon
-                                                    className={isOpen[index] ? 'mr-1' : ''}
+                                                    className={isOpen[index] ? 'me-1' : ''}
                                                     icon={isOpen[index] ? faAngleDoubleDown : faAngleDoubleRight}
                                                 />
                                             </DropdownToggle>
@@ -139,11 +135,11 @@ function Breadcrumbs(props) {
                                                                     renderDropdownItem(rf, rf.label)
                                                                 ) : (
                                                                     <DropdownItem key={`rf-${rf.id}`}>{rf.label}</DropdownItem>
-                                                                )
+                                                                ),
                                                             )}
                                                     </>
                                                 ) : (
-                                                    <Icon className="ml-3" icon={faSpinner} spin />
+                                                    <Icon className="ms-3" icon={faSpinner} spin />
                                                 )}
                                             </DropdownMenu>
                                         </Dropdown>
@@ -173,12 +169,12 @@ Breadcrumbs.propTypes = {
     researchFieldId: PropTypes.string,
     disableLastField: PropTypes.bool,
     onFieldClick: PropTypes.func,
-    backgroundWhite: PropTypes.bool
+    backgroundWhite: PropTypes.bool,
 };
 
 Breadcrumbs.defaultProps = {
     disableLastField: false,
-    backgroundWhite: false
+    backgroundWhite: false,
 };
 
 export default Breadcrumbs;

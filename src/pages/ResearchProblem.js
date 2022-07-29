@@ -1,26 +1,19 @@
-import PropTypes from 'prop-types';
-import Papers from 'components/ResearchProblem/Papers';
+import IntegratedList from 'components/ResearchProblem/IntegratedList';
+import { useParams } from 'react-router-dom';
 import Benchmarks from 'components/ResearchProblem/Benchmarks/Benchmarks';
 import ResearchProblemHeader from 'components/ResearchProblem/ResearchProblemHeader';
-function ResearchProblem(props) {
-    const { researchProblemId } = props.match.params;
+
+function ResearchProblem() {
+    const { researchProblemId, slug } = useParams();
 
     return (
         <div>
             <ResearchProblemHeader id={researchProblemId} />
             <Benchmarks id={researchProblemId} />
 
-            <Papers id={researchProblemId} boxShadow />
+            <IntegratedList id={researchProblemId} slug={slug} boxShadow />
         </div>
     );
 }
-
-ResearchProblem.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            researchProblemId: PropTypes.string
-        }).isRequired
-    }).isRequired
-};
 
 export default ResearchProblem;

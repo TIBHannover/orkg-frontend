@@ -7,7 +7,6 @@ import {
     Label,
     Input,
     InputGroup,
-    InputGroupAddon,
     Button,
     ButtonGroup,
     FormFeedback,
@@ -16,31 +15,31 @@ import {
     Modal,
     ModalHeader,
     ModalBody,
-    ModalFooter
+    ModalFooter,
 } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { range } from 'utils';
+import { range, getPaperData, parseCiteResult } from 'utils';
 import Tooltip from 'components/Utils/Tooltip';
 import AuthorsInput from 'components/Utils/AuthorsInput';
 import Joi from 'joi';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateGeneralData, nextStep, openTour, closeTour } from 'actions/addPaper';
+import { updateGeneralData, nextStep, openTour, closeTour } from 'slices/addPaperSlice';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { useCookies } from 'react-cookie';
 import styled, { ThemeContext } from 'styled-components';
 import moment from 'moment';
 import Cite from 'citation-js';
 import Tour from 'reactour';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-import { getPaperData } from 'utils';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { getPaperByDOI, getPaperByTitle } from 'services/backend/misc';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
-import ExistingDoiModal from './ExistingDoiModal';
-import { parseCiteResult } from 'utils';
 import env from '@beam-australia/react-env';
+import AutocompleteContentTypeTitle from 'components/AutocompleteContentTypeTitle/AutocompleteContentTypeTitle';
+import Confirm from 'components/Confirmation/Confirmation';
+import ExistingDoiModal from './ExistingDoiModal';
 
 const Container = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -73,7 +72,7 @@ const Container = styled(CSSTransition)`
 
 const GeneralData = () => {
     const { entry, doi, title, publishedIn, url, authors, showLookupTable, publicationMonth, publicationYear, isTourOpen, tourStartAt } = useSelector(
-        state => state.addPaper
+        state => state.addPaper,
     );
     const dispatch = useDispatch();
     const refLookup = useRef(null);
@@ -81,7 +80,7 @@ const GeneralData = () => {
     const location = useLocation();
     const [cookies, setCookie] = useCookies(['takeTourClosed', 'takeTour']);
     // Hide the tour if a cookie 'takeTour' exist
-    const [isFirstVisit, setIsFirstVisit] = useState(!!!(cookies && cookies.takeTour));
+    const [isFirstVisit, setIsFirstVisit] = useState(!(cookies && cookies.takeTour));
     const [showHelpButton, setShowHelpButton] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
     const [dataEntry, setDataEntry] = useState('doi');
@@ -92,7 +91,7 @@ const GeneralData = () => {
 
     const disableBody = target =>
         disableBodyScroll(target, {
-            reserveScrollBarGap: true
+            reserveScrollBarGap: true,
         });
     const enableBody = target => enableBodyScroll(target);
 
@@ -109,7 +108,7 @@ const GeneralData = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    //TODO this logic should be placed inside an action creator
+    // TODO this logic should be placed inside an action creator
     const handleLookupClick = async lookDoi => {
         if (isTourOpen) {
             requestCloseTour();
@@ -121,7 +120,7 @@ const GeneralData = () => {
         const { error } = Joi.string()
             .required()
             .messages({
-                'string.empty': `Please enter the DOI, Bibtex or select 'Manually' to enter the paper details yourself`
+                'string.empty': "Please enter the DOI, Bibtex or select 'Manually' to enter the paper details yourself",
             })
             .label('Paper DOI or BibTeX')
             .validate(lookDoi);
@@ -192,8 +191,8 @@ const GeneralData = () => {
                             publicationMonth: parseResult.paperPublicationMonth,
                             publicationYear: parseResult.paperPublicationYear,
                             doi: parseResult.doi,
-                            publishedIn: parseResult.publishedIn
-                        })
+                            publishedIn: parseResult.publishedIn,
+                        }),
                     );
                 }
             });
@@ -205,25 +204,25 @@ const GeneralData = () => {
         }
         dispatch(
             updateGeneralData({
-                [e.target.name]: e.target.value
-            })
+                [e.target.name]: e.target.value,
+            }),
         );
     };
 
     const handleMonthChange = e => {
         dispatch(
             updateGeneralData({
-                [e.target.name]: parseInt(e.target.value)
-            })
+                [e.target.name]: e.target.value,
+            }),
         );
     };
 
     const handleAuthorsChange = tags => {
-        tags = tags ? tags : [];
+        tags = tags || [];
         dispatch(
             updateGeneralData({
-                authors: tags
-            })
+                authors: tags,
+            }),
         );
     };
 
@@ -270,8 +269,8 @@ const GeneralData = () => {
                     entry,
                     showLookupTable,
                     publishedIn,
-                    url
-                })
+                    url,
+                }),
             );
             // If the paper title already exists in the database and not checked yet!
             if (!existingPaper) {
@@ -301,6 +300,34 @@ const GeneralData = () => {
     const handleLearnMore = step => {
         dispatch(openTour(step));
     };
+
+    const handleTitleOptionClick = async paper => {
+        if (authors.length > 0 || publicationMonth || publicationYear || url || publishedIn) {
+            const confirm = await Confirm({
+                title: 'Overwrite data?',
+                message: 'Do you want to overwrite the data you entered with the selected paper data?',
+            });
+
+            if (confirm) {
+                updateData(paper);
+            }
+        } else {
+            updateData(paper);
+        }
+    };
+
+    const updateData = paper =>
+        dispatch(
+            updateGeneralData({
+                title: paper.label,
+                authors: paper?.authors?.length > 0 ? paper.authors.map(author => ({ label: author.name })) : [],
+                publicationYear: paper.year || '',
+                publishedIn: paper.venue || '',
+                doi: paper.externalIds?.DOI || '',
+                entry: paper.externalIds?.DOI || '',
+                url: paper.externalIds?.ArXiv ? `https://arxiv.org/abs/${paper.externalIds?.ArXiv}` : '',
+            }),
+        );
 
     return (
         <div>
@@ -366,6 +393,7 @@ const GeneralData = () => {
                                                     </div>
                                                 </div>
                                             }
+                                            tippyProps={{ interactive: true }}
                                         >
                                             Paper DOI or BibTeX
                                         </Tooltip>
@@ -384,19 +412,17 @@ const GeneralData = () => {
                                         />
                                         <FormFeedback className="order-1">{validation}</FormFeedback>
                                         {/* Need to set order-1 here to fix Bootstrap bug of missing rounded borders */}
-                                        <InputGroupAddon addonType="append">
-                                            <Button
-                                                outline
-                                                color="primary"
-                                                innerRef={refLookup}
-                                                style={{ minWidth: 130 }}
-                                                onClick={() => handleLookupClick(entry)}
-                                                disabled={isFetching}
-                                                data-test="lookupDoi"
-                                            >
-                                                {!isFetching ? 'Lookup' : <FontAwesomeIcon icon={faSpinner} spin />}
-                                            </Button>
-                                        </InputGroupAddon>
+                                        <Button
+                                            outline
+                                            color="primary"
+                                            innerRef={refLookup}
+                                            style={{ minWidth: 130 }}
+                                            onClick={() => handleLookupClick(entry)}
+                                            disabled={isFetching}
+                                            data-test="lookupDoi"
+                                        >
+                                            {!isFetching ? 'Lookup' : <FontAwesomeIcon icon={faSpinner} spin />}
+                                        </Button>
                                     </InputGroup>
                                 </FormGroup>
                             </Form>
@@ -408,7 +434,7 @@ const GeneralData = () => {
                                             <div className="mt-5">
                                                 <h3 className="h4 mb-3">
                                                     Lookup result
-                                                    <Button className="pull-right ml-1" outline size="sm" onClick={() => setDataEntry('manually')}>
+                                                    <Button className="pull-right ms-1" outline size="sm" onClick={() => setDataEntry('manually')}>
                                                         Edit
                                                     </Button>
                                                 </h3>
@@ -425,7 +451,7 @@ const GeneralData = () => {
                                                                     <strong>Authors:</strong>{' '}
                                                                     {authors.map((author, index) => (
                                                                         <span key={index}>
-                                                                            {authors.length > index + 1 ? author.label + ', ' : author.label}
+                                                                            {authors.length > index + 1 ? `${author.label}, ` : author.label}
                                                                         </span>
                                                                     ))}
                                                                 </td>
@@ -465,11 +491,21 @@ const GeneralData = () => {
                                 <Label for="paperTitle">
                                     <Tooltip message="The main title of the paper">Paper title</Tooltip>
                                 </Label>
-                                <Input type="text" name="title" id="paperTitle" value={title} onChange={handleInputChange} />
+                                <AutocompleteContentTypeTitle
+                                    value={title}
+                                    onChange={value =>
+                                        dispatch(
+                                            updateGeneralData({
+                                                title: value,
+                                            }),
+                                        )
+                                    }
+                                    onOptionClick={handleTitleOptionClick}
+                                />
                                 <FormFeedback />
                             </FormGroup>
-                            <Row form>
-                                <Col md={6} className="pr-3">
+                            <Row>
+                                <Col md={6} className="pe-3">
                                     <FormGroup>
                                         <Label for="paperAuthors">
                                             <Tooltip message="The author or authors of the paper. Enter both the first and last name">
@@ -479,14 +515,14 @@ const GeneralData = () => {
                                         <AuthorsInput handler={handleAuthorsChange} value={authors} />
                                     </FormGroup>
                                 </Col>
-                                <Col md={6} className="pl-md-3">
+                                <Col md={6} className="ps-md-3">
                                     <FormGroup>
                                         <Label for="paperCreationDate">
                                             <Tooltip message="The publication date of the paper, in the form of month and year">
                                                 Publication date
                                             </Tooltip>
                                         </Label>
-                                        <Row form>
+                                        <Row>
                                             <Col md={6}>
                                                 <Input
                                                     type="select"
@@ -498,13 +534,11 @@ const GeneralData = () => {
                                                     <option value="" key="">
                                                         Month
                                                     </option>
-                                                    {moment.months().map((el, index) => {
-                                                        return (
-                                                            <option value={index + 1} key={index + 1}>
-                                                                {el}
-                                                            </option>
-                                                        );
-                                                    })}
+                                                    {moment.months().map((el, index) => (
+                                                        <option value={index + 1} key={index + 1}>
+                                                            {el}
+                                                        </option>
+                                                    ))}
                                                 </Input>
                                             </Col>
                                             <Col md={6}>
@@ -549,13 +583,13 @@ const GeneralData = () => {
             </TransitionGroup>
             <hr className="mt-5 mb-3" />
             {errors && errors.length > 0 && (
-                <ul className="float-left mb-4 text-danger">
-                    {errors.map((e, index) => {
-                        return <li key={index}>{e}</li>;
-                    })}
+                <ul className="float-start mb-4 text-danger">
+                    {errors.map((e, index) => (
+                        <li key={index}>{e}</li>
+                    ))}
                 </ul>
             )}
-            <Button color="primary" className="float-right mb-4" onClick={handleNextClick} data-test="nextStep">
+            <Button color="primary" className="float-end mb-4" onClick={handleNextClick} data-test="nextStep">
                 Next step
             </Button>
 
@@ -570,14 +604,14 @@ const GeneralData = () => {
                                   content:
                                       'Start by entering the DOI or the BibTeX of the paper you want to add. Then, click on "Lookup" to fetch paper meta-data automatically.',
                                   style: { borderTop: '4px solid #E86161' },
-                                  action: node => (node ? node.focus() : null)
+                                  action: node => (node ? node.focus() : null),
                               },
                               {
                                   selector: '#entryOptions',
                                   content:
                                       'In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button on the right.',
-                                  style: { borderTop: '4px solid #E86161' }
-                              }
+                                  style: { borderTop: '4px solid #E86161' },
+                              },
                           ]
                         : [
                               {
@@ -585,15 +619,15 @@ const GeneralData = () => {
                                   content:
                                       'In case you have the DOI, you can enter the doi to fetch paper meta-data automatically. Do this by pressing the "By DOI" button on the left.',
                                   style: { borderTop: '4px solid #E86161' },
-                                  action: node => (node ? node.focus() : null)
+                                  action: node => (node ? node.focus() : null),
                               },
                               {
                                   selector: '#manuelInputGroup',
                                   content: 'You can enter the general paper data manually using this form.',
                                   style: { borderTop: '4px solid #E86161' },
-                                  action: node => (node ? node.focus() : null)
-                              }
-                          ])
+                                  action: node => (node ? node.focus() : null),
+                              },
+                          ]),
                 ]}
                 showNumber={false}
                 accentColor={theme.primary}
@@ -601,7 +635,7 @@ const GeneralData = () => {
                 onRequestClose={requestCloseTour}
                 isOpen={isTourOpen}
                 startAt={tourStartAt}
-                maskClassName="reactourMask"
+                maskClassName="opacity-75"
             />
 
             <Tour
@@ -612,8 +646,8 @@ const GeneralData = () => {
                     {
                         selector: '#helpIcon',
                         content: 'If you want to start the tour again at a later point, you can do so from this button.',
-                        style: { borderTop: '4px solid #E86161' }
-                    }
+                        style: { borderTop: '4px solid #E86161' },
+                    },
                 ]}
                 showNumber={false}
                 accentColor={theme.primary}
@@ -625,7 +659,7 @@ const GeneralData = () => {
                 startAt={0}
                 showButtons={false}
                 showNavigation={false}
-                maskClassName="reactourMask"
+                maskClassName="opacity-75"
             />
         </div>
     );

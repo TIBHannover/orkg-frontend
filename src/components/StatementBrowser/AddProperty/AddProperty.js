@@ -4,16 +4,16 @@ import useAddProperty from './hooks/useAddProperty';
 
 const AddProperty = props => {
     const {
-        isLoading,
         showAddProperty,
         newProperties,
         canAddProperty,
         setShowAddProperty,
         handlePropertySelect,
-        toggleConfirmNewProperty
+        toggleConfirmNewProperty,
+        ConfirmPropertyModal,
     } = useAddProperty({
         resourceId: props.resourceId,
-        syncBackend: props.syncBackend
+        syncBackend: props.syncBackend,
     });
 
     return (
@@ -21,13 +21,13 @@ const AddProperty = props => {
             <AddPropertyView
                 inTemplate={props.inTemplate}
                 isDisabled={!canAddProperty}
-                isLoading={isLoading}
                 showAddProperty={showAddProperty}
                 handlePropertySelect={handlePropertySelect}
                 toggleConfirmNewProperty={toggleConfirmNewProperty}
                 setShowAddProperty={setShowAddProperty}
                 newProperties={newProperties}
             />
+            <ConfirmPropertyModal />
         </>
     );
 };
@@ -35,11 +35,11 @@ const AddProperty = props => {
 AddProperty.propTypes = {
     resourceId: PropTypes.string.isRequired,
     syncBackend: PropTypes.bool.isRequired,
-    inTemplate: PropTypes.bool
+    inTemplate: PropTypes.bool,
 };
 
 AddProperty.defaultProps = {
-    inTemplate: false
+    inTemplate: false,
 };
 
 export default AddProperty;

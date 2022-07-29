@@ -25,7 +25,7 @@ export default class DropDownMapperSelector extends Component {
 
         this.state = {
             isOpen: false,
-            selectedMapper: initMapper
+            selectedMapper: initMapper,
         };
         this.mapperTypes = ['Select Mapper', 'Number', 'String', 'Date'];
     }
@@ -38,36 +38,34 @@ export default class DropDownMapperSelector extends Component {
         }
     };
 
-    /** Rendering functions **/
-    /** render based on propFlag **/
+    /** Rendering functions * */
+    /** render based on propFlag * */
     render() {
-        const items = this.mapperTypes.map((item, id) => {
-            return (
-                <DropdownItem
-                    key={'dropdownItemIndexKey_' + id}
-                    onClick={() => {
-                        this.props.data.setPropertyMapperType(item);
-                        this.setState({ selectedMapper: item });
-                    }}
-                >
-                    {item}
-                </DropdownItem>
-            );
-        });
+        const items = this.mapperTypes.map((item, id) => (
+            <DropdownItem
+                key={`dropdownItemIndexKey_${id}`}
+                onClick={() => {
+                    this.props.data.setPropertyMapperType(item);
+                    this.setState({ selectedMapper: item });
+                }}
+            >
+                {item}
+            </DropdownItem>
+        ));
 
         return (
             <ButtonDropdown
                 color="secondary"
                 size="sm"
-                className="pl-0 m-0 flex-grow-1"
+                className="ps-0 m-0 flex-grow-1"
                 isOpen={this.state.isOpen}
                 toggle={() => {
                     this.setState({
-                        isOpen: !this.state.isOpen
+                        isOpen: !this.state.isOpen,
                     });
                 }}
             >
-                <StyledDropdownToggle caret color="secondary" className="pl-1" style={{ borderBottomRightRadius: '0', borderBottomLeftRadius: '0' }}>
+                <StyledDropdownToggle caret color="secondary" className="ps-1" style={{ borderBottomRightRadius: '0', borderBottomLeftRadius: '0' }}>
                     {this.state.selectedMapper}
                 </StyledDropdownToggle>
                 <DropdownMenu>{items}</DropdownMenu>
@@ -78,5 +76,5 @@ export default class DropDownMapperSelector extends Component {
 
 DropDownMapperSelector.propTypes = {
     data: PropTypes.object,
-    callBack: PropTypes.func
+    callBack: PropTypes.func,
 };

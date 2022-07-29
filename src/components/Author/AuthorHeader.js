@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button, Container, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import useAuthor from './hooks/useAuthor';
 import NotFound from 'pages/NotFound';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faOrcid, faLinkedin, faGoogle, faResearchgate } from '@fortawesome/free-brands-svg-icons';
@@ -11,9 +10,9 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
-import { usePrevious } from 'react-use';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
+import useAuthor from './hooks/useAuthor';
 
 const AuthorMetaInfo = styled.div`
     border-left: 1px ${props => props.theme.secondary} solid;
@@ -31,17 +30,9 @@ const AuthorMetaInfo = styled.div`
 const AuthorHeader = ({ authorId }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const prevEditMode = usePrevious({ editMode });
     const { author, isLoading, isFailedLoading, loadAuthorData } = useAuthor({
-        authorId
+        authorId,
     });
-
-    useEffect(() => {
-        if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
-            loadAuthorData();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [editMode]);
 
     return (
         <>
@@ -60,17 +51,17 @@ const AuthorHeader = ({ authorId }) => {
                                     component={Button}
                                     size="sm"
                                     color="secondary"
-                                    className="float-right"
+                                    className="float-end"
                                     onClick={() => setEditMode(v => !v)}
                                 >
                                     <Icon icon={faPen} /> Edit
                                 </RequireAuthentication>
-                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
-                                    <DropdownMenu right>
-                                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: authorId })}>
+                                    <DropdownMenu end>
+                                        <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: authorId })}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>
@@ -89,6 +80,7 @@ const AuthorHeader = ({ authorId }) => {
                             label={author.label}
                             enableEdit={true}
                             syncBackend={true}
+                            onCloseModal={() => loadAuthorData()}
                         />
                     )}
                     <Container className="p-0">
@@ -107,7 +99,7 @@ const AuthorHeader = ({ authorId }) => {
                                     </AuthorMetaInfo>
                                 )}
                                 {author.website && (
-                                    <AuthorMetaInfo className="pl-3">
+                                    <AuthorMetaInfo className="ps-3">
                                         <div className="key">
                                             Website <Icon icon={faGlobe} />
                                         </div>
@@ -119,7 +111,7 @@ const AuthorHeader = ({ authorId }) => {
                                     </AuthorMetaInfo>
                                 )}
                                 {author.googleScholar && (
-                                    <AuthorMetaInfo className="pl-3">
+                                    <AuthorMetaInfo className="ps-3">
                                         <div className="key">
                                             Google Scholar <Icon icon={faGoogle} />
                                         </div>
@@ -135,7 +127,7 @@ const AuthorHeader = ({ authorId }) => {
                                     </AuthorMetaInfo>
                                 )}
                                 {author.researchGate && (
-                                    <AuthorMetaInfo className="pl-3">
+                                    <AuthorMetaInfo className="ps-3">
                                         <div className="key">
                                             ResearchGate <Icon icon={faResearchgate} />
                                         </div>
@@ -151,7 +143,7 @@ const AuthorHeader = ({ authorId }) => {
                                     </AuthorMetaInfo>
                                 )}
                                 {author.linkedIn && (
-                                    <AuthorMetaInfo className="pl-3">
+                                    <AuthorMetaInfo className="ps-3">
                                         <div className="key">
                                             Linkedin <Icon icon={faLinkedin} />
                                         </div>
@@ -176,7 +168,7 @@ const AuthorHeader = ({ authorId }) => {
 };
 
 AuthorHeader.propTypes = {
-    authorId: PropTypes.object.isRequired
+    authorId: PropTypes.string.isRequired,
 };
 
 export default AuthorHeader;

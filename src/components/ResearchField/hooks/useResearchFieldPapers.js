@@ -3,9 +3,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getPapersByResearchFieldId } from 'services/backend/researchFields';
 import { getResourcesByClass } from 'services/backend/resources';
-import { getPaperData } from 'utils';
-import { MISC } from 'constants/graphSettings';
-import { CLASSES } from 'constants/graphSettings';
+import { getPaperData, mergeAlternate } from 'utils';
+import { RESOURCES, CLASSES } from 'constants/graphSettings';
 
 function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSubFields, pageSize = 10 }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -18,25 +17,60 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
     const [includeSubFields, setIncludeSubFields] = useState(initialIncludeSubFields);
 
     const loadData = useCallback(
-        page => {
+        (page, total) => {
             setIsLoading(true);
             // Papers
             let papersService;
-            if (researchFieldId === MISC.RESEARCH_FIELD_MAIN) {
+            if (sort === 'combined') {
+                // in case of combined sort we list 50% featured and 50% not featured items
+                const noFeaturedPapersService = getPapersByResearchFieldId({
+                    id: researchFieldId,
+                    page,
+                    items: Math.round(pageSize / 2),
+                    sortBy: 'created_at',
+                    desc: true,
+                    subfields: includeSubFields,
+                    featured: false,
+                    unlisted: false,
+                });
+                const featuredPapersService = getPapersByResearchFieldId({
+                    id: researchFieldId,
+                    page,
+                    items: Math.round(pageSize / 2),
+                    sortBy: 'created_at',
+                    desc: true,
+                    subfields: includeSubFields,
+                    featured: true,
+                    unlisted: false,
+                });
+                papersService = Promise.all([noFeaturedPapersService, featuredPapersService]).then(([noFeaturedPapers, featuredPapers]) => {
+                    // merge two arrays and alternate values
+                    const combinedPapers = mergeAlternate(noFeaturedPapers.content, featuredPapers.content);
+                    return {
+                        content: combinedPapers,
+                        totalElements: page === 0 ? noFeaturedPapers.totalElements + featuredPapers.totalElements : total,
+                        last: noFeaturedPapers.last && featuredPapers.last,
+                    };
+                });
+            } else if (researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN) {
                 papersService = getResourcesByClass({
                     id: sort === 'featured' ? CLASSES.FEATURED_PAPER : CLASSES.PAPER,
                     sortBy: 'created_at',
-                    desc: sort === 'newest' || sort === 'featured' ? true : false,
-                    items: pageSize
+                    desc: true,
+                    items: pageSize,
+                    featured: sort === 'featured' ? true : null,
+                    unlisted: sort === 'unlisted',
                 });
             } else {
                 papersService = getPapersByResearchFieldId({
                     id: researchFieldId,
-                    page: page,
+                    page,
                     items: pageSize,
                     sortBy: 'created_at',
-                    desc: sort === 'newest' || sort === 'featured' ? true : false,
-                    subfields: includeSubFields
+                    desc: true,
+                    subfields: includeSubFields,
+                    featured: sort === 'featured' ? true : null,
+                    unlisted: sort === 'unlisted',
                 });
             }
 
@@ -44,12 +78,12 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                 .then(result => {
                     // Fetch the data of each paper
                     getStatementsBySubjects({
-                        ids: result.content.map(p => p.id)
+                        ids: result.content.map(p => p.id),
                     })
                         .then(papersStatements => {
                             const papers = papersStatements.map(paperStatements => {
                                 const paperSubject = find(result.content, {
-                                    id: paperStatements.id
+                                    id: paperStatements.id,
                                 });
                                 return getPaperData(paperSubject, paperStatements.statements);
                             });
@@ -64,7 +98,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                         .catch(error => {
                             setIsLoading(false);
                             setHasNextPage(false);
-                            setIsLastPageReached(page > 1 ? true : false);
+                            setIsLastPageReached(page > 1);
 
                             console.log(error);
                         });
@@ -72,12 +106,12 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                 .catch(error => {
                     setIsLoading(false);
                     setHasNextPage(false);
-                    setIsLastPageReached(page > 1 ? true : false);
+                    setIsLastPageReached(page > 1);
 
                     console.log(error);
                 });
         },
-        [includeSubFields, researchFieldId, sort, pageSize]
+        [sort, researchFieldId, pageSize, includeSubFields],
     );
 
     // reset resources when the researchFieldId has changed
@@ -87,13 +121,6 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
         setIsLastPageReached(false);
         setPage(0);
         setTotalElements(0);
-        /*
-        TODO: Remove the featured sort with it's not the main research field
-        if (researchFieldId !== MISC.RESEARCH_FIELD_MAIN && sort === 'featured') {
-            // Because filtering featured comparison based on research field is not supported
-            setSort('newest');
-        }
-        */
     }, [researchFieldId, sort, includeSubFields]);
 
     useEffect(() => {
@@ -102,7 +129,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
 
     const handleLoadMore = () => {
         if (!isLoading) {
-            loadData(page);
+            loadData(page, totalElements);
         }
     };
 
@@ -117,7 +144,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
         page,
         handleLoadMore,
         setIncludeSubFields,
-        setSort
+        setSort,
     };
 }
 export default useResearchFieldPapers;

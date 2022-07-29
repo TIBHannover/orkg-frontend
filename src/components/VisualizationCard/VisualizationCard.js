@@ -2,15 +2,18 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
-import useVisualizationResearchField from './hooks/useVisualizationResearchField';
+import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { CardBadge } from 'components/styled';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
-import Thumbnail from './Thumbnail';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import Thumbnail from './Thumbnail';
+import useVisualizationResearchField from './hooks/useVisualizationResearchField';
 
 const VisualizationCardStyled = styled.div`
     a {
@@ -23,31 +26,47 @@ const VisualizationCardStyled = styled.div`
 `;
 
 const VisualizationCard = props => {
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: props.visualization.id,
+        unlisted: props.visualization?.unlisted,
+        featured: props.visualization?.featured,
+    });
+
     const { researchField } = useVisualizationResearchField({
-        visualizationId: props.visualization.id
+        visualizationId: props.visualization.id,
     });
 
     return (
-        <VisualizationCardStyled style={{ flexWrap: 'wrap' }} className={`list-group-item d-flex pr-3 pl-3 `}>
+        <VisualizationCardStyled className={`list-group-item d-flex py-3 pe-4 ${props.showCurationFlags ? ' ps-3  ' : ' ps-4  '}`}>
             <div className="col-md-9 d-flex p-0">
+                {props.showCurationFlags && (
+                    <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
+                        <div>
+                            <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                        </div>
+                        <div>
+                            <MarkUnlisted size="sm" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                        </div>
+                    </div>
+                )}
                 <div className="d-flex flex-column flex-grow-1">
-                    <div>
+                    <div className="mb-2">
                         <Link
                             to={
                                 props.visualization.comparisonId
-                                    ? reverse(ROUTES.COMPARISON, { comparisonId: props.visualization.comparisonId }) + '#Vis' + props.visualization.id
+                                    ? `${reverse(ROUTES.COMPARISON, { comparisonId: props.visualization.comparisonId })}#Vis${props.visualization.id}`
                                     : reverse(ROUTES.VISUALIZATION, { id: props.visualization.id })
                             }
                         >
                             {props.visualization.label ? props.visualization.label : <em>No title</em>}
                         </Link>
                         {props.showBadge && (
-                            <div className="d-inline-block ml-2">
+                            <div className="d-inline-block ms-2">
                                 <CardBadge color="primary">Visualization</CardBadge>
                             </div>
                         )}
                     </div>
-                    <div>
+                    <div className="mb-1">
                         <small>
                             {props.visualization.authors && props.visualization.authors.length > 0 && (
                                 <>
@@ -56,7 +75,7 @@ const VisualizationCard = props => {
                             )}
                             {props.visualization.created_at && (
                                 <>
-                                    <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />{' '}
+                                    <Icon size="sm" icon={faCalendar} className="ms-2 me-1" />{' '}
                                     {moment(props.visualization.created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
@@ -94,13 +113,17 @@ VisualizationCard.propTypes = {
         authors: PropTypes.array,
         created_at: PropTypes.string,
         created_by: PropTypes.string,
-        description: PropTypes.string
+        description: PropTypes.string,
+        featured: PropTypes.bool,
+        unlisted: PropTypes.bool,
     }).isRequired,
-    showBadge: PropTypes.bool.isRequired
+    showBadge: PropTypes.bool.isRequired,
+    showCurationFlags: PropTypes.bool.isRequired,
 };
 
 VisualizationCard.defaultProps = {
-    showBadge: false
+    showBadge: false,
+    showCurationFlags: true,
 };
 
 export default VisualizationCard;

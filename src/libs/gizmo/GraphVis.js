@@ -1,5 +1,7 @@
-import Options from './options.js';
 import * as d3 from 'd3';
+import groupBy from 'lodash/groupBy';
+import { CLASSES } from 'constants/graphSettings';
+import Options from './options.js';
 
 import Node from './elements/Nodes';
 import Edge from './elements/Edges';
@@ -7,8 +9,6 @@ import Property from './elements/Property';
 import MinimumSpanningTree from './mst';
 import Layout from './Layout';
 import Navigation from './Navigation';
-import groupBy from 'lodash/groupBy';
-import { CLASSES } from 'constants/graphSettings';
 
 export default class GraphVis {
     constructor() {
@@ -74,7 +74,7 @@ export default class GraphVis {
         this.ensureLayoutConsistency = this.ensureLayoutConsistency.bind(this);
         this.updateNodeStatus = this.updateNodeStatus.bind(this);
 
-        /** refactoring **/
+        /** refactoring * */
         this.redrawGraphAfterExpand = this.redrawGraphAfterExpand.bind(this);
         this.redrawGraphAfterCollapse = this.redrawGraphAfterCollapse.bind(this);
         this.clearGraphAnimation = this.clearGraphAnimation.bind(this);
@@ -173,15 +173,16 @@ export default class GraphVis {
             });
         }
     };
+
     computeDistanceToCenterAndUpdateHaloRadius = node => {
         const posXY = this.nav.getScreenCoords(node.x, node.y);
         const w = this.layout.layoutSize[0];
         const h = this.layout.layoutSize[1];
         const translation = this.nav.graphTranslation;
-        const zoomFactor = this.nav.zoomFactor;
+        const { zoomFactor } = this.nav;
 
-        const x = posXY.x;
-        const y = posXY.y;
+        const { x } = posXY;
+        const { y } = posXY;
         let borderPoint_x = 0;
         let borderPoint_y = 0;
         const defaultRadius = 55;
@@ -224,7 +225,7 @@ export default class GraphVis {
             const normedX = borderRadius_x / len;
             const normedY = borderRadius_y / len;
 
-            len = len + 25; // add 20 px;
+            len += 25; // add 20 px;
 
             // re-normalized vector
             const newVectorX = normedX * len + x;
@@ -249,9 +250,7 @@ export default class GraphVis {
         }
     };
 
-    getDictionary = () => {
-        return this.dictinary;
-    };
+    getDictionary = () => this.dictinary;
 
     buildDictionary = () => {
         this.dictinary = []; // clear the array;
@@ -261,7 +260,7 @@ export default class GraphVis {
         this.propNodes.forEach(node => {
             this.dictinary.push({ text: node.label, nodeId: node.id() });
         });
-        //give the dictionary to the search component;
+        // give the dictionary to the search component;
         this.propagateDictionary();
     };
 
@@ -331,9 +330,7 @@ export default class GraphVis {
     };
 
     async exploreMultipleNodes(nodesToExplore) {
-        const ResourceIds = nodesToExplore.map(o => {
-            return o._resourceId;
-        });
+        const ResourceIds = nodesToExplore.map(o => o._resourceId);
         const incrementalData = await this.fetchMultipleResourcesFromAPI(ResourceIds);
         let iterator = this.classNodes.length + 1;
         if (!incrementalData.nodes && !incrementalData.edges) {
@@ -409,25 +406,23 @@ export default class GraphVis {
                 this.blackOpsRedraw();
                 // this should force the redraw of all new items and then we are allowed to work on the expansions stuff
                 return;
-            } else {
-                await this.blackOpsExplore(unexploredNodes);
-                if (!this.hasIncrementalData) {
-                    this.graphFullyExplored = true;
-                    this.buildDictionary();
-                    this.mst.computeMinimumSpanningTree();
-                    // redraw full graph now;
-                    this.blackOpsRedraw();
-                    break;
-                }
             }
+            await this.blackOpsExplore(unexploredNodes);
+            if (!this.hasIncrementalData) {
+                this.graphFullyExplored = true;
+                this.buildDictionary();
+                this.mst.computeMinimumSpanningTree();
+                // redraw full graph now;
+                this.blackOpsRedraw();
+                break;
+            }
+
             exploreCounter++;
         }
     };
 
     async blackOpsExplore(nodesToExplore) {
-        const ResourceIds = nodesToExplore.map(o => {
-            return o._resourceId;
-        });
+        const ResourceIds = nodesToExplore.map(o => o._resourceId);
         const incrementalData = await this.fetchMultipleResourcesFromAPI(ResourceIds);
         let iterator = this.classNodes.length + 1;
         if (!incrementalData.nodes && !incrementalData.edges) {
@@ -507,9 +502,8 @@ export default class GraphVis {
                     this.graphFullyExplored = true;
                 }
                 return;
-            } else {
-                await this.exploreMultipleNodes(unexploredNodes);
             }
+            await this.exploreMultipleNodes(unexploredNodes);
         }
         exploreCounter++;
 
@@ -523,7 +517,7 @@ export default class GraphVis {
         }
     }
 
-    /** State Load Unload Functions **/
+    /** State Load Unload Functions * */
     graphInitialized(val) {
         if (!arguments.length) {
             return this.graphIsInitialized;
@@ -658,7 +652,7 @@ export default class GraphVis {
         delete this.links;
     }
 
-    /** Navigation Functions **/
+    /** Navigation Functions * */
     updateLayout(value) {
         this.layout.layoutType(value);
         this.layout.initializeLayoutEngine();
@@ -670,19 +664,19 @@ export default class GraphVis {
         this.nav.zoomToExtent();
     }
 
-    /** Rendering Functions **/
+    /** Rendering Functions * */
     initializeLayers() {
         const layers = this.graphOptions.layerDefinitionObject();
         const root = this.graphRoot;
-        const rootContainer = this.rootContainer;
+        const { rootContainer } = this;
 
-        layers.forEach(function(layer) {
+        layers.forEach(layer => {
             if (layer === 'arrows') {
                 const markerContainer = root.append('defs');
-                markerContainer.node().id = rootContainer + '_' + layer;
+                markerContainer.node().id = `${rootContainer}_${layer}`;
             } else {
                 const renderingLayer = root.append('g');
-                renderingLayer.node().id = rootContainer + '_' + layer;
+                renderingLayer.node().id = `${rootContainer}_${layer}`;
             }
         });
     }
@@ -785,9 +779,7 @@ export default class GraphVis {
             .enter()
             .append('g')
             .classed('draggableItem', true)
-            .attr('id', function(d) {
-                return d.id();
-            })
+            .attr('id', d => d.id())
             .call(this.nav.getDragBehaviour());
     }
 
@@ -949,7 +941,7 @@ export default class GraphVis {
         return node;
     }
 
-    /** Helper functions**/
+    /** Helper functions* */
     ensureLayoutConsistency(layout) {
         if (this.layout.layoutType() !== layout) {
             this.updateLayout(layout);
@@ -1059,7 +1051,7 @@ export default class GraphVis {
         // force layout will automatically be restarted
     }
 
-    /** multiple Task execution **/
+    /** multiple Task execution * */
     async performMultipleTasks(collapseGroup, expandGroup, exploreGroup, internalDepth) {
         if (this.layout.layoutType() === 'force') {
             this.layout.stopForce();
@@ -1072,7 +1064,7 @@ export default class GraphVis {
         }
     }
 
-    /** Collapse Tasks **/
+    /** Collapse Tasks * */
     // perform collapse receives levels to collapse, it detects the items to collapse by their status (expanded)
     // then it executes a promisedGroupCollapse and redraws the graph
     // promised group collapse executes for each level the collapse operation and starts the promised animation
@@ -1178,9 +1170,7 @@ export default class GraphVis {
             }
         }
         inverseGroup = inverseGroup.reverse();
-        inverseGroup = inverseGroup.filter(function(item) {
-            return item != null;
-        });
+        inverseGroup = inverseGroup.filter(item => item != null);
 
         await this.promisedGroupCollapse(inverseGroup);
         if (redraw !== false) {
@@ -1188,7 +1178,7 @@ export default class GraphVis {
         }
     }
 
-    /** Expansion Tasks **/
+    /** Expansion Tasks * */
     async performExpansion(levelsToExpand) {
         const groupsToExpand = [];
         levelsToExpand.forEach(level => {
@@ -1221,8 +1211,8 @@ export default class GraphVis {
 
     async runForceAnimation(duration) {
         if (this.layout.layoutType() === 'force') {
-            const animationWaiter = new Promise(function(resolve) {
-                setTimeout(function() {
+            const animationWaiter = new Promise(resolve => {
+                setTimeout(() => {
                     resolve(true);
                 }, duration);
             });
@@ -1231,7 +1221,7 @@ export default class GraphVis {
     }
 
     collectChildrenAndSetVisibilityFlag(parent, visFlag, setToParentPos) {
-        /** extension for single node collapse **/
+        /** extension for single node collapse * */
         const vislinks = [];
         const invislinks = [];
         parent.outgoingLink.forEach(link => {
@@ -1336,7 +1326,7 @@ export default class GraphVis {
         this.layout.pauseForceLayoutAnimation(false);
     }
 
-    /** Exploration Tasks**/
+    /** Exploration Tasks* */
     async performExplorations(needToExploreLevels, internalDepth) {
         const that = this;
         const lastKnownLevel = needToExploreLevels[needToExploreLevels.length - 1];
@@ -1492,16 +1482,15 @@ export default class GraphVis {
 
         return recursivePlan;
     }
+
     collectRecursiveNodeCollapse(recursiveArray) {
         recursiveArray.forEach(child => {
             const recursiveCollapsePlan = []; // these are additional nodes;
             const recursivePlan = this.checkForRecursivePlan(child, recursiveCollapsePlan);
             if (recursivePlan) {
                 this.collectRecursiveNodeCollapse(recursiveCollapsePlan);
-            } else {
-                if (recursiveArray.indexOf(child) === -1) {
-                    recursiveArray.push(child);
-                }
+            } else if (recursiveArray.indexOf(child) === -1) {
+                recursiveArray.push(child);
             }
             // collect the data to propagate it back
             recursiveCollapsePlan.forEach(item => {
@@ -1525,7 +1514,7 @@ export default class GraphVis {
             recursiveCollapsePlan.push(caller);
             // sort the nodes by highest depth;
             recursiveCollapsePlan.sort((a, b) => (a.depthValue > b.depthValue ? -1 : b.depthValue > a.depthValue ? 1 : 0));
-            this.executeSortedCollapsePlan(recursiveCollapsePlan).then(function() {}); // ignoring then
+            this.executeSortedCollapsePlan(recursiveCollapsePlan).then(() => {}); // ignoring then
         }
     }
 
@@ -1543,7 +1532,7 @@ export default class GraphVis {
             recursiveCollapsePlan.push(caller);
             // sort the nodes by highest depth;
             recursiveCollapsePlan.sort((a, b) => (a.depthValue > b.depthValue ? -1 : b.depthValue > a.depthValue ? 1 : 0));
-            this.executeSortedCollapsePlan(recursiveCollapsePlan, redraw).then(function() {
+            this.executeSortedCollapsePlan(recursiveCollapsePlan, redraw).then(() => {
                 callback(caller);
             }); // ignoring then
         }

@@ -1,20 +1,19 @@
 import { createRef, Component } from 'react';
 import { Badge, Container, Navbar, Button, ButtonGroup } from 'reactstrap';
-import { ComparisonBoxButton, ComparisonBox, Header, List, ContributionItem, Title, Number, Remove, StartComparison } from './styled';
 import { faChevronDown, faChevronUp, faTimes, faTrash, faCheck } from '@fortawesome/free-solid-svg-icons';
-import { loadComparisonFromLocalStorage, removeFromComparison } from 'actions/viewPaper';
+import { loadComparisonFromLocalStorage, removeFromComparison } from 'slices/viewPaperSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Cookies } from 'react-cookie';
 import ROUTES from 'constants/routes.js';
-import Tooltip from '../Utils/Tooltip';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { reverse } from 'named-urls';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import Tippy from '@tippyjs/react';
+import { ComparisonBoxButton, ComparisonBox, Header, List, ContributionItem, Title, Number, Remove, StartComparison } from './styled';
 
 const cookies = new Cookies();
 
@@ -40,7 +39,7 @@ class ComparisonPopup extends Component {
         super(props);
 
         this.state = {
-            showComparisonBox: false
+            showComparisonBox: false,
         };
 
         this.yesButtonRef = createRef();
@@ -70,7 +69,7 @@ class ComparisonPopup extends Component {
 
     toggleComparisonBox = () => {
         this.setState(prevState => ({
-            showComparisonBox: !prevState.showComparisonBox
+            showComparisonBox: !prevState.showComparisonBox,
         }));
     };
 
@@ -135,7 +134,7 @@ class ComparisonPopup extends Component {
 
         const contributionAmount = allIds.length;
         const ids = allIds.join(',');
-        const comparisonUrl = reverse(ROUTES.COMPARISON) + '?contributions=' + ids; // with named-urls it is not possible to use wildcard URLs, so replace the asterisk
+        const comparisonUrl = `${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${ids}`; // with named-urls it is not possible to use wildcard URLs, so replace the asterisk
 
         return (
             <ComparisonPopupStyled
@@ -147,20 +146,20 @@ class ComparisonPopup extends Component {
                 <Navbar className="p-0">
                     <Container>
                         {!this.state.showComparisonBox ? (
-                            <ComparisonBoxButton color="primary" className="ml-auto" onClick={this.toggleComparisonBox}>
-                                <Badge color="primary-darker" className="pl-2 pr-2">
+                            <ComparisonBoxButton color="primary" className="ms-auto" onClick={this.toggleComparisonBox}>
+                                <Badge color="primary-darker" className="ps-2 pe-2">
                                     {contributionAmount}
                                 </Badge>{' '}
                                 Compare contributions <Icon icon={faChevronUp} />
                             </ComparisonBoxButton>
                         ) : (
-                            <ComparisonBox className="ml-auto">
+                            <ComparisonBox className="ms-auto">
                                 <Header onClick={this.toggleComparisonBox}>
-                                    <Badge color="primary-darker" className="pl-2 pr-2 mr-1">
+                                    <Badge color="primary-darker" className="ps-2 pe-2 me-1">
                                         {contributionAmount}
                                     </Badge>{' '}
                                     Compare contributions
-                                    <div className="float-right">
+                                    <div className="float-end">
                                         <Tippy trigger="mouseenter" content="Remove all contributions from comparison" zIndex={9999}>
                                             <Tippy
                                                 onShow={this.onShow}
@@ -186,7 +185,7 @@ class ComparisonPopup extends Component {
                                                                 color="danger"
                                                                 style={{ paddingTop: 2, paddingBottom: 2 }}
                                                             >
-                                                                <Icon icon={faCheck} className="mr-1" />
+                                                                <Icon icon={faCheck} className="me-1" />
                                                                 Remove
                                                             </Button>
                                                             <Button
@@ -198,14 +197,14 @@ class ComparisonPopup extends Component {
                                                                 style={{ paddingTop: 2, paddingBottom: 2 }}
                                                             >
                                                                 {' '}
-                                                                <Icon icon={faTimes} className="mr-1" /> Cancel
+                                                                <Icon icon={faTimes} className="me-1" /> Cancel
                                                             </Button>
                                                         </ButtonGroup>
                                                     </div>
                                                 }
                                             >
                                                 <span>
-                                                    <Icon className="ml-2 mr-2" size="sm" onClick={e => e.stopPropagation()} icon={faTrash} />
+                                                    <Icon className="ms-2 me-2" size="sm" onClick={e => e.stopPropagation()} icon={faTrash} />
                                                 </span>
                                             </Tippy>
                                         </Tippy>
@@ -216,25 +215,27 @@ class ComparisonPopup extends Component {
                                     {allIds.map(contributionId => (
                                         <ContributionItem key={contributionId}>
                                             <div className="d-flex">
-                                                <div className="pr-3">
+                                                <div className="pe-3">
                                                     <Icon icon={faFile} />
                                                 </div>
                                                 <div className="flex-grow-1 text-break">
                                                     <Title
-                                                        to={reverse(ROUTES.VIEW_PAPER, {
+                                                        to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                                                             resourceId: byId[contributionId].paperId,
-                                                            contributionId: contributionId
+                                                            contributionId,
                                                         })}
                                                     >
                                                         {byId[contributionId].paperTitle}
                                                     </Title>
                                                     <Number>{byId[contributionId].contributionTitle}</Number>
                                                 </div>
-                                                <Tooltip message="Remove from comparison" hideDefaultIcon>
-                                                    <Remove>
-                                                        <Icon icon={faTimes} onClick={() => this.removeFromComparison(contributionId)} />
-                                                    </Remove>
-                                                </Tooltip>
+                                                <Tippy content="Remove from comparison">
+                                                    <span>
+                                                        <Remove>
+                                                            <Icon icon={faTimes} onClick={() => this.removeFromComparison(contributionId)} />
+                                                        </Remove>
+                                                    </span>
+                                                </Tippy>
                                             </div>
                                         </ContributionItem>
                                     ))}
@@ -265,19 +266,19 @@ class ComparisonPopup extends Component {
 ComparisonPopup.propTypes = {
     comparison: PropTypes.object.isRequired,
     removeFromComparison: PropTypes.func.isRequired,
-    loadComparisonFromLocalStorage: PropTypes.func.isRequired
+    loadComparisonFromLocalStorage: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-    comparison: state.viewPaper.comparison
+    comparison: state.viewPaper.comparison,
 });
 
 const mapDispatchToProps = dispatch => ({
     removeFromComparison: data => dispatch(removeFromComparison(data)),
-    loadComparisonFromLocalStorage: data => dispatch(loadComparisonFromLocalStorage(data))
+    loadComparisonFromLocalStorage: data => dispatch(loadComparisonFromLocalStorage(data)),
 });
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(ComparisonPopup);

@@ -1,8 +1,7 @@
 import { render, screen, waitFor, fireEvent, waitForElementToBeRemoved } from 'testUtils';
-import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 import selectEvent from 'react-select-event';
-import { ToastContainer } from 'react-toastify';
+import StatementBrowser from '../StatementBrowser';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
@@ -15,15 +14,10 @@ const setup = (
         newStore: true,
         rootNodeType: ENTITIES.RESOURCE,
         enableEdit: true,
-        syncBackend: true
-    }
+        syncBackend: true,
+    },
 ) => {
-    render(
-        <>
-            <StatementBrowser {...props} /> <ToastContainer position="top-right" autoClose={5000} hideProgressBar className="toast-container" />
-        </>,
-        { initialState }
-    );
+    render(<StatementBrowser {...props} />, { initialState });
 };
 
 describe('StatementBrowser', () => {
@@ -64,7 +58,7 @@ describe('AddValue', () => {
         fireEvent.click(screen.getByText(/back/i));
         const addR0Value = screen.getByTestId('add-value-P23140-true');
         expect(addR0Value).toBeInTheDocument();
-        expect(addR0Value).toHaveAttribute('disabled');
+        expect(addR0Value).toBeDisabled();
     });
 });
 
@@ -77,7 +71,7 @@ describe('AddValue', () => {
         // Basic reproduction number
         const changeR0Property = screen.getByTestId('change-property-P23140');
         expect(changeR0Property).toBeInTheDocument();
-        expect(changeR0Property).toHaveAttribute('disabled');
+        expect(changeR0Property).toBeDisabled();
     });
 });
 
@@ -90,7 +84,7 @@ describe('AddValue', () => {
         // Basic reproduction number
         const deleteR0Property = screen.getByTestId('delete-property-P23140');
         expect(deleteR0Property).toBeInTheDocument();
-        expect(deleteR0Property).toHaveAttribute('disabled');
+        expect(deleteR0Property).toBeDisabled();
     });
 });
 
@@ -104,11 +98,11 @@ describe('AddValue', () => {
         await waitFor(() => expect(screen.getByTestId('add-value-P5049-false')).toBeInTheDocument());
         fireEvent.click(screen.getByTestId('add-value-P5049-false'));
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: 'Hannover' } });
-        await selectEvent.select(screen.getByRole('textbox', { name: /Enter a resource/i, hidden: true }), /Hannover/i);
+        await selectEvent.select(screen.getByRole('combobox', { name: /Enter a resource/i, hidden: true }), /Hannover/i);
         await waitFor(() => expect(screen.getByText(/Hannover/i)).toBeInTheDocument());
         // Because location has cardinality 1, the button add should be disabled after adding a new value
         const addLocationValue = screen.getByTestId('add-value-P5049-false');
         expect(addLocationValue).toBeInTheDocument();
-        expect(addLocationValue).toHaveAttribute('disabled');
+        expect(addLocationValue).toBeDisabled();
     });
 });

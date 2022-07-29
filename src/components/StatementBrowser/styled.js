@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ListGroupItem, DropdownItem, Button, DropdownToggle } from 'reactstrap';
 
-/*propertyItem*/
+/* propertyItem */
 export const StyledStatementItem = styled(ListGroupItem)`
     padding: 0.5rem 0.75rem !important;
     cursor: default;
@@ -45,7 +45,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
     }
 `;
 
-/*levelBox*/
+/* levelBox */
 export const StyledLevelBox = styled.div`
     // The hierarchy indicator doesn't look nice when properties have a space between them
     /*border-color: #dfdfdf; //don't use default color, since it is partially transparent $list-group-border-color;
@@ -68,7 +68,7 @@ export const StyledLevelBox = styled.div`
     }
 `;
 
-/*dropdownItem*/
+/* dropdownItem */
 export const StyledDropdownItem = styled(DropdownItem)`
     outline: 0;
     & svg {
@@ -93,7 +93,7 @@ export const StyledButton = styled(Button)`
 `;
 
 export const StyledDropdownToggle = styled(DropdownToggle).withConfig({
-    shouldForwardProp: prop => !['disableBorderRadiusLeft', 'disableBorderRadiusRight'].includes(prop)
+    shouldForwardProp: prop => !['disableBorderRadiusLeft', 'disableBorderRadiusRight'].includes(prop),
 })`
     border-top-left-radius: ${props => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
     border-bottom-left-radius: ${props => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
@@ -247,18 +247,6 @@ export const AddPropertyFormStyle = styled.div`
         border-left: 0;
         outline: 0;
         box-shadow: none;
-    }
-
-    .input-group-prepend {
-        background-color: ${props => props.theme.lightLighter};
-        cursor: default;
-        display: flex;
-        border: 1px solid rgba(0, 0, 0, 0.125);
-        border-bottom-left-radius: 4px;
-        border-top-left-radius: 4px;
-        width: 28px;
-        align-items: center;
-        justify-content: center;
     }
 `;
 
@@ -425,6 +413,40 @@ export const TemplateHeaderStyle = styled.div`
         .span {
             background-color: ${props => props.theme.dark};
             color: ${props => props.theme.secondary};
+        }
+    }
+`;
+
+export const PulsateIcon = styled.span`
+    animation: pulsate 1s ease-out;
+    animation-iteration-count: infinite;
+    opacity: 0;
+
+    /* you dont need the stuff below, but its what I used to create the loading circle */
+    border: 3px solid ${props => props.theme.primary};
+    border-radius: 30px;
+    height: 18px;
+    width: 18px;
+    position: absolute;
+    display: inline-block;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    cursor: pointer;
+
+    @keyframes pulsate {
+        0% {
+            -webkit-transform: scale(0.1, 0.1);
+            opacity: 0;
+        }
+        50% {
+            opacity: 1;
+        }
+        100% {
+            -webkit-transform: scale(1.2, 1.2);
+            opacity: 0;
         }
     }
 `;

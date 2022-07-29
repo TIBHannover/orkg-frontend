@@ -24,7 +24,7 @@ const HelpCenter = () => {
                 let categories = await getHelpCategories();
                 categories = categories.map(category => ({
                     ...category,
-                    help_articles: category.help_articles.sort((a, b) => (parseInt(a.order) > parseInt(b.order) ? 1 : -1))
+                    help_articles: category.help_articles.sort((a, b) => (parseInt(a.order) > parseInt(b.order) ? 1 : -1)),
                 }));
                 setCategories(categories);
             } catch (e) {
@@ -41,7 +41,7 @@ const HelpCenter = () => {
         <div>
             <TitleBar>Help center</TitleBar>
 
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <HelpCenterSearchInput />
 
                 {hasFailed && <Alert color="danger">Help categories are not loaded because an error occurred</Alert>}
@@ -73,24 +73,24 @@ const HelpCenter = () => {
                 <Row className="mt-5">
                     {categories.map(category => (
                         <Col key={category.id} md="6">
-                            <h3>
+                            <h2 className="h4">
                                 <Link
                                     to={reverse(ROUTES.HELP_CENTER_CATEGORY, {
-                                        id: category.id
+                                        id: category.id,
                                     })}
                                     className="text-body"
                                 >
                                     {category.title}
                                 </Link>
-                            </h3>
-                            <ul className="pl-3 mb-0">
+                            </h2>
+                            <ul className="ps-3 mb-0">
                                 {category.help_articles &&
                                     category.help_articles.slice(0, 5).map(article => (
                                         <li key={article.id}>
                                             <Link
                                                 to={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                                     id: article.id,
-                                                    slug: article.title
+                                                    slug: article.title,
                                                 })}
                                             >
                                                 {article.title}
@@ -101,7 +101,7 @@ const HelpCenter = () => {
                             <div className="mt-2 mb-4">
                                 <Link
                                     to={reverse(ROUTES.HELP_CENTER_CATEGORY, {
-                                        id: category.id
+                                        id: category.id,
                                     })}
                                     className="text-muted"
                                 >

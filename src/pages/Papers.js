@@ -1,11 +1,11 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import PaperCard from 'components/PaperCard/PaperCard';
+import { getPaperData } from 'utils';
 import ListPage from 'components/ListPage/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import { CLASSES } from 'constants/graphSettings';
-import PaperCard from 'components/PaperCard/PaperCard';
-import { getPaperData } from 'utils';
 import ROUTES from 'constants/routes';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -27,7 +27,7 @@ const Papers = () => {
                 paper={{
                     title: paper.label,
                     ...paper,
-                    ...(!paperCardData ? { isLoading: true } : getPaperData(paper, paperCardData?.statements))
+                    ...(!paperCardData ? { isLoading: true } : getPaperData(paper, paperCardData?.statements)),
                 }}
                 key={paper.id}
             />
@@ -41,20 +41,20 @@ const Papers = () => {
             items: pageSize,
             sortBy: 'created_at',
             desc: true,
-            verified
+            verified,
         });
 
         // promise to prevent blocking loading of the additional paper data
         if (items.length > 0) {
             getStatementsBySubjects({ ids: items.map(p => p.id) }).then(_statements =>
-                setStatements(prevStatements => [...prevStatements, ..._statements])
+                setStatements(prevStatements => [...prevStatements, ..._statements]),
             );
         }
 
         return {
             items,
             last,
-            totalElements
+            totalElements,
         };
     };
 

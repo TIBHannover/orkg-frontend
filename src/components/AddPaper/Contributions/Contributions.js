@@ -1,45 +1,46 @@
-import { useEffect } from 'react';
-import { Row, Col, Button } from 'reactstrap';
-import { useSelector, useDispatch } from 'react-redux';
-import ContributionItemList from './ContributionItemList';
-import ContributionsHelpTour from './ContributionsHelpTour';
-import Tooltip from 'components/Utils/Tooltip';
-import { AddContribution, StyledHorizontalContributionsList } from './styled';
-import {
-    nextStep,
-    previousStep,
-    createContribution,
-    deleteContribution,
-    selectContribution,
-    updateContributionLabel,
-    saveAddPaper,
-    openTour,
-    toggleAbstractDialog
-} from 'actions/addPaper';
-import Abstract from 'components/AddPaper/Abstract/Abstract';
-import Confirm from 'reactstrap-confirm';
-import Contribution from './Contribution';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { faAngleDown, faExclamationTriangle, faMagic } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faMagic, faPlus, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import styled from 'styled-components';
 import Tippy from '@tippyjs/react';
-import { updateSettings } from 'actions/statementBrowser';
+import Abstract from 'components/AddPaper/Abstract/Abstract';
 import EntityRecognition from 'components/AddPaper/EntityRecognition/EntityRecognition';
 import useDetermineResearchField from 'components/AddPaper/EntityRecognition/useDetermineResearchField';
+import Confirm from 'components/Confirmation/Confirmation';
+import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
+import ContributionTab from 'components/ContributionTabs/ContributionTab';
+import { StyledContributionTabs } from 'components/ContributionTabs/styled';
+import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
+import Tooltip from 'components/Utils/Tooltip';
+import Tabs, { TabPane } from 'rc-tabs';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, Col, Row } from 'reactstrap';
+import {
+    createContributionAction as createContribution,
+    deleteContributionAction as deleteContribution,
+    nextStep,
+    openTour,
+    previousStep,
+    saveAddPaperAction as saveAddPaper,
+    selectContributionAction as selectContribution,
+    toggleAbstractDialog,
+    updateContributionLabelAction as updateContributionLabel,
+} from 'slices/addPaperSlice';
+import { updateSettings } from 'slices/statementBrowserSlice';
+import styled from 'styled-components';
+import ContributionsHelpTour from './ContributionsHelpTour';
 
-const AnimationContainer = styled(CSSTransition)`
-    transition: 0.3s background-color, 0.3s border-color;
+// const AnimationContainer = styled(CSSTransition)`
+//     transition: 0.3s background-color, 0.3s border-color;
 
-    &.fadeIn-enter {
-        opacity: 0;
-    }
+//     &.fadeIn-enter {
+//         opacity: 0;
+//     }
 
-    &.fadeIn-enter-active {
-        opacity: 1;
-        transition: 0.7s opacity;
-    }
-`;
+//     &.fadeIn-enter-active {
+//         opacity: 1;
+//         transition: 0.7s opacity;
+//     }
+// `;
 
 const Contributions = () => {
     const {
@@ -53,7 +54,7 @@ const Contributions = () => {
         selectedResearchField,
         contributions,
         selectedContribution,
-        abstract
+        abstract,
     } = useSelector(state => state.addPaper);
     const { resources, properties, values } = useSelector(state => state.statementBrowser);
     const { isComputerScienceField } = useDetermineResearchField();
@@ -67,13 +68,13 @@ const Contributions = () => {
                 createContribution({
                     selectAfterCreation: true,
                     prefillStatements: true,
-                    researchField: selectedResearchField
-                })
+                    researchField: selectedResearchField,
+                }),
             );
             dispatch(
                 updateSettings({
-                    openExistingResourcesInDialog: true
-                })
+                    openExistingResourcesInDialog: true,
+                }),
             );
         }
     }, [contributions.allIds.length, dispatch, selectedResearchField]);
@@ -82,19 +83,19 @@ const Contributions = () => {
         // save add paper
         dispatch(
             saveAddPaper({
-                title: title,
-                authors: authors,
-                publicationMonth: publicationMonth,
-                publicationYear: publicationYear,
-                doi: doi,
-                publishedIn: publishedIn,
-                url: url,
-                selectedResearchField: selectedResearchField,
-                contributions: contributions,
-                resources: resources,
-                properties: properties,
-                values: values
-            })
+                title,
+                authors,
+                publicationMonth,
+                publicationYear,
+                doi,
+                publishedIn,
+                url,
+                selectedResearchField,
+                contributions,
+                resources,
+                properties,
+                values,
+            }),
         );
         dispatch(nextStep());
     };
@@ -103,7 +104,6 @@ const Contributions = () => {
         const result = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure you want to delete this contribution?',
-            cancelColor: 'light'
         });
 
         if (result) {
@@ -121,10 +121,10 @@ const Contributions = () => {
         const contribution = contributions.byId[contributionId];
         dispatch(
             updateContributionLabel({
-                label: label,
-                contributionId: contributionId,
-                resourceId: contribution.resourceId
-            })
+                label,
+                contributionId,
+                resourceId: contribution.resourceId,
+            }),
         );
     };
 
@@ -133,6 +133,15 @@ const Contributions = () => {
     };
 
     const showAbstractWarning = isComputerScienceField && !abstract;
+    const onTabChange = key => {
+        handleSelectContribution(key);
+    };
+
+    const renderTabBar = (props, DefaultTabBar) => (
+        <div id="contributionsList">
+            <DefaultTabBar {...props} />
+        </div>
+    );
 
     return (
         <div>
@@ -158,11 +167,12 @@ const Contributions = () => {
                                 </div>
                             </span>
                         }
+                        tippyProps={{ interactive: true }}
                     >
                         Specify research contributions
                     </Tooltip>
                 </h2>
-                <div className="flex-shrink-0 ml-auto">
+                <div className="flex-shrink-0 ms-auto">
                     <Tippy
                         hideOnClick
                         showOnCreate
@@ -179,50 +189,52 @@ const Contributions = () => {
                     </Tippy>
                 </div>
             </div>
-            <Row noGutters className="mt-2">
-                <Col lg="9">
-                    <StyledHorizontalContributionsList id="contributionsList">
-                        {contributions.allIds.map((contributionId, index) => {
-                            const contribution = contributions.byId[contributionId];
-
-                            return (
-                                <ContributionItemList
-                                    handleChangeContributionLabel={handleChange}
-                                    isSelected={contributionId === selectedContribution}
-                                    canDelete={contributions.allIds.length !== 1}
-                                    selectedContributionId={selectedContribution}
-                                    contribution={contribution}
-                                    key={contributionId}
-                                    toggleDeleteContribution={toggleDeleteContribution}
-                                    handleSelectContribution={handleSelectContribution}
-                                    enableEdit={true}
-                                />
-                            );
-                        })}
-
-                        <li>
-                            <AddContribution color="link" onClick={() => dispatch(createContribution({}))}>
-                                <Tippy content="Add contribution">
-                                    <span>
-                                        <Icon size="xs" icon={faPlus} />
-                                    </span>
-                                </Tippy>
-                            </AddContribution>
-                        </li>
-                    </StyledHorizontalContributionsList>
+            <Row className="mt-2 g-0">
+                <Col md="9">
+                    <StyledContributionTabs>
+                        <Tabs
+                            renderTabBar={renderTabBar}
+                            tabBarExtraContent={<AddContributionButton onClick={() => dispatch(createContribution({}))} />}
+                            moreIcon={<Icon size="lg" icon={faAngleDown} />}
+                            activeKey={selectedContribution}
+                            onChange={onTabChange}
+                            destroyInactiveTabPane={true}
+                        >
+                            {contributions.allIds.map(contributionId => {
+                                const contribution = contributions.byId[contributionId];
+                                return (
+                                    <TabPane
+                                        tab={
+                                            <ContributionTab
+                                                handleChangeContributionLabel={handleChange}
+                                                isSelected={contribution.id === selectedContribution}
+                                                canDelete={contributions.allIds.length !== 1}
+                                                contribution={contribution}
+                                                key={contribution.id}
+                                                toggleDeleteContribution={toggleDeleteContribution}
+                                                enableEdit={true}
+                                            />
+                                        }
+                                        key={contribution.id}
+                                    >
+                                        <div className="contributionData">
+                                            <StatementBrowser
+                                                enableEdit={true}
+                                                syncBackend={false}
+                                                openExistingResourcesInDialog={false}
+                                                initialSubjectId={contribution.resourceId}
+                                                initialSubjectLabel={contribution.label}
+                                                renderTemplateBox={true}
+                                            />
+                                        </div>
+                                    </TabPane>
+                                );
+                            })}
+                        </Tabs>
+                    </StyledContributionTabs>
                 </Col>
-            </Row>
 
-            <Row noGutters>
-                <TransitionGroup className="col-lg-9 mb-2" exit={false}>
-                    <AnimationContainer classNames="fadeIn" timeout={{ enter: 700, exit: 0 }} key={selectedContribution}>
-                        <div>
-                            <Contribution id={selectedContribution} />
-                        </div>
-                    </AnimationContainer>
-                </TransitionGroup>
-
-                <Col lg="3" className="pl-lg-3">
+                <Col lg="3" className="ps-lg-3">
                     {isComputerScienceField && !showAbstractWarning && <EntityRecognition />}
                 </Col>
             </Row>
@@ -233,10 +245,10 @@ const Contributions = () => {
 
             <ContributionsHelpTour />
 
-            <Button color="primary" className="float-right mb-4" onClick={handleNextClick}>
+            <Button color="primary" className="float-end mb-4" onClick={handleNextClick}>
                 Finish
             </Button>
-            <Button color="light" className="float-right mb-4 mr-2" onClick={() => dispatch(previousStep())}>
+            <Button color="light" className="float-end mb-4 me-2" onClick={() => dispatch(previousStep())}>
                 Previous step
             </Button>
         </div>

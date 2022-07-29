@@ -1,57 +1,60 @@
 import { useState, useCallback } from 'react';
 import {
-    createValue,
+    createValueAction as createValue,
     getComponentsByResourceIDAndPredicateID,
     fetchTemplatesOfClassIfNeeded,
     getValueClass,
     isLiteral,
+    fillStatements,
+    getSubjectIdByValue,
+    setIsAddingValue,
+    setSavingValue,
     updateValueLabel,
-    doneSavingValue,
-    isSavingValue,
-    isAddingValue,
-    doneAddingValue,
-    fillStatements
-} from 'actions/statementBrowser';
+} from 'slices/statementBrowserSlice';
 import { createResourceStatement } from 'services/backend/statements';
-import { createResource, updateResource } from 'services/backend/resources';
+import { createResource, getResource, updateResource } from 'services/backend/resources';
 import { createLiteral, updateLiteral } from 'services/backend/literals';
 import { createClass } from 'services/backend/classes';
 import { createPredicate } from 'services/backend/predicates';
-import validationSchema from '../helpers/validationSchema';
 import { getConfigByType, getConfigByClassId } from 'constants/DataTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { guid } from 'utils';
 import { toast } from 'react-toastify';
-import { ENTITIES, CLASSES, MISC } from 'constants/graphSettings';
+import { ENTITIES, CLASSES, MISC, RESOURCES } from 'constants/graphSettings';
+import validationSchema from '../helpers/validationSchema';
 
 const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     const dispatch = useDispatch();
     const editMode = Boolean(valueId);
     const value = useSelector(state => (valueId ? state.statementBrowser.values.byId[valueId] : null));
     const property = useSelector(state => state.statementBrowser.properties.byId[editMode ? value.propertyId : propertyId]);
-    const subjectId = editMode ? value.resourceId : resourceId;
-    const valueClass = useSelector(state =>
-        editMode ? value.classes?.[0] : getValueClass(getComponentsByResourceIDAndPredicateID(state, subjectId, property?.existingPredicateId))
-    );
-
+    const subjectId = useSelector(state => (editMode ? getSubjectIdByValue(state, valueId) : resourceId));
+    // refactoring: Can be replaced with the id class
+    const valueClass = useSelector(state => getValueClass(getComponentsByResourceIDAndPredicateID(state, subjectId, property?.existingPredicateId)));
     const isLiteralField = useSelector(state =>
         editMode
             ? value._class === ENTITIES.LITERAL
-            : isLiteral(getComponentsByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId))
+            : isLiteral(getComponentsByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)),
     );
-    const isUniqLabel = valueClass && valueClass.id === CLASSES.PROBLEM ? true : false;
+    const isUniqLabel = !!(valueClass && valueClass.id === CLASSES.PROBLEM);
 
     const [entityType, setEntityType] = useState(
         !valueClass?.id
             ? getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE)._class
-            : getConfigByClassId(valueClass.id)._class
+            : getConfigByClassId(valueClass.id)._class,
+    );
+
+    const [inputFormType, setInputFormType] = useState(
+        !valueClass?.id
+            ? getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE).inputFormType
+            : getConfigByClassId(valueClass.id).inputFormType,
     );
 
     const [inputValue, setInputValue] = useState(editMode ? value.label : '');
     const [inputDataType, setInputDataType] = useState(
         !valueClass?.id
             ? getConfigByType(isLiteralField ? (editMode ? value.datatype : MISC.DEFAULT_LITERAL_DATATYPE) : ENTITIES.RESOURCE).type
-            : getConfigByClassId(valueClass.id).type
+            : getConfigByClassId(valueClass.id).type,
     );
     const [disabledCreate, setDisabledCreate] = useState(false);
 
@@ -59,7 +62,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
         // Check if the user changed the label
         if (draftLabel !== value.label || draftDataType !== value.datatype) {
             if (syncBackend) {
-                dispatch(isSavingValue({ id: valueId })); // To show the saving message instead of the value label
+                dispatch(setSavingValue({ id: valueId, status: true })); // To show the saving message instead of the value label
                 if (value.resourceId) {
                     const apiCall =
                         value._class === ENTITIES.LITERAL
@@ -67,12 +70,12 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                             : updateResource(value.resourceId, draftLabel);
                     apiCall
                         .then(() => {
-                            toast.success(`${value._class === ENTITIES.LITERAL ? 'Resource' : 'Literal'} label updated successfully`);
-                            dispatch(doneSavingValue({ id: valueId }));
+                            toast.success(`${value._class === ENTITIES.LITERAL ? 'Literal' : 'Resource'} label updated successfully`);
+                            dispatch(setSavingValue({ id: valueId, status: false }));
                         })
                         .catch(() => {
                             toast.error('Something went wrong while updating the label.');
-                            dispatch(doneSavingValue({ id: valueId }));
+                            dispatch(setSavingValue({ id: valueId, status: false }));
                         });
                 }
             }
@@ -80,8 +83,8 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                 updateValueLabel({
                     label: draftLabel,
                     datatype: draftDataType,
-                    valueId: valueId
-                })
+                    valueId,
+                }),
             );
         }
     };
@@ -97,15 +100,14 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                 component = {
                     value: valueClass,
                     property: { id: property.id, label: property.label },
-                    validationRules: property.validationRules
+                    validationRules: property.validationRules,
                 };
             }
             const schema = validationSchema(component);
             return schema;
-        } else {
-            const config = getConfigByType(inputDataType);
-            return config.schema;
         }
+        const config = getConfigByType(inputDataType);
+        return config.schema;
     });
 
     if (valueClass) {
@@ -115,8 +117,8 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     const isBlankNode = useSelector(state => {
         if (valueClass && !isLiteralField) {
             if (state.statementBrowser.classes[valueClass.id]?.templateIds) {
-                const templateIds = state.statementBrowser.classes[valueClass.id].templateIds;
-                //check if it's an inline resource
+                const { templateIds } = state.statementBrowser.classes[valueClass.id];
+                // check if it's an inline resource
                 for (const templateId of templateIds) {
                     const template = state.statementBrowser.templates[templateId];
                     if (template && template.hasLabelFormat) {
@@ -139,12 +141,13 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
         for (const key in state.statementBrowser.resources.byId) {
             const resource = state.statementBrowser.resources.byId[key];
 
-            if (!resource.existingResourceId && resource.label && resource.id) {
+            if (!resource.existingResourceId && resource.label && resource.resourceId) {
                 newResourcesList.push({
-                    id: resource.id,
+                    id: resource.resourceId,
                     label: resource.label,
                     ...(resource.shared ? { shared: resource.shared } : {}),
-                    ...(resource.classes ? { classes: resource.classes } : {})
+                    ...(resource.classes ? { classes: resource.classes } : {}),
+                    existingResourceId: true,
                 });
             }
         }
@@ -190,17 +193,17 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
             const _propertyID = guid();
             if (!createdProperties[statement.predicate.id]) {
                 createdProperties[statement.predicate.id] = _propertyID;
-                statements['properties'].push({
+                statements.properties.push({
                     propertyId: createdProperties[statement.predicate.id],
                     existingPredicateId: statement.predicate.id,
-                    label: statement.predicate.label
+                    label: statement.predicate.label,
                 });
             }
-            statements['values'].push({
+            statements.values.push({
                 _class: statement.value._class,
                 propertyId: createdProperties[statement.predicate.id],
                 label: statement.value.label,
-                datatype: statement.value.datatype
+                datatype: statement.value.datatype,
             });
         }
         return statements;
@@ -221,12 +224,13 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
      */
     const handleAddValue = useCallback(
         async (entityType, value) => {
-            let newEntity = { id: value.id, label: value.label, shared: value.shared, classes: value.classes, datatype: value.datatype };
+            let _class = entityType;
+            let newEntity = { id: value.id, label: value.label, shared: value.shared ?? 0, classes: value.classes, datatype: value.datatype };
             let newStatement = null;
             let apiError = false;
             const existingResourceId = guid();
             if (syncBackend) {
-                dispatch(isAddingValue({ id: propertyId }));
+                dispatch(setIsAddingValue({ id: propertyId, status: true }));
                 let apiCall;
                 if (!value.selected || value.external) {
                     switch (entityType) {
@@ -241,6 +245,10 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                             break;
                         case ENTITIES.CLASS:
                             apiCall = createClass(value.label);
+                            break;
+                        case 'empty':
+                            apiCall = getResource(RESOURCES.EMPTY_RESOURCE);
+                            _class = ENTITIES.RESOURCE;
                             break;
                         default:
                             apiCall = createLiteral(value.label, value.datatype);
@@ -259,40 +267,40 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                     .catch(() => {
                         apiError = true;
                         toast.error('Something went wrong while adding the value.');
-                        dispatch(doneAddingValue({ id: propertyId }));
+                        dispatch(setIsAddingValue({ id: propertyId, status: false }));
                     });
             }
             if (!apiError) {
                 dispatch(
                     createValue({
                         ...newEntity,
-                        //valueId: newEntity.id ?? existingResourceId,
+                        // valueId: newEntity.id ?? existingResourceId,
                         classes: newEntity.classes ?? (valueClass ? [valueClass?.id] : []),
-                        _class: entityType,
-                        propertyId: propertyId,
+                        _class,
+                        propertyId,
                         existingResourceId: newEntity.id ?? existingResourceId,
-                        isExistingValue: newEntity.id ? true : false,
-                        statementId: newStatement?.id
-                    })
+                        isExistingValue: !!newEntity.id,
+                        statementId: newStatement?.id,
+                    }),
                 );
-                //create statements
+                // create statements
                 value.statements &&
                     (await dispatch(
                         fillStatements({
                             statements: generateStatementsFromExternalData(value.statements),
                             resourceId: newEntity.id ?? existingResourceId,
-                            syncBackend: syncBackend
-                        })
+                            syncBackend,
+                        }),
                     ));
-                dispatch(doneAddingValue({ id: propertyId }));
+                dispatch(setIsAddingValue({ id: propertyId, status: false }));
                 return newEntity.id ?? existingResourceId;
             }
         },
-        [dispatch, property?.existingPredicateId, propertyId, resourceId, syncBackend, valueClass]
+        [dispatch, property?.existingPredicateId, propertyId, resourceId, syncBackend, valueClass],
     );
 
     const handleCreateExistingLabel = (inputValue, selectOptions) => {
-        //check if label exists
+        // check if label exists
         if (
             isUniqLabel &&
             inputValue &&
@@ -300,12 +308,12 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                 .map(s =>
                     String(s.label)
                         .trim()
-                        .toLowerCase()
+                        .toLowerCase(),
                 )
                 .includes(
                     String(inputValue)
                         .trim()
-                        .toLowerCase()
+                        .toLowerCase(),
                 )
         ) {
             setDisabledCreate(true);
@@ -332,7 +340,9 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
         newResources,
         disabledCreate,
         handleCreateExistingLabel,
-        commitChangeLabel
+        commitChangeLabel,
+        inputFormType,
+        setInputFormType,
     };
 };
 

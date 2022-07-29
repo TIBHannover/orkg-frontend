@@ -5,25 +5,29 @@ import DATA_TYPES from 'constants/DataTypes.js';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
-import { setComponents } from 'actions/addTemplate';
-import { connect } from 'react-redux';
+import { updateComponents } from 'slices/templateEditorSlice';
+import { useSelector, useDispatch } from 'react-redux';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import ValidationRules from '../ValidationRules/ValidationRules';
 
-function TemplateComponentValue(props) {
+const TemplateComponentValue = props => {
     const [cardinality, setCardinality] = useState(!props.minOccurs && !props.maxOccurs ? '0,*' : 'range');
     const classAutocompleteRef = useRef(null);
 
+    const dispatch = useDispatch();
+    const components = useSelector(state => state.templateEditor.components);
+    const editMode = useSelector(state => state.templateEditor.editMode);
+
     const onChange = event => {
-        const templateComponents = props.components.map((item, j) => {
+        const templateComponents = components.map((item, j) => {
             const _item = { ...item };
             if (j === props.id) {
                 _item[event.target.name] = event.target.value.toString();
             }
             return _item;
         });
-        props.setComponents(templateComponents);
+        dispatch(updateComponents(templateComponents));
     };
 
     const onChangeCardinality = event => {
@@ -31,7 +35,7 @@ function TemplateComponentValue(props) {
 
         if (event.target.value !== 'range') {
             const [minOccurs, maxOccurs] = event.target.value.split(',');
-            const templateComponents = props.components.map((item, j) => {
+            const templateComponents = components.map((item, j) => {
                 const _item = { ...item };
                 if (j === props.id) {
                     _item.minOccurs = minOccurs;
@@ -39,7 +43,7 @@ function TemplateComponentValue(props) {
                 }
                 return _item;
             });
-            props.setComponents(templateComponents);
+            dispatch(updateComponents(templateComponents));
         }
     };
 
@@ -49,7 +53,7 @@ function TemplateComponentValue(props) {
                 <InputGroup size="sm">
                     <AutoComplete
                         entityType={ENTITIES.CLASS}
-                        placeholder={props.enableEdit ? 'Select or type to enter a class' : 'No Class'}
+                        placeholder={editMode ? 'Select or type to enter a class' : 'No Class'}
                         onChange={(selected, action) => {
                             // blur the field allows to focus and open the menu again
                             classAutocompleteRef.current && classAutocompleteRef.current.blur();
@@ -59,7 +63,7 @@ function TemplateComponentValue(props) {
                         autoLoadOption={true}
                         openMenuOnFocus={true}
                         allowCreate={true}
-                        isDisabled={!props.enableEdit}
+                        isDisabled={!editMode}
                         copyValueButton={true}
                         isClearable
                         defaultOptions={DATA_TYPES.filter(dt => dt.classId !== CLASSES.RESOURCE).map(dt => ({ label: dt.name, id: dt.classId }))}
@@ -73,11 +77,18 @@ function TemplateComponentValue(props) {
                 </InputGroup>
                 <div className="mt-2">
                     <FormGroup row>
-                        <Label className="text-right text-muted" for="cardinalityValueInput" sm={3}>
+                        <Label className="text-end text-muted" for="cardinalityValueInput" sm={3}>
                             <small>Cardinality</small>
                         </Label>
                         <Col sm={9}>
-                            <Input disabled={!props.enableEdit} onChange={onChangeCardinality} value={cardinality} type="select" bsSize="sm">
+                            <Input
+                                disabled={!editMode}
+                                onChange={onChangeCardinality}
+                                value={cardinality}
+                                type="select"
+                                bsSize="sm"
+                                id="cardinalityValueInput"
+                            >
                                 <option value="0,*">Zero or more [0,*]</option>
                                 <option value="0,1">Optional [0,1]</option>
                                 <option value="1,1">Exactly one [1,1]</option>
@@ -91,12 +102,12 @@ function TemplateComponentValue(props) {
                     <>
                         <div className="mt-2">
                             <FormGroup row>
-                                <Label className="text-right text-muted" for="minOccursValueInput" sm={3}>
+                                <Label className="text-end text-muted" for="minOccursValueInput" sm={3}>
                                     <small>Minimum Occurence</small>
                                 </Label>
                                 <Col sm={9}>
                                     <Input
-                                        disabled={!props.enableEdit}
+                                        disabled={!editMode}
                                         onChange={onChange}
                                         bsSize="sm"
                                         value={props.minOccurs}
@@ -110,12 +121,12 @@ function TemplateComponentValue(props) {
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
-                                <Label className="text-right text-muted" for="maxOccursValueInput" sm={3}>
+                                <Label className="text-end text-muted" for="maxOccursValueInput" sm={3}>
                                     <small>Maximum Occurence</small>
                                 </Label>
                                 <Col sm={9}>
                                     <Input
-                                        disabled={!props.enableEdit}
+                                        disabled={!editMode}
                                         onChange={onChange}
                                         bsSize="sm"
                                         value={props.maxOccurs !== null ? props.maxOccurs : ''}
@@ -126,7 +137,7 @@ function TemplateComponentValue(props) {
                                         id="maxOccursValueInput"
                                         placeholder="Maximum number of occurrences in the resource"
                                     />
-                                    {props.enableEdit && (
+                                    {editMode && (
                                         <FormText className="d-block">Clear the input field if there is no restriction (unbounded)</FormText>
                                     )}
                                 </Col>
@@ -136,36 +147,20 @@ function TemplateComponentValue(props) {
                 )}
 
                 {props.value && ['Number', 'Integer', 'String'].includes(props.value.id) && (
-                    <ValidationRules validationRules={props.validationRules} id={props.id} value={props.value} enableEdit={props.enableEdit} />
+                    <ValidationRules validationRules={props.validationRules} id={props.id} value={props.value} />
                 )}
             </div>
         </ValuesStyle>
     );
-}
+};
 
 TemplateComponentValue.propTypes = {
-    components: PropTypes.array.isRequired,
-    setComponents: PropTypes.func.isRequired,
     id: PropTypes.number.isRequired,
-    value: PropTypes.object.isRequired,
+    value: PropTypes.object,
     minOccurs: PropTypes.string.isRequired,
     maxOccurs: PropTypes.string,
-    enableEdit: PropTypes.bool.isRequired,
     validationRules: PropTypes.object.isRequired,
-    handleClassOfPropertySelect: PropTypes.func.isRequired
+    handleClassOfPropertySelect: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
-    return {
-        components: state.addTemplate.components
-    };
-};
-
-const mapDispatchToProps = dispatch => ({
-    setComponents: data => dispatch(setComponents(data))
-});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(TemplateComponentValue);
+export default TemplateComponentValue;

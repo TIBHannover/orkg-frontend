@@ -7,20 +7,22 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import NotFound from 'pages/NotFound';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { EditModeHeader, Title } from 'pages/ViewPaper';
-import PropTypes from 'prop-types';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import PropertyStatements from 'components/PropertyStatements/PropertyStatements';
 import { ENTITIES } from 'constants/graphSettings';
 import TitleBar from 'components/TitleBar/TitleBar';
+import ItemMetadata from 'components/Search/ItemMetadata';
+import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import EditableHeader from 'components/EditableHeader';
 
-function Property(props) {
+function Property() {
     const location = useLocation();
     const [error, setError] = useState(null);
-    const [label, setLabel] = useState('');
+    const [property, setProperty] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
-    const propertyId = props.match.params.id;
+    const params = useParams();
+    const propertyId = params.id;
 
     useEffect(() => {
         const findPredicate = async () => {
@@ -29,11 +31,11 @@ function Property(props) {
                 const responseJson = await getPredicate(propertyId);
                 document.title = `${responseJson.label} - Property - ORKG`;
 
-                setLabel(responseJson.label);
+                setProperty(responseJson);
                 setIsLoading(false);
             } catch (err) {
                 console.error(err);
-                setLabel(null);
+                setProperty(null);
                 setError(err);
                 setIsLoading(false);
             }
@@ -41,9 +43,13 @@ function Property(props) {
         findPredicate();
     }, [location, propertyId]);
 
+    const handleHeaderChange = value => {
+        setProperty(prev => ({ ...prev, label: value }));
+    };
+
     return (
         <>
-            {isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
+            {isLoading && <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>}
             {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
             {!isLoading && !error && (
                 <>
@@ -52,7 +58,7 @@ function Property(props) {
                             !editMode ? (
                                 <RequireAuthentication
                                     component={Button}
-                                    className="float-right flex-shrink-0"
+                                    className="float-end flex-shrink-0"
                                     color="secondary"
                                     size="sm"
                                     onClick={() => setEditMode(v => !v)}
@@ -60,7 +66,7 @@ function Property(props) {
                                     <Icon icon={faPen} /> Edit
                                 </RequireAuthentication>
                             ) : (
-                                <Button className="float-right flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
+                                <Button className="float-end flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
                                     <Icon icon={faTimes} /> Stop editing
                                 </Button>
                             )
@@ -69,25 +75,26 @@ function Property(props) {
                         Property view
                     </TitleBar>
                     <Container className="p-0 clearfix">
-                        {editMode && (
-                            <EditModeHeader className="box rounded-top">
-                                <Title>
-                                    Edit mode <span className="pl-2">Every change you make is automatically saved</span>
-                                </Title>
-                            </EditModeHeader>
-                        )}
-                        <div className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
-                            <div className="mb-2">
-                                <div className="pb-2 mb-3">
-                                    <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                        {label || (
-                                            <i>
-                                                <small>No label</small>
-                                            </i>
-                                        )}
-                                    </h3>
-                                </div>
-                            </div>
+                        <EditModeHeader isVisible={editMode} />
+                        <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
+                            {!editMode ? (
+                                <h3 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                    {property?.label || (
+                                        <i>
+                                            <small>No label</small>
+                                        </i>
+                                    )}
+                                </h3>
+                            ) : (
+                                <EditableHeader
+                                    id={params.id}
+                                    value={property?.label}
+                                    onChange={handleHeaderChange}
+                                    entityType={ENTITIES.PREDICATE}
+                                    curatorsOnly={true}
+                                />
+                            )}
+                            <ItemMetadata item={property} showCreatedAt={true} showCreatedBy={true} />
                             <hr />
                             <h3 className="h5">Statements</h3>
                             <div className="clearfix">
@@ -97,7 +104,7 @@ function Property(props) {
                                     syncBackend={editMode}
                                     openExistingResourcesInDialog={false}
                                     initialSubjectId={propertyId}
-                                    initialSubjectLabel={label}
+                                    initialSubjectLabel={property?.label}
                                     newStore={true}
                                     propertiesAsLinks={true}
                                     resourcesAsLinks={true}
@@ -111,13 +118,5 @@ function Property(props) {
         </>
     );
 }
-
-Property.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired
-};
 
 export default Property;
