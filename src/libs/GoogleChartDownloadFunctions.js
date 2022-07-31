@@ -71,7 +71,7 @@ export const downloadPNG = (svg, imageTitle) => {
 
     let textSvg = new XMLSerializer().serializeToString(svg);
     textSvg = `<?xml version="1.0"?>\n ${textSvg}`;
-    let imgsrc = `data:image/svg+xml;base64,${btoa(textSvg)}`;
+    let imgsrc = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(textSvg)))}`;
     let img = new Image();
     img.src = imgsrc;
     img.onload = () => {
@@ -84,9 +84,9 @@ export const downloadPNG = (svg, imageTitle) => {
 
         ctx.drawImage(img, 0, 0);
         let link = document.createElement('a');
-        link.download = `${imageTitle}.jpg`;
+        link.download = `${imageTitle}.png`;
         link.href = canvas.toDataURL('image/png');
-        console.log(imageTitle);
+        // console.log(imageTitle);
         link.click();
     };
 

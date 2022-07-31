@@ -26,6 +26,8 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
 
     const [downloadDropDownOpen, setDropDownOpen] = useState(false);
 
+    const [chartWidth, decreaseChartWidth] = useState('100%');
+
     return (
         <Modal size="lg" isOpen={isOpen} toggle={toggle} style={{ maxWidth: '90%' }}>
             <ModalHeader toggle={toggle}>View visualization</ModalHeader>
@@ -67,9 +69,12 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                         })}
                 </div>
                 <hr />
-                <GDCVisualizationRenderer height="500px" model={data.reconstructionModel} chartWrapperFunction={setChartWrapper} />
+                <GDCVisualizationRenderer width={chartWidth} height="500px" model={data.reconstructionModel} chartWrapperFunction={setChartWrapper} />
             </ModalBody>
             <ModalFooter>
+                <Button onClick={() => decreaseChartWidth(w => '800px')} color="light">
+                    Increase Width
+                </Button>
                 <Dropdown
                     isOpen={downloadDropDownOpen}
                     toggle={function noRefCheck() {
