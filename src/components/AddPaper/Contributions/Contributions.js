@@ -4,6 +4,7 @@ import Tippy from '@tippyjs/react';
 import Abstract from 'components/AddPaper/Abstract/Abstract';
 import EntityRecognition from 'components/AddPaper/EntityRecognition/EntityRecognition';
 import useDetermineResearchField from 'components/AddPaper/EntityRecognition/useDetermineResearchField';
+import useEntityRecognition from 'components/AddPaper/hooks/useEntityRecognition';
 import Confirm from 'components/Confirmation/Confirmation';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
@@ -44,6 +45,7 @@ const Contributions = () => {
     } = useSelector(state => state.addPaper);
     const { resources, properties, values } = useSelector(state => state.statementBrowser);
     const { isComputerScienceField } = useDetermineResearchField();
+    const { handleSaveFeedback } = useEntityRecognition();
 
     const dispatch = useDispatch();
 
@@ -66,6 +68,7 @@ const Contributions = () => {
     }, [contributions.allIds.length, dispatch, selectedResearchField]);
 
     const handleNextClick = async () => {
+        handleSaveFeedback();
         // save add paper
         dispatch(
             saveAddPaper({

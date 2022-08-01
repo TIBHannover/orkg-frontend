@@ -88,3 +88,10 @@ export const getNerResults = async ({ title = '', abstract = '' }) => {
 
     return { resources: mappedEntities, properties };
 };
+
+export const saveFeedback = async ({ request, response, serviceName }) =>
+    submitPostRequest(
+        'https://orkg.org/nlp/api/feedback/',
+        { 'Content-Type': 'application/json' },
+        { feedback: { request, response, service_name: serviceName } },
+    );

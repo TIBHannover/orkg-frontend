@@ -1,13 +1,15 @@
 import { faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import useEntityRecognition from 'components/AddPaper/hooks/useEntityRecognition';
 import useInsertData from 'components/AddPaper/hooks/useInsertData';
 import Tooltip from 'components/Utils/Tooltip';
 import { capitalize } from 'lodash';
-import { Fragment, useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { Fragment, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 import { getNerResults } from 'services/annotation';
+import { setNerProperties, setNerResources } from 'slices/addPaperSlice';
 import styled from 'styled-components';
 
 const AnimationContainer = styled(CSSTransition)`
@@ -50,19 +52,19 @@ const ValueItem = styled(ListGroupItem)`
 `;
 
 const EntityRecognition = () => {
-    const { title, abstract } = useSelector(state => state.addPaper);
-    const [nerResults, setNerResults] = useState({});
-    const [properties, setProperties] = useState([]);
-    const { getExistingStatement, handleInsertData } = useInsertData();
+    const { title, abstract, nerProperties } = useSelector(state => state.addPaper);
+    const dispatch = useDispatch();
+    const { handleInsertData } = useInsertData();
+    const { suggestions } = useEntityRecognition();
 
     useEffect(() => {
         const processNlpData = async () => {
             const data = await getNerResults({ title, abstract });
-            setNerResults(data.resources);
-            setProperties(data.properties);
+            dispatch(setNerResources(data.resources));
+            dispatch(setNerProperties(data.properties));
         };
         processNlpData();
-    }, [abstract, title]);
+    }, [abstract, dispatch, title]);
 
     const handleInsert = ({ property, resource }) =>
         handleInsertData([
@@ -70,28 +72,10 @@ const EntityRecognition = () => {
                 object: resource,
                 property: {
                     id: property,
-                    label: properties?.[property]?.label,
+                    label: nerProperties?.[property]?.label,
                 },
             },
         ]);
-
-    const displayedEntities = useMemo(() => {
-        const _nerResults = {};
-        for (const key of Object.keys(nerResults)) {
-            _nerResults[key] = nerResults[key].filter(
-                item =>
-                    !getExistingStatement({
-                        object: {
-                            label: item.label,
-                        },
-                        property: {
-                            label: properties?.[key]?.label,
-                        },
-                    }),
-            );
-        }
-        return _nerResults;
-    }, [getExistingStatement, nerResults, properties]);
 
     return (
         <>
@@ -101,15 +85,15 @@ const EntityRecognition = () => {
                 </Tooltip>
             </h3>
             <ListGroup>
-                {Object.keys(displayedEntities).map(key => (
+                {Object.keys(suggestions).map(key => (
                     <Fragment key={key}>
-                        {displayedEntities[key].length > 0 && (
+                        {suggestions[key].length > 0 && (
                             <PropertyItem color="smart" className="py-1">
-                                {capitalize(properties?.[key]?.label)}
+                                {capitalize(nerProperties?.[key]?.label)}
                             </PropertyItem>
                         )}
                         <TransitionGroup component={null}>
-                            {displayedEntities[key].map(item => (
+                            {suggestions[key].map(item => (
                                 <AnimationContainer
                                     key={item.id}
                                     classNames="slide-left"

@@ -42,6 +42,8 @@ const initialState = {
         byId: {},
         allIds: [],
     },
+    nerResources: [],
+    nerProperties: [],
 };
 
 export const addPaperSlice = createSlice({
@@ -190,6 +192,12 @@ export const addPaperSlice = createSlice({
         saveAddPaper: (state, { payload }) => {
             state.paperNewResourceId = payload;
         },
+        setNerResources: (state, { payload }) => {
+            state.nerResources = payload;
+        },
+        setNerProperties: (state, { payload }) => {
+            state.nerProperties = payload;
+        },
     },
     extraReducers: {
         [LOCATION_CHANGE]: () => initialState,
@@ -219,6 +227,8 @@ export const {
     selectContribution,
     updateContributionLabel,
     saveAddPaper,
+    setNerResources,
+    setNerProperties,
 } = addPaperSlice.actions;
 
 export default addPaperSlice.reducer;

@@ -1,6 +1,6 @@
-import { fillStatements, goToResourceHistory } from 'slices/statementBrowserSlice';
 import { ENTITIES } from 'constants/graphSettings';
 import { useDispatch, useSelector } from 'react-redux';
+import { fillStatements, goToResourceHistory } from 'slices/statementBrowserSlice';
 import { guid } from 'utils';
 
 /**
