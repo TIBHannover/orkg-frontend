@@ -58,8 +58,7 @@ const ValueForm = props => {
     const [suggestionType, setSuggestionType] = useState(null);
 
     /* Select component reference can be used to check if menu is opened */
-    const isMenuOpen = () => autocompleteInputRef.current.state.menuIsOpen && autocompleteInputRef.current.props.options.length > 0;
-
+    const isMenuOpen = () => autocompleteInputRef.current.props.menuIsOpen && autocompleteInputRef.current.props.options.length > 0;
     const onSubmit = () => {
         let error;
         if (schema) {
@@ -162,7 +161,7 @@ const ValueForm = props => {
                                 // escape
                                 props.setShowAddValue?.(false);
                             } else if (e.keyCode === 13 && !isMenuOpen()) {
-                                handleAddValue(entityType, { label: inputValue, selected: true });
+                                inputValue && handleAddValue(entityType, { label: inputValue, selected: false });
                                 props.setShowAddValue?.(false);
                             }
                         }}
