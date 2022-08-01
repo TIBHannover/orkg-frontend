@@ -29,7 +29,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { useCookies } from 'react-cookie';
 import styled, { ThemeContext } from 'styled-components';
 import moment from 'moment';
-import Cite from 'citation-js';
+import { Cite } from '@citation-js/core';
 import Tour from 'reactour';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';

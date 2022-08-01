@@ -1,6 +1,6 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Cite from 'citation-js';
+import { Cite } from '@citation-js/core';
 import ExistingDoiModal from 'components/AddPaper/GeneralData/ExistingDoiModal';
 import ListItem from 'components/ViewPaper/EditDialog/ListItem';
 import PropTypes from 'prop-types';

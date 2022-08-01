@@ -1,7 +1,7 @@
 import { faPen, faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { createReference as createReferenceAction, deleteReference, updateReference as updateReferenceAction } from 'slices/reviewSlice';
-import Cite from 'citation-js';
+import { Cite } from '@citation-js/core';
 import ReferenceModal from 'components/Review/References/ReferenceModal';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState, useCallback } from 'react';

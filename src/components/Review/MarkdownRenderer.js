@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Showdown from 'showdown';
 import footnotes from 'showdown-footnotes';
 import REGEX from 'constants/regex';
-import Cite from 'citation-js';
+import { Cite } from '@citation-js/core';
 import showdownVideoPlugin from 'components/ArticleBuilder/MarkdownEditor/showdownVideoPlugin';
 import { MarkdownContainer } from 'components/ArticleBuilder/MarkdownEditor/styled';
 

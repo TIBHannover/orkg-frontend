@@ -6,7 +6,7 @@ import { getResource } from 'services/backend/resources';
 import { getStatementsBundleBySubject, getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
 import { getResourceData } from 'services/similarity';
 import { countBy, orderBy } from 'lodash';
-import Cite from 'citation-js';
+import { Cite } from '@citation-js/core';
 
 const useLoad = () => {
     const [isLoading, setIsLoading] = useState(false);

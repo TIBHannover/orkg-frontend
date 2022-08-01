@@ -1,6 +1,6 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Cite from 'citation-js';
+import { Cite } from '@citation-js/core';
 import AutocompleteContentTypeTitle from 'components/AutocompleteContentTypeTitle/AutocompleteContentTypeTitle';
 import useList from 'components/List/hooks/useList';
 import MetadataTable from 'components/List/MetadataTable/MetadataTable';

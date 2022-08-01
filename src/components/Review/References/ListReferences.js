@@ -1,4 +1,4 @@
-import Cite from 'citation-js';
+import { Cite } from '@citation-js/core';
 import useScroll from 'components/Review/hooks/useScroll';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';

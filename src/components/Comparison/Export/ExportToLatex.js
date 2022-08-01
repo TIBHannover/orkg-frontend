@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, Label, FormGroup } from 'reactstrap';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { createShortLink, getComparison } from 'services/similarity/index';
-import Cite from 'citation-js';
+import { Cite } from '@citation-js/core';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import MakeLatex from 'make-latex';
