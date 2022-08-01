@@ -9,7 +9,7 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { downloadJPG, downloadPNG, downloadSVG, downloadPDF } from 'libs/GoogleChartDownloadFunctions';
+import { downloadJPG, downloadPDF } from 'libs/GoogleChartDownloadFunctions';
 import { Badge, Button, Modal, ModalBody, ModalFooter, ModalHeader, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) => {
@@ -72,9 +72,6 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                 <GDCVisualizationRenderer width={chartWidth} height="500px" model={data.reconstructionModel} chartWrapperFunction={setChartWrapper} />
             </ModalBody>
             <ModalFooter>
-                <Button onClick={() => decreaseChartWidth(w => '800px')} color="light">
-                    Increase Width
-                </Button>
                 <Dropdown
                     isOpen={downloadDropDownOpen}
                     toggle={function noRefCheck() {
@@ -86,8 +83,8 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                     </DropdownToggle>
                     <DropdownMenu>
                         <DropdownItem onClick={() => downloadPDF(chart, data.label)}>Download as PDF</DropdownItem>
-                        <DropdownItem onClick={() => downloadSVG(chartSVGDOMElement, data.label)}>Download as SVG</DropdownItem>
-                        <DropdownItem onClick={() => downloadPNG(chartSVGDOMElement, data.label)}>Download as PNG</DropdownItem>
+                        {/* <DropdownItem onClick={() => downloadSVG(chartSVGDOMElement, data.label)}>Download as SVG</DropdownItem>
+                        <DropdownItem onClick={() => downloadPNG(chartSVGDOMElement, data.label)}>Download as PNG</DropdownItem> */}
                         <DropdownItem onClick={() => downloadJPG(chart, data.label)}>Download as JPG</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
