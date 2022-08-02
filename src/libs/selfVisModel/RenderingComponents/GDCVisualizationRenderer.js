@@ -18,49 +18,30 @@ const GDCVisualizationRenderer = props => {
         }
     });
 
-    useEffect(() => {
-        GoogleCharts.load(drawChart);
-
-        let wrapper;
-        function drawChart() {
-            // Standard google charts functionality is available as GoogleCharts.api after load
-            wrapper = new GoogleCharts.api.visualization.ChartWrapper({
-                chartType: props.model.data.visMethod,
-                dataTable: props.model.data.googleChartsData,
-                containerId: 'google-chart-rendered',
-            });
-            wrapper.draw();
-            // GoogleCharts.api.visualization.events.addListener(wrapper, 'ready', () => console.log('ready'));
-            // GoogleCharts.api.visualization.events.addListener(wrapper.getChart(), 'ready', () => console.log('test'));
-
-            setTimeout(() => {
-                props.chartWrapperFunction(wrapper.getChart());
-            }, 3000);
-        }
-    }, []);
+    const chartEvents = [
+        {
+            eventName: 'ready',
+            callback({ chartWrapper }) {
+                console.log('ready');
+                props.downloadChart(chartWrapper.getChart());
+            },
+        },
+    ];
 
     return (
         <>
-            <div
-                id="google-chart-rendered"
-                style={{
-                    width: '1000px',
-                    height: '500px',
-                    position: 'absolute',
-                    opacity: 0,
-                    pointerEvents: 'none',
-                }}
-            />
             <Chart
                 chartType={props.model.data.visMethod}
                 data={props.model.data.googleChartsData}
                 height={props.height ?? undefined}
                 width={props.width ?? '100%'}
                 options={{
+                    title: props.caption ?? undefined,
                     showRowNumber: true,
                     enableInteractivity: !props.disableInteractivity,
                     ...(props.height ? { height: props.height } : {}),
                 }}
+                chartEvents={props.downloadChart ? chartEvents : undefined}
             />
         </>
     );
@@ -70,8 +51,9 @@ GDCVisualizationRenderer.propTypes = {
     model: PropTypes.any,
     height: PropTypes.string,
     width: PropTypes.string,
+    caption: PropTypes.string,
+    downloadChart: PropTypes.func,
     disableInteractivity: PropTypes.bool,
-    chartWrapperFunction: PropTypes.func,
 };
 
 export default GDCVisualizationRenderer;

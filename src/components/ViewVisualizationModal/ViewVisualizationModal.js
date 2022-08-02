@@ -7,10 +7,24 @@ import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCV
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { downloadJPG, downloadPDF } from 'libs/GoogleChartDownloadFunctions';
-import { Badge, Button, Modal, ModalBody, ModalFooter, ModalHeader, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import {
+    Badge,
+    Button,
+    Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,
+    UncontrolledPopover,
+    PopoverHeader,
+    PopoverBody,
+    Form,
+    FormGroup,
+    Input,
+    Label,
+} from 'reactstrap';
 
 const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) => {
     const handleEditVisualization = () => {
@@ -18,15 +32,27 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
         toggle();
     };
 
-    const [chart, setChartWrapper] = useState(null);
+    const [chartToDownload, setChartWrapper] = useState(null);
 
-    // BackupChartRenderer.drawChart()
+    let [selectedFileFormat, selectFileFormat] = useState('JPGformat');
+    let [caption, enableCaption] = useState(true);
 
-    const chartSVGDOMElement = document.querySelector('#google-chart-rendered svg');
+    const downloadChart = chart => {
+        if (selectedFileFormat === 'JPGformat') downloadJPG(chart, data.label);
+        else if (selectedFileFormat === 'PDFformat') downloadPDF(chart, data.label);
+    };
 
-    const [downloadDropDownOpen, setDropDownOpen] = useState(false);
-
-    const [chartWidth, decreaseChartWidth] = useState('100%');
+    const initChartDownload = () => {
+        setChartWrapper(
+            <GDCVisualizationRenderer
+                caption={caption ? data.label : undefined}
+                width="1000px"
+                height="500px"
+                model={data.reconstructionModel}
+                downloadChart={downloadChart}
+            />,
+        );
+    };
 
     return (
         <Modal size="lg" isOpen={isOpen} toggle={toggle} style={{ maxWidth: '90%' }}>
@@ -69,25 +95,74 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                         })}
                 </div>
                 <hr />
-                <GDCVisualizationRenderer width={chartWidth} height="500px" model={data.reconstructionModel} chartWrapperFunction={setChartWrapper} />
-            </ModalBody>
-            <ModalFooter>
-                <Dropdown
-                    isOpen={downloadDropDownOpen}
-                    toggle={function noRefCheck() {
-                        setDropDownOpen(!downloadDropDownOpen);
+                <GDCVisualizationRenderer height="500px" model={data.reconstructionModel} />
+                <div
+                    id="google-chart-rendered"
+                    style={{
+                        position: 'absolute',
+                        opacity: 0,
+                        pointerEvents: 'none',
                     }}
                 >
-                    <DropdownToggle>
-                        <Icon icon={faDownload} /> Download
-                    </DropdownToggle>
-                    <DropdownMenu>
-                        <DropdownItem onClick={() => downloadPDF(chart, data.label)}>Download as PDF</DropdownItem>
-                        {/* <DropdownItem onClick={() => downloadSVG(chartSVGDOMElement, data.label)}>Download as SVG</DropdownItem>
-                        <DropdownItem onClick={() => downloadPNG(chartSVGDOMElement, data.label)}>Download as PNG</DropdownItem> */}
-                        <DropdownItem onClick={() => downloadJPG(chart, data.label)}>Download as JPG</DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
+                    {chartToDownload}
+                </div>
+            </ModalBody>
+            <ModalFooter>
+                <Button id="PopoverLegacy" type="button">
+                    Export
+                </Button>
+                <UncontrolledPopover placement="bottom" target="PopoverLegacy" trigger="legacy">
+                    <PopoverHeader>Chart export</PopoverHeader>
+                    <PopoverBody>
+                        <Form>
+                            <FormGroup
+                                onChange={({ target }) => {
+                                    selectFileFormat(target.value);
+                                }}
+                            >
+                                <legend style={{ fontSize: '1rem' }}>File format</legend>
+                                <FormGroup check inline>
+                                    <Input defaultChecked id="JPGformat" value="JPGformat" type="radio" name="fileFormat" />
+                                    <Label for="JPGformat" check>
+                                        JPG
+                                    </Label>
+                                </FormGroup>
+                                <FormGroup check inline>
+                                    <Input id="PDFformat" type="radio" name="fileFormat" value="PDFformat" />
+                                    <Label for="PDFformat" check>
+                                        PDF
+                                    </Label>
+                                </FormGroup>
+                            </FormGroup>
+                            <FormGroup>
+                                <FormGroup check inline>
+                                    <Label for="caption-ins" check>
+                                        Enable caption
+                                    </Label>
+                                    <Input
+                                        onChange={({ target }) => {
+                                            enableCaption(target.checked);
+                                        }}
+                                        defaultChecked
+                                        id="caption-ins"
+                                        type="checkbox"
+                                        name="caption-ins"
+                                    />
+                                </FormGroup>
+                            </FormGroup>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <Button
+                                    onClick={e => {
+                                        e.preventDefault();
+                                        initChartDownload();
+                                    }}
+                                >
+                                    Export
+                                </Button>
+                            </div>
+                        </Form>
+                    </PopoverBody>
+                </UncontrolledPopover>
                 <Button onClick={handleEditVisualization} color="light">
                     Edit visualization
                 </Button>
