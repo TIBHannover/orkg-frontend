@@ -70,6 +70,7 @@ describe('ClassesItem', () => {
         await waitFor(() => expect(screen.getByLabelText(/Specify the classes of the resource/i)).toBeInTheDocument());
         // Basic reproduction number estimate
         fireEvent.change(screen.getByLabelText(/Specify the classes of the resource/i), { target: { value: 'R40006' } });
+        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         await selectEvent.select(screen.getByRole('combobox', { name: /Specify the classes of the resource/i }), 'R40006');
         await waitFor(() => screen.getByRole('button', { name: 'Done' }));
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));

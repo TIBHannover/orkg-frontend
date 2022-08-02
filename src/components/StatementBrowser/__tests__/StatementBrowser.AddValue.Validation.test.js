@@ -28,7 +28,9 @@ const setValueAndClickOnCreate = async (sc, datatype = 'Resource', value = 'test
     await waitFor(() => expect(sc.getByLabelText(/Enter a resource/i)).toBeInTheDocument());
     fireEvent.change(sc.getByLabelText(/Enter a resource/i), { target: { value } });
     await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
-    await selectEvent.select(sc.getByText('Resource'), [datatype]);
+    const selectInput = screen.getByText('Resource');
+    await selectEvent.openMenu(selectInput);
+    await selectEvent.select(selectInput, [datatype]);
     fireEvent.click(sc.getByRole('button', { name: 'Create' }));
 };
 
