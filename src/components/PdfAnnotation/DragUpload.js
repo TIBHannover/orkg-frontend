@@ -51,7 +51,7 @@ const DragUpload = () => {
         dispatch(failedToConvertPdf());
     };
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, onDropRejected, accept: 'application/pdf' });
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, onDropRejected, accept: { 'application/pdf': ['.pdf'] } });
     const loading = pdfConvertIsFetching || pdfParseIsFetching;
 
     return (

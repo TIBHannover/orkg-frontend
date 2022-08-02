@@ -52,7 +52,7 @@ const DragUpload = () => {
         setIsLoading(false);
     };
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, onDropRejected, accept: 'application/pdf' });
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, onDropRejected, accept: { 'application/pdf': ['.pdf'] } });
 
     return (
         <>
