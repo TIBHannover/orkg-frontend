@@ -31,12 +31,10 @@ export const downloadPDF = (chart, fileName) => {
         ctx.drawImage(img, 0, 0);
         let imgData = canvas.toDataURL('image/jpeg');
 
-        let pdf = new jsPDF('p', 'mm', 'a4');
-
-        let width = pdf.internal.pageSize.getWidth();
-        let height = pdf.internal.pageSize.getHeight();
-
-        pdf.addImage(imgData, 'JPEG', 10, 10, width - 20, height - 20);
+        let pdf = new jsPDF({
+            orientation: 'landscape',
+        });
+        pdf.addImage(imgData, 'JPEG', 10, 10);
         pdf.save(`${fileName}.pdf`);
     });
     img.src = chart.getImageURI();
