@@ -40,6 +40,7 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
     const downloadChart = chart => {
         if (selectedFileFormat === 'JPGformat') downloadJPG(chart, data.label);
         else if (selectedFileFormat === 'PDFformat') downloadPDF(chart, data.label);
+        setChartWrapper(null);
     };
 
     const initChartDownload = () => {

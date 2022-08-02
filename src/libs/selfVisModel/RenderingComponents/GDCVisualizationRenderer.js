@@ -1,7 +1,5 @@
 import PropTypes from 'prop-types';
 import { Chart } from 'react-google-charts';
-import { GoogleCharts } from 'google-charts';
-import { useEffect } from 'react';
 
 const GDCVisualizationRenderer = props => {
     // adding pre-processing step to render date items correctly;
@@ -22,8 +20,7 @@ const GDCVisualizationRenderer = props => {
         {
             eventName: 'ready',
             callback({ chartWrapper }) {
-                console.log('ready');
-                props.downloadChart(chartWrapper.getChart());
+                if (props.downloadChart) props.downloadChart(chartWrapper.getChart());
             },
         },
     ];
