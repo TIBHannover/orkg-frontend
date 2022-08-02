@@ -109,7 +109,7 @@
         "string-format": "^2.0.0",
         "styled-components": "^5.3.5",
         "typed.js": "^2.0.12",
-        "use-resize-observer": "^8.0.0"
+        "use-resize-observer": "^9.0.2"
     },
     "scripts": {
         "analyze": "source-map-explorer 'build/static/js/*.js'",
@@ -146,7 +146,7 @@
         "prettier": "1.18.2",
         "react-scripts": "5.0.1",
         "react-select-event": "^5.5.0",
-        "sass": "^1.51.0"
+        "sass": "^1.54.0"
     },
     "jest-junit": {
         "classNameTemplate": "{classname}",
