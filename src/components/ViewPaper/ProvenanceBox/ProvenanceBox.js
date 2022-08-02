@@ -3,6 +3,7 @@ import { TransitionGroup } from 'react-transition-group';
 import env from '@beam-australia/react-env';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
 import useProvenance from 'components/ViewPaper/hooks/useProvenance';
+import { uniqBy } from 'lodash';
 import Provenance from './Provenance';
 import Timeline from './Timeline';
 import { AnimationContainer, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
@@ -18,7 +19,6 @@ const ProvenanceBox = () => {
         versions,
         contributors,
     } = useProvenance();
-
     const [activeTab, setActiveTab] = useState(1);
 
     return (
@@ -61,7 +61,7 @@ const ProvenanceBox = () => {
                                 observatoryInfo={observatoryInfo}
                                 organizationInfo={organizationInfo}
                                 paperResource={paperResource}
-                                contributors={contributors}
+                                contributors={uniqBy(contributors, 'id')}
                                 createdBy={createdBy}
                                 isLoadingProvenance={isLoadingProvenance}
                                 isLoadingContributors={isLoadingContributors}
