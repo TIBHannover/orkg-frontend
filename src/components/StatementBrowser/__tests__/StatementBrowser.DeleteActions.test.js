@@ -20,14 +20,14 @@ const setup = (
     render(<StatementBrowser {...props} />, { initialState });
 };
 
-const clickOnDeleteValueButton = async screen => {
-    const deleteButton = screen.getByRole('button', { name: 'Delete value' });
+const clickOnDeleteValueButton = async sc => {
+    const deleteButton = sc.getByRole('button', { name: 'Delete value' });
     expect(deleteButton).toBeInTheDocument();
     fireEvent.click(deleteButton);
 };
 
-const clickOnDeletePropertyButton = async screen => {
-    const deleteButton = screen.getByRole('button', { name: 'Delete property' });
+const clickOnDeletePropertyButton = async sc => {
+    const deleteButton = sc.getByRole('button', { name: 'Delete property' });
     expect(deleteButton).toBeInTheDocument();
     fireEvent.click(deleteButton);
 };

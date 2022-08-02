@@ -148,6 +148,7 @@ const TemplatesModal = props => {
                                             autoLoadOption={true}
                                             openMenuOnFocus={false}
                                             allowCreate={false}
+                                            ols={false}
                                             cacheOptions={false}
                                             inputId={selectedFilter.id}
                                             isClearable={true}

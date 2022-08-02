@@ -134,6 +134,7 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                             }}
                             value={selectedResearchField.id !== RESOURCES.RESEARCH_FIELD_MAIN ? selectedResearchField : null}
                             allowCreate={false}
+                            ols={false}
                             autoLoadOption={true}
                             cssClasses="form-control-sm"
                             isDisabled={isLoading}

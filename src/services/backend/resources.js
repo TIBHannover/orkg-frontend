@@ -14,7 +14,8 @@ export const updateResource = (id, label, classes = null) =>
 export const updateResourceClasses = (id, classes = null) =>
     submitPutRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' }, { ...(classes ? { classes } : null) });
 
-export const createResource = (label, classes = []) => submitPostRequest(resourcesUrl, { 'Content-Type': 'application/json' }, { label, classes });
+export const createResource = (label, classes = [], id = undefined) =>
+    submitPostRequest(resourcesUrl, { 'Content-Type': 'application/json' }, { label, classes, id });
 
 export const getResource = id => submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`);
 
