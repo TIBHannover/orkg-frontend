@@ -238,6 +238,7 @@ const ResearchFieldSelector = ({
                     onItemSelected={handleFieldSelect}
                     value={selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN ? { id: selectedResearchField, label: researchFieldLabel } : null}
                     allowCreate={false}
+                    ols={false}
                     autoLoadOption={true}
                 />
             </div>

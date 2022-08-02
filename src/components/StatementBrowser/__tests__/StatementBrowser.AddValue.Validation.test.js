@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from 'testUtils';
+import { render, screen, fireEvent, waitFor, waitForElementToBeRemoved } from 'testUtils';
 import { ENTITIES } from 'constants/graphSettings';
 import selectEvent from 'react-select-event';
 import StatementBrowser from '../StatementBrowser';
@@ -21,14 +21,15 @@ const setup = (
     render(<StatementBrowser {...props} />, { initialState });
 };
 
-const setValueAndClickOnCreate = async (screen, datatype = 'Resource', value = 'test') => {
-    const addButton = screen.getByRole('button', { name: 'Add value' });
+const setValueAndClickOnCreate = async (sc, datatype = 'Resource', value = 'test') => {
+    const addButton = sc.getByRole('button', { name: 'Add value' });
     await waitFor(() => expect(addButton).toBeInTheDocument());
     fireEvent.click(addButton);
-    await waitFor(() => expect(screen.getByLabelText(/Enter a resource/i)).toBeInTheDocument());
-    fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value } });
-    await selectEvent.select(screen.getByText('Resource'), [datatype]);
-    fireEvent.click(screen.getByRole('button', { name: 'Create' }));
+    await waitFor(() => expect(sc.getByLabelText(/Enter a resource/i)).toBeInTheDocument());
+    fireEvent.change(sc.getByLabelText(/Enter a resource/i), { target: { value } });
+    await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+    await selectEvent.select(sc.getByText('Resource'), [datatype]);
+    fireEvent.click(sc.getByRole('button', { name: 'Create' }));
 };
 
 describe('AddValue', () => {

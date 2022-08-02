@@ -81,6 +81,7 @@ const Filters = () => {
                 autoLoadOption={true}
                 openMenuOnFocus={true}
                 allowCreate={false}
+                ols={false}
                 isClearable
                 isMulti={true}
                 autoFocus={false}
