@@ -50,7 +50,7 @@ const useContributions = ({ paperId, contributionId }) => {
     }, [contributionId, contributions, selectedContribution]);
 
     useEffect(() => {
-        const handleSelectContribution = contributionId => {
+        const handleSelectContribution = cId => {
             setIsSimilarContributionsLoading(true);
             setIsLoading(true);
             // get the contribution label
@@ -59,7 +59,7 @@ const useContributions = ({ paperId, contributionId }) => {
                 setLoadingContributionFailed(false);
                 dispatch(
                     selectContribution({
-                        contributionId,
+                        contributionId: cId,
                         contributionLabel: contributionResource.label,
                     }),
                 );
@@ -91,24 +91,24 @@ const useContributions = ({ paperId, contributionId }) => {
         handleSelectContribution(selectedContribution);
     }, [contributions, dispatch, selectedContribution]);
 
-    const handleChangeContributionLabel = (contributionId, label) => {
+    const handleChangeContributionLabel = (cId, label) => {
         // find the index of contribution
-        const objIndex = contributions.findIndex(obj => obj.id === contributionId);
+        const objIndex = contributions.findIndex(obj => obj.id === cId);
         if (contributions[objIndex].label !== label) {
             // set the label of the contribution
             const updatedObj = { ...contributions[objIndex], label };
             // update the contributions array
             const newContributions = [...contributions.slice(0, objIndex), updatedObj, ...contributions.slice(objIndex + 1)];
-            dispatch(setIsSavingContribution({ id: contributionId, status: true }));
-            updateResource(contributionId, label)
+            dispatch(setIsSavingContribution({ id: cId, status: true }));
+            updateResource(cId, label)
                 .then(() => {
                     dispatch(setPaperContributions(newContributions));
-                    dispatch(updateContributionLabel({ id: contributionId, label }));
-                    dispatch(setIsSavingContribution({ id: contributionId, status: false }));
+                    dispatch(updateContributionLabel({ id: cId, label }));
+                    dispatch(setIsSavingContribution({ id: cId, status: false }));
                     toast.success('Contribution name updated successfully');
                 })
                 .catch(() => {
-                    dispatch(setIsSavingContribution({ id: contributionId, status: false }));
+                    dispatch(setIsSavingContribution({ id: cId, status: false }));
                     toast.error('Something went wrong while updating contribution label.');
                 });
         }

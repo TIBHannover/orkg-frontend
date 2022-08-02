@@ -2,7 +2,7 @@ import 'react-app-polyfill/ie9';
 import 'react-app-polyfill/stable';
 import 'fast-text-encoding/text';
 import 'jspdf/dist/polyfills.es.js';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import theme from 'assets/scss/ThemeVariables';
 import { Provider } from 'react-redux';
 import { CookiesProvider } from 'react-cookie';
@@ -34,9 +34,11 @@ const matomoInstance =
         : undefined;
 
 const { store, history } = configureStore();
+const container = document.getElementById('root');
+const root = createRoot(container);
 
 const render = () => {
-    ReactDOM.render(
+    root.render(
         <DndProvider backend={HTML5Backend}>
             <CookiesProvider>
                 <Provider store={store}>
@@ -50,7 +52,6 @@ const render = () => {
                 </Provider>
             </CookiesProvider>
         </DndProvider>,
-        document.getElementById('root'),
     );
 };
 

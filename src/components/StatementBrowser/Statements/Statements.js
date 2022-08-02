@@ -144,14 +144,14 @@ const Statements = props => {
     };
 
     const addLevel = (_level, maxLevel) =>
-        (maxLevel !== 0 ? (
+        maxLevel !== 0 ? (
             <StyledLevelBox>
                 {maxLevel !== _level + 1 && addLevel(_level + 1, maxLevel)}
                 {maxLevel === _level + 1 && statements()}
             </StyledLevelBox>
         ) : (
             statements()
-        ));
+        );
 
     const elements = addLevel(0, level);
 

@@ -1,17 +1,17 @@
-import { render, unmountComponentAtNode } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import NewClassConfirmationModal from './NewClassConfirmationModal';
 
 const confirm = props =>
     new Promise(resolve => {
-        let el = document.createElement('div');
-
+        let container = document.createElement('div');
+        const root = createRoot(container);
         const handleResolve = result => {
-            unmountComponentAtNode(el);
-            el = null;
+            root.unmount();
+            container = null;
             resolve(result);
         };
 
-        render(<NewClassConfirmationModal {...props} onClose={handleResolve} />, el);
+        root.render(<NewClassConfirmationModal {...props} onClose={handleResolve} />);
     });
 
 export default confirm;
