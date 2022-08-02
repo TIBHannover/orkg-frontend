@@ -44,6 +44,7 @@ const initialState = {
     },
     nerResources: [],
     nerProperties: [],
+    nerRawResponse: {},
 };
 
 export const addPaperSlice = createSlice({
@@ -198,6 +199,9 @@ export const addPaperSlice = createSlice({
         setNerProperties: (state, { payload }) => {
             state.nerProperties = payload;
         },
+        setNerRawResponse: (state, { payload }) => {
+            state.nerRawResponse = payload;
+        },
     },
     extraReducers: {
         [LOCATION_CHANGE]: () => initialState,
@@ -229,6 +233,7 @@ export const {
     saveAddPaper,
     setNerResources,
     setNerProperties,
+    setNerRawResponse,
 } = addPaperSlice.actions;
 
 export default addPaperSlice.reducer;

@@ -4,12 +4,13 @@ import useEntityRecognition from 'components/AddPaper/hooks/useEntityRecognition
 import useInsertData from 'components/AddPaper/hooks/useInsertData';
 import Tooltip from 'components/Utils/Tooltip';
 import { capitalize } from 'lodash';
-import { Fragment, useEffect } from 'react';
+import { Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { useDebounce } from 'react-use';
 import { ListGroup, ListGroupItem } from 'reactstrap';
-import { getNerResults } from 'services/annotation';
-import { setNerProperties, setNerResources } from 'slices/addPaperSlice';
+import { getNerResults } from 'services/orkgNlp';
+import { setNerProperties, setNerResources, setNerRawResponse } from 'slices/addPaperSlice';
 import styled from 'styled-components';
 
 const AnimationContainer = styled(CSSTransition)`
@@ -57,14 +58,19 @@ const EntityRecognition = () => {
     const { handleInsertData } = useInsertData();
     const { suggestions } = useEntityRecognition();
 
-    useEffect(() => {
-        const processNlpData = async () => {
-            const data = await getNerResults({ title, abstract });
-            dispatch(setNerResources(data.resources));
-            dispatch(setNerProperties(data.properties));
-        };
-        processNlpData();
-    }, [abstract, dispatch, title]);
+    useDebounce(
+        () => {
+            const processNlpData = async () => {
+                const data = await getNerResults({ title, abstract });
+                dispatch(setNerResources(data.resources));
+                dispatch(setNerProperties(data.properties));
+                dispatch(setNerRawResponse(data.response));
+            };
+            processNlpData();
+        },
+        500,
+        [abstract, dispatch, title],
+    );
 
     const handleInsert = ({ property, resource }) =>
         handleInsertData([
@@ -79,11 +85,13 @@ const EntityRecognition = () => {
 
     return (
         <>
-            <h3 className="h5">
-                <Tooltip message="The suggestions listed below are automatically generated based on the title and abstract from the paper. Using these suggestions is optional.">
-                    Smart suggestions
-                </Tooltip>
-            </h3>
+            {Object.keys(suggestions).length > 0 && (
+                <h3 className="h5">
+                    <Tooltip message="The suggestions listed below are automatically generated based on the title and abstract from the paper. Using these suggestions is optional.">
+                        Smart suggestions
+                    </Tooltip>
+                </h3>
+            )}
             <ListGroup>
                 {Object.keys(suggestions).map(key => (
                     <Fragment key={key}>
