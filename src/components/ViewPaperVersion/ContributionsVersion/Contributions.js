@@ -1,27 +1,38 @@
-import { Alert, Col, Container, FormGroup, Row, ListGroup } from 'reactstrap';
+import { Alert, Col, Container, FormGroup, Row, ListGroup, Button, Badge } from 'reactstrap';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import { useParams, useNavigate } from 'react-router-dom';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
-import { StyledContributionTabs } from 'components/ContributionTabs/styled';
+import { StyledContributionTabs, GlobalStyle } from 'components/ContributionTabs/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import Tabs, { TabPane } from 'rc-tabs';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { ENTITIES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
+import { BackButton } from 'components/StatementBrowser/Breadcrumbs/styled';
 import useContributions from './hooks/useContributions';
+import Breadcrumbs from '../BreadCrumbs';
 
 const Contributions = props => {
     const { resourceId, contributionId } = useParams();
 
-    const { isLoading, isLoadingContributionFailed, selectedContribution, contributionData } = useContributions({
+    const {
+        isLoading,
+        isLoadingContributionFailed,
+        selectedContribution,
+        contributionData,
+        handleResourceClick,
+        resourceHistory,
+        handleBackClick,
+    } = useContributions({
         paperId: resourceId,
         contributionId,
         contributions: props.contributions,
+        paperStatements: props.paperStatements,
     });
     const navigate = useNavigate();
 
@@ -36,6 +47,7 @@ const Contributions = props => {
 
     return (
         <div>
+            <GlobalStyle />
             <Container>
                 <Row>
                     <Col md="9">
@@ -96,6 +108,9 @@ const Contributions = props => {
                                                             </ContentLoader>
                                                         </div>
                                                     )}
+                                                    {resourceHistory.length > 0 && (
+                                                        <Breadcrumbs resourceHistory={resourceHistory} handleBackClick={handleBackClick} />
+                                                    )}
                                                     {!isLoading && contributionData && (
                                                         <>
                                                             {Object.keys(contributionData).map((cd, i) => (
@@ -104,7 +119,7 @@ const Contributions = props => {
                                                                         <PropertyStyle className="col-4" tabIndex="0" key={`p${i}`}>
                                                                             <div>
                                                                                 <div className="propertyLabel">
-                                                                                    <DescriptionTooltip id="p26" typeId={ENTITIES.PREDICATE}>
+                                                                                    <DescriptionTooltip id={cd} typeId={ENTITIES.PREDICATE}>
                                                                                         {cd}
                                                                                     </DescriptionTooltip>
                                                                                 </div>
@@ -113,7 +128,16 @@ const Contributions = props => {
                                                                         <ValuesStyle className="col-8 valuesList" key={`v${i}`}>
                                                                             {contributionData[cd].map((v, index) => (
                                                                                 <ListGroup flush className="px-3 mt-2" key={`pv${index}`}>
-                                                                                    {v.object.label}
+                                                                                    <Button
+                                                                                        className="p-0 text-start objectLabel"
+                                                                                        color="link"
+                                                                                        onClick={() => {
+                                                                                            handleResourceClick(v.object.id);
+                                                                                        }}
+                                                                                    >
+                                                                                        {' '}
+                                                                                        {v.object.label}{' '}
+                                                                                    </Button>
                                                                                 </ListGroup>
                                                                             ))}
                                                                         </ValuesStyle>
@@ -150,6 +174,7 @@ const Contributions = props => {
 
 Contributions.propTypes = {
     contributions: PropTypes.array,
+    paperStatements: PropTypes.array,
 };
 
 export default Contributions;

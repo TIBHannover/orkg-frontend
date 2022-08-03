@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { getVisualization } from 'services/similarity';
 import { groupBy } from 'lodash';
 
-const useContributions = ({ paperId, contributionId, contributions }) => {
+const useContributions = ({ paperId, contributionId, contributions, paperStatements }) => {
     const [selectedContribution, setSelectedContribution] = useState(contributionId);
     const [contributionData, setContributionData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingContributionFailed, setLoadingContributionFailed] = useState(false);
+    const [resourceHistory, setResourceHistory] = useState([]);
 
     useEffect(() => {
         if (contributions?.length && (selectedContribution !== contributionId || !contributionId)) {
@@ -24,48 +25,80 @@ const useContributions = ({ paperId, contributionId, contributions }) => {
         }
     }, [contributionId, contributions, selectedContribution]);
 
-    const getResourceStatements = async (resourceId, data, list) => {
-        const statement = data.find(d => d.subject.id === resourceId);
-        if (statement) {
-            list.push(statement);
-        } else {
-            return list;
-        }
-        if (statement.object._class === 'resource') {
-            await getResourceStatements(statement.object.id, data, list);
-            return list;
-        }
-        return list;
-    };
-
     useEffect(() => {
-        getVisualization(paperId).then(async r => {
-            setIsLoading(true);
-            if (selectedContribution) {
-                const statement = r.data.statements.find(s => s.subject.id === selectedContribution);
-                // TODO
-                const subjectId = statement.subject.id;
-                const list = [];
-                for (const r1 of r.data.statements) {
-                    if (r1.subject.id === subjectId) {
-                        list.push(r1);
-                        const response = await getResourceStatements(r1.object.id, r.data.statements, []);
-                        list.push(...response);
-                    }
+        // getVisualization(paperId).then(async r => {
+        setIsLoading(true);
+        if (selectedContribution) {
+            const statement = paperStatements.find(s => s.subject.id === selectedContribution);
+            // TODO
+            const subjectId = statement.subject.id;
+            const list = [];
+            // r1.object.id===selectedResource.id
+            // if not selected resource then this
+            // else code for selected resource
+            for (const r1 of paperStatements) {
+                if (r1.subject.id === subjectId) {
+                    list.push(r1);
                 }
-                const rr = groupBy(list, 'predicate.label');
-                setContributionData(rr);
             }
-            setIsLoading(false);
-        });
+            const rr = groupBy(list, 'predicate.label');
+            setContributionData(rr);
+        }
+        setIsLoading(false);
+        // });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paperId, selectedContribution]);
+
+    const handleResourceClick = async e => {
+        // const statement = paperStatements.find(s => s.subject.id === e);
+        // const subjectId = statement.subject.id;
+        console.log(e);
+        if (resourceHistory.length === 0) {
+            setResourceHistory(v => [
+                ...v,
+                { id: selectedContribution, label: contributions.find(c => c.id === selectedContribution).label, property: null },
+            ]);
+        }
+        const selectedStmt = paperStatements.find(c => c.object.id === e);
+        setResourceHistory(v => [...v, { id: selectedStmt.object.id, label: selectedStmt.object.label, property: selectedStmt.predicate.label }]);
+        const list = paperStatements.filter(st => st.subject.id === e);
+        console.log(paperStatements.find(c => c.object.id === e).object.label);
+        const rr = groupBy(list, 'predicate.label');
+        setContributionData(rr);
+    };
+
+    const handleBackClick = () => {
+        const temp = [...resourceHistory];
+        temp.pop();
+        if (temp.length === 1) {
+            temp.pop();
+        }
+        console.log(temp.length);
+        const index = temp[temp.length - 1];
+        console.log(index);
+        if (temp[temp.length - 1] && temp.length > 1) {
+            const list = paperStatements.filter(st => st.subject.id === index.id);
+            console.log(list);
+            const rr = groupBy(list, 'predicate.label');
+            setContributionData(rr);
+        } else {
+            const list = paperStatements.filter(st => st.subject.id === selectedContribution);
+            console.log(list);
+            const rr = groupBy(list, 'predicate.label');
+            setContributionData(rr);
+        }
+        // setResourceHistory(temp);
+        setResourceHistory(temp);
+    };
 
     return {
         isLoading,
         isLoadingContributionFailed,
         selectedContribution,
         contributionData,
+        handleResourceClick,
+        resourceHistory,
+        handleBackClick,
     };
 };
 

@@ -72,7 +72,7 @@ function PaperMenuBar(props) {
             </ButtonDropdown>
 
             <PapersWithCodeModal isOpen={isOpenPWCModal} toggle={() => setIsOpenPWCModal(v => !v)} label={props.label} />
-            <Publish showDialog={showPublishDialog} toggle={() => setShowPublishDialog(v => !v)} paperId={props.id} label={props.label} />
+            <Publish showDialog={showPublishDialog} toggle={() => setShowPublishDialog(v => !v)} label={props.label} />
         </>
     );
 }
