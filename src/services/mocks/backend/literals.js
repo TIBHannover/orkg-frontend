@@ -2,8 +2,8 @@ import { rest } from 'msw';
 import { literalsUrl } from 'services/backend/literals';
 import { MISC } from 'constants/graphSettings';
 
-const literalPostAndPut = (req, res, ctx) => {
-    const { label, datatype = MISC.DEFAULT_LITERAL_DATATYPE } = req.body;
+const literalPostAndPut = async (req, res, ctx) => {
+    const { label, datatype = MISC.DEFAULT_LITERAL_DATATYPE } = await req.json();
     const { id } = req.params;
 
     return res(
