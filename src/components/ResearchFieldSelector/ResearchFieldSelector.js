@@ -267,21 +267,22 @@ const ResearchFieldSelector = ({
                         <Icon icon={faMinusSquare} /> <span className="text-decoration-underline">Collapse all</span>
                     </CollapseButton>
                     {isLoading && (
-                        <ContentLoader
-                            speed={2}
-                            width={810}
-                            height={250}
-                            viewBox="0 0 810 250"
-                            style={{ width: '100% !important' }}
-                            backgroundColor="#f3f3f3"
-                            foregroundColor="#ecebeb"
-                        >
-                            <rect x="0" y="0" rx="6" ry="6" width="810" height="40" />
-                            <rect x="0" y="45" rx="6" ry="6" width="810" height="40" />
-                            <rect x="0" y="90" rx="6" ry="6" width="810" height="40" />
-                            <rect x="0" y="135" rx="6" ry="6" width="810" height="40" />
-                            <rect x="0" y="180" rx="6" ry="6" width="810" height="40" />
-                        </ContentLoader>
+                        <div>
+                            <ContentLoader
+                                width="100%"
+                                speed={2}
+                                viewBox="0 0 100 30"
+                                style={{ width: '100% !important' }}
+                                backgroundColor="#f3f3f3"
+                                foregroundColor="#ecebeb"
+                            >
+                                <rect x="0" y="0" rx="1" ry="1" width="100" height="5" />
+                                <rect x="0" y="6" rx="1" ry="1" width="100" height="5" />
+                                <rect x="0" y="12" rx="1" ry="1" width="100" height="5" />
+                                <rect x="0" y="18" rx="1" ry="1" width="100" height="5" />
+                                <rect x="0" y="24" rx="1" ry="1" width="100" height="5" />
+                            </ContentLoader>
+                        </div>
                     )}
                     <List>{fieldList(RESOURCES.RESEARCH_FIELD_MAIN)}</List>
                 </div>
