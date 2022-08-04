@@ -27,6 +27,8 @@ const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, 
 
         let doi = value.trim();
 
+        doi = doi.startsWith('http') ? doi.substring(doi.indexOf('10.')) : doi;
+
         await checkIfPaperExists({ doi });
 
         await Cite.async(doi)

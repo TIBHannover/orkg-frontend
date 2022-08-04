@@ -28,9 +28,10 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
             return;
         }
 
-        const doi = initialValue.startsWith('http') ? initialValue.substring(initialValue.indexOf('10.')) : initialValue;
-        if (REGEX.DOI.test(doi)) {
-            setDoi(doi);
+        const doiEntry = initialValue.startsWith('http') ? initialValue.substring(initialValue.indexOf('10.')) : initialValue;
+
+        if (REGEX.DOI.test(doiEntry)) {
+            setDoi(doiEntry);
             setLookupOnMount(true);
         } else {
             setTitle(initialValue);
