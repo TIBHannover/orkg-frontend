@@ -7,7 +7,7 @@ import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/Datat
 import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataTypes';
 import a from 'indefinite';
 import { useDispatch } from 'react-redux';
-import { addValue } from 'slices/contributionEditorSlice';
+import { addValue, setPreviousInputDataType } from 'slices/contributionEditorSlice';
 import { useClickAway } from 'react-use';
 import ConfirmationTooltip from 'components/StatementBrowser/ConfirmationTooltip/ConfirmationTooltip';
 import Tippy from '@tippyjs/react';
@@ -137,6 +137,11 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
         }
     }, [inputDataType, setEntityType, setInputValue, setInputFormType]);
 
+    const handleSetValueType = type => {
+        dispatch(setPreviousInputDataType(type));
+        setInputDataType(type);
+    };
+
     return (
         <div ref={refContainer} style={{ minHeight: 35 }}>
             <Tippy
@@ -241,7 +246,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                 disableBorderRadiusLeft={true}
                                 disableBorderRadiusRight={false}
                                 valueType={inputDataType}
-                                setValueType={setInputDataType}
+                                setValueType={handleSetValueType}
                                 menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
                             />
                         )}

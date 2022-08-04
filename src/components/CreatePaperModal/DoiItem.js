@@ -1,22 +1,20 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Cite } from '@citation-js/core';
-import ExistingDoiModal from 'components/AddPaper/GeneralData/ExistingDoiModal';
+import useExistingPaper from 'components/ExistingPaperModal/useExistingPaper';
 import ListItem from 'components/ViewPaper/EditDialog/ListItem';
+import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, Input, InputGroup } from 'reactstrap';
-import { getPaperByDOI } from 'services/backend/misc';
-import { getStatementsBySubject } from 'services/backend/statements';
-import { truncate } from 'lodash';
-import { getPaperData, parseCiteResult } from 'utils';
+import { parseCiteResult } from 'utils';
 
 const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, lookupOnMount }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [existingPaper, setExistingPaper] = useState(null);
     const [isValid, setIsValid] = useState(null);
     const [shouldPerformLookup, setShouldPerformLookup] = useState(lookupOnMount);
+    const { checkIfPaperExists, ExistingPaperModels } = useExistingPaper();
 
     const handleLookup = useCallback(async () => {
         if (!value) {
@@ -28,21 +26,10 @@ const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, 
         setIsValid(null);
 
         let doi = value.trim();
+
         doi = doi.startsWith('http') ? doi.substring(doi.indexOf('10.')) : doi;
 
-        // check if paper is already in ORKG
-        if (doi.includes('10.') && doi.startsWith('10.')) {
-            try {
-                const paper = await getPaperByDOI(doi);
-                const paperStatements = await getStatementsBySubject({ id: paper.id });
-                setExistingPaper({
-                    ...getPaperData({ ...paper, label: paper.title }, paperStatements),
-                    title: paper.title,
-                });
-            } catch (e) {
-                setExistingPaper(null);
-            }
-        }
+        await checkIfPaperExists({ doi });
 
         await Cite.async(doi)
             .then(paper => {
@@ -78,7 +65,7 @@ const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, 
             });
 
         setIsLoading(false);
-    }, [onPopulateMetadata, value]);
+    }, [checkIfPaperExists, onPopulateMetadata, value]);
 
     useEffect(() => {
         if (shouldPerformLookup) {
@@ -96,7 +83,7 @@ const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, 
                 </Button>
             </InputGroup>
             {/* TODO: improve modal to allow linking to the 'add contribution' modal */}
-            {existingPaper && <ExistingDoiModal existingPaper={existingPaper} />}
+            <ExistingPaperModels />
         </ListItem>
     );
 };
@@ -107,6 +94,7 @@ DoiItem.propTypes = {
     onPopulateMetadata: PropTypes.func.isRequired,
     value: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
+    setIsExistingDoi: PropTypes.func.isRequired,
     lookupOnMount: PropTypes.bool,
 };
 
