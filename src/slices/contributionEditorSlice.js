@@ -38,6 +38,7 @@ const initialState = {
     classes: {},
     isLoading: false,
     hasFailed: false,
+    previousInputDataType: MISC.DEFAULT_LITERAL_DATATYPE,
 };
 
 export const contributionEditorSlice = createSlice({
@@ -163,6 +164,9 @@ export const contributionEditorSlice = createSlice({
         updateContributionClasses: (state, { payload: { resourceId, classes } }) => {
             state.contributions[resourceId].classes = classes;
         },
+        setPreviousInputDataType: (state, { payload }) => {
+            state.previousInputDataType = payload;
+        },
     },
     extraReducers: {
         [LOCATION_CHANGE]: () => initialState,
@@ -189,6 +193,7 @@ export const {
     propertyDeleted,
     propertyUpdated,
     paperUpdated,
+    setPreviousInputDataType,
 } = contributionEditorSlice.actions;
 
 export default contributionEditorSlice.reducer;

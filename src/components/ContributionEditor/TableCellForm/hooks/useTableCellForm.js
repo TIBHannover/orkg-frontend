@@ -19,6 +19,7 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
     const editMode = Boolean(value);
 
     const property = useSelector(state => state.contributionEditor.properties[propertyId]);
+    const { previousInputDataType } = useSelector(state => state.contributionEditor);
     const valueClass = useSelector(state => getValueClass(getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId)));
 
     const canAddValue = useSelector(state => canAddValueAction(state, contributionId, propertyId));
@@ -38,7 +39,7 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
     const [inputValue, setInputValue] = useState(editMode ? value.label : '');
     const [inputDataType, setInputDataType] = useState(
         !valueClass?.id
-            ? getConfigByType(isLiteralField ? (editMode ? value.datatype : MISC.DEFAULT_LITERAL_DATATYPE) : MISC.DEFAULT_LITERAL_DATATYPE).type
+            ? getConfigByType(isLiteralField ? (editMode ? value.datatype : previousInputDataType) : previousInputDataType).type
             : getConfigByClassId(valueClass.id).type,
     );
     const [disabledCreate] = useState(false);
