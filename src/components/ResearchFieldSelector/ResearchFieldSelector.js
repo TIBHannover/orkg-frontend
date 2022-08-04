@@ -9,6 +9,7 @@ import { sortBy, find, set, cloneDeep } from 'lodash';
 import { getParentResearchFields, getStatementsBySubjects } from 'services/backend/statements';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import ContentLoader from 'react-content-loader';
 
 const FieldItem = styled(Button)`
     &&& {
@@ -249,11 +250,7 @@ const ResearchFieldSelector = ({
                         <PreviouslySelectedResearchField selectedResearchField={selectedResearchField} handleFieldSelect={handleFieldSelect} />
                     </div>
                 )}
-                {isLoading && (
-                    <div className="mb-2">
-                        <Icon icon={faSpinner} spin /> Loading
-                    </div>
-                )}
+
                 <div className={`${insideModal || !showPreviouslySelected ? 'col-12' : 'col-md-8 order-md-1'}`}>
                     <CollapseButton
                         size="sm"
@@ -269,6 +266,23 @@ const ResearchFieldSelector = ({
                     >
                         <Icon icon={faMinusSquare} /> <span className="text-decoration-underline">Collapse all</span>
                     </CollapseButton>
+                    {isLoading && (
+                        <ContentLoader
+                            speed={2}
+                            width={810}
+                            height={250}
+                            viewBox="0 0 810 250"
+                            style={{ width: '100% !important' }}
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                        >
+                            <rect x="0" y="0" rx="6" ry="6" width="810" height="40" />
+                            <rect x="0" y="45" rx="6" ry="6" width="810" height="40" />
+                            <rect x="0" y="90" rx="6" ry="6" width="810" height="40" />
+                            <rect x="0" y="135" rx="6" ry="6" width="810" height="40" />
+                            <rect x="0" y="180" rx="6" ry="6" width="810" height="40" />
+                        </ContentLoader>
+                    )}
                     <List>{fieldList(RESOURCES.RESEARCH_FIELD_MAIN)}</List>
                 </div>
             </div>
