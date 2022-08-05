@@ -18,7 +18,8 @@ const Timeline = ({ versions, paperResource, isLoadingContributors }) => (
                         <div>
                             {paperResource.created_by &&
                                 version.created_by.id === paperResource.created_by &&
-                                moment(paperResource.created_at).format('DD MMM YYYY') === moment(version.created_at).format('DD MMM YYYY') && (
+                                moment(paperResource.created_at).format('DD MMM YYYY') === moment(version.created_at).format('DD MMM YYYY') &&
+                                !version.publishedResource && (
                                     <>
                                         Added by{' '}
                                         <Link
