@@ -8,7 +8,6 @@ import { createLiteral } from 'services/backend/literals';
 import Tooltip from 'components/Utils/Tooltip';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
-import styled from 'styled-components';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getContributorsByResourceId } from 'services/backend/resources';
 import { getPublicUrl, filterObjectOfStatementsByPredicateAndClass } from 'utils';
@@ -20,38 +19,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { uniqBy } from 'lodash';
-
-const AuthorTag = styled.div`
-    background-color: #e9ecef;
-    display: flex;
-    margin: 0 0 4px 0;
-    box-sizing: border-box;
-    color: rgb(147, 147, 147);
-    cursor: default;
-    border-radius: 12px;
-    overflow: hidden;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    &:hover {
-        background-color: #ffbdad;
-        color: #de350b;
-    }
-
-    .name {
-        padding: 8px 10px;
-        color: #495057;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        box-sizing: border-box;
-        flex: 1;
-        display: flex;
-    }
-`;
+import { AuthorTag } from 'components/Utils/AuthorsInput';
 
 function Publish(props) {
     const [isLoading, setIsLoading] = useState(false);
