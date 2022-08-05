@@ -28,7 +28,7 @@ const useContributions = ({ paperId, contributionId, contributions, paperStateme
     const updateContributionStatements = useCallback(
         id => {
             const list = paperStatements.filter(st => st.subject.id === id);
-            const rr = groupBy(list, 'predicate.label');
+            const rr = groupBy(list, 'predicate.id');
             setContributionData(rr);
         },
         [paperStatements],

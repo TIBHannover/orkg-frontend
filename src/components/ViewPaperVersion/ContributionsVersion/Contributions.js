@@ -119,7 +119,7 @@ const Contributions = props => {
                                                                             <div>
                                                                                 <div className="propertyLabel">
                                                                                     <DescriptionTooltip id={cd} typeId={ENTITIES.PREDICATE}>
-                                                                                        {cd}
+                                                                                        {contributionData[cd][0].predicate.label}
                                                                                     </DescriptionTooltip>
                                                                                 </div>
                                                                             </div>
@@ -127,7 +127,7 @@ const Contributions = props => {
                                                                         <ValuesStyle className="col-8 valuesList" key={`v${i}`}>
                                                                             {contributionData[cd].map((v, index) => (
                                                                                 <ListGroup flush className="px-3 mt-2" key={`pv${index}`}>
-                                                                                    {v.object._class === 'resource' ? (
+                                                                                    {v.object._class === ENTITIES.RESOURCE ? (
                                                                                         <Button
                                                                                             className="p-0 text-start objectLabel"
                                                                                             color="link"
