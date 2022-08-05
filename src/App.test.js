@@ -3,6 +3,8 @@ import App from './App';
 
 jest.mock('react-responsive-tabs', () => ({ children }) => null);
 
+window.scrollTo = jest.fn();
+
 const setup = () => {
     render(<App />);
 };

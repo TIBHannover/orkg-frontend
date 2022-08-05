@@ -160,6 +160,7 @@ const GeneralSettings = () => {
                             isClearable
                             isMulti
                             inputId="template-field"
+                            ols={false}
                         />
                         {editMode && <FormText>Specify the research fields that uses this template.</FormText>}
                     </FormGroup>
@@ -181,6 +182,7 @@ const GeneralSettings = () => {
                             isClearable
                             isMulti
                             inputId="template-problems"
+                            ols={false}
                         />
                         {editMode && <FormText>Specify the research problems that uses this template.</FormText>}
                     </FormGroup>

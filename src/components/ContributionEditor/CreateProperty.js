@@ -6,7 +6,9 @@ import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES } from 'constants/graphSettings';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Button } from 'reactstrap';
+import { Button, InputGroup } from 'reactstrap';
+import { isString } from 'lodash';
+import { StyledButton } from 'components/StatementBrowser/styled';
 import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
 
 export const CreateProperty = () => {
@@ -14,13 +16,14 @@ export const CreateProperty = () => {
     const [inputValue, setInputValue] = useState('');
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
     const [isTemplatesModalOpen, setIsTemplatesModalOpen] = useState(false);
+    const [propertyLabel, setPropertyLabel] = useState('');
     const dispatch = useDispatch();
 
-    const handleCreate = ({ id }) => {
+    const handleCreate = ({ id, label }) => {
         dispatch(
             createProperty({
                 id,
-                label: inputValue,
+                label,
                 action: 'select-option',
             }),
         );
@@ -29,11 +32,12 @@ export const CreateProperty = () => {
         setIsOpenConfirmModal(false);
     };
 
-    const handleChangeAutocomplete = async (selected, { action }) => {
-        if (action === 'create-option') {
+    const handleChangeAutocomplete = async selected => {
+        if (isString(selected)) {
+            setPropertyLabel(selected);
             setIsOpenConfirmModal(true);
         } else {
-            handleCreate({ id: selected.id });
+            handleCreate(selected);
         }
     };
 
@@ -42,7 +46,7 @@ export const CreateProperty = () => {
             {isOpenConfirmModal && (
                 <ConfirmCreatePropertyModal
                     onCreate={handleCreate}
-                    label={inputValue}
+                    label={propertyLabel}
                     toggle={() => setIsOpenConfirmModal(v => !v)}
                     shouldPerformCreate
                 />
@@ -65,18 +69,23 @@ export const CreateProperty = () => {
                 </>
             ) : (
                 <div style={{ maxWidth: 300 }}>
-                    <Autocomplete
-                        entityType={ENTITIES.PREDICATE}
-                        placeholder="Enter a property"
-                        onChange={handleChangeAutocomplete}
-                        onInput={(e, value) => setInputValue(e ? e.target.value : value)}
-                        value={inputValue}
-                        onBlur={() => setIsCreating(false)}
-                        openMenuOnFocus={true}
-                        cssClasses="form-control-sm"
-                        menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
-                        allowCreate
-                    />
+                    <InputGroup size="sm">
+                        <Autocomplete
+                            entityType={ENTITIES.PREDICATE}
+                            placeholder="Enter a property"
+                            onItemSelected={handleChangeAutocomplete}
+                            onNewItemSelected={handleChangeAutocomplete}
+                            onInput={(e, value) => setInputValue(e ? e.target.value : value)}
+                            value={inputValue}
+                            openMenuOnFocus={true}
+                            cssClasses="form-control-sm"
+                            menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
+                            allowCreate
+                        />
+                        <StyledButton outline onClick={() => setIsCreating(false)}>
+                            Cancel
+                        </StyledButton>
+                    </InputGroup>
                 </div>
             )}
         </>

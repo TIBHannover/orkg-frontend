@@ -1,18 +1,15 @@
-import ExistingDoiModal from 'components/AddPaper/GeneralData/ExistingDoiModal';
+import useExistingPaper from 'components/ExistingPaperModal/useExistingPaper';
 import { StyledAutoCompleteInputFormControl } from 'components/Autocomplete/Autocomplete';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import Menu from 'components/AutocompleteContentTypeTitle/Menu';
 import PaperOption from 'components/AutocompleteContentTypeTitle/PaperOption';
 import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { AsyncPaginate } from 'react-select-async-paginate';
-import { getPaperByDOI } from 'services/backend/misc';
 import { getResourcesByClass } from 'services/backend/resources';
-import { getStatementsBySubject } from 'services/backend/statements';
 import { getPapersByTitle } from 'services/semanticScholar';
 import { withTheme } from 'styled-components';
-import { getPaperData } from 'utils';
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
 const PAGE_SIZE = 10;
 const MIN_INPUT_LENGTH = 3;
@@ -29,7 +26,7 @@ function AutocompleteContentTypeTitle({
     theme,
 }) {
     const [menuIsOpen, setMenuIsOpen] = useState(false);
-    const [existingPaper, setExistingPaper] = useState(null);
+    const { checkIfPaperExists, ExistingPaperModels } = useExistingPaper();
 
     const performSemanticScholarLookup = contentType === 'all' || contentType === CLASSES.PAPER;
 
@@ -125,16 +122,7 @@ function AutocompleteContentTypeTitle({
 
             const doi = selected.externalIds?.DOI;
             if (performExistingPaperLookup && doi && doi.includes('10.') && doi.startsWith('10.')) {
-                try {
-                    const paper = await getPaperByDOI(doi);
-                    const paperStatements = await getStatementsBySubject({ id: paper.id });
-                    setExistingPaper({
-                        ...getPaperData({ ...paper, label: paper.title }, paperStatements),
-                        title: paper.title,
-                    });
-                } catch (e) {
-                    setExistingPaper(null);
-                }
+                checkIfPaperExists({ doi });
             }
         }
     };
@@ -194,7 +182,7 @@ function AutocompleteContentTypeTitle({
                     }}
                 />
             </StyledAutoCompleteInputFormControl>
-            {existingPaper && <ExistingDoiModal existingPaper={existingPaper} />}
+            <ExistingPaperModels />
         </>
     );
 }

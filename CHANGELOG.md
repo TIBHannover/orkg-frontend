@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.76.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.75.1...v0.76.0) - 2022-08-04
+
+### Changes
+
+- CD(pre-release): Show the long format of tag name [`#897`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/897)
+- feat(Autocomplete): support for Wikidata and external ontologies [`#890`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/890)
+- fix(StatementBrowser): Submitting autocomplete field using Keyboard [`#896`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/896)
+
+---
 ## [v0.75.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.75.0...v0.75.1) - 2022-07-25
 
 ### Changes

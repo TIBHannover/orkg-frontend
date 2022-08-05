@@ -102,6 +102,7 @@ const EditItem = props => {
             <InputGroup>
                 <AutoComplete
                     allowCreate={false}
+                    ols={false}
                     entityType={ENTITIES.RESOURCE}
                     optionsClass={CLASSES.RESEARCH_FIELD}
                     onChange={props.onChange}

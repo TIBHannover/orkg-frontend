@@ -7,7 +7,7 @@ import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/Datat
 import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataTypes';
 import a from 'indefinite';
 import { useDispatch } from 'react-redux';
-import { addValue } from 'slices/contributionEditorSlice';
+import { addValue, setPreviousInputDataType } from 'slices/contributionEditorSlice';
 import { useClickAway } from 'react-use';
 import ConfirmationTooltip from 'components/StatementBrowser/ConfirmationTooltip/ConfirmationTooltip';
 import Tippy from '@tippyjs/react';
@@ -137,6 +137,11 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
         }
     }, [inputDataType, setEntityType, setInputValue, setInputFormType]);
 
+    const handleSetValueType = type => {
+        dispatch(setPreviousInputDataType(type));
+        setInputDataType(type);
+    };
+
     return (
         <div ref={refContainer} style={{ minHeight: 35 }}>
             <Tippy
@@ -180,7 +185,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                 entityType={entityType}
                                 excludeClasses={
                                     entityType === ENTITIES.RESOURCE && !valueClass
-                                        ? `${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE},${CLASSES.TEMPLATE_COMPONENT},${CLASSES.PAPER_DELETED},${CLASSES.CONTRIBUTION_DELETED}`
+                                        ? `${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE},${CLASSES.TEMPLATE_COMPONENT},${CLASSES.PAPER_DELETED},${CLASSES.CONTRIBUTION_DELETED},${CLASSES.EXTERNAL}`
                                         : null
                                 }
                                 optionsClass={entityType === ENTITIES.RESOURCE && valueClass ? valueClass.id : undefined}
@@ -193,7 +198,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                     dispatch(addValue(entityType, { label, selected: false }, valueClass, contributionId, propertyId));
                                     closeForm?.(false);
                                 }}
-                                ols={entityType === ENTITIES.CLASS}
+                                ols={!valueClass}
                                 onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                                 menuPortalTarget={document.body}
                                 value={inputValue}
@@ -241,7 +246,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                 disableBorderRadiusLeft={true}
                                 disableBorderRadiusRight={false}
                                 valueType={inputDataType}
-                                setValueType={setInputDataType}
+                                setValueType={handleSetValueType}
                                 menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
                             />
                         )}

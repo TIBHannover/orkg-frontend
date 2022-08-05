@@ -27,7 +27,8 @@ describe('ContributionEditor CreateProperty', () => {
 
         await waitFor(() => screen.getByRole('combobox'));
         fireEvent.blur(screen.getByRole('combobox'));
-
+        const cancelButton = screen.getByRole('button', { name: /Cancel/i });
+        fireEvent.click(cancelButton);
         expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
     });
 });

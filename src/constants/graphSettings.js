@@ -123,6 +123,7 @@ export const CLASSES = {
     BOOLEAN: 'Boolean',
     URI: 'URI',
     SOFTWARE: 'Software',
+    EXTERNAL: 'External',
 };
 
 export const RESOURCES = {

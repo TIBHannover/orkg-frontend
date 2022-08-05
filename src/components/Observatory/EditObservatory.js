@@ -159,6 +159,7 @@ class EditObservatory extends Component {
                                     }}
                                     value={this.state.researchField && this.state.researchField.id ? this.state.researchField : null}
                                     allowCreate={false}
+                                    ols={false}
                                     autoLoadOption={true}
                                     isDisabled={isLoading}
                                 />
