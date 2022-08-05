@@ -1,4 +1,4 @@
-import { Alert, Col, Container, FormGroup, Row, ListGroup, Button, Badge } from 'reactstrap';
+import { Alert, Col, Container, FormGroup, Row, ListGroup, Button } from 'reactstrap';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
@@ -6,14 +6,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import { StyledContributionTabs, GlobalStyle } from 'components/ContributionTabs/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import Tabs, { TabPane } from 'rc-tabs';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { ENTITIES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
-import { BackButton } from 'components/StatementBrowser/Breadcrumbs/styled';
 import useContributions from './hooks/useContributions';
 import Breadcrumbs from '../BreadCrumbs';
 
@@ -111,7 +110,7 @@ const Contributions = props => {
                                                     {resourceHistory.length > 0 && (
                                                         <Breadcrumbs resourceHistory={resourceHistory} handleBackClick={handleBackClick} />
                                                     )}
-                                                    {!isLoading && contributionData && (
+                                                    {!isLoading && Object.keys(contributionData).length > 0 ? (
                                                         <>
                                                             {Object.keys(contributionData).map((cd, i) => (
                                                                 <StatementsGroupStyle className="noTemplate list-group-item" key={`st${i}`}>
@@ -128,16 +127,20 @@ const Contributions = props => {
                                                                         <ValuesStyle className="col-8 valuesList" key={`v${i}`}>
                                                                             {contributionData[cd].map((v, index) => (
                                                                                 <ListGroup flush className="px-3 mt-2" key={`pv${index}`}>
-                                                                                    <Button
-                                                                                        className="p-0 text-start objectLabel"
-                                                                                        color="link"
-                                                                                        onClick={() => {
-                                                                                            handleResourceClick(v.object.id);
-                                                                                        }}
-                                                                                    >
-                                                                                        {' '}
-                                                                                        {v.object.label}{' '}
-                                                                                    </Button>
+                                                                                    {v.object._class === 'resource' ? (
+                                                                                        <Button
+                                                                                            className="p-0 text-start objectLabel"
+                                                                                            color="link"
+                                                                                            onClick={() => {
+                                                                                                handleResourceClick(v);
+                                                                                            }}
+                                                                                        >
+                                                                                            {' '}
+                                                                                            {v.object.label}{' '}
+                                                                                        </Button>
+                                                                                    ) : (
+                                                                                        <>{v.object.label}</>
+                                                                                    )}
                                                                                 </ListGroup>
                                                                             ))}
                                                                         </ValuesStyle>
@@ -145,6 +148,8 @@ const Contributions = props => {
                                                                 </StatementsGroupStyle>
                                                             ))}
                                                         </>
+                                                    ) : (
+                                                        <div className="mb-0 rounded list-group-item">No data</div>
                                                     )}
                                                 </FormGroup>
                                             </div>

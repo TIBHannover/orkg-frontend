@@ -52,9 +52,7 @@ const useViewPaperVersion = ({ paperId }) => {
                         false,
                         CLASSES.CONTRIBUTION,
                     );
-                    // const pp = ctrbs.filter((ele, ind) => ind === ctrbs.findIndex(elem => elem.id === ele.id));
-                    const pp = uniqBy(cntrbs);
-                    setContributions(pp.reverse());
+                    setContributions(uniqBy(cntrbs, 'id').reverse());
                 });
                 getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD, CLASSES.CONTRIBUTION] }).then(
                     async pStatements => {
