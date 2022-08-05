@@ -87,6 +87,7 @@ const ViewPaper = () => {
                             toggle={toggle}
                             id={resourceId}
                             paperTitle={viewPaper.paperResource.label}
+                            doi={viewPaper.doi?.label}
                         />
                     )}
                     <Breadcrumbs researchFieldId={viewPaper.researchField ? viewPaper.researchField.id : null} />
@@ -109,6 +110,7 @@ const ViewPaper = () => {
                                     toggle={toggle}
                                     id={resourceId}
                                     label={viewPaper.paperResource?.label}
+                                    doi={viewPaper.doi?.label}
                                 />
                             }
                         >
