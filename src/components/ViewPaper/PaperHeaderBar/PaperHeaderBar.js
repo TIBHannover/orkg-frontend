@@ -54,6 +54,7 @@ function PaperHeaderBar(props) {
                             editMode={props.editMode}
                             paperLink={props.paperLink}
                             toggle={props.toggle}
+                            doi={props.doi}
                         />
                     </ButtonGroup>
                 </Container>
@@ -68,6 +69,7 @@ PaperHeaderBar.propTypes = {
     toggle: PropTypes.func.isRequired,
     paperTitle: PropTypes.string.isRequired,
     id: PropTypes.string,
+    doi: PropTypes.string,
 };
 
 export default PaperHeaderBar;

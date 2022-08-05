@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faProjectDiagram, faPen, faTimes, faFile, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faProjectDiagram, faPen, faTimes, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeModal';
 import PropTypes from 'prop-types';
@@ -9,6 +9,7 @@ import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import Publish from 'components/ViewPaper/Publish/Publish';
+import ViewPaperButton from 'components/ViewPaper/PaperHeaderBar/ViewPaperButton';
 
 function PaperMenuBar(props) {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -17,17 +18,7 @@ function PaperMenuBar(props) {
 
     return (
         <>
-            {props.paperLink && (
-                <a
-                    href={props.paperLink}
-                    className="btn btn-secondary flex-shrink-0 btn-sm"
-                    style={{ marginRight: 2 }}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <Icon icon={faFile} style={{ margin: '2px 4px 0 0' }} /> View paper
-                </a>
-            )}
+            <ViewPaperButton paperLink={props.paperLink} doi={props.doi} title={props.label} />
             <Button className="flex-shrink-0" color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => props.toggle('showGraphModal')}>
                 <Icon icon={faProjectDiagram} style={{ margin: '2px 4px 0 0' }} /> Graph view
             </Button>
@@ -84,6 +75,7 @@ PaperMenuBar.propTypes = {
     id: PropTypes.string,
     label: PropTypes.string,
     toggle: PropTypes.func.isRequired,
+    doi: PropTypes.string,
 };
 
 export default PaperMenuBar;

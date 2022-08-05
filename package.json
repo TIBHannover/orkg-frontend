@@ -2,7 +2,7 @@
     "name": "orkg-frontend",
     "version": "0.76.0",
     "private": true,
-    "homepage": ".",
+    "homepage": "/",
     "dependencies": {
         "@datapunt/matomo-tracker-react": "^0.5.1",
         "@fortawesome/fontawesome-svg-core": "^6.1.1",
