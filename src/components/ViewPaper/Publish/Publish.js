@@ -19,6 +19,7 @@ import { Link } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { uniqBy } from 'lodash';
 
 const AuthorTag = styled.div`
     background-color: #e9ecef;
@@ -67,7 +68,7 @@ function Publish(props) {
             getContributorsByResourceId(viewPaper.paperResource.id)
                 .then(contrs => {
                     const contributorsList = contrs.filter(c => c.created_by.display_name !== 'Unknown');
-                    setContributors(contributorsList ? contributorsList.reverse() : []);
+                    setContributors(contributorsList ? uniqBy(contributorsList.reverse(), 'id') : []);
                 })
                 .catch(error => {});
         };
