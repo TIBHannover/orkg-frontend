@@ -94,7 +94,7 @@ const ViewPaperVersion = () => {
                         {!isLoading && (
                             <>
                                 {viewPaper.originalPaperId && (
-                                    <Alert color="warning" className="container d-flex box">
+                                    <Alert color="warning" className="container d-flex">
                                         <div className="flex-grow-1">
                                             You are viewing the published version of the paper. Click to{' '}
                                             <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: viewPaper.originalPaperId })}>Fetch live data</Link>
