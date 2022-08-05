@@ -119,6 +119,7 @@ export const CLASSES = {
     URI: 'URI',
     PAPER_VERSION: 'PaperVersion',
     SOFTWARE: 'Software',
+    EXTERNAL: 'External',
 };
 
 export const RESOURCES = {

@@ -3,6 +3,33 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.76.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.75.1...v0.76.0) - 2022-08-04
+
+### Changes
+
+- CD(pre-release): Show the long format of tag name [`#897`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/897)
+- feat(Autocomplete): support for Wikidata and external ontologies [`#890`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/890)
+- fix(StatementBrowser): Submitting autocomplete field using Keyboard [`#896`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/896)
+
+---
+## [v0.75.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.75.0...v0.75.1) - 2022-07-25
+
+### Changes
+
+- fix(CsvImport): broken validation solved [`#895`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/895)
+- CI: Send ref name when release is triggered [`#894`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/894)
+- feat(Search): support DOI lookup by full URL, fix loading indicator [`#893`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/893)
+
+---
+## [v0.75.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.74.1...v0.75.0) - 2022-07-20
+
+### Changes
+
+- ux(Search): Run the search query when clicking Enter [`#892`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/892)
+- feat(ContributionEditor): support for 'empty' resource [`#891`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/891)
+- fix(StatementBrowser): Applying a template to contribution doesn't update the classes [`#889`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/889)
+
+---
 ## [v0.74.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.74.0...v0.74.1) - 2022-07-13
 
 ### Changes

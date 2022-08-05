@@ -1,30 +1,31 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
-import { InputGroup, Button } from 'reactstrap';
+import { faClipboard, faGear, faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faClipboard, faLink, faAtom } from '@fortawesome/free-solid-svg-icons';
+import Tippy from '@tippyjs/react';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import { getEntity, getEntities } from 'services/backend/misc';
-import { createClass, getClasses } from 'services/backend/classes';
-import { getResourcesByClass } from 'services/backend/resources';
-import { createLiteral } from 'services/backend/literals';
-import { createLiteralStatement } from 'services/backend/statements';
-import { olsBaseUrl, selectTerms, getAllOntologies, getOntologyTerms, getTermMatchingAcrossOntologies } from 'services/ols/index';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import REGEX from 'constants/regex';
+import { isEqual } from 'lodash';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import NativeListener from 'react-native-listener';
+import { Link } from 'react-router-dom';
+import { components } from 'react-select';
 import { AsyncPaginate, withAsyncPaginate } from 'react-select-async-paginate';
 import Creatable from 'react-select/creatable';
-import PropTypes from 'prop-types';
-import { truncate } from 'lodash';
-import { components } from 'react-select';
-import { compareOption } from 'utils';
-import styled, { withTheme } from 'styled-components';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
-import Tippy from '@tippyjs/react';
-import REGEX from 'constants/regex';
-import NativeListener from 'react-native-listener';
-import { ENTITIES, PREDICATES } from 'constants/graphSettings';
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import CustomOption from './CustomOption';
+import { Badge, Button, InputGroup } from 'reactstrap';
+import { createClass, getClasses } from 'services/backend/classes';
+import { createLiteral } from 'services/backend/literals';
+import { getEntities, getEntity } from 'services/backend/misc';
+import { createPredicate, getPredicate } from 'services/backend/predicates';
+import { createResource, getResource, getResourcesByClass } from 'services/backend/resources';
+import { createLiteralStatement } from 'services/backend/statements';
+import { getAllOntologies, getOntologyTerms, getTermMatchingAcrossOntologies, olsBaseUrl, selectTerms } from 'services/ols/index';
+import styled, { withTheme } from 'styled-components';
+import { asyncLocalStorage, compareOption } from 'utils';
 import getExternalData from './3rdPartyRegistries/index';
+import CustomOption from './CustomOption';
 import OntologiesModal from './OntologiesModal';
 
 export const StyledAutoCompleteInputFormControl = styled.div`
@@ -48,14 +49,23 @@ export const StyledMenuListHeader = styled.div`
     cursor: default;
 `;
 
+const STORAGE_NAME = 'autocomplete-sources';
+
+export const DEFAULT_SOURCES = [
+    { external: false, id: 'ORKG', label: 'Open Research Knowledge Graph', ontologyId: 'orkg', uri: 'http://orkg.org' },
+    { external: false, id: 'Wikidata', label: 'Wikidata', ontologyId: 'wikidata', uri: 'http://wikidata.org' },
+    { external: false, id: 'GeoNames', label: 'GeoNames', ontologyId: 'geonames', uri: 'http://geonames.org' },
+];
+
 function Autocomplete(props) {
     const [inputValue, setInputValue] = useState(typeof props.value !== 'object' || props.value === null ? props.value : null);
     const [menuIsOpen, setMenuIsOpen] = useState(false);
     const [ontologySelectorIsOpen, setOntologySelectorIsOpen] = useState(false);
-    const [selectedOntologies, setSelectedOntologies] = useState([]);
+
+    const [selectedOntologies, setSelectedOntologies] = useState(DEFAULT_SOURCES);
 
     // Pagination params
-    const PAGE_SIZE = 10;
+    const PAGE_SIZE = 3;
     const defaultAdditional = {
         page: 0,
     };
@@ -106,6 +116,27 @@ function Autocomplete(props) {
         }
     }, [props.value]);
 
+    useEffect(() => {
+        const getSources = async () => {
+            const data = await asyncLocalStorage.getItem(STORAGE_NAME);
+            try {
+                const parsedData = JSON.parse(data);
+                if (data && Array.isArray(parsedData)) {
+                    setSelectedOntologies(parsedData);
+                }
+            } catch (e) {}
+        };
+        getSources();
+    }, []);
+
+    useEffect(() => {
+        if (!isEqual(DEFAULT_SOURCES, selectedOntologies)) {
+            asyncLocalStorage.setItem(STORAGE_NAME, JSON.stringify(selectedOntologies));
+        } else {
+            asyncLocalStorage.removeItem(STORAGE_NAME);
+        }
+    }, [selectedOntologies]);
+
     // Support home and end keys for text Input
     const handleKeyDown = evt => {
         if (evt.key === 'Home') {
@@ -135,7 +166,7 @@ function Autocomplete(props) {
      * @param {Array} prevOptions Loaded options for current search.
      * @return {Array} The list of loaded options
      */
-    const InternalORKGLookup = async (value, page) => {
+    const orkgLookup = async (value, page) => {
         const exact = !!(value.startsWith('"') && value.endsWith('"') && value.length > 2);
         if (exact) {
             value = value.substring(1, value.length - 1).trim();
@@ -207,15 +238,25 @@ function Autocomplete(props) {
      * @param {Array} page Page number
      * @return {Array} The list of classes or properties
      */
-    const GetExternalClasses = async (value, page) => {
+    const olsLookup = async (value, page) => {
         if (value) {
+            const classes = {
+                [ENTITIES.CLASS]: 'class',
+                [ENTITIES.PREDICATE]: 'property',
+                default: 'individual',
+            };
             try {
                 return await selectTerms({
                     page,
-                    PAGE_SIZE,
-                    type: props.entityType === ENTITIES.CLASS ? 'class' : 'property',
+                    pageSize: PAGE_SIZE,
+                    type: classes[props.entityType] || classes.default,
                     q: encodeURIComponent(value.trim()),
-                    ontology: selectedOntologies ? selectedOntologies.map(o => o.ontologyId.replace(':', '')).join(',') : null,
+                    ontology: selectedOntologies
+                        ? selectedOntologies
+                              .filter(c => c.ontologyId !== 'orkg' && c.ontologyId !== 'wikidata')
+                              ?.map(o => o.ontologyId.replace(':', ''))
+                              .join(',')
+                        : null ?? null,
                 });
             } catch (error) {
                 // No matching class
@@ -224,9 +265,15 @@ function Autocomplete(props) {
         } else {
             // list all external classes
             try {
-                if (selectedOntologies && selectedOntologies.length > 0) {
+                if (
+                    selectedOntologies.filter(c => c.ontologyId !== 'orkg' && c.ontologyId !== 'wikidata') &&
+                    selectedOntologies.filter(c => c.ontologyId !== 'orkg' && c.ontologyId !== 'wikidata').length > 0
+                ) {
                     return await getOntologyTerms({
-                        ontology_id: selectedOntologies.map(s => s.ontologyId.replace(':', ''))[0],
+                        ontology_id:
+                            selectedOntologies
+                                .filter(c => c.ontologyId !== 'orkg' && c.ontologyId !== 'wikidata')
+                                ?.map(s => s.ontologyId.replace(':', ''))[0] ?? '',
                         page,
                         PAGE_SIZE,
                     });
@@ -287,34 +334,45 @@ function Autocomplete(props) {
                 };
             }
 
-            let responseJson = [];
+            let responseItems = [];
             let hasMore = false;
+
             if (props.requestUrl === olsBaseUrl) {
-                responseJson = await OntologyLookup(value, page);
-            } else if (selectedOntologies.length === 0) {
-                responseJson = await InternalORKGLookup(value, page);
-            } else if (props.ols) {
-                responseJson = await GetExternalClasses(value, page);
-            }
+                const result = await OntologyLookup(value, page);
+                responseItems = result.content;
+                hasMore = !result.last;
+            } else {
+                if (selectedOntologies.find(ontology => ontology.id === 'ORKG') || props.optionsClass) {
+                    const orkgResponseItems = await orkgLookup(value, page);
+                    responseItems.push(...orkgResponseItems.content);
 
-            hasMore = !responseJson.last;
-            responseJson = responseJson.content;
+                    // TODO: check if this this is still needed?
+                    if (responseItems.length > PAGE_SIZE) {
+                        // in case the endpoint doesn't support pagination!
+                        responseItems = responseItems.slice(0, PAGE_SIZE);
+                    }
+                    hasMore = !orkgResponseItems.last;
+                }
+                if (
+                    selectedOntologies.filter(ontology => ontology.id !== 'ORKG' && ontology.id !== 'Wikidata' && ontology.id !== 'GeoNames').length >
+                        0 ||
+                    props.entityType === ENTITIES.CLASS
+                ) {
+                    const olsResponseItems = await olsLookup(value, page);
+                    responseItems.push(...olsResponseItems.content);
+                    hasMore = hasMore || !olsResponseItems.last;
+                }
 
-            if (page === 0) {
-                responseJson = await IdMatch(value.trim(), responseJson);
-            }
-
-            if (responseJson.length > PAGE_SIZE) {
-                // in case the endpoint doesn't support pagination!
-                responseJson = responseJson.slice(0, PAGE_SIZE);
+                if (page === 0) {
+                    responseItems = await IdMatch(value.trim(), responseItems);
+                }
             }
 
             let options = [];
 
-            responseJson.map(item =>
+            responseItems.map(item =>
                 options.push({
-                    label: item.label,
-                    id: item.id,
+                    ...item,
                     ...(item.uri ? { uri: item.uri } : {}),
                     ...(item.shared ? { shared: item.shared } : {}),
                     ...(item.classes ? { classes: item.classes } : {}),
@@ -327,14 +385,32 @@ function Autocomplete(props) {
             options = AddAdditionalData(value, options, page);
 
             // Add resources from third party registries
-            if (!hasMore && props.optionsClass) {
-                options = await getExternalData(value, options, props.optionsClass);
+            // get ExternalData only when ols is true or the optionsClass exist
+            // to load data from Geonames in case of optionsClass set to Location
+            if (props.requestUrl !== olsBaseUrl && (props.ols || props.optionsClass)) {
+                try {
+                    const promises = await Promise.all(
+                        getExternalData({
+                            value,
+                            page,
+                            pageSize: PAGE_SIZE,
+                            options,
+                            optionsClass: props.optionsClass,
+                            entityType: props.entityType,
+                            selectedOntologies: props.ols ? selectedOntologies : [],
+                        }),
+                    );
+                    for (const data of promises) {
+                        options = [...options, ...data.options];
+                        hasMore = hasMore || data.hasMore;
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
             }
-
             return {
                 options,
                 hasMore,
-
                 additional: {
                     page: page + 1,
                 },
@@ -403,22 +479,87 @@ function Autocomplete(props) {
         }
     };
 
+    const findOrCreateProperty = async ({ id, label, description, sameAsUri }) => {
+        let property;
+        try {
+            property = await getPredicate(id);
+        } catch (e) {
+            property = await createPredicate(label, id);
+            if (sameAsUri) {
+                createLiteralStatement(property.id, PREDICATES.SAME_AS, (await createLiteral(sameAsUri)).id);
+            }
+            if (description) {
+                createLiteralStatement(property.id, PREDICATES.DESCRIPTION, (await createLiteral(description)).id);
+            }
+        }
+        return property;
+    };
+
+    const findOrCreateResource = async ({ id, label, description, sameAsUri }) => {
+        let resource;
+        try {
+            resource = await getResource(id);
+        } catch (e) {
+            resource = await createResource(label, [CLASSES.EXTERNAL], id);
+            if (sameAsUri) {
+                createLiteralStatement(resource.id, PREDICATES.SAME_AS, (await createLiteral(sameAsUri)).id);
+            }
+            if (description) {
+                createLiteralStatement(resource.id, PREDICATES.DESCRIPTION, (await createLiteral(description)).id);
+            }
+        }
+        return resource;
+    };
+
     /**
      * Handle change events on the select
      *
      * @param {Object} selected Selected option
      * @param {String} Object.action Change action, one of : "select-option","deselect-option", "remove-value", "pop-value", "set-value", "clear", "create-option"
      */
-    const handleChange = (selected, { action }) => {
+    const handleChange = async (selected, { action }) => {
         if (action === 'select-option') {
-            props.onItemSelected({
-                id: selected.id,
-                value: selected.label,
-                shared: selected.shared,
-                classes: selected.classes,
-                external: selected.external ?? false,
-                statements: selected.statements,
-            });
+            let id;
+            let label;
+            let description;
+            let sameAsUri;
+
+            if (selected.source === 'wikidata-api') {
+                id = `wikidata:${selected.id}`;
+                label = selected.label;
+                sameAsUri = `https://www.wikidata.org/entity/${selected.id}`;
+            } else if (selected.source === 'ols-api') {
+                id = `${selected.ontology}:${selected.shortForm}`;
+                label = selected.label;
+                description = selected.description;
+                sameAsUri = selected.uri;
+            }
+            if (selected.source === 'wikidata-api' || selected.source === 'ols-api') {
+                let resource;
+                if (props.entityType === ENTITIES.RESOURCE) {
+                    resource = await findOrCreateResource({ id, label, description, sameAsUri });
+                } else if (props.entityType === ENTITIES.PREDICATE) {
+                    resource = await findOrCreateProperty({ id, label, description, sameAsUri });
+                }
+                props.onItemSelected({
+                    id: resource.id,
+                    value: resource.label,
+                    shared: resource.shared,
+                    classes: resource.classes,
+                    external: false,
+                    statements: [],
+                });
+            } else {
+                props.onItemSelected({
+                    id: selected.id,
+                    value: selected.label,
+                    shared: selected.shared,
+                    classes: selected.classes,
+                    external: selected.external ?? false,
+                    statements: selected.statements,
+                });
+            }
+
             setInputValue('');
         } else if (action === 'create-option') {
             props.onNewItemSelected && props.onNewItemSelected(selected.label);
@@ -500,51 +641,45 @@ function Autocomplete(props) {
             <components.Menu {...innerProps}>
                 <div>{children}</div>
                 {props.ols && (
-                    <StyledMenuListHeader className=" align-items-center p-1 d-flex clearfix">
-                        <div className=" flex-grow-1 justify-content-end">
-                            {inputValue && props.allowCreate && (
-                                <Button
-                                    outline
-                                    color="info"
-                                    onClick={() => {
-                                        if (props.onNewItemSelected) {
-                                            props.onNewItemSelected(inputValue);
-                                        } else {
-                                            props.onChange(
-                                                props.isMulti ? [...props.value, { label: inputValue, __isNew__: true }] : { label: inputValue },
-                                                { action: 'create-option' },
-                                            );
-                                            setInputValue('');
-                                        }
-                                    }}
-                                    size="sm"
-                                >
-                                    Create "{truncate(inputValue, { length: 15 })}"
-                                </Button>
+                    <StyledMenuListHeader className="d-flex justify-content-between align-items-center p-1 d-flex">
+                        <div className="d-flex align-items-center">
+                            <div className="ps-2 align-items-center d-flex">
+                                Sources
+                                <div className="overflow-hidden">
+                                    {selectedOntologies.map(ontology => (
+                                        <Tippy
+                                            key={ontology.id}
+                                            content={
+                                                <div className="text-break">
+                                                    <strong>Label:</strong> {ontology.label} <br />
+                                                    <strong>URI:</strong> {ontology.uri}
+                                                </div>
+                                            }
+                                        >
+                                            <span>
+                                                <Badge color="light-darker text-black ms-2 rounded-pill" size="sm" style={{ marginBottom: 2 }}>
+                                                    {ontology.id}
+                                                </Badge>
+                                            </span>
+                                        </Tippy>
+                                    ))}
+                                </div>
+                            </div>
+                            {props.requestUrl !== olsBaseUrl && (
+                                <Tippy content="Select sources">
+                                    <span>
+                                        <Button
+                                            color="light-darker"
+                                            className="px-2 py-0 ms-2"
+                                            onClick={() => setOntologySelectorIsOpen(v => !v)}
+                                            size="sm"
+                                        >
+                                            <Icon icon={faGear} size="sm" />
+                                        </Button>
+                                    </span>
+                                </Tippy>
                             )}
                         </div>
-                        {props.requestUrl !== olsBaseUrl && (
-                            <>
-                                <Button
-                                    outline
-                                    color="info"
-                                    className="justify-content-end"
-                                    onClick={() => setOntologySelectorIsOpen(v => !v)}
-                                    size="sm"
-                                >
-                                    <Tippy
-                                        content={
-                                            selectedOntologies.length > 0 ? `${selectedOntologies.length} ontologies selected` : 'Select an ontology'
-                                        }
-                                    >
-                                        <span>
-                                            <Icon color={selectedOntologies.length > 0 ? props.theme.primary : undefined} icon={faAtom} size="sm" />{' '}
-                                            Ontologies
-                                        </span>
-                                    </Tippy>
-                                </Button>
-                            </>
-                        )}
                     </StyledMenuListHeader>
                 )}
             </components.Menu>
@@ -614,6 +749,9 @@ function Autocomplete(props) {
             ...provided,
             zIndex: 10,
             fontSize: '0.875rem',
+            width: 'max-content', // making sure the menu can be wider than the input size
+            minWidth: '100%',
+            maxWidth: 700,
         }),
         option: provided => ({
             ...provided,
@@ -637,7 +775,7 @@ function Autocomplete(props) {
     };
 
     // Creatable with adding new options : https://codesandbox.io/s/6pznz
-    const Select = useMemo(() => (props.allowCreate && !props.ols ? withAsyncPaginate(Creatable) : AsyncPaginate), [props.allowCreate, props.ols]);
+    const Select = useMemo(() => (props.allowCreate ? withAsyncPaginate(Creatable) : AsyncPaginate), [props.allowCreate]);
 
     return (
         <ConditionalWrapper
@@ -668,12 +806,13 @@ function Autocomplete(props) {
                 </ConditionalWrapper>
             )}
         >
-            <OntologiesModal
-                selectedOntologies={selectedOntologies}
-                setSelectedOntologies={setSelectedOntologies}
-                toggle={() => setOntologySelectorIsOpen(v => !v)}
-                showDialog={ontologySelectorIsOpen}
-            />
+            {ontologySelectorIsOpen && (
+                <OntologiesModal
+                    selectedOntologies={selectedOntologies}
+                    setSelectedOntologies={setSelectedOntologies}
+                    toggle={() => setOntologySelectorIsOpen(v => !v)}
+                />
+            )}
             <StyledAutoCompleteInputFormControl className={`form-control ${props.cssClasses ? props.cssClasses : 'default'} border-0`}>
                 <SelectGlobalStyle />
                 <Select
@@ -800,7 +939,7 @@ Autocomplete.defaultProps = {
     linkButton: null,
     isMulti: false,
     autoFocus: true,
-    ols: false,
+    ols: true,
     inputGroup: true,
     inputId: null,
     inputValue: null,

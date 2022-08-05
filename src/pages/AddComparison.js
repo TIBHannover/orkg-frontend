@@ -17,7 +17,7 @@ const AddComparison = () => {
             <Container className="box rounded py-4 px-5">
                 <Row>
                     <Col md="4">
-                        <div class="ratio ratio-16x9">
+                        <div className="ratio ratio-16x9">
                             <iframe
                                 title="How to make an ORKG comparison"
                                 scrolling="no"

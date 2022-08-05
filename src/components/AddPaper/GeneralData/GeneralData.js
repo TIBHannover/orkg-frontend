@@ -39,7 +39,9 @@ import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'bo
 import env from '@beam-australia/react-env';
 import AutocompleteContentTypeTitle from 'components/AutocompleteContentTypeTitle/AutocompleteContentTypeTitle';
 import Confirm from 'components/Confirmation/Confirmation';
-import ExistingDoiModal from './ExistingDoiModal';
+import ExistingTitleModal from 'components/ExistingPaperModal/ExistingTitleModal';
+import ExistingDoiModal from 'components/ExistingPaperModal/ExistingDoiModal';
+import useExistingPaper from 'components/ExistingPaperModal/useExistingPaper';
 
 const Container = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -86,8 +88,7 @@ const GeneralData = () => {
     const [dataEntry, setDataEntry] = useState('doi');
     const [validation, setValidation] = useState(null);
     const [errors, setErrors] = useState(null);
-    const [existingPaper, setExistingPaper] = useState(null);
-    const [continueNextStep, setContinueNextStep] = useState(false);
+    const { checkIfPaperExists, ExistingPaperModels } = useExistingPaper();
 
     const disableBody = target =>
         disableBodyScroll(target, {
@@ -159,30 +160,11 @@ const GeneralData = () => {
                 setErrors(null);
                 return null;
             })
-            .then(paper => {
+            .then(async paper => {
                 if (paper) {
                     const parseResult = parseCiteResult(paper);
-                    let checkDatabase;
-                    // If the paper DOI already exists in the database
-                    if (parseResult.doi.includes('10.') && parseResult.doi.startsWith('10.')) {
-                        checkDatabase = getPaperByDOI(parseResult.doi);
-                    } else {
-                        checkDatabase = getPaperByTitle(parseResult.paperTitle);
-                    }
-
-                    checkDatabase
-                        .then(result => {
-                            getStatementsBySubject({ id: result.id }).then(paperStatements => {
-                                setExistingPaper({ ...getPaperData(result, paperStatements), title: result.title });
-                                setIsFetching(false);
-                                setErrors(null);
-                            });
-                        })
-                        .catch(() => {
-                            setIsFetching(false);
-                            setErrors(null);
-                            setExistingPaper(null);
-                        });
+                    await checkIfPaperExists({ title: parseResult.paperTitle, doi: parseResult.doi });
+                    setIsFetching(false);
                     dispatch(
                         updateGeneralData({
                             showLookupTable: true,
@@ -250,7 +232,7 @@ const GeneralData = () => {
         }
     };
 
-    const handleNextClick = () => {
+    const handleNextClick = async () => {
         // TODO do some sort of validation, before proceeding to the next step
         const errors = [];
 
@@ -272,20 +254,7 @@ const GeneralData = () => {
                     url,
                 }),
             );
-            // If the paper title already exists in the database and not checked yet!
-            if (!existingPaper) {
-                getPaperByTitle(title)
-                    .then(result => {
-                        getStatementsBySubject({ id: result.id }).then(paperStatements => {
-                            setExistingPaper({ ...getPaperData(result, paperStatements), title: result.title });
-                            setContinueNextStep(true);
-                        });
-                    })
-                    .catch(() => {
-                        setExistingPaper(null);
-                        dispatch(nextStep());
-                    });
-            } else {
+            if (!(await checkIfPaperExists({ doi, title, continueNext: true }))) {
                 dispatch(nextStep());
             }
         } else {
@@ -481,9 +450,7 @@ const GeneralData = () => {
                         </div>
                     </Container>
                 )}
-                {existingPaper && (
-                    <ExistingDoiModal onContinue={() => (continueNextStep ? dispatch(nextStep()) : undefined)} existingPaper={existingPaper} />
-                )}
+
                 {dataEntry !== 'doi' && (
                     <Container key={2} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
                         <Form className="mt-4" onSubmit={submitHandler} id="manuelInputGroup">
@@ -661,6 +628,7 @@ const GeneralData = () => {
                 showNavigation={false}
                 maskClassName="opacity-75"
             />
+            <ExistingPaperModels onContinue={() => dispatch(nextStep())} />
         </div>
     );
 };

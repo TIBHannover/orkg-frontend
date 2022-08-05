@@ -21,6 +21,7 @@ const Filters = () => {
                     placeholder="Search..."
                     id="searchQuery"
                     name="value"
+                    onKeyDown={e => e.key === 'Enter' && submitSearch(value)}
                 />
                 <Button onClick={() => submitSearch(value)} color="secondary" className="ps-2 pe-2">
                     <FontAwesomeIcon icon={faSearch} />
@@ -80,6 +81,7 @@ const Filters = () => {
                 autoLoadOption={true}
                 openMenuOnFocus={true}
                 allowCreate={false}
+                ols={false}
                 isClearable
                 isMulti={true}
                 autoFocus={false}

@@ -1,3 +1,4 @@
+import useExistingPaper from 'components/ExistingPaperModal/useExistingPaper';
 import Confirm from 'components/Confirmation/Confirmation';
 import DoiItem from 'components/CreatePaperModal/DoiItem';
 import useCreatePaper from 'components/CreatePaperModal/hooks/useCreatePaper';
@@ -20,15 +21,17 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
     const [researchField, setResearchField] = useState(null);
     const [url, setUrl] = useState('');
     const [lookupOnMount, setLookupOnMount] = useState(false);
+    const { checkIfPaperExists, ExistingPaperModels } = useExistingPaper();
 
     useEffect(() => {
         if (!initialValue) {
             return;
         }
 
-        const doi = initialValue.startsWith('http') ? initialValue.substring(initialValue.indexOf('10.')) : initialValue;
-        if (REGEX.DOI.test(doi)) {
-            setDoi(doi);
+        const doiEntry = initialValue.startsWith('http') ? initialValue.substring(initialValue.indexOf('10.')) : initialValue;
+
+        if (REGEX.DOI.test(doiEntry)) {
+            setDoi(doiEntry);
             setLookupOnMount(true);
         } else {
             setTitle(initialValue);
@@ -36,7 +39,7 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
         }
     }, [initialValue]);
 
-    const handleCreate = async () => {
+    const finishCreate = async () => {
         const ids = await createPaper({
             title,
             month,
@@ -51,6 +54,13 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
         if (ids) {
             onCreatePaper(ids);
         }
+    };
+
+    const handleCreate = async () => {
+        if (await checkIfPaperExists({ doi, title, continueNext: true })) {
+            return;
+        }
+        finishCreate();
     };
 
     const FIELDS = {
@@ -165,6 +175,7 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
                     {!isLoading ? 'Create' : 'Loading...'}
                 </Button>
             </ModalFooter>
+            <ExistingPaperModels onContinue={finishCreate} />
         </Modal>
     );
 };

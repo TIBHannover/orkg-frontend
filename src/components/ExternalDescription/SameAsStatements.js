@@ -47,7 +47,7 @@ const SameAsStatements = () => {
                     }
                     if (resourceUrl.match(REG_WIKIDATA)) {
                         return (
-                            <div className="list-group-item">
+                            <div className="border rounded p-3">
                                 <WikidataDescription externalResource={resourceUrl} key={`wiki${index}`} />
                             </div>
                         );
