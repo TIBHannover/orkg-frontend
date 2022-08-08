@@ -78,8 +78,8 @@ const predicates = [
             }),
         );
     }),
-    rest.post(`${predicatesUrl}`, (req, res, ctx) => {
-        const { label } = req.body;
+    rest.post(`${predicatesUrl}`, async (req, res, ctx) => {
+        const { label } = await req.json();
         return res(
             ctx.json({
                 id: `P${faker.datatype.number()}`,

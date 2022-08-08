@@ -6,7 +6,7 @@ import { getPaperByDOI } from 'services/backend/misc';
 import { createResource, getResourcesByClass, getResources, getResource } from 'services/backend/resources';
 import { getPredicate, getPredicates, createPredicate } from 'services/backend/predicates';
 import { saveFullPaper } from 'services/backend/papers';
-import Cite from 'citation-js';
+import { Cite } from '@citation-js/core';
 import { parseCiteResult } from 'utils';
 import { toast } from 'react-toastify';
 import DATA_TYPES, { checkDataTypeIsInValid, getSuggestionByValue } from 'constants/DataTypes';

@@ -1,6 +1,6 @@
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Cite from 'citation-js';
+import { Cite } from '@citation-js/core';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -25,7 +25,7 @@ const ExportBibtexModal = ({ isOpen, toggle }) => {
             type: 'article',
             id: paper.paper.id,
             title: paper.label,
-            author: paper.authors.length > 0 ? paper.authors.map(author => ({ name: author.label })) : null,
+            author: paper.authors?.length > 0 ? paper.authors.map(author => ({ name: author.label })) : null,
             year: paper.publicationYear?.label,
         });
 

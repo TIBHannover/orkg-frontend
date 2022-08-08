@@ -78,12 +78,12 @@ const EditorTable = ({ scrollContainerBody }) => {
                             </FlipMove>
                         </div>
                     </div>
-                    {rows.length === 0 && (
-                        <Alert className="mt-0" color="info">
-                            Start adding properties or use templates by using the buttons below
-                        </Alert>
-                    )}
                 </ScrollSyncPane>
+                {rows.length === 0 && (
+                    <Alert className="mt-0" color="info">
+                        Start adding properties or use templates by using the buttons below
+                    </Alert>
+                )}
             </div>
         </>
     );
