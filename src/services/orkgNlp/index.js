@@ -39,25 +39,24 @@ export const summarizeText = ({ text, ratio }) => {
     return payload;
 };
 
+export const PROPERTY_MAPPING = {
+    RESEARCH_PROBLEM: PREDICATES.HAS_RESEARCH_PROBLEM,
+    METHOD: PREDICATES.METHOD,
+    LANGUAGE: PREDICATES.LANGUAGE,
+    RESOURCE: PREDICATES.RESOURCE,
+    TOOL: PREDICATES.TOOL,
+    SOLUTION: PREDICATES.SOLUTION,
+    DATASET: PREDICATES.HAS_DATASET,
+};
+
 export const getNerResults = async ({ title = '', abstract = '' }) => {
     const data = await submitPostRequest(`${nlpServiceUrl}annotation/csner`, { 'Content-Type': 'application/json' }, { title, abstract });
     const titleConcepts = mapValues(keyBy(data.payload.annotations.title, 'concept'), 'entities');
     const abstractConcepts = mapValues(keyBy(data.payload.annotations.abstract, 'concept'), 'entities');
-
-    const propertyMapping = {
-        RESEARCH_PROBLEM: PREDICATES.HAS_RESEARCH_PROBLEM,
-        METHOD: PREDICATES.METHOD,
-        LANGUAGE: PREDICATES.LANGUAGE,
-        RESOURCE: PREDICATES.RESOURCE,
-        TOOL: PREDICATES.TOOL,
-        SOLUTION: PREDICATES.SOLUTION,
-        DATASET: PREDICATES.HAS_DATASET,
-    };
-
     const mappedEntities = {};
     const mappedResourcePromises = [];
 
-    for (const type of Object.keys(propertyMapping)) {
+    for (const type of Object.keys(PROPERTY_MAPPING)) {
         const resources = uniq([...(titleConcepts?.[type] || []), ...(abstractConcepts?.[type] || [])]);
         mappedResourcePromises.push(
             ...resources.map(resource => ({ type, label: resource, data: getResources({ q: resource, exact: true, returnContent: true }) })),
@@ -67,8 +66,8 @@ export const getNerResults = async ({ title = '', abstract = '' }) => {
     const resources = await Promise.all(mappedResourcePromises.map(promise => promise.data));
 
     for (const [index, resourceResults] of resources.entries()) {
-        if (!mappedEntities[propertyMapping[mappedResourcePromises[index].type]]) {
-            mappedEntities[propertyMapping[mappedResourcePromises[index].type]] = [];
+        if (!mappedEntities[PROPERTY_MAPPING[mappedResourcePromises[index].type]]) {
+            mappedEntities[PROPERTY_MAPPING[mappedResourcePromises[index].type]] = [];
         }
         let resource;
         if (resourceResults.length > 0) {
@@ -80,7 +79,7 @@ export const getNerResults = async ({ title = '', abstract = '' }) => {
                 isExistingValue: false,
             };
         }
-        mappedEntities[propertyMapping[mappedResourcePromises[index].type]].push(resource);
+        mappedEntities[PROPERTY_MAPPING[mappedResourcePromises[index].type]].push(resource);
     }
 
     const propertyPromises = Object.keys(mappedEntities).map(propertyId => getPredicate(propertyId));
@@ -88,7 +87,7 @@ export const getNerResults = async ({ title = '', abstract = '' }) => {
     properties = keyBy(
         properties.map(property => ({
             ...property,
-            concept: Object.keys(propertyMapping).find(key => propertyMapping[key] === property.id),
+            concept: Object.keys(PROPERTY_MAPPING).find(key => PROPERTY_MAPPING[key] === property.id),
         })),
         'id',
     );
