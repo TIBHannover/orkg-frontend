@@ -30,7 +30,9 @@ describe('TableCellValueCreate', () => {
     it('should switch to autocomplete when resource type is selected', async () => {
         setup();
         fireEvent.click(screen.getByRole('button', { name: /add value/i, hidden: true }));
-        await selectEvent.select(screen.getByText(/text/i), ['Resource'], { container: document.body });
+        const selectInput = screen.getByText(/text/i);
+        await selectEvent.openMenu(selectInput);
+        await selectEvent.select(selectInput, ['Resource'], { container: document.body });
         expect(screen.getByRole('combobox', { name: /enter a resource/i })).toBeInTheDocument();
     });
 
@@ -38,9 +40,12 @@ describe('TableCellValueCreate', () => {
         setup();
         fireEvent.click(screen.getByRole('button', { name: /add value/i, hidden: true }));
         // use wait for to prevent "Can't perform a React state update on an unmounted component. This is a no-op" warning
-        await selectEvent.select(screen.getByText(/text/i), ['Resource'], { container: document.body });
+        const selectInput = screen.getByText(/text/i);
+        await selectEvent.openMenu(selectInput);
+        await selectEvent.select(selectInput, ['Resource'], { container: document.body });
         expect(screen.getByRole('combobox', { name: /enter a resource/i })).toBeInTheDocument();
-        await selectEvent.select(screen.getByText('Resource'), ['Text'], { container: document.body });
+        await selectEvent.openMenu(selectInput);
+        await selectEvent.select(selectInput, ['Text'], { container: document.body });
         expect(screen.getByPlaceholderText(/enter a value/i)).toBeInTheDocument();
     });
 

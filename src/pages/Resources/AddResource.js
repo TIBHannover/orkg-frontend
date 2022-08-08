@@ -10,7 +10,7 @@ import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
 import REGEX from 'constants/regex';
-import Cite from 'citation-js';
+import { Cite } from '@citation-js/core';
 import ROUTES from 'constants/routes';
 import { useSelector } from 'react-redux';
 import { PREDICATES, ENTITIES, CLASSES } from 'constants/graphSettings';

@@ -202,7 +202,9 @@ describe('ValueItem', () => {
         setup();
         await clickOnEditValueButton(screen, VALUE_IDS.URL);
         // Could be a bug in react-select-event
-        await selectEvent.select(screen.getByText('URL'), ['Text']);
+        const selectInput = screen.getByText('URL');
+        await selectEvent.openMenu(selectInput);
+        await selectEvent.select(selectInput, ['Text']);
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
         fireEvent.click(screen.getByRole('button', { name: 'Keep' }));
         expect(screen.getAllByText('Text')).toHaveLength(2);
@@ -216,7 +218,9 @@ describe('ValueItem', () => {
         setup();
         await clickOnEditValueButton(screen, VALUE_IDS.Date);
         // Could be a bug in react-select-event
-        await selectEvent.select(screen.getByText('Date'), ['Text']);
+        const selectInput = screen.getByText('Date');
+        await selectEvent.openMenu(selectInput);
+        await selectEvent.select(selectInput, ['Text']);
         fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: 'New text' } });
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
         await waitFor(() => expect(screen.getByText('New text')).toBeInTheDocument());
@@ -237,9 +241,11 @@ describe('ValueItem', () => {
     it('should not show resource datatype on literal edit', async () => {
         setup();
         await clickOnEditValueButton(screen, VALUE_IDS.Date);
-        await selectEvent.select(screen.getByText('Date'), ['Date']);
+        const selectInput = screen.getByText('Date');
+        await selectEvent.openMenu(selectInput);
+        await selectEvent.select(selectInput, ['Date']);
         await waitFor(() => expect(screen.queryAllByText(/Resource/i)).toHaveLength(1));
-        expect(screen.getAllByText('Text')).toHaveLength(2);
-        expect(screen.getAllByText('Date')).toHaveLength(2);
+        expect(screen.getAllByText('Text')).toHaveLength(1);
+        expect(screen.getAllByText('Date')).toHaveLength(1);
     });
 });
