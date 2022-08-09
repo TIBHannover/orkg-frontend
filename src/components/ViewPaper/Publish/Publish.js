@@ -8,7 +8,7 @@ import { createLiteral } from 'services/backend/literals';
 import Tooltip from 'components/Utils/Tooltip';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
-import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
+import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import { getContributorsByResourceId } from 'services/backend/resources';
 import { getPublicUrl, filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import { getStatementsBySubject, createResourceStatement, deleteStatementById, getStatementsBundleBySubject } from 'services/backend/statements';
@@ -18,13 +18,13 @@ import { Link } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { uniqBy } from 'lodash';
+import { uniqBy, flatten } from 'lodash';
 import { AuthorTag } from 'components/Utils/AuthorsInput';
 
 function Publish(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [description, setDescription] = useState('');
-    const [subject, setSubject] = useState('');
+    const [subject, setSubject] = useState(null);
     const [contributors, setContributors] = useState([]);
     const viewPaper = useSelector(state => state.viewPaper);
     const [dataCiteDoi, setDataCiteDoi] = useState('');
@@ -34,32 +34,28 @@ function Publish(props) {
     useEffect(() => {
         const loadContributors = () => {
             getContributorsByResourceId(viewPaper.paperResource.id)
-                .then(contrs => {
-                    const contributorsList = contrs.filter(c => c.created_by.display_name !== 'Unknown');
-                    setContributors(contributorsList ? uniqBy(contributorsList.reverse(), 'id') : []);
+                .then(result => {
+                    const contributorsList = result.filter(c => c.created_by.id !== MISC.UNKNOWN_ID);
+                    setContributors(contributorsList ? uniqBy(contributorsList, 'created_by.id') : []);
                 })
-                .catch(error => {});
+                .catch(() => {});
         };
-        setSubject(viewPaper.researchField);
+
         loadContributors();
-    }, [viewPaper]);
+    }, [viewPaper.paperResource.id]);
+
+    useEffect(() => {
+        setSubject(viewPaper.researchField);
+    }, [viewPaper.researchField]);
 
     const getPaperStatements = async paperId => {
-        const statements = await getStatementsBySubject({ id: paperId });
-        const result = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
-        const ids = result.map(c => c.id);
-        const data = [];
-        for (let j = 0; j < ids.length; j += 1) {
-            const bstatements = getStatementsBundleBySubject({ id: ids[j], maxLevel: 10, blacklist: [CLASSES.RESEARCH_FIELD] });
-            data.push(bstatements);
-        }
-        const res = [];
-        await Promise.all(data).then(r => {
-            for (let t = 0; t < r.length; t += 1) {
-                res.push(...r[t].statements);
-            }
-        });
-        return res;
+        const pStatements = await getStatementsBySubject({ id: paperId });
+        const contributions = filterObjectOfStatementsByPredicateAndClass(pStatements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
+        const contributionAPIcalls = contributions.map(contribution =>
+            getStatementsBundleBySubject({ id: contribution.id, maxLevel: 10, blacklist: [CLASSES.RESEARCH_FIELD] }),
+        );
+        const statements = await Promise.all(contributionAPIcalls).then(r => flatten(r.map(c => c.statements)));
+        return statements;
     };
 
     const publishDOI = async paperId => {
@@ -76,14 +72,13 @@ function Publish(props) {
                     name: title,
                     classes: [CLASSES.PAPER_VERSION],
                     values: {
-                        ...(subject &&
-                            subject.id && {
-                                [PREDICATES.HAS_RESEARCH_FIELD]: [
-                                    {
-                                        '@id': subject.id,
-                                    },
-                                ],
-                            }),
+                        ...(subject?.id && {
+                            [PREDICATES.HAS_RESEARCH_FIELD]: [
+                                {
+                                    '@id': subject.id,
+                                },
+                            ],
+                        }),
                         ...(viewPaper.publicationMonth && {
                             [PREDICATES.HAS_PUBLICATION_MONTH]: [
                                 {
@@ -120,29 +115,33 @@ function Publish(props) {
                 title,
                 subject: subject ? subject.label : '',
                 description,
-                related_sources: viewPaper.contributions && viewPaper.contributions[0] ? [viewPaper.contributions[0].id] : [''],
+                // we send only one contribution id because we want to create a DOI for the whole paper and not for each contribution.
+                // the backend will fetch the paper original DOI
+                related_sources: viewPaper.contributions?.[0] ? [viewPaper.contributions[0].id] : [''],
                 authors: contributors.map(creator => ({ creator: creator.created_by.display_name, orcid: '' })),
                 url: `${getPublicUrl()}${reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaper.id })}`,
             })
-                .then(doiResponse => {
-                    createLiteral(doiResponse.data.attributes.doi).then(async doiLiteral => {
-                        createResourceStatement(createdPaper.id, PREDICATES.HAS_DOI, doiLiteral.id);
-                        if (viewPaper.hasVersion) {
-                            await deleteStatementById(viewPaper.hasVersion.statementId);
-                            createResourceStatement(createdPaper.id, PREDICATES.HAS_PREVIOUS_VERSION, viewPaper.hasVersion.id);
-                        }
-                        createResourceStatement(viewPaper.paperResource.id, PREDICATES.HAS_PREVIOUS_VERSION, createdPaper.id);
-                        setDataCiteDoi(doiResponse.data.attributes.doi);
-                        setCreatedPaperId(createdPaper.id);
+                .then(async doiResponse => {
+                    const doiLiteral = await createLiteral(doiResponse.data.attributes.doi);
+                    const apiCalls = [createResourceStatement(createdPaper.id, PREDICATES.HAS_DOI, doiLiteral.id)];
+                    if (viewPaper.hasVersion) {
+                        await deleteStatementById(viewPaper.hasVersion.statementId);
+                        apiCalls.push(createResourceStatement(createdPaper.id, PREDICATES.HAS_PREVIOUS_VERSION, viewPaper.hasVersion.id));
+                    }
+                    apiCalls.push(createResourceStatement(viewPaper.paperResource.id, PREDICATES.HAS_PREVIOUS_VERSION, createdPaper.id));
+                    apiCalls.push(
                         createResourceData({
                             resourceId: createdPaper.id,
                             data: { statements: paperStatements },
-                        });
-                        setIsLoading(false);
-                        toast.success('DOI has been registered successfully');
-                    });
+                        }),
+                    );
+                    await Promise.all(apiCalls);
+                    setDataCiteDoi(doiResponse.data.attributes.doi);
+                    setCreatedPaperId(createdPaper.id);
+                    setIsLoading(false);
+                    toast.success('DOI has been registered successfully');
                 })
-                .catch(error => {
+                .catch(() => {
                     toast.error('Error publishing a DOI');
                     setIsLoading(false);
                 });
@@ -203,7 +202,6 @@ function Publish(props) {
                 )}
                 {!dataCiteDoi && (
                     <>
-                        {' '}
                         <FormGroup>
                             <Label for="title">
                                 <Tooltip message="Title of the paper">Title</Tooltip>
