@@ -61,7 +61,7 @@ const ProvenanceBox = () => {
                                 observatoryInfo={observatoryInfo}
                                 organizationInfo={organizationInfo}
                                 paperResource={paperResource}
-                                contributors={contributors}
+                                contributors={uniqBy(contributors, 'created_by.id')}
                                 createdBy={createdBy}
                                 isLoadingProvenance={isLoadingProvenance}
                                 isLoadingContributors={isLoadingContributors}
