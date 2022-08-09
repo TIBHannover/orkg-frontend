@@ -8,17 +8,23 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
+import { useSelector } from 'react-redux';
 import Publish from 'components/ViewPaper/Publish/Publish';
 import ViewPaperButton from 'components/ViewPaper/PaperHeaderBar/ViewPaperButton';
+import { getPaperLink } from 'slices/viewPaperSlice';
 
 function PaperMenuBar(props) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
+    const id = useSelector(state => state.viewPaper.paperResource?.id);
+    const label = useSelector(state => state.viewPaper.paperResource?.label);
+    const doi = useSelector(state => state.viewPaper.doi?.label);
+    const paperLink = useSelector(getPaperLink);
 
     return (
         <>
-            <ViewPaperButton paperLink={props.paperLink} doi={props.doi} title={props.label} />
+            <ViewPaperButton paperLink={paperLink} doi={doi} title={label} />
             <Button className="flex-shrink-0" color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => props.toggle('showGraphModal')}>
                 <Icon icon={faProjectDiagram} style={{ margin: '2px 4px 0 0' }} /> Graph view
             </Button>
@@ -56,14 +62,15 @@ function PaperMenuBar(props) {
                     <RequireAuthentication component={DropdownItem} onClick={() => setShowPublishDialog(v => !v)}>
                         Publish
                     </RequireAuthentication>
-                    <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: props.id })}>
+                    <DropdownItem divider />
+                    <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id })}>
                         View resource
                     </DropdownItem>
                 </DropdownMenu>
             </ButtonDropdown>
 
-            <PapersWithCodeModal isOpen={isOpenPWCModal} toggle={() => setIsOpenPWCModal(v => !v)} label={props.label} />
-            <Publish showDialog={showPublishDialog} toggle={() => setShowPublishDialog(v => !v)} label={props.label} />
+            <PapersWithCodeModal isOpen={isOpenPWCModal} toggle={() => setIsOpenPWCModal(v => !v)} label={label} />
+            <Publish showDialog={showPublishDialog} toggle={() => setShowPublishDialog(v => !v)} />
         </>
     );
 }
@@ -71,11 +78,7 @@ function PaperMenuBar(props) {
 PaperMenuBar.propTypes = {
     editMode: PropTypes.bool.isRequired,
     disableEdit: PropTypes.bool.isRequired,
-    paperLink: PropTypes.string,
-    id: PropTypes.string,
-    label: PropTypes.string,
     toggle: PropTypes.func.isRequired,
-    doi: PropTypes.string,
 };
 
 export default PaperMenuBar;

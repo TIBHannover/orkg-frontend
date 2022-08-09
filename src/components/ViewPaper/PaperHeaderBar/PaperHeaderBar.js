@@ -2,6 +2,7 @@ import { ButtonGroup, Container } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { CSSTransition } from 'react-transition-group';
+import { useSelector } from 'react-redux';
 import PaperMenuBar from './PaperMenuBar';
 
 const PaperHeaderBarContainer = styled.div`
@@ -33,6 +34,8 @@ const AnimationContainer = styled(CSSTransition)`
 `;
 
 function PaperHeaderBar(props) {
+    const label = useSelector(state => state.viewPaper.paperResource?.label);
+
     return (
         <AnimationContainer in={true} appear={true} classNames="fade" timeout={500}>
             <PaperHeaderBarContainer id="paperHeaderBar">
@@ -43,19 +46,11 @@ function PaperHeaderBar(props) {
                                 Edit mode <span className="ps-2">Every change you make is automatically saved</span>
                             </>
                         ) : (
-                            props.paperTitle
+                            label
                         )}
                     </div>
                     <ButtonGroup className="flex-shrink-0">
-                        <PaperMenuBar
-                            disableEdit={props.disableEdit}
-                            id={props.id}
-                            label={props.paperTitle}
-                            editMode={props.editMode}
-                            paperLink={props.paperLink}
-                            toggle={props.toggle}
-                            doi={props.doi}
-                        />
+                        <PaperMenuBar disableEdit={props.disableEdit} editMode={props.editMode} toggle={props.toggle} />
                     </ButtonGroup>
                 </Container>
             </PaperHeaderBarContainer>
@@ -65,11 +60,7 @@ function PaperHeaderBar(props) {
 PaperHeaderBar.propTypes = {
     editMode: PropTypes.bool.isRequired,
     disableEdit: PropTypes.bool.isRequired,
-    paperLink: PropTypes.string,
     toggle: PropTypes.func.isRequired,
-    paperTitle: PropTypes.string.isRequired,
-    id: PropTypes.string,
-    doi: PropTypes.string,
 };
 
 export default PaperHeaderBar;

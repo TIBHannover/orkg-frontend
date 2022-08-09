@@ -24,13 +24,6 @@ const ViewPaper = () => {
     const { resourceId } = useParams();
     const location = useLocation();
     const viewPaper = useSelector(state => state.viewPaper);
-    const paperLink = useSelector(state =>
-        state.viewPaper.url
-            ? state.viewPaper.url.label
-            : state.viewPaper.doi && state.viewPaper.doi.label.startsWith('10.')
-            ? `https://doi.org/${state.viewPaper.doi.label}`
-            : '',
-    );
 
     const {
         isLoading,
@@ -80,15 +73,7 @@ const ViewPaper = () => {
             {!isLoadingFailed && (
                 <>
                     {showHeaderBar && (
-                        <PaperHeaderBar
-                            disableEdit={env('PWC_USER_ID') === viewPaper.paperResource.created_by}
-                            paperLink={paperLink}
-                            editMode={editMode}
-                            toggle={toggle}
-                            id={resourceId}
-                            paperTitle={viewPaper.paperResource.label}
-                            doi={viewPaper.doi?.label}
-                        />
+                        <PaperHeaderBar disableEdit={env('PWC_USER_ID') === viewPaper.paperResource.created_by} editMode={editMode} toggle={toggle} />
                     )}
                     <Breadcrumbs researchFieldId={viewPaper.researchField ? viewPaper.researchField.id : null} />
 
@@ -106,11 +91,7 @@ const ViewPaper = () => {
                                 <PaperMenuBar
                                     disableEdit={env('PWC_USER_ID') === viewPaper.paperResource.created_by}
                                     editMode={editMode}
-                                    paperLink={paperLink}
                                     toggle={toggle}
-                                    id={resourceId}
-                                    label={viewPaper.paperResource?.label}
-                                    doi={viewPaper.doi?.label}
                                 />
                             }
                         >

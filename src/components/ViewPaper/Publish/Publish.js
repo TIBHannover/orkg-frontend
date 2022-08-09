@@ -42,7 +42,7 @@ function Publish(props) {
         };
         setSubject(viewPaper.researchField);
         loadContributors();
-    }, [props.label, viewPaper]);
+    }, [viewPaper]);
 
     const getPaperStatements = async paperId => {
         const statements = await getStatementsBySubject({ id: paperId });
@@ -276,7 +276,6 @@ function Publish(props) {
 Publish.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    label: PropTypes.string,
 };
 
 export default Publish;
