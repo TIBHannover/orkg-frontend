@@ -52,22 +52,25 @@ const ViewPaperVersion = () => {
             {!isLoadingFailed && (
                 <>
                     <Breadcrumbs researchFieldId={viewPaper.researchField ? viewPaper.researchField.id : null} />
-                    <br />
                     <TitleBar
                         buttonGroup={
-                            <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
-                                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
-                                    <Icon icon={faEllipsisV} />
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem onClick={() => setShowExportCitationsDialog(v => !v)}>Export citations</DropdownItem>
-                                    <DropdownItem onClick={() => setShowPublishDialog(v => !v)}>Publish</DropdownItem>
-                                    <DropdownItem divider />
-                                    <DropdownItem tag={NavLink} to={reverse(ROUTES.RESOURCE, { id: resourceId })}>
-                                        View resource
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
+                            <>
+                                <Button size="sm" onClick={() => setShowExportCitationsDialog(v => !v)}>
+                                    Export citations
+                                </Button>
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
+                                        <Icon icon={faEllipsisV} />
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DropdownItem onClick={() => setShowPublishDialog(v => !v)}>Publish</DropdownItem>
+                                        <DropdownItem divider />
+                                        <DropdownItem tag={NavLink} to={reverse(ROUTES.RESOURCE, { id: resourceId })}>
+                                            View resource
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                            </>
                         }
                     >
                         View paper
@@ -127,10 +130,9 @@ const ViewPaperVersion = () => {
                     {dataCiteDoi && viewPaper.originalPaperId && (
                         <Alert color="info">
                             <>
-                                {' '}
-                                This paper is already published, you can find the persistent link below.
-                                <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: viewPaper.originalPaperId })}> Fetch live data</Link> for updating
-                                the current version.{' '}
+                                This paper is already published, you can find the persistent link below.{' '}
+                                <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: viewPaper.originalPaperId })}>Fetch live data</Link> for updating
+                                the current version.
                             </>
                         </Alert>
                     )}

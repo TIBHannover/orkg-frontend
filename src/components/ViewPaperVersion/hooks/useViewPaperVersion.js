@@ -37,7 +37,7 @@ const useViewPaperVersion = ({ paperId }) => {
     const loadPaperData = useCallback(() => {
         setIsLoading(true);
         getResource(paperId)
-            .then(paperResource => {
+            .then(async paperResource => {
                 if (!paperResource.classes.includes(CLASSES.PAPER_VERSION)) {
                     setIsLoadingFailed(true);
                     setIsLoading(false);
@@ -46,26 +46,23 @@ const useViewPaperVersion = ({ paperId }) => {
                 // Load the paper metadata but skip the research field and contribution data
                 getVisualization(paperId).then(async r => {
                     setPaperStatements(r.data.statements);
-                    const cntrbs = filterSubjectOfStatementsByPredicateAndClass(
+                    const contributionsNodes = filterSubjectOfStatementsByPredicateAndClass(
                         r.data.statements,
                         PREDICATES.HAS_CONTRIBUTION,
                         false,
                         CLASSES.CONTRIBUTION,
                     );
-                    setContributions(uniqBy(cntrbs, 'id').reverse());
+                    setContributions(uniqBy(contributionsNodes, 'id').reverse());
                 });
-                getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD, CLASSES.CONTRIBUTION] }).then(
-                    async pStatements => {
-                        const paperData = getPaperDataViewPaper(paperResource, pStatements.statements?.filter(s => s.subject.id === paperId));
-                        const livePaperId = await getOriginalPaperId(paperId);
-                        dispatch(loadPaper({ ...paperData, originalPaperId: livePaperId }));
-                        setAuthorsORCID(pStatements.statements, paperId);
-                        setIsLoading(false);
-                        document.title = paperData.paperResource.label;
-                    },
-                );
+                const pStatements = await getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD] });
+                const paperData = getPaperDataViewPaper(paperResource, pStatements.statements?.filter(s => s.subject.id === paperId));
+                const livePaperId = await getOriginalPaperId(paperId);
+                dispatch(loadPaper({ ...paperData, originalPaperId: livePaperId }));
+                setAuthorsORCID(pStatements.statements, paperId);
+                setIsLoading(false);
+                document.title = paperData.paperResource.label;
             })
-            .catch(error => {
+            .catch(() => {
                 setIsLoadingFailed(true);
                 setIsLoading(false);
             });

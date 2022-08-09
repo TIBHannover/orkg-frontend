@@ -9,9 +9,8 @@ import { useEffect, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getAltMetrics } from 'services/altmetric/index';
-import env from '@beam-australia/react-env';
 
-const PaperVersionHeader = props => {
+const PaperVersionHeader = () => {
     const viewPaper = useSelector(state => state.viewPaper, shallowEqual);
     const [altMetrics, setAltMetrics] = useState(null);
 
@@ -68,22 +67,16 @@ const PaperVersionHeader = props => {
                     </div>
                 )}
 
-                {viewPaper.doi &&
-                    viewPaper.doi.length &&
-                    viewPaper.doi.length > 0 &&
-                    viewPaper.doi.map(
-                        (doi, i) =>
-                            !doi.label.startsWith(env('DATACITE_DOI_PREFIX')) && (
-                                <div className="flex-shrink-0" key={i}>
-                                    <small>
-                                        DOI:
-                                        <a href={`https://doi.org/${doi.label}`} target="_blank" rel="noopener noreferrer">
-                                            {doi.label}
-                                        </a>
-                                    </small>
-                                </div>
-                            ),
-                    )}
+                {viewPaper.doi?.label && (
+                    <div className="flex-shrink-0">
+                        <small>
+                            DOI:{' '}
+                            <a href={`https://doi.org/${viewPaper.doi.label}`} target="_blank" rel="noopener noreferrer">
+                                https://doi.org/{viewPaper.doi.label}
+                            </a>
+                        </small>
+                    </div>
+                )}
             </div>
         </>
     );

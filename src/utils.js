@@ -215,7 +215,7 @@ export const filterDoiObjects = (objects, isDataCite = false) => {
     if (isDataCite) {
         return objects.find(doi => doi.label?.startsWith(env('DATACITE_DOI_PREFIX'))) ?? '';
     }
-    return objects.find(doi => doi.label?.startsWith('10.')) ?? '';
+    return objects.find(doi => doi.label?.startsWith('10.') && !doi.label?.startsWith(env('DATACITE_DOI_PREFIX'))) ?? '';
 };
 
 /**
