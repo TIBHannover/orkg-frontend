@@ -122,6 +122,8 @@ function Publish(props) {
                 url: `${getPublicUrl()}${reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaper.id })}`,
             })
                 .then(async doiResponse => {
+                    // The followed model:
+                    // https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Modeling-of-persistent-identification-of-ORKG-papers
                     const doiLiteral = await createLiteral(doiResponse.data.attributes.doi);
                     const apiCalls = [createResourceStatement(createdPaper.id, PREDICATES.HAS_DOI, doiLiteral.id)];
                     if (viewPaper.hasVersion) {
