@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import ViewPaper from 'pages/ViewPaper';
+import ViewPaper from 'pages/Papers/ViewPaper';
 import { useParams } from 'react-router-dom';
-import ViewPaperVersion from 'pages/ViewPaperVersion';
+import ViewPaperVersion from 'pages/Papers/ViewPaperVersion';
 import { getResource } from 'services/backend/resources';
 import { CLASSES } from 'constants/graphSettings';
 
