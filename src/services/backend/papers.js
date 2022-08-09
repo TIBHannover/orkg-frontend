@@ -37,8 +37,9 @@ export const getOriginalPaperId = paperId => {
             objectId: id,
             predicateId: PREDICATES.HAS_PREVIOUS_VERSION,
         });
-        if (statement[0].subject.classes.find(s => s === CLASSES.HAS_PREVIOUS_VERSION)) {
-            getPaperId(statement[0].subject.id);
+        // finding the original paperId from the published version
+        if (statement[0].subject.classes.find(s => s !== CLASSES.PAPER)) {
+            return getPaperId(statement[0].subject.id);
         }
         return statement[0].subject.id;
     };
