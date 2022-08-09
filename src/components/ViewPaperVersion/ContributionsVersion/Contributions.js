@@ -8,7 +8,7 @@ import { StyledContributionTabs, GlobalStyle } from 'components/ContributionTabs
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import Tabs, { TabPane } from 'rc-tabs';
-import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
+import { StyledStatementItem, StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { ENTITIES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
@@ -125,21 +125,18 @@ const Contributions = props => {
                                                                             </div>
                                                                         </PropertyStyle>
                                                                         <ValuesStyle className="col-8 valuesList" key={`v${i}`}>
-                                                                            {contributionData[cd].map((v, index) => (
+                                                                            {contributionData[cd].map((s, index) => (
                                                                                 <ListGroup flush className="px-3 mt-2" key={`pv${index}`}>
-                                                                                    {v.object._class === ENTITIES.RESOURCE ? (
+                                                                                    {s.object._class === ENTITIES.RESOURCE ? (
                                                                                         <Button
                                                                                             className="p-0 text-start objectLabel"
                                                                                             color="link"
-                                                                                            onClick={() => {
-                                                                                                handleResourceClick(v);
-                                                                                            }}
+                                                                                            onClick={() => handleResourceClick(s)}
                                                                                         >
-                                                                                            {' '}
-                                                                                            {v.object.label}{' '}
+                                                                                            {s.object.label}
                                                                                         </Button>
                                                                                     ) : (
-                                                                                        <>{v.object.label}</>
+                                                                                        <>{s.object.label}</>
                                                                                     )}
                                                                                 </ListGroup>
                                                                             ))}
@@ -149,7 +146,9 @@ const Contributions = props => {
                                                             ))}
                                                         </>
                                                     ) : (
-                                                        <div className="mb-0 rounded list-group-item">No data</div>
+                                                        <ListGroup tag="div" className="listGroupEnlarge">
+                                                            <StyledStatementItem className="mb-0 rounded">No data</StyledStatementItem>
+                                                        </ListGroup>
                                                     )}
                                                 </FormGroup>
                                             </div>

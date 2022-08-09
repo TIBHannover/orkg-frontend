@@ -25,11 +25,10 @@ const useContributions = ({ paperId, contributionId, contributions, paperStateme
         }
     }, [contributionId, contributions, selectedContribution]);
 
-    const updateContributionStatements = useCallback(
+    const showResourceStatements = useCallback(
         id => {
             const list = paperStatements.filter(st => st.subject.id === id);
-            const rr = groupBy(list, 'predicate.id');
-            setContributionData(rr);
+            setContributionData(groupBy(list, 'predicate.id'));
         },
         [paperStatements],
     );
@@ -37,17 +36,17 @@ const useContributions = ({ paperId, contributionId, contributions, paperStateme
     const loadContributionData = useCallback(() => {
         setIsLoading(true);
         if (selectedContribution) {
-            updateContributionStatements(selectedContribution);
+            showResourceStatements(selectedContribution);
         }
         setIsLoading(false);
-    }, [selectedContribution, updateContributionStatements]);
+    }, [selectedContribution, showResourceStatements]);
 
-    const handleResourceClick = async e => {
+    const handleResourceClick = async s => {
         if (resourceHistory.length === 0) {
             setResourceHistory([{ id: selectedContribution, label: contributions.find(c => c.id === selectedContribution).label, property: null }]);
         }
-        setResourceHistory(v => [...v, { id: e.object.id, label: e.object.label, property: e.predicate.label }]);
-        updateContributionStatements(e.object.id);
+        setResourceHistory(v => [...v, { id: s.object.id, label: s.object.label, property: s.predicate.label }]);
+        showResourceStatements(s.object.id);
     };
 
     const handleBackClick = (id = '', index = '') => {
@@ -65,7 +64,7 @@ const useContributions = ({ paperId, contributionId, contributions, paperStateme
         if (temp.length && temp.length > 1) {
             element = temp[temp.length - 1].id;
         }
-        updateContributionStatements(element);
+        showResourceStatements(element);
         setResourceHistory(temp);
     };
 
