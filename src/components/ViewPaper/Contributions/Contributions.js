@@ -102,31 +102,14 @@ const Contributions = props => {
                                         {!isLoadingContributionFailed && (
                                             <div>
                                                 <FormGroup>
-                                                    {isLoading && (
-                                                        <div>
-                                                            <ContentLoader
-                                                                height="100%"
-                                                                width="100%"
-                                                                viewBox="0 0 100 6"
-                                                                style={{ width: '100% !important' }}
-                                                                speed={2}
-                                                                backgroundColor="#f3f3f3"
-                                                                foregroundColor="#ecebeb"
-                                                            >
-                                                                <rect x="0" y="0" rx="1" ry="1" width="90" height="6" />
-                                                            </ContentLoader>
-                                                        </div>
-                                                    )}
-                                                    {!isLoading && (
-                                                        <StatementBrowser
-                                                            enableEdit={props.enableEdit}
-                                                            syncBackend={props.enableEdit}
-                                                            openExistingResourcesInDialog={false}
-                                                            initOnLocationChange={false}
-                                                            keyToKeepStateOnLocationChange={resourceId}
-                                                            renderTemplateBox={true}
-                                                        />
-                                                    )}
+                                                    <StatementBrowser
+                                                        enableEdit={props.enableEdit}
+                                                        syncBackend={props.enableEdit}
+                                                        openExistingResourcesInDialog={false}
+                                                        initOnLocationChange={false}
+                                                        keyToKeepStateOnLocationChange={resourceId}
+                                                        renderTemplateBox={true}
+                                                    />
                                                 </FormGroup>
 
                                                 <SimilarContributions

@@ -94,8 +94,8 @@ const resources = [
             }),
         );
     }),
-    rest.post(resourcesUrl, (req, res, ctx) => {
-        const { label, classes } = req.body;
+    rest.post(resourcesUrl, async (req, res, ctx) => {
+        const { label, classes } = await req.json();
 
         return res(
             ctx.json({

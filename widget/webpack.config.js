@@ -16,7 +16,7 @@ module.exports = (env, argv) => {
                 path: isDevBuild ? path.resolve(bundleOutputDir) : path.resolve(bundleReleaseOutputDir),
             },
             devServer: {
-                contentBase: bundleOutputDir,
+                static: './',
             },
             plugins: [
                 new webpack.DefinePlugin({

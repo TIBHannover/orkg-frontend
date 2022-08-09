@@ -253,7 +253,7 @@ export const AddPropertyFormStyle = styled.div`
 export const StatementsGroupStyle = styled.div`
     position: relative;
     padding: 0 !important;
-    border-top: 1px solid rgba(0, 0, 0, 0.125) !important;
+    border: 1px solid rgba(0, 0, 0, 0.125) !important;
 
     &:last-of-type {
         border-bottom-left-radius: 4px;

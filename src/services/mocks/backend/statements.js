@@ -165,9 +165,8 @@ const statements = [
             }),
         );
     }),
-    rest.post(statementsUrl, (req, res, ctx) => {
-        const { subject_id, predicate_id, object_id } = req.body;
-
+    rest.post(statementsUrl, async (req, res, ctx) => {
+        const { subject_id, predicate_id, object_id } = await req.json();
         return res(
             ctx.json({
                 id: `S${faker.datatype.number()}`,

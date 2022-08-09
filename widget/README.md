@@ -54,7 +54,7 @@ The orkg widget uses this following html template to render the widget:
 
 ### Building
 
-minimum supported Node.js version is 12.20.0
+minimum supported Node.js version is `14.15.0`
 
 ```
 npm run build

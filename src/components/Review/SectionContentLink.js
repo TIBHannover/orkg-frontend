@@ -1,5 +1,5 @@
 import { createReference, createSection, updateSectionLink } from 'slices/reviewSlice';
-import Cite from 'citation-js';
+import { Cite } from '@citation-js/core';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import SectionComparison from 'components/Review/SectionComparison';

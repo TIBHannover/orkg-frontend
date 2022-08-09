@@ -10,7 +10,7 @@ import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import Cite from 'citation-js';
+import { Cite } from '@citation-js/core';
 import { parseCiteResult } from 'utils';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
