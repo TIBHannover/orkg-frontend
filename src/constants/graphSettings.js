@@ -63,6 +63,11 @@ export const PREDICATES = {
     HAS_LIST: 'HasList',
     HAS_ENTRY: 'HasEntry',
     HAS_HEADING_LEVEL: 'HasHeadingLevel',
+    METHOD: 'METHOD',
+    LANGUAGE: 'Language',
+    RESOURCE: 'Resource',
+    TOOL: 'Tool',
+    SOLUTION: 'Solution',
     HAS_VIDEO: 'HasVideo',
     IS_ANONYMIZED: 'IsAnonymized',
 };
@@ -123,6 +128,7 @@ export const CLASSES = {
 
 export const RESOURCES = {
     RESEARCH_FIELD_MAIN: 'R11',
+    RESEARCH_FIELD_COMPUTER_SCIENCE: 'R132',
     EMPTY_RESOURCE: 'empty',
 };
 

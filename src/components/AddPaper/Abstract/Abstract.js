@@ -1,27 +1,15 @@
-import { Component } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
-import { submitGetRequest } from 'network';
-import { semanticScholarUrl } from 'services/semanticScholar';
+import { getAbstractByDoi } from 'services/semanticScholar';
 import { getAnnotations } from 'services/annotation/index';
-import { connect } from 'react-redux';
-import {
-    updateAbstract,
-    nextStep,
-    previousStep,
-    createContributionAction as createContribution,
-    createAnnotation,
-    clearAnnotations,
-    toggleAbstractDialog,
-    setAbstractDialogView,
-} from 'slices/addPaperSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateAbstract, createAnnotation, clearAnnotations, toggleAbstractDialog, setAbstractDialogView } from 'slices/addPaperSlice';
 import { fillStatements } from 'slices/statementBrowserSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faThList, faMagic } from '@fortawesome/free-solid-svg-icons';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import randomcolor from 'randomcolor';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import { compose } from 'redux';
 import { guid } from 'utils';
 import toArray from 'lodash/toArray';
 import { ENTITIES } from 'constants/graphSettings';
@@ -40,62 +28,66 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
-class Abstract extends Component {
-    constructor(props) {
-        super(props);
+const CLASS_OPTIONS = [
+    {
+        id: 'PROCESS',
+        label: 'Process',
+        description: 'Natural phenomenon, or independent/dependent activities.E.g., growing(Bio), cured(MS), flooding(ES).',
+    },
+    {
+        id: 'DATA',
+        label: 'Data',
+        description:
+            'The data themselves, or quantitative or qualitative characteristics of entities. E.g., rotational energy (Eng), tensile strength (MS), the Chern character (Mat).',
+    },
+    {
+        id: 'MATERIAL',
+        label: 'Material',
+        description: 'A physical or digital entity used for scientific experiments. E.g., soil (Agr), the moon (Ast), the set (Mat).',
+    },
+    {
+        id: 'METHOD',
+        label: 'Method',
+        description:
+            'A commonly used procedure that acts on entities. E.g., powder X-ray (Che), the PRAM analysis (CS), magnetoencephalography (Med).',
+    },
+];
 
-        this.state = {
-            isAbstractLoading: false,
-            isAbstractFailedLoading: false,
-            isAnnotationLoading: false,
-            isAnnotationFailedLoading: false,
-            annotationError: null,
-            showError: false,
-            classOptions: [
-                {
-                    id: 'PROCESS',
-                    label: 'Process',
-                    description: 'Natural phenomenon, or independent/dependent activities.E.g., growing(Bio), cured(MS), flooding(ES).',
-                },
-                {
-                    id: 'DATA',
-                    label: 'Data',
-                    description:
-                        'The data themselves, or quantitative or qualitative characteristics of entities. E.g., rotational energy (Eng), tensile strength (MS), the Chern character (Mat).',
-                },
-                {
-                    id: 'MATERIAL',
-                    label: 'Material',
-                    description: 'A physical or digital entity used for scientific experiments. E.g., soil (Agr), the moon (Ast), the set (Mat).',
-                },
-                {
-                    id: 'METHOD',
-                    label: 'Method',
-                    description:
-                        'A commonly used procedure that acts on entities. E.g., powder X-ray (Che), the PRAM analysis (CS), magnetoencephalography (Med).',
-                },
-            ],
-            certaintyThreshold: [0.5],
-            validation: true,
-            classColors: {
-                process: '#7fa2ff',
-                data: '	#9df28a',
-                material: '#EAB0A2',
-                method: '#D2B8E5',
-            },
-        };
-    }
+const CLASS_COLORS = {
+    process: '#7fa2ff',
+    data: '#9df28a',
+    material: '#EAB0A2',
+    method: '#D2B8E5',
+};
 
-    componentDidMount() {
-        this.fetchAbstract();
-    }
+function Abstract() {
+    const [isAbstractLoading, setIsAbstractLoading] = useState(false);
+    const [isAbstractFailedLoading, setIsAbstractFailedLoading] = useState(false);
+    const [isAnnotationLoading, setIsAnnotationLoading] = useState(false);
+    const [isAnnotationFailedLoading, setIsAnnotationFailedLoading] = useState(false);
+    const [annotationError, setAnnotationError] = useState(null);
+    const [certaintyThreshold, setCertaintyThreshold] = useState([0.5]);
+    const [validation, setValidation] = useState(true);
+    const [classColors, setClassColors] = useState(CLASS_COLORS);
+    const dispatch = useDispatch();
 
-    getAnnotation = () => {
-        this.setState({ isAnnotationLoading: true });
-        return getAnnotations(this.props.abstract)
+    const abstract = useSelector(state => state.addPaper.abstract);
+    const doi = useSelector(state => state.addPaper.doi);
+    const title = useSelector(state => state.addPaper.title);
+    const abstractDialogView = useSelector(state => state.addPaper.abstractDialogView);
+    const ranges = useSelector(state => state.addPaper.ranges);
+    const contributions = useSelector(state => state.addPaper.contributions);
+    const selectedContribution = useSelector(state => state.addPaper.selectedContribution);
+    const showAbstractDialog = useSelector(state => state.addPaper.showAbstractDialog);
+    const properties = useSelector(state => state.statementBrowser.properties);
+    const values = useSelector(state => state.statementBrowser.values);
+
+    const getAnnotation = useCallback(() => {
+        setIsAnnotationLoading(true);
+        return getAnnotations(abstract)
             .then(data => {
                 const annotated = [];
-                const ranges = {};
+                const nRanges = {};
                 if (data && data.entities) {
                     data.entities
                         .map(entity => {
@@ -103,13 +95,13 @@ class Abstract extends Component {
                             if (annotated.indexOf(text.toLowerCase()) < 0) {
                                 annotated.push(text.toLowerCase());
                                 // Predicate label entity[1]
-                                let rangeClass = this.state.classOptions.filter(c => c.label.toLowerCase() === entity[1].toLowerCase());
+                                let rangeClass = CLASS_OPTIONS.filter(c => c.label.toLowerCase() === entity[1].toLowerCase());
                                 if (rangeClass.length > 0) {
-                                    rangeClass = rangeClass[0];
+                                    [rangeClass] = rangeClass;
                                 } else {
                                     rangeClass = { id: entity[1], label: entity[1] };
                                 }
-                                ranges[entity[0]] = {
+                                nRanges[entity[0]] = {
                                     text,
                                     start: entity[2][0][0],
                                     end: entity[2][0][1] - 1,
@@ -117,91 +109,97 @@ class Abstract extends Component {
                                     class: rangeClass,
                                     isEditing: false,
                                 };
-                                return ranges[entity[0]];
+                                return nRanges[entity[0]];
                             }
                             return null;
                         })
                         .filter(r => r);
                 }
                 // Clear annotations
-                this.props.clearAnnotations();
-                toArray(ranges).map(range => this.props.createAnnotation(range));
-                this.setState({
-                    isAnnotationLoading: false,
-                    isAnnotationFailedLoading: false,
-                    isAbstractLoading: false,
-                    isAbstractFailedLoading: false,
-                });
+                dispatch(clearAnnotations());
+                toArray(nRanges).map(range => dispatch(createAnnotation(range)));
+                setIsAnnotationLoading(false);
+                setIsAnnotationFailedLoading(false);
+                setIsAbstractLoading(false);
+                setIsAbstractFailedLoading(false);
             })
             .catch(e => {
                 if (e.statusCode === 422) {
-                    this.setState({
-                        annotationError: 'Failed to annotate the abstract, please change the abstract and try again',
-                        isAnnotationLoading: false,
-                        isAnnotationFailedLoading: true,
-                    });
+                    setAnnotationError('Failed to annotate the abstract, please change the abstract and try again');
+                    setIsAnnotationLoading(false);
+                    setIsAnnotationFailedLoading(true);
                 } else {
-                    this.setState({ annotationError: null, isAnnotationLoading: false, isAnnotationFailedLoading: true });
+                    setAnnotationError(null);
+                    setIsAnnotationLoading(false);
+                    setIsAnnotationFailedLoading(true);
                 }
                 return null;
             });
-    };
+    }, [abstract, dispatch]);
 
-    fetchAbstract = async () => {
-        if (!this.props.abstract) {
-            let DOI;
-            try {
-                DOI = this.props.doi.substring(this.props.doi.indexOf('10.'));
-            } catch {
-                DOI = false;
-            }
-            if (!this.props.title || !DOI) {
-                this.props.setAbstractDialogView('input');
+    const handleChangeAbstract = () => {
+        if (abstractDialogView === 'input') {
+            if (abstract.replace(/^\s+|\s+$/g, '') === '' || abstract.replace(/^\s+|\s+$/g, '').split(' ').length <= 1) {
+                setValidation(false);
                 return;
             }
-            this.setState({
-                isAbstractLoading: true,
-            });
-            return submitGetRequest(`${semanticScholarUrl}v1/paper/${DOI}`)
-                .then((data, reject) => {
-                    if (!data.abstract) {
-                        return reject;
-                    }
-                    return data.abstract;
-                })
-                .then(abstract => {
-                    // remove line breaks from the abstract
-                    abstract = abstract.replace(/(\r\n|\n|\r)/gm, ' ');
-
-                    this.setState({
-                        isAbstractLoading: false,
-                    });
-                    this.props.updateAbstract(abstract);
-                    this.getAnnotation();
-                })
-                .catch(() => {
-                    this.handleChangeAbstract();
-                    this.setState({ isAbstractFailedLoading: true, isAbstractLoading: false });
-                });
+            getAnnotation();
         }
-        this.getAnnotation();
+        dispatch(setAbstractDialogView(abstractDialogView === 'input' ? 'annotator' : 'input'));
+        setValidation(true);
     };
 
-    getClassColor = rangeClass => {
+    useEffect(() => {
+        const fetchAbstract = async () => {
+            if (!abstract) {
+                let DOI;
+                try {
+                    DOI = doi.substring(doi.indexOf('10.'));
+                } catch {
+                    DOI = false;
+                }
+                if (!title && !DOI) {
+                    dispatch(setAbstractDialogView('input'));
+                    return;
+                }
+                setIsAbstractLoading(true);
+                try {
+                    let fetchedAbstract = await getAbstractByDoi(DOI);
+                    // remove line breaks from the abstract
+                    fetchedAbstract = fetchedAbstract.replace(/(\r\n|\n|\r)/gm, ' ');
+                    setIsAbstractLoading(false);
+                    dispatch(updateAbstract(fetchedAbstract));
+                } catch {
+                    handleChangeAbstract();
+                    setIsAbstractLoading(false);
+                    setIsAbstractFailedLoading(true);
+                }
+            }
+        };
+        fetchAbstract();
+    }, []);
+
+    useEffect(() => {
+        if (abstractDialogView !== 'input') {
+            getAnnotation();
+        }
+    }, [abstract, getAnnotation]);
+
+    const getClassColor = rangeClass => {
         if (!rangeClass) {
             return '#ffb7b7';
         }
-        if (this.state.classColors[rangeClass.toLowerCase()]) {
-            return this.state.classColors[rangeClass.toLowerCase()];
+        if (classColors[rangeClass.toLowerCase()]) {
+            return classColors[rangeClass.toLowerCase()];
         }
         const newColor = randomcolor({ luminosity: 'light', seed: rangeClass.toLowerCase() });
-        this.setState({ classColors: { ...this.state.classColors, [rangeClass.toLowerCase()]: newColor } });
+        setClassColors({ ...classColors, [rangeClass.toLowerCase()]: newColor });
         return newColor;
     };
 
-    getExistingPredicateId = property => {
-        if (this.props.properties.allIds.length > 0) {
-            const p = this.props.properties.allIds.filter(pId => this.props.properties.byId[pId].label === property.label);
+    const getExistingPredicateId = property => {
+        if (properties.allIds.length > 0) {
+            const p = properties.allIds.filter(pId => properties.byId[pId].label === property.label);
             if (p.length > 0) {
                 // Property Already exists
                 return p[0];
@@ -210,14 +208,14 @@ class Abstract extends Component {
         return false;
     };
 
-    getExistingRange = range => {
-        if (this.props.properties.allIds.length > 0) {
-            const p = this.props.properties.allIds.filter(pId => this.props.properties.byId[pId].label === range.class.label);
+    const getExistingRange = range => {
+        if (properties.allIds.length > 0) {
+            const p = properties.allIds.filter(pId => properties.byId[pId].label === range.class.label);
             if (p.length > 0) {
                 // Property Already exists
                 // Check value
-                const v = this.props.properties.byId[p[0]].valueIds.filter(id => {
-                    if (this.props.values.byId[id].label === range.text) {
+                const v = properties.byId[p[0]].valueIds.filter(id => {
+                    if (values.byId[id].label === range.text) {
                         return id;
                     }
                     return false;
@@ -230,15 +228,15 @@ class Abstract extends Component {
         return false;
     };
 
-    handleInsertData = () => {
+    const handleInsertData = () => {
         const classesID = {};
         const createdProperties = {};
         const statements = { properties: [], values: [] };
-        const rangesArray = toArray(this.props.ranges).filter(r => r.certainty >= this.state.certaintyThreshold);
+        const rangesArray = toArray(ranges).filter(r => r.certainty >= certaintyThreshold);
         if (rangesArray.length > 0) {
             rangesArray.map(range => {
                 let propertyId;
-                if (!this.getExistingRange(range) && range.class.id) {
+                if (!getExistingRange(range) && range.class.id) {
                     if (classesID[range.class.id]) {
                         propertyId = classesID[range.class.id];
                     } else {
@@ -247,7 +245,7 @@ class Abstract extends Component {
                         propertyId = pID;
                     }
                     if (!createdProperties[propertyId]) {
-                        const existingPredicateId = this.getExistingPredicateId(range.class);
+                        const existingPredicateId = getExistingPredicateId(range.class);
                         if (!existingPredicateId) {
                             statements.properties.push({
                                 propertyId,
@@ -269,187 +267,111 @@ class Abstract extends Component {
             });
         }
         // Add the statements to the selected contribution
-        this.props.fillStatements({ statements, resourceId: this.props.contributions.byId[this.props.selectedContribution].resourceId });
-        this.props.toggleAbstractDialog();
+        dispatch(fillStatements({ statements, resourceId: contributions.byId[selectedContribution].resourceId }));
+        dispatch(toggleAbstractDialog());
     };
 
-    handleChangeAbstract = () => {
-        if (this.props.abstractDialogView === 'input') {
-            if (this.props.abstract.replace(/^\s+|\s+$/g, '') === '' || this.props.abstract.replace(/^\s+|\s+$/g, '').split(' ').length <= 1) {
-                this.setState({ validation: false });
-                return;
-            }
-            this.getAnnotation();
-        }
-        this.props.setAbstractDialogView(this.props.abstractDialogView === 'input' ? 'annotator' : 'input');
-        this.setState({ validation: true });
+    const handleChangeView = view => {
+        dispatch(setAbstractDialogView(view));
     };
 
-    handleChangeCertaintyThreshold = values => {
-        this.setState({ certaintyThreshold: values });
-    };
+    let currentStepDetails = (
+        <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+            <AbstractAnnotatorView
+                certaintyThreshold={certaintyThreshold}
+                isAbstractLoading={isAbstractLoading}
+                isAnnotationLoading={isAnnotationLoading}
+                isAnnotationFailedLoading={isAnnotationFailedLoading}
+                handleChangeCertaintyThreshold={v => setCertaintyThreshold(v)}
+                classOptions={CLASS_OPTIONS}
+                annotationError={annotationError}
+                getClassColor={getClassColor}
+            />
+        </AnimationContainer>
+    );
 
-    handleChangeView = view => {
-        this.props.setAbstractDialogView(view);
-    };
-
-    render() {
-        let currentStepDetails;
-        switch (this.props.abstractDialogView) {
-            case 'annotator':
-            default:
-                currentStepDetails = (
-                    <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        <AbstractAnnotatorView
-                            certaintyThreshold={this.state.certaintyThreshold}
-                            isAbstractLoading={this.state.isAbstractLoading}
-                            isAnnotationLoading={this.state.isAnnotationLoading}
-                            isAnnotationFailedLoading={this.state.isAnnotationFailedLoading}
-                            handleChangeCertaintyThreshold={this.handleChangeCertaintyThreshold}
-                            classOptions={this.state.classOptions}
-                            annotationError={this.state.annotationError}
-                            getClassColor={this.getClassColor}
-                        />
-                    </AnimationContainer>
-                );
-                break;
-            case 'input':
-                currentStepDetails = (
-                    <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        <AbstractInputView
-                            validation={this.state.validation}
-                            classOptions={this.state.classOptions}
-                            isAbstractLoading={this.state.isAbstractLoading}
-                            isAbstractFailedLoading={this.state.isAbstractFailedLoading}
-                        />
-                    </AnimationContainer>
-                );
-                break;
-            case 'list':
-                currentStepDetails = (
-                    <AnimationContainer key={3} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        <AbstractRangesList
-                            certaintyThreshold={this.state.certaintyThreshold}
-                            classOptions={this.state.classOptions}
-                            getClassColor={this.getClassColor}
-                        />
-                    </AnimationContainer>
-                );
-                break;
-        }
-
-        return (
-            <Modal isOpen={this.props.showAbstractDialog} toggle={this.props.toggleAbstractDialog} size="lg">
-                <ModalHeader toggle={this.props.toggleAbstractDialog}>Abstract annotator</ModalHeader>
-                <ModalBody>
-                    <div className="clearfix">
-                        {(this.state.isAbstractLoading || this.state.isAnnotationLoading) && (
-                            <div className="text-center text-primary">
-                                <span style={{ fontSize: 80 }}>
-                                    <Icon icon={faSpinner} spin />
-                                </span>
-                                <br />
-                                <h2 className="h5">{this.state.isAbstractLoading ? 'Loading abstract...' : 'Loading annotations...'}</h2>
-                            </div>
-                        )}
-
-                        <TransitionGroup exit={false}>{currentStepDetails}</TransitionGroup>
-                    </div>
-                </ModalBody>
-                <ModalFooter>
-                    {this.props.abstractDialogView === 'input' ? (
-                        <>
-                            <Button color="primary" className="float-end" onClick={this.handleChangeAbstract}>
-                                Annotate Abstract
-                            </Button>
-                        </>
-                    ) : this.props.abstractDialogView === 'list' ? (
-                        <>
-                            <Button color="secondary" outline className="float-start" onClick={() => this.handleChangeView('annotator')}>
-                                <Icon icon={faMagic} /> Annotator
-                            </Button>
-
-                            <Button color="primary" className="float-end" onClick={this.handleInsertData}>
-                                Insert Data
-                            </Button>
-
-                            <Button color="light" className="float-end me-2" onClick={this.handleChangeAbstract}>
-                                Change abstract
-                            </Button>
-                        </>
-                    ) : (
-                        <>
-                            <Button color="secondary" outline className="float-start" onClick={() => this.handleChangeView('list')}>
-                                <Icon icon={faThList} /> List of annotations
-                            </Button>
-
-                            <Button color="primary" className="float-end" onClick={this.handleInsertData}>
-                                Insert Data
-                            </Button>
-
-                            <Button color="light" className="float-end me-2" onClick={this.handleChangeAbstract}>
-                                Change abstract
-                            </Button>
-                        </>
-                    )}
-                </ModalFooter>
-            </Modal>
-        );
+    switch (abstractDialogView) {
+        case 'input':
+            currentStepDetails = (
+                <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+                    <AbstractInputView
+                        validation={validation}
+                        classOptions={CLASS_OPTIONS}
+                        isAbstractLoading={isAbstractLoading}
+                        isAbstractFailedLoading={isAbstractFailedLoading}
+                    />
+                </AnimationContainer>
+            );
+            break;
+        case 'list':
+            currentStepDetails = (
+                <AnimationContainer key={3} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+                    <AbstractRangesList certaintyThreshold={certaintyThreshold} classOptions={CLASS_OPTIONS} getClassColor={getClassColor} />
+                </AnimationContainer>
+            );
+            break;
+        default:
+            break;
     }
+
+    return (
+        <Modal isOpen={showAbstractDialog} toggle={() => dispatch(toggleAbstractDialog())} size="lg">
+            <ModalHeader toggle={() => dispatch(toggleAbstractDialog())}>Abstract annotator</ModalHeader>
+            <ModalBody>
+                <div className="clearfix">
+                    {(isAbstractLoading || isAnnotationLoading) && (
+                        <div className="text-center text-primary">
+                            <span style={{ fontSize: 80 }}>
+                                <Icon icon={faSpinner} spin />
+                            </span>
+                            <br />
+                            <h2 className="h5">{isAbstractLoading ? 'Loading abstract...' : 'Loading annotations...'}</h2>
+                        </div>
+                    )}
+
+                    <TransitionGroup exit={false}>{currentStepDetails}</TransitionGroup>
+                </div>
+            </ModalBody>
+            <ModalFooter>
+                {abstractDialogView === 'input' && (
+                    <>
+                        <Button color="primary" className="float-end" onClick={handleChangeAbstract}>
+                            Annotate Abstract
+                        </Button>
+                    </>
+                )}
+                {abstractDialogView === 'list' ? (
+                    <>
+                        <Button color="secondary" outline className="float-start" onClick={() => handleChangeView('annotator')}>
+                            <Icon icon={faMagic} /> Annotator
+                        </Button>
+
+                        <Button color="light" className="float-right mr-2" onClick={handleChangeAbstract}>
+                            Change abstract
+                        </Button>
+
+                        <Button color="smart" className="float-right" onClick={handleInsertData}>
+                            Insert Data
+                        </Button>
+                    </>
+                ) : (
+                    <>
+                        <Button color="secondary" outline className="float-start" onClick={() => handleChangeView('list')}>
+                            <Icon icon={faThList} /> List of annotations
+                        </Button>
+                        {abstractDialogView !== 'input' && (
+                            <Button color="light" className="float-right mr-2" onClick={handleChangeAbstract}>
+                                Change abstract
+                            </Button>
+                        )}
+                        <Button color="smart" className="float-right" onClick={handleInsertData}>
+                            Insert Data
+                        </Button>
+                    </>
+                )}
+            </ModalFooter>
+        </Modal>
+    );
 }
 
-Abstract.propTypes = {
-    nextStep: PropTypes.func.isRequired,
-    previousStep: PropTypes.func.isRequired,
-    updateAbstract: PropTypes.func.isRequired,
-    abstract: PropTypes.string.isRequired,
-    ranges: PropTypes.object.isRequired,
-    title: PropTypes.string.isRequired,
-    doi: PropTypes.string,
-    selectedContribution: PropTypes.string.isRequired,
-    contributions: PropTypes.object.isRequired,
-    createContribution: PropTypes.func.isRequired,
-    fillStatements: PropTypes.func.isRequired,
-    createAnnotation: PropTypes.func.isRequired,
-    clearAnnotations: PropTypes.func.isRequired,
-    resources: PropTypes.object.isRequired,
-    properties: PropTypes.object.isRequired,
-    values: PropTypes.object.isRequired,
-    showAbstractDialog: PropTypes.bool.isRequired,
-    toggleAbstractDialog: PropTypes.func.isRequired,
-    setAbstractDialogView: PropTypes.func.isRequired,
-    abstractDialogView: PropTypes.string.isRequired,
-};
-
-const mapStateToProps = state => ({
-    selectedContribution: state.addPaper.selectedContribution,
-    title: state.addPaper.title,
-    doi: state.addPaper.doi,
-    abstract: state.addPaper.abstract,
-    ranges: state.addPaper.ranges,
-    contributions: state.addPaper.contributions,
-    resources: state.statementBrowser.resources,
-    properties: state.statementBrowser.properties,
-    values: state.statementBrowser.values,
-    showAbstractDialog: state.addPaper.showAbstractDialog,
-    abstractDialogView: state.addPaper.abstractDialogView,
-});
-
-const mapDispatchToProps = dispatch => ({
-    updateAbstract: data => dispatch(updateAbstract(data)),
-    nextStep: () => dispatch(nextStep()),
-    previousStep: () => dispatch(previousStep()),
-    createContribution: data => dispatch(createContribution(data)),
-    fillStatements: data => dispatch(fillStatements(data)),
-    createAnnotation: data => dispatch(createAnnotation(data)),
-    clearAnnotations: () => dispatch(clearAnnotations()),
-    toggleAbstractDialog: () => dispatch(toggleAbstractDialog()),
-    setAbstractDialogView: data => dispatch(setAbstractDialogView(data)),
-});
-
-export default compose(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps,
-    ),
-)(Abstract);
+export default Abstract;
