@@ -1,17 +1,15 @@
-import { Component } from 'react';
 import { Label, FormFeedback, Alert } from 'reactstrap';
 import Textarea from 'react-textarea-autosize';
 import { updateAbstract } from 'slices/addPaperSlice';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 import Tooltip from 'components/Utils/Tooltip';
 
-class AbstractInputView extends Component {
-    handleChange = event => {
-        this.props.updateAbstract(event.target.value);
-    };
+function AbstractInputView(props) {
+    const abstract = useSelector(state => state.addPaper.abstract);
+    const dispatch = useDispatch();
 
-    stripLineBreaks = event => {
+    const stripLineBreaks = event => {
         event.preventDefault();
         let text = '';
         if (event.clipboardData || event.originalEvent.clipboardData) {
@@ -21,54 +19,37 @@ class AbstractInputView extends Component {
         }
         // strip line breaks
         text = text.replace(/\r?\n|\r/g, ' ');
-        this.props.updateAbstract(this.props.abstract + text);
+        dispatch(updateAbstract(abstract + text));
     };
 
-    render() {
-        return (
-            <div>
-                {!this.props.isAbstractLoading && this.props.isAbstractFailedLoading && (
-                    <Alert color="light">We couldn't fetch the abstract of the paper, please enter it manually or skip this step.</Alert>
-                )}
-                <Alert color="info">
-                    The provided abstract is not stored and is only used for processing. So you do not have to worry about potential copyright issues
-                </Alert>
-                <Label for="paperAbstract">
-                    <Tooltip message="Enter the paper abstract to get automatically generated concepts for you paper.">
-                        Enter the paper abstract
-                    </Tooltip>
-                </Label>
-                <Textarea
-                    id="paperAbstract"
-                    className={`form-control ps-2 pe-2 ${!this.props.validation ? 'is-invalid' : ''}`}
-                    minRows={8}
-                    value={this.props.abstract}
-                    onChange={this.handleChange}
-                    onPaste={this.stripLineBreaks}
-                />
-                {!this.props.validation && <FormFeedback className="order-1">Please enter the abstract or skip this step.</FormFeedback>}
-            </div>
-        );
-    }
+    return (
+        <div>
+            {!props.isAbstractLoading && props.isAbstractFailedLoading && (
+                <Alert color="light">We couldn't fetch the abstract of the paper, please enter it manually or skip this step.</Alert>
+            )}
+            <Alert color="info">
+                The provided abstract is not stored and is only used for processing. So you do not have to worry about potential copyright issues
+            </Alert>
+            <Label for="paperAbstract">
+                <Tooltip message="Enter the paper abstract to get automatically generated concepts for you paper.">Enter the paper abstract</Tooltip>
+            </Label>
+            <Textarea
+                id="paperAbstract"
+                className={`form-control ps-2 pe-2 ${!props.validation ? 'is-invalid' : ''}`}
+                minRows={8}
+                value={abstract}
+                onChange={event => dispatch(updateAbstract(event.target.value))}
+                onPaste={stripLineBreaks}
+            />
+            {!props.validation && <FormFeedback className="order-1">Please enter the abstract or skip this step.</FormFeedback>}
+        </div>
+    );
 }
 
+export default AbstractInputView;
+
 AbstractInputView.propTypes = {
-    abstract: PropTypes.string.isRequired,
-    updateAbstract: PropTypes.func.isRequired,
     validation: PropTypes.bool.isRequired,
     isAbstractLoading: PropTypes.bool.isRequired,
     isAbstractFailedLoading: PropTypes.bool.isRequired,
 };
-
-const mapStateToProps = state => ({
-    abstract: state.addPaper.abstract,
-});
-
-const mapDispatchToProps = dispatch => ({
-    updateAbstract: data => dispatch(updateAbstract(data)),
-});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(AbstractInputView);
