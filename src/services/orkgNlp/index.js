@@ -102,3 +102,6 @@ export const saveFeedback = async ({ request, response, serviceName }) =>
         { 'Content-Type': 'application/json' },
         { feedback: { request, response, service_name: serviceName } },
     );
+
+export const semantifyBioassays = text =>
+    submitPostRequest(`${nlpServiceUrl}clustering/bioassays/`, { 'Content-Type': 'application/json' }, { text });

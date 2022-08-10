@@ -1,4 +1,4 @@
-import { faAngleDown, faExclamationTriangle, faMagic } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faExclamationTriangle, faMagic, faFlask } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Abstract from 'components/AddPaper/Abstract/Abstract';
@@ -12,9 +12,11 @@ import { StyledContributionTabs } from 'components/ContributionTabs/styled';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tooltip from 'components/Utils/Tooltip';
 import Tabs, { TabPane } from 'rc-tabs';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Col, Row } from 'reactstrap';
+import BIOASSAYS_FIELDS_LIST from 'constants/bioassayFieldList';
+import BioAssaysModal from 'components/AddPaper/BioAssaysModal/BioAssaysModal';
+import { Button, Col, Row, UncontrolledAlert } from 'reactstrap';
 import {
     createContributionAction as createContribution,
     deleteContributionAction as deleteContribution,
@@ -46,6 +48,7 @@ const Contributions = () => {
     const { resources, properties, values } = useSelector(state => state.statementBrowser);
     const { isComputerScienceField } = useDetermineResearchField();
     const { handleSaveFeedback } = useEntityRecognition();
+    const [isOpenBioassays, setIsOpenBioassays] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -162,6 +165,11 @@ const Contributions = () => {
                     </Tooltip>
                 </h2>
                 <div className="flex-shrink-0 ms-auto">
+                    {BIOASSAYS_FIELDS_LIST.includes(selectedResearchField) && (
+                        <Button onClick={() => setIsOpenBioassays(v => !v)} outline size="sm" color="secondary" className="me-1">
+                            <Icon icon={faFlask} /> Add Bioassay
+                        </Button>
+                    )}
                     <Tippy
                         hideOnClick
                         showOnCreate
@@ -178,6 +186,12 @@ const Contributions = () => {
                     </Tippy>
                 </div>
             </div>
+            {BIOASSAYS_FIELDS_LIST.includes(selectedResearchField) && (
+                <UncontrolledAlert color="info">
+                    To add a Bioassay, please click the 'Add Bioassay' button above. This feature lets you insert and curate an automatically
+                    semantified version of your assay text by our machine learning system.
+                </UncontrolledAlert>
+            )}
             <Row className="mt-2 g-0">
                 <Col md="9">
                     <StyledContributionTabs>
@@ -231,6 +245,8 @@ const Contributions = () => {
             <hr className="mt-5 mb-3" />
 
             <Abstract />
+
+            <BioAssaysModal selectedResource={selectedContribution} showDialog={isOpenBioassays} toggle={() => setIsOpenBioassays(v => !v)} />
 
             <ContributionsHelpTour />
 

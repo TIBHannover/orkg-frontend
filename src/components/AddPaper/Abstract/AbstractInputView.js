@@ -25,7 +25,7 @@ function AbstractInputView(props) {
     return (
         <div>
             {!props.isAbstractLoading && props.isAbstractFailedLoading && (
-                <Alert color="light">We couldn't fetch the abstract of the paper, please enter it manually or skip this step.</Alert>
+                <Alert color="light">We couldn't fetch the abstract of the paper, please enter it manually.</Alert>
             )}
             <Alert color="info">
                 The provided abstract is not stored and is only used for processing. So you do not have to worry about potential copyright issues
@@ -41,7 +41,7 @@ function AbstractInputView(props) {
                 onChange={event => dispatch(updateAbstract(event.target.value))}
                 onPaste={stripLineBreaks}
             />
-            {!props.validation && <FormFeedback className="order-1">Please enter the abstract or skip this step.</FormFeedback>}
+            {!props.validation && <FormFeedback className="order-1">Please enter the abstract.</FormFeedback>}
         </div>
     );
 }
