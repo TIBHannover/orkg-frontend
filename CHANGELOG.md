@@ -3,6 +3,19 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.77.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.76.0...v0.77.0) - 2022-08-10
+
+### Changes
+
+- feat(AddPaperWizard): implement NER-CS tool [`#734`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/734)
+- internal: update dependencies [`#898`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/898)
+- config(CI/CD): Set homepage to / in package.json [`#904`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/904)
+- feat(ViewPaper): integrate unpaywall [`#903`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/903)
+- ux(ContributionEditor): remember last selected data type [`#902`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/902)
+- ux(ResearchFieldSelector): improved loading indicator [`#901`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/901)
+- feat(ExistingPaperModal): disallow duplicate DOIs [`#900`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/900)
+
+---
 ## [v0.76.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.75.1...v0.76.0) - 2022-08-04
 
 ### Changes
