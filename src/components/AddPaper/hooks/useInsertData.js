@@ -52,8 +52,7 @@ const useInsertData = () => {
                         if (!existingPredicateId) {
                             insertStatements.properties.push({
                                 propertyId,
-                                existingPredicateId:
-                                    statement.property.id.toLowerCase() !== statement.property.label.toLowerCase() ? statement.property.id : null,
+                                existingPredicateId: statement.property.id,
                                 label: statement.property.label,
                             });
                         } else {
