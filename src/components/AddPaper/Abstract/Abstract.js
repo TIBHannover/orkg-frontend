@@ -180,7 +180,9 @@ function Abstract() {
     }, []);
 
     useEffect(() => {
-        getAnnotation();
+        if (abstractDialogView !== 'input') {
+            getAnnotation();
+        }
     }, [abstract, getAnnotation]);
 
     const getClassColor = rangeClass => {
@@ -269,13 +271,10 @@ function Abstract() {
         dispatch(toggleAbstractDialog());
     };
 
-    const handleChangeCertaintyThreshold = values => {
-        setCertaintyThreshold(values);
-    };
-
     const handleChangeView = view => {
         dispatch(setAbstractDialogView(view));
     };
+
     let currentStepDetails = (
         <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
             <AbstractAnnotatorView
@@ -283,30 +282,15 @@ function Abstract() {
                 isAbstractLoading={isAbstractLoading}
                 isAnnotationLoading={isAnnotationLoading}
                 isAnnotationFailedLoading={isAnnotationFailedLoading}
-                handleChangeCertaintyThreshold={handleChangeCertaintyThreshold}
+                handleChangeCertaintyThreshold={v => setCertaintyThreshold(v)}
                 classOptions={CLASS_OPTIONS}
                 annotationError={annotationError}
                 getClassColor={getClassColor}
             />
         </AnimationContainer>
     );
+
     switch (abstractDialogView) {
-        case 'annotator':
-            currentStepDetails = (
-                <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                    <AbstractAnnotatorView
-                        certaintyThreshold={certaintyThreshold}
-                        isAbstractLoading={isAbstractLoading}
-                        isAnnotationLoading={isAnnotationLoading}
-                        isAnnotationFailedLoading={isAnnotationFailedLoading}
-                        handleChangeCertaintyThreshold={handleChangeCertaintyThreshold}
-                        classOptions={CLASS_OPTIONS}
-                        annotationError={annotationError}
-                        getClassColor={getClassColor}
-                    />
-                </AnimationContainer>
-            );
-            break;
         case 'input':
             currentStepDetails = (
                 <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
