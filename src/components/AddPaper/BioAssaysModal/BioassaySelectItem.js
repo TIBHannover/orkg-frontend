@@ -13,38 +13,34 @@ export default function BioassaySelectItem(props) {
             </div>
             <ListGroup className="listGroupEnlarge">
                 <div>
-                    {Object.keys(props.data.labels).map(labelKey => (
-                        <StatementsGroupStyle key={`p${props.data.properties[labelKey]}`} className="noTemplate">
+                    {props.data.labels.map(labelKey => (
+                        <StatementsGroupStyle key={`p${labelKey.property.id}`} className="noTemplate">
                             <div className="row g-0">
                                 <PropertyStyle className="col-4" tabIndex="0">
                                     <div className="propertyLabel">
                                         <Label className=" mr-2">
-                                            <Link
-                                                className="text-dark"
-                                                target="_blank"
-                                                to={reverse(ROUTES.PROPERTY, { id: props.data.properties[labelKey] })}
-                                            >
-                                                {labelKey}
+                                            <Link className="text-dark" target="_blank" to={reverse(ROUTES.PROPERTY, { id: labelKey.property.id })}>
+                                                {labelKey.property.label}
                                             </Link>
                                         </Label>
                                     </div>
                                 </PropertyStyle>
                                 <ValuesStyle className="col-8 valuesList">
                                     <ListGroup flush className="px-3">
-                                        {props.data.labels[labelKey].map(value => (
-                                            <ValueItemStyle key={`p${props.data.resources[value]}`} className="suggested_value d-flex">
+                                        {labelKey.resources.map(resource => (
+                                            <ValueItemStyle key={`p${resource.id}`} className="suggested_value d-flex">
                                                 <div className="flex-grow-1">
                                                     <Label>
-                                                        <Link target="_blank" to={reverse(ROUTES.RESOURCE, { id: props.data.resources[value] })}>
-                                                            {value}
+                                                        <Link target="_blank" to={reverse(ROUTES.RESOURCE, { id: resource.id })}>
+                                                            {resource.label}
                                                         </Link>
                                                     </Label>
                                                 </div>
                                                 <div>
                                                     <input
                                                         type="checkbox"
-                                                        onChange={e => props.handleSelect(labelKey, value)}
-                                                        checked={!!props.selectedItems?.[labelKey]?.includes(value)}
+                                                        onChange={e => props.handleSelect(labelKey, resource)}
+                                                        checked={!!props.selectedItems?.[labelKey.property.id]?.includes(resource.id)}
                                                     />
                                                 </div>
                                             </ValueItemStyle>

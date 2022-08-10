@@ -4,10 +4,10 @@ import { semantifyBioassays } from 'services/orkgNlp/index';
 import CsvReader from 'react-csv-reader';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { isArray, isObject, invert } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { fillStatements } from 'slices/statementBrowserSlice';
+import { setNerRawResponse } from 'slices/addPaperSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import BioassaySelectItem from './BioassaySelectItem';
 
@@ -35,14 +35,9 @@ const BioAssaysModal = props => {
             setIsSubmitted(true);
             semantifyBioassays(bioassaysTest)
                 .then(result => {
-                    const data = result;
-                    data.resources = invert(data.resources);
-                    data.properties = invert(data.properties);
-                    if (Object.keys(data.labels).length) {
-                        Object.keys(data.labels).forEach(key => {
-                            data.labels[key] = isArray(data.labels[key]) ? data.labels[key] : [data.labels[key]];
-                            data.labels[key] = data.labels[key].map(value => (isObject(value) ? Object.keys(value)[0] : value));
-                        });
+                    const data = result.payload;
+                    dispatch(setNerRawResponse(data.labels));
+                    if (data.labels.length) {
                         setAssayData(data);
                         setIsLoadingData(false);
                         setIsLoadingDataFailed(false);
@@ -64,10 +59,10 @@ const BioAssaysModal = props => {
     };
 
     const handleSelect = (labelKey, value) => {
-        if (selectedItems[labelKey] && selectedItems[labelKey].includes(value)) {
-            setSelectedItems(prev => ({ ...prev, [labelKey]: prev[labelKey].filter(id => id !== value) }));
+        if (selectedItems[labelKey.property.id] && selectedItems[labelKey.property.id].includes(value.id)) {
+            setSelectedItems(prev => ({ ...prev, [labelKey.property.id]: prev[labelKey.property.id].filter(id => id !== value) }));
         } else {
-            setSelectedItems(prev => ({ ...prev, [labelKey]: [...(prev[labelKey] || []), value] }));
+            setSelectedItems(prev => ({ ...prev, [labelKey.property.id]: [...(prev[labelKey.property.id] || []), value.id] }));
         }
     };
 
@@ -76,19 +71,21 @@ const BioAssaysModal = props => {
         const statements = { properties: [], values: [] };
         for (const key of Object.keys(selectedItems)) {
             if (selectedItems[key].length > 0) {
+                const label = assayData.labels.find(l => l.property.id === key);
                 statements.properties.push({
-                    existingPredicateId: assayData.properties[key],
-                    propertyId: assayData.properties[key],
-                    label: key,
+                    existingPredicateId: label.property.id,
+                    propertyId: label.property.id,
+                    label: label.property.label,
                 });
 
                 for (const value of selectedItems[key]) {
+                    const val = label.resources.find(v => v.id === value);
                     statements.values.push({
-                        label: value,
+                        label: val.label,
                         type: 'object',
-                        existingResourceId: assayData.resources[value],
+                        existingResourceId: val.id,
                         isExistingValue: true,
-                        propertyId: assayData.properties[key],
+                        propertyId: label.property.id,
                     });
                 }
             }

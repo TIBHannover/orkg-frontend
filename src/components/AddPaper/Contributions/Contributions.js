@@ -47,6 +47,9 @@ const Contributions = () => {
     } = useSelector(state => state.addPaper);
     const { resources, properties, values } = useSelector(state => state.statementBrowser);
     const { isComputerScienceField } = useDetermineResearchField();
+
+    const isBioassayField = BIOASSAYS_FIELDS_LIST.includes(selectedResearchField);
+
     const { handleSaveFeedback } = useEntityRecognition();
     const [isOpenBioassays, setIsOpenBioassays] = useState(false);
 
@@ -71,7 +74,9 @@ const Contributions = () => {
     }, [contributions.allIds.length, dispatch, selectedResearchField]);
 
     const handleNextClick = async () => {
-        handleSaveFeedback();
+        if (isComputerScienceField) {
+            handleSaveFeedback();
+        }
         // save add paper
         dispatch(
             saveAddPaper({
@@ -165,7 +170,7 @@ const Contributions = () => {
                     </Tooltip>
                 </h2>
                 <div className="flex-shrink-0 ms-auto">
-                    {BIOASSAYS_FIELDS_LIST.includes(selectedResearchField) && (
+                    {isBioassayField && (
                         <Button onClick={() => setIsOpenBioassays(v => !v)} outline size="sm" color="secondary" className="me-1">
                             <Icon icon={faFlask} /> Add Bioassay
                         </Button>
@@ -186,7 +191,7 @@ const Contributions = () => {
                     </Tippy>
                 </div>
             </div>
-            {BIOASSAYS_FIELDS_LIST.includes(selectedResearchField) && (
+            {isBioassayField && (
                 <UncontrolledAlert color="info">
                     To add a Bioassay, please click the 'Add Bioassay' button above. This feature lets you insert and curate an automatically
                     semantified version of your assay text by our machine learning system.
@@ -246,7 +251,9 @@ const Contributions = () => {
 
             <Abstract />
 
-            <BioAssaysModal selectedResource={selectedContribution} showDialog={isOpenBioassays} toggle={() => setIsOpenBioassays(v => !v)} />
+            {isBioassayField && (
+                <BioAssaysModal selectedResource={selectedContribution} showDialog={isOpenBioassays} toggle={() => setIsOpenBioassays(v => !v)} />
+            )}
 
             <ContributionsHelpTour />
 
