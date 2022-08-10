@@ -33,15 +33,15 @@ export const indexContributionsByPaperId = async paperId => {
 
 export const getOriginalPaperId = paperId => {
     const getPaperId = async id => {
-        const statement = await getStatementsByObjectAndPredicate({
+        const statements = await getStatementsByObjectAndPredicate({
             objectId: id,
             predicateId: PREDICATES.HAS_PREVIOUS_VERSION,
         });
         // finding the original paperId from the published version
-        if (statement[0].subject.classes.find(s => s !== CLASSES.PAPER)) {
-            return getPaperId(statement[0].subject.id);
+        if (!statements?.[0]?.subject.classes?.includes(CLASSES.PAPER)) {
+            return getPaperId(statements[0].subject.id);
         }
-        return statement[0].subject.id;
+        return statements?.[0]?.subject.id;
     };
     const pId = getPaperId(paperId);
     return pId;
