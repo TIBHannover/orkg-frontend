@@ -55,7 +55,7 @@ const CLASS_OPTIONS = [
 
 const CLASS_COLORS = {
     process: '#7fa2ff',
-    data: '	#9df28a',
+    data: '#9df28a',
     material: '#EAB0A2',
     method: '#D2B8E5',
 };
