@@ -394,7 +394,7 @@ const RDFDataCube = props => {
                                         )}
                                     </DropdownMenu>
                                 </Dropdown>
-                                <Table {...getTableProps()} striped bordered>
+                                <Table {...getTableProps()} striped bordered style={{ whiteSpace: 'nowrap', display: 'block', overflowX: 'auto' }}>
                                     <thead>
                                         {headerGroups.map(headerGroup => (
                                             <tr {...headerGroup.getHeaderGroupProps()}>
