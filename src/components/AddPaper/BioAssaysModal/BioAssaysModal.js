@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { fillStatements } from 'slices/statementBrowserSlice';
-import { setNerRawResponse } from 'slices/addPaperSlice';
+import { setBioassayRawResponse, setBioassayText } from 'slices/addPaperSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import BioassaySelectItem from './BioassaySelectItem';
 
@@ -36,7 +36,8 @@ const BioAssaysModal = props => {
             semantifyBioassays(bioassaysTest)
                 .then(result => {
                     const data = result.payload;
-                    dispatch(setNerRawResponse(data.labels));
+                    dispatch(setBioassayRawResponse(data.labels));
+                    dispatch(setBioassayText(bioassaysTest));
                     if (data.labels.length) {
                         setAssayData(data);
                         setIsLoadingData(false);

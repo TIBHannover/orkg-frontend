@@ -5,6 +5,7 @@ import Abstract from 'components/AddPaper/Abstract/Abstract';
 import EntityRecognition from 'components/AddPaper/EntityRecognition/EntityRecognition';
 import useDetermineResearchField from 'components/AddPaper/EntityRecognition/useDetermineResearchField';
 import useEntityRecognition from 'components/AddPaper/hooks/useEntityRecognition';
+import useBioassays from 'components/AddPaper/hooks/useBioassays';
 import Confirm from 'components/Confirmation/Confirmation';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
@@ -51,6 +52,8 @@ const Contributions = () => {
     const isBioassayField = BIOASSAYS_FIELDS_LIST.includes(selectedResearchField);
 
     const { handleSaveFeedback } = useEntityRecognition();
+    const { handleSaveBioassaysFeedback } = useBioassays();
+
     const [isOpenBioassays, setIsOpenBioassays] = useState(false);
 
     const dispatch = useDispatch();
@@ -76,6 +79,9 @@ const Contributions = () => {
     const handleNextClick = async () => {
         if (isComputerScienceField) {
             handleSaveFeedback();
+        }
+        if (isBioassayField) {
+            handleSaveBioassaysFeedback();
         }
         // save add paper
         dispatch(

@@ -13,6 +13,17 @@ import { guid } from 'utils';
 
 export const nlpServiceUrl = env('NLP_SERVICE_URL');
 
+// https://gitlab.com/TIBHannover/orkg/nlp/orkg-nlp-api/-/blob/main/app/__init__.py#L13
+export const SERVICE_MAPPING = {
+    PREDICATES_CLUSTERING: 'PREDICATES_CLUSTERING',
+    BIOASSAYS_SEMANTIFICATION: 'BIOASSAYS_SEMANTIFICATION',
+    CS_NER: 'CS_NER',
+    TABLE_EXTRACTION: 'TABLE_EXTRACTION',
+    PDF_CONVERSION: 'PDF_CONVERSION',
+    TEXT_SUMMARIZATION: 'TEXT_SUMMARIZATION',
+    TEXT_CLASSIFICATION: 'TEXT_CLASSIFICATION',
+};
+
 export const classifySentence = async ({ sentence, labels }) => {
     const { payload } = await submitPostRequest(
         `${nlpServiceUrl}tools/text/classify`,
