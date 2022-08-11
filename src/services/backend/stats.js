@@ -4,17 +4,11 @@ import queryString from 'query-string';
 
 export const statsUrl = `${url}stats/`;
 
-export const getStats = (extra = []) => {
-    return submitGetRequest(`${statsUrl}?extra=${extra.join(',')}`);
-};
+export const getStats = (extra = []) => submitGetRequest(`${statsUrl}?extra=${extra.join(',')}`);
 
-export const getResearchFieldsStats = () => {
-    return submitGetRequest(`${statsUrl}fields`);
-};
+export const getResearchFieldsStats = () => submitGetRequest(`${statsUrl}fields`);
 
-export const getComparisonsCountByObservatoryId = id => {
-    return submitGetRequest(`${statsUrl}${encodeURIComponent(id)}/observatoryComparisonsCount`);
-};
+export const getComparisonsCountByObservatoryId = id => submitGetRequest(`${statsUrl}${encodeURIComponent(id)}/observatoryComparisonsCount`);
 
 /**
  * Get top contributors
@@ -34,7 +28,7 @@ export const getTopContributors = ({
     size = 9999,
     sortBy = 'contributions',
     desc = true,
-    subfields = true
+    subfields = true,
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     if (researchFieldId) {
@@ -42,49 +36,44 @@ export const getTopContributors = ({
             { days, sort },
             {
                 skipNull: true,
-                skipEmptyString: true
-            }
+                skipEmptyString: true,
+            },
         );
         return submitGetRequest(`${statsUrl}research-field/${researchFieldId}/${subfields ? 'subfields/' : ''}top/contributors?${params}`).then(
             result => {
                 result = {
                     content: result,
                     last: true,
-                    totalElements: result.length
+                    totalElements: result.length,
                 };
                 return result;
-            }
+            },
         );
-    } else {
-        const params = queryString.stringify(
-            { page, size, sort, days },
-            {
-                skipNull: true,
-                skipEmptyString: true
-            }
-        );
-        return submitGetRequest(`${statsUrl}top/contributors?${params}`).then(result => {
-            return {
-                ...result,
-                content: result.content.map(c => {
-                    return {
-                        profile: c.profile,
-                        counts: { total: c.contributions }
-                    };
-                })
-            };
-        });
     }
+    const params = queryString.stringify(
+        { page, size, sort, days },
+        {
+            skipNull: true,
+            skipEmptyString: true,
+        },
+    );
+    return submitGetRequest(`${statsUrl}top/contributors?${params}`).then(result => ({
+        ...result,
+        content: result.content.map(c => ({
+            profile: c.profile,
+            counts: { total: c.contributions },
+        })),
+    }));
 };
 
 export const getChangelogs = ({ researchFieldId = null, page = 0, items = 9999, sortBy = 'createdAt', desc = true }) => {
     const sort = sortBy ? `${sortBy},${desc ? 'desc' : 'asc'}` : null;
     const params = queryString.stringify(
-        { page: page, size: items, sort },
+        { page, size: items, sort },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
     return submitGetRequest(`${statsUrl}${researchFieldId ? `research-field/${researchFieldId}/` : ''}top/changelog?${params}`);
 };
@@ -92,11 +81,11 @@ export const getChangelogs = ({ researchFieldId = null, page = 0, items = 9999, 
 export const getTopResearchProblems = ({ page = 0, items = 9999, sortBy = 'created_at', desc = true, subfields = true }) => {
     // const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
-        { page: page, size: items /*, sort, desc*/ },
+        { page, size: items /* , sort, desc */ },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
     return submitGetRequest(`${statsUrl}top/research-problems?${params}`);
 };

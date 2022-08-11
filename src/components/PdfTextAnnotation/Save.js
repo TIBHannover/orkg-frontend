@@ -5,12 +5,12 @@ import { createLiteralStatement } from 'services/backend/statements';
 import { saveFullPaper } from 'services/backend/papers';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
-import { CLASSES, PREDICATES, MISC } from 'constants/graphSettings';
+import { CLASSES, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import Cite from 'citation-js';
+import { Cite } from '@citation-js/core';
 import { parseCiteResult } from 'utils';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -30,7 +30,7 @@ const Save = props => {
         paperPublicationMonth: null,
         paperPublicationYear: null,
         doi: null,
-        publishedIn: null
+        publishedIn: null,
     });
 
     const handleSave = async () => {
@@ -57,19 +57,19 @@ const Save = props => {
             if (!(PREDICATES.CONTAINS in contributionStatements)) {
                 contributionStatements[PREDICATES.CONTAINS] = [
                     {
-                        '@id': resource.id
-                    }
+                        '@id': resource.id,
+                    },
                 ];
             } else {
                 contributionStatements[PREDICATES.CONTAINS].push({
-                    '@id': resource.id
+                    '@id': resource.id,
                 });
             }
         }
 
         const paper = {
             title: _title,
-            researchField: MISC.RESEARCH_FIELD_MAIN,
+            researchField: RESOURCES.RESEARCH_FIELD_MAIN,
             authors: paperAuthors.length
                 ? paperAuthors.map(author => ({ label: author.label, ...(author.orcid ? { orcid: author.orcid } : {}) }))
                 : null,
@@ -80,12 +80,12 @@ const Save = props => {
             contributions: [
                 {
                     name: 'Contribution',
-                    values: contributionStatements
-                }
-            ]
+                    values: contributionStatements,
+                },
+            ],
         };
 
-        const savedPaper = await saveFullPaper({ paper: paper }, true);
+        const savedPaper = await saveFullPaper({ paper }, true);
 
         setIsLoading(false);
         setPaperId(savedPaper.id);
@@ -127,7 +127,7 @@ const Save = props => {
                         paperPublicationMonth,
                         paperPublicationYear,
                         doi,
-                        publishedIn
+                        publishedIn,
                     });
                     setDoiIsFetching(false);
                 }
@@ -213,7 +213,7 @@ const Save = props => {
 
 Save.propTypes = {
     toggle: PropTypes.func.isRequired,
-    isOpen: PropTypes.bool.isRequired
+    isOpen: PropTypes.bool.isRequired,
 };
 
 export default Save;

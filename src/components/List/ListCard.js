@@ -26,13 +26,13 @@ const ListCard = ({ versions, showBadge, showCurationFlags }) => {
     const { researchField, authors, isLoading: isLoadingMetaData } = useCardData({
         id: versions[0]?.id,
         initResearchField: versions[0]?.researchField,
-        initAuthors: versions[0]?.authors
+        initAuthors: versions[0]?.authors,
     });
 
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: versions[0]?.id,
         unlisted: versions[0]?.unlisted,
-        featured: versions[0]?.featured
+        featured: versions[0]?.featured,
     });
 
     return (
@@ -99,12 +99,12 @@ const ListCard = ({ versions, showBadge, showCurationFlags }) => {
 ListCard.propTypes = {
     versions: PropTypes.array.isRequired,
     showBadge: PropTypes.bool.isRequired,
-    showCurationFlags: PropTypes.bool.isRequired
+    showCurationFlags: PropTypes.bool.isRequired,
 };
 
 ListCard.defaultProps = {
     showBadge: false,
-    showCurationFlags: true
+    showCurationFlags: true,
 };
 
 export default ListCard;

@@ -7,7 +7,7 @@ const MarkFeaturedUnlistedContainer = props => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: props.id,
         unlisted: props.unlisted,
-        featured: props.featured
+        featured: props.featured,
     });
     return (
         <>
@@ -23,11 +23,11 @@ MarkFeaturedUnlistedContainer.propTypes = {
     id: PropTypes.string.isRequired,
     featured: PropTypes.bool,
     unlisted: PropTypes.bool,
-    size: PropTypes.string
+    size: PropTypes.string,
 };
 
 MarkFeaturedUnlistedContainer.defaultProps = {
-    size: 'xs'
+    size: 'xs',
 };
 
 export default MarkFeaturedUnlistedContainer;

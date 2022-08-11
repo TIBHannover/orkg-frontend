@@ -24,12 +24,12 @@ function useVenuePapers({ venueId }) {
                 items: pageSize,
                 sortBy: 'created_at',
                 desc: true,
-                returnContent: false
+                returnContent: false,
             }).then(result => {
                 // Fetch the data of each work
                 if (result.content?.length) {
                     return getStatementsBySubjects({
-                        ids: result.content.map(p => p.subject.id)
+                        ids: result.content.map(p => p.subject.id),
                     })
                         .then(statements => {
                             const items = statements.map(itemStatements => {
@@ -48,16 +48,15 @@ function useVenuePapers({ venueId }) {
                             setPapers([]);
                             setIsNextPageLoading(false);
                             setHasNextPage(false);
-                            setIsLastPageReached(p > 1 ? true : false);
+                            setIsLastPageReached(p > 1);
                         });
-                } else {
-                    setIsNextPageLoading(false);
-                    setHasNextPage(false);
-                    setIsLastPageReached(true);
                 }
+                setIsNextPageLoading(false);
+                setHasNextPage(false);
+                setIsLastPageReached(true);
             });
         },
-        [venueId]
+        [venueId],
     );
     // reset resources when the venueId has changed
     useEffect(() => {

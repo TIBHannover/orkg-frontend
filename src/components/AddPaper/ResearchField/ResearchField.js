@@ -28,7 +28,7 @@ const ResearchField = () => {
         (data, submit = false) => {
             dispatch(updateResearchField({ ...data, submit }));
         },
-        [dispatch]
+        [dispatch],
     );
 
     return (

@@ -26,7 +26,7 @@ const Data = () => {
                                 tag="a"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                href="https://www.orkg.org/orkg/doc/api/"
+                                href="http://tibhannover.gitlab.io/orkg/orkg-backend/api-doc/"
                             >
                                 API Documentation
                             </Button>
@@ -64,7 +64,7 @@ const Data = () => {
                                         tag="a"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        href="https://www.orkg.org/orkg/triplestore"
+                                        href="https://www.orkg.org/triplestore"
                                     >
                                         Virtuoso Query Editor
                                     </Button>
@@ -76,7 +76,7 @@ const Data = () => {
                                         tag="a"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        href="https://www.orkg.org/orkg/sparql"
+                                        href="https://www.orkg.org/sparql"
                                     >
                                         Visual SPARQL Editor
                                     </Button>
@@ -96,7 +96,7 @@ const Data = () => {
                                 tag="a"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                href="https://orkg.org/orkg/api/rdf/dump"
+                                href="https://orkg.org/api/rdf/dump"
                             >
                                 Download RDF dump
                             </Button>

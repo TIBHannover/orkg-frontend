@@ -13,8 +13,8 @@ const StatementBrowser = props => {
         if (newStore) {
             setStore(
                 configureStore({
-                    auth
-                })
+                    auth,
+                }).store,
             );
         }
     }, [auth, newStore]);
@@ -38,11 +38,11 @@ const StatementBrowser = props => {
 };
 
 StatementBrowser.propTypes = {
-    newStore: PropTypes.bool
+    newStore: PropTypes.bool,
 };
 
 StatementBrowser.defaultProps = {
-    newStore: false
+    newStore: false,
 };
 
 export default StatementBrowser;

@@ -30,9 +30,9 @@ const ObservatoryModal = props => {
         await addResourceToObservatory({
             observatory_id: observatory?.id ?? MISC.UNKNOWN_ID,
             organization_id: organization?.id ?? MISC.UNKNOWN_ID,
-            id: props.resourceId
+            id: props.resourceId,
         }).then(() => {
-            toast.success(`Observatory assigned to resource successfully`);
+            toast.success('Observatory assigned to resource successfully');
             props.callBack && props.callBack(observatory?.id ?? MISC.UNKNOWN_ID, organization?.id ?? MISC.UNKNOWN_ID);
             props.toggle();
         });
@@ -64,7 +64,7 @@ ObservatoryModal.propTypes = {
     resourceId: PropTypes.string.isRequired,
     observatory: PropTypes.object,
     organization: PropTypes.object,
-    callBack: PropTypes.func
+    callBack: PropTypes.func,
 };
 
 export default ObservatoryModal;

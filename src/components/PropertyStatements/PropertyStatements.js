@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import usePropertyStatements from './hooks/usePropertyStatements';
 import { Button, Table, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getLinkByEntityType } from 'utils';
 import { Link } from 'react-router-dom';
+import usePropertyStatements from './hooks/usePropertyStatements';
 
 const PropertyStatements = ({ propertyId }) => {
     const { statements, isLoading, hasNextPage, totalElements, handleLoadMore } = usePropertyStatements({
-        propertyId: propertyId,
-        pageSize: 10
+        propertyId,
+        pageSize: 10,
     });
 
     const [showPropertyStatements, setShowPropertyStatements] = useState(false);
@@ -82,14 +82,14 @@ const PropertyStatements = ({ propertyId }) => {
 
                 {isLoading && loadingIndicator}
 
-                {statements.length === 0 && !isLoading && <div className="text-center mb-2">This property isn't used in any statement yet!</div>}
+                {statements.length === 0 && !isLoading && <div className="text-center mb-2">This property isn't used in any statement yet</div>}
             </Collapse>
         </div>
     );
 };
 
 PropertyStatements.propTypes = {
-    propertyId: PropTypes.string.isRequired
+    propertyId: PropTypes.string.isRequired,
 };
 
 export default PropertyStatements;

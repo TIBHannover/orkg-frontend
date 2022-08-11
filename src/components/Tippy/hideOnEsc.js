@@ -22,9 +22,9 @@ const hideOnEsc = {
             },
             onHide() {
                 document.removeEventListener('keydown', onKeyDown);
-            }
+            },
         };
-    }
+    },
 };
 
 export default hideOnEsc;

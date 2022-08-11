@@ -11,21 +11,20 @@ export default class TableInput extends Component {
         this.tableData = this.createTableFromModel();
     }
 
-    createTableFromModel = () => {
+    createTableFromModel = () =>
         // access the model and get the data for google charts ;
-        return this.selfVisModel._googleChartsData.getChartData();
-    };
+        this.selfVisModel._googleChartsData.getChartData();
 
-    createTableFromInputData = () => {
-        return <Chart chartType="Table" data={this.tableData} width="100%" height={this.props.height - 5} options={{ showRowNumber: true }} />;
-    };
+    createTableFromInputData = () => (
+        <Chart chartType="Table" data={this.tableData} width="100%" height={this.props.height - 5} options={{ showRowNumber: true }} />
+    );
 
-    /** component rendering entrance point **/
+    /** component rendering entrance point * */
     render() {
         return <div> {this.createTableFromInputData()}</div>;
     }
 }
 
 TableInput.propTypes = {
-    height: PropTypes.number
+    height: PropTypes.number,
 };

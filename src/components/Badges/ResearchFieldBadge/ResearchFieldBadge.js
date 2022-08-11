@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom';
 import { Badge } from 'reactstrap';
 import { reverseWithSlug } from 'utils';
 
-const ResearchFieldBadge = ({ researchField = null }) => {
-    return researchField && researchField.id ? (
+const ResearchFieldBadge = ({ researchField = null }) =>
+    (researchField && researchField.id ? (
         <Link
             to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}
             target="_blank"
@@ -17,11 +17,10 @@ const ResearchFieldBadge = ({ researchField = null }) => {
                 <Icon icon={faBars} className="text-primary" /> {researchField.label}
             </Badge>
         </Link>
-    ) : null;
-};
+    ) : null);
 
 ResearchFieldBadge.propTypes = {
-    researchField: PropTypes.object
+    researchField: PropTypes.object,
 };
 
 export default ResearchFieldBadge;

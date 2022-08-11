@@ -41,7 +41,7 @@ const PreviouslySelectedResearchField = props => {
 
 PreviouslySelectedResearchField.propTypes = {
     handleFieldSelect: PropTypes.func,
-    selectedResearchField: PropTypes.string
+    selectedResearchField: PropTypes.string,
 };
 
 export default PreviouslySelectedResearchField;

@@ -55,8 +55,8 @@ const PropertySuggestions = () => {
                                         existingPredicateId: c.property.id,
                                         label: c.property.label,
                                         isTemplate: false,
-                                        createAndSelect: true
-                                    })
+                                        createAndSelect: true,
+                                    }),
                                 );
                             }}
                             key={`suggested-property-${index}`}

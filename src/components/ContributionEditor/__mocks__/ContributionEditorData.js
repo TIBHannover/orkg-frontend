@@ -14,28 +14,28 @@ export const contribution = {
                 organization_id: '1bdc53bc-4f75-49ab-9cd1-ea219ca7e250',
                 featured: false,
                 unlisted: false,
-                paperId: 'R30608'
-            }
+                paperId: 'R30608',
+            },
         },
         statements: {
             S56530: {
                 contributionId: 'R30609',
                 propertyId: 'P15136',
                 objectId: 'L45713',
-                type: 'literal'
+                type: 'literal',
             },
             S56529: {
                 contributionId: 'R30609',
                 propertyId: 'P15136',
                 objectId: 'R30611',
-                type: 'resource'
+                type: 'resource',
             },
             S56528: {
                 contributionId: 'R30609',
                 propertyId: 'P15137',
                 objectId: 'R30613',
-                type: 'resource'
-            }
+                type: 'resource',
+            },
         },
         resources: {
             R30611: {
@@ -51,7 +51,7 @@ export const contribution = {
                 organization_id: '1bdc53bc-4f75-49ab-9cd1-ea219ca7e250',
                 featured: false,
                 unlisted: false,
-                statements: []
+                statements: [],
             },
             R30613: {
                 id: 'R30613',
@@ -66,8 +66,8 @@ export const contribution = {
                 organization_id: '1bdc53bc-4f75-49ab-9cd1-ea219ca7e250',
                 featured: false,
                 unlisted: false,
-                statements: []
-            }
+                statements: [],
+            },
         },
         literals: {
             L45713: {
@@ -76,8 +76,8 @@ export const contribution = {
                 datatype: 'xsd:string',
                 created_at: '2021-03-04T13:25:13.209097Z',
                 created_by: '93da2912-06f9-4aab-987e-810347b21dd5',
-                _class: 'literal'
-            }
+                _class: 'literal',
+            },
         },
         properties: {
             P15136: {
@@ -87,7 +87,7 @@ export const contribution = {
                 created_by: '93da2912-06f9-4aab-987e-810347b21dd5',
                 _class: 'predicate',
                 description: null,
-                staticRowId: '419b5e7c-0e0a-5798-4d2a-8ec43c9fbe3f'
+                staticRowId: '419b5e7c-0e0a-5798-4d2a-8ec43c9fbe3f',
             },
             P15137: {
                 id: 'P15137',
@@ -96,8 +96,8 @@ export const contribution = {
                 created_by: '93da2912-06f9-4aab-987e-810347b21dd5',
                 _class: 'predicate',
                 description: null,
-                staticRowId: 'b2718119-d3c2-353e-7c45-f63cd77004ce'
-            }
+                staticRowId: 'b2718119-d3c2-353e-7c45-f63cd77004ce',
+            },
         },
         papers: {
             R30608: {
@@ -127,9 +127,9 @@ export const contribution = {
                     featured: false,
                     unlisted: false,
                     statementId: 'S56527',
-                    s_created_at: '2021-03-04T13:25:13.129173Z'
-                }
-            }
+                    s_created_at: '2021-03-04T13:25:13.129173Z',
+                },
+            },
         },
         templates: {
             R52232: {
@@ -145,81 +145,81 @@ export const contribution = {
                         id: 'R52248',
                         property: {
                             id: 'P32',
-                            label: 'has research problem'
+                            label: 'has research problem',
                         },
                         value: {
                             id: 'Problem',
-                            label: 'Problem'
+                            label: 'Problem',
                         },
                         minOccurs: '0',
                         maxOccurs: null,
                         order: '0',
-                        validationRules: {}
+                        validationRules: {},
                     },
                     {
                         id: 'R52249',
                         property: {
                             id: 'MATERIAL',
-                            label: 'Material'
+                            label: 'Material',
                         },
                         value: {
                             id: 'C16001',
-                            label: 'Research Material'
+                            label: 'Research Material',
                         },
                         minOccurs: '0',
                         maxOccurs: null,
                         order: '1',
-                        validationRules: {}
+                        validationRules: {},
                     },
                     {
                         id: 'R52250',
                         property: {
                             id: 'HasMethod',
-                            label: 'HasMethod'
+                            label: 'HasMethod',
                         },
                         value: {
                             id: 'Methods',
-                            label: 'Methods'
+                            label: 'Methods',
                         },
                         minOccurs: '0',
                         maxOccurs: null,
                         order: '2',
-                        validationRules: {}
+                        validationRules: {},
                     },
                     {
                         id: 'R52251',
                         property: {
                             id: 'HAS_RESULTS',
-                            label: 'Has result'
+                            label: 'Has result',
                         },
                         value: {
                             id: 'Results',
-                            label: 'Results'
+                            label: 'Results',
                         },
                         minOccurs: '0',
                         maxOccurs: null,
                         order: '3',
-                        validationRules: {}
-                    }
+                        validationRules: {},
+                    },
                 ],
                 class: {
                     id: 'Contribution',
-                    label: 'Contribution'
+                    label: 'Contribution',
                 },
                 researchFields: [],
                 researchProblems: [],
-                isLoading: false
-            }
+                isLoading: false,
+            },
         },
         classes: {
             Contribution: {
                 isFetching: false,
-                templateIds: ['R52232']
-            }
+                templateIds: ['R52232'],
+            },
         },
         isLoading: false,
-        hasFailed: false
-    }
+        hasFailed: false,
+    },
 };
 
 export const contributionLiteralOnly = {
@@ -238,16 +238,16 @@ export const contributionLiteralOnly = {
                 organization_id: '1bdc53bc-4f75-49ab-9cd1-ea219ca7e250',
                 featured: false,
                 unlisted: false,
-                paperId: 'R30608'
-            }
+                paperId: 'R30608',
+            },
         },
         statements: {
             S56530: {
                 contributionId: 'R30609',
                 propertyId: 'P15136',
                 objectId: 'L45713',
-                type: 'literal'
-            }
+                type: 'literal',
+            },
         },
         resources: {},
         literals: {
@@ -257,8 +257,8 @@ export const contributionLiteralOnly = {
                 datatype: 'xsd:string',
                 created_at: '2021-03-04T13:25:13.209097Z',
                 created_by: '93da2912-06f9-4aab-987e-810347b21dd5',
-                _class: 'literal'
-            }
+                _class: 'literal',
+            },
         },
         properties: {
             P15136: {
@@ -268,8 +268,8 @@ export const contributionLiteralOnly = {
                 created_by: '93da2912-06f9-4aab-987e-810347b21dd5',
                 _class: 'predicate',
                 description: null,
-                staticRowId: 'bd8d2f65-22a4-512f-094f-b992f7b5e32a'
-            }
+                staticRowId: 'bd8d2f65-22a4-512f-094f-b992f7b5e32a',
+            },
         },
         papers: {
             R30608: {
@@ -299,9 +299,9 @@ export const contributionLiteralOnly = {
                     featured: false,
                     unlisted: false,
                     statementId: 'S56527',
-                    s_created_at: '2021-03-04T13:25:13.129173Z'
-                }
-            }
+                    s_created_at: '2021-03-04T13:25:13.129173Z',
+                },
+            },
         },
         templates: {
             R52232: {
@@ -317,79 +317,79 @@ export const contributionLiteralOnly = {
                         id: 'R52248',
                         property: {
                             id: 'P32',
-                            label: 'has research problem'
+                            label: 'has research problem',
                         },
                         value: {
                             id: 'Problem',
-                            label: 'Problem'
+                            label: 'Problem',
                         },
                         minOccurs: '0',
                         maxOccurs: null,
                         order: '0',
-                        validationRules: {}
+                        validationRules: {},
                     },
                     {
                         id: 'R52249',
                         property: {
                             id: 'MATERIAL',
-                            label: 'Material'
+                            label: 'Material',
                         },
                         value: {
                             id: 'C16001',
-                            label: 'Research Material'
+                            label: 'Research Material',
                         },
                         minOccurs: '0',
                         maxOccurs: null,
                         order: '1',
-                        validationRules: {}
+                        validationRules: {},
                     },
                     {
                         id: 'R52250',
                         property: {
                             id: 'HasMethod',
-                            label: 'HasMethod'
+                            label: 'HasMethod',
                         },
                         value: {
                             id: 'Methods',
-                            label: 'Methods'
+                            label: 'Methods',
                         },
                         minOccurs: '0',
                         maxOccurs: null,
                         order: '2',
-                        validationRules: {}
+                        validationRules: {},
                     },
                     {
                         id: 'R52251',
                         property: {
                             id: 'HAS_RESULTS',
-                            label: 'Has result'
+                            label: 'Has result',
                         },
                         value: {
                             id: 'Results',
-                            label: 'Results'
+                            label: 'Results',
                         },
                         minOccurs: '0',
                         maxOccurs: null,
                         order: '3',
-                        validationRules: {}
-                    }
+                        validationRules: {},
+                    },
                 ],
                 class: {
                     id: 'Contribution',
-                    label: 'Contribution'
+                    label: 'Contribution',
                 },
                 researchFields: [],
                 researchProblems: [],
-                isLoading: false
-            }
+                isLoading: false,
+            },
         },
         classes: {
             Contribution: {
                 isFetching: false,
-                templateIds: ['R52232']
-            }
+                templateIds: ['R52232'],
+            },
         },
         isLoading: false,
-        hasFailed: false
-    }
+        hasFailed: false,
+    },
 };

@@ -43,7 +43,7 @@ const AddProperty = () => {
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <div className="pt-2">
                     <FormGroup>
-                        <Label for="propertyLabel">Property Label</Label>
+                        <Label for="propertyLabel">Property label</Label>
                         <Input
                             onChange={e => setLabel(e.target.value)}
                             onKeyDown={e => (e.keyCode === 13 ? handleAdd : undefined)}
@@ -51,11 +51,10 @@ const AddProperty = () => {
                             name="value"
                             id="propertyLabel"
                             disabled={isLoading}
-                            placeholder="Property label"
                         />
                     </FormGroup>
                     <Button color="primary" onClick={handleAdd} className="mt-3 mb-2" disabled={isLoading}>
-                        {!isLoading ? 'Create Property' : <span>Loading</span>}
+                        {!isLoading ? 'Create property' : <span>Loading</span>}
                     </Button>
                 </div>
             </Container>

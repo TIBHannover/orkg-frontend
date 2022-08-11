@@ -4,11 +4,12 @@ import { faMinusSquare, faPlusSquare, faSpinner } from '@fortawesome/free-solid-
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import PreviouslySelectedResearchField from 'components/PreviouslySelectedResearchField/PreviouslySelectedResearchField';
-import { CLASSES, MISC, ENTITIES } from 'constants/graphSettings';
+import { CLASSES, RESOURCES, ENTITIES } from 'constants/graphSettings';
 import { sortBy, find, set, cloneDeep } from 'lodash';
 import { getParentResearchFields, getStatementsBySubjects } from 'services/backend/statements';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import ContentLoader from 'react-content-loader';
 
 const FieldItem = styled(Button)`
     &&& {
@@ -59,7 +60,7 @@ const ResearchFieldSelector = ({
     updateResearchField,
     researchFieldStats,
     insideModal,
-    showPreviouslySelected
+    showPreviouslySelected,
 }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [loadingId, setLoadingId] = useState(null);
@@ -78,9 +79,9 @@ const ResearchFieldSelector = ({
                 {
                     researchFields: fields,
                     selectedResearchField: selected.id,
-                    selectedResearchFieldLabel: selected.label
+                    selectedResearchFieldLabel: selected.label,
                 },
-                submit
+                submit,
             );
             setIsLoading(false);
         });
@@ -95,7 +96,7 @@ const ResearchFieldSelector = ({
 
         const payload = {
             researchFields: fields,
-            selectedResearchField: shouldSetActive ? fieldId : undefined
+            selectedResearchField: shouldSetActive ? fieldId : undefined,
         };
 
         updateResearchField(payload);
@@ -115,9 +116,9 @@ const ResearchFieldSelector = ({
                               id: statement.object.id,
                               parent: id,
                               hasChildren: null,
-                              isExpanded: false
+                              isExpanded: false,
                           })
-                        : {}
+                        : {},
                 );
             }
 
@@ -149,7 +150,7 @@ const ResearchFieldSelector = ({
 
             return await getFieldsByIds(childrenIds, fields);
         },
-        [getFieldsByIds]
+        [getFieldsByIds],
     );
 
     useEffect(() => {
@@ -158,11 +159,11 @@ const ResearchFieldSelector = ({
             const initializeFields = async () => {
                 setIsLoading(true);
 
-                let fields = await getFieldsByIds([MISC.RESEARCH_FIELD_MAIN]);
-                fields = await getChildFields(MISC.RESEARCH_FIELD_MAIN, fields);
+                let fields = await getFieldsByIds([RESOURCES.RESEARCH_FIELD_MAIN]);
+                fields = await getChildFields(RESOURCES.RESEARCH_FIELD_MAIN, fields);
 
                 updateResearchField({
-                    researchFields: fields
+                    researchFields: fields,
                 });
                 setIsLoading(false);
             };
@@ -216,9 +217,8 @@ const ResearchFieldSelector = ({
         if (f) {
             parents.push(f);
             return getParents(f, parents);
-        } else {
-            return parents;
         }
+        return parents;
     };
 
     let researchFieldLabel;
@@ -237,8 +237,9 @@ const ResearchFieldSelector = ({
                     optionsClass={CLASSES.RESEARCH_FIELD}
                     placeholder="Search for fields..."
                     onItemSelected={handleFieldSelect}
-                    value={selectedResearchField !== MISC.RESEARCH_FIELD_MAIN ? { id: selectedResearchField, label: researchFieldLabel } : null}
+                    value={selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN ? { id: selectedResearchField, label: researchFieldLabel } : null}
                     allowCreate={false}
+                    ols={false}
                     autoLoadOption={true}
                 />
             </div>
@@ -249,11 +250,7 @@ const ResearchFieldSelector = ({
                         <PreviouslySelectedResearchField selectedResearchField={selectedResearchField} handleFieldSelect={handleFieldSelect} />
                     </div>
                 )}
-                {isLoading && (
-                    <div className="mb-2">
-                        <Icon icon={faSpinner} spin /> Loading
-                    </div>
-                )}
+
                 <div className={`${insideModal || !showPreviouslySelected ? 'col-12' : 'col-md-8 order-md-1'}`}>
                     <CollapseButton
                         size="sm"
@@ -263,13 +260,31 @@ const ResearchFieldSelector = ({
                         onClick={() => {
                             const fields = cloneDeep(researchFields);
                             updateResearchField({
-                                researchFields: fields.map(f => set(f, 'isExpanded', false))
+                                researchFields: fields.map(f => set(f, 'isExpanded', false)),
                             });
                         }}
                     >
                         <Icon icon={faMinusSquare} /> <span className="text-decoration-underline">Collapse all</span>
                     </CollapseButton>
-                    <List>{fieldList(MISC.RESEARCH_FIELD_MAIN)}</List>
+                    {isLoading && (
+                        <div>
+                            <ContentLoader
+                                width="100%"
+                                speed={2}
+                                viewBox="0 0 100 30"
+                                style={{ width: '100% !important' }}
+                                backgroundColor="#f3f3f3"
+                                foregroundColor="#ecebeb"
+                            >
+                                <rect x="0" y="0" rx="1" ry="1" width="100" height="5" />
+                                <rect x="0" y="6" rx="1" ry="1" width="100" height="5" />
+                                <rect x="0" y="12" rx="1" ry="1" width="100" height="5" />
+                                <rect x="0" y="18" rx="1" ry="1" width="100" height="5" />
+                                <rect x="0" y="24" rx="1" ry="1" width="100" height="5" />
+                            </ContentLoader>
+                        </div>
+                    )}
+                    <List>{fieldList(RESOURCES.RESEARCH_FIELD_MAIN)}</List>
                 </div>
             </div>
         </>
@@ -282,12 +297,12 @@ ResearchFieldSelector.propTypes = {
     updateResearchField: PropTypes.func,
     researchFieldStats: PropTypes.object,
     insideModal: PropTypes.bool.isRequired,
-    showPreviouslySelected: PropTypes.bool.isRequired
+    showPreviouslySelected: PropTypes.bool.isRequired,
 };
 
 ResearchFieldSelector.defaultProps = {
     insideModal: false,
-    showPreviouslySelected: true
+    showPreviouslySelected: true,
 };
 
 export default ResearchFieldSelector;

@@ -1,11 +1,12 @@
-import App from './App';
 import { render, screen } from 'testUtils';
-import { history } from './store';
+import App from './App';
 
 jest.mock('react-responsive-tabs', () => ({ children }) => null);
 
+window.scrollTo = jest.fn();
+
 const setup = () => {
-    render(<App history={history} />);
+    render(<App />);
 };
 describe('App', () => {
     it('renders without crashing', () => {

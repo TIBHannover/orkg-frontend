@@ -31,14 +31,14 @@ const Reviews = () => {
             page,
             items: pageSize,
             sortBy: 'created_at',
-            desc: true
+            desc: true,
         });
 
         if (resources.length) {
             items = await getStatementsBySubjects({ ids: resources.map(item => item.id) }).then(statements =>
-                statements.map(statementsForSubject => {
-                    return getReviewData(resources.find(resource => resource.id === statementsForSubject.id), statementsForSubject.statements);
-                })
+                statements.map(statementsForSubject =>
+                    getReviewData(resources.find(resource => resource.id === statementsForSubject.id), statementsForSubject.statements),
+                ),
             );
             const groupedByPaper = groupBy(items, 'paperId');
             items = Object.keys(groupedByPaper).map(paperId => [...groupedByPaper[paperId]]);
@@ -47,7 +47,7 @@ const Reviews = () => {
         return {
             items,
             last,
-            totalElements
+            totalElements,
         };
     };
 

@@ -32,13 +32,11 @@ const EditItem = props => {
                 <option value="" key="">
                     Month
                 </option>
-                {moment.months().map((el, index) => {
-                    return (
-                        <option value={index + 1} key={index + 1}>
-                            {el}
-                        </option>
-                    );
-                })}
+                {moment.months().map((el, index) => (
+                    <option value={index + 1} key={index + 1}>
+                        {el}
+                    </option>
+                ))}
             </Input>
         );
         stringValue = props.value ? moment(props.value, 'M').format('MMMM') : EMPTY_LABEL;
@@ -68,13 +66,13 @@ const EditItem = props => {
                 const newVenue = await createResource(selected.label, [CLASSES.VENUE]);
                 props.onChange({
                     ...selected,
-                    id: newVenue.id
+                    id: newVenue.id,
                 });
             } else if (action.action === 'clear') {
                 props.onChange({
                     ...selected,
                     id: null,
-                    label: null
+                    label: null,
                 });
             }
         };
@@ -97,13 +95,14 @@ const EditItem = props => {
         const handleSelectField = ({ id, label }) => {
             props.onChange({
                 id,
-                label
+                label,
             });
         };
         input = (
             <InputGroup>
                 <AutoComplete
                     allowCreate={false}
+                    ols={false}
                     entityType={ENTITIES.RESOURCE}
                     optionsClass={CLASSES.RESEARCH_FIELD}
                     onChange={props.onChange}
@@ -149,12 +148,12 @@ EditItem.propTypes = {
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array, PropTypes.object]),
     onChange: PropTypes.func.isRequired,
     type: PropTypes.oneOf(['text', 'month', 'year', 'authors', 'publishedIn', 'researchField', 'textarea']).isRequired,
-    isLastItem: PropTypes.bool
+    isLastItem: PropTypes.bool,
 };
 
 EditItem.defaultProps = {
     isLastItem: false,
-    value: ''
+    value: '',
 };
 
 export default EditItem;

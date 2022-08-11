@@ -1,13 +1,13 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { render, unmountComponentAtNode } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 
 class Confirmation extends Component {
     render() {
         const { proceedLabel, cancelLabel, title, message, proceed, enableEscape = true } = this.props;
         return (
-            <Modal isOpen toggle={() => proceed(false)} backdrop={enableEscape ? true : false}>
+            <Modal isOpen toggle={() => proceed(false)} backdrop={!!enableEscape}>
                 <ModalHeader toggle={() => proceed(false)}>{title}</ModalHeader>
                 <ModalBody>{message}</ModalBody>
                 <ModalFooter>
@@ -29,20 +29,20 @@ Confirmation.propTypes = {
     title: PropTypes.string,
     message: PropTypes.string,
     proceed: PropTypes.func, // called when ok button is clicked.
-    enableEscape: PropTypes.bool
+    enableEscape: PropTypes.bool,
 };
 
-const Confirm = ({ message, title = 'Are you sure?', proceedLabel = 'Ok', cancelLabel = 'Cancel', options = {} }) => {
-    return new Promise(resolve => {
-        let el = document.createElement('div');
-
+const Confirm = ({ message, title = 'Are you sure?', proceedLabel = 'Ok', cancelLabel = 'Cancel', options = {} }) =>
+    new Promise(resolve => {
+        let container = document.createElement('div');
+        const root = createRoot(container);
         const handleResolve = result => {
-            unmountComponentAtNode(el);
-            el = null;
+            root.unmount();
+            container = null;
             resolve(result);
         };
 
-        render(
+        root.render(
             <Confirmation
                 title={title}
                 message={message}
@@ -51,9 +51,7 @@ const Confirm = ({ message, title = 'Are you sure?', proceedLabel = 'Ok', cancel
                 {...options}
                 proceed={handleResolve}
             />,
-            el
         );
     });
-};
 
 export default Confirm;

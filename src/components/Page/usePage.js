@@ -40,7 +40,7 @@ const usePage = () => {
 
             setPage({
                 ..._page,
-                content: <Article dangerouslySetInnerHTML={{ __html: converter.makeHtml(_page.content) }} />
+                content: <Article dangerouslySetInnerHTML={{ __html: converter.makeHtml(_page.content) }} />,
             });
         } catch (e) {
             console.log(e);

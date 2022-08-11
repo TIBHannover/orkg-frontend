@@ -11,6 +11,7 @@ import { createAnnotation, setIsLoadedPdfViewer } from 'slices/pdfTextAnnotation
 import Highlight from 'components/PdfTextAnnotation/Highlight';
 import useDeleteAnnotation from 'components/PdfTextAnnotation/hooks/useDeleteAnnotation';
 import DragUpload from 'components/PdfTextAnnotation/DragUpload';
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 
 const Wrapper = styled.div`
     margin-top: -30px;
@@ -54,7 +55,7 @@ const PdfTextAnnotation = () => {
     );
 
     const handleHighlightTransform = (highlight, index, setTip, hideTip, viewportToScaled, screenshot, isScrolledTo) => {
-        const isTextHighlight = !Boolean(highlight.content && highlight.content.image);
+        const isTextHighlight = !(highlight.content && highlight.content.image);
 
         const component = isTextHighlight ? (
             <Highlight isScrolledTo={isScrolledTo} position={highlight.position} type={highlight.type} />
@@ -100,11 +101,11 @@ const PdfTextAnnotation = () => {
     return (
         <Wrapper>
             <Sidebar pdfViewer={pdfViewer} />
-            {/*pdf && <ZoomBar />*/}
+            {/* pdf && <ZoomBar /> */}
 
             <Main>
                 {pdf ? (
-                    <PdfLoader url={pdf} beforeLoad={<Icon icon={faSpinner} />}>
+                    <PdfLoader url={pdf} beforeLoad={<Icon icon={faSpinner} />} workerSrc={pdfjsWorker}>
                         {pdfDocument => (
                             <PdfHighlighter
                                 pdfDocument={pdfDocument}

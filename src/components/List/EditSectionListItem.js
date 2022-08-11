@@ -51,7 +51,7 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
     const handleDelete = async () => {
         const confirm = await Confirm({
             title: 'Are you sure?',
-            message: 'Do you want to remove this item from the list?'
+            message: 'Do you want to remove this item from the list?',
         });
 
         if (confirm) {
@@ -76,8 +76,8 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
             label: 'Description',
             type: 'textarea',
             value: description,
-            onChange: e => setDescription(e.target.value)
-        }
+            onChange: e => setDescription(e.target.value),
+        },
     };
 
     return (
@@ -116,7 +116,7 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
                     showCreator={false}
                     paper={{
                         ...contentType,
-                        title: contentType.label
+                        title: contentType.label,
                     }}
                     description={entry.description}
                     showAddToComparison
@@ -131,7 +131,7 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
                         ...contentType,
                         paper: { label: contentType.label, id: contentType.id },
                         month: contentType.publicationMonth,
-                        year: contentType.publicationYear
+                        year: contentType.publicationYear,
                     }}
                     afterUpdate={handleUpdatePaper}
                     toggle={v => setIsOpenEditModal(!v)}
@@ -147,7 +147,7 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
 EditSectionListItem.propTypes = {
     entry: PropTypes.object.isRequired,
     sectionId: PropTypes.string.isRequired,
-    statementId: PropTypes.string.isRequired
+    statementId: PropTypes.string.isRequired,
 };
 
 export default SortableElement(EditSectionListItem);

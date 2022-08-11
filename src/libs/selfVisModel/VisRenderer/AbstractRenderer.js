@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import AbstractChartRenderer from './ChartRenderers/AbstractChartRenderer';
 import PropTypes from 'prop-types';
+import AbstractChartRenderer from './ChartRenderers/AbstractChartRenderer';
 
 export default class AbstractRenderer extends Component {
     constructor(props) {
@@ -25,7 +25,7 @@ export default class AbstractRenderer extends Component {
         if (prevProps.isInputTableExpanded !== this.props.isInputTableExpanded) {
             // force an update;
             /** the chart widget does not have animation functions, so it will not know the width when animation is finished
-             * so here we hack it with an timeout**/
+             * so here we hack it with an timeout* */
             setTimeout(this.applySelectorMethod, 400);
         }
     };
@@ -65,12 +65,12 @@ export default class AbstractRenderer extends Component {
         }
     };
 
-    /** component rendering entrance point **/
+    /** component rendering entrance point * */
     render() {
         return (
             <div
                 style={{
-                    width: this.props.visualizationWidth + 'px'
+                    width: `${this.props.visualizationWidth}px`,
                 }}
             >
                 {this.createVisualization()}
@@ -84,5 +84,5 @@ AbstractRenderer.propTypes = {
     isInputTableExpanded: PropTypes.bool,
     height: PropTypes.number,
     visualizationWidth: PropTypes.number,
-    visualizationHeight: PropTypes.number
+    visualizationHeight: PropTypes.number,
 };

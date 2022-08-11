@@ -1,16 +1,20 @@
 import { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input, FormText, FormFeedback } from 'reactstrap';
 import { createClass } from 'services/backend/classes';
+import { createLiteral } from 'services/backend/literals';
+import { PREDICATES } from 'constants/graphSettings';
+import { createLiteralStatement } from 'services/backend/statements';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
-import { get_error_message } from 'utils';
+import { getErrorMessage } from 'utils';
 
 function CreateClassModal(props) {
     const isURI = new RegExp(REGEX.URL).test(props.label.trim());
     const [uri, setUri] = useState(props.uri ? props.uri : isURI ? props.label.trim() : '');
     const [label, setLabel] = useState(isURI ? '' : props.label.trim());
     const [errors, setErrors] = useState(null);
+    const [description, setDescription] = useState('');
 
     const handleConfirm = async () => {
         setErrors(null);
@@ -19,7 +23,11 @@ function CreateClassModal(props) {
                 toast.error('Please enter a valid URI of the class');
             } else {
                 try {
-                    const newClass = await createClass(label, uri ? uri : null);
+                    const newClass = await createClass(label, uri || null);
+                    if (description && description.trim() !== '') {
+                        const descriptionLiteral = await createLiteral(description);
+                        createLiteralStatement(newClass.id, PREDICATES.DESCRIPTION, descriptionLiteral.id);
+                    }
                     props.onClose(newClass);
                     setErrors(null);
                 } catch (error) {
@@ -49,10 +57,21 @@ function CreateClassModal(props) {
                         value={uri}
                         placeholder="Enter the URI of the class"
                         onChange={e => setUri(e.target.value)}
-                        invalid={Boolean(get_error_message(errors, 'uri'))}
+                        invalid={Boolean(getErrorMessage(errors, 'uri'))}
                     />
-                    {Boolean(get_error_message(errors, 'uri')) && <FormFeedback>{get_error_message(errors, 'uri')}</FormFeedback>}
+                    {Boolean(getErrorMessage(errors, 'uri')) && <FormFeedback>{getErrorMessage(errors, 'uri')}</FormFeedback>}
                     <FormText color="muted">Please provide the URI of the class if you are using a class defined in an external ontology</FormText>
+                </FormGroup>
+
+                <FormGroup className="mt-4">
+                    <Label for="property-description">Description</Label>
+                    <Input
+                        onChange={e => setDescription(e.target.value)}
+                        value={description}
+                        type="text"
+                        id="property-description"
+                        placeholder="E.g. Set of collection of objects"
+                    />
                 </FormGroup>
             </ModalBody>
             <ModalFooter>
@@ -70,7 +89,7 @@ function CreateClassModal(props) {
 CreateClassModal.propTypes = {
     onClose: PropTypes.func.isRequired,
     label: PropTypes.string.isRequired,
-    uri: PropTypes.string
+    uri: PropTypes.string,
 };
 
 export default CreateClassModal;

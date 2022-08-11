@@ -75,7 +75,7 @@ const Outline = ({ editMode = false }) => {
 };
 
 Outline.propTypes = {
-    editMode: propTypes.bool
+    editMode: propTypes.bool,
 };
 
 export default Outline;

@@ -14,17 +14,18 @@ const ClassesBadgesFilter = props => {
         }
     };
 
-    const Control = useCallback(({ ...innerProps }) => {
-        return (
+    const Control = useCallback(
+        ({ ...innerProps }) => (
             <components.Control {...innerProps}>
                 <div className="ps-2">Types ({innerProps.getValue()?.length} selected)</div>
                 {innerProps.children}
             </components.Control>
-        );
-    }, []);
+        ),
+        [],
+    );
 
-    const CustomOption = useCallback(innerProps => {
-        return (
+    const CustomOption = useCallback(
+        innerProps => (
             <div>
                 <components.Option {...innerProps}>
                     <div className="d-flex">
@@ -33,8 +34,9 @@ const ClassesBadgesFilter = props => {
                     </div>
                 </components.Option>
             </div>
-        );
-    }, []);
+        ),
+        [],
+    );
 
     const customStyles = {
         container: provided => ({
@@ -43,44 +45,44 @@ const ClassesBadgesFilter = props => {
             border: '0',
             fontSize: '100%',
             position: 'relative',
-            zIndex: '99'
+            zIndex: '99',
         }),
         control: provided => ({
             ...provided,
             height: 'calc(1.5em + 0.5rem + 2px)',
             minHeight: 'calc(1.5em + 0.5rem + 2px)',
-            fontSize: '100%'
+            fontSize: '100%',
         }),
         valueContainer: provided => ({
             ...provided,
             marginTop: '0',
             marginLeft: '6px',
             padding: '0',
-            border: '0'
+            border: '0',
         }),
         input: provided => ({
             ...provided,
-            color: 'transparent '
+            color: 'transparent ',
         }),
         dropdownIndicator: provided => ({
             ...provided,
             marginTop: '0',
             padding: '0',
             border: '0',
-            width: '16px'
+            width: '16px',
         }),
         clearIndicator: provided => ({
             ...provided,
             marginTop: '0',
             padding: '0',
             border: '0',
-            width: '16px'
+            width: '16px',
         }),
         indicatorsContainer: provided => ({
             ...provided,
             paddingRight: '4px',
-            border: '0'
-        })
+            border: '0',
+        }),
     };
 
     return (
@@ -112,11 +114,11 @@ ClassesBadgesFilter.propTypes = {
     initialClassFilterOptions: PropTypes.array.isRequired,
     setClassesFilter: PropTypes.func.isRequired,
     classesFilter: PropTypes.array.isRequired,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
 };
 
 ClassesBadgesFilter.defaultProps = {
-    disabled: false
+    disabled: false,
 };
 
 export default ClassesBadgesFilter;

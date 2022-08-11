@@ -5,12 +5,14 @@ import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import { reverseWithSlug } from 'utils';
 import PropTypes from 'prop-types';
+import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const ResearchProblemCard = props => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: props.problem.id,
         unlisted: props.problem.unlisted,
-        featured: props.problem.featured
+        featured: props.problem.featured,
     });
 
     return (
@@ -26,14 +28,39 @@ const ResearchProblemCard = props => {
             <div className="flex-grow-1">
                 <Link to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: props.problem.id, slug: props.problem.label })}>
                     {props.problem.label}
-                </Link>
+                </Link>{' '}
+                <small>
+                    {props.options?.map?.(option => (
+                        <StatementActionButton
+                            title={option.label}
+                            icon={option.icon}
+                            key={`problem${props.problem.id}`}
+                            requireConfirmation={option.requireConfirmation}
+                            confirmationMessage="Are you sure?"
+                            confirmationButtons={[
+                                {
+                                    title: 'Delete',
+                                    color: 'danger',
+                                    icon: faCheck,
+                                    action: option.action,
+                                },
+                                {
+                                    title: 'Cancel',
+                                    color: 'secondary',
+                                    icon: faTimes,
+                                },
+                            ]}
+                        />
+                    ))}
+                </small>
             </div>
         </div>
     );
 };
 
 ResearchProblemCard.propTypes = {
-    problem: PropTypes.object.isRequired
+    problem: PropTypes.object.isRequired,
+    options: PropTypes.array,
 };
 
 export default ResearchProblemCard;

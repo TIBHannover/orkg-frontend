@@ -13,10 +13,10 @@ import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMa
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { CardBadge } from 'components/styled';
 import ContentLoader from 'react-content-loader';
-import Authors from './Authors';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import pluralize from 'pluralize';
+import Authors from './Authors';
 
 const PaperCardStyled = styled.div`
     &.selected {
@@ -29,7 +29,7 @@ const PaperCard = props => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: props.paper.id,
         unlisted: props.paper?.unlisted,
-        featured: props.paper?.featured
+        featured: props.paper?.featured,
     });
 
     return (
@@ -44,7 +44,7 @@ const PaperCard = props => {
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
                         {props.selectable && (
                             <div>
-                                <Input type="checkbox" id={props.paper.id + 'input'} onChange={props.onSelect} checked={props.selected} />
+                                <Input type="checkbox" id={`${props.paper.id}input`} onChange={props.onSelect} checked={props.selected} />
                             </div>
                         )}
                         {!props.selectable && props.showAddToComparison && !!props.paper.contributions?.length && (
@@ -72,7 +72,7 @@ const PaperCard = props => {
                                 props.route ||
                                 reverse(props.contribution?.id ? ROUTES.VIEW_PAPER_CONTRIBUTION : ROUTES.VIEW_PAPER, {
                                     resourceId: props.paper.id,
-                                    contributionId: props.contribution?.id ?? undefined
+                                    contributionId: props.contribution?.id ?? undefined,
                                 })
                             }
                         >
@@ -90,7 +90,7 @@ const PaperCard = props => {
                             {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.paper.researchField} />}
                         </div>
                     </div>
-                    {/*Show Loading Dynamic data indicator if we are loading */}
+                    {/* Show Loading Dynamic data indicator if we are loading */}
                     {props.paper.isLoading && (
                         <div>
                             <span>Loading</span>
@@ -156,17 +156,17 @@ PaperCard.propTypes = {
         publicationYear: PropTypes.object,
         researchField: PropTypes.shape({
             id: PropTypes.string.isRequired,
-            label: PropTypes.string
+            label: PropTypes.string,
         }),
         contributions: PropTypes.array,
         created_by: PropTypes.string,
         featured: PropTypes.bool,
         unlisted: PropTypes.bool,
-        isLoading: PropTypes.bool
+        isLoading: PropTypes.bool,
     }).isRequired,
     contribution: PropTypes.shape({
         id: PropTypes.string.isRequired,
-        title: PropTypes.string
+        title: PropTypes.string,
     }),
     selectable: PropTypes.bool,
     selected: PropTypes.bool,
@@ -180,7 +180,7 @@ PaperCard.propTypes = {
     description: PropTypes.object,
     linkTarget: PropTypes.string,
     showContributionCount: PropTypes.bool.isRequired,
-    route: PropTypes.string
+    route: PropTypes.string,
 };
 
 PaperCard.defaultProps = {
@@ -196,7 +196,7 @@ PaperCard.defaultProps = {
     onChange: () => {},
     description: null,
     showContributionCount: false,
-    route: null
+    route: null,
 };
 
 export default PaperCard;

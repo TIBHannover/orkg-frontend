@@ -30,7 +30,7 @@ export default function ImportCSVInstances(props) {
     const csvReaderOptions = {
         header: false,
         dynamicTyping: true,
-        skipEmptyLines: true
+        skipEmptyLines: true,
     };
 
     const handleImport = () => {
@@ -43,11 +43,10 @@ export default function ImportCSVInstances(props) {
                         if (data[index + 1][1]) {
                             // add statement for URI
                             return createLiteral(data[index + 1][1]).then(literal =>
-                                createLiteralStatement(newResource.id, PREDICATES.URL, literal.id)
+                                createLiteralStatement(newResource.id, PREDICATES.URL, literal.id),
                             );
-                        } else {
-                            return Promise.resolve();
                         }
+                        return Promise.resolve();
                     });
                     Promise.all(statements).then(() => {
                         toast.success(`${data.length - 1} instances imported successfully`);
@@ -57,7 +56,7 @@ export default function ImportCSVInstances(props) {
                     });
                 })
                 .catch(e => {
-                    toast.error(`Something went wrong when importing instances`);
+                    toast.error('Something went wrong when importing instances');
                     setIsImporting(false);
                     setData([]);
                 });
@@ -97,5 +96,5 @@ ImportCSVInstances.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     classId: PropTypes.string.isRequired,
-    callBack: PropTypes.func.isRequired
+    callBack: PropTypes.func.isRequired,
 };

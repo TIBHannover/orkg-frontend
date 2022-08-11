@@ -180,8 +180,8 @@ const RelativeBreadcrumbs = ({ researchField }) => {
 RelativeBreadcrumbs.propTypes = {
     researchField: PropTypes.shape({
         id: PropTypes.string.isRequired,
-        label: PropTypes.string
-    })
+        label: PropTypes.string,
+    }),
 };
 
 export default RelativeBreadcrumbs;

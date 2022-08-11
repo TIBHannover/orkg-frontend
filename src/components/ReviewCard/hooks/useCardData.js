@@ -12,15 +12,13 @@ function useCardData({ id, initResearchField = null, initAuthors = [] }) {
         setIsLoading(true);
         getStatementsBySubjectAndPredicate({
             subjectId: id,
-            predicateId: PREDICATES.HAS_PAPER
+            predicateId: PREDICATES.HAS_PAPER,
         })
-            .then(paper => {
-                return paper?.length > 0 ? getStatementsBySubject({ id: paper[0].object.id }) : [];
-            })
+            .then(paper => (paper?.length > 0 ? getStatementsBySubject({ id: paper[0].object.id }) : []))
             .then(paperStatements => {
                 setIsLoading(false);
                 setResearchField(
-                    filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD)
+                    filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD),
                 );
                 setAuthors(filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHOR, false));
             })
@@ -30,7 +28,7 @@ function useCardData({ id, initResearchField = null, initAuthors = [] }) {
     }, [id]);
 
     useEffect(() => {
-        if (!initResearchField && !!!initAuthors?.length) {
+        if (!initResearchField && !initAuthors?.length) {
             loadSubject();
         }
     }, [initAuthors.length, initResearchField, loadSubject, id]);
@@ -38,7 +36,7 @@ function useCardData({ id, initResearchField = null, initAuthors = [] }) {
     return {
         researchField,
         authors: authors.reverse(),
-        isLoading
+        isLoading,
     };
 }
 export default useCardData;

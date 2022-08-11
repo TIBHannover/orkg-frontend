@@ -6,5 +6,5 @@ export const FILTER_TYPES = {
     LTE_DATE: 'lteDate',
     NEQ_DATE: 'nEqDate',
     NEQ: 'nEq',
-    INC: 'inc'
+    INC: 'inc',
 };

@@ -100,6 +100,7 @@ export default class BaseElement {
             this.updateCircleHalo(pulseItem, newRadius);
         }
     };
+
     setInViewportRadius = () => {
         // basically gets the rendering shape attributes and propagates them
         const shapeSize = this.getRenderingElementSize();
@@ -241,9 +242,8 @@ export default class BaseElement {
     id(val) {
         if (!arguments.length) {
             return this.idValue;
-        } else {
-            this.idValue = val;
         }
+        this.idValue = val;
     }
 
     setLabel(val) {
@@ -288,7 +288,7 @@ export default class BaseElement {
             const fontSizeProperty = window.getComputedStyle(tempRTE.node()).getPropertyValue('font-size');
             const fontFamily = window.getComputedStyle(tempRTE.node()).getPropertyValue('font-family');
             const fontSize = parseFloat(fontSizeProperty);
-            const textWidth = DrawTools().measureTextWidth(textValue, fontFamily, fontSize + 'px');
+            const textWidth = DrawTools().measureTextWidth(textValue, fontFamily, `${fontSize}px`);
 
             let height = fontSize + 2 * parseInt(cfg.overWriteOffset);
             let width = textWidth + 2 * parseInt(cfg.overWriteOffset);
@@ -327,8 +327,8 @@ export default class BaseElement {
             }
             const dy = 0.25 * cdy;
             const dx = -0.5 * textWidth;
-            this.renderingText.attr('dy', dy + 'px');
-            this.renderingText.attr('dx', dx + 'px');
+            this.renderingText.attr('dy', `${dy}px`);
+            this.renderingText.attr('dx', `${dx}px`);
         }
     }
 

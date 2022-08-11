@@ -76,13 +76,13 @@ class GizMOGraph extends Component {
         this.graphVis.svgRoot.remove();
     }
 
-    /** Component Rendering Function **/
+    /** Component Rendering Function * */
     render() {
         return <div id="graphRendering" style={{ width: '100%', height: '100%', backgroundColor: 'gray' }} />;
     }
 }
 
-/** Property Type Validation **/
+/** Property Type Validation * */
 GizMOGraph.propTypes = {
     updateDepthRange: PropTypes.func.isRequired,
     graph: PropTypes.any.isRequired,
@@ -91,7 +91,7 @@ GizMOGraph.propTypes = {
     layout: PropTypes.any.isRequired,
     isLoadingStatements: PropTypes.bool.isRequired,
     initializeGraph: PropTypes.bool.isRequired,
-    addPaperVisualization: PropTypes.bool
+    addPaperVisualization: PropTypes.bool,
 };
 
 export default GizMOGraph;

@@ -132,7 +132,7 @@ PaperList.propTypes = {
     papers: PropTypes.array.isRequired,
     existingPaperIds: PropTypes.array.isRequired,
     idToLabel: PropTypes.object.isRequired,
-    validationErrors: PropTypes.object
+    validationErrors: PropTypes.object,
 };
 
 export default PaperList;

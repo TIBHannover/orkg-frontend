@@ -3,9 +3,8 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { useDropzone } from 'react-dropzone';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { convertPdf, failedToConvertPdf } from 'slices/pdfAnnotationSlice';
-import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
 const DragPdf = styled.div`
@@ -48,11 +47,11 @@ const DragUpload = () => {
     };
 
     const onDropRejected = () => {
-        toast.error(`Error uploading your file, only PDF files are accepted`);
+        toast.error('Error uploading your file, only PDF files are accepted');
         dispatch(failedToConvertPdf());
     };
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, onDropRejected, accept: 'application/pdf' });
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, onDropRejected, accept: { 'application/pdf': ['.pdf'] } });
     const loading = pdfConvertIsFetching || pdfParseIsFetching;
 
     return (

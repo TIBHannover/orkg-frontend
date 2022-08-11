@@ -7,7 +7,7 @@ import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/Datat
 import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataTypes';
 import a from 'indefinite';
 import { useDispatch } from 'react-redux';
-import { addValue } from 'slices/contributionEditorSlice';
+import { addValue, setPreviousInputDataType } from 'slices/contributionEditorSlice';
 import { useClickAway } from 'react-use';
 import ConfirmationTooltip from 'components/StatementBrowser/ConfirmationTooltip/ConfirmationTooltip';
 import Tippy from '@tippyjs/react';
@@ -30,7 +30,9 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
         setInputDataType,
         setEntityType,
         setInputValue,
-        commitChangeLabel
+        commitChangeLabel,
+        inputFormType,
+        setInputFormType,
     } = useTableCellForm({ value, contributionId, propertyId });
 
     const dispatch = useDispatch();
@@ -49,29 +51,30 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
     const [suggestionType, setSuggestionType] = useState(null);
 
     useClickAway(refContainer, () => {
-        //setIsCreating(false);
+        // setIsCreating(false);
         if (!editMode) {
-            if (inputValue === '') {
+            if (inputValue === '' && inputFormType !== 'empty') {
                 closeForm(false);
             }
             createValue();
+        } else if ((inputDataType !== value.datatype || inputValue !== value.label) && inputValue !== '') {
+            onSubmit();
         } else {
-            if ((inputDataType !== value.datatype || inputValue !== value.label) && inputValue !== '') {
-                onSubmit();
-            } else {
-                closeForm();
-            }
+            closeForm();
         }
     });
 
     const createValue = () => {
-        if (entityType === ENTITIES.LITERAL && inputValue.trim()) {
+        if ((entityType === ENTITIES.LITERAL && inputValue.trim()) || (entityType === ENTITIES.RESOURCE || inputFormType === 'empty')) {
             onSubmit();
         }
     };
 
     const onSubmit = () => {
-        const { error } = schema.validate(inputValue);
+        let error;
+        if (schema) {
+            error = schema.validate(inputValue).error;
+        }
         if (error) {
             setFormFeedback(error.message);
             setIsValid(false);
@@ -83,14 +86,12 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
             if (suggestions.length > 0 && !valueClass) {
                 setSuggestionType(suggestions[0]);
                 confirmConversion.current.show();
+            } else if (!editMode) {
+                dispatch(addValue(entityType, { label: inputValue, datatype: getDataType() }, valueClass, contributionId, propertyId));
+                closeForm?.(false);
             } else {
-                if (!editMode) {
-                    dispatch(addValue(entityType, { label: inputValue, datatype: getDataType() }, valueClass, contributionId, propertyId));
-                    closeForm?.(false);
-                } else {
-                    commitChangeLabel(inputValue, getDataType(inputDataType));
-                    closeForm();
-                }
+                commitChangeLabel(inputValue, getDataType(inputDataType));
+                closeForm();
             }
         }
     };
@@ -130,10 +131,16 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
         setFormFeedback(null);
         setIsValid(true);
         setEntityType(getConfigByType(inputDataType)._class);
+        setInputFormType(getConfigByType(inputDataType).inputFormType);
         if (inputDataType === 'xsd:boolean') {
             setInputValue(v => Boolean(v === 'true').toString());
         }
-    }, [inputDataType, setEntityType, setInputValue]);
+    }, [inputDataType, setEntityType, setInputValue, setInputFormType]);
+
+    const handleSetValueType = type => {
+        dispatch(setPreviousInputDataType(type));
+        setInputDataType(type);
+    };
 
     return (
         <div ref={refContainer} style={{ minHeight: 35 }}>
@@ -155,14 +162,14 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                 title: 'Convert',
                                 color: 'success',
                                 icon: faCheck,
-                                action: acceptSuggestion
+                                action: acceptSuggestion,
                             },
                             {
                                 title: 'Keep',
                                 color: 'secondary',
                                 icon: faTimes,
-                                action: rejectSuggestion
-                            }
+                                action: rejectSuggestion,
+                            },
                         ]}
                     />
                 }
@@ -173,12 +180,12 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
             >
                 <span>
                     <InputGroup size="sm" style={{ minWidth: 295, zIndex: 100 }}>
-                        {!editMode && entityType !== ENTITIES.LITERAL ? (
+                        {!editMode && inputFormType === 'autocomplete' ? (
                             <AutoComplete
                                 entityType={entityType}
                                 excludeClasses={
-                                    entityType === ENTITIES.RESOURCE && valueClass
-                                        ? `${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`
+                                    entityType === ENTITIES.RESOURCE && !valueClass
+                                        ? `${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE},${CLASSES.TEMPLATE_COMPONENT},${CLASSES.PAPER_DELETED},${CLASSES.CONTRIBUTION_DELETED},${CLASSES.EXTERNAL}`
                                         : null
                                 }
                                 optionsClass={entityType === ENTITIES.RESOURCE && valueClass ? valueClass.id : undefined}
@@ -188,14 +195,14 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                     closeForm?.(false);
                                 }}
                                 onNewItemSelected={label => {
-                                    dispatch(addValue(entityType, { label: label, selected: false }, valueClass, contributionId, propertyId));
+                                    dispatch(addValue(entityType, { label, selected: false }, valueClass, contributionId, propertyId));
                                     closeForm?.(false);
                                 }}
-                                ols={entityType === ENTITIES.CLASS ? true : false}
+                                ols={!valueClass}
                                 onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                                 menuPortalTarget={document.body}
                                 value={inputValue}
-                                autoLoadOption={valueClass ? true : false}
+                                autoLoadOption={!!valueClass}
                                 openMenuOnFocus={true}
                                 allowCreate
                                 allowCreateDuplicate={!isUniqLabel}
@@ -239,7 +246,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                 disableBorderRadiusLeft={true}
                                 disableBorderRadiusRight={false}
                                 valueType={inputDataType}
-                                setValueType={setInputDataType}
+                                setValueType={handleSetValueType}
                                 menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
                             />
                         )}
@@ -254,7 +261,7 @@ TableCellForm.propTypes = {
     value: PropTypes.object, // If the id is set (editMode)
     contributionId: PropTypes.string,
     propertyId: PropTypes.string,
-    closeForm: PropTypes.func
+    closeForm: PropTypes.func,
 };
 
 export default TableCellForm;

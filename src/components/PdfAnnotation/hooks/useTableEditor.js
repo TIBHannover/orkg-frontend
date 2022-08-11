@@ -44,13 +44,13 @@ function useTableEditor(tableId, tableRef) {
 
                 for (let i = 1; i <= rowAmount; i++) {
                     tableUpdates.push([selectionStart.row + i, col, null, '']);
-                    newValue += ' ' + _tableData[selectionStart.row + i][col];
+                    newValue += ` ${_tableData[selectionStart.row + i][col]}`;
                 }
 
                 tableUpdates.push([selectionStart.row, col, null, newValue]);
 
                 // TODO: follow up with handontable issue https://forum.handsontable.com/t/gh-5727-contextmenu-callback-the-runhooks-method-cannot-be-called/4134/11
-                setTimeout(function() {
+                setTimeout(() => {
                     dispatch(updateTableData({ id: tableId, dataChanges: tableUpdates }));
                 }, 100);
             }
@@ -59,7 +59,7 @@ function useTableEditor(tableId, tableRef) {
 
     // disabled function for now, 'tableInstance.alter' cannot be used correctly in combination with redux
     // the logic to add an extra column should be written as part of 'tableUpdates' which is dispatched to redux
-    /*const splitIntoSeveralColumns = (key, selection) => {
+    /* const splitIntoSeveralColumns = (key, selection) => {
         const separator = prompt('By which character should the values be splitted?', ',');
 
         if (selection.length === 0 || !separator) {
@@ -79,7 +79,7 @@ function useTableEditor(tableId, tableRef) {
             toast.error('Error, splitting by value is only possible when a single column is selected');
             return;
         }
-        
+
         for (const [rowIndex, row] of tableData.entries()) {
             const value = row[selectedCol];
 
@@ -123,7 +123,7 @@ function useTableEditor(tableId, tableRef) {
         }, 100);
 
         toast.success('Columns successfully splitted');
-    };*/
+    }; */
 
     return { mergeCellValues, removeEmptyRows, renderTable };
 }

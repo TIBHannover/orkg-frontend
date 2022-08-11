@@ -14,7 +14,7 @@ const ObservatoriesBox = ({ researchFieldId }) => {
                 className="h5"
                 style={{
                     marginBottom: 0,
-                    padding: '15px'
+                    padding: '15px',
                 }}
             >
                 <Tippy content="Observatories organize research contributions in a particular research field and are curated by research organizations active in the respective field.">
@@ -31,7 +31,7 @@ const ObservatoriesBox = ({ researchFieldId }) => {
 };
 
 ObservatoriesBox.propTypes = {
-    researchFieldId: PropTypes.string.isRequired
+    researchFieldId: PropTypes.string.isRequired,
 };
 
 export default ObservatoriesBox;

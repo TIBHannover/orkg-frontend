@@ -77,7 +77,7 @@ FeaturedComparisonsItem.propTypes = {
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    contributions: PropTypes.array.isRequired
+    contributions: PropTypes.array.isRequired,
 };
 
 export default FeaturedComparisonsItem;

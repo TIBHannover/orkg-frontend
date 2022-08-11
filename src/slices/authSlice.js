@@ -8,19 +8,17 @@ const initialState = {
     action: 'signin',
     user: 0, // possible values: 0 (to differentiate first load from non-signedin but stay falsy), null (non signedin), or object (signedin)
     signInRequired: null,
-    redirectRoute: null
+    redirectRoute: null,
 };
 
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        updateAuth: (state, { payload }) => {
-            return {
-                ...state,
-                ...payload
-            };
-        },
+        updateAuth: (state, { payload }) => ({
+            ...state,
+            ...payload,
+        }),
         resetAuth: state => {
             state.user = null; // ensure user is null (signedout) not 0 (first load)
         },
@@ -33,8 +31,8 @@ export const authSlice = createSlice({
         toggleAuthDialog: state => {
             state.dialogIsOpen = !state.dialogIsOpen;
             state.redirectRoute = !state.dialogIsOpen ? state.redirectRoute : null; // reset redirectRoute on close
-        }
-    }
+        },
+    },
 });
 
 export const { updateAuth, resetAuth, openAuthDialog, toggleAuthDialog } = authSlice.actions;
@@ -53,12 +51,12 @@ export function firstLoad() {
                         user: {
                             displayName: userData.display_name,
                             id: userData.id,
-                            token: token,
+                            token,
                             tokenExpire: token_expires_in,
                             email: userData.email,
-                            isCurationAllowed: userData.is_curation_allowed
-                        }
-                    })
+                            isCurationAllowed: userData.is_curation_allowed,
+                        },
+                    }),
                 );
                 return Promise.resolve();
             })

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getChangelogs } from 'services/backend/stats';
 import { orderBy } from 'lodash';
-import { MISC } from 'constants/graphSettings';
+import { RESOURCES } from 'constants/graphSettings';
 
 function useTopChangelog({ researchFieldId, pageSize = 30, sortBy = 'createdAt', desc = true }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -15,11 +15,11 @@ function useTopChangelog({ researchFieldId, pageSize = 30, sortBy = 'createdAt',
         page => {
             setIsLoading(true);
             getChangelogs({
-                researchFieldId: researchFieldId === MISC.RESEARCH_FIELD_MAIN ? null : researchFieldId,
-                page: page,
+                researchFieldId: researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN ? null : researchFieldId,
+                page,
                 items: pageSize,
-                sortBy: researchFieldId === MISC.RESEARCH_FIELD_MAIN ? null : sortBy,
-                desc
+                sortBy: researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN ? null : sortBy,
+                desc,
             })
                 .then(result => {
                     setActivities(prevResources => orderBy([...prevResources, ...(result.content || [])], ['created_at'], ['desc']));
@@ -32,12 +32,12 @@ function useTopChangelog({ researchFieldId, pageSize = 30, sortBy = 'createdAt',
                 .catch(error => {
                     setIsLoading(false);
                     setHasNextPage(false);
-                    setIsLastPageReached(page > 1 ? true : false);
+                    setIsLastPageReached(page > 1);
 
                     console.log(error);
                 });
         },
-        [researchFieldId, pageSize, sortBy, desc]
+        [researchFieldId, pageSize, sortBy, desc],
     );
 
     // reset resources when the researchFieldId has changed
@@ -66,7 +66,7 @@ function useTopChangelog({ researchFieldId, pageSize = 30, sortBy = 'createdAt',
         isLastPageReached,
         totalElements,
         page,
-        handleLoadMore
+        handleLoadMore,
     };
 }
 export default useTopChangelog;

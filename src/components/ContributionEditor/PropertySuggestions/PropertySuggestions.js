@@ -24,8 +24,8 @@ const PropertySuggestions = () => {
                                         createProperty({
                                             id: c.property.id,
                                             label: c.property.label,
-                                            action: 'select-option'
-                                        })
+                                            action: 'select-option',
+                                        }),
                                     );
                                 }}
                                 key={`suggested-property-${index}`}

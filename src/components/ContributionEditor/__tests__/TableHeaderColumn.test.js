@@ -4,11 +4,11 @@ import TableHeaderColumn from '../TableHeaderColumn';
 const setup = paperTitle => {
     const paper = {
         id: 'R1',
-        label: paperTitle
+        label: paperTitle,
     };
     const contribution = {
         id: 'R2',
-        label: 'contribution title'
+        label: 'contribution title',
     };
 
     render(<TableHeaderColumn paper={paper} contribution={contribution} />);

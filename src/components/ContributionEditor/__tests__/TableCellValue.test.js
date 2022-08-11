@@ -7,7 +7,7 @@ const setup = className => {
     const value = {
         label,
         _class: className,
-        statementId: 'S1'
+        statementId: 'S1',
     };
 
     render(<TableCellValue value={value} index={0} setDisableCreate={setDisableCreate} propertyId="P1" />);

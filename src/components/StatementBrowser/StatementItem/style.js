@@ -11,8 +11,8 @@ export const customStyles = {
         borderRadius: 'inherit',
         padding: 0,
         '&>div:first-of-type': {
-            padding: 0
-        }
+            padding: 0,
+        },
     }),
     container: provided => ({
         padding: 0,
@@ -22,35 +22,35 @@ export const customStyles = {
         width: '100%',
         marginRight: 15,
         '&>div:first-of-type': {
-            padding: 0
-        }
+            padding: 0,
+        },
     }),
     menu: provided => ({
         ...provided,
         zIndex: 10,
         width: '50%',
-        color: '#000'
+        color: '#000',
     }),
     option: provided => ({
         ...provided,
         cursor: 'pointer',
-        whiteSpace: 'normal'
+        whiteSpace: 'normal',
     }),
     indicatorsContainer: provided => ({
         ...provided,
         cursor: 'pointer',
         '&>div:last-child': {
-            padding: '0 8px'
-        }
+            padding: '0 8px',
+        },
     }),
     input: provided => ({
         ...provided,
-        margin: '0 4px'
+        margin: '0 4px',
     }),
     placeholder: provided => ({
         ...provided,
         opacity: 0.7,
         paddingLeft: 5,
-        fontStyle: 'italic'
-    })
+        fontStyle: 'italic',
+    }),
 };

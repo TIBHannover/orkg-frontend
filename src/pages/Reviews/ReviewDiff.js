@@ -22,7 +22,7 @@ const ReviewDiff = () => {
             oldText: reviewToPlainText(oldArticle),
             newText: reviewToPlainText(newArticle),
             oldTitleData: getTitleData(oldArticle),
-            newTitleData: getTitleData(newArticle)
+            newTitleData: getTitleData(newArticle),
         };
     };
 
@@ -45,7 +45,7 @@ const ReviewDiff = () => {
                     </span>
                 </Tippy>
             ),
-            buttonText: 'View article'
+            buttonText: 'View article',
         };
     };
 

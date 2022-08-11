@@ -39,7 +39,7 @@ const useEditResource = resource => {
         if (action.action === 'create-option') {
             const foundIndex = selected.findIndex(x => x.__isNew__);
             const newClass = await Confirm({
-                label: selected[foundIndex].label
+                label: selected[foundIndex].label,
             });
             if (newClass) {
                 const foundIndex = selected.findIndex(x => x.__isNew__);

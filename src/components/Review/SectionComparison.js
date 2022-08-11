@@ -1,11 +1,10 @@
-import { setComparisonData } from 'slices/reviewSlice';
+import { setComparisonData, setUsedReferences } from 'slices/reviewSlice';
 import Comparison from 'components/Comparison/Comparison';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import useComparison from 'components/Comparison/hooks/useComparison';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setUsedReferences } from 'slices/reviewSlice';
 import { isEqual } from 'lodash';
 import { Alert } from 'reactstrap';
 import ROUTES from 'constants/routes';
@@ -17,7 +16,7 @@ const SectionComparison = ({ id, sectionId }) => {
     const usedReferences = useSelector(state => state.review.usedReferences);
     const dispatch = useDispatch();
     const comparisonData = useComparison({
-        id
+        id,
     });
 
     const {
@@ -29,7 +28,7 @@ const SectionComparison = ({ id, sectionId }) => {
         updateRulesOfProperty,
         comparisonType,
         handleToggleGroupVisibility,
-        hiddenGroups
+        hiddenGroups,
     } = comparisonData;
 
     useEffect(() => {
@@ -42,9 +41,9 @@ const SectionComparison = ({ id, sectionId }) => {
                 data: {
                     data,
                     properties,
-                    metaData: comparisonData.metaData
-                }
-            })
+                    metaData: comparisonData.metaData,
+                },
+            }),
         );
     }, [comparisonData, data, dispatch, id, properties]);
 
@@ -91,7 +90,7 @@ const SectionComparison = ({ id, sectionId }) => {
 
 SectionComparison.propTypes = {
     id: PropTypes.string.isRequired,
-    sectionId: PropTypes.string.isRequired
+    sectionId: PropTypes.string.isRequired,
 };
 
 export default SectionComparison;

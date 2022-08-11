@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ListGroupItem, Collapse } from 'reactstrap';
 
-/*listGroupOpen*/
+/* listGroupOpen */
 export const StyledListGroupOpen = styled(Collapse)`
     border-left-width: ${props => props.theme.borderWidth};
     border-right-width: ${props => props.theme.borderWidth};

@@ -23,7 +23,7 @@ function HelpVideoModal(props) {
 
 HelpVideoModal.propTypes = {
     showDialog: PropTypes.bool.isRequired,
-    toggle: PropTypes.func.isRequired
+    toggle: PropTypes.func.isRequired,
 };
 
 export default HelpVideoModal;

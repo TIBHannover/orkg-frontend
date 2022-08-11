@@ -1,6 +1,6 @@
 import { render, screen, waitFor, waitForElementToBeRemoved } from 'testUtils';
-import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
+import StatementBrowser from '../StatementBrowser';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
@@ -11,8 +11,8 @@ const setup = async (
         initialSubjectId: 'R1',
         initialSubjectLabel: null,
         newStore: true,
-        rootNodeType: ENTITIES.RESOURCE
-    }
+        rootNodeType: ENTITIES.RESOURCE,
+    },
 ) => {
     render(<StatementBrowser {...props} />, { initialState });
 };
@@ -23,7 +23,7 @@ describe('formatted label', () => {
             initialSubjectId: 'R44727',
             initialSubjectLabel: null,
             newStore: true,
-            rootNodeType: ENTITIES.RESOURCE
+            rootNodeType: ENTITIES.RESOURCE,
         };
         setup({}, config);
         await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());

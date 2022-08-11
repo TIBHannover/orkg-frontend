@@ -6,10 +6,9 @@ import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import { setIsHelpModalOpen } from 'slices/statementBrowserSlice';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import classNames from 'classnames';
 import env from '@beam-australia/react-env';
-import { memo } from 'react';
 import styled from 'styled-components';
 
 const ButtonsContainer = styled.div`
@@ -30,7 +29,7 @@ const TableCellButtons = ({ onEdit, onDelete, backgroundColor, style, value }) =
     const dispatch = useDispatch();
     const buttonClasses = classNames({
         'cell-buttons': true,
-        disableHover: disableHover
+        disableHover,
     });
 
     return (
@@ -78,13 +77,13 @@ const TableCellButtons = ({ onEdit, onDelete, backgroundColor, style, value }) =
                         title: 'Delete',
                         color: 'danger',
                         icon: faCheck,
-                        action: onDelete
+                        action: onDelete,
                     },
                     {
                         title: 'Cancel',
                         color: 'secondary',
-                        icon: faTimes
-                    }
+                        icon: faTimes,
+                    },
                 ]}
                 onVisibilityChange={disable => setDisableHover(disable)}
             />
@@ -97,13 +96,13 @@ TableCellButtons.propTypes = {
     onDelete: PropTypes.func,
     backgroundColor: PropTypes.string.isRequired,
     style: PropTypes.object,
-    value: PropTypes.object
+    value: PropTypes.object,
 };
 
 TableCellButtons.defaultProps = {
     style: {},
     onEdit: null,
-    onDelete: null
+    onDelete: null,
 };
 
 export default memo(TableCellButtons);

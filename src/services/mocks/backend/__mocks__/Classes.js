@@ -12,7 +12,7 @@ export const DClocationResources = {
             _class: 'resource',
             observatory_id: '00000000-0000-0000-0000-000000000000',
             extraction_method: 'UNKNOWN',
-            organization_id: '00000000-0000-0000-0000-000000000000'
+            organization_id: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: `R${faker.datatype.number()}`,
@@ -24,8 +24,8 @@ export const DClocationResources = {
             _class: 'resource',
             observatory_id: '00000000-0000-0000-0000-000000000000',
             extraction_method: 'UNKNOWN',
-            organization_id: '00000000-0000-0000-0000-000000000000'
-        }
+            organization_id: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 10, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -36,7 +36,7 @@ export const DClocationResources = {
     size: 10,
     number: 0,
     numberOfElements: 2,
-    empty: false
+    empty: false,
 };
 
 export const QBDatasetClasses = {
@@ -48,7 +48,7 @@ export const QBDatasetClasses = {
             created_at: '2021-11-16T12:12:43.245509Z',
             created_by: '00000000-0000-0000-0000-000000000000',
             _class: 'class',
-            description: null
+            description: null,
         },
         {
             id: 'C6',
@@ -57,7 +57,7 @@ export const QBDatasetClasses = {
             created_at: '2021-11-16T12:12:43.245665Z',
             created_by: '00000000-0000-0000-0000-000000000000',
             _class: 'class',
-            description: null
+            description: null,
         },
         {
             id: 'C3',
@@ -66,7 +66,7 @@ export const QBDatasetClasses = {
             created_at: '2021-11-16T12:12:43.245716Z',
             created_by: '00000000-0000-0000-0000-000000000000',
             _class: 'class',
-            description: null
+            description: null,
         },
         {
             id: 'C7',
@@ -75,7 +75,7 @@ export const QBDatasetClasses = {
             created_at: '2021-11-16T12:12:43.245762Z',
             created_by: '00000000-0000-0000-0000-000000000000',
             _class: 'class',
-            description: null
+            description: null,
         },
         {
             id: 'C8',
@@ -84,7 +84,7 @@ export const QBDatasetClasses = {
             created_at: '2021-11-16T12:12:43.245805Z',
             created_by: '00000000-0000-0000-0000-000000000000',
             _class: 'class',
-            description: null
+            description: null,
         },
         {
             id: 'C1',
@@ -93,7 +93,7 @@ export const QBDatasetClasses = {
             created_at: '2021-11-16T12:12:43.245848Z',
             created_by: '00000000-0000-0000-0000-000000000000',
             _class: 'class',
-            description: null
+            description: null,
         },
         {
             id: 'C5',
@@ -102,7 +102,7 @@ export const QBDatasetClasses = {
             created_at: '2021-11-16T12:12:43.245891Z',
             created_by: '00000000-0000-0000-0000-000000000000',
             _class: 'class',
-            description: null
+            description: null,
         },
         {
             id: 'C0',
@@ -111,7 +111,7 @@ export const QBDatasetClasses = {
             created_at: '2021-11-16T12:12:43.245937Z',
             created_by: '00000000-0000-0000-0000-000000000000',
             _class: 'class',
-            description: null
+            description: null,
         },
         {
             id: 'QBDataset',
@@ -120,8 +120,8 @@ export const QBDatasetClasses = {
             created_at: '2019-12-16T16:54:05.404+01:00',
             created_by: '00000000-0000-0000-0000-000000000000',
             _class: 'class',
-            description: null
-        }
+            description: null,
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -132,5 +132,5 @@ export const QBDatasetClasses = {
     size: 2000,
     number: 0,
     numberOfElements: 9,
-    empty: false
+    empty: false,
 };

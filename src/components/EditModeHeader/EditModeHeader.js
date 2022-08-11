@@ -58,7 +58,7 @@ function EditModeHeader({ isVisible }) {
 }
 
 EditModeHeader.propTypes = {
-    isVisible: PropTypes.bool.isRequired
+    isVisible: PropTypes.bool.isRequired,
 };
 
 export default EditModeHeader;

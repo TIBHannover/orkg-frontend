@@ -12,7 +12,7 @@ function HistoryModal({ comparedComparisonId, toggle, showDialog, comparisonId }
         ? comparisonVersions.map(version => ({
               ...version,
               isSelected: comparisonId === version.id || comparedComparisonId === version.id,
-              link: reverse(ROUTES.COMPARISON, { comparisonId: version.id })
+              link: reverse(ROUTES.COMPARISON, { comparisonId: version.id }),
           }))
         : [];
 
@@ -36,7 +36,7 @@ HistoryModal.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     comparisonId: PropTypes.string,
-    comparedComparisonId: PropTypes.string
+    comparedComparisonId: PropTypes.string,
 };
 
 export default HistoryModal;

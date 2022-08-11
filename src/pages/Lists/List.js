@@ -18,8 +18,7 @@ import { reverse } from 'named-urls';
 import NotFound from 'pages/NotFound';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import { useParams, useNavigate } from 'react-router-dom';
+import { NavLink, useParams, useNavigate } from 'react-router-dom';
 import { Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import Confirm from 'components/Confirmation/Confirmation';
 import { historyModalToggled, setIsEditing } from 'slices/listSlice';
@@ -89,8 +88,9 @@ const List = () => {
         if (isPublished) {
             const isConfirmed = await Confirm({
                 title: 'This is a published list',
-                message: `The list you are viewing is published, which means it cannot be modified. To make changes, fetch the live data and try this action again`,
-                proceedLabel: 'Fetch live data'
+                message:
+                    'The list you are viewing is published, which means it cannot be modified. To make changes, fetch the live data and try this action again',
+                proceedLabel: 'Fetch live data',
             });
 
             if (isConfirmed) {

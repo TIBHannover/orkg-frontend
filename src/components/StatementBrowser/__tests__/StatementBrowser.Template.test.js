@@ -1,7 +1,7 @@
 import { render, screen, waitFor, fireEvent, waitForElementToBeRemoved } from 'testUtils';
-import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 import selectEvent from 'react-select-event';
+import StatementBrowser from '../StatementBrowser';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
@@ -14,8 +14,8 @@ const setup = (
         newStore: true,
         rootNodeType: ENTITIES.RESOURCE,
         enableEdit: true,
-        syncBackend: true
-    }
+        syncBackend: true,
+    },
 ) => {
     render(<StatementBrowser {...props} />, { initialState });
 };
@@ -98,6 +98,7 @@ describe('AddValue', () => {
         await waitFor(() => expect(screen.getByTestId('add-value-P5049-false')).toBeInTheDocument());
         fireEvent.click(screen.getByTestId('add-value-P5049-false'));
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: 'Hannover' } });
+        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         await selectEvent.select(screen.getByRole('combobox', { name: /Enter a resource/i, hidden: true }), /Hannover/i);
         await waitFor(() => expect(screen.getByText(/Hannover/i)).toBeInTheDocument());
         // Because location has cardinality 1, the button add should be disabled after adding a new value

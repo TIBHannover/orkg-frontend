@@ -34,7 +34,7 @@ const SignIn = props => {
                 cookies.set('token', token.access_token, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
                 token_expires_in = new Date(Date.now() + token.expires_in * 1000).toUTCString();
                 cookies.set('token_expires_in', token_expires_in, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
-                //window.location.reload();
+                // window.location.reload();
                 return getUserInformation();
             })
             .then(userData => {
@@ -47,10 +47,10 @@ const SignIn = props => {
                             token: userToken,
                             email: userData.email,
                             tokenExpire: token_expires_in,
-                            isCurationAllowed: userData.is_curation_allowed
+                            isCurationAllowed: userData.is_curation_allowed,
                         },
-                        redirectRoute: null
-                    })
+                        redirectRoute: null,
+                    }),
                 );
                 dispatch(toggleAuthDialog());
                 setLoading(false);
@@ -113,7 +113,7 @@ const SignIn = props => {
 
 SignIn.propTypes = {
     signInRequired: PropTypes.bool,
-    redirectRoute: PropTypes.string
+    redirectRoute: PropTypes.string,
 };
 
 export default SignIn;

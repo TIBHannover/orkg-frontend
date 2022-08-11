@@ -37,7 +37,7 @@ const PaperOption = ({ children, ...innerProps }) => {
 };
 
 PaperOption.propTypes = {
-    children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
 };
 
 export default PaperOption;

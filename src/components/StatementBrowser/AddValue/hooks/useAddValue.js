@@ -8,7 +8,7 @@ import {
     getValueClass,
     isLiteral,
     fillStatements,
-    setIsAddingValue
+    setIsAddingValue,
 } from 'slices/statementBrowserSlice';
 import { createResourceStatement } from 'services/backend/statements';
 import { createLiteral } from 'services/backend/literals';
@@ -40,8 +40,8 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
     const isBlankNode = useSelector(state => {
         if (valueClass && !isLiteralField) {
             if (state.statementBrowser.classes[valueClass.id]?.templateIds) {
-                const templateIds = state.statementBrowser.classes[valueClass.id].templateIds;
-                //check if it's an inline resource
+                const { templateIds } = state.statementBrowser.classes[valueClass.id];
+                // check if it's an inline resource
                 for (const templateId of templateIds) {
                     const template = state.statementBrowser.templates[templateId];
                     if (template && template.hasLabelFormat) {
@@ -71,17 +71,17 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
             const _propertyID = guid();
             if (!createdProperties[statement.predicate.id]) {
                 createdProperties[statement.predicate.id] = _propertyID;
-                statements['properties'].push({
+                statements.properties.push({
                     propertyId: createdProperties[statement.predicate.id],
                     existingPredicateId: statement.predicate.id,
-                    label: statement.predicate.label
+                    label: statement.predicate.label,
                 });
             }
-            statements['values'].push({
+            statements.values.push({
                 _class: statement.value._class,
                 propertyId: createdProperties[statement.predicate.id],
                 label: statement.value.label,
-                datatype: statement.value.datatype
+                datatype: statement.value.datatype,
             });
         }
         return statements;
@@ -99,7 +99,7 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
                         setDialogResourceId(newResourceId);
                         setDialogResourceLabel(isBlankNode);
                         setModal(true);
-                    })
+                    }),
                 );
                 dispatch(setIsAddingValue({ id: propertyId, status: false }));
             } else {
@@ -108,8 +108,8 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
                         increaseLevel: true,
                         resourceId: newResourceId,
                         label: isBlankNode,
-                        propertyLabel: property.label
-                    })
+                        propertyLabel: property.label,
+                    }),
                 );
                 dispatch(setIsAddingValue({ id: propertyId, status: false }));
             }
@@ -153,27 +153,27 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
             dispatch(
                 createValue({
                     ...newEntity,
-                    //valueId: newEntity.id ?? existingResourceId,
+                    // valueId: newEntity.id ?? existingResourceId,
                     classes: newEntity.classes ?? (valueClass ? [valueClass?.id] : []),
                     _class: entityType,
-                    propertyId: propertyId,
+                    propertyId,
                     existingResourceId: newEntity.id ?? existingResourceId,
-                    isExistingValue: newEntity.id ? true : false,
-                    statementId: newStatement?.id
-                })
+                    isExistingValue: !!newEntity.id,
+                    statementId: newStatement?.id,
+                }),
             );
-            //create statements
+            // create statements
             value.statements &&
                 dispatch(
                     fillStatements({
                         statements: generateStatementsFromExternalData(value.statements),
                         resourceId: newEntity.id ?? existingResourceId,
-                        syncBackend: syncBackend
-                    })
+                        syncBackend,
+                    }),
                 );
             return newEntity.id ?? existingResourceId;
         },
-        [dispatch, property?.existingPredicateId, propertyId, resourceId, syncBackend, valueClass]
+        [dispatch, property?.existingPredicateId, propertyId, resourceId, syncBackend, valueClass],
     );
 
     return {
@@ -185,7 +185,7 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
         setInputValue,
         dialogResourceId,
         dialogResourceLabel,
-        createBlankNode
+        createBlankNode,
     };
 };
 

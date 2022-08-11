@@ -43,7 +43,7 @@ const TABS = {
     PASSWORD: 'password',
     DRAFT_COMPARISONS: 'draft-comparisons',
     DRAFT_REVIEWS: 'draft-reviews',
-    DRAFT_LISTS: 'draft-lists'
+    DRAFT_LISTS: 'draft-lists',
 };
 
 const UserSettings = () => {

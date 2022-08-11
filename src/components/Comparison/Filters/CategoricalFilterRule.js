@@ -20,7 +20,7 @@ const CategoricalFilterRule = props => {
     const vals = Object.keys(values)
         .map(key => ({
             label: key,
-            checked: rules.filter(item => item.propertyId === propertyId && item.type === FILTER_TYPES.ONE_OF && item.value.includes(key)).length > 0
+            checked: rules.filter(item => item.propertyId === propertyId && item.type === FILTER_TYPES.ONE_OF && item.value.includes(key)).length > 0,
         }))
         .sort((a, b) => a.label.localeCompare(b.label));
 
@@ -56,21 +56,18 @@ const CategoricalFilterRule = props => {
         toggleFilterDialog();
     };
 
-    const checkboxList = () => {
-        return categoricalValues.slice(0, maxCategoryNumber).map(item => {
-            return (
-                <FormGroup key={item.label} check>
-                    <Input className="col-form-label-sm" type="checkbox" id={item.label} onChange={handleCheckboxChange} checked={item.checked} />{' '}
-                    <Label check for={item.label} className="mb-0">
-                        {item.label}
-                    </Label>
-                    <Badge color="light" className="ms-2" pill>
-                        {values[item.label].length}
-                    </Badge>
-                </FormGroup>
-            );
-        });
-    };
+    const checkboxList = () =>
+        categoricalValues.slice(0, maxCategoryNumber).map(item => (
+            <FormGroup key={item.label} check>
+                <Input className="col-form-label-sm" type="checkbox" id={item.label} onChange={handleCheckboxChange} checked={item.checked} />{' '}
+                <Label check for={item.label} className="mb-0">
+                    {item.label}
+                </Label>
+                <Badge color="light" className="ms-2" pill>
+                    {values[item.label].length}
+                </Badge>
+            </FormGroup>
+        ));
 
     return (
         <>
@@ -88,6 +85,6 @@ const CategoricalFilterRule = props => {
     );
 };
 CategoricalFilterRule.propTypes = {
-    dataController: PropTypes.object.isRequired
+    dataController: PropTypes.object.isRequired,
 };
 export default CategoricalFilterRule;

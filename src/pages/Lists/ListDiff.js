@@ -22,7 +22,7 @@ const ListDiff = () => {
             oldText: listToPlainText(oldList),
             newText: listToPlainText(newList),
             oldTitleData: getTitleData(oldList),
-            newTitleData: getTitleData(newList)
+            newTitleData: getTitleData(newList),
         };
     };
 
@@ -45,7 +45,7 @@ const ListDiff = () => {
                     </span>
                 </Tippy>
             ),
-            buttonText: 'View list'
+            buttonText: 'View list',
         };
     };
 

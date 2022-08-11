@@ -7,7 +7,7 @@ const initialState = {
     isLoadedPdfViewer: false,
     zoom: 1.2,
     showHighlights: false,
-    summaryFetched: false
+    summaryFetched: false,
 };
 
 export const pdfTextAnnotationSlice = createSlice({
@@ -26,8 +26,8 @@ export const pdfTextAnnotationSlice = createSlice({
                     return {
                         ...annotation,
                         content: {
-                            text: payload.text
-                        }
+                            text: payload.text,
+                        },
                     };
                 }
                 return annotation;
@@ -51,8 +51,8 @@ export const pdfTextAnnotationSlice = createSlice({
         discardChanges: state => {
             window.URL.revokeObjectURL(state.pdf);
             return initialState;
-        }
-    }
+        },
+    },
 });
 
 export const {
@@ -64,7 +64,7 @@ export const {
     setShowHighlights,
     setIsLoadedPdfViewer,
     setSummaryFetched,
-    discardChanges
+    discardChanges,
 } = pdfTextAnnotationSlice.actions;
 
 export default pdfTextAnnotationSlice.reducer;

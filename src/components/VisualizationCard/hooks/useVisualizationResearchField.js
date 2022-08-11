@@ -11,17 +11,17 @@ function useVisualizationResearchField({ visualizationId }) {
         setIsLoading(true);
         getStatementsByObjectAndPredicate({
             objectId: visualizationId,
-            predicateId: PREDICATES.HAS_VISUALIZATION
+            predicateId: PREDICATES.HAS_VISUALIZATION,
         })
-            .then(comparison => {
-                return comparison?.length > 0
+            .then(comparison =>
+                (comparison?.length > 0
                     ? getStatementsBySubjectAndPredicate({ subjectId: comparison[0].subject.id, predicateId: PREDICATES.HAS_SUBJECT })
-                    : [];
-            })
+                    : []),
+            )
             .then(comparisonStatement => {
                 setIsLoading(false);
                 setResearchField(
-                    filterObjectOfStatementsByPredicateAndClass(comparisonStatement, PREDICATES.HAS_SUBJECT, true, CLASSES.RESEARCH_FIELD)
+                    filterObjectOfStatementsByPredicateAndClass(comparisonStatement, PREDICATES.HAS_SUBJECT, true, CLASSES.RESEARCH_FIELD),
                 );
             })
             .catch(() => {
@@ -35,7 +35,7 @@ function useVisualizationResearchField({ visualizationId }) {
 
     return {
         researchField,
-        isLoading
+        isLoading,
     };
 }
 export default useVisualizationResearchField;

@@ -7,8 +7,8 @@ const setup = () => {
         {
             label,
             _class: 'resource',
-            statementId: 'S1'
-        }
+            statementId: 'S1',
+        },
     ];
 
     render(<TableCell values={values} contributionId="R1" propertyId="P1" />);
@@ -42,23 +42,23 @@ describe('TableCell', () => {
             {
                 label: label1,
                 _class: 'literal',
-                statementId: 'S1'
+                statementId: 'S1',
             },
             {
                 label: label2,
                 _class: 'literal',
-                statementId: 'S2'
+                statementId: 'S2',
             },
             {
                 label: label3,
                 _class: 'resource',
-                statementId: 'S3'
+                statementId: 'S3',
             },
             {
                 label: label4,
                 _class: 'resource',
-                statementId: 'S4'
-            }
+                statementId: 'S4',
+            },
         ];
 
         render(<TableCell values={values} contributionId="R1" propertyId="P1" />);

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Showdown from 'showdown';
 import footnotes from 'showdown-footnotes';
 import REGEX from 'constants/regex';
-import Cite from 'citation-js';
+import { Cite } from '@citation-js/core';
 import showdownVideoPlugin from 'components/ArticleBuilder/MarkdownEditor/showdownVideoPlugin';
 import { MarkdownContainer } from 'components/ArticleBuilder/MarkdownEditor/styled';
 
@@ -35,17 +35,12 @@ const MarkdownRenderer = ({ text, id }) => {
                 ]?.[0]?.[0] ?? ''}](#reference${keyFormatted}))`;
             }
             return '<strong>[?]</strong>';
-        }
+        },
     };
 
     const formatReferenceKey = useCallback(key => key.slice(0, -1).slice(2, key.length), []);
 
-    const getReferenceByKey = useCallback(
-        key => {
-            return references.find(reference => reference?.parsedReference?.id === key);
-        },
-        [references]
-    );
+    const getReferenceByKey = useCallback(key => references.find(reference => reference?.parsedReference?.id === key), [references]);
 
     useEffect(() => {
         if (!text) {
@@ -90,7 +85,7 @@ const MarkdownRenderer = ({ text, id }) => {
     const converter = new Showdown.Converter({
         openLinksInNewWindow: true,
         extensions: [footnotes, inlineReferences, showdownVideoPlugin],
-        underline: true
+        underline: true,
     });
     converter.setFlavor('github');
 
@@ -99,11 +94,11 @@ const MarkdownRenderer = ({ text, id }) => {
 
 MarkdownRenderer.propTypes = {
     text: PropTypes.string,
-    id: PropTypes.string
+    id: PropTypes.string,
 };
 
 MarkdownRenderer.defaultProps = {
-    text: null
+    text: null,
 };
 
 export default MarkdownRenderer;

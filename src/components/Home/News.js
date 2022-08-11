@@ -4,6 +4,7 @@ import { getNewsCards } from 'services/cms';
 import { CarouselIndicatorsStyled } from 'components/styled';
 import styled from 'styled-components';
 import * as Showdown from 'showdown';
+import moment from 'moment';
 
 const CarouselContainer = styled.div`
     width: 100%;
@@ -54,8 +55,8 @@ export default function News() {
         setActiveIndex(newIndex);
     };
 
-    return (
-        <>
+    return !isLoading && moment(items?.[0]?.published_at) > moment().subtract(2, 'months') ? (
+        <div className="mt-3 box rounded d-flex flex-column overflow-hidden">
             <div className="d-flex align-items-center pt-3 ps-3 pe-3 pb-0">
                 <div className="flex-grow-1">
                     <h2 className="h6 mb-1 mt-0">Latest news</h2>
@@ -65,8 +66,7 @@ export default function News() {
             <hr className="mx-3 mt-1" />
 
             <CarouselContainer>
-                {!isLoading && items.length === 0 && <div className="text-center mt-3 mb-4">No news messages found</div>}
-                {isLoading && <div className="text-center mt-3 mb-4">Loading...</div>}
+                {items.length === 0 && <div className="text-center mt-3 mb-4">No news messages found</div>}
                 {items?.length > 0 && (
                     <Carousel activeIndex={activeIndex} next={next} previous={previous}>
                         {items.map((item, index) => (
@@ -89,6 +89,6 @@ export default function News() {
                     </Carousel>
                 )}
             </CarouselContainer>
-        </>
-    );
+        </div>
+    ) : null;
 }

@@ -19,27 +19,27 @@ export const statementBrowserStrictTemplate = {
                     classes: ['C19000'],
                     isFetching: false,
                     isFetched: true,
-                    fetchedDepth: 1
-                }
+                    fetchedDepth: 1,
+                },
             },
-            allIds: ['R142012']
+            allIds: ['R142012'],
         },
         properties: {
             byId: {},
-            allIds: []
+            allIds: [],
         },
         values: {
             byId: {},
-            allIds: []
+            allIds: [],
         },
         resourceHistory: {
             byId: {
                 R142012: {
                     id: 'R142012',
-                    label: 'instance 1'
-                }
+                    label: 'instance 1',
+                },
             },
-            allIds: ['R142012']
+            allIds: ['R142012'],
         },
         templates: {
             R142011: {
@@ -53,19 +53,19 @@ export const statementBrowserStrictTemplate = {
                 components: [],
                 class: {
                     id: 'C19000',
-                    label: 'test'
+                    label: 'test',
                 },
                 researchFields: [],
-                researchProblems: []
-            }
+                researchProblems: [],
+            },
         },
         classes: {
             C19000: {
                 isFetching: false,
-                templateIds: ['R142011']
-            }
+                templateIds: ['R142011'],
+            },
         },
         contributions: {},
-        selectedContributionId: ''
-    }
+        selectedContributionId: '',
+    },
 };

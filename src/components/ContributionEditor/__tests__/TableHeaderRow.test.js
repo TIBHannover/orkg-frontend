@@ -4,7 +4,7 @@ import TableHeaderRow from '../TableHeaderRow';
 const setup = () => {
     const property = {
         id: 'P1',
-        label: 'property label'
+        label: 'property label',
     };
 
     render(<TableHeaderRow property={property} />);

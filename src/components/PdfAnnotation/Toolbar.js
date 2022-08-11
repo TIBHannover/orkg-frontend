@@ -28,7 +28,7 @@ const Toolbar = props => {
     const discardPdfFile = async () => {
         const result = await Confirm({
             title: 'Are you sure?',
-            message: 'Are you sure you want to discard this PDF file?'
+            message: 'Are you sure you want to discard this PDF file?',
         });
 
         if (result) {
@@ -45,7 +45,7 @@ const Toolbar = props => {
             <Tippy content="Open help center">
                 <span className="ms-3">
                     <a
-                        href="https://www.orkg.org/orkg/help-center/article/7/Extracting_and_importing_tables_from_survey_articles"
+                        href="https://www.orkg.org/help-center/article/7/Extracting_and_importing_tables_from_survey_articles"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
@@ -89,7 +89,7 @@ const Toolbar = props => {
 
 Toolbar.propTypes = {
     changeZoom: PropTypes.func.isRequired,
-    zoom: PropTypes.number.isRequired
+    zoom: PropTypes.number.isRequired,
 };
 
 export default Toolbar;

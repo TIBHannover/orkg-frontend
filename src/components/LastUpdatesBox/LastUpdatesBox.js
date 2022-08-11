@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import useTopChangelog from 'components/LastUpdatesBox/hooks/useTopChangelog';
-import LastUpdatesModal from './LastUpdatesModal';
-import { StyledActivity } from './styled';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { getResourceLink, getResourceTypeLabel } from 'utils';
@@ -11,6 +9,8 @@ import ROUTES from 'constants/routes';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
+import { StyledActivity } from './styled';
+import LastUpdatesModal from './LastUpdatesModal';
 
 const LastUpdatesBox = ({ researchFieldId }) => {
     const { activities, isLoading } = useTopChangelog({ researchFieldId, pageSize: 4 });
@@ -21,30 +21,31 @@ const LastUpdatesBox = ({ researchFieldId }) => {
             <h5>Last updates</h5>
             <div className="mt-3 flex-grow-1">
                 <div>
-                    {!isLoading &&
-                        activities?.length > 0 &&
-                        activities.slice(0, 3).map(activity => (
-                            <StyledActivity key={`log${activity.id}`} className="ps-3 pb-3">
-                                <div className="time">{moment(activity.created_at).fromNow()}</div>
-                                <div className="action">
-                                    {activity.profile?.id ? (
-                                        <>
-                                            <Link to={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>
-                                                {activity.profile.display_name}
-                                            </Link>
-                                        </>
-                                    ) : (
-                                        <i>Anonymous user</i>
-                                    )}{' '}
-                                    added
-                                    {` ${getResourceTypeLabel(activity.classes?.length > 0 ? activity.classes[0] : '')} `}
-                                    <Link to={getResourceLink(activity.classes?.length > 0 ? activity.classes[0] : '', activity.id)}>
-                                        {truncate(activity.label, { length: 50 })}
-                                    </Link>
-                                </div>
-                            </StyledActivity>
-                        ))}
-
+                    <div>
+                        {!isLoading &&
+                            activities?.length > 0 &&
+                            activities.slice(0, 3).map(activity => (
+                                <StyledActivity key={`log${activity.id}`} className="ps-3 pb-3">
+                                    <div className="time">{moment(activity.created_at).fromNow()}</div>
+                                    <div className="action">
+                                        {activity.profile?.id ? (
+                                            <>
+                                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>
+                                                    {activity.profile.display_name}
+                                                </Link>
+                                            </>
+                                        ) : (
+                                            <i>Anonymous user</i>
+                                        )}{' '}
+                                        added
+                                        {` ${getResourceTypeLabel(activity.classes?.length > 0 ? activity.classes[0] : '')} `}
+                                        <Link to={getResourceLink(activity.classes?.length > 0 ? activity.classes[0] : '', activity.id)}>
+                                            {truncate(activity.label, { length: 50 })}
+                                        </Link>
+                                    </div>
+                                </StyledActivity>
+                            ))}
+                    </div>
                     {!isLoading && activities.length > 3 && (
                         <div className="text-center">
                             <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
@@ -82,7 +83,7 @@ const LastUpdatesBox = ({ researchFieldId }) => {
 };
 
 LastUpdatesBox.propTypes = {
-    researchFieldId: PropTypes.string.isRequired
+    researchFieldId: PropTypes.string.isRequired,
 };
 
 export default LastUpdatesBox;

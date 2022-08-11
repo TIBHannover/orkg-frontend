@@ -28,7 +28,7 @@ class ExternalDescription extends Component {
 }
 
 ExternalDescription.propTypes = {
-    query: PropTypes.string.isRequired
+    query: PropTypes.string.isRequired,
 };
 
 export default ExternalDescription;

@@ -50,8 +50,8 @@ const AddSection = props => {
             createSection({
                 afterIndex: props.index,
                 contributionId,
-                sectionType
-            })
+                sectionType,
+            }),
         );
     };
 
@@ -93,7 +93,7 @@ const AddSection = props => {
 };
 
 AddSection.propTypes = {
-    index: PropTypes.number.isRequired
+    index: PropTypes.number.isRequired,
 };
 
 export default AddSection;

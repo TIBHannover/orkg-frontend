@@ -41,14 +41,13 @@ const TableCellValueResource = ({ value }) => {
                 return value.label;
             }
             return generatedFormattedLabel(value, labelFormat);
-        } else {
-            return value.label;
         }
+        return value.label;
     }, [hasLabelFormat, labelFormat, value]);
 
     return (
         <>
-            <Button color="link" className="p-0 text-wrap" style={{ maxWidth: '100%' }} onClick={() => setIsModalOpen(true)}>
+            <Button color="link" className="p-0 text-wrap user-select-auto" style={{ maxWidth: '100%' }} onClick={() => setIsModalOpen(true)}>
                 {formattedLabel !== '' ? formattedLabel.toString() : <i>No label</i>}
             </Button>
             {isModelOpen && (
@@ -68,7 +67,7 @@ const TableCellValueResource = ({ value }) => {
 };
 
 TableCellValueResource.propTypes = {
-    value: PropTypes.object.isRequired
+    value: PropTypes.object.isRequired,
 };
 
 export default memo(TableCellValueResource);

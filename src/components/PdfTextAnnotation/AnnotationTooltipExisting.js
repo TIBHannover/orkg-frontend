@@ -45,12 +45,12 @@ const AnnotationTooltipExisting = props => {
 AnnotationTooltipExisting.propTypes = {
     deleteAnnotation: PropTypes.func.isRequired,
     type: PropTypes.string,
-    id: PropTypes.string
+    id: PropTypes.string,
 };
 
 AnnotationTooltipExisting.defaultProps = {
     type: null,
-    id: null
+    id: null,
 };
 
 export default AnnotationTooltipExisting;

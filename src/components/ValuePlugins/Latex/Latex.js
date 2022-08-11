@@ -32,42 +32,39 @@ class Latex extends Component {
         }
 
         if (this.props.type === 'literal' && labelToText.match(this.supportedValues)) {
-            return ReactStringReplace(labelToText, this.supportedValues, (match, i) => {
-                return (
-                    <StyledMathJax
-                        key={i}
-                        config={{
-                            jax: ['input/TeX', 'output/SVG'],
-                            showMathMenu: false,
-                            SVG: {
-                                useFontCache: false,
-                                useGlobalCache: false,
-                                linebreaks: { automatic: true, width: 'container' }
-                            },
-                            skipStartupTypeset: true,
-                            'HTML-CSS': {
-                                linebreaks: { automatic: true, width: 'container' }
-                            }
-                        }}
-                        onLoad={() => {
-                            if (!window.MathJax) {
-                                return;
-                            }
-                            window.MathJax.Hub.Queue(['Rerender', window.MathJax.Hub]);
-                        }}
-                        math={match}
-                    />
-                );
-            });
-        } else {
-            return label;
+            return ReactStringReplace(labelToText, this.supportedValues, (match, i) => (
+                <StyledMathJax
+                    key={i}
+                    config={{
+                        jax: ['input/TeX', 'output/SVG'],
+                        showMathMenu: false,
+                        SVG: {
+                            useFontCache: false,
+                            useGlobalCache: false,
+                            linebreaks: { automatic: true, width: 'container' },
+                        },
+                        skipStartupTypeset: true,
+                        'HTML-CSS': {
+                            linebreaks: { automatic: true, width: 'container' },
+                        },
+                    }}
+                    onLoad={() => {
+                        if (!window.MathJax) {
+                            return;
+                        }
+                        window.MathJax.Hub.Queue(['Rerender', window.MathJax.Hub]);
+                    }}
+                    math={match}
+                />
+            ));
         }
+        return label;
     }
 }
 
 Latex.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-    type: PropTypes.oneOf(['resource', 'literal'])
+    type: PropTypes.oneOf(['resource', 'literal']),
 };
 
 export default Latex;

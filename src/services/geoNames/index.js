@@ -1,6 +1,9 @@
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 
+export const geonamesUrl = env('GEONAMES_API_SEARCH_URL');
+export const geonamesUsername = env('GEONAMES_API_USERNAME');
+
 /**
  * Fetch 10 autocomplete options from geonames.org API
  *
@@ -8,65 +11,72 @@ import env from '@beam-australia/react-env';
  * @param {Array} prevOptions Loaded options for current search.
  * @return {Array} The list of loaded options including the options from geonames.org
  */
-export default async function getGeoNames(value, options) {
+export default async function getGeoNames({ value, pageSize, page }) {
+    const options = [];
     let responseXML = await fetch(
-        env('GEONAMES_API_SEARCH_URL') + '?q=' + encodeURIComponent(value.trim()) + '&maxRows=10&type=rdf&username=' + env('GEONAMES_API_USERNAME')
+        `${geonamesUrl}?q=${encodeURIComponent(value.trim())}&maxRows=${pageSize}&startRow=${page * pageSize}&type=rdf&username=${geonamesUsername}`,
     );
-    const data = await responseXML.text();
-    responseXML = new window.DOMParser().parseFromString(data, 'text/xml'); // parse as xml
+    try {
+        const data = await responseXML.text();
+        responseXML = new window.DOMParser().parseFromString(data, 'text/xml'); // parse as xml
+    } catch (e) {
+        return { options, hasMore: options.length > 0 };
+    }
+
     const names = responseXML.getElementsByTagName('gn:name');
     const docs = responseXML.getElementsByTagName('gn:Feature');
     const countryCodes = responseXML.getElementsByTagName('gn:countryCode');
     const populations = responseXML.getElementsByTagName('gn:population');
     const lat = responseXML.getElementsByTagName('wgs84_pos:lat');
     const long = responseXML.getElementsByTagName('wgs84_pos:long');
-    names?.forEach?.(function(name, i) {
+    Array.from(names)?.forEach?.((name, i) => {
         const itemData = {
             id: null,
             label: name.childNodes[0].nodeValue,
             external: true,
             source: 'GeoNames',
             statements: [],
-            tooltipData: []
+            tooltipData: [],
+            ontology: 'GeoNames',
         };
         // load statements
         if (docs[i] && docs[i].attributes) {
-            itemData['statements'].push({
+            itemData.statements.push({
                 predicate: { id: PREDICATES.SAME_AS, label: 'same as' },
                 value: {
                     _class: ENTITIES.LITERAL,
                     label: docs[i].attributes.getNamedItem('rdf:about').nodeValue,
                     id: null,
-                    datatype: 'xsd:anyURI'
-                }
+                    datatype: 'xsd:anyURI',
+                },
             });
         }
         // add tooltip information
         if (countryCodes[i] && countryCodes[i].childNodes[0].nodeValue) {
-            itemData['tooltipData'].push({
+            itemData.tooltipData.push({
                 property: 'Country Code',
-                value: countryCodes[i].childNodes[0].nodeValue
+                value: countryCodes[i].childNodes[0].nodeValue,
             });
         }
         if (populations[i] && populations[i].childNodes[0].nodeValue) {
-            itemData['tooltipData'].push({
+            itemData.tooltipData.push({
                 property: 'Population',
-                value: populations[i].childNodes[0].nodeValue
+                value: populations[i].childNodes[0].nodeValue,
             });
         }
         if (lat[i] && lat[i].childNodes[0].nodeValue) {
-            itemData['tooltipData'].push({
+            itemData.tooltipData.push({
                 property: 'Latitude',
-                value: lat[i].childNodes[0].nodeValue
+                value: lat[i].childNodes[0].nodeValue,
             });
         }
         if (long[i] && long[i].childNodes[0].nodeValue) {
-            itemData['tooltipData'].push({
+            itemData.tooltipData.push({
                 property: 'Longitude',
-                value: long[i].childNodes[0].nodeValue
+                value: long[i].childNodes[0].nodeValue,
             });
         }
         options.push(itemData);
     });
-    return options;
+    return { options, hasMore: options.length > 0 };
 }

@@ -12,20 +12,18 @@ import { Alert, Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
-const Option = ({ children, data, ...props }) => {
-    return (
-        <components.Option {...props}>
-            {children}
-            <div>
-                <small>{data.comment}</small>
-            </div>
-        </components.Option>
-    );
-};
+const Option = ({ children, data, ...props }) => (
+    <components.Option {...props}>
+        {children}
+        <div>
+            <small>{data.comment}</small>
+        </div>
+    </components.Option>
+);
 
 Option.propTypes = {
     data: PropTypes.object.isRequired,
-    children: PropTypes.string.isRequired
+    children: PropTypes.string.isRequired,
 };
 
 const Activity = styled.div`
@@ -73,7 +71,7 @@ const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => 
     const options = versions.map((version, index) => ({
         label: `Version ${versions.length - index}`,
         value: version.id,
-        comment: version.description
+        comment: version.description,
     }));
 
     const handleCompare = () => {
@@ -177,7 +175,7 @@ HistoryModal.propTypes = {
     show: PropTypes.bool.isRequired,
     title: PropTypes.string.isRequired,
     versions: PropTypes.array,
-    routeDiff: PropTypes.string.isRequired
+    routeDiff: PropTypes.string.isRequired,
 };
 
 export default HistoryModal;

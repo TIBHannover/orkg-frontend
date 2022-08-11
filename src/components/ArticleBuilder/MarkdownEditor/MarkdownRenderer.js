@@ -15,7 +15,7 @@ const MarkdownRenderer = ({ text = null }) => {
     const converter = new Showdown.Converter({
         openLinksInNewWindow: true,
         extensions: [footnotes, showdownVideoPlugin],
-        underline: true
+        underline: true,
     });
     converter.setFlavor('github');
 
@@ -23,7 +23,7 @@ const MarkdownRenderer = ({ text = null }) => {
 };
 
 MarkdownRenderer.propTypes = {
-    text: PropTypes.string
+    text: PropTypes.string,
 };
 
 export default MarkdownRenderer;

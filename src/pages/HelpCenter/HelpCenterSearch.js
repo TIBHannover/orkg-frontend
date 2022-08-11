@@ -24,10 +24,10 @@ const HelpCenterSearch = () => {
                         .map(word => {
                             const where = `_where[_or][${whereCount}][title_contains]=${word}&_where[_or][${whereCount +
                                 1}][content_contains]=${word}`;
-                            whereCount = whereCount + 2;
+                            whereCount += 2;
                             return where;
                         })
-                        .join('&')
+                        .join('&'),
                 });
                 setArticles(_articles);
             } catch (e) {
@@ -63,7 +63,7 @@ const HelpCenterSearch = () => {
                                 <Link
                                     to={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                         id: article.id,
-                                        slug: article.title
+                                        slug: article.title,
                                     })}
                                 >
                                     {article.title}

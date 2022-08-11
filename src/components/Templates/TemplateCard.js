@@ -44,8 +44,8 @@ class TemplateCard extends Component {
 TemplateCard.propTypes = {
     template: PropTypes.shape({
         id: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired
-    }).isRequired
+        label: PropTypes.string.isRequired,
+    }).isRequired,
 };
 
 export default TemplateCard;

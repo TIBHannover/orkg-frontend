@@ -18,7 +18,7 @@ function EmbedModal({ isOpen, toggle, id }) {
     const title = `ORKG list - ${list?.title}`;
     const src = `${env('URL')}${reverse(ROUTES.LIST_EMBED, {
         id,
-        embed: 'embed'
+        embed: 'embed',
     }).replace('/', '', 1)}`;
 
     const code = `<iframe src="${src}"  width="${width}" height="480px" title="${title}"/>`;
@@ -37,7 +37,7 @@ function EmbedModal({ isOpen, toggle, id }) {
                                         <CopyToClipboard
                                             text={code}
                                             onCopy={() => {
-                                                toast.success(`Copied to clipboard`);
+                                                toast.success('Copied to clipboard');
                                             }}
                                         >
                                             <Button color="primary" className="ps-3 pe-3" size="sm">
@@ -85,7 +85,7 @@ function EmbedModal({ isOpen, toggle, id }) {
 EmbedModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
 };
 
 export default EmbedModal;

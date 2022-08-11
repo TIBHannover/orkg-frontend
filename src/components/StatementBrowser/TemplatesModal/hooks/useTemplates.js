@@ -3,8 +3,7 @@ import { useSelector } from 'react-redux';
 import { getStatementsByObjectAndPredicate, getParentResearchFields } from 'services/backend/statements';
 import { getResearchProblemsOfContribution } from 'slices/statementBrowserSlice';
 import { getResearchProblems, getResearchFields, getCommonClasses } from 'slices/contributionEditorSlice';
-import { uniqBy, differenceBy } from 'lodash';
-import { debounce } from 'lodash';
+import { uniqBy, differenceBy, debounce } from 'lodash';
 import { getResourcesByClass } from 'services/backend/resources';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 
@@ -16,16 +15,16 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
             label: 'research field',
             predicate: PREDICATES.TEMPLATE_OF_RESEARCH_FIELD,
             placeholder: 'Search or choose a research field',
-            entityType: ENTITIES.RESOURCE
+            entityType: ENTITIES.RESOURCE,
         },
         {
             id: CLASSES.PROBLEM,
             label: 'research problem',
             predicate: PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM,
             placeholder: 'Search a research problem',
-            entityType: ENTITIES.RESOURCE
+            entityType: ENTITIES.RESOURCE,
         },
-        { id: CLASSES.CLASS, label: 'class', predicate: PREDICATES.TEMPLATE_OF_CLASS, placeholder: 'Search a class', entityType: ENTITIES.CLASS }
+        { id: CLASSES.CLASS, label: 'class', predicate: PREDICATES.TEMPLATE_OF_CLASS, placeholder: 'Search a class', entityType: ENTITIES.CLASS },
     ];
 
     const [selectedFilter, setSelectedFilter] = useState(filterOptions[0]);
@@ -47,10 +46,10 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
 
     // in case of contribution editor, we consider only the research field of the first contribution
     const researchField = useSelector(state =>
-        !isContributionEditor ? state.viewPaper.researchField?.id || state.addPaper.selectedResearchField : getResearchFields(state)?.[0]
+        !isContributionEditor ? state.viewPaper.researchField?.id || state.addPaper.selectedResearchField : getResearchFields(state)?.[0],
     );
     const resource = useSelector(state =>
-        !isContributionEditor ? selectedResource && state.statementBrowser.resources.byId[selectedResource] : { classes: getCommonClasses(state) }
+        !isContributionEditor ? selectedResource && state.statementBrowser.resources.byId[selectedResource] : { classes: getCommonClasses(state) },
     );
 
     const researchProblems = useSelector(state =>
@@ -58,7 +57,7 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
             ? resource?.classes?.includes(CLASSES.CONTRIBUTION)
                 ? getResearchProblemsOfContribution(state, selectedResource)
                 : []
-            : getResearchProblems(state)
+            : getResearchProblems(state),
     );
 
     /**
@@ -67,25 +66,28 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
      * @param {String} resourceId Resource Id
      * @param {String} predicateId Predicate Id
      */
-    const getTemplatesOfResourceId = useCallback((resourceId, predicateId, p = null) => {
-        return getStatementsByObjectAndPredicate({
-            objectId: resourceId,
-            predicateId: predicateId,
-            page: p !== null ? p : 0,
-            items: pageSize,
-            sortBy: 'created_at',
-            desc: true,
-            returnContent: false
-        }).then(statements => {
-            // Filter statement with subjects of type Template
-            return {
-                ...statements,
-                content: statements.content
-                    .filter(statement => statement.subject.classes.includes(CLASSES.TEMPLATE))
-                    .map(st => ({ id: st.subject.id, label: st.subject.label }))
-            }; // return the template Object
-        });
-    }, []);
+    const getTemplatesOfResourceId = useCallback(
+        (resourceId, predicateId, p = null) =>
+            getStatementsByObjectAndPredicate({
+                objectId: resourceId,
+                predicateId,
+                page: p !== null ? p : 0,
+                items: pageSize,
+                sortBy: 'created_at',
+                desc: true,
+                returnContent: false,
+            }).then(
+                statements =>
+                    // Filter statement with subjects of type Template
+                    ({
+                        ...statements,
+                        content: statements.content
+                            .filter(statement => statement.subject.classes.includes(CLASSES.TEMPLATE))
+                            .map(st => ({ id: st.subject.id, label: st.subject.label })),
+                    }), // return the template Object
+            ),
+        [],
+    );
 
     const loadMoreTemplates = (sf, target, label) => {
         if (label || target || !onlyFeatured) {
@@ -96,11 +98,11 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
             } else {
                 searchCall = getResourcesByClass({
                     id: CLASSES.TEMPLATE,
-                    page: page,
+                    page,
                     q: label,
                     items: pageSize,
                     sortBy: 'created_at',
-                    desc: true
+                    desc: true,
                 });
             }
 
@@ -124,9 +126,9 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
         const loadFeaturedTemplates = async () => {
             setIsLoadingFeatured(true);
             const researchFieldTemplates = researchField
-                ? await getParentResearchFields(researchField).then(parents => {
-                      return [...parents.map(rf => getTemplatesOfResourceId(rf.id, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD, 0))];
-                  })
+                ? await getParentResearchFields(researchField).then(parents => [
+                      ...parents.map(rf => getTemplatesOfResourceId(rf.id, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD, 0)),
+                  ])
                 : [];
 
             const researchProblemsTemplates =
@@ -142,8 +144,8 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
                                 .map(c => c.content)
                                 .filter(r => r.length)
                                 .flat(),
-                            'id'
-                        )
+                            'id',
+                        ),
                     );
                     setIsLoadingFeatured(false);
                 })
@@ -174,7 +176,7 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
                     tmpl
                         .map((c, index) => c.content.map(t => ({ ...t, classId: resource?.classes[index] })))
                         .filter(r => r.length)
-                        .flat()
+                        .flat(),
                 );
                 setIsLoadingUsedTemplates(false);
             })
@@ -217,9 +219,7 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
         templates: differenceBy(uniqBy(templates, 'id'), usedTemplates, 'id'),
         featuredTemplates: differenceBy(featuredTemplates, usedTemplates, 'id'),
         // Hide the delete button for contribution template
-        usedTemplates: usedTemplates.filter(t => {
-            return t?.classId !== CLASSES.CONTRIBUTION;
-        }),
+        usedTemplates: usedTemplates.filter(t => t?.classId !== CLASSES.CONTRIBUTION),
         isLoadingUsedTemplates,
         researchField,
         isNextPageLoading,
@@ -234,7 +234,7 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
         handleSelectedFilterChange,
         setTargetFilter,
         handleLabelFilterChange,
-        loadMoreTemplates
+        loadMoreTemplates,
     };
 };
 

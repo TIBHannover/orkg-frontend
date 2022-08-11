@@ -10,12 +10,12 @@ import ContentLoader from 'react-content-loader';
 import Tippy, { useSingleton } from '@tippyjs/react';
 import TemplateButton from 'components/StatementBrowser/TemplatesModal/TemplateButton/TemplateButton';
 import SearchFieldSelector from 'components/StatementBrowser/TemplatesModal/SearchFieldSelector/SearchFieldSelector';
-import useTemplates from './hooks/useTemplates';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
+import useTemplates from './hooks/useTemplates';
 
 const AnimationContainer = styled(CSSTransition)`
     &.zoom-enter {
@@ -58,7 +58,7 @@ const TemplatesModal = props => {
         handleTargetFilterChange,
         handleSelectedFilterChange,
         handleLabelFilterChange,
-        loadMoreTemplates
+        loadMoreTemplates,
     } = useTemplates({ onlyFeatured });
 
     const dispatch = useDispatch();
@@ -66,7 +66,7 @@ const TemplatesModal = props => {
     const handleSelectField = ({ id, label }) => {
         handleTargetFilterChange({
             id,
-            label
+            label,
         });
     };
 
@@ -148,6 +148,7 @@ const TemplatesModal = props => {
                                             autoLoadOption={true}
                                             openMenuOnFocus={false}
                                             allowCreate={false}
+                                            ols={false}
                                             cacheOptions={false}
                                             inputId={selectedFilter.id}
                                             isClearable={true}
@@ -264,7 +265,7 @@ const TemplatesModal = props => {
 };
 
 TemplatesModal.propTypes = {
-    syncBackend: PropTypes.bool.isRequired
+    syncBackend: PropTypes.bool.isRequired,
 };
 
 export default TemplatesModal;

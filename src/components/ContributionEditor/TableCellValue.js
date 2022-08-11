@@ -63,7 +63,7 @@ TableCellValue.propTypes = {
     value: PropTypes.object.isRequired,
     index: PropTypes.number.isRequired,
     setDisableCreate: PropTypes.func.isRequired,
-    propertyId: PropTypes.string.isRequired
+    propertyId: PropTypes.string.isRequired,
 };
 
 export default memo(TableCellValue);

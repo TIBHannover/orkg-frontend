@@ -62,11 +62,11 @@ const ObservatoryBox = ({ provenance }) => {
 };
 
 ObservatoryBox.propTypes = {
-    provenance: PropTypes.object
+    provenance: PropTypes.object,
 };
 
 ObservatoryBox.defaultProps = {
-    provenance: null
+    provenance: null,
 };
 
 export default ObservatoryBox;

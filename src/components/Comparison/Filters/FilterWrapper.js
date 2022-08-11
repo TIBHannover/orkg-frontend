@@ -12,9 +12,10 @@ const FilterWrapper = props => {
             setContent(
                 rules
                     .map(
-                        ({ propertyName, type, value }) => `${propertyName} ${stringifyType(type)} ${Array.isArray(value) ? value.join(', ') : value}`
+                        ({ propertyName, type, value }) =>
+                            `${propertyName} ${stringifyType(type)} ${Array.isArray(value) ? value.join(', ') : value}`,
                     )
-                    .join(' ; ')
+                    .join(' ; '),
             );
         } else {
             setContent('No different values to filter on');
@@ -32,7 +33,7 @@ const FilterWrapper = props => {
 
 FilterWrapper.propTypes = {
     data: PropTypes.object.isRequired,
-    children: PropTypes.object.isRequired
+    children: PropTypes.object.isRequired,
 };
 
 export default FilterWrapper;

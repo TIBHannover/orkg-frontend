@@ -46,25 +46,23 @@ export const OptionButtonStyled = styled.span`
 `;
 
 /* Tippy doesn't work when reference element is disabled, so adding span around the button       fixes it  */
-const ActionButtonView = forwardRef((props, ref) => {
-    return (
-        <OptionButtonStyled ref={ref} tabIndex="0" className="me-2">
-            <Button
-                className="p-0"
-                wrappersize={props.size}
-                disabled={props.isDisabled}
-                color="link"
-                onClick={props.action}
-                aria-label={isString(props.title) ? props.title : props.title.toString()}
-                data-testid={props.testId}
-            >
-                <span className="icon-wrapper">
-                    <Icon size={props.size} icon={props.icon} spin={props.iconSpin} />
-                </span>
-            </Button>
-        </OptionButtonStyled>
-    );
-});
+const ActionButtonView = forwardRef((props, ref) => (
+    <OptionButtonStyled ref={ref} tabIndex="0" className="me-2">
+        <Button
+            className="p-0"
+            wrappersize={props.size}
+            disabled={props.isDisabled}
+            color="link"
+            onClick={props.action}
+            aria-label={isString(props.title) ? props.title : props.title.toString()}
+            data-testid={props.testId}
+        >
+            <span className="icon-wrapper">
+                <Icon size={props.size} icon={props.icon} spin={props.iconSpin} />
+            </span>
+        </Button>
+    </OptionButtonStyled>
+));
 
 ActionButtonView.propTypes = {
     title: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
@@ -73,12 +71,12 @@ ActionButtonView.propTypes = {
     size: PropTypes.oneOf(['xs', 'sm', 'lg']).isRequired,
     action: PropTypes.func,
     isDisabled: PropTypes.bool,
-    testId: PropTypes.string
+    testId: PropTypes.string,
 };
 
 ActionButtonView.defaultProps = {
     size: 'xs',
-    iconSpin: false
+    iconSpin: false,
 };
 
 export default ActionButtonView;

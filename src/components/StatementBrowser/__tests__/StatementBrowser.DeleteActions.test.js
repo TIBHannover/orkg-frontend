@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from 'testUtils';
-import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
+import StatementBrowser from '../StatementBrowser';
 import { statementBrowser1P2V } from '../ValueItem/__mocks__/StatementBrowserDataValueItem';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
@@ -14,20 +14,20 @@ const setup = (
         newStore: false,
         rootNodeType: ENTITIES.RESOURCE,
         enableEdit: true,
-        syncBackend: false
-    }
+        syncBackend: false,
+    },
 ) => {
     render(<StatementBrowser {...props} />, { initialState });
 };
 
-const clickOnDeleteValueButton = async screen => {
-    const deleteButton = screen.getByRole('button', { name: 'Delete value' });
+const clickOnDeleteValueButton = async sc => {
+    const deleteButton = sc.getByRole('button', { name: 'Delete value' });
     expect(deleteButton).toBeInTheDocument();
     fireEvent.click(deleteButton);
 };
 
-const clickOnDeletePropertyButton = async screen => {
-    const deleteButton = screen.getByRole('button', { name: 'Delete property' });
+const clickOnDeletePropertyButton = async sc => {
+    const deleteButton = sc.getByRole('button', { name: 'Delete property' });
     expect(deleteButton).toBeInTheDocument();
     fireEvent.click(deleteButton);
 };

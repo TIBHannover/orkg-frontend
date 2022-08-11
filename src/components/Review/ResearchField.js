@@ -18,8 +18,8 @@ const ResearchField = () => {
             setResearchField({
                 researchField,
                 statementId: researchField?.statementId,
-                paperId: paper.id
-            })
+                paperId: paper.id,
+            }),
         );
     };
 

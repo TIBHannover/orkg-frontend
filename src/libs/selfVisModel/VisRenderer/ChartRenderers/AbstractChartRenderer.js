@@ -8,7 +8,7 @@ class AbstractChartRenderer extends Component {
         super(props);
         this.selfVisModel = new SelfVisDataModel(); // this access the instance of the data (its a singleton)
         this.state = {
-            fakeControls: [] // used to trigger an update event on the chart rendering engine
+            fakeControls: [], // used to trigger an update event on the chart rendering engine
         };
     }
 
@@ -20,22 +20,21 @@ class AbstractChartRenderer extends Component {
 
     createRenderingData = () => {
         const sharedCustomizationState = this.selfVisModel.__sharedStateObject;
-        const customizer = sharedCustomizationState.customizer;
+        const { customizer } = sharedCustomizationState;
         const gdc = this.selfVisModel._googleChartsData;
         if (gdc && this.props.visualizationMethod === 'Table') {
             return gdc.useAllColumns();
-        } else {
-            if (gdc && customizer.errorValue === -1 && customizer.xAxisSelector && customizer.yAxisSelector && customizer.yAxisSelector.length > 0) {
-                // console.log('LEST CREATE THAT THING!!!!');
-                const resultingData = gdc.createDataFromSharedCustomizer(customizer);
-                if (resultingData.cols[0].type === 'date' && this.props.visualizationMethod === 'LineChart') {
-                    // we need to sort the input data if date and if we have a line chart...
-                    const sortedData = { ...resultingData };
-                    sortedData.rows.sort((a, b) => a.c[0].v <= b.c[0].v);
-                    return sortedData;
-                }
-                return resultingData;
+        }
+        if (gdc && customizer.errorValue === -1 && customizer.xAxisSelector && customizer.yAxisSelector && customizer.yAxisSelector.length > 0) {
+            // console.log('LEST CREATE THAT THING!!!!');
+            const resultingData = gdc.createDataFromSharedCustomizer(customizer);
+            if (resultingData.cols[0].type === 'date' && this.props.visualizationMethod === 'LineChart') {
+                // we need to sort the input data if date and if we have a line chart...
+                const sortedData = { ...resultingData };
+                sortedData.rows.sort((a, b) => a.c[0].v <= b.c[0].v);
+                return sortedData;
             }
+            return resultingData;
         }
     };
 
@@ -43,7 +42,7 @@ class AbstractChartRenderer extends Component {
         const renderingData = this.createRenderingData();
         let XLabel = '';
         let YLabel = '';
-        const customizer = this.selfVisModel.__sharedStateObject.customizer;
+        const { customizer } = this.selfVisModel.__sharedStateObject;
         if (customizer) {
             XLabel = customizer.xAxisLabel ? customizer.xAxisLabel : customizer.xAxisSelector ? customizer.xAxisSelector.label : '';
             YLabel = customizer.yAxisLabel
@@ -65,11 +64,11 @@ class AbstractChartRenderer extends Component {
                         options={{
                             showRowNumber: true,
                             hAxis: {
-                                title: this.props.visualizationMethod === 'BarChart' ? YLabel : XLabel
+                                title: this.props.visualizationMethod === 'BarChart' ? YLabel : XLabel,
                             },
                             vAxis: {
-                                title: this.props.visualizationMethod === 'BarChart' ? XLabel : YLabel
-                            }
+                                title: this.props.visualizationMethod === 'BarChart' ? XLabel : YLabel,
+                            },
                         }}
                     />
                 ) : (
@@ -83,6 +82,6 @@ AbstractChartRenderer.propTypes = {
     customizationState: PropTypes.object,
     visualizationWidth: PropTypes.number,
     visualizationHeight: PropTypes.number,
-    visualizationMethod: PropTypes.string
+    visualizationMethod: PropTypes.string,
 };
 export default AbstractChartRenderer;

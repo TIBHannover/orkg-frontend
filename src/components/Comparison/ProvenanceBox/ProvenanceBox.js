@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Row, Card, CardBody, CardTitle } from 'reactstrap';
+import { Row, Card, CardBody, CardTitle, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
@@ -9,7 +9,6 @@ import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { isEmpty } from 'lodash';
-import { Button } from 'reactstrap';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 
@@ -138,7 +137,7 @@ ProvenanceBox.propTypes = {
     provenance: PropTypes.object,
     creator: PropTypes.object,
     changeObservatory: PropTypes.func,
-    resourceId: PropTypes.string
+    resourceId: PropTypes.string,
 };
 
 export default ProvenanceBox;

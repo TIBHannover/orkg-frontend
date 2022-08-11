@@ -4,13 +4,13 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import { getUsersByOrganizationId } from 'services/backend/organizations';
 import ContentLoader from 'react-content-loader';
-import MembersModal from './MembersModal';
 import ROUTES from 'constants/routes.js';
 import { StyledGravatar, StyledDotGravatar, ContributorsAvatars } from 'components/styled';
 import Tippy from '@tippyjs/react';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
+import MembersModal from './MembersModal';
 
 const Members = ({ organizationsId }) => {
     const [members, setMembers] = useState([]);
@@ -60,7 +60,7 @@ const Members = ({ organizationsId }) => {
                     )}
                 </ContributorsAvatars>
             )}
-            {!isLoadingMembers && members?.length === 0 && <div className="mt-4 mb-4">No members in this organization yet.</div>}
+            {!isLoadingMembers && members?.length === 0 && <div className="mb-2">No members in this organization yet</div>}
             {members.length > 18 && openModal && (
                 <MembersModal members={members} openModal={openModal} setOpenModal={setOpenModal} organizationsId={organizationsId} />
             )}
@@ -87,7 +87,7 @@ const Members = ({ organizationsId }) => {
 };
 
 Members.propTypes = {
-    organizationsId: PropTypes.string.isRequired
+    organizationsId: PropTypes.string.isRequired,
 };
 
 export default Members;

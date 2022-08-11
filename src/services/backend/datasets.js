@@ -11,20 +11,15 @@ export const datasetsUrl = `${url}datasets/`;
  * Each benchmark on the dataset is define by the following attributes:
  * model_name, score, metric, paper_title, code_urls
  * */
-export const getDatasetBenchmarksByDatasetId = (datasetId, problemId) => {
-    return submitGetRequest(`${datasetsUrl}${datasetId}/problem/${problemId}/summary`);
-};
+export const getDatasetBenchmarksByDatasetId = (datasetId, problemId) => submitGetRequest(`${datasetsUrl}${datasetId}/problem/${problemId}/summary`);
 
 /**
  * Get the list of research problems of a dataset
  * */
-export const getResearchProblemsByDatasetId = datasetId => {
-    return submitGetRequest(`${datasetsUrl}${datasetId}/problems`);
-};
+export const getResearchProblemsByDatasetId = datasetId => submitGetRequest(`${datasetsUrl}${datasetId}/problems`);
 
 /**
  * Get the datasets for a research problem: (a.k.a. Benchmark Summary)
  * */
-export const getDatasetsBenchmarksByResearchProblemId = resourceId => {
-    return submitGetRequest(`${datasetsUrl}research-problem/${encodeURIComponent(resourceId)}`);
-};
+export const getDatasetsBenchmarksByResearchProblemId = resourceId =>
+    submitGetRequest(`${datasetsUrl}research-problem/${encodeURIComponent(resourceId)}`);

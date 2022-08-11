@@ -19,26 +19,26 @@ const EditorTable = ({ scrollContainerBody }) => {
         papers,
         properties,
         resources,
-        statements
+        statements,
     ]);
 
     const defaultColumn = useMemo(
         () => ({
             minWidth: 300,
             width: 1,
-            maxWidth: 2
+            maxWidth: 2,
         }),
-        []
+        [],
     );
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
             columns,
             data,
-            defaultColumn
+            defaultColumn,
         },
         useFlexLayout,
-        useSticky
+        useSticky,
     );
 
     return (
@@ -78,12 +78,12 @@ const EditorTable = ({ scrollContainerBody }) => {
                             </FlipMove>
                         </div>
                     </div>
-                    {rows.length === 0 && (
-                        <Alert className="mt-0" color="info">
-                            Start adding properties or use templates by using the buttons below
-                        </Alert>
-                    )}
                 </ScrollSyncPane>
+                {rows.length === 0 && (
+                    <Alert className="mt-0" color="info">
+                        Start adding properties or use templates by using the buttons below
+                    </Alert>
+                )}
             </div>
         </>
     );
@@ -91,7 +91,7 @@ const EditorTable = ({ scrollContainerBody }) => {
 
 EditorTable.propTypes = {
     data: PropTypes.object,
-    scrollContainerBody: PropTypes.object.isRequired
+    scrollContainerBody: PropTypes.object.isRequired,
 };
 
 export default memo(EditorTable);

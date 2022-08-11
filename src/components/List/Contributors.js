@@ -25,7 +25,7 @@ const Contributors = ({ isEmbedded = false }) => {
 };
 
 Contributors.propTypes = {
-    isEmbedded: PropTypes.bool
+    isEmbedded: PropTypes.bool,
 };
 
 export default Contributors;

@@ -19,7 +19,7 @@ const Menu = ({ children, ...innerProps }) => (
 );
 
 Menu.propTypes = {
-    children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
 };
 
 export default Menu;

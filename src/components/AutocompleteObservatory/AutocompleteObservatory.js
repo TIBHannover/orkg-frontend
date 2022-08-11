@@ -35,7 +35,7 @@ function AutocompleteObservatory(props) {
                     const orgs = data[1].filter(org => observatory.organization_ids.includes(org.id));
                     items.push({
                         ...observatory,
-                        organizations: orgs
+                        organizations: orgs,
                     });
                 }
                 setOptions(items);
@@ -131,7 +131,7 @@ AutocompleteObservatory.propTypes = {
     onChangeOrganization: PropTypes.func,
     observatory: PropTypes.object,
     organization: PropTypes.object,
-    inputId: PropTypes.string
+    inputId: PropTypes.string,
 };
 
 export default AutocompleteObservatory;

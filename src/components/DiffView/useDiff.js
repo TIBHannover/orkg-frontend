@@ -50,13 +50,13 @@ const useDiff = () => {
                 articleText += `Content:\n${section.content.text}\n\n`;
             }
             if (section.entries) {
-                articleText += `Section entries:\n`;
+                articleText += 'Section entries:\n';
                 for (const entry of section.entries) {
                     articleText += `Entry: ${article?.contentTypes?.[entry.contentTypeId]?.label}`;
                     if (entry.description) {
                         articleText += `\nDescription: ${entry.description.label}`;
                     }
-                    articleText += `\n\n`;
+                    articleText += '\n\n';
                 }
             }
         }

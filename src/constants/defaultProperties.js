@@ -1,32 +1,32 @@
 const defaultProperties = [
     {
         label: 'Has evaluation',
-        id: 'HAS_EVALUATION'
+        id: 'HAS_EVALUATION',
     },
     {
         label: 'Has approach',
-        id: 'HAS_APPROACH'
+        id: 'HAS_APPROACH',
     },
     {
         label: 'Has method',
-        id: 'HAS_METHOD'
+        id: 'HAS_METHOD',
     },
     {
         label: 'Has implementation',
-        id: 'HAS_IMPLEMENTATION'
+        id: 'HAS_IMPLEMENTATION',
     },
     {
         label: 'Has result',
-        id: 'HAS_RESULTS'
+        id: 'HAS_RESULTS',
     },
     {
         label: 'Has value',
-        id: 'HAS_VALUE'
+        id: 'HAS_VALUE',
     },
     {
         label: 'Has metric',
-        id: 'HAS_METRIC'
-    }
+        id: 'HAS_METRIC',
+    },
 ];
 
 export default defaultProperties;

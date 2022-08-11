@@ -38,7 +38,7 @@ const ViewList = ({ isEmbedded }) => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: id,
         unlisted: listResource?.unlisted,
-        featured: listResource?.featured
+        featured: listResource?.featured,
     });
 
     return (
@@ -86,7 +86,8 @@ const ViewList = ({ isEmbedded }) => {
                                     <MarkdownRenderer text={section.content.text} />
                                 </section>
                             );
-                        } else if (section.type === CLASSES.LIST_SECTION) {
+                        }
+                        if (section.type === CLASSES.LIST_SECTION) {
                             return (
                                 <section key={section.id} className="mt-3">
                                     <ListGroup>
@@ -94,7 +95,7 @@ const ViewList = ({ isEmbedded }) => {
                                             const contentType = contentTypes[entry.contentTypeId];
                                             const isPaper = contentType.classes?.includes(CLASSES.PAPER);
                                             const contentTypeClass = contentType.classes?.filter(classId =>
-                                                supportedContentTypes.find(c => c.id === classId)
+                                                supportedContentTypes.find(c => c.id === classId),
                                             )?.[0];
                                             const route = !isPaper
                                                 ? reverse(ROUTES.CONTENT_TYPE_NO_MODE, { id: contentType.id, type: contentTypeClass })
@@ -110,7 +111,7 @@ const ViewList = ({ isEmbedded }) => {
                                                         description={entry.description}
                                                         paper={{
                                                             ...contentType,
-                                                            title: contentType.label
+                                                            title: contentType.label,
                                                         }}
                                                         showAddToComparison={!isEmbedded}
                                                         linkTarget="_blank"
@@ -144,7 +145,7 @@ const ViewList = ({ isEmbedded }) => {
 };
 
 ViewList.propTypes = {
-    isEmbedded: PropTypes.bool.isRequired
+    isEmbedded: PropTypes.bool.isRequired,
 };
 
 export default ViewList;

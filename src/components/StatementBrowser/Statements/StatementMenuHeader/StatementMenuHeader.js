@@ -11,6 +11,7 @@ import { setIsHelpModalOpen, setIsPreferencesOpen, setIsTemplateModalOpen } from
 import { ENTITIES } from 'constants/graphSettings';
 import Preferences from 'components/StatementBrowser/Preferences/Preferences';
 import PropTypes from 'prop-types';
+
 export default function StatementMenuHeader(props) {
     const isPreferencesOpen = useSelector(state => state.statementBrowser.isPreferencesOpen);
     const isHelpModalOpen = useSelector(state => state.statementBrowser.isHelpModalOpen);
@@ -22,7 +23,7 @@ export default function StatementMenuHeader(props) {
         <>
             <div className="mb-2 text-end">
                 <ButtonGroup>
-                    {/* We have custom templates for predicates and classes*/}
+                    {/* We have custom templates for predicates and classes */}
                     {props.canEdit && props.enableEdit && props.resource._class === ENTITIES.RESOURCE && (
                         <Button
                             className="p-0"
@@ -85,5 +86,5 @@ StatementMenuHeader.propTypes = {
     resource: PropTypes.object.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     canEdit: PropTypes.bool.isRequired,
-    syncBackend: PropTypes.bool.isRequired
+    syncBackend: PropTypes.bool.isRequired,
 };

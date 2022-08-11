@@ -1,3 +1,4 @@
+import useExistingPaper from 'components/ExistingPaperModal/useExistingPaper';
 import Confirm from 'components/Confirmation/Confirmation';
 import DoiItem from 'components/CreatePaperModal/DoiItem';
 import useCreatePaper from 'components/CreatePaperModal/hooks/useCreatePaper';
@@ -20,15 +21,17 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
     const [researchField, setResearchField] = useState(null);
     const [url, setUrl] = useState('');
     const [lookupOnMount, setLookupOnMount] = useState(false);
+    const { checkIfPaperExists, ExistingPaperModels } = useExistingPaper();
 
     useEffect(() => {
         if (!initialValue) {
             return;
         }
 
-        const doi = initialValue.startsWith('http') ? initialValue.substring(initialValue.indexOf('10.')) : initialValue;
-        if (REGEX.DOI.test(doi)) {
-            setDoi(doi);
+        const doiEntry = initialValue.startsWith('http') ? initialValue.substring(initialValue.indexOf('10.')) : initialValue;
+
+        if (REGEX.DOI.test(doiEntry)) {
+            setDoi(doiEntry);
             setLookupOnMount(true);
         } else {
             setTitle(initialValue);
@@ -36,7 +39,7 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
         }
     }, [initialValue]);
 
-    const handleCreate = async () => {
+    const finishCreate = async () => {
         const ids = await createPaper({
             title,
             month,
@@ -46,50 +49,57 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
             publishedIn,
             researchField,
             url,
-            setOpenItem
+            setOpenItem,
         });
         if (ids) {
             onCreatePaper(ids);
         }
     };
 
+    const handleCreate = async () => {
+        if (await checkIfPaperExists({ doi, title, continueNext: true })) {
+            return;
+        }
+        finishCreate();
+    };
+
     const FIELDS = {
         researchField: {
-            label: 'Research Field *',
+            label: 'Research field *',
             type: 'researchField',
             value: researchField,
-            onChange: setResearchField
+            onChange: setResearchField,
         },
         month: {
             label: 'Publication month',
             type: 'month',
             value: month,
-            onChange: e => setMonth(e.target.value)
+            onChange: e => setMonth(e.target.value),
         },
         year: {
             label: 'Publication year',
             type: 'year',
             value: year,
-            onChange: e => setYear(e.target.value)
+            onChange: e => setYear(e.target.value),
         },
         authors: {
             label: 'Authors',
             type: 'authors',
             value: authors,
-            onChange: setAuthors
+            onChange: setAuthors,
         },
         publishedIn: {
             label: 'Published in',
             type: 'text', // TODO: replace with 'publishedIn', but currently the "papers" endpoint doesn't accept a resource for the 'publishedIn' key
             value: publishedIn,
-            onChange: e => setPublishedIn(e.target.value)
+            onChange: e => setPublishedIn(e.target.value),
         },
         paperUrl: {
             label: 'Paper URL',
             type: 'text',
             value: url,
-            onChange: e => setUrl(e.target.value)
-        }
+            onChange: e => setUrl(e.target.value),
+        },
     };
 
     const handlePopulateMetadata = useCallback(
@@ -102,7 +112,7 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
             setPublishedIn(paper.publishedIn || publishedIn);
             setUrl(paper.url || url);
         },
-        [authors, doi, month, publishedIn, title, url, year]
+        [authors, doi, month, publishedIn, title, url, year],
     );
 
     const toggleItem = item => setOpenItem(openItem !== item ? item : null);
@@ -111,7 +121,7 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
         if (authors.length > 0 || month || year || url || publishedIn) {
             const confirm = await Confirm({
                 title: 'Overwrite data?',
-                message: 'Do you want to overwrite the data you entered with the selected paper data?'
+                message: 'Do you want to overwrite the data you entered with the selected paper data?',
             });
 
             if (!confirm) {
@@ -165,6 +175,7 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
                     {!isLoading ? 'Create' : 'Loading...'}
                 </Button>
             </ModalFooter>
+            <ExistingPaperModels onContinue={finishCreate} />
         </Modal>
     );
 };
@@ -173,11 +184,11 @@ CreatePaperModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     onCreatePaper: PropTypes.func.isRequired,
-    initialValue: PropTypes.string
+    initialValue: PropTypes.string,
 };
 
 CreatePaperModal.defaultProps = {
-    initialValue: ''
+    initialValue: '',
 };
 
 export default CreatePaperModal;

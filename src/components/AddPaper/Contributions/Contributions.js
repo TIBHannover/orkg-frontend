@@ -1,29 +1,33 @@
-import { useEffect } from 'react';
-import { Row, Col, Button } from 'reactstrap';
-import { useSelector, useDispatch } from 'react-redux';
-import ContributionsHelpTour from './ContributionsHelpTour';
+import { faAngleDown, faExclamationTriangle, faMagic } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
+import Abstract from 'components/AddPaper/Abstract/Abstract';
+import EntityRecognition from 'components/AddPaper/EntityRecognition/EntityRecognition';
+import useDetermineResearchField from 'components/AddPaper/EntityRecognition/useDetermineResearchField';
+import useEntityRecognition from 'components/AddPaper/hooks/useEntityRecognition';
+import Confirm from 'components/Confirmation/Confirmation';
+import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
+import ContributionTab from 'components/ContributionTabs/ContributionTab';
+import { StyledContributionTabs } from 'components/ContributionTabs/styled';
+import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tooltip from 'components/Utils/Tooltip';
+import Tabs, { TabPane } from 'rc-tabs';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, Col, Row } from 'reactstrap';
 import {
-    nextStep,
-    previousStep,
     createContributionAction as createContribution,
     deleteContributionAction as deleteContribution,
-    selectContributionAction as selectContribution,
-    updateContributionLabelAction as updateContributionLabel,
-    saveAddPaperAction as saveAddPaper,
+    nextStep,
     openTour,
-    toggleAbstractDialog
+    previousStep,
+    saveAddPaperAction as saveAddPaper,
+    selectContributionAction as selectContribution,
+    toggleAbstractDialog,
+    updateContributionLabelAction as updateContributionLabel,
 } from 'slices/addPaperSlice';
 import { updateSettings } from 'slices/statementBrowserSlice';
-import Abstract from 'components/AddPaper/Abstract/Abstract';
-import Confirm from 'components/Confirmation/Confirmation';
-import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
-import ContributionTab from 'components/ContributionTabs/ContributionTab';
-import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
-import { StyledContributionTabs } from 'components/ContributionTabs/styled';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faMagic, faAngleDown } from '@fortawesome/free-solid-svg-icons';
-import Tabs, { TabPane } from 'rc-tabs';
+import ContributionsHelpTour from './ContributionsHelpTour';
 
 const Contributions = () => {
     const {
@@ -36,9 +40,12 @@ const Contributions = () => {
         url,
         selectedResearchField,
         contributions,
-        selectedContribution
+        selectedContribution,
+        abstract,
     } = useSelector(state => state.addPaper);
     const { resources, properties, values } = useSelector(state => state.statementBrowser);
+    const { isComputerScienceField } = useDetermineResearchField();
+    const { handleSaveFeedback } = useEntityRecognition();
 
     const dispatch = useDispatch();
 
@@ -49,34 +56,35 @@ const Contributions = () => {
                 createContribution({
                     selectAfterCreation: true,
                     prefillStatements: true,
-                    researchField: selectedResearchField
-                })
+                    researchField: selectedResearchField,
+                }),
             );
             dispatch(
                 updateSettings({
-                    openExistingResourcesInDialog: true
-                })
+                    openExistingResourcesInDialog: true,
+                }),
             );
         }
     }, [contributions.allIds.length, dispatch, selectedResearchField]);
 
     const handleNextClick = async () => {
+        handleSaveFeedback();
         // save add paper
         dispatch(
             saveAddPaper({
-                title: title,
-                authors: authors,
-                publicationMonth: publicationMonth,
-                publicationYear: publicationYear,
-                doi: doi,
-                publishedIn: publishedIn,
-                url: url,
-                selectedResearchField: selectedResearchField,
-                contributions: contributions,
-                resources: resources,
-                properties: properties,
-                values: values
-            })
+                title,
+                authors,
+                publicationMonth,
+                publicationYear,
+                doi,
+                publishedIn,
+                url,
+                selectedResearchField,
+                contributions,
+                resources,
+                properties,
+                values,
+            }),
         );
         dispatch(nextStep());
     };
@@ -84,7 +92,7 @@ const Contributions = () => {
     const toggleDeleteContribution = async id => {
         const result = await Confirm({
             title: 'Are you sure?',
-            message: 'Are you sure you want to delete this contribution?'
+            message: 'Are you sure you want to delete this contribution?',
         });
 
         if (result) {
@@ -102,10 +110,10 @@ const Contributions = () => {
         const contribution = contributions.byId[contributionId];
         dispatch(
             updateContributionLabel({
-                label: label,
-                contributionId: contributionId,
-                resourceId: contribution.resourceId
-            })
+                label,
+                contributionId,
+                resourceId: contribution.resourceId,
+            }),
         );
     };
 
@@ -113,6 +121,7 @@ const Contributions = () => {
         dispatch(openTour(step));
     };
 
+    const showAbstractWarning = isComputerScienceField && !abstract;
     const onTabChange = key => {
         handleSelectContribution(key);
     };
@@ -153,9 +162,20 @@ const Contributions = () => {
                     </Tooltip>
                 </h2>
                 <div className="flex-shrink-0 ms-auto">
-                    <Button onClick={() => dispatch(toggleAbstractDialog())} outline size="sm" color="secondary">
-                        <Icon icon={faMagic} /> Abstract annotator
-                    </Button>
+                    <Tippy
+                        hideOnClick
+                        showOnCreate
+                        disabled={!showAbstractWarning}
+                        placement="right"
+                        content="We were unable to fetch the abstract of the paper. Click the button to manually add it, this improves the smart recommendations"
+                    >
+                        <span>
+                            <Button onClick={() => dispatch(toggleAbstractDialog())} outline size="sm" color="smart">
+                                {!showAbstractWarning ? <Icon icon={faMagic} /> : <Icon icon={faExclamationTriangle} className="text-warning" />}{' '}
+                                Abstract annotator
+                            </Button>
+                        </span>
+                    </Tippy>
                 </div>
             </div>
             <Row className="mt-2 g-0">
@@ -201,6 +221,10 @@ const Contributions = () => {
                             })}
                         </Tabs>
                     </StyledContributionTabs>
+                </Col>
+
+                <Col lg="3" className="ps-lg-3 mt-5">
+                    {isComputerScienceField && !showAbstractWarning && <EntityRecognition />}
                 </Col>
             </Row>
 

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getVisualization } from 'services/similarity/index';
-import SingleVisualizationComponent from './SingleVisualizationComponent';
-import PreviewCarouselComponent from './PreviewCarouselComponent';
 import ContentLoader from 'react-content-loader';
 import { getVisualizationData } from 'utils';
 import { find } from 'lodash';
 import PropTypes from 'prop-types';
+import PreviewCarouselComponent from './PreviewCarouselComponent';
+import SingleVisualizationComponent from './SingleVisualizationComponent';
 
 function PreviewVisualizationComparison(props) {
     const [isLoading, setIsLoading] = useState(false);
@@ -48,16 +48,14 @@ function PreviewVisualizationComparison(props) {
         <div>
             {!isLoading && visData && visData.length > 0 && (
                 <PreviewCarouselComponent>
-                    {visData.map((data, index) => {
-                        return (
-                            <SingleVisualizationComponent
-                                key={'singleVisComp_' + index}
-                                input={data}
-                                itemIndex={index}
-                                expandVisualization={props.expandVisualization}
-                            />
-                        );
-                    })}
+                    {visData.map((data, index) => (
+                        <SingleVisualizationComponent
+                            key={`singleVisComp_${index}`}
+                            input={data}
+                            itemIndex={index}
+                            expandVisualization={props.expandVisualization}
+                        />
+                    ))}
                 </PreviewCarouselComponent>
             )}
             {isLoading && (
@@ -81,7 +79,7 @@ function PreviewVisualizationComparison(props) {
 PreviewVisualizationComparison.propTypes = {
     comparisonId: PropTypes.string,
     expandVisualization: PropTypes.func,
-    visualizations: PropTypes.array
+    visualizations: PropTypes.array,
 };
 
 export default PreviewVisualizationComparison;

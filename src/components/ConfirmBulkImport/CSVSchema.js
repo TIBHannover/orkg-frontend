@@ -18,7 +18,7 @@ export default function checkDataValidation(data) {
     }
 
     if (values.length === 0) {
-        return `The CSV file should contain at least one paper.`;
+        return 'The CSV file should contain at least one paper.';
     }
 
     const papersObjects = values.map(value => ({
@@ -27,14 +27,14 @@ export default function checkDataValidation(data) {
         publication_year: header.indexOf('paper:publication_year') !== -1 ? value[header.indexOf('paper:publication_year')] : '',
         research_field: header.indexOf('paper:research_field') !== -1 ? value[header.indexOf('paper:research_field')] : '',
         doi: header.indexOf('paper:doi') !== -1 ? value[header.indexOf('paper:doi')] : '',
-        url: header.indexOf('paper:url') !== -1 ? value[header.indexOf('paper:url')] : ''
+        url: header.indexOf('paper:url') !== -1 ? value[header.indexOf('paper:url')] : '',
     }));
 
     const paperSchema = Joi.object({
         title: Joi.when('doi', { is: Joi.valid(), then: Joi.optional(), otherwise: Joi.string().required() })
             .concat(Joi.when('doi', { is: '', then: Joi.string().required() }))
             .messages({
-                'string.empty': `DOI or Title is a required column.`
+                'string.empty': 'DOI or Title is a required column.',
             }),
         publication_month: Joi.number()
             .integer()
@@ -42,9 +42,9 @@ export default function checkDataValidation(data) {
             .min(1)
             .allow('')
             .messages({
-                'number.max': `Publication month must be less than or equal to 12`,
-                'number.min': `Publication month must be larger than or equal to 1`,
-                'number.base': `Publication month must be a number`
+                'number.max': 'Publication month must be less than or equal to 12',
+                'number.min': 'Publication month must be larger than or equal to 1',
+                'number.base': 'Publication month must be a number',
             }),
         publication_year: Joi.number()
             .integer()
@@ -53,28 +53,28 @@ export default function checkDataValidation(data) {
             .allow('')
             .messages({
                 'number.max': `Publication year must be less than or equal to ${moment().year()}`,
-                'number.min': `Publication year must be larger than or equal to 1900`,
-                'number.base': `Publication year must be a number`
+                'number.min': 'Publication year must be larger than or equal to 1900',
+                'number.base': 'Publication year must be a number',
             }),
         research_field: Joi.string()
             .pattern(new RegExp('^(orkg:)?R([0-9])+$'))
             .allow('')
             .messages({
-                'string.base': `Research field ID should be a type of 'text'`,
-                'string.pattern.base': `doesn't have a valid research field ID`
+                'string.base': "Research field ID should be a type of 'text'",
+                'string.pattern.base': "doesn't have a valid research field ID",
             }),
         doi: Joi.string()
             .pattern(new RegExp(REGEX.DOI))
             .allow('')
             .messages({
-                'string.pattern.base': `Doi must be a valid and without the resolver (e.g. 10.1145/3360901.3364435)`
+                'string.pattern.base': 'Doi must be a valid and without the resolver (e.g. 10.1145/3360901.3364435)',
             }),
         url: Joi.string()
             .pattern(new RegExp(REGEX.URL))
             .allow('')
             .messages({
-                'string.pattern.base': `URL must be a valid`
-            })
+                'string.pattern.base': 'URL must be a valid',
+            }),
     });
 
     for (let i = 0; i < papersObjects.length; i++) {

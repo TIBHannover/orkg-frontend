@@ -24,84 +24,75 @@ const BorderBottomRadius = styled.div`
     margin: 0 10px;
 `;
 
-const TableLoadingIndicator = ({ contributionAmount }) => {
-    return (
-        <LoadingContainer>
-            <div className="clearfix" />
-            <table className="mb-0 mt-3 table">
-                <tbody className="table-borderless">
-                    <tr className="table-borderless">
-                        <td className="p-0">
+const TableLoadingIndicator = ({ contributionAmount }) => (
+    <LoadingContainer>
+        <div className="clearfix" />
+        <table className="mb-0 mt-3 table">
+            <tbody className="table-borderless">
+                <tr className="table-borderless">
+                    <td className="p-0">
+                        <BorderTopRadius>
+                            <ContentLoader height={50} width={230} viewBox="0 0 230 50" speed={2} backgroundColor="#80869B" foregroundColor="#ecebeb">
+                                <rect x="0" y="0" rx="0" ry="0" width="230" height="50" />
+                            </ContentLoader>
+                        </BorderTopRadius>
+                    </td>
+                    {times(contributionAmount, i => (
+                        <td className="p-0" key={i} data-testid="contentLoader">
                             <BorderTopRadius>
                                 <ContentLoader
                                     height={50}
                                     width={230}
                                     viewBox="0 0 230 50"
                                     speed={2}
-                                    backgroundColor="#80869B"
+                                    backgroundColor="#d5d8e3"
                                     foregroundColor="#ecebeb"
                                 >
                                     <rect x="0" y="0" rx="0" ry="0" width="230" height="50" />
                                 </ContentLoader>
                             </BorderTopRadius>
                         </td>
-                        {times(contributionAmount, i => (
-                            <td className="p-0" key={i} data-testid="contentLoader">
-                                <BorderTopRadius>
-                                    <ContentLoader
-                                        height={50}
-                                        width={230}
-                                        viewBox="0 0 230 50"
-                                        speed={2}
-                                        backgroundColor="#d5d8e3"
-                                        foregroundColor="#ecebeb"
-                                    >
-                                        <rect x="0" y="0" rx="0" ry="0" width="230" height="50" />
-                                    </ContentLoader>
-                                </BorderTopRadius>
-                            </td>
-                        ))}
-                    </tr>
-                    <tr className="table-borderless">
-                        <td className="p-0">
+                    ))}
+                </tr>
+                <tr className="table-borderless">
+                    <td className="p-0">
+                        <BorderBottomRadius>
+                            <ContentLoader
+                                height={150}
+                                width={230}
+                                viewBox="0 0 230 150"
+                                speed={2}
+                                backgroundColor="#80869B"
+                                foregroundColor="#ecebeb"
+                            >
+                                <rect x="0" y="0" rx="0" ry="0" width="230" height="150" />
+                            </ContentLoader>
+                        </BorderBottomRadius>
+                    </td>
+                    {times(contributionAmount, i => (
+                        <td className="p-0" key={i}>
                             <BorderBottomRadius>
                                 <ContentLoader
                                     height={150}
                                     width={230}
                                     viewBox="0 0 230 150"
                                     speed={2}
-                                    backgroundColor="#80869B"
+                                    backgroundColor="#f3f3f3"
                                     foregroundColor="#ecebeb"
                                 >
                                     <rect x="0" y="0" rx="0" ry="0" width="230" height="150" />
                                 </ContentLoader>
                             </BorderBottomRadius>
                         </td>
-                        {times(contributionAmount, i => (
-                            <td className="p-0" key={i}>
-                                <BorderBottomRadius>
-                                    <ContentLoader
-                                        height={150}
-                                        width={230}
-                                        viewBox="0 0 230 150"
-                                        speed={2}
-                                        backgroundColor="#f3f3f3"
-                                        foregroundColor="#ecebeb"
-                                    >
-                                        <rect x="0" y="0" rx="0" ry="0" width="230" height="150" />
-                                    </ContentLoader>
-                                </BorderBottomRadius>
-                            </td>
-                        ))}
-                    </tr>
-                </tbody>
-            </table>
-        </LoadingContainer>
-    );
-};
+                    ))}
+                </tr>
+            </tbody>
+        </table>
+    </LoadingContainer>
+);
 
 TableLoadingIndicator.propTypes = {
-    contributionAmount: PropTypes.number.isRequired
+    contributionAmount: PropTypes.number.isRequired,
 };
 
 export default TableLoadingIndicator;

@@ -1,12 +1,13 @@
+import * as d3 from 'd3';
 import DrawTools from '../drawTools';
 import BaseElement from './BaseElement';
-import * as d3 from 'd3';
+
 let id = 0;
 export default class Edge extends BaseElement {
     constructor(props) {
         super(props);
 
-        this.id('edge_' + id++);
+        this.id(`edge_${id++}`);
         this.domain = undefined;
         this.range = undefined;
         this.prop = undefined;
@@ -22,12 +23,8 @@ export default class Edge extends BaseElement {
         // helper function
         this.lineFunction = d3.svg
             .line()
-            .x(function(d) {
-                return d.x;
-            })
-            .y(function(d) {
-                return d.y;
-            })
+            .x(d => d.x)
+            .y(d => d.y)
             .interpolate('cardinal');
     }
 
@@ -59,7 +56,7 @@ export default class Edge extends BaseElement {
     render(parentNode, markerContainer) {
         this.svgRoot = parentNode;
         this.renderingLine = DrawTools().drawLinkElement(this.svgRoot, this.configObject);
-        DrawTools().drawArrowHead(this.svgRoot, markerContainer, this.id() + '_arrowHead', this.configObject);
+        DrawTools().drawArrowHead(this.svgRoot, markerContainer, `${this.id()}_arrowHead`, this.configObject);
     }
 
     updateDrawPosition = function() {
@@ -77,9 +74,9 @@ export default class Edge extends BaseElement {
             iP = DrawTools().computeIntersectionPointsForMLP(this.domain, this.prop, this.range, 1);
         }
 
-        const fixPoint1 = { x: iP.x1, y: iP.y1 },
-            fixPoint2 = { x: this.prop.x, y: this.prop.y },
-            fixPoint3 = { x: iP.x2, y: iP.y2 };
+        const fixPoint1 = { x: iP.x1, y: iP.y1 };
+        const fixPoint2 = { x: this.prop.x, y: this.prop.y };
+        const fixPoint3 = { x: iP.x2, y: iP.y2 };
 
         return [fixPoint1, fixPoint2, fixPoint3];
     }

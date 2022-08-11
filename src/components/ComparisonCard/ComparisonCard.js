@@ -10,11 +10,11 @@ import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMa
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { CardBadge } from 'components/styled';
-import Versions from './Versions';
-import Thumbnail from './Thumbnail';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { truncate } from 'lodash';
+import Thumbnail from './Thumbnail';
+import Versions from './Versions';
 
 const ComparisonCardStyled = styled.li`
     &:last-child {
@@ -26,7 +26,7 @@ const ComparisonCard = props => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: props.comparison.id,
         unlisted: props.comparison?.unlisted,
-        featured: props.comparison?.featured
+        featured: props.comparison?.featured,
     });
     return (
         <ComparisonCardStyled
@@ -115,25 +115,25 @@ ComparisonCard.propTypes = {
         figures: PropTypes.array,
         researchField: PropTypes.shape({
             id: PropTypes.string.isRequired,
-            label: PropTypes.string
+            label: PropTypes.string,
         }),
         created_by: PropTypes.string,
         versions: PropTypes.array,
         visualizations: PropTypes.array,
         featured: PropTypes.bool,
-        unlisted: PropTypes.bool
+        unlisted: PropTypes.bool,
     }).isRequired,
     rounded: PropTypes.string,
     showHistory: PropTypes.bool,
     showBreadcrumbs: PropTypes.bool.isRequired,
     showBadge: PropTypes.bool.isRequired,
-    showCurationFlags: PropTypes.bool.isRequired
+    showCurationFlags: PropTypes.bool.isRequired,
 };
 
 ComparisonCard.defaultProps = {
     showHistory: true,
     showBreadcrumbs: true,
     showBadge: false,
-    showCurationFlags: true
+    showCurationFlags: true,
 };
 export default ComparisonCard;

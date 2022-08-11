@@ -20,7 +20,7 @@ const DiffTitle = ({ data }) => (
 );
 
 DiffTitle.propTypes = {
-    data: PropTypes.object.isRequired
+    data: PropTypes.object.isRequired,
 };
 
 export default DiffTitle;

@@ -20,7 +20,7 @@ export default function Visualization() {
     useEffect(() => {
         getStatementsByObjectAndPredicate({
             objectId: visualizationId,
-            predicateId: PREDICATES.HAS_VISUALIZATION
+            predicateId: PREDICATES.HAS_VISUALIZATION,
         }).then(statements => {
             // check if statements are found and if "visualizationId" has the contribution class
             const comparison = filterSubjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_VISUALIZATION, true, CLASSES.COMPARISON);
@@ -34,9 +34,9 @@ export default function Visualization() {
 
     if (error) {
         return <NotFound />;
-    } else if (comparisonId) {
-        return <Navigate to={reverse(ROUTES.COMPARISON, { comparisonId: comparisonId }) + '#Vis' + visualizationId} />;
-    } else {
-        return <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>;
     }
+    if (comparisonId) {
+        return <Navigate to={`${reverse(ROUTES.COMPARISON, { comparisonId })}#Vis${visualizationId}`} />;
+    }
+    return <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>;
 }

@@ -34,12 +34,12 @@ const DraftReviews = () => {
             items: pageSize,
             sortBy: 'created_at',
             creator: user.id,
-            desc: true
+            desc: true,
         });
 
         if (resources.length) {
             return Promise.all(
-                resources.map(resource => getStatementsByObjectAndPredicate({ objectId: resource.id, predicateId: PREDICATES.HAS_PAPER }))
+                resources.map(resource => getStatementsByObjectAndPredicate({ objectId: resource.id, predicateId: PREDICATES.HAS_PAPER })),
             )
                 .then(resourcesStatements =>
                     resourcesStatements.map((statements, idx) => {
@@ -47,23 +47,22 @@ const DraftReviews = () => {
                             return resources[idx];
                         }
                         return null;
-                    })
+                    }),
                 )
                 .then(unpublishedItems => {
                     const items = unpublishedItems.filter(v => v);
                     return {
-                        items: items,
+                        items,
                         last,
-                        totalElements: items.length
+                        totalElements: items.length,
                     };
                 });
-        } else {
-            return {
-                items: [],
-                last,
-                totalElements
-            };
         }
+        return {
+            items: [],
+            last,
+            totalElements,
+        };
     };
 
     return (

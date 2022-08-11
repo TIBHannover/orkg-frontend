@@ -15,6 +15,8 @@ $light-darker: #dbdde5;
 $dark: #5b6176;
 $body-bg: $light;
 $body-color: #4f4f4f;
+$smart: #17a2b8;
+$smart-darker: #148da0;
 $list-group-color: #4f4f4f;
 $border-width: 1px;
 $border-radius: 6px;
@@ -36,7 +38,9 @@ $theme-colors: (
     'secondary-darker': $secondary-darker,
     'light-darker': $light-darker,
     'light-lighter': $light-lighter,
-    'body': $body-color
+    'body': $body-color,
+    'smart': $smart,
+    'smart-darker': $smart-darker,
 );
 
 // Forms
@@ -80,5 +84,5 @@ $grid-breakpoints: (
     md: 768px,
     lg: 992px,
     xl: 1200px,
-    xxl: 1400px
+    xxl: 1400px,
 );

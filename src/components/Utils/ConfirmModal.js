@@ -8,13 +8,13 @@ class ConfirmModal extends Component {
         super(props);
 
         this.state = {
-            showModal: true
+            showModal: true,
         };
     }
 
     toggle = () => {
         this.setState(prevState => ({
-            showModal: !prevState.showModal
+            showModal: !prevState.showModal,
         }));
     };
 
@@ -38,7 +38,7 @@ class ConfirmModal extends Component {
 
 ConfirmModal.propTypes = {
     message: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
 };
 
 export default ConfirmModal;

@@ -7,7 +7,7 @@ import {
     faQuoteRight,
     faSpinner,
     faTimes,
-    faUpload
+    faUpload,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -113,8 +113,9 @@ const Review = () => {
         if (isPublished) {
             const isConfirmed = await Confirm({
                 title: 'This is a published review',
-                message: `The review you are viewing is published, which means it cannot be modified. To make changes, fetch the live review data and try this action again`,
-                proceedLabel: 'Fetch live data'
+                message:
+                    'The review you are viewing is published, which means it cannot be modified. To make changes, fetch the live review data and try this action again',
+                proceedLabel: 'Fetch live data',
             });
 
             if (isConfirmed) {
@@ -138,14 +139,14 @@ const Review = () => {
             author: authors?.map(author => ({
                 name: author?.label,
                 ...(author?.orcid ? { url: `http://orcid.org/${author.orcid}` } : {}),
-                '@type': 'Person'
+                '@type': 'Person',
             })),
             datePublished: publicationDate,
             about: researchField?.label,
-            '@type': 'ScholarlyArticle'
+            '@type': 'ScholarlyArticle',
         },
         '@context': 'https://schema.org',
-        '@type': 'WebPage'
+        '@type': 'WebPage',
     };
 
     return (

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createLiteral as createLiteralApi, updateLiteral } from 'services/backend/literals';
-import { markAsUnverified, markAsVerified } from 'services/backend/papers';
+import { markAsUnverified, markAsVerified, getIsVerified } from 'services/backend/papers';
 import { createResource, getResource, updateResource } from 'services/backend/resources';
 import {
     createLiteralStatement,
@@ -14,9 +14,8 @@ import {
     deleteStatementsByIds,
     getStatementsByPredicateAndLiteral,
     getStatementsBySubject,
-    updateStatement
+    updateStatement,
 } from 'services/backend/statements';
-import { getIsVerified } from 'services/backend/papers';
 
 const useEditPaper = () => {
     const [isLoadingEdit, setIsLoadingEdit] = useState(false);
@@ -32,7 +31,7 @@ const useEditPaper = () => {
 
         // Validate URL
         if (url.label && !new RegExp(REGEX.URL).test(url.label.trim())) {
-            toast.error(`Please enter a valid paper URL`);
+            toast.error('Please enter a valid paper URL');
             return;
         }
 
@@ -41,14 +40,14 @@ const useEditPaper = () => {
         const updatedData = {
             paper,
             publishedIn,
-            researchField
+            researchField,
         };
 
         // title
         updateResource(paper.id, paper.label);
 
         // authors
-        const authorsUpdated = await updateAuthors({ authors, prevAuthors, paperId: paper.id }); //use await to prevent updating the props, which are needed to check whether authors exist
+        const authorsUpdated = await updateAuthors({ authors, prevAuthors, paperId: paper.id }); // use await to prevent updating the props, which are needed to check whether authors exist
         updatedData.authors = authorsUpdated;
 
         if (publishedIn?.statementId && publishedIn?.id) {
@@ -77,28 +76,28 @@ const useEditPaper = () => {
             id: month?.id,
             label: month.label,
             predicateId: PREDICATES.HAS_PUBLICATION_MONTH,
-            paperId: paper.id
+            paperId: paper.id,
         });
 
         updatedData.year = await updateOrCreateLiteral({
             id: year?.id,
             label: year.label,
             predicateId: PREDICATES.HAS_PUBLICATION_YEAR,
-            paperId: paper.id
+            paperId: paper.id,
         });
 
         updatedData.doi = await updateOrCreateLiteral({
             id: doi?.id,
             label: doi.label,
             predicateId: PREDICATES.HAS_DOI,
-            paperId: paper.id
+            paperId: paper.id,
         });
 
         updatedData.url = await updateOrCreateLiteral({
             id: url?.id,
             label: url.label,
             predicateId: PREDICATES.URL,
-            paperId: paper.id
+            paperId: paper.id,
         });
 
         updatedData.isVerified = isVerified;
@@ -122,7 +121,7 @@ const useEditPaper = () => {
         const data = {
             paper,
             authors: [],
-            isVerified
+            isVerified,
         };
 
         const propertyIdToKey = {
@@ -131,20 +130,20 @@ const useEditPaper = () => {
             [PREDICATES.HAS_DOI]: 'doi',
             [PREDICATES.HAS_VENUE]: 'publishedIn',
             [PREDICATES.HAS_RESEARCH_FIELD]: 'researchField',
-            [PREDICATES.URL]: 'url'
+            [PREDICATES.URL]: 'url',
         };
 
         for (const { predicate: property, object, id: statementId } of paperStatements) {
             if (property.id in propertyIdToKey) {
                 data[propertyIdToKey[property.id]] = {
                     ...object,
-                    statementId: property.id === PREDICATES.HAS_RESEARCH_FIELD || property.id === PREDICATES.HAS_VENUE ? statementId : undefined
+                    statementId: property.id === PREDICATES.HAS_RESEARCH_FIELD || property.id === PREDICATES.HAS_VENUE ? statementId : undefined,
                 };
             }
             if (property.id === PREDICATES.HAS_AUTHOR) {
                 data.authors.push({
                     ...object,
-                    statementId
+                    statementId,
                 });
             }
         }
@@ -157,14 +156,15 @@ const useEditPaper = () => {
             updateLiteral(id, label);
             return {
                 id,
-                label
+                label,
             };
-        } else if (label) {
+        }
+        if (label) {
             const newLiteral = await createLiteralApi(label);
             createLiteralStatement(paperId, predicateId, newLiteral.id);
             return {
                 id: newLiteral.id,
-                label
+                label,
             };
         }
         return null;
@@ -195,7 +195,7 @@ const useEditPaper = () => {
                     predicateId: PREDICATES.HAS_ORCID,
                     literal: author.orcid,
                     subjectClass: CLASSES.AUTHOR,
-                    items: 1
+                    items: 1,
                 });
                 if (responseJson.length > 0) {
                     // Author resource exists

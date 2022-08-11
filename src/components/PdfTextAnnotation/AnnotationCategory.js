@@ -1,11 +1,10 @@
 import styled from 'styled-components';
-import { upperFirst } from 'lodash';
+import { upperFirst, filter } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faQuoteLeft, faTrash, faExclamationTriangle, faPen } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import { Button } from 'reactstrap';
 import { useSelector } from 'react-redux';
-import { filter } from 'lodash';
 import PropTypes from 'prop-types';
 import useDeleteAnnotation from 'components/PdfTextAnnotation/hooks/useDeleteAnnotation';
 import useEditAnnotation from 'components/PdfTextAnnotation/hooks/useEditAnnotation';
@@ -145,7 +144,7 @@ const AnnotationCategory = props => {
 
 AnnotationCategory.propTypes = {
     annotationClass: PropTypes.object.isRequired,
-    hideEmpty: PropTypes.bool.isRequired
+    hideEmpty: PropTypes.bool.isRequired,
 };
 
 export default AnnotationCategory;

@@ -43,7 +43,7 @@ const InfoTippy = props => {
 };
 
 InfoTippy.propTypes = {
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
 };
 
 export default InfoTippy;

@@ -12,20 +12,20 @@ function useDeleteResource({ resourceId, redirect = false }) {
     const deleteResource = async () => {
         const confirm = await Confirm({
             title: 'Are you sure?',
-            message: `Are you sure you want to delete this resource?`
+            message: 'Are you sure you want to delete this resource?',
         });
 
         if (confirm) {
             setIsLoading(true);
             try {
                 await deleteResourceNetwork(resourceId);
-                toast.success(`Resource deleted successfully`);
+                toast.success('Resource deleted successfully');
 
                 if (redirect) {
                     navigate(ROUTES.RESOURCES);
                 }
             } catch (err) {
-                toast.error(`An error occurred, resource not deleted`);
+                toast.error('An error occurred, resource not deleted');
                 console.error(err);
             }
 

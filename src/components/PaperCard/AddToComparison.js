@@ -8,16 +8,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import { addToComparison, removeFromComparison } from 'slices/viewPaperSlice';
 
-const Option = ({ children, data, ...props }) => {
-    return (
-        <components.Option {...props}>
-            <div>{children}</div>
-            <div>
-                <small>{data.value}</small>
-            </div>
-        </components.Option>
-    );
-};
+const Option = ({ children, data, ...props }) => (
+    <components.Option {...props}>
+        <div>{children}</div>
+        <div>
+            <small>{data.value}</small>
+        </div>
+    </components.Option>
+);
 
 const CustomInputStyled = styled(Input)`
     &.custom-control {
@@ -32,7 +30,7 @@ const SelectStyled = styled(Select)`
 
 Option.propTypes = {
     data: PropTypes.object.isRequired,
-    children: PropTypes.string.isRequired
+    children: PropTypes.string.isRequired,
 };
 
 const AddToComparison = ({ contributionId, paper, showLabel }) => {
@@ -55,7 +53,7 @@ const AddToComparison = ({ contributionId, paper, showLabel }) => {
 
     const options = paper.contributions?.map((contribution, index) => ({
         label: contribution.label,
-        value: contribution.id
+        value: contribution.id,
     }));
 
     const toggleCompare = cId => {
@@ -68,9 +66,9 @@ const AddToComparison = ({ contributionId, paper, showLabel }) => {
                     contributionData: {
                         paperId: paper.id,
                         paperTitle: paper.label,
-                        contributionTitle: paper.contributions.find(c => c.id === cId)?.label ?? ''
-                    }
-                })
+                        contributionTitle: paper.contributions.find(c => c.id === cId)?.label ?? '',
+                    },
+                }),
             );
         }
     };
@@ -105,7 +103,7 @@ const AddToComparison = ({ contributionId, paper, showLabel }) => {
         <Tippy
             placement="bottom-start"
             interactiveDebounce={75}
-            interactive={!contributionId && paper.contributions?.length > 1 ? true : false}
+            interactive={!!(!contributionId && paper.contributions?.length > 1)}
             content={
                 !contributionId && paper.contributions?.length > 1 ? (
                     <>
@@ -137,7 +135,7 @@ const AddToComparison = ({ contributionId, paper, showLabel }) => {
                 ) : isSelected ? (
                     'Remove from comparison'
                 ) : (
-                    `Add to comparison`
+                    'Add to comparison'
                 )
             }
         >
@@ -168,11 +166,11 @@ const AddToComparison = ({ contributionId, paper, showLabel }) => {
 AddToComparison.propTypes = {
     contributionId: PropTypes.string,
     paper: PropTypes.object.isRequired,
-    showLabel: PropTypes.bool.isRequired
+    showLabel: PropTypes.bool.isRequired,
 };
 
 AddToComparison.defaultProps = {
-    showLabel: false
+    showLabel: false,
 };
 
 export default AddToComparison;

@@ -25,7 +25,7 @@ const ShouldPublishModal = ({ show, toggle, openPublishModal }) => (
 ShouldPublishModal.propTypes = {
     toggle: PropTypes.func.isRequired,
     show: PropTypes.bool.isRequired,
-    openPublishModal: PropTypes.func.isRequired
+    openPublishModal: PropTypes.func.isRequired,
 };
 
 export default ShouldPublishModal;

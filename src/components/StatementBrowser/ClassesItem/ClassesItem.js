@@ -79,7 +79,7 @@ const ClassesItem = props => {
                     }
                 });
         };
-        if (preferences['showClasses'] && resource?._class === ENTITIES.RESOURCE) {
+        if (preferences.showClasses && resource?._class === ENTITIES.RESOURCE) {
             findClasses();
         }
         return () => {
@@ -92,7 +92,7 @@ const ClassesItem = props => {
         if (action.action === 'create-option') {
             const foundIndex = selected.findIndex(x => x.__isNew__);
             const newClass = await Confirm({
-                label: selected[foundIndex].label
+                label: selected[foundIndex].label,
             });
             if (newClass) {
                 const foundIndex = selected.findIndex(x => x.__isNew__);
@@ -122,7 +122,7 @@ const ClassesItem = props => {
     };
 
     return (
-        <AnimationContainer in={preferences['showClasses']} timeout={300} classNames="zoom" unmountOnExit>
+        <AnimationContainer in={preferences.showClasses} timeout={300} classNames="zoom" unmountOnExit>
             <div>
                 {selectedResource && resource._class === ENTITIES.RESOURCE && (
                     <ClassesStyle className="text-muted mb-2 d-flex align-items-center clearfix">
@@ -188,12 +188,12 @@ const ClassesItem = props => {
 
 ClassesItem.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
-    syncBackend: PropTypes.bool.isRequired
+    syncBackend: PropTypes.bool.isRequired,
 };
 
 ClassesItem.defaultProps = {
     enableEdit: false,
-    syncBackend: false
+    syncBackend: false,
 };
 
 export default ClassesItem;

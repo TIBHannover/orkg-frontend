@@ -27,9 +27,7 @@ export const useSearch = () => {
     const [currentPage, setCurrentPage] = useState({});
     const [, setIsLastPageReached] = useState({});
 
-    const isLoading = () => {
-        return Object.keys(isNextPageLoading).every(v => isNextPageLoading[v] === true) || isLoadingFilterClasses;
-    };
+    const isLoading = () => Object.keys(isNextPageLoading).every(v => isNextPageLoading[v] === true) || isLoadingFilterClasses;
 
     const loadMoreResults = async (filterType, page = 0) => {
         if (!searchTerm || searchTerm.length === 0) {
@@ -44,16 +42,16 @@ export const useSearch = () => {
         try {
             if (filterType === ENTITIES.PREDICATE) {
                 resultsResponse = await getPredicates({
-                    page: page,
+                    page,
                     items: itemsPerFilter,
                     sortBy: 'id',
                     desc: true,
                     q: searchQuery,
-                    returnContent: true
+                    returnContent: true,
                 });
             } else if (filterType === ENTITIES.RESOURCE) {
                 resultsResponse = await getResources({
-                    page: page,
+                    page,
                     items: itemsPerFilter,
                     sortBy: 'id',
                     desc: true,
@@ -61,34 +59,35 @@ export const useSearch = () => {
                     exclude: DEFAULT_FILTERS.map(df => df.id)
                         .concat(IGNORED_CLASSES)
                         .join(','),
-                    returnContent: true
+                    returnContent: true,
                 });
             } else if (filterType === ENTITIES.CLASS) {
                 resultsResponse = await getClasses({
-                    page: page,
+                    page,
                     items: itemsPerFilter,
                     sortBy: 'id',
                     desc: true,
                     q: searchQuery,
-                    returnContent: true
+                    returnContent: true,
                 });
             } else {
                 resultsResponse = await getResourcesByClass({
-                    page: page,
+                    page,
                     items: itemsPerFilter,
                     sortBy: 'id',
                     desc: true,
                     q: searchQuery,
                     id: filterType,
                     returnContent: true,
-                    creator: getParamFromQueryString(location.search, 'createdBy') ?? undefined
+                    creator: getParamFromQueryString(location.search, 'createdBy') ?? undefined,
                 });
             }
 
             // for papers, try to find a DOI
-            if (filterType === CLASSES.PAPER && REGEX.DOI.test(searchQuery)) {
+            const doi = searchQuery.startsWith('http') ? searchQuery.trim().substring(searchQuery.trim().indexOf('10.')) : searchQuery;
+            if (filterType === CLASSES.PAPER && REGEX.DOI.test(doi)) {
                 try {
-                    const paper = await getPaperByDOI(searchQuery);
+                    const paper = await getPaperByDOI(doi);
                     resultsResponse.push({ label: paper.title, id: paper.id, class: CLASSES.PAPER });
                 } catch (e) {}
             }
@@ -99,7 +98,7 @@ export const useSearch = () => {
         if (resultsResponse.length > 0) {
             setResults(prev => ({ ...prev, [filterType]: [...(page > 0 ? prev[filterType] : []), ...resultsResponse] }));
             setIsNextPageLoading(prev => ({ ...prev, [filterType]: false }));
-            setHasNextPage(prev => ({ ...prev, [filterType]: resultsResponse.length < itemsPerFilter ? false : true }));
+            setHasNextPage(prev => ({ ...prev, [filterType]: !(resultsResponse.length < itemsPerFilter) }));
             setCurrentPage(prev => ({ ...prev, [filterType]: page + 1 }));
         } else {
             setIsNextPageLoading(prev => ({ ...prev, [filterType]: false }));

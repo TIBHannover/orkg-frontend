@@ -19,10 +19,9 @@ export const validateCellMapping = (mapper, cellValue) => {
         const { error } = numValidationSchema.validate(cellValue);
         if (!error) {
             return { error: { message: 'Value must be a valid data (YYYY-MM-DD) ' }, value: cellValue };
-        } else {
-            const validationSchema = Joi.date().required();
-            return validationSchema.validate(cellValue);
         }
+        const validationSchema = Joi.date().required();
+        return validationSchema.validate(cellValue);
     }
 
     return { error: null, value: cellValue };

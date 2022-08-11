@@ -55,7 +55,7 @@ function useBenchmarkDatasetPapers({ datasetId, problemId }) {
         selectedMetric,
         isLoading,
         isFailedLoadingPapers,
-        setSelectedMetric
+        setSelectedMetric,
     };
 }
 

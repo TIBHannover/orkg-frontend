@@ -1,10 +1,11 @@
+import { clone } from 'lodash';
 import MachineReadableRepresentation from './MachineReadableRepresentation';
 import DataForChart from './VisRenderer/googleDataWrapper';
 import { validateCellMapping } from './ValidateCellMapping';
-import { clone } from 'lodash';
 
 export default class SelfVisDataMode {
     static instance;
+
     constructor() {
         if (SelfVisDataMode.instance) {
             return SelfVisDataMode.instance;
@@ -31,12 +32,12 @@ export default class SelfVisDataMode {
                 xAxisSelectorOpen: false,
                 yAxisSelectorOpen: [],
                 yAxisInterValSelectors: {},
-                yAxisSelectorCount: 1
-            }
+                yAxisSelectorCount: 1,
+            },
         };
     }
 
-    /** Customization State Logic**/
+    /** Customization State Logic* */
     applySelectionToCustomizationState = (propertyAnchor, value) => {
         if (value === true) {
             // find based on index
@@ -55,6 +56,7 @@ export default class SelfVisDataMode {
             }
         }
     };
+
     resetSharedCustomizerObject = () => {
         this.__sharedStateObject.customizer = {
             errorDataNotSupported: false,
@@ -67,13 +69,11 @@ export default class SelfVisDataMode {
             xAxisSelectorOpen: false,
             yAxisSelectorOpen: [],
             yAxisInterValSelectors: {},
-            yAxisSelectorCount: 1
+            yAxisSelectorCount: 1,
         };
     };
 
-    getSharedCustomizerObject = () => {
-        return this.__sharedStateObject.customizer;
-    };
+    getSharedCustomizerObject = () => this.__sharedStateObject.customizer;
 
     resetSharedCustomizationState = () => {
         this.__sharedStateObject = {
@@ -90,13 +90,13 @@ export default class SelfVisDataMode {
                 xAxisSelectorOpen: false,
                 yAxisSelectorOpen: [],
                 yAxisInterValSelectors: {},
-                yAxisSelectorCount: 1
-            }
+                yAxisSelectorCount: 1,
+            },
         };
     };
 
-    /** exposed functions ----------------------------------------------------------------------**/
-    /** ----------------------------------------------------------------------------------------**/
+    /** exposed functions ----------------------------------------------------------------------* */
+    /** ----------------------------------------------------------------------------------------* */
     integrateInputData = input => {
         // this will check if we actually have to update the input data (re-run the parser)
         // comes in handy when we will change between comparisons
@@ -104,14 +104,14 @@ export default class SelfVisDataMode {
         this.__parseInputIfNeeded();
     };
 
-    /** CURRENTLY HACKISH **/
+    /** CURRENTLY HACKISH * */
     setRenderingMethod = method => {
         this._renderingMethod = method;
         this.__sharedStateObject.renderingMethod = method;
     };
-    getRenderingMethod = () => {
-        return this._renderingMethod;
-    };
+
+    getRenderingMethod = () => this._renderingMethod;
+
     setRenderingEngine = engine => {
         this._renderingEngine = engine;
         this.__sharedStateObject.renderingEngine = engine;
@@ -124,9 +124,8 @@ export default class SelfVisDataMode {
     saveCustomizationState = state => {
         this.__customizationStateObject = { ...state };
     };
-    loadCustomizationState = () => {
-        return { ...this.__customizationStateObject };
-    };
+
+    loadCustomizationState = () => ({ ...this.__customizationStateObject });
 
     getGoogleChartsData = () => {
         if (!this._googleChartsData) {
@@ -134,9 +133,8 @@ export default class SelfVisDataMode {
         }
         if (this._renderingMethod === 'Table') {
             return this._googleChartsData.useAllColumns();
-        } else {
-            return this._googleChartsData.createDataFromSharedCustomizer(this.__sharedStateObject.customizer);
         }
+        return this._googleChartsData.createDataFromSharedCustomizer(this.__sharedStateObject.customizer);
     };
 
     getReconstructionModel = () => {
@@ -155,12 +153,12 @@ export default class SelfVisDataMode {
                     label: anchor.label,
                     originalLabel: anchor.originalLabel,
                     positionPropertyAnchor: anchor.positionPropertyAnchor,
-                    propertyMapperType: anchor.propertyMapperType
+                    propertyMapperType: anchor.propertyMapperType,
                 });
             } else {
                 reconstructionModel.propertyAnchors.push({
                     positionPropertyAnchor: anchor.positionPropertyAnchor,
-                    propertyMapperType: anchor.propertyMapperType
+                    propertyMapperType: anchor.propertyMapperType,
                 });
             }
         });
@@ -173,11 +171,11 @@ export default class SelfVisDataMode {
                 reconstructionModel.contributionAnchors.push({
                     label: anchor.label,
                     originalLabel: anchor.originalLabel,
-                    positionContribAnchor: anchor.positionContribAnchor
+                    positionContribAnchor: anchor.positionContribAnchor,
                 });
             } else {
                 reconstructionModel.contributionAnchors.push({
-                    positionContribAnchor: anchor.positionContribAnchor
+                    positionContribAnchor: anchor.positionContribAnchor,
                 });
             }
         });
@@ -193,12 +191,12 @@ export default class SelfVisDataMode {
                         label: cell.label,
                         originalLabel: cell.originalLabel,
                         positionContribAnchor: cell.positionContribAnchor,
-                        positionPropertyAnchor: cell.positionPropertyAnchor
+                        positionPropertyAnchor: cell.positionPropertyAnchor,
                     });
                 } else {
                     reconstructionModel.dataCells.push({
                         positionContribAnchor: cell.positionContribAnchor,
-                        positionPropertyAnchor: cell.positionPropertyAnchor
+                        positionPropertyAnchor: cell.positionPropertyAnchor,
                     });
                 }
             }
@@ -220,7 +218,7 @@ export default class SelfVisDataMode {
                 yAxisInterValSelectors: {},
                 yAxisIntervals: {},
                 yAxisSelectorOpen: [],
-                yAxisSelector: []
+                yAxisSelector: [],
             };
 
             // reconstruct values one by one
@@ -242,7 +240,7 @@ export default class SelfVisDataMode {
                         yAxis.intervals.forEach(interval => {
                             customizationState.yAxisInterValSelectors[id].push({
                                 isOpen: false,
-                                label: interval.item.label
+                                label: interval.item.label,
                             });
                             customizationState.yAxisIntervals[id].push({ isOpen: false, label: interval.item.label });
                         });
@@ -376,7 +374,7 @@ export default class SelfVisDataMode {
     };
 
     synchronizeSharedCustomizationStateObject = reconstruct => {
-        const customizer = this.__sharedStateObject.customizer;
+        const { customizer } = this.__sharedStateObject;
 
         // axis selector;
         // we have a label for the Axis;
@@ -403,7 +401,7 @@ export default class SelfVisDataMode {
         for (const intervalAxisID in reconstruct.yAxisIntervals) {
             if (reconstruct.yAxisIntervals.hasOwnProperty(intervalAxisID)) {
                 const selectedIntervals = reconstruct.yAxisIntervals[intervalAxisID];
-                //createSelector for that
+                // createSelector for that
                 const yAxisIntervalGuesses = [];
                 selectedIntervals.forEach(item => {
                     const yAxisGuess = this.requestAnIndex(item.label);
@@ -418,7 +416,7 @@ export default class SelfVisDataMode {
         this.__sharedStateObject.customizer = customizer;
     };
 
-    /** HACKISH ENDS**/
+    /** HACKISH ENDS* */
 
     requestAnIndex = label => {
         const guess = this.mrrModel.propertyAnchors.find(element => element.label === label);
@@ -432,7 +430,7 @@ export default class SelfVisDataMode {
     createGDCDataModel = () => {
         // filter the propertyAnchors by selectionFlag;
         const filteredProperties = this.mrrModel.propertyAnchors.filter(
-            item => item.isSelectedColumnForUse === true && item.propertyMapperType !== 'Select Mapper'
+            item => item.isSelectedColumnForUse === true && item.propertyMapperType !== 'Select Mapper',
         );
         // now figure out how many rows we do have;
         // const filteredContribs = this.mrrModel.contributionAnchors.filter(item => item.isSelectedRowForUse === true);
@@ -492,8 +490,8 @@ export default class SelfVisDataMode {
     };
 
     //----------------------------------------------------------------------------------------------
-    /** private functions ----------------------------------------------------------------------**/
-    /** ----------------------------------------------------------------------------------------**/
+    /** private functions ----------------------------------------------------------------------* */
+    /** ----------------------------------------------------------------------------------------* */
 
     // Force Cell Validation
     forceCellValidation = () => {
@@ -522,7 +520,7 @@ export default class SelfVisDataMode {
         });
     };
 
-    /** GROUPED FUNCTIONS : handling input model and parse it **/
+    /** GROUPED FUNCTIONS : handling input model and parse it * */
     __setInputData = data => {
         this._inputData = data;
     };
@@ -550,6 +548,7 @@ export default class SelfVisDataMode {
             this.requiresParing = false;
         }
     };
+
     __parseInput = () => {
         // parses input of the input data
         const parser = new MachineReadableRepresentation(this._inputData);

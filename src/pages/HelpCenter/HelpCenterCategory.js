@@ -59,7 +59,7 @@ const HelpCenterCategory = () => {
                                     <Link
                                         to={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                             id: article.id,
-                                            slug: article.title
+                                            slug: article.title,
                                         })}
                                     >
                                         {article.title}

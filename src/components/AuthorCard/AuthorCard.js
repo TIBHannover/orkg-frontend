@@ -26,7 +26,7 @@ function AuthorCard(props) {
 
 AuthorCard.propTypes = {
     author: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-    subTitle: PropTypes.string.isRequired
+    subTitle: PropTypes.string.isRequired,
 };
 
 export default AuthorCard;

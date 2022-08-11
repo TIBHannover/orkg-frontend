@@ -2,13 +2,13 @@ import { Button, Input, Modal, ModalBody, ModalHeader, FormGroup, Label } from '
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { updateResource } from 'services/backend/resources';
-import useEditResource from './hooks/useEditResource';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import useEditResource from './hooks/useEditResource';
 
 const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate, showResourceLink, fixedClasses }) => {
     const { classes, label, isLoading, setIsLoading, handleChangeClasses, setLabel } = useEditResource(resource);
@@ -84,12 +84,12 @@ EditResourceDialog.propTypes = {
     resource: PropTypes.object.isRequired,
     fixedClasses: PropTypes.array,
     afterUpdate: PropTypes.func,
-    showResourceLink: PropTypes.bool
+    showResourceLink: PropTypes.bool,
 };
 
 EditResourceDialog.defaultProps = {
     afterUpdate: null,
-    showResourceLink: false
+    showResourceLink: false,
 };
 
 export default EditResourceDialog;

@@ -2,13 +2,9 @@ import 'react-app-polyfill/ie9';
 import 'react-app-polyfill/stable';
 import 'fast-text-encoding/text';
 import 'jspdf/dist/polyfills.es.js';
-import ReactDOM from 'react-dom';
-import App from './App';
-import { unregister } from './registerServiceWorker';
+import { createRoot } from 'react-dom/client';
 import theme from 'assets/scss/ThemeVariables';
 import { Provider } from 'react-redux';
-import configureStore, { history } from './store';
-import rootReducer from './slices/rootReducer';
 import { CookiesProvider } from 'react-cookie';
 import { ThemeProvider } from 'styled-components';
 import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
@@ -16,6 +12,10 @@ import { DndProvider } from 'react-dnd';
 import env from '@beam-australia/react-env';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { HistoryRouter as Router } from 'redux-first-history/rr6';
+import rootReducer from './slices/rootReducer';
+import configureStore from './store';
+import { unregister } from './registerServiceWorker';
+import App from './App';
 
 const matomoInstance =
     env('MATOMO_TRACKER') === 'true'
@@ -28,20 +28,23 @@ const matomoInstance =
               linkTracking: true,
               trackPageView: true,
               configurations: {
-                  disableCookies: true
-              }
+                  disableCookies: true,
+              },
           })
         : undefined;
 
-const store = configureStore();
+const { store, history } = configureStore();
+const container = document.getElementById('root');
+const root = createRoot(container);
+
 const render = () => {
-    ReactDOM.render(
+    root.render(
         <DndProvider backend={HTML5Backend}>
             <CookiesProvider>
                 <Provider store={store}>
                     <ThemeProvider theme={theme}>
                         <MatomoProvider value={matomoInstance}>
-                            <Router history={history}>
+                            <Router basename={env('PUBLIC_URL')} history={history}>
                                 <App />
                             </Router>
                         </MatomoProvider>
@@ -49,7 +52,6 @@ const render = () => {
                 </Provider>
             </CookiesProvider>
         </DndProvider>,
-        document.getElementById('root')
     );
 };
 

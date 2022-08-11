@@ -16,7 +16,7 @@ const VersionTooltip = props => {
     const [isLoading, setIsLoading] = useState(false);
     const [version, setVersion] = useState(props.version);
     useEffect(() => {
-        if (!!!version?.contributions?.length) {
+        if (!version?.contributions?.length) {
             setIsLoading(true);
             getStatementsBySubject({ id: version.id }).then(statements => {
                 setVersion(getComparisonData(version, statements));
@@ -59,7 +59,7 @@ const VersionTooltip = props => {
 };
 
 VersionTooltip.propTypes = {
-    version: PropTypes.object
+    version: PropTypes.object,
 };
 
 const Versions = props => {
@@ -97,11 +97,11 @@ const Versions = props => {
 
 Versions.propTypes = {
     id: PropTypes.string.isRequired,
-    versions: PropTypes.array
+    versions: PropTypes.array,
 };
 
 Versions.defaultProps = {
-    showHistory: true
+    showHistory: true,
 };
 
 export default Versions;

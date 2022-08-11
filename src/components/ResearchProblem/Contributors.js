@@ -2,9 +2,7 @@ import { useState } from 'react';
 import { CardTitle } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-import useResearchProblemContributors from './hooks/useResearchProblemContributors';
 import ContentLoader from 'react-content-loader';
-import ContributorsModal from './ContributorsModal';
 import ROUTES from 'constants/routes.js';
 import { StyledGravatar, StyledDotGravatar, ContributorsAvatars } from 'components/styled';
 import Tippy from '@tippyjs/react';
@@ -12,11 +10,13 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
+import ContributorsModal from './ContributorsModal';
+import useResearchProblemContributors from './hooks/useResearchProblemContributors';
 
 const Contributors = ({ researchProblemId }) => {
     const { contributors, isLoading, isLoadingFailed } = useResearchProblemContributors({
         researchProblemId,
-        pageSize: 19
+        pageSize: 19,
     });
     const [openModal, setOpenModal] = useState(false);
 
@@ -92,7 +92,7 @@ const Contributors = ({ researchProblemId }) => {
 };
 
 Contributors.propTypes = {
-    researchProblemId: PropTypes.string.isRequired
+    researchProblemId: PropTypes.string.isRequired,
 };
 
 export default Contributors;

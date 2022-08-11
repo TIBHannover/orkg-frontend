@@ -10,8 +10,8 @@ const setup = (
         id: 'e4030c32-4e15-ae2e-c6f9-687591cf617e',
         propertyId: '8bd2d009-b720-9efd-711e-f594330a2235',
         syncBackend: true,
-        enableEdit: false
-    }
+        enableEdit: false,
+    },
 ) => {
     render(<ValueItem {...props} />, { initialState });
 };
@@ -22,7 +22,7 @@ describe('ValueItem', () => {
             id: 'e4030c32-4e15-ae2e-c6f9-687591cf617e',
             propertyId: '8bd2d009-b720-9efd-711e-f594330a2235',
             syncBackend: false,
-            enableEdit: false
+            enableEdit: false,
         };
         setup(statementBrowser1QBDataset, config);
         expect(screen.getByRole('button', { name: 'Visualize data in tabular form' })).toBeInTheDocument();
@@ -35,13 +35,13 @@ describe('ValueItem', () => {
             id: 'e4030c32-4e15-ae2e-c6f9-687591cf617e',
             propertyId: '8bd2d009-b720-9efd-711e-f594330a2235',
             syncBackend: false,
-            enableEdit: false
+            enableEdit: false,
         };
         setup(statementBrowser1QBDataset, config);
         fireEvent.click(screen.getByRole('button', { name: 'Visualize data in tabular form' }));
         expect(screen.getByText(/View dataset/i)).toBeInTheDocument();
         await waitForElementToBeRemoved(() => screen.queryByText(/Loading dataset/i));
-        //DILS2018 technical evaluation of ORKG comparison service
+        // DILS2018 technical evaluation of ORKG comparison service
         expect(screen.getByText(/0.00026 sec/i)).toBeInTheDocument();
         expect(screen.getByText(/Baseline/i)).toBeInTheDocument();
     });

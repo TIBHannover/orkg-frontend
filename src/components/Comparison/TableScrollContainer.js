@@ -4,9 +4,9 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { debounce } from 'lodash';
 import { ScrollSync } from 'react-scroll-sync';
 import useResizeObserver from 'use-resize-observer';
-import { ClickableScrollButton, ReactTableWrapper, ScrollButton } from './styled';
 import PropTypes from 'prop-types';
 import { useMedia } from 'react-use';
+import { ClickableScrollButton, ReactTableWrapper, ScrollButton } from './styled';
 
 const SCROLL_AMOUNT = 500;
 
@@ -44,7 +44,7 @@ const TableScrollContainer = ({ children, className }) => {
         rtTable.scrollTo({
             top: 0,
             left: rtTable.scrollLeft + SCROLL_AMOUNT,
-            behavior: 'smooth'
+            behavior: 'smooth',
         });
     };
 
@@ -53,7 +53,7 @@ const TableScrollContainer = ({ children, className }) => {
         rtTable.scrollTo({
             top: 0,
             left: rtTable.scrollLeft - SCROLL_AMOUNT,
-            behavior: 'smooth'
+            behavior: 'smooth',
         });
     };
 
@@ -84,11 +84,11 @@ const TableScrollContainer = ({ children, className }) => {
 
 TableScrollContainer.propTypes = {
     children: PropTypes.node.isRequired,
-    className: PropTypes.string
+    className: PropTypes.string,
 };
 
 TableScrollContainer.defaultProps = {
-    className: ''
+    className: '',
 };
 
 export default TableScrollContainer;

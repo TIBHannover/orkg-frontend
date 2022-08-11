@@ -6,12 +6,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/dist/backdrop.css';
 import 'tippy.js/animations/shift-away.css';
+import '@citation-js/plugin-bibtex';
+import '@citation-js/plugin-doi';
+import '@citation-js/plugin-csl';
 import { useRoutes } from 'react-router-dom';
 import { detect } from 'detect-browser';
 import ScrollToTop from 'components/ScrollToTop';
-import MetaTags from 'react-meta-tags';
 import { Alert } from 'reactstrap';
 import env from '@beam-australia/react-env';
+import { Helmet } from 'react-helmet';
 
 const alertStyle = { borderRadius: '0', marginTop: '-30px', marginBottom: '30px' };
 
@@ -31,9 +34,9 @@ const App = () => {
                 )}
                 {env('IS_TESTING_SERVER') === 'true' && (
                     <>
-                        <MetaTags>
+                        <Helmet>
                             <meta name="robots" content="noindex" /> {/* make sure search engines are not indexing our test server */}
-                        </MetaTags>
+                        </Helmet>
                         <Alert color="warning" style={alertStyle} className="text-center">
                             <strong>Warning:</strong> You are using a testing environment. Data you enter in the system can be deleted without any
                             notice.

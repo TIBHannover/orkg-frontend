@@ -1,8 +1,8 @@
-import { render, screen, fireEvent, waitFor } from 'testUtils';
-import StatementBrowser from '../StatementBrowser';
+import { render, screen, fireEvent, waitFor, waitForElementToBeRemoved } from 'testUtils';
 import { ENTITIES } from 'constants/graphSettings';
-import { statementBrowserOneProperty } from '../AddValue/__mocks__/StatementBrowserDataAddValue';
 import selectEvent from 'react-select-event';
+import StatementBrowser from '../StatementBrowser';
+import { statementBrowserOneProperty } from '../AddValue/__mocks__/StatementBrowserDataAddValue';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
@@ -15,20 +15,23 @@ const setup = (
         newStore: false,
         rootNodeType: ENTITIES.RESOURCE,
         enableEdit: true,
-        syncBackend: false
-    }
+        syncBackend: false,
+    },
 ) => {
     render(<StatementBrowser {...props} />, { initialState });
 };
 
-const setValueAndClickOnCreate = async (screen, datatype = 'Resource', value = 'test') => {
-    const addButton = screen.getByRole('button', { name: 'Add value' });
+const setValueAndClickOnCreate = async (sc, datatype = 'Resource', value = 'test') => {
+    const addButton = sc.getByRole('button', { name: 'Add value' });
     await waitFor(() => expect(addButton).toBeInTheDocument());
     fireEvent.click(addButton);
-    await waitFor(() => expect(screen.getByLabelText(/Enter a resource/i)).toBeInTheDocument());
-    fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value } });
-    await selectEvent.select(screen.getByText('Resource'), [datatype]);
-    fireEvent.click(screen.getByRole('button', { name: 'Create' }));
+    await waitFor(() => expect(sc.getByLabelText(/Enter a resource/i)).toBeInTheDocument());
+    fireEvent.change(sc.getByLabelText(/Enter a resource/i), { target: { value } });
+    await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+    const selectInput = screen.getByText('Resource');
+    await selectEvent.openMenu(selectInput);
+    await selectEvent.select(selectInput, [datatype]);
+    fireEvent.click(sc.getByRole('button', { name: 'Create' }));
 };
 
 describe('AddValue', () => {

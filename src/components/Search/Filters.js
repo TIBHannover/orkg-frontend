@@ -21,6 +21,7 @@ const Filters = () => {
                     placeholder="Search..."
                     id="searchQuery"
                     name="value"
+                    onKeyDown={e => e.key === 'Enter' && submitSearch(value)}
                 />
                 <Button onClick={() => submitSearch(value)} color="secondary" className="ps-2 pe-2">
                     <FontAwesomeIcon icon={faSearch} />
@@ -30,15 +31,10 @@ const Filters = () => {
                 <>
                     <hr className="mt-3 mb-3" />
                     <FormGroup check className="mb-0">
-                        <Input
-                            type="checkbox"
-                            id="createdBy"
-                            onChange={e => setCreatedBy(createdBy ? null : user.id)}
-                            checked={createdBy ? true : false}
-                        />
+                        <Input type="checkbox" id="createdBy" onChange={e => setCreatedBy(createdBy ? null : user.id)} checked={!!createdBy} />
                         <Label check for="createdBy" className="mb-0">
                             <span>
-                                Content created by <UserAvatar userId={createdBy ? createdBy : user.id} showDisplayName={true} />
+                                Content created by <UserAvatar userId={createdBy || user.id} showDisplayName={true} />
                             </span>
                         </Label>
                     </FormGroup>
@@ -56,11 +52,11 @@ const Filters = () => {
                             <Input
                                 disabled={createdBy && !filter.isCreatedByActive}
                                 type="checkbox"
-                                id={'filter' + filter.id}
+                                id={`filter${filter.id}`}
                                 onChange={() => toggleFilter(filter)}
                                 checked={selectedFilters.map(sf => sf.id).includes(filter.id) && (filter.isCreatedByActive || !createdBy)}
                             />
-                            <Label check for={'filter' + filter.id} className="mb-0">
+                            <Label check for={`filter${filter.id}`} className="mb-0">
                                 <span>{filter.label}</span>
                             </Label>
                         </span>
@@ -85,6 +81,7 @@ const Filters = () => {
                 autoLoadOption={true}
                 openMenuOnFocus={true}
                 allowCreate={false}
+                ols={false}
                 isClearable
                 isMulti={true}
                 autoFocus={false}

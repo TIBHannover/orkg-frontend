@@ -35,72 +35,68 @@ const StyledListGroupItem = styled(ListGroupItem)`
     }
 `;
 
-const Results = props => {
-    return (
-        <div>
-            {props.loading && props.currentPage === 0 && (
-                <ContentLoader
-                    height="100%"
-                    width="100%"
-                    viewBox="0 0 100 25"
-                    style={{ width: '100% !important' }}
-                    speed={2}
-                    backgroundColor="#f3f3f3"
-                    foregroundColor="#ecebeb"
-                >
-                    <rect x="0" y="0" width="50" height="3" />
-                    <rect x="0" y="5" width="100%" height="3" />
-                    <rect x="0" y="10" width="100%" height="3" />
-                    <rect x="0" y="15" width="100%" height="3" />
-                    <rect x="0" y="20" width="100%" height="3" />
-                </ContentLoader>
-            )}
+const Results = props => (
+    <div>
+        {props.loading && props.currentPage === 0 && (
+            <ContentLoader
+                height="100%"
+                width="100%"
+                viewBox="0 0 100 25"
+                style={{ width: '100% !important' }}
+                speed={2}
+                backgroundColor="#f3f3f3"
+                foregroundColor="#ecebeb"
+            >
+                <rect x="0" y="0" width="50" height="3" />
+                <rect x="0" y="5" width="100%" height="3" />
+                <rect x="0" y="10" width="100%" height="3" />
+                <rect x="0" y="15" width="100%" height="3" />
+                <rect x="0" y="20" width="100%" height="3" />
+            </ContentLoader>
+        )}
 
-            {!props.loading && props.items.length === 0 && props.showNoResultsMessage && (
-                <div>
-                    <h2 className="h5">{props.label}</h2>
-                    <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
-                </div>
-            )}
+        {!props.loading && props.items.length === 0 && props.showNoResultsMessage && (
+            <div>
+                <h2 className="h5">{props.label}</h2>
+                <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
+            </div>
+        )}
 
-            {props.items.length > 0 && (
-                <div>
-                    <h2 className="h5">{props.label}</h2>
-                    <div className="mb-3">
-                        <ListGroup>
-                            {props.items.map((item, index) => {
-                                return (
-                                    <StyledListGroupItem rounded={props.hasNextPage.toString()} key={`result-${index}`} className="pt-1 pb-2">
-                                        <Link to={getResourceLink(props.class, item.id)}>{item.label}</Link>
-                                        <ItemMetadata
-                                            item={item}
-                                            showClasses={props.showClasses}
-                                            showCreatedAt={item.classes && item.classes.includes(CLASSES.COMPARISON)}
-                                        />
-                                    </StyledListGroupItem>
-                                );
-                            })}
-                        </ListGroup>
-                        {!props.loading && props.hasNextPage && (
-                            <StyledLoadMoreButton className="text-end action">
-                                <Button color="link" size="sm" onClick={props.loadMore}>
-                                    + Load more
-                                </Button>
-                            </StyledLoadMoreButton>
-                        )}
-                        {props.loading && props.hasNextPage && (
-                            <StyledLoadMoreButton className="text-end action">
-                                <Button color="link" size="sm" onClick={props.loadMore}>
-                                    Loading...
-                                </Button>
-                            </StyledLoadMoreButton>
-                        )}
-                    </div>
+        {props.items.length > 0 && (
+            <div>
+                <h2 className="h5">{props.label}</h2>
+                <div className="mb-3">
+                    <ListGroup>
+                        {props.items.map((item, index) => (
+                            <StyledListGroupItem rounded={props.hasNextPage.toString()} key={`result-${index}`} className="pt-1 pb-2">
+                                <Link to={getResourceLink(props.class, item.id)}>{item.label}</Link>
+                                <ItemMetadata
+                                    item={item}
+                                    showClasses={props.showClasses}
+                                    showCreatedAt={item.classes && item.classes.includes(CLASSES.COMPARISON)}
+                                />
+                            </StyledListGroupItem>
+                        ))}
+                    </ListGroup>
+                    {!props.loading && props.hasNextPage && (
+                        <StyledLoadMoreButton className="text-end action">
+                            <Button color="link" size="sm" onClick={props.loadMore}>
+                                + Load more
+                            </Button>
+                        </StyledLoadMoreButton>
+                    )}
+                    {props.loading && props.hasNextPage && (
+                        <StyledLoadMoreButton className="text-end action">
+                            <Button color="link" size="sm" onClick={props.loadMore}>
+                                Loading...
+                            </Button>
+                        </StyledLoadMoreButton>
+                    )}
                 </div>
-            )}
-        </div>
-    );
-};
+            </div>
+        )}
+    </div>
+);
 
 Results.propTypes = {
     loading: PropTypes.bool.isRequired,
@@ -111,7 +107,7 @@ Results.propTypes = {
     loadMore: PropTypes.func.isRequired,
     hasNextPage: PropTypes.bool.isRequired,
     showNoResultsMessage: PropTypes.bool.isRequired,
-    currentPage: PropTypes.number.isRequired
+    currentPage: PropTypes.number.isRequired,
 };
 
 export default Results;

@@ -8,11 +8,10 @@
 
 // User Interaction Requirements
   The user should be able to the flag for the cell if it is selected or not;
-  
-  
+
 // Validation Mechanics for mapper
-  the mapper determines for a whole column the type of mapping 
-  It should have a flag valid mapping under this mapper 
+  the mapper determines for a whole column the type of mapping
+  It should have a flag valid mapping under this mapper
 
 * */
 
@@ -52,27 +51,23 @@ export default class Cell {
     setPropertyMapperType = name => {
         this.propertyMapperType = name;
     };
-    getPropertyMapperType = () => {
-        return this.propertyMapperType;
-    };
 
-    isSelectedColumn = () => {
-        return this.isSelectedColumnForUse;
-    };
+    getPropertyMapperType = () => this.propertyMapperType;
+
+    isSelectedColumn = () => this.isSelectedColumnForUse;
+
     setSelectedColumn = value => {
         this.isSelectedColumnForUse = value;
     };
 
-    isSelectedRow = () => {
-        return this.isSelectedRowForUse;
-    };
+    isSelectedRow = () => this.isSelectedRowForUse;
+
     setSelectedRow = value => {
         this.isSelectedRowForUse = value;
     };
 
-    isItemSelected = () => {
-        return this.itemIsSelectedForUse;
-    };
+    isItemSelected = () => this.itemIsSelectedForUse;
+
     setItemSelected = value => {
         this.itemIsSelectedForUse = value;
     };
@@ -88,6 +83,7 @@ export default class Cell {
             this.valueAnchorFlag = true;
         }
     };
+
     setLabel = value => {
         this.label = value;
     };
@@ -102,8 +98,8 @@ export default class Cell {
         if (this.contributionAnchgorFlag === true) {
             this.contributionAnchor = data;
             this.positionContribAnchor = index;
-            this.label = data.contributionLabel + '(' + data.paperId + ')'; // << for now to keep string short
-            this.originalLabel = data.contributionLabel + '(' + data.paperId + ')'; // << for now to keep string short
+            this.label = `${data.contributionLabel}(${data.paperId})`; // << for now to keep string short
+            this.originalLabel = `${data.contributionLabel}(${data.paperId})`; // << for now to keep string short
         }
         if (this.propertyAnchorFlag === true) {
             this.propertyAnchor = data;

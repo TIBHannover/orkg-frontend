@@ -37,7 +37,7 @@ const SectionVisualization = ({ id }) => {
 };
 
 SectionVisualization.propTypes = {
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
 };
 
 export default SectionVisualization;

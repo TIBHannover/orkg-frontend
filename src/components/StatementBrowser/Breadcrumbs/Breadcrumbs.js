@@ -1,4 +1,3 @@
-import { Container, BackButton, BreadcrumbList, BreadcrumbItem } from './styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faLink, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { goToResourceHistory } from 'slices/statementBrowserSlice';
@@ -7,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { truncate } from 'lodash';
 import { getResourceLink } from 'utils';
 import Tippy from '@tippyjs/react';
+import { Container, BackButton, BreadcrumbList, BreadcrumbItem } from './styled';
 
 const Breadcrumbs = () => {
     const dispatch = useDispatch();
@@ -19,8 +19,8 @@ const Breadcrumbs = () => {
         dispatch(
             goToResourceHistory({
                 id,
-                historyIndex
-            })
+                historyIndex,
+            }),
         );
     };
 
@@ -31,8 +31,8 @@ const Breadcrumbs = () => {
         dispatch(
             goToResourceHistory({
                 id,
-                historyIndex
-            })
+                historyIndex,
+            }),
         );
     };
 

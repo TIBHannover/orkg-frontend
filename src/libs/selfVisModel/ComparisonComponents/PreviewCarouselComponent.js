@@ -16,7 +16,7 @@ const PreviewCarouselComponent = props => {
     const executeUpdates = () => {
         const item = carouselRef.current;
         const areaWidth = item.scrollWidth;
-        const clientWidth = item.clientWidth;
+        const { clientWidth } = item;
         const left = item.scrollLeft;
         const leftMax = item.scrollLeftMax;
         const needUpdate = clientWidth < areaWidth;
@@ -27,11 +27,11 @@ const PreviewCarouselComponent = props => {
     };
 
     const handleRightArrowShow = (left, max) => {
-        setShowArrowRight(left === max ? false : true);
+        setShowArrowRight(left !== max);
     };
 
     const handleLeftArrowShow = val => {
-        setShowArrowLeft(val > 0 ? true : false);
+        setShowArrowLeft(val > 0);
     };
 
     const handleScrollLeft = () => {
@@ -39,7 +39,7 @@ const PreviewCarouselComponent = props => {
         item.scrollTo({
             top: 0,
             left: item.scrollLeft - childWidth,
-            behavior: 'smooth'
+            behavior: 'smooth',
         });
     };
     const handleScrollRight = () => {
@@ -47,7 +47,7 @@ const PreviewCarouselComponent = props => {
         item.scrollTo({
             top: 0,
             left: item.scrollLeft + childWidth,
-            behavior: 'smooth'
+            behavior: 'smooth',
         });
     };
 
@@ -66,7 +66,7 @@ const PreviewCarouselComponent = props => {
                 }
             }
         },
-        [showArrowLeft, showArrowRight]
+        [showArrowLeft, showArrowRight],
     );
 
     // just a wrapper function for better code reading
@@ -133,7 +133,7 @@ const PreviewCarouselComponent = props => {
 };
 
 PreviewCarouselComponent.propTypes = {
-    children: PropTypes.any
+    children: PropTypes.any,
 };
 
 export default PreviewCarouselComponent;

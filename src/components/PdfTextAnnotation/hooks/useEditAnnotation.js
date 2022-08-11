@@ -29,8 +29,8 @@ const useEditAnnotation = () => {
         dispatch(
             updateAnnotationText({
                 id: annotationId,
-                text: value
-            })
+                text: value,
+            }),
         );
 
         toggleIsOpen();

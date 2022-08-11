@@ -43,7 +43,7 @@ function Benchmarks() {
                         </p>
                         <div>
                             Add your benchmark dataset and its evaluations to the ORKG by following the steps found in the{' '}
-                            <a href="https://www.orkg.org/orkg/help-center/article/21/Benchmarks" target="_blank" rel="noopener noreferrer">
+                            <a href="https://orkg.org/about/18/Benchmarks" target="_blank" rel="noopener noreferrer">
                                 ORKG help center
                             </a>
                             .
@@ -58,12 +58,10 @@ function Benchmarks() {
                     {benchmarks?.length > 0 &&
                         benchmarks
                             .filter(b => b.research_problem.label.toLowerCase().includes(filter.toLowerCase()) || filter === '')
-                            .map(benchmark => {
-                                return <BenchmarkCard key={`${benchmark.research_problem.id}`} benchmark={benchmark} />;
-                            })}
+                            .map(benchmark => <BenchmarkCard key={`${benchmark.research_problem.id}`} benchmark={benchmark} />)}
                 </Row>
 
-                {benchmarks.length === 0 && !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">No benchmarks yet!</div>}
+                {benchmarks.length === 0 && !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">No benchmarks yet</div>}
                 {benchmarks.length !== 0 &&
                     benchmarks.filter(b => b.research_problem.label.toLowerCase().includes(filter.toLowerCase())).length === 0 &&
                     !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">Sorry, no benchmarks found - try a different search query</div>}

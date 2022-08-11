@@ -56,7 +56,7 @@ const TemplatesModal = props => {
         handleTargetFilterChange,
         handleSelectedFilterChange,
         handleLabelFilterChange,
-        loadMoreTemplates
+        loadMoreTemplates,
     } = useTemplates({ onlyFeatured, isContributionEditor: true });
 
     const dispatch = useDispatch();
@@ -64,7 +64,7 @@ const TemplatesModal = props => {
     const handleSelectField = ({ id, label }) => {
         handleTargetFilterChange({
             id,
-            label
+            label,
         });
     };
 
@@ -156,6 +156,7 @@ const TemplatesModal = props => {
                                             autoLoadOption={true}
                                             openMenuOnFocus={false}
                                             allowCreate={false}
+                                            ols={false}
                                             cacheOptions={false}
                                             inputId={selectedFilter.id}
                                             isClearable={true}
@@ -271,12 +272,12 @@ const TemplatesModal = props => {
 
 TemplatesModal.propTypes = {
     isTemplatesModalOpen: PropTypes.bool,
-    setIsTemplatesModalOpen: PropTypes.func
+    setIsTemplatesModalOpen: PropTypes.func,
 };
 
 TemplatesModal.defaultProps = {
     isTemplatesModalOpen: undefined,
-    setIsTemplatesModalOpen: undefined
+    setIsTemplatesModalOpen: undefined,
 };
 
 export default TemplatesModal;

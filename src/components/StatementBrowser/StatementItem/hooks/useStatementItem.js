@@ -5,7 +5,7 @@ import {
     setIsSavingProperty,
     setIsDeletingProperty,
     canAddValue as canAddValueAction,
-    canDeleteProperty as canDeletePropertyAction
+    canDeleteProperty as canDeletePropertyAction,
 } from 'slices/statementBrowserSlice';
 import { updateStatement, deleteStatementById } from 'services/backend/statements';
 import { createPredicate } from 'services/backend/predicates';
@@ -21,14 +21,12 @@ function useStatementItem({ propertyId, resourceId, syncBackend }) {
     const values = useSelector(state => state.statementBrowser.values);
     const [predicateLabel, setPredicateLabel] = useState(property.label);
 
-    const canAddValue = useSelector(state => canAddValueAction(state, resourceId ? resourceId : state.statementBrowser.selectedResource, propertyId));
-    const canDeleteProperty = useSelector(state =>
-        canDeletePropertyAction(state, resourceId ? resourceId : state.statementBrowser.selectedResource, propertyId)
-    );
+    const canAddValue = useSelector(state => canAddValueAction(state, resourceId || state.statementBrowser.selectedResource, propertyId));
+    const canDeleteProperty = useSelector(state => canDeletePropertyAction(state, resourceId || state.statementBrowser.selectedResource, propertyId));
     const propertiesAsLinks = useSelector(state => state.statementBrowser.propertiesAsLinks);
 
     const propertyOptionsClasses = classNames({
-        propertyOptions: true
+        propertyOptions: true,
     });
 
     useEffect(() => {
@@ -65,11 +63,11 @@ function useStatementItem({ propertyId, resourceId, syncBackend }) {
                         dispatch(
                             deleteProperty({
                                 id: propertyId,
-                                resourceId: resourceId
-                            })
+                                resourceId,
+                            }),
                         );
                         toast.success(
-                            `${property.valueIds.length} ${property.valueIds.length === 1 ? 'Statement' : 'Statements'} deleted successfully`
+                            `${property.valueIds.length} ${property.valueIds.length === 1 ? 'Statement' : 'Statements'} deleted successfully`,
                         );
                     })
                     .catch(e => {
@@ -80,16 +78,16 @@ function useStatementItem({ propertyId, resourceId, syncBackend }) {
                 dispatch(
                     deleteProperty({
                         id: propertyId,
-                        resourceId: resourceId
-                    })
+                        resourceId,
+                    }),
                 );
             }
         } else {
             dispatch(
                 deleteProperty({
                     id: propertyId,
-                    resourceId: resourceId
-                })
+                    resourceId,
+                }),
             );
         }
     }, [dispatch, property, propertyId, resourceId, syncBackend, values.byId]);
@@ -106,20 +104,20 @@ function useStatementItem({ propertyId, resourceId, syncBackend }) {
                 }
                 Promise.all(apiCalls)
                     .then(() => {
-                        dispatch(changeProperty({ propertyId: propertyId, newProperty: newProperty }));
+                        dispatch(changeProperty({ propertyId, newProperty }));
                         toast.success('Property changed successfully');
                         dispatch(setIsSavingProperty({ id: propertyId, status: false }));
                     })
                     .catch(() => {
-                        toast.error(`Something went wrong while changing the property`);
+                        toast.error('Something went wrong while changing the property');
                         dispatch(setIsSavingProperty({ id: propertyId, status: false }));
                     });
             } else {
-                dispatch(changeProperty({ propertyId: propertyId, newProperty: newProperty }));
+                dispatch(changeProperty({ propertyId, newProperty }));
                 dispatch(setIsSavingProperty({ id: propertyId, status: false }));
             }
         },
-        [dispatch, property, propertyId, syncBackend, values.byId]
+        [dispatch, property, propertyId, syncBackend, values.byId],
     );
 
     const handleChange = useCallback(
@@ -133,7 +131,7 @@ function useStatementItem({ propertyId, resourceId, syncBackend }) {
                     let newPredicate = null;
                     if (syncBackend) {
                         newPredicate = await createPredicate(selectedOption.label);
-                        newPredicate['isExistingProperty'] = true;
+                        newPredicate.isExistingProperty = true;
                     } else {
                         newPredicate = { id: guid(), label: selectedOption.label, isExistingProperty: false };
                     }
@@ -141,7 +139,7 @@ function useStatementItem({ propertyId, resourceId, syncBackend }) {
                 }
             }
         },
-        [changePredicate, dispatch, predicateLabel, property.existingPredicateId, propertyId, syncBackend]
+        [changePredicate, dispatch, predicateLabel, property.existingPredicateId, propertyId, syncBackend],
     );
 
     return {
@@ -154,7 +152,7 @@ function useStatementItem({ propertyId, resourceId, syncBackend }) {
         property,
         predicateLabel,
         handleChange,
-        handleDeleteStatement
+        handleDeleteStatement,
     };
 }
 export default useStatementItem;

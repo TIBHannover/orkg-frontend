@@ -1,4 +1,4 @@
-import Cite from 'citation-js';
+import { Cite } from '@citation-js/core';
 import useScroll from 'components/Review/hooks/useScroll';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -40,7 +40,7 @@ const ListReferences = () => {
                         ? Object.values(section)
                               .filter(reference => reference)
                               .map(reference => reference?.literal?.label)
-                        : []
+                        : [],
                 )
                 .join('');
 
@@ -59,8 +59,8 @@ const ListReferences = () => {
                     format: 'html',
                     template: 'apa',
                     lang: 'en-US',
-                    prepend: data => `<li  class="${location.hash === '#reference' + data['id'] ? 'blink-figure' : ''}" id="reference${data['id']}">`,
-                    append: () => '</li>'
+                    prepend: data => `<li  class="${location.hash === `#reference${data.id}` ? 'blink-figure' : ''}" id="reference${data.id}">`,
+                    append: () => '</li>',
                 });
 
                 setBibliography(_bibliography);

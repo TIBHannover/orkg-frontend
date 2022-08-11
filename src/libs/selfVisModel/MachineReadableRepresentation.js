@@ -18,30 +18,26 @@ export default class MachineReadableRepresentation {
         this.mrrModel.getRow = function(index) {};
     };
 
-    getResult = () => {
-        return this.mrrModel;
-    };
+    getResult = () => this.mrrModel;
 
-    getRow = index => {
+    getRow = index =>
         // we use the notation, that the row describes the cell values related to the contribution anchors
         // so it will return all values for a "property" relating to all contributions
-        return this.mrrModel.dataItems.filter(item => item.positionContribAnchor === index);
-    };
+        this.mrrModel.dataItems.filter(item => item.positionContribAnchor === index);
 
-    getCol = index => {
+    getCol = index =>
         // we use the notation, that the row describes the cell values related to the property anchors
         // so it will return all values for a "contribution" relating to all properties
-        return this.mrrModel.dataItems.filter(item => item.positionPropertyAnchor === index);
-    };
+        this.mrrModel.dataItems.filter(item => item.positionPropertyAnchor === index);
+
     getItem = (rowIndex, colIndex) => {
         const itemsArray = this.mrrModel.dataItems.filter(
-            item => item.positionPropertyAnchor === colIndex && item.positionContribAnchor === rowIndex
+            item => item.positionPropertyAnchor === colIndex && item.positionContribAnchor === rowIndex,
         );
         if (itemsArray.length === 1) {
             return itemsArray[0];
-        } else {
-            return null; //<< ERROR
         }
+        return null; // << ERROR
     };
 
     createDataItemAnchors(model) {
@@ -74,6 +70,7 @@ export default class MachineReadableRepresentation {
             model.contributionAnchors.push(aCell);
         });
     }
+
     createPropertyAnchors(model) {
         // go through the input data and create the anchors for the contributions (add AnchorId)
         model.propertyAnchors = [];

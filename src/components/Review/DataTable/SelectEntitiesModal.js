@@ -63,15 +63,15 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                                                 .map(value => ({
                                                     label: value.pathLabels?.[value.pathLabels?.length - 1],
                                                     id: value.path?.[value.path?.length - 1],
-                                                    type: 'property'
+                                                    type: 'property',
                                                 }))
-                                                .filter(_property => _property.id)
-                                        )
-                                    )
+                                                .filter(_property => _property.id),
+                                        ),
+                                    ),
                             ),
-                            'id'
-                        )
-                    }))
+                            'id',
+                        ),
+                    })),
                 );
 
                 setSelectedEntities(section.dataTable.entities);
@@ -103,39 +103,37 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
         </ListGroupItemStyled>
     ));
 
-    const SortableList = SortableContainer(({ items }) => {
-        return (
-            <ListGroup>
-                <ListGroupItemStyled className="font-weight-bold ps-2 py-2 bg-light">Selected {type}</ListGroupItemStyled>
-                {items.map((value, index) => (
-                    <SortableItem key={`item-${index}`} index={index} value={value} />
-                ))}
-                <ListGroupItemStyled className="py-2 d-flex justify-content-end">
-                    {addEntityType ? (
-                        <Autocomplete
-                            entityType={addEntityType}
-                            placeholder={`Enter a ${addEntityType === ENTITIES.PREDICATE ? 'property' : 'resource'}`}
-                            onItemSelected={item => handleSelectEntity(item.id)}
-                            onBlur={() => setAddEntityType(null)}
-                            openMenuOnFocus={true}
-                            cssClasses="form-control-sm"
-                        />
-                    ) : (
-                        <>
-                            <Button color="secondary" size="sm" onClick={() => setAddEntityType(ENTITIES.PREDICATE)}>
-                                Add property
+    const SortableList = SortableContainer(({ items }) => (
+        <ListGroup>
+            <ListGroupItemStyled className="font-weight-bold ps-2 py-2 bg-light">Selected {type}</ListGroupItemStyled>
+            {items.map((value, index) => (
+                <SortableItem key={`item-${index}`} index={index} value={value} />
+            ))}
+            <ListGroupItemStyled className="py-2 d-flex justify-content-end">
+                {addEntityType ? (
+                    <Autocomplete
+                        entityType={addEntityType}
+                        placeholder={`Enter a ${addEntityType === ENTITIES.PREDICATE ? 'property' : 'resource'}`}
+                        onItemSelected={item => handleSelectEntity(item.id)}
+                        onBlur={() => setAddEntityType(null)}
+                        openMenuOnFocus={true}
+                        cssClasses="form-control-sm"
+                    />
+                ) : (
+                    <>
+                        <Button color="secondary" size="sm" onClick={() => setAddEntityType(ENTITIES.PREDICATE)}>
+                            Add property
+                        </Button>
+                        {type === 'entities' && (
+                            <Button color="secondary" size="sm" className="ms-2" onClick={() => setAddEntityType(ENTITIES.RESOURCE)}>
+                                Add resource
                             </Button>
-                            {type === 'entities' && (
-                                <Button color="secondary" size="sm" className="ms-2" onClick={() => setAddEntityType(ENTITIES.RESOURCE)}>
-                                    Add resource
-                                </Button>
-                            )}
-                        </>
-                    )}
-                </ListGroupItemStyled>
-            </ListGroup>
-        );
-    });
+                        )}
+                    </>
+                )}
+            </ListGroupItemStyled>
+        </ListGroup>
+    ));
 
     const handleSort = ({ oldIndex, newIndex }) => {
         setSelectedEntities(_entities => arrayMove(_entities, oldIndex, newIndex));
@@ -146,15 +144,15 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
             dispatch(
                 saveEntities({
                     sectionId: section.id,
-                    entities: selectedEntities
-                })
+                    entities: selectedEntities,
+                }),
             );
         } else if (type === 'properties') {
             dispatch(
                 saveShowProperties({
                     sectionId: section.id,
-                    properties: selectedEntities
-                })
+                    properties: selectedEntities,
+                }),
             );
         }
         toggle();
@@ -240,7 +238,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
 SelectEntitiesModal.propTypes = {
     toggle: PropTypes.func.isRequired,
     section: PropTypes.object.isRequired,
-    type: PropTypes.string.isRequired
+    type: PropTypes.string.isRequired,
 };
 
 export default SelectEntitiesModal;

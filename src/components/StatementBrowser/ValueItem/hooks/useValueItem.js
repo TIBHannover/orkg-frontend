@@ -42,15 +42,15 @@ const useValueItem = ({ valueId, propertyId }) => {
     });
 
     const handleResourceClick = async e => {
-        const existingResourceId = resource.existingResourceId;
+        const { existingResourceId } = resource;
 
         if (existingResourceId) {
             await dispatch(
                 fetchStatementsForResource({
                     resourceId: existingResourceId,
                     rootNodeType: resource._class,
-                    depth: 3
-                })
+                    depth: 3,
+                }),
             );
         }
 
@@ -59,8 +59,8 @@ const useValueItem = ({ valueId, propertyId }) => {
                 increaseLevel: true,
                 resourceId: value.resourceId,
                 label: value.label,
-                propertyLabel: property?.label
-            })
+                propertyLabel: property?.label,
+            }),
         );
     };
 
@@ -68,7 +68,7 @@ const useValueItem = ({ valueId, propertyId }) => {
         const existingResourceId = resource.existingResourceId ? resource.existingResourceId : value.resourceId;
 
         // Load template of this class
-        //show the statement browser
+        // show the statement browser
         setDialogResourceId(existingResourceId);
         setDialogResourceLabel(resource.label);
         setModal(true);
@@ -79,8 +79,8 @@ const useValueItem = ({ valueId, propertyId }) => {
             await dispatch(
                 fetchStatementsForResource({
                     resourceId: existingResourceId,
-                    rootNodeType: resource._class
-                })
+                    rootNodeType: resource._class,
+                }),
             );
         };
         const existingResourceId = resource ? resource.existingResourceId : false;
@@ -101,9 +101,8 @@ const useValueItem = ({ valueId, propertyId }) => {
                 return value.label;
             }
             return dispatch(generatedFormattedLabel(resource, labelFormat));
-        } else {
-            return value.label;
         }
+        return value.label;
     }, [dispatch, hasLabelFormat, labelFormat, resource, value.classes, value.label]);
 
     return {
@@ -116,7 +115,7 @@ const useValueItem = ({ valueId, propertyId }) => {
         openExistingResourcesInDialog,
         handleExistingResourceClick,
         handleResourceClick,
-        formattedLabel
+        formattedLabel,
     };
 };
 

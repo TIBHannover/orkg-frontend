@@ -11,7 +11,7 @@ class RelatedResources extends Component {
         this.urlRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/gi;
 
         this.state = {
-            relatedResources: []
+            relatedResources: [],
         };
     }
 
@@ -35,10 +35,10 @@ class RelatedResources extends Component {
             let relatedResources = this.props.resourcesStatements
                 .filter(r => r._class === 'literal')
                 .map(resource => ({
-                    url: resource.label
+                    url: resource.label,
                 }));
             await getStatementsBySubjects({
-                ids: this.props.resourcesStatements.filter(r => r._class !== 'literal').map(r => r.id)
+                ids: this.props.resourcesStatements.filter(r => r._class !== 'literal').map(r => r.id),
             }).then(resourcesStatements => {
                 relatedResources = [...relatedResources, ...getRelatedResourcesData(resourcesStatements)];
             });
@@ -86,7 +86,7 @@ class RelatedResources extends Component {
 }
 
 RelatedResources.propTypes = {
-    resourcesStatements: PropTypes.array.isRequired
+    resourcesStatements: PropTypes.array.isRequired,
 };
 
 export default RelatedResources;

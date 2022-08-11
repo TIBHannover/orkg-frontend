@@ -23,12 +23,12 @@ function Share(props) {
             setShortLinkIsLoading(false);
             setShortLinkIsFailed(false);
         } else {
-            let link = ``;
+            let link = '';
             if (!props.responseHash) {
                 const saveComparison = await getComparison({
                     contributionIds: props.contributionsList,
                     type: props.comparisonType,
-                    save_response: true
+                    save_response: true,
                 });
                 link = `${props.publicURL}${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}${props.comparisonURLConfig}&response_hash=${
                     saveComparison.response_hash
@@ -38,7 +38,7 @@ function Share(props) {
                 link = `${props.publicURL}${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}${props.comparisonURLConfig}`;
             }
             createShortLink({
-                long_url: link
+                long_url: link,
             })
                 .then(data => {
                     const shortLink = `${props.publicURL}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
@@ -111,7 +111,7 @@ Share.propTypes = {
     setResponseHash: PropTypes.func.isRequired,
     shortLink: PropTypes.string.isRequired,
     subject: PropTypes.object,
-    setShortLink: PropTypes.func.isRequired
+    setShortLink: PropTypes.func.isRequired,
 };
 
 export default Share;

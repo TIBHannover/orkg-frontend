@@ -2,9 +2,9 @@ import { setDoneAnimation } from 'slices/statementBrowserSlice';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
 import TemplateHeader from 'components/StatementBrowser/Template/TemplateHeader/TemplateHeader';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItem';
-import { AddPropertyWrapper, AnimationContainer } from './styled';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { AddPropertyWrapper, AnimationContainer } from './styled';
 
 const Template = props => {
     const dispatch = useDispatch();
@@ -40,7 +40,7 @@ const Template = props => {
                 />
                 {propertyIds.map((propertyId, index) => (
                     <StatementItem
-                        key={'statement-' + index}
+                        key={`statement-${index}`}
                         id={propertyId}
                         enableEdit={shared <= 1 ? props.enableEdit : false}
                         syncBackend={props.syncBackend}
@@ -70,7 +70,7 @@ Template.propTypes = {
     value: PropTypes.object.isRequired,
     selectedResource: PropTypes.string.isRequired,
     syncBackend: PropTypes.bool.isRequired,
-    enableEdit: PropTypes.bool.isRequired
+    enableEdit: PropTypes.bool.isRequired,
 };
 
 export default Template;

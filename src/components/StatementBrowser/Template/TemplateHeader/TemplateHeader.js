@@ -20,8 +20,8 @@ export default function TemplateHeader(props) {
             dispatch(
                 updateValueLabel({
                     label: draftLabel,
-                    valueId: props.id
-                })
+                    valueId: props.id,
+                }),
             );
             if (props.syncBackend) {
                 dispatch(setSavingValue({ id: props.id, status: true })); // To show the saving message instead of the value label
@@ -42,14 +42,14 @@ export default function TemplateHeader(props) {
         dispatch(
             deleteValue({
                 id: props.id,
-                propertyId: props.propertyId
-            })
+                propertyId: props.propertyId,
+            }),
         );
         dispatch(
             deleteProperty({
                 id: props.propertyId,
-                resourceId: props.resourceId
-            })
+                resourceId: props.resourceId,
+            }),
         );
     };
 
@@ -77,13 +77,13 @@ export default function TemplateHeader(props) {
                                                 title: 'Delete',
                                                 color: 'danger',
                                                 icon: faCheck,
-                                                action: handleDeleteTemplate
+                                                action: handleDeleteTemplate,
                                             },
                                             {
                                                 title: 'Cancel',
                                                 color: 'secondary',
-                                                icon: faTimes
-                                            }
+                                                icon: faTimes,
+                                            },
                                         ]}
                                     />
                                 </div>
@@ -124,5 +124,5 @@ TemplateHeader.propTypes = {
     propertyId: PropTypes.string.isRequired,
     statementId: PropTypes.string,
     syncBackend: PropTypes.bool.isRequired,
-    enableEdit: PropTypes.bool.isRequired
+    enableEdit: PropTypes.bool.isRequired,
 };

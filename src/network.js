@@ -16,14 +16,14 @@ export const submitGetRequest = (url, headers, send_token = false) => {
     return new Promise((resolve, reject) => {
         fetch(url, {
             method: 'GET',
-            headers: myHeaders
+            headers: myHeaders,
         })
             .then(response => {
                 if (!response.ok) {
                     reject({
                         error: new Error(`Error response. (${response.status}) ${response.statusText}`),
                         statusCode: response.status,
-                        statusText: response.statusText
+                        statusText: response.statusText,
                     });
                 } else {
                     const json = response.json();
@@ -64,20 +64,18 @@ export const submitPostRequest = (url, headers, data, jsonStringify = true, send
                     const json = response.json();
                     if (json.then) {
                         return json.then(reject);
-                    } else {
-                        return reject({
-                            error: new Error(`Error response. (${response.status}) ${response.statusText}`),
-                            statusCode: response.status,
-                            statusText: response.statusText
-                        });
                     }
+                    return reject({
+                        error: new Error(`Error response. (${response.status}) ${response.statusText}`),
+                        statusCode: response.status,
+                        statusText: response.statusText,
+                    });
+                }
+                const json = response.json();
+                if (json.then) {
+                    json.then(resolve).catch(reject);
                 } else {
-                    const json = response.json();
-                    if (json.then) {
-                        json.then(resolve).catch(reject);
-                    } else {
-                        return resolve(json);
-                    }
+                    return resolve(json);
                 }
             })
             .catch(reject);
@@ -107,25 +105,22 @@ export const submitPutRequest = (url, headers, data, jsonStringify = true) => {
                     const json = response.json();
                     if (json.then) {
                         return json.then(reject);
-                    } else {
-                        return reject({
-                            error: new Error(`Error response. (${response.status}) ${response.statusText}`),
-                            statusCode: response.status,
-                            statusText: response.statusText
-                        });
                     }
+                    return reject({
+                        error: new Error(`Error response. (${response.status}) ${response.statusText}`),
+                        statusCode: response.status,
+                        statusText: response.statusText,
+                    });
+                }
+                if (response.status === 204) {
+                    // HTTP 204 No Content success status
+                    return resolve();
+                }
+                const json = response.json();
+                if (json.then) {
+                    json.then(resolve).catch(reject);
                 } else {
-                    if (response.status === 204) {
-                        // HTTP 204 No Content success status
-                        return resolve();
-                    } else {
-                        const json = response.json();
-                        if (json.then) {
-                            json.then(resolve).catch(reject);
-                        } else {
-                            return resolve(json);
-                        }
-                    }
+                    return resolve(json);
                 }
             })
             .catch(reject);

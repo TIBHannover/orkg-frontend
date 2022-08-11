@@ -67,7 +67,7 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
 
 SearchForm.propTypes = {
     placeholder: PropTypes.string.isRequired,
-    onSearch: PropTypes.func
+    onSearch: PropTypes.func,
 };
 
 export default SearchForm;

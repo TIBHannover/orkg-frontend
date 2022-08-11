@@ -25,15 +25,14 @@ class Doi extends Component {
                     {labelToText} <Icon icon={faExternalLinkAlt} />
                 </a>
             );
-        } else {
-            return label;
         }
+        return label;
     }
 }
 
 Doi.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-    type: PropTypes.oneOf(['resource', 'literal'])
+    type: PropTypes.oneOf(['resource', 'literal']),
 };
 
 export default Doi;

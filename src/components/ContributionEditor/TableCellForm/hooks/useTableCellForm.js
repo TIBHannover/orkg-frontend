@@ -6,7 +6,7 @@ import {
     canAddValueAction,
     updateResourceStatementsAction,
     updateLiteral,
-    updateResourceLabel
+    updateResourceLabel,
 } from 'slices/contributionEditorSlice';
 import { getValueClass, isLiteral } from 'slices/statementBrowserSlice';
 import validationSchema from 'components/StatementBrowser/ValueForm/helpers/validationSchema';
@@ -19,29 +19,36 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
     const editMode = Boolean(value);
 
     const property = useSelector(state => state.contributionEditor.properties[propertyId]);
+    const { previousInputDataType } = useSelector(state => state.contributionEditor);
     const valueClass = useSelector(state => getValueClass(getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId)));
 
     const canAddValue = useSelector(state => canAddValueAction(state, contributionId, propertyId));
 
     const isLiteralField = useSelector(state =>
-        editMode ? value._class === ENTITIES.LITERAL : isLiteral(getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId))
+        editMode ? value._class === ENTITIES.LITERAL : isLiteral(getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId)),
     );
 
-    const isUniqLabel = valueClass && valueClass.id === CLASSES.PROBLEM ? true : false;
+    const isUniqLabel = !!(valueClass && valueClass.id === CLASSES.PROBLEM);
 
     const [entityType, setEntityType] = useState(
         !valueClass?.id
             ? getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE)._class
-            : getConfigByClassId(valueClass.id)._class
+            : getConfigByClassId(valueClass.id)._class,
     );
 
     const [inputValue, setInputValue] = useState(editMode ? value.label : '');
     const [inputDataType, setInputDataType] = useState(
         !valueClass?.id
-            ? getConfigByType(isLiteralField ? (editMode ? value.datatype : MISC.DEFAULT_LITERAL_DATATYPE) : MISC.DEFAULT_LITERAL_DATATYPE).type
-            : getConfigByClassId(valueClass.id).type
+            ? getConfigByType(isLiteralField ? (editMode ? value.datatype : previousInputDataType) : previousInputDataType).type
+            : getConfigByClassId(valueClass.id).type,
     );
     const [disabledCreate] = useState(false);
+
+    const [inputFormType, setInputFormType] = useState(
+        !valueClass?.id
+            ? getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE).inputFormType
+            : getConfigByClassId(valueClass.id).inputFormType,
+    );
 
     const createBlankNode = () => {
         // 1 - create a resource
@@ -52,8 +59,8 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
                 resourceId: null,
                 resourceLabel: isBlankNode,
                 action: 'create-option',
-                classes: valueClass ? [valueClass.id] : []
-            })
+                classes: valueClass ? [valueClass.id] : [],
+            }),
         )
             .then(newResourceId => {
                 // 2 - open the dialog on that resource
@@ -84,22 +91,21 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
                 component = {
                     value: valueClass,
                     property: { id: property.id, label: property.label },
-                    validationRules: property.validationRules
+                    validationRules: property.validationRules,
                 };
             }
             const schema = validationSchema(component);
             return schema;
-        } else {
-            const config = getConfigByType(inputDataType);
-            return config.schema;
         }
+        const config = getConfigByType(inputDataType);
+        return config.schema;
     });
 
     const isBlankNode = useSelector(state => {
         if (valueClass && !isLiteralField) {
             if (state.contributionEditor.classes[valueClass.id]?.templateIds) {
-                const templateIds = state.contributionEditor.classes[valueClass.id].templateIds;
-                //check if it's an inline resource
+                const { templateIds } = state.contributionEditor.classes[valueClass.id];
+                // check if it's an inline resource
                 for (const templateId of templateIds) {
                     const template = state.contributionEditor.templates[templateId];
                     if (template && template.hasLabelFormat) {
@@ -175,7 +181,9 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
         setInputValue,
         updateResourceStatements,
         disabledCreate,
-        commitChangeLabel
+        commitChangeLabel,
+        inputFormType,
+        setInputFormType,
     };
 };
 

@@ -1,4 +1,4 @@
-import { MISC, PREDICATES } from 'constants/graphSettings';
+import { RESOURCES, PREDICATES } from 'constants/graphSettings';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { saveFullPaper } from 'services/backend/papers';
@@ -26,18 +26,18 @@ const useCreatePaper = () => {
             authors: authors.map(author => ({
                 label: author.label,
                 id: author.id !== author.label ? author.id : undefined,
-                orcid: author.orcid || undefined
+                orcid: author.orcid || undefined,
             })),
             publicationMonth: month,
             publicationYear: year,
-            researchField: researchField?.id || MISC.RESEARCH_FIELD_MAIN,
+            researchField: researchField?.id || RESOURCES.RESEARCH_FIELD_MAIN,
             url,
             publishedIn,
             contributions: [
                 {
-                    name: 'Contribution 1'
-                }
-            ]
+                    name: 'Contribution 1',
+                },
+            ],
         };
 
         const createdPaper = await saveFullPaper({ paper });
@@ -50,7 +50,7 @@ const useCreatePaper = () => {
 
         return {
             paperId: createdPaper.id,
-            contributionId: contributionStatement.object.id
+            contributionId: contributionStatement.object.id,
         };
     };
 

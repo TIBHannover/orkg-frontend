@@ -22,7 +22,7 @@ export default class Navigation {
 
         this.clearData = this.clearData.bind(this);
 
-        //helper functions
+        // helper functions
         this.waitForForce = this.waitForForce.bind(this);
         this.transform = this.transform.bind(this);
         this.getWorldPosFromScreen = this.getWorldPosFromScreen.bind(this);
@@ -53,7 +53,7 @@ export default class Navigation {
         this.graphTranslation = backupT;
 
         if (this.zoom) {
-            this.graph.graphRoot.attr('transform', 'translate(' + this.graphTranslation + ')scale(' + this.zoomFactor + ')');
+            this.graph.graphRoot.attr('transform', `translate(${this.graphTranslation})scale(${this.zoomFactor})`);
             this.zoom.translate(this.graphTranslation);
             this.zoom.scale(this.zoomFactor);
         }
@@ -67,7 +67,7 @@ export default class Navigation {
 
     intervalWaiter(interval) {
         if (this.graph && this.graph.layout && this.graph.layout.force) {
-            const force = this.graph.layout.force;
+            const { force } = this.graph.layout;
             if (force.alpha() < 0.05) {
                 // remove timer and zoom to extent;
                 clearInterval(this.intervalTimer);
@@ -106,19 +106,17 @@ export default class Navigation {
     }
 
     initializeRendering() {
-        const graph = this.graph;
+        const { graph } = this;
         const that = this;
 
         this.dragBehaviour = d3.behavior
             .drag()
-            .origin(function(d) {
-                return d;
-            })
-            .on('dragstart', function(d) {
+            .origin(d => d)
+            .on('dragstart', d => {
                 d3.event.sourceEvent.stopPropagation(); // Prevent panning
                 d.fixed = true;
             })
-            .on('drag', function(d) {
+            .on('drag', d => {
                 d3.event.sourceEvent.stopPropagation(); // Prevent panning
                 d.setPosition(d3.event.x, d3.event.y);
                 d.px = d3.event.x;
@@ -129,7 +127,7 @@ export default class Navigation {
                 }
                 d.updateDrawPosition();
             })
-            .on('dragend', function(d) {
+            .on('dragend', d => {
                 if (graph.layout.layoutType() === 'force') {
                     graph.layout.resumeForce();
                 }
@@ -142,12 +140,12 @@ export default class Navigation {
             .duration(150)
             .scaleExtent([0.02, 5])
             .on('zoom', that.zoomed)
-            .on('zoomstart', function() {
+            .on('zoomstart', () => {
                 if (d3.event.sourceEvent && d3.event.sourceEvent.buttons && d3.event.sourceEvent.buttons === 1) {
                     graph.svgRoot.style('cursor', 'move');
                 }
             })
-            .on('zoomend', function() {
+            .on('zoomend', () => {
                 graph.svgRoot.style('cursor', 'auto');
                 // save the graph values;
                 const t = d3.transform(graph.graphRoot.attr('transform'));
@@ -164,7 +162,7 @@ export default class Navigation {
 
     zoomed() {
         const that = this;
-        const graph = that.graph;
+        const { graph } = that;
         const graphContainer = graph.graphRoot;
         let zoomEventByMWheel = false;
         if (d3.event.sourceEvent) {
@@ -178,30 +176,32 @@ export default class Navigation {
             }
             that.zoomFactor = d3.event.scale;
             that.graphTranslation = d3.event.translate;
-            graphContainer.attr('transform', 'translate(' + that.graphTranslation + ')scale(' + that.zoomFactor + ')');
+            graphContainer.attr('transform', `translate(${that.graphTranslation})scale(${that.zoomFactor})`);
             graph.updateHaloRadius();
             return;
         }
-        /** animate the transition **/
+        /** animate the transition * */
         this.zoomFactor = d3.event.scale;
         this.graphTranslation = d3.event.translate;
         graphContainer
             .transition()
-            .tween('attr.translate', function() {
-                return function() {
-                    that.transformAnimation = true;
-                    const tr = d3.transform(graphContainer.attr('transform'));
-                    that.graphTranslation[0] = tr.translate[0];
-                    that.graphTranslation[1] = tr.translate[1];
-                    that.zoomFactor = tr.scale[0];
-                    graph.updateHaloRadius();
-                };
-            })
-            .each('end', function() {
+            .tween(
+                'attr.translate',
+                () =>
+                    function () {
+                        that.transformAnimation = true;
+                        const tr = d3.transform(graphContainer.attr('transform'));
+                        that.graphTranslation[0] = tr.translate[0];
+                        that.graphTranslation[1] = tr.translate[1];
+                        that.zoomFactor = tr.scale[0];
+                        graph.updateHaloRadius();
+                    },
+            )
+            .each('end', () => {
                 that.transformAnimation = false;
                 that.graph.updateHaloRadius();
             })
-            .attr('transform', 'translate(' + that.graphTranslation + ')scale(' + that.zoomFactor + ')')
+            .attr('transform', `translate(${that.graphTranslation})scale(${that.zoomFactor})`)
             .ease('linear')
             .duration(250);
     }
@@ -212,7 +212,7 @@ export default class Navigation {
             return;
         }
         // save some vars
-        const graph = this.graph;
+        const { graph } = this;
         const that = this;
 
         // get the rendering dom elements
@@ -244,7 +244,7 @@ export default class Navigation {
 
         // zoom factor calculations and fail safes;
         let newZoomFactor;
-        //get the smaller one
+        // get the smaller one
         const a = w / g_w;
         const b = h / g_h;
         if (a <= b) {
@@ -284,15 +284,17 @@ export default class Navigation {
             .attr('transform', that.transform(sP, cx, cy, that))
             .transition()
             .duration(lenAnimation)
-            .attrTween('transform', function() {
-                return function(t) {
-                    graph.updateHaloRadius();
-                    return that.transform(pos_interpolation(t), cx, cy, that);
-                };
-            })
-            .each('end', function() {
+            .attrTween(
+                'transform',
+                () =>
+                    function (t) {
+                        graph.updateHaloRadius();
+                        return that.transform(pos_interpolation(t), cx, cy, that);
+                    },
+            )
+            .each('end', () => {
                 if (that.zoom) {
-                    graph.graphRoot.attr('transform', 'translate(' + that.graphTranslation + ')scale(' + that.zoomFactor + ')');
+                    graph.graphRoot.attr('transform', `translate(${that.graphTranslation})scale(${that.zoomFactor})`);
                     that.zoom.translate(that.graphTranslation);
                     that.zoom.scale(that.zoomFactor);
                 }
@@ -300,7 +302,7 @@ export default class Navigation {
     }
 
     zoomToNode = node => {
-        const graph = this.graph;
+        const { graph } = this;
         const that = this;
         const svgBbox = graph.svgRoot.node().getBoundingClientRect();
 
@@ -326,25 +328,28 @@ export default class Navigation {
             .attr('transform', that.transform(sP, cx, cy, that))
             .transition()
             .duration(lenAnimation)
-            .attrTween('transform', function() {
-                return function(t) {
-                    that.graph.updateHaloRadius();
-                    return that.transform(pos_intp(t), cx, cy, that);
-                };
-            })
-            .each('end', function() {
-                graph.graphRoot.attr('transform', 'translate(' + that.graphTranslation + ')scale(' + that.zoomFactor + ')');
+            .attrTween(
+                'transform',
+                () =>
+                    function (t) {
+                        that.graph.updateHaloRadius();
+                        return that.transform(pos_intp(t), cx, cy, that);
+                    },
+            )
+            .each('end', () => {
+                graph.graphRoot.attr('transform', `translate(${that.graphTranslation})scale(${that.zoomFactor})`);
                 that.zoom.translate(that.graphTranslation);
                 that.zoom.scale(that.zoomFactor);
                 graph.updateHaloRadius();
             });
     };
 
-    /** Helper functions **/
+    /** Helper functions * */
     getWorldPosFromScreen(x, y, translate, scale) {
         // have to check if scale is array or value >> temp variable
         const temp = scale[0];
-        let xn, yn;
+        let xn;
+        let yn;
         if (temp) {
             xn = (x - translate[0]) / temp;
             yn = (y - translate[1]) / temp;
@@ -355,9 +360,7 @@ export default class Navigation {
         return { x: xn, y: yn };
     }
 
-    getScreenCoords = (x, y) => {
-        return { x: this.graphTranslation[0] + x * this.zoomFactor, y: this.graphTranslation[1] + y * this.zoomFactor };
-    };
+    getScreenCoords = (x, y) => ({ x: this.graphTranslation[0] + x * this.zoomFactor, y: this.graphTranslation[1] + y * this.zoomFactor });
 
     transform(p, cx, cy, parent) {
         if (parent && parent.graph) {
@@ -366,7 +369,7 @@ export default class Navigation {
             parent.graphTranslation = [cx - p[0] * parent.zoomFactor, cy - p[1] * parent.zoomFactor];
             parent.zoom.translate(parent.graphTranslation);
             parent.zoom.scale(parent.zoomFactor);
-            return 'translate(' + parent.graphTranslation + ')scale(' + parent.zoomFactor + ')';
+            return `translate(${parent.graphTranslation})scale(${parent.zoomFactor})`;
         }
     }
 } // end of class definition

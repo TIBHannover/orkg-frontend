@@ -18,7 +18,7 @@ const SectionOntology = ({ section, isEditable = false }) => {
 
             const entities = section.dataTable.entities.map(entity => {
                 const statements = orderBy(entity.statements.filter(statement => propertyIds.includes(statement.predicate.id)), statement =>
-                    propertyIds.findIndex(element => element === statement.predicate.id)
+                    propertyIds.findIndex(element => element === statement.predicate.id),
                 );
 
                 if (!statements || statements.length === 0) {
@@ -28,14 +28,14 @@ const SectionOntology = ({ section, isEditable = false }) => {
                             {
                                 subject: entity,
                                 predicate: null,
-                                object: null
-                            }
-                        ]
+                                object: null,
+                            },
+                        ],
                     };
                 }
                 return {
                     ...entity,
-                    statements
+                    statements,
                 };
             });
             return entities.flatMap(entity => entity.statements);
@@ -135,7 +135,7 @@ const SectionOntology = ({ section, isEditable = false }) => {
 
 SectionOntology.propTypes = {
     section: PropTypes.object.isRequired,
-    isEditable: PropTypes.bool
+    isEditable: PropTypes.bool,
 };
 
 export default SectionOntology;

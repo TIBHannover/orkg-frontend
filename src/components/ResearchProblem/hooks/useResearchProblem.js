@@ -31,13 +31,13 @@ function useResearchProblem({ id }) {
                 const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
                 const sameAs = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.SAME_AS, true);
                 const subProblems = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.SUB_PROBLEM, false, CLASSES.PROBLEM);
-                setData(prevData => ({ ...prevData, description: description?.label, sameAs: sameAs, subProblems: subProblems ?? [] }));
+                setData(prevData => ({ ...prevData, description: description?.label, sameAs, subProblems: subProblems ?? [] }));
             });
 
             // Get super research problems
             getStatementsByObjectAndPredicate({
                 objectId: rpId,
-                predicateId: PREDICATES.SUB_PROBLEM
+                predicateId: PREDICATES.SUB_PROBLEM,
             }).then(superProblems => {
                 setSuperProblems(superProblems.map(s => s.subject));
             });
