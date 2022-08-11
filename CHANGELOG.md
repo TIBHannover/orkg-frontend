@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.77.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.77.0...v0.77.1) - 2022-08-11
+
+### Changes
+
+- fix(PdfTextAnnotation): use package instead of CDN for loading pdfjs worker [`#908`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/908)
+
+---
 ## [v0.77.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.76.0...v0.77.0) - 2022-08-10
 
 ### Changes
