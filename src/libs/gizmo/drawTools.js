@@ -39,6 +39,7 @@ function cropText(input, config, width) {
     let textWidth;
     let ratio;
     let newTruncatedTextLength;
+    // eslint-disable-next-line no-constant-condition
     while (true) {
         textWidth = measureTextWidth(truncatedText, config.fontFamily, config.fontSize);
         if (textWidth <= width) {
