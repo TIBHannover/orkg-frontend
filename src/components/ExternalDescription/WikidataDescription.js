@@ -61,7 +61,7 @@ const WikidataDescription = ({ externalResource }) => {
             {hasFailed && <p className="text-center">Failed loading Wikidata statements</p>}
 
             {Object.keys(statementsByProperty).map(propertyUri => (
-                <StatementsGroupStyle className="noTemplate list-group-item">
+                <StatementsGroupStyle key={propertyUri} className="noTemplate list-group-item">
                     <Row className="row gx-0">
                         <PropertyStyle className="col-4" tabIndex="0">
                             <div>
@@ -77,8 +77,8 @@ const WikidataDescription = ({ externalResource }) => {
                             </div>
                         </PropertyStyle>
                         <ValuesStyle className="col-8 valuesList">
-                            {statementsByProperty[propertyUri].map(value => (
-                                <div>
+                            {statementsByProperty[propertyUri].map((value, index) => (
+                                <div key={index}>
                                     {value?.object?.type === 'uri' ? (
                                         <a href={value?.object?.value} className="text-break" target="_blank" rel="noopener noreferrer">
                                             {value.objectLabel?.value}
