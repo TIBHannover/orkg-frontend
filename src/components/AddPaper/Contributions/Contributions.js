@@ -2,6 +2,7 @@ import { faAngleDown, faExclamationTriangle, faMagic } from '@fortawesome/free-s
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Abstract from 'components/AddPaper/Abstract/Abstract';
+import AbstractModal from 'components/AddPaper/AbstractModal/AbstractModal';
 import EntityRecognition from 'components/AddPaper/EntityRecognition/EntityRecognition';
 import useDetermineResearchField from 'components/AddPaper/EntityRecognition/useDetermineResearchField';
 import useEntityRecognition from 'components/AddPaper/hooks/useEntityRecognition';
@@ -12,7 +13,7 @@ import { StyledContributionTabs } from 'components/ContributionTabs/styled';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tooltip from 'components/Utils/Tooltip';
 import Tabs, { TabPane } from 'rc-tabs';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Row } from 'reactstrap';
 import {
@@ -43,6 +44,7 @@ const Contributions = () => {
         selectedContribution,
         abstract,
     } = useSelector(state => state.addPaper);
+    const [isOpenAbstractModal, setIsOpenAbstractModal] = useState(false);
     const { resources, properties, values } = useSelector(state => state.statementBrowser);
     const { isComputerScienceField } = useDetermineResearchField();
     const { handleSaveFeedback } = useEntityRecognition();
@@ -162,20 +164,27 @@ const Contributions = () => {
                     </Tooltip>
                 </h2>
                 <div className="flex-shrink-0 ms-auto">
-                    <Tippy
-                        hideOnClick
-                        showOnCreate
-                        disabled={!showAbstractWarning}
-                        placement="right"
-                        content="We were unable to fetch the abstract of the paper. Click the button to manually add it, this improves the smart recommendations"
-                    >
-                        <span>
-                            <Button onClick={() => dispatch(toggleAbstractDialog())} outline size="sm" color="smart">
-                                {!showAbstractWarning ? <Icon icon={faMagic} /> : <Icon icon={faExclamationTriangle} className="text-warning" />}{' '}
-                                Abstract annotator
-                            </Button>
-                        </span>
-                    </Tippy>
+                    {!isComputerScienceField ? (
+                        <Button onClick={() => dispatch(toggleAbstractDialog())} outline size="sm" color="smart">
+                            {!showAbstractWarning ? <Icon icon={faMagic} /> : <Icon icon={faExclamationTriangle} className="text-warning" />} Abstract
+                            annotator
+                        </Button>
+                    ) : (
+                        <Tippy
+                            showOnCreate
+                            delay="1000"
+                            disabled={!showAbstractWarning}
+                            placement="right"
+                            content="We were unable to fetch the abstract of the paper. Click the button to manually add it, this improves the suggestions."
+                        >
+                            <span>
+                                <Button onClick={() => setIsOpenAbstractModal(true)} outline size="sm" color="smart">
+                                    {!showAbstractWarning ? <Icon icon={faMagic} /> : <Icon icon={faExclamationTriangle} className="text-warning" />}{' '}
+                                    Paper abstract
+                                </Button>
+                            </span>
+                        </Tippy>
+                    )}
                 </div>
             </div>
             <Row className="mt-2 g-0">
@@ -224,7 +233,7 @@ const Contributions = () => {
                 </Col>
 
                 <Col lg="3" className="ps-lg-3 mt-5">
-                    {isComputerScienceField && !showAbstractWarning && <EntityRecognition />}
+                    {isComputerScienceField && <EntityRecognition />}
                 </Col>
             </Row>
 
@@ -240,6 +249,7 @@ const Contributions = () => {
             <Button color="light" className="float-end mb-4 me-2" onClick={() => dispatch(previousStep())}>
                 Previous step
             </Button>
+            {isOpenAbstractModal && <AbstractModal toggle={() => setIsOpenAbstractModal(v => !v)} />}
         </div>
     );
 };
