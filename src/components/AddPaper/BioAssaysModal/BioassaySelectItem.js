@@ -1,4 +1,4 @@
-import { Label, ListGroup, Alert } from 'reactstrap';
+import { Label, ListGroup, Alert, Input } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle, ValueItemStyle } from 'components/StatementBrowser/styled';
 import { reverse } from 'named-urls';
@@ -9,7 +9,7 @@ export default function BioassaySelectItem(props) {
     return (
         <>
             <div className="mb-3">
-                <Alert>Please select specific items that you want to include in the contribution data</Alert>
+                <Alert color="info">Please select specific items that you want to include in the contribution data</Alert>
             </div>
             <ListGroup className="listGroupEnlarge">
                 <div>
@@ -37,7 +37,7 @@ export default function BioassaySelectItem(props) {
                                                     </Label>
                                                 </div>
                                                 <div>
-                                                    <input
+                                                    <Input
                                                         type="checkbox"
                                                         onChange={e => props.handleSelect(labelKey, resource)}
                                                         checked={!!props.selectedItems?.[labelKey.property.id]?.includes(resource.id)}

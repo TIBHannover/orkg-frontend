@@ -177,7 +177,7 @@ const Contributions = () => {
                 </h2>
                 <div className="flex-shrink-0 ms-auto">
                     {isBioassayField && (
-                        <Button onClick={() => setIsOpenBioassays(v => !v)} outline size="sm" color="secondary" className="me-1">
+                        <Button onClick={() => setIsOpenBioassays(v => !v)} outline size="sm" color="smart" className="me-1">
                             <Icon icon={faFlask} /> Add Bioassay
                         </Button>
                     )}

@@ -60,8 +60,8 @@ const BioAssaysModal = props => {
     };
 
     const handleSelect = (labelKey, value) => {
-        if (selectedItems[labelKey.property.id] && selectedItems[labelKey.property.id].includes(value.id)) {
-            setSelectedItems(prev => ({ ...prev, [labelKey.property.id]: prev[labelKey.property.id].filter(id => id !== value) }));
+        if (selectedItems[labelKey.property.id]?.includes(value.id)) {
+            setSelectedItems(prev => ({ ...prev, [labelKey.property.id]: prev[labelKey.property.id].filter(id => id !== value.id) }));
         } else {
             setSelectedItems(prev => ({ ...prev, [labelKey.property.id]: [...(prev[labelKey.property.id] || []), value.id] }));
         }
@@ -179,7 +179,7 @@ const BioAssaysModal = props => {
                     Cancel
                 </Button>
                 <Button color="primary" onClick={isSubmitted ? handleInsertData : handleSubmitText} disabled={isLoadingData}>
-                    {isSubmitted ? 'Insert Data' : 'Submit'}
+                    {isSubmitted ? 'Insert data' : 'Submit'}
                 </Button>
             </ModalFooter>
         </Modal>
