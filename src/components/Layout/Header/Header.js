@@ -447,6 +447,10 @@ const Header = () => {
                                     Research fields
                                 </DropdownItem>
 
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.DIAGRAMS} onClick={closeMenu}>
+                                    Diagrams
+                                </DropdownItem>
+
                                 <ContentTypesMenu closeMenu={closeMenu} />
 
                                 <DropdownItem divider />

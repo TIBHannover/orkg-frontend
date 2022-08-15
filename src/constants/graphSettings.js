@@ -124,6 +124,7 @@ export const CLASSES = {
     URI: 'URI',
     SOFTWARE: 'Software',
     EXTERNAL: 'External',
+    DIAGRAM: 'DIAGRAM',
 };
 
 export const RESOURCES = {
