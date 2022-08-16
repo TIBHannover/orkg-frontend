@@ -1,11 +1,12 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { NavLink, useParams, useLocation } from 'react-router-dom';
-import ReactFlow, { applyEdgeChanges, applyNodeChanges, Controls, addEdge } from 'react-flow-renderer';
+import ReactFlow, { applyEdgeChanges, applyNodeChanges, Controls, addEdge, MarkerType } from 'react-flow-renderer';
 import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { useContextMenu } from 'react-contexify';
 import ContextMenu from 'components/DiagramEditor/ContextMenu';
 import { DIAGRAM_CONTEXT_MENU_ID } from 'constants/misc';
 import EditNode from 'components/DiagramEditor/EditNode';
+import EditEdge from 'components/DiagramEditor/EditEdge';
 import SaveDiagram from 'components/DiagramEditor/SaveDiagram';
 import TitleBar from 'components/TitleBar/TitleBar';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
@@ -16,8 +17,22 @@ import ROUTES from 'constants/routes.js';
 import { guid } from 'utils';
 import { getResourceData } from 'services/similarity/index';
 import Confirm from 'components/Confirmation/Confirmation';
+import styled from 'styled-components';
 
-function Diagram(props) {
+const StyledReactFlow = styled(ReactFlow)`
+    path.react-flow__edge-path {
+        stroke-width: 4;
+        stroke: ${props => props.theme.secondary};
+        &:hover {
+            stroke: ${props => props.theme.primary};
+        }
+    }
+    .react-flow__edge.selected .react-flow__edge-path {
+        stroke: ${props => props.theme.primary};
+    }
+`;
+
+function Diagram() {
     const location = useLocation();
     const { id } = useParams();
     const { show } = useContextMenu({
@@ -26,13 +41,16 @@ function Diagram(props) {
 
     const [currentMenu, setCurrentMenu] = useState(null);
     const [currentNode, setCurrentNode] = useState(null);
+    const [currentEdge, setCurrentEdge] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
 
     const [diagram, setDiagram] = useState();
 
     const diagramRef = useRef(null);
-    const [isAddNodeModalOpen, setIsAddNodeModalOpen] = useState(false);
+    const [isEditNodeModalOpen, setIsEditNodeModalOpen] = useState(false);
+    const [isEditEdgeModalOpen, setIsEditEdgeModalOpen] = useState(false);
+
     const [isSaveDiagramModalOpen, setIsSaveDiagramModalOpen] = useState(false);
     const [position, setPosition] = useState(null);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -41,7 +59,10 @@ function Diagram(props) {
 
     const onNodesChange = useCallback(changes => setNodes(nds => applyNodeChanges(changes, nds)), [setNodes]);
     const onEdgesChange = useCallback(changes => setEdges(eds => applyEdgeChanges(changes, eds)), [setEdges]);
-    const onConnect = useCallback(connection => setEdges(eds => addEdge(connection, eds)), [setEdges]);
+    const onConnect = useCallback(connection => {
+        setCurrentEdge(connection);
+        setIsEditEdgeModalOpen(true);
+    }, []);
 
     useEffect(() => {
         if (id) {
@@ -96,12 +117,17 @@ function Diagram(props) {
         const clientY = event.props.event.clientY - bounds.top;
         setPosition({ x: clientX, y: clientY });
         setCurrentNode(null);
-        setIsAddNodeModalOpen(v => !v);
+        setIsEditNodeModalOpen(v => !v);
     }, []);
 
     const handleEditNode = useCallback(event => {
         setCurrentNode(event.props.node);
-        setIsAddNodeModalOpen(v => !v);
+        setIsEditNodeModalOpen(v => !v);
+    }, []);
+
+    const handleEditEdge = useCallback(event => {
+        setCurrentEdge(event.props.edge);
+        setIsEditEdgeModalOpen(v => !v);
     }, []);
 
     const handleDeleteNode = useCallback(async event => {
@@ -161,9 +187,22 @@ function Diagram(props) {
                 position,
             };
             setNodes(prevNodes => [...prevNodes, node]);
-            setIsAddNodeModalOpen(false);
+            setIsEditNodeModalOpen(false);
         },
         [position],
+    );
+
+    const handleAddEdge = useCallback(
+        value => {
+            const edge = {
+                ...currentEdge,
+                ...(value ? { label: value.value, data: { label: value.value, ...value } } : {}),
+                labelStyle: { fontSize: '14px' },
+            };
+            setEdges(eds => addEdge(edge, eds));
+            setIsEditEdgeModalOpen(false);
+        },
+        [currentEdge],
     );
 
     const saveNode = useCallback(
@@ -181,9 +220,29 @@ function Diagram(props) {
                     return node;
                 }),
             );
-            setIsAddNodeModalOpen(false);
+            setIsEditNodeModalOpen(false);
         },
         [currentNode?.id],
+    );
+
+    const saveEdge = useCallback(
+        value => {
+            setEdges(prevEdges =>
+                prevEdges.map(edge => {
+                    if (edge.id === currentEdge.id) {
+                        // it's important that you create a new object here
+                        // in order to notify react flow about the change
+                        edge.data = {
+                            ...value,
+                        };
+                        edge.label = value.label;
+                    }
+                    return edge;
+                }),
+            );
+            setIsEditEdgeModalOpen(false);
+        },
+        [currentEdge?.id],
     );
 
     const handleSave = useCallback(() => {
@@ -230,17 +289,18 @@ function Diagram(props) {
                 Diagram
             </TitleBar>
             <Container className="p-2 box rounded" style={{ width: '100%', height: '500px' }}>
-                <ReactFlow
+                <StyledReactFlow
                     onPaneContextMenu={handlePaneContextMenu}
                     onNodeContextMenu={handleNodeContextMenu}
                     onEdgeContextMenu={handleEdgeContextMenu}
                     nodes={nodes}
-                    edges={edges}
+                    edges={edges.map(edge => ({ ...edge, markerEnd: { type: MarkerType.Arrow } }))}
                     onNodesChange={onNodesChange}
                     onEdgesChange={onEdgesChange}
                     onConnect={onConnect}
                     onInit={inst => setReactFlowInstance(inst)}
                     ref={diagramRef}
+                    connectionLineStyle={{ strokeWidth: 5 }}
                 >
                     <ContextMenu
                         currentMenu={currentMenu}
@@ -248,17 +308,25 @@ function Diagram(props) {
                             { label: 'Add node', effect: handleAddNode, menu: ['pane'] },
                             { label: 'Edit node', effect: handleEditNode, menu: ['node'] },
                             { label: 'Delete node', effect: handleDeleteNode, menu: ['node'] },
+                            { label: 'Edit edge', effect: handleEditEdge, menu: ['edge'] },
                             { label: 'Delete edge', effect: handleDeleteEdge, menu: ['edge'] },
                         ]}
                     />
                     <Controls />
-                </ReactFlow>
+                </StyledReactFlow>
                 <EditNode
                     node={currentNode}
                     addNode={addNode}
                     saveNode={saveNode}
-                    isAddNodeModalOpen={isAddNodeModalOpen}
-                    setIsAddNodeModalOpen={() => setIsAddNodeModalOpen(v => !v)}
+                    isEditNodeModalOpen={isEditNodeModalOpen}
+                    setIsEditNodeModalOpen={() => setIsEditNodeModalOpen(v => !v)}
+                />
+                <EditEdge
+                    edge={currentEdge}
+                    addEdge={handleAddEdge}
+                    saveEdge={saveEdge}
+                    isEditEdgeModalOpen={isEditEdgeModalOpen}
+                    setIsEditEdgeModalOpen={() => setIsEditEdgeModalOpen(v => !v)}
                 />
                 <SaveDiagram
                     diagram={reactFlowInstance?.toObject() ?? {}}
