@@ -13,6 +13,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faPen, faSave } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
+import { guid } from 'utils';
 import { getResourceData } from 'services/similarity/index';
 import Confirm from 'components/Confirmation/Confirmation';
 
@@ -66,6 +67,7 @@ function Diagram(props) {
     const handleNodeContextMenu = (event, node) => {
         event.preventDefault();
         setCurrentMenu('node');
+
         show(event, {
             props: {
                 key: 'node',
@@ -93,10 +95,14 @@ function Diagram(props) {
         const clientX = event.props.event.clientX - bounds.left;
         const clientY = event.props.event.clientY - bounds.top;
         setPosition({ x: clientX, y: clientY });
+        setCurrentNode(null);
         setIsAddNodeModalOpen(v => !v);
     }, []);
 
-    const handleEditNode = useCallback(event => {}, []);
+    const handleEditNode = useCallback(event => {
+        setCurrentNode(event.props.node);
+        setIsAddNodeModalOpen(v => !v);
+    }, []);
 
     const handleDeleteNode = useCallback(async event => {
         const confirm = await Confirm({
@@ -150,7 +156,7 @@ function Diagram(props) {
     const addNode = useCallback(
         value => {
             const node = {
-                id: value.id,
+                id: guid(),
                 data: { label: value.value, ...value },
                 position,
             };
@@ -158,6 +164,26 @@ function Diagram(props) {
             setIsAddNodeModalOpen(false);
         },
         [position],
+    );
+
+    const saveNode = useCallback(
+        value => {
+            setNodes(prevNodes =>
+                prevNodes.map(node => {
+                    if (node.id === currentNode.id) {
+                        // it's important that you create a new object here
+                        // in order to notify react flow about the change
+                        node.data = {
+                            ...value,
+                        };
+                    }
+
+                    return node;
+                }),
+            );
+            setIsAddNodeModalOpen(false);
+        },
+        [currentNode?.id],
     );
 
     const handleSave = useCallback(() => {
@@ -230,6 +256,7 @@ function Diagram(props) {
                 <EditNode
                     node={currentNode}
                     addNode={addNode}
+                    saveNode={saveNode}
                     isAddNodeModalOpen={isAddNodeModalOpen}
                     setIsAddNodeModalOpen={() => setIsAddNodeModalOpen(v => !v)}
                 />
