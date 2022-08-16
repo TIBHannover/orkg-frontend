@@ -95,7 +95,7 @@ export const CLASSES = {
     QB_DATASET_CLASS: 'QBDataset',
     LOCATION: 'DCLocation',
     SENTENCE: 'Sentence',
-    BENCHMARK: 'Benchmark',
+    BENCHMARK: 'C14022',
     MODEL: 'Model',
     DATASET: 'Dataset',
     EVALUATION: 'Evaluation',
