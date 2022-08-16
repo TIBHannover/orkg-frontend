@@ -5,7 +5,7 @@ import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, Dropdo
 import { useContextMenu } from 'react-contexify';
 import ContextMenu from 'components/DiagramEditor/ContextMenu';
 import { DIAGRAM_CONTEXT_MENU_ID } from 'constants/misc';
-import AddNode from 'components/DiagramEditor/AddNode';
+import EditNode from 'components/DiagramEditor/EditNode';
 import SaveDiagram from 'components/DiagramEditor/SaveDiagram';
 import TitleBar from 'components/TitleBar/TitleBar';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
@@ -14,6 +14,7 @@ import { faEllipsisV, faPen, faSave } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { getResourceData } from 'services/similarity/index';
+import Confirm from 'components/Confirmation/Confirmation';
 
 function Diagram(props) {
     const location = useLocation();
@@ -22,6 +23,8 @@ function Diagram(props) {
         id: DIAGRAM_CONTEXT_MENU_ID,
     });
 
+    const [currentMenu, setCurrentMenu] = useState(null);
+    const [currentNode, setCurrentNode] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
 
@@ -49,12 +52,37 @@ function Diagram(props) {
         }
     }, [id]);
 
-    const handleContextMenu = event => {
+    const handlePaneContextMenu = event => {
         event.preventDefault();
+        setCurrentMenu('pane');
         show(event, {
             props: {
-                key: 'value',
+                key: 'pane',
                 event,
+            },
+        });
+    };
+
+    const handleNodeContextMenu = (event, node) => {
+        event.preventDefault();
+        setCurrentMenu('node');
+        show(event, {
+            props: {
+                key: 'node',
+                event,
+                node,
+            },
+        });
+    };
+
+    const handleEdgeContextMenu = (event, edge) => {
+        event.preventDefault();
+        setCurrentMenu('edge');
+        show(event, {
+            props: {
+                key: 'edge',
+                event,
+                edge,
             },
         });
     };
@@ -67,6 +95,57 @@ function Diagram(props) {
         setPosition({ x: clientX, y: clientY });
         setIsAddNodeModalOpen(v => !v);
     }, []);
+
+    const handleEditNode = useCallback(event => {}, []);
+
+    const handleDeleteNode = useCallback(async event => {
+        const confirm = await Confirm({
+            title: 'Are you sure?',
+            message: (
+                <>
+                    Are you sure you want to delete this node?
+                    <br />
+                    <small>
+                        <i>- {event.props.node.data.label}</i>
+                    </small>
+                </>
+            ),
+        });
+
+        if (confirm) {
+            setNodes(nds => nds.filter(n => n.id !== event.props.node.id));
+        }
+    }, []);
+
+    const handleDeleteEdge = useCallback(
+        async event => {
+            const confirm = await Confirm({
+                title: 'Are you sure?',
+                message: (
+                    <>
+                        Are you sure you want to delete this edge?
+                        <br />
+                        between:
+                        <br />
+                        <small>
+                            <i>- {nodes.find(n => n.id === event.props.edge.source)?.data.label}</i>
+                        </small>
+                        <br />
+                        and:
+                        <br />
+                        <small>
+                            <i>- {nodes.find(n => n.id === event.props.edge.target)?.data.label}</i>
+                        </small>
+                    </>
+                ),
+            });
+
+            if (confirm) {
+                setEdges(nds => nds.filter(n => n.id !== event.props.edge.id));
+            }
+        },
+        [nodes],
+    );
 
     const addNode = useCallback(
         value => {
@@ -126,7 +205,9 @@ function Diagram(props) {
             </TitleBar>
             <Container className="p-2 box rounded" style={{ width: '100%', height: '500px' }}>
                 <ReactFlow
-                    onPaneContextMenu={handleContextMenu}
+                    onPaneContextMenu={handlePaneContextMenu}
+                    onNodeContextMenu={handleNodeContextMenu}
+                    onEdgeContextMenu={handleEdgeContextMenu}
                     nodes={nodes}
                     edges={edges}
                     onNodesChange={onNodesChange}
@@ -135,10 +216,23 @@ function Diagram(props) {
                     onInit={inst => setReactFlowInstance(inst)}
                     ref={diagramRef}
                 >
-                    <ContextMenu actions={[{ label: 'Add node', effect: handleAddNode }]} />
+                    <ContextMenu
+                        currentMenu={currentMenu}
+                        actions={[
+                            { label: 'Add node', effect: handleAddNode, menu: ['pane'] },
+                            { label: 'Edit node', effect: handleEditNode, menu: ['node'] },
+                            { label: 'Delete node', effect: handleDeleteNode, menu: ['node'] },
+                            { label: 'Delete edge', effect: handleDeleteEdge, menu: ['edge'] },
+                        ]}
+                    />
                     <Controls />
                 </ReactFlow>
-                <AddNode addNode={addNode} isAddNodeModalOpen={isAddNodeModalOpen} setIsAddNodeModalOpen={() => setIsAddNodeModalOpen(v => !v)} />
+                <EditNode
+                    node={currentNode}
+                    addNode={addNode}
+                    isAddNodeModalOpen={isAddNodeModalOpen}
+                    setIsAddNodeModalOpen={() => setIsAddNodeModalOpen(v => !v)}
+                />
                 <SaveDiagram
                     diagram={reactFlowInstance?.toObject() ?? {}}
                     isSaveDiagramModalOpen={isSaveDiagramModalOpen}

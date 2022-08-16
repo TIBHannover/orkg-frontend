@@ -3,18 +3,20 @@ import { Menu, Item } from 'react-contexify';
 import { DIAGRAM_CONTEXT_MENU_ID } from 'constants/misc';
 import 'react-contexify/dist/ReactContexify.min.css';
 
-const ContextMenu = ({ actions }) => (
+const ContextMenu = ({ actions, currentMenu }) => (
     <>
         <Menu id={DIAGRAM_CONTEXT_MENU_ID} animation={null}>
-            {actions.map(action => (
-                <Item key={action.label} onClick={action.effect}>
-                    {action.label}
-                </Item>
-            ))}
+            {actions
+                .filter(a => a.menu.includes(currentMenu))
+                .map(action => (
+                    <Item key={action.label} onClick={action.effect}>
+                        {action.label}
+                    </Item>
+                ))}
         </Menu>
     </>
 );
 
-ContextMenu.propTypes = { actions: PropTypes.array };
+ContextMenu.propTypes = { actions: PropTypes.array, currentMenu: PropTypes.string };
 
 export default ContextMenu;

@@ -4,7 +4,7 @@ import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 
-function AddNode({ isAddNodeModalOpen, setIsAddNodeModalOpen, addNode }) {
+function EditNode({ isAddNodeModalOpen, setIsAddNodeModalOpen, addNode, node }) {
     const [value, setValue] = useState(null);
 
     return (
@@ -37,9 +37,10 @@ function AddNode({ isAddNodeModalOpen, setIsAddNodeModalOpen, addNode }) {
     );
 }
 
-AddNode.propTypes = {
+EditNode.propTypes = {
     isAddNodeModalOpen: PropTypes.bool.isRequired,
     setIsAddNodeModalOpen: PropTypes.func.isRequired,
     addNode: PropTypes.func.isRequired,
+    node: PropTypes.object,
 };
-export default AddNode;
+export default EditNode;
