@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { NavLink, useParams, useLocation } from 'react-router-dom';
 import ReactFlow, { applyEdgeChanges, applyNodeChanges, Controls, addEdge, MarkerType } from 'react-flow-renderer';
 import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
@@ -8,6 +8,7 @@ import { DIAGRAM_CONTEXT_MENU_ID } from 'constants/misc';
 import EditNode from 'components/DiagramEditor/EditNode';
 import EditEdge from 'components/DiagramEditor/EditEdge';
 import SaveDiagram from 'components/DiagramEditor/SaveDiagram';
+import CustomNode from 'components/DiagramEditor/CustomNode';
 import TitleBar from 'components/TitleBar/TitleBar';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -249,6 +250,8 @@ function Diagram() {
         setIsSaveDiagramModalOpen(v => !v);
     }, []);
 
+    const nodeTypes = useMemo(() => ({ default: CustomNode }), []);
+
     return (
         <>
             <TitleBar
@@ -301,6 +304,7 @@ function Diagram() {
                     onInit={inst => setReactFlowInstance(inst)}
                     ref={diagramRef}
                     connectionLineStyle={{ strokeWidth: 5 }}
+                    nodeTypes={nodeTypes}
                 >
                     <ContextMenu
                         currentMenu={currentMenu}
