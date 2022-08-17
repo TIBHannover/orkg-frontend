@@ -12,7 +12,7 @@ function EditNode({ isEditNodeModalOpen, setIsEditNodeModalOpen, saveNode, addNo
     }, [node]);
 
     return (
-        <Modal isOpen={isEditNodeModalOpen} toggle={setIsEditNodeModalOpen}>
+        <Modal onExit={() => setValue(null)} isOpen={isEditNodeModalOpen} toggle={setIsEditNodeModalOpen}>
             <ModalHeader toggle={setIsEditNodeModalOpen}>{!node ? 'Add' : 'Edit'} node</ModalHeader>
             <ModalBody>
                 {!node && 'Enter an ORKG resource in the input below and click the "Add node" button.'}
@@ -24,6 +24,9 @@ function EditNode({ isEditNodeModalOpen, setIsEditNodeModalOpen, saveNode, addNo
                         inputGroup={false}
                         onItemSelected={item => {
                             setValue({ ...item, label: item.value });
+                        }}
+                        onNewItemSelected={item => {
+                            setValue({ id: item, label: item, value: item });
                         }}
                         value={value}
                         inputId="selectNode"

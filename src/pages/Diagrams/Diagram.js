@@ -21,6 +21,7 @@ import { guid } from 'utils';
 import { getResourceData } from 'services/similarity/index';
 import Confirm from 'components/Confirmation/Confirmation';
 import styled from 'styled-components';
+import { asyncLocalStorage } from 'utils';
 
 const StyledReactFlow = styled(ReactFlow)`
     path.react-flow__edge-path {
@@ -214,6 +215,24 @@ function Diagram() {
         setIsEditEdgeModalOpen(v => !v);
     }, []);
 
+    useEffect(() => {
+        if (nodes?.length > 0 && !id) {
+            asyncLocalStorage.setItem('diagram', JSON.stringify(reactFlowInstance?.toObject()));
+        }
+    }, [nodes, edges, reactFlowInstance, id]);
+
+    useEffect(() => {
+        const loadLocalData = async () => {
+            const data = await asyncLocalStorage.getItem('diagram');
+            const localDiagram = await JSON.parse(data);
+            if (!id && localDiagram) {
+                setNodes(localDiagram.nodes);
+                setEdges(localDiagram.edges);
+            }
+        };
+        loadLocalData();
+    }, [id]);
+
     const handleDeleteNode = useCallback(async event => {
         const confirm = await Confirm({
             title: 'Are you sure?',
@@ -389,6 +408,11 @@ function Diagram() {
                                 </>
                             )}
                         </RequireAuthentication>
+                        {!id && (
+                            <Button style={{ marginLeft: 2 }} size="sm" onClick={() => asyncLocalStorage.removeItem('diagram')}>
+                                Reset
+                            </Button>
+                        )}
                         {id && (
                             <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
                                 <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
