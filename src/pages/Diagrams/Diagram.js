@@ -7,8 +7,10 @@ import ContextMenu from 'components/DiagramEditor/ContextMenu';
 import { DIAGRAM_CONTEXT_MENU_ID } from 'constants/misc';
 import EditNode from 'components/DiagramEditor/EditNode';
 import EditEdge from 'components/DiagramEditor/EditEdge';
+import EditGroup from 'components/DiagramEditor/EditGroup';
 import SaveDiagram from 'components/DiagramEditor/SaveDiagram';
 import CustomNode from 'components/DiagramEditor/CustomNode';
+import CustomGroup from 'components/DiagramEditor/CustomGroup';
 import TitleBar from 'components/TitleBar/TitleBar';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -31,6 +33,10 @@ const StyledReactFlow = styled(ReactFlow)`
     .react-flow__edge.selected .react-flow__edge-path {
         stroke: ${props => props.theme.primary};
     }
+
+    .react-flow__node-group {
+        padding: 0;
+    }
 `;
 
 function Diagram() {
@@ -43,6 +49,7 @@ function Diagram() {
     const [currentMenu, setCurrentMenu] = useState(null);
     const [currentNode, setCurrentNode] = useState(null);
     const [currentEdge, setCurrentEdge] = useState(null);
+    const [currentGroup, setCurrentGroup] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
 
@@ -51,6 +58,7 @@ function Diagram() {
     const diagramRef = useRef(null);
     const [isEditNodeModalOpen, setIsEditNodeModalOpen] = useState(false);
     const [isEditEdgeModalOpen, setIsEditEdgeModalOpen] = useState(false);
+    const [isEditGroupModalOpen, setIsEditGroupModalOpen] = useState(false);
 
     const [isSaveDiagramModalOpen, setIsSaveDiagramModalOpen] = useState(false);
     const [position, setPosition] = useState(null);
@@ -88,8 +96,8 @@ function Diagram() {
 
     const handleNodeContextMenu = (event, node) => {
         event.preventDefault();
-        setCurrentMenu('node');
-
+        setCurrentMenu(node.type ?? 'node');
+        console.log(node.type);
         show(event, {
             props: {
                 key: 'node',
@@ -111,6 +119,76 @@ function Diagram() {
         });
     };
 
+    const onSelectionContextMenu = useCallback(
+        (event, nodes) => {
+            console.log('onSelectionContextMenu', event, nodes);
+            if (nodes.length > 1) {
+                console.log(event);
+
+                event.preventDefault();
+                setCurrentMenu('selection');
+                show(event, {
+                    props: {
+                        key: 'selection',
+                        event,
+                        nodes,
+                    },
+                });
+            }
+        },
+        [show],
+    );
+
+    const handleAddGroup = useCallback(event => {
+        console.log('handleAddGroup', event);
+        /*
+        const bounds = diagramRef.current.getBoundingClientRect();
+        // Compute mouse coords relative to canvas
+        const clientX = event.props.event.clientX - bounds.left;
+        const clientY = event.props.event.clientY - bounds.top;
+        setPosition({ x: clientX, y: clientY });
+        setCurrentNode(null);
+        */
+        setCurrentGroup({ event: event.props.event, nodes: event.props.nodes });
+        setIsEditGroupModalOpen(v => !v);
+    }, []);
+
+    const addGroup = useCallback(
+        value => {
+            const group = {
+                id: guid(),
+                type: 'group',
+                data: { label: value },
+                position: { x: currentGroup.event.target.offsetLeft - 20, y: currentGroup.event.target.offsetTop - 40 },
+                style: {
+                    width: currentGroup.event.target.clientWidth + 40,
+                    height: currentGroup.event.target.clientHeight + 60,
+                },
+            };
+
+            setNodes(prevNodes => [
+                group,
+                ...prevNodes.map(node => {
+                    const child = node;
+                    if (currentGroup.nodes.map(sn => sn.id).includes(node.id)) {
+                        // it's important that you create a new object here
+                        // in order to notify react flow about the change
+                        child.parentNode = group.id;
+                        child.extent = 'parent';
+                        child.position = {
+                            x: node.position.x - currentGroup.event.target.offsetLeft + 20,
+                            y: node.position.y - currentGroup.event.target.offsetTop + 40,
+                        };
+                    }
+
+                    return child;
+                }),
+            ]);
+            setIsEditGroupModalOpen(false);
+        },
+        [currentGroup],
+    );
+
     const handleAddNode = useCallback(event => {
         const bounds = diagramRef.current.getBoundingClientRect();
         // Compute mouse coords relative to canvas
@@ -126,6 +204,11 @@ function Diagram() {
         setIsEditNodeModalOpen(v => !v);
     }, []);
 
+    const handleEditGroup = useCallback(event => {
+        setCurrentGroup(event.props.node);
+        setIsEditGroupModalOpen(v => !v);
+    }, []);
+
     const handleEditEdge = useCallback(event => {
         setCurrentEdge(event.props.edge);
         setIsEditEdgeModalOpen(v => !v);
@@ -136,7 +219,7 @@ function Diagram() {
             title: 'Are you sure?',
             message: (
                 <>
-                    Are you sure you want to delete this node?
+                    Are you sure you want to delete this {event.props.node.type === 'node' ? 'node' : 'group'}?
                     <br />
                     <small>
                         <i>- {event.props.node.data.label}</i>
@@ -146,7 +229,19 @@ function Diagram() {
         });
 
         if (confirm) {
-            setNodes(nds => nds.filter(n => n.id !== event.props.node.id));
+            // remove and un-plug childs
+            setNodes(nds =>
+                nds
+                    .filter(n => n.id !== event.props.node.id)
+                    .map(n => {
+                        if (n.parentNode === event.props.node.id) {
+                            n.parentNode = undefined;
+                            n.extent = undefined;
+                            n.position = { x: n.position.x + event.props.node.position.x, y: n.position.y + event.props.node.position.y };
+                        }
+                        return n;
+                    }),
+            );
         }
     }, []);
 
@@ -226,6 +321,26 @@ function Diagram() {
         [currentNode?.id],
     );
 
+    const saveGroup = useCallback(
+        value => {
+            setNodes(prevNodes =>
+                prevNodes.map(node => {
+                    if (node.id === currentGroup.id) {
+                        // it's important that you create a new object here
+                        // in order to notify react flow about the change
+                        node.data = {
+                            label: value,
+                        };
+                    }
+
+                    return node;
+                }),
+            );
+            setIsEditGroupModalOpen(false);
+        },
+        [currentGroup?.id],
+    );
+
     const saveEdge = useCallback(
         value => {
             setEdges(prevEdges =>
@@ -250,7 +365,7 @@ function Diagram() {
         setIsSaveDiagramModalOpen(v => !v);
     }, []);
 
-    const nodeTypes = useMemo(() => ({ default: CustomNode }), []);
+    const nodeTypes = useMemo(() => ({ default: CustomNode, group: CustomGroup }), []);
 
     return (
         <>
@@ -296,6 +411,7 @@ function Diagram() {
                     onPaneContextMenu={handlePaneContextMenu}
                     onNodeContextMenu={handleNodeContextMenu}
                     onEdgeContextMenu={handleEdgeContextMenu}
+                    onSelectionContextMenu={onSelectionContextMenu}
                     nodes={nodes}
                     edges={edges.map(edge => ({ ...edge, markerEnd: { type: MarkerType.Arrow } }))}
                     onNodesChange={onNodesChange}
@@ -314,6 +430,9 @@ function Diagram() {
                             { label: 'Delete node', effect: handleDeleteNode, menu: ['node'] },
                             { label: 'Edit edge', effect: handleEditEdge, menu: ['edge'] },
                             { label: 'Delete edge', effect: handleDeleteEdge, menu: ['edge'] },
+                            { label: 'Create group', effect: handleAddGroup, menu: ['selection'] },
+                            { label: 'Edit group', effect: handleEditGroup, menu: ['group'] },
+                            { label: 'Delete group', effect: handleDeleteNode, menu: ['group'] },
                         ]}
                     />
                     <Controls />
@@ -324,6 +443,14 @@ function Diagram() {
                     saveNode={saveNode}
                     isEditNodeModalOpen={isEditNodeModalOpen}
                     setIsEditNodeModalOpen={() => setIsEditNodeModalOpen(v => !v)}
+                />
+
+                <EditGroup
+                    currentGroup={currentGroup}
+                    addGroup={addGroup}
+                    saveGroup={saveGroup}
+                    isEditGroupModalOpen={isEditGroupModalOpen}
+                    setIsEditGroupModalOpen={() => setIsEditGroupModalOpen(v => !v)}
                 />
                 <EditEdge
                     edge={currentEdge}
