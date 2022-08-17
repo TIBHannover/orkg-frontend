@@ -26,6 +26,7 @@ function EditEdge({ isEditEdgeModalOpen, setIsEditEdgeModalOpen, saveEdge, addEd
                             setValue({ ...item, label: item.value });
                         }}
                         value={value}
+                        ols={false}
                         inputId="selectEdge"
                     />
                 </div>

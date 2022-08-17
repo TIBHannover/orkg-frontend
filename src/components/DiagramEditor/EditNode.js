@@ -29,6 +29,7 @@ function EditNode({ isEditNodeModalOpen, setIsEditNodeModalOpen, saveNode, addNo
                             setValue({ id: item, label: item, value: item });
                         }}
                         value={value}
+                        ols={false}
                         inputId="selectNode"
                     />
                 </div>
