@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { NavLink, useParams, useLocation } from 'react-router-dom';
-import ReactFlow, { applyEdgeChanges, applyNodeChanges, Controls, addEdge, MarkerType } from 'react-flow-renderer';
+import ReactFlow, { applyEdgeChanges, applyNodeChanges, Controls, addEdge, MarkerType, SmoothStepEdge } from 'react-flow-renderer';
 import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { useContextMenu } from 'react-contexify';
 import ContextMenu from 'components/DiagramEditor/ContextMenu';
@@ -385,6 +385,7 @@ function Diagram() {
     }, []);
 
     const nodeTypes = useMemo(() => ({ default: CustomNode, group: CustomGroup }), []);
+    const edgeTypes = useMemo(() => ({ default: SmoothStepEdge }), []);
 
     return (
         <>
@@ -445,6 +446,7 @@ function Diagram() {
                     ref={diagramRef}
                     connectionLineStyle={{ strokeWidth: 5 }}
                     nodeTypes={nodeTypes}
+                    edgeTypes={edgeTypes}
                 >
                     <ContextMenu
                         currentMenu={currentMenu}

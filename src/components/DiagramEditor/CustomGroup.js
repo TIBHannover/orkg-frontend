@@ -3,7 +3,7 @@ import { Handle, Position } from 'react-flow-renderer';
 import styled from 'styled-components';
 
 const StyledGroupHeader = styled.div`
-    background: ${props => props.theme.secondary};
+    background: rgba(128, 134, 155, 0.8);
     color: #fff;
 `;
 
