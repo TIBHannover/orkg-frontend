@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { NavLink, useParams, useLocation } from 'react-router-dom';
-import ReactFlow, { applyEdgeChanges, applyNodeChanges, Controls, addEdge, MarkerType, SmoothStepEdge } from 'react-flow-renderer';
+import ReactFlow, { applyEdgeChanges, applyNodeChanges, Controls, addEdge, MarkerType, SmoothStepEdge, MiniMap } from 'react-flow-renderer';
 import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { useContextMenu } from 'react-contexify';
 import ContextMenu from 'components/DiagramEditor/ContextMenu';
@@ -39,6 +39,19 @@ const StyledReactFlow = styled(ReactFlow)`
         padding: 0;
     }
 `;
+
+const nodeColor = node => {
+    switch (node.type) {
+        case 'input':
+            return 'red';
+        case 'default':
+            return '#00ff00';
+        case 'output':
+            return 'rgb(0,0,255)';
+        default:
+            return '#eee';
+    }
+};
 
 function Diagram() {
     const location = useLocation();
@@ -195,7 +208,7 @@ function Diagram() {
         // Compute mouse coords relative to canvas
         const clientX = event.props.event.clientX - bounds.left;
         const clientY = event.props.event.clientY - bounds.top;
-        setPosition({ x: clientX, y: clientY });
+        setPosition(reactFlowInstance.project({ x: clientX, y: clientY }));
         setCurrentNode(null);
         setIsEditNodeModalOpen(v => !v);
     }, []);
@@ -462,6 +475,7 @@ function Diagram() {
                         ]}
                     />
                     <Controls />
+                    <MiniMap nodeColor={nodeColor} nodeStrokeWidth={3} />
                 </StyledReactFlow>
                 <EditNode
                     node={currentNode}

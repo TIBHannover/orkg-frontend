@@ -7,8 +7,14 @@ function CustomNode({ data }) {
     return (
         <>
             <Handle type="target" position={Position.Top} />
+            {data.id !== data.label ? (
+                <>
+                    <Link to={getResourceLink(data.classes?.[0], data.id)}>{data.label}</Link>
+                </>
+            ) : (
+                <>{data.label}</>
+            )}
 
-            <Link to={getResourceLink(data.classes?.[0], data.id)}>{data.label}</Link>
             <Handle type="source" position={Position.Bottom} />
         </>
     );

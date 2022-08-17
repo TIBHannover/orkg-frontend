@@ -10,7 +10,7 @@ const StyledGroupHeader = styled.div`
 function CustomGroup({ data }) {
     return (
         <>
-            <StyledGroupHeader>{data.label}</StyledGroupHeader>
+            <StyledGroupHeader>{data.label !== 'Test' ? data.label : '*'}</StyledGroupHeader>
             <Handle type="target" position={Position.Top} />
             <Handle type="source" position={Position.Bottom} />
         </>

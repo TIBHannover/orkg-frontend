@@ -25,6 +25,9 @@ function EditEdge({ isEditEdgeModalOpen, setIsEditEdgeModalOpen, saveEdge, addEd
                         onItemSelected={item => {
                             setValue({ ...item, label: item.value });
                         }}
+                        onNewItemSelected={item => {
+                            setValue({ id: item, label: item, value: item });
+                        }}
                         value={value}
                         ols={false}
                         inputId="selectEdge"

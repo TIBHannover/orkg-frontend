@@ -8,11 +8,13 @@ function EditNode({ isEditNodeModalOpen, setIsEditNodeModalOpen, saveNode, addNo
     const [value, setValue] = useState(!node ? null : { label: node.data.label, id: node.data.id });
 
     useEffect(() => {
-        setValue(!node ? null : { label: node.data.label, id: node.data.id });
+        if (node) {
+            setValue({ label: node.data.label, id: node.data.id });
+        }
     }, [node]);
 
     return (
-        <Modal onExit={() => setValue(null)} isOpen={isEditNodeModalOpen} toggle={setIsEditNodeModalOpen}>
+        <Modal onClosed={() => setValue(null)} isOpen={isEditNodeModalOpen} toggle={setIsEditNodeModalOpen}>
             <ModalHeader toggle={setIsEditNodeModalOpen}>{!node ? 'Add' : 'Edit'} node</ModalHeader>
             <ModalBody>
                 {!node && 'Enter an ORKG resource in the input below and click the "Add node" button.'}
@@ -22,8 +24,8 @@ function EditNode({ isEditNodeModalOpen, setIsEditNodeModalOpen, saveNode, addNo
                         placeholder="Select or type to enter a resource"
                         allowCreate={true}
                         inputGroup={false}
-                        onItemSelected={item => {
-                            setValue({ ...item, label: item.value });
+                        onItemSelected={i => {
+                            setValue({ ...i, label: i.value });
                         }}
                         onNewItemSelected={item => {
                             setValue({ id: item, label: item, value: item });
