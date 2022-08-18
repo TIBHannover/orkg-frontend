@@ -46,21 +46,26 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
     };
 
     const [isValid, setIsValid] = useState(true);
+
+    // we need this state to prevent closing the modal of selecting ontologies when the users clicks outside the input field because of useClickAway
+    const [ontologyModalIsOpen, setOntologyModalIsOpen] = useState(false);
     const [formFeedback, setFormFeedback] = useState(null);
     const confirmConversion = useRef(null);
     const [suggestionType, setSuggestionType] = useState(null);
 
     useClickAway(refContainer, () => {
         // setIsCreating(false);
-        if (!editMode) {
-            if (inputValue === '' && inputFormType !== 'empty') {
-                closeForm(false);
+        if (!ontologyModalIsOpen) {
+            if (!editMode) {
+                if (inputValue === '' && inputFormType !== 'empty') {
+                    closeForm(false);
+                }
+                createValue();
+            } else if ((inputDataType !== value.datatype || inputValue !== value.label) && inputValue !== '') {
+                onSubmit();
+            } else {
+                closeForm();
             }
-            createValue();
-        } else if ((inputDataType !== value.datatype || inputValue !== value.label) && inputValue !== '') {
-            onSubmit();
-        } else {
-            closeForm();
         }
     });
 
@@ -214,6 +219,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                 }}
                                 innerRef={ref => (autocompleteInputRef.current = ref)}
                                 cssClasses="form-control-sm"
+                                onOntologySelectorIsOpenStatusChange={status => setOntologyModalIsOpen(status)}
                             />
                         ) : (
                             <>
