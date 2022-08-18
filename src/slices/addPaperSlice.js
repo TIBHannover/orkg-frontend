@@ -279,13 +279,7 @@ export const createContributionAction = ({ selectAfterCreation = false, fillStat
     );
 
     if (selectAfterCreation) {
-        dispatch(
-            selectResource({
-                increaseLevel: false,
-                resourceId: newResourceId,
-                label: newContributionLabel,
-            }),
-        );
+        dispatch(selectContribution(newContributionId));
     }
 
     // Dispatch loading template of classes

@@ -217,7 +217,7 @@ const Contributions = () => {
                     <StyledContributionTabs>
                         <Tabs
                             renderTabBar={renderTabBar}
-                            tabBarExtraContent={<AddContributionButton onClick={() => dispatch(createContribution({}))} />}
+                            tabBarExtraContent={<AddContributionButton onClick={() => dispatch(createContribution({ selectAfterCreation: true }))} />}
                             moreIcon={<Icon size="lg" icon={faAngleDown} />}
                             activeKey={selectedContribution}
                             onChange={onTabChange}
