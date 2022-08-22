@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input } from 'reactstrap';
-import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 
 function EditGroup({ isEditGroupModalOpen, setIsEditGroupModalOpen, saveGroup, addGroup, currentGroup }) {
-    const [value, setValue] = useState(!currentGroup?.id ? null : currentGroup.data.label);
+    const [value, setValue] = useState(!currentGroup?.id ? '' : currentGroup.data.label);
 
     useEffect(() => {
-        setValue(!currentGroup?.id ? null : currentGroup.data.label);
+        setValue(!currentGroup?.id ? '' : currentGroup.data.label);
     }, [currentGroup]);
 
     return (
@@ -20,7 +19,7 @@ function EditGroup({ isEditGroupModalOpen, setIsEditGroupModalOpen, saveGroup, a
                 </div>
             </ModalBody>
             <ModalFooter>
-                <Button color="primary" onClick={() => (!currentGroup?.id ? addGroup(value) : saveGroup(value))} disabled={!value}>
+                <Button color="primary" onClick={() => (!currentGroup?.id ? addGroup(value) : saveGroup(value))}>
                     {!currentGroup?.id ? 'Add group' : 'Save'}
                 </Button>
                 <Button color="secondary" onClick={setIsEditGroupModalOpen}>
