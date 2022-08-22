@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { NavLink, useParams, useLocation } from 'react-router-dom';
 import ReactFlow, { applyEdgeChanges, applyNodeChanges, Controls, addEdge, MarkerType, SmoothStepEdge, MiniMap } from 'react-flow-renderer';
-import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Alert } from 'reactstrap';
 import { useContextMenu } from 'react-contexify';
 import ContextMenu from 'components/DiagramEditor/ContextMenu';
 import { DIAGRAM_CONTEXT_MENU_ID } from 'constants/misc';
@@ -14,7 +14,7 @@ import CustomGroup from 'components/DiagramEditor/CustomGroup';
 import TitleBar from 'components/TitleBar/TitleBar';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPen, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faPen, faSave, faRefresh, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { guid } from 'utils';
@@ -22,6 +22,7 @@ import { getResourceData } from 'services/similarity/index';
 import Confirm from 'components/Confirmation/Confirmation';
 import styled from 'styled-components';
 import { asyncLocalStorage } from 'utils';
+import { getResource } from 'services/backend/resources';
 
 const StyledReactFlow = styled(ReactFlow)`
     path.react-flow__edge-path {
@@ -65,15 +66,17 @@ function Diagram() {
     const [currentEdge, setCurrentEdge] = useState(null);
     const [currentGroup, setCurrentGroup] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [editMode, setEditMode] = useState(false);
+    const [editMode, setEditMode] = useState(!id);
 
     const [diagram, setDiagram] = useState();
+    const [diagramResource, setDiagramResource] = useState(null);
 
     const diagramRef = useRef(null);
     const [isEditNodeModalOpen, setIsEditNodeModalOpen] = useState(false);
     const [isEditEdgeModalOpen, setIsEditEdgeModalOpen] = useState(false);
     const [isEditGroupModalOpen, setIsEditGroupModalOpen] = useState(false);
 
+    const [isDataLoadedFromLocalStorage, setIsDataLoadedFromLocalStorage] = useState(false);
     const [isSaveDiagramModalOpen, setIsSaveDiagramModalOpen] = useState(false);
     const [position, setPosition] = useState(null);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -86,16 +89,6 @@ function Diagram() {
         setCurrentEdge(connection);
         setIsEditEdgeModalOpen(true);
     }, []);
-
-    useEffect(() => {
-        if (id) {
-            getResourceData(id).then(res => {
-                setDiagram(res.data);
-                setNodes(res.data.nodes);
-                setEdges(res.data.edges);
-            });
-        }
-    }, [id]);
 
     const handlePaneContextMenu = event => {
         event.preventDefault();
@@ -231,24 +224,6 @@ function Diagram() {
         setIsEditEdgeModalOpen(v => !v);
     }, []);
 
-    useEffect(() => {
-        if (nodes?.length > 0 && !id) {
-            asyncLocalStorage.setItem('diagram', JSON.stringify(reactFlowInstance?.toObject()));
-        }
-    }, [nodes, edges, reactFlowInstance, id]);
-
-    useEffect(() => {
-        const loadLocalData = async () => {
-            const data = await asyncLocalStorage.getItem('diagram');
-            const localDiagram = await JSON.parse(data);
-            if (!id && localDiagram) {
-                setNodes(localDiagram.nodes);
-                setEdges(localDiagram.edges);
-            }
-        };
-        loadLocalData();
-    }, [id]);
-
     const handleDeleteNode = useCallback(async event => {
         const confirm = await Confirm({
             title: 'Are you sure?',
@@ -309,6 +284,20 @@ function Diagram() {
         },
         [nodes],
     );
+
+    const handleResetDiagram = useCallback(async () => {
+        const confirm = await Confirm({
+            title: 'Are you sure?',
+            message: <>Are you sure you want to clear this diagram?</>,
+        });
+
+        if (confirm) {
+            asyncLocalStorage.removeItem('diagram');
+            setNodes([]);
+            setEdges([]);
+            setIsDataLoadedFromLocalStorage(false);
+        }
+    }, []);
 
     const addNode = useCallback(
         value => {
@@ -400,34 +389,109 @@ function Diagram() {
         setIsSaveDiagramModalOpen(v => !v);
     }, []);
 
+    const handleStopEdit = useCallback(async () => {
+        if (!editMode) {
+            setEditMode(v => !v);
+        } else {
+            const confirm = await Confirm({
+                title: 'Are you sure?',
+                message: <>Are you sure you want to clear all changes?</>,
+            });
+
+            if (confirm) {
+                setNodes(diagram.nodes);
+                setEdges(diagram.edges);
+                setEditMode(v => !v);
+            }
+        }
+    }, [diagram?.edges, diagram?.nodes, editMode]);
+
+    useEffect(() => {
+        if (id) {
+            setIsDataLoadedFromLocalStorage(false);
+            getResourceData(id).then(res => {
+                setDiagram(res.data);
+                setNodes(res.data.nodes);
+                setEdges(res.data.edges);
+            });
+            getResource(id).then(res => {
+                setDiagramResource(res);
+            });
+        }
+        setEditMode(!id);
+    }, [id]);
+
     const nodeTypes = useMemo(() => ({ default: CustomNode, group: CustomGroup }), []);
     const edgeTypes = useMemo(() => ({ default: SmoothStepEdge }), []);
+
+    useEffect(() => {
+        if (nodes?.length > 0 && !id) {
+            asyncLocalStorage.setItem('diagram', JSON.stringify(reactFlowInstance?.toObject()));
+        }
+    }, [nodes, edges, reactFlowInstance, id]);
+
+    useEffect(() => {
+        const loadLocalData = async () => {
+            const data = await asyncLocalStorage.getItem('diagram');
+            const localDiagram = await JSON.parse(data);
+            if (!id && localDiagram && localDiagram.nodes.length > 0) {
+                setNodes(localDiagram.nodes);
+                setEdges(localDiagram.edges);
+                setIsDataLoadedFromLocalStorage(true);
+            } else {
+                setIsDataLoadedFromLocalStorage(false);
+            }
+        };
+        loadLocalData();
+    }, [id]);
+
+    useEffect(() => {
+        document.title = `${id ? '' : 'Create '}Diagram ${diagramResource?.label ?? ''}`;
+    }, [id, diagramResource]);
 
     return (
         <>
             <TitleBar
                 buttonGroup={
                     <>
-                        <RequireAuthentication
-                            component={Button}
-                            size="sm"
-                            color="secondary"
-                            className="float-end"
-                            onClick={() => (id ? setEditMode(v => !v) : handleSave())}
-                        >
-                            {id ? (
-                                <>
-                                    <Icon icon={faPen} /> Edit
-                                </>
-                            ) : (
+                        {id && (
+                            <RequireAuthentication
+                                component={Button}
+                                size="sm"
+                                color="secondary"
+                                className="float-end"
+                                onClick={() => (id ? handleStopEdit() : handleSave())}
+                                disabled={nodes.length === 0}
+                            >
+                                {!editMode ? (
+                                    <>
+                                        <Icon icon={faPen} /> Edit
+                                    </>
+                                ) : (
+                                    <>
+                                        <Icon icon={faTimes} /> Stop editing
+                                    </>
+                                )}
+                            </RequireAuthentication>
+                        )}
+                        {((id && editMode) || !id) && (
+                            <RequireAuthentication
+                                component={Button}
+                                size="sm"
+                                color="secondary"
+                                className="float-end"
+                                onClick={() => handleSave()}
+                                disabled={nodes.length === 0}
+                                style={{ marginLeft: 1 }}
+                            >
                                 <>
                                     <Icon icon={faSave} /> Save
                                 </>
-                            )}
-                        </RequireAuthentication>
-                        {!id && (
-                            <Button style={{ marginLeft: 2 }} size="sm" onClick={() => asyncLocalStorage.removeItem('diagram')}>
-                                Reset
+                            </RequireAuthentication>
+                        )}
+                        {!id && nodes.length > 0 && (
+                            <Button style={{ marginLeft: 2 }} size="sm" onClick={handleResetDiagram}>
+                                <Icon icon={faRefresh} /> Reset
                             </Button>
                         )}
                         {id && (
@@ -445,19 +509,28 @@ function Diagram() {
                     </>
                 }
             >
-                Diagram
+                Diagram{diagram ? `: ${diagramResource.label}` : ''}
             </TitleBar>
+            {isDataLoadedFromLocalStorage && (
+                <Container className="p-0">
+                    <Alert color="light-darker">
+                        This diagram is loaded from your browser storage. If you want to remove it, click <i>Reset</i>.
+                    </Alert>
+                </Container>
+            )}
             <Container className="p-2 box rounded" style={{ width: '100%', height: '500px' }}>
                 <StyledReactFlow
-                    onPaneContextMenu={handlePaneContextMenu}
-                    onNodeContextMenu={handleNodeContextMenu}
-                    onEdgeContextMenu={handleEdgeContextMenu}
-                    onSelectionContextMenu={onSelectionContextMenu}
+                    onPaneContextMenu={editMode ? handlePaneContextMenu : null}
+                    onNodeContextMenu={editMode ? handleNodeContextMenu : null}
+                    onEdgeContextMenu={editMode ? handleEdgeContextMenu : null}
+                    onSelectionContextMenu={editMode ? onSelectionContextMenu : null}
+                    nodesConnectable={editMode}
+                    nodesDraggable={editMode}
                     nodes={nodes}
                     edges={edges.map(edge => ({ ...edge, markerEnd: { type: MarkerType.Arrow } }))}
-                    onNodesChange={onNodesChange}
-                    onEdgesChange={onEdgesChange}
-                    onConnect={onConnect}
+                    onNodesChange={editMode ? onNodesChange : null}
+                    onEdgesChange={editMode ? onEdgesChange : null}
+                    onConnect={editMode ? onConnect : null}
                     onInit={inst => setReactFlowInstance(inst)}
                     ref={diagramRef}
                     connectionLineStyle={{ strokeWidth: 5 }}
@@ -477,7 +550,7 @@ function Diagram() {
                             { label: 'Delete group', effect: handleDeleteNode, menu: ['group'] },
                         ]}
                     />
-                    <Controls />
+                    <Controls showInteractive={false} />
                     <MiniMap nodeColor={nodeColor} nodeStrokeWidth={3} />
                 </StyledReactFlow>
                 <EditNode
@@ -504,6 +577,7 @@ function Diagram() {
                 />
                 <SaveDiagram
                     diagram={reactFlowInstance?.toObject() ?? {}}
+                    diagramResource={diagramResource}
                     isSaveDiagramModalOpen={isSaveDiagramModalOpen}
                     setIsSaveDiagramModalOpen={() => setIsSaveDiagramModalOpen(v => !v)}
                 />

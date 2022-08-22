@@ -1,19 +1,21 @@
-import { useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input, InputGroup, Label } from 'reactstrap';
-import { CLASSES } from 'constants/graphSettings';
+import { useEffect, useState } from 'react';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Alert } from 'reactstrap';
+import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { createResource } from 'services/backend/resources';
 import { createResourceData } from 'services/similarity/index';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { toast } from 'react-toastify';
+import { useNavigate, Link } from 'react-router-dom';
+import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
+import { asyncLocalStorage } from 'utils';
+import { createResourceStatement } from 'services/backend/statements';
 
-function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagram }) {
-    const [resource, setResource] = useState(null);
-    const [value, setValue] = useState(null);
+function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagram, diagramResource }) {
+    const [value, setValue] = useState(diagramResource?.label ?? '');
     const [isSaving, setIsSaving] = useState(false);
-
+    const navigate = useNavigate();
     const save = async () => {
         setIsSaving(true);
         const sResource = await createResource(value, [CLASSES.DIAGRAM]);
@@ -21,10 +23,15 @@ function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagra
             resourceId: sResource.id,
             data: diagram,
         })
-            .then(() => {
-                setResource(sResource);
+            .then(async () => {
+                if (diagramResource.id) {
+                    await createResourceStatement(sResource.id, PREDICATES.HAS_PREVIOUS_VERSION, diagramResource?.id);
+                }
+                navigate(reverse(ROUTES.DIAGRAM, { id: sResource.id }));
+                toast.success('Diagram published successfully');
                 setIsSaving(false);
-                // setIsSaveDiagramModalOpen(false);
+                setIsSaveDiagramModalOpen(false);
+                asyncLocalStorage.removeItem('diagram');
             })
             .catch(() => {
                 setIsSaving(false);
@@ -32,38 +39,34 @@ function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagra
             });
     };
 
+    useEffect(() => {
+        setValue(diagramResource?.label ?? '');
+    }, [diagramResource]);
+
     return (
         <Modal isOpen={isSaveDiagramModalOpen} toggle={setIsSaveDiagramModalOpen}>
             <ModalHeader toggle={setIsSaveDiagramModalOpen}>Save diagram</ModalHeader>
             <ModalBody>
-                {!resource ? (
-                    <>
-                        Enter a diagram label
-                        <div className="mt-2">
-                            <Input type="text" onChange={e => setValue(e.target.value)} />
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <FormGroup>
-                            <Label for="doi_link">Diagram</Label>
-                            <InputGroup>
-                                <Input id="doi_link" value="Diagram" disabled />
-                                <CopyToClipboard
-                                    text="Diagram"
-                                    onCopy={() => {
-                                        toast.dismiss();
-                                        toast.success('Diagram link copied!');
-                                    }}
-                                >
-                                    <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                        <Icon icon={faClipboard} />
-                                    </Button>
-                                </CopyToClipboard>
-                            </InputGroup>
-                        </FormGroup>
-                    </>
+                {diagramResource?.id && (
+                    <Alert color="info">
+                        You are publishing a new version of the diagram. The diagram you are about to save will be marked as a new version of the{' '}
+                        <Link target="_blank" to={reverse(ROUTES.DIAGRAM, { id: diagramResource?.id })}>
+                            original diagram
+                        </Link>
+                        {diagramResource?.created_by !== MISC.UNKNOWN_ID && (
+                            <>
+                                {' created by '}
+                                <UserAvatar showDisplayName={true} userId={diagramResource?.created_by} />
+                            </>
+                        )}
+                    </Alert>
                 )}
+                <>
+                    Enter a diagram label
+                    <div className="mt-2">
+                        <Input type="text" value={value} onChange={e => setValue(e.target.value)} />
+                    </div>
+                </>
             </ModalBody>
             <ModalFooter>
                 <Button color="primary" onClick={save} disabled={isSaving}>
@@ -81,6 +84,7 @@ SaveDiagram.propTypes = {
     isSaveDiagramModalOpen: PropTypes.bool.isRequired,
     setIsSaveDiagramModalOpen: PropTypes.func.isRequired,
     diagram: PropTypes.object.isRequired,
+    diagramResource: PropTypes.object,
 };
 
 export default SaveDiagram;
