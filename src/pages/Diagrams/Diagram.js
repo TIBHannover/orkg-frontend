@@ -203,15 +203,18 @@ function Diagram() {
         [currentGroup],
     );
 
-    const handleAddNode = useCallback(event => {
-        const bounds = diagramRef.current.getBoundingClientRect();
-        // Compute mouse coords relative to canvas
-        const clientX = event.props.event.clientX - bounds.left;
-        const clientY = event.props.event.clientY - bounds.top;
-        setPosition(reactFlowInstance.project({ x: clientX, y: clientY }));
-        setCurrentNode(null);
-        setIsEditNodeModalOpen(v => !v);
-    }, []);
+    const handleAddNode = useCallback(
+        event => {
+            const bounds = diagramRef.current.getBoundingClientRect();
+            // Compute mouse coords relative to canvas
+            const clientX = event.props.event.clientX - bounds.left;
+            const clientY = event.props.event.clientY - bounds.top;
+            setPosition(reactFlowInstance.project({ x: clientX, y: clientY }));
+            setCurrentNode(null);
+            setIsEditNodeModalOpen(v => !v);
+        },
+        [reactFlowInstance],
+    );
 
     const handleEditNode = useCallback(event => {
         setCurrentNode(event.props.node);

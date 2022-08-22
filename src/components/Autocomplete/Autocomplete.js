@@ -563,6 +563,7 @@ function Autocomplete(props) {
             setInputValue('');
         } else if (action === 'create-option') {
             props.onNewItemSelected && props.onNewItemSelected(selected.label);
+            setInputValue('');
         }
     };
 
