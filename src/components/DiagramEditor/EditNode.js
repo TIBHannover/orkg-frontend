@@ -33,6 +33,7 @@ function EditNode({ isEditNodeModalOpen, setIsEditNodeModalOpen, saveNode, addNo
                         value={value}
                         ols={false}
                         inputId="selectNode"
+                        allowCreateDuplicate={true}
                     />
                 </div>
             </ModalBody>
