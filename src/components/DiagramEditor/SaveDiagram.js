@@ -24,7 +24,7 @@ function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagra
             data: diagram,
         })
             .then(async () => {
-                if (diagramResource.id) {
+                if (diagramResource?.id) {
                     await createResourceStatement(sResource.id, PREDICATES.HAS_PREVIOUS_VERSION, diagramResource?.id);
                 }
                 navigate(reverse(ROUTES.DIAGRAM, { id: sResource.id }));
