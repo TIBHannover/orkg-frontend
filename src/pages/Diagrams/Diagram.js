@@ -458,7 +458,7 @@ function Diagram() {
                             <RequireAuthentication
                                 component={Button}
                                 size="sm"
-                                color="secondary"
+                                color={!editMode ? 'secondary' : 'secondary-darker'}
                                 className="float-end"
                                 onClick={() => (id ? handleStopEdit() : handleSave())}
                                 disabled={nodes.length === 0}
@@ -509,7 +509,7 @@ function Diagram() {
                     </>
                 }
             >
-                Diagram{diagram ? `: ${diagramResource.label}` : ''}
+                Diagram{diagram ? `: ${diagramResource?.label}` : ''}
             </TitleBar>
             {isDataLoadedFromLocalStorage && (
                 <Container className="p-0">
@@ -518,7 +518,7 @@ function Diagram() {
                     </Alert>
                 </Container>
             )}
-            <Container className="p-2 box rounded" style={{ width: '100%', height: '500px' }}>
+            <Container className="p-2 box rounded" style={{ width: '100%', height: '800px' }}>
                 <StyledReactFlow
                     onPaneContextMenu={editMode ? handlePaneContextMenu : null}
                     onNodeContextMenu={editMode ? handleNodeContextMenu : null}
