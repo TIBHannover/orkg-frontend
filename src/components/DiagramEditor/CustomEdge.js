@@ -1,5 +1,11 @@
-import { getSmoothStepPath, EdgeText, Position } from 'react-flow-renderer';
+import { getSmoothStepPath, Position } from 'react-flow-renderer';
 import PropTypes from 'prop-types';
+import Tippy from '@tippyjs/react';
+import styled from 'styled-components';
+
+const StyledForeignObject = styled.foreignObject`
+    overflow: visible;
+`;
 
 const LeftOrRight = [Position.Left, Position.Right];
 
@@ -51,12 +57,6 @@ export default function CustomEdge({
     animated,
     sourcePosition,
     targetPosition,
-    label,
-    labelStyle,
-    labelShowBg,
-    labelBgStyle,
-    labelBgPadding,
-    labelBgBorderRadius,
     style,
     arrowHeadType = 'arrow',
     markerEndId,
@@ -79,23 +79,27 @@ export default function CustomEdge({
 
     const markerEnd = getMarkerEnd(arrowHeadType, markerEndId);
 
-    const text = data?.label ? (
-        <EdgeText
-            x={centerX}
-            y={centerY}
-            label={data.label}
-            labelStyle={labelStyle}
-            labelShowBg={labelShowBg}
-            labelBgStyle={labelBgStyle}
-            labelBgPadding={labelBgPadding}
-            labelBgBorderRadius={labelBgBorderRadius}
-        />
-    ) : null;
-
+    const size = data?.label?.length ?? 20;
     return (
         <>
             <path style={style} className="react-flow__edge-path" d={path} markerEnd={markerEnd} />
-            {text}
+            <StyledForeignObject height={1} width={1} x={centerX - size / 2} y={centerY - size / 2}>
+                <div xmlns="http://www.w3.org/1999/xhtml">
+                    <Tippy
+                        content={
+                            <>
+                                ID: {data.id}
+                                <br />
+                                Label: {data.label}
+                            </>
+                        }
+                        interactive={true}
+                        appendTo={document.body}
+                    >
+                        <span>{data.label}</span>
+                    </Tippy>
+                </div>
+            </StyledForeignObject>
         </>
     );
 }
@@ -112,12 +116,6 @@ CustomEdge.propTypes = {
     animated: PropTypes.bool,
     sourcePosition: PropTypes.string,
     targetPosition: PropTypes.string,
-    label: PropTypes.string,
-    labelStyle: PropTypes.object,
-    labelShowBg: PropTypes.bool,
-    labelBgStyle: PropTypes.object,
-    labelBgPadding: PropTypes.array,
-    labelBgBorderRadius: PropTypes.number,
     style: PropTypes.object,
     arrowHeadType: PropTypes.string,
     markerEndId: PropTypes.string,

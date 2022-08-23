@@ -6,16 +6,12 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import { CLASSES } from 'constants/graphSettings';
 import DiagramCard from 'components/DiagramCard/DiagramCard';
 import ROUTES from 'constants/routes';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getVisualizationData } from 'utils';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { reverse } from 'named-urls';
 
 const Diagrams = () => {
-    const user = useSelector(state => state.auth.user);
-
     useEffect(() => {
         document.title = 'Diagrams - ORKG';
     });

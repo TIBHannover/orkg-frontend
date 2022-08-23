@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { NavLink, useParams, useLocation } from 'react-router-dom';
-import ReactFlow, { applyEdgeChanges, applyNodeChanges, Controls, addEdge, MarkerType, MiniMap, SmoothStepEdge } from 'react-flow-renderer';
+import ReactFlow, { applyEdgeChanges, applyNodeChanges, Controls, addEdge, MarkerType, MiniMap } from 'react-flow-renderer';
 import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Alert } from 'reactstrap';
 import { useContextMenu } from 'react-contexify';
 import ContextMenu from 'components/DiagramEditor/ContextMenu';
@@ -105,7 +105,7 @@ function Diagram() {
     const handleNodeContextMenu = (event, node) => {
         event.preventDefault();
         setCurrentMenu(node.type ?? 'node');
-        console.log(node.type);
+
         show(event, {
             props: {
                 key: 'node',
@@ -129,10 +129,7 @@ function Diagram() {
 
     const onSelectionContextMenu = useCallback(
         (event, nodes) => {
-            console.log('onSelectionContextMenu', event, nodes);
             if (nodes.length > 1) {
-                console.log(event);
-
                 event.preventDefault();
                 setCurrentMenu('selection');
                 show(event, {
@@ -148,15 +145,6 @@ function Diagram() {
     );
 
     const handleAddGroup = useCallback(event => {
-        console.log('handleAddGroup', event);
-        /*
-        const bounds = diagramRef.current.getBoundingClientRect();
-        // Compute mouse coords relative to canvas
-        const clientX = event.props.event.clientX - bounds.left;
-        const clientY = event.props.event.clientY - bounds.top;
-        setPosition({ x: clientX, y: clientY });
-        setCurrentNode(null);
-        */
         setCurrentGroup({ event: event.props.event, nodes: event.props.nodes });
         setIsEditGroupModalOpen(v => !v);
     }, []);
