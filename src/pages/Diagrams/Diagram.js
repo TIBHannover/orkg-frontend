@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { NavLink, useParams, useLocation } from 'react-router-dom';
-import ReactFlow, { applyEdgeChanges, applyNodeChanges, Controls, addEdge, MarkerType, SmoothStepEdge, MiniMap } from 'react-flow-renderer';
+import ReactFlow, { applyEdgeChanges, applyNodeChanges, Controls, addEdge, MarkerType, MiniMap, SmoothStepEdge } from 'react-flow-renderer';
 import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Alert } from 'reactstrap';
 import { useContextMenu } from 'react-contexify';
 import ContextMenu from 'components/DiagramEditor/ContextMenu';
@@ -11,6 +11,7 @@ import EditGroup from 'components/DiagramEditor/EditGroup';
 import SaveDiagram from 'components/DiagramEditor/SaveDiagram';
 import CustomNode from 'components/DiagramEditor/CustomNode';
 import CustomGroup from 'components/DiagramEditor/CustomGroup';
+import CustomEdge from 'components/DiagramEditor/CustomEdge';
 import TitleBar from 'components/TitleBar/TitleBar';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -375,7 +376,6 @@ function Diagram() {
                         edge.data = {
                             ...value,
                         };
-                        edge.label = value.label;
                     }
                     return edge;
                 }),
@@ -422,7 +422,7 @@ function Diagram() {
     }, [id]);
 
     const nodeTypes = useMemo(() => ({ default: CustomNode, group: CustomGroup }), []);
-    const edgeTypes = useMemo(() => ({ default: SmoothStepEdge }), []);
+    const edgeTypes = useMemo(() => ({ default: CustomEdge /* SmoothStepEdge */ }), []);
 
     useEffect(() => {
         if (nodes?.length > 0 && !id) {
