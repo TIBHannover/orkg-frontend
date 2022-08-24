@@ -79,11 +79,10 @@ export default function CustomEdge({
 
     const markerEnd = getMarkerEnd(arrowHeadType, markerEndId);
 
-    const size = data?.label?.length ?? 20;
     return (
         <>
             <path style={style} className="react-flow__edge-path" d={path} markerEnd={markerEnd} />
-            <StyledForeignObject height={1} width={1} x={centerX - size / 2} y={centerY - size / 2}>
+            <StyledForeignObject height={1} width={1} x={centerX} y={centerY}>
                 <div xmlns="http://www.w3.org/1999/xhtml">
                     <Tippy
                         disabled={!data}
