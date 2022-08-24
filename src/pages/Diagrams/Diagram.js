@@ -13,12 +13,14 @@ import CustomNode from 'components/DiagramEditor/CustomNode';
 import CustomGroup from 'components/DiagramEditor/CustomGroup';
 import CustomEdge from 'components/DiagramEditor/CustomEdge';
 import ExportDiagram from 'components/DiagramEditor/ExportDiagram';
+import HelpModal from 'components/DiagramEditor/HelpModal';
 import TitleBar from 'components/TitleBar/TitleBar';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPen, faSave, faRefresh, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faPen, faSave, faRefresh, faTimes, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
+import Tippy from '@tippyjs/react';
 import { guid } from 'utils';
 import { getResourceData } from 'services/similarity/index';
 import Confirm from 'components/Confirmation/Confirmation';
@@ -78,6 +80,7 @@ function Diagram() {
     const [isEditEdgeModalOpen, setIsEditEdgeModalOpen] = useState(false);
     const [isEditGroupModalOpen, setIsEditGroupModalOpen] = useState(false);
     const [isExportDiagramModalOpen, setIsExportDiagramModalOpen] = useState(false);
+    const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
     const [isDataLoadedFromLocalStorage, setIsDataLoadedFromLocalStorage] = useState(false);
     const [isSaveDiagramModalOpen, setIsSaveDiagramModalOpen] = useState(false);
@@ -500,7 +503,18 @@ function Diagram() {
                     </>
                 }
             >
-                Diagram{diagram ? `: ${diagramResource?.label}` : ''}
+                Diagram{diagram ? `: ${diagramResource?.label}` : ''}{' '}
+                {editMode && (
+                    <Tippy content="Open help modal">
+                        <span className="ml-3">
+                            <Button color="link" size="sm" className="p-0 m-0" style={{ fontSize: '22px' }} onClick={() => setIsHelpModalOpen(true)}>
+                                <span className="text-primary">
+                                    <Icon icon={faQuestionCircle} />
+                                </span>
+                            </Button>
+                        </span>
+                    </Tippy>
+                )}
             </TitleBar>
             {isDataLoadedFromLocalStorage && (
                 <Container className="p-0">
@@ -578,6 +592,7 @@ function Diagram() {
                     isExportDiagramModalOpen={isExportDiagramModalOpen}
                     setIsExportDiagramModalOpen={() => setIsExportDiagramModalOpen(v => !v)}
                 />
+                <HelpModal isHelpModalOpen={isHelpModalOpen} setIsHelpModalOpen={() => setIsHelpModalOpen(v => !v)} />
             </Container>
         </>
     );
