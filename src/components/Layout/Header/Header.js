@@ -446,11 +446,9 @@ const Header = () => {
                                 <DropdownItem tag={RouterNavLink} end to={ROUTES.RESEARCH_FIELDS} onClick={closeMenu}>
                                     Research fields
                                 </DropdownItem>
-
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.DIAGRAMS} onClick={closeMenu}>
+                                {/** <DropdownItem tag={RouterNavLink} end to={ROUTES.DIAGRAMS} onClick={closeMenu}>
                                     Diagrams
-                                </DropdownItem>
-
+                                </DropdownItem> */}
                                 <ContentTypesMenu closeMenu={closeMenu} />
 
                                 <DropdownItem divider />
