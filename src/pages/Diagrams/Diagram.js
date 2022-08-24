@@ -12,6 +12,7 @@ import SaveDiagram from 'components/DiagramEditor/SaveDiagram';
 import CustomNode from 'components/DiagramEditor/CustomNode';
 import CustomGroup from 'components/DiagramEditor/CustomGroup';
 import CustomEdge from 'components/DiagramEditor/CustomEdge';
+import ExportDiagram from 'components/DiagramEditor/ExportDiagram';
 import TitleBar from 'components/TitleBar/TitleBar';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -76,6 +77,7 @@ function Diagram() {
     const [isEditNodeModalOpen, setIsEditNodeModalOpen] = useState(false);
     const [isEditEdgeModalOpen, setIsEditEdgeModalOpen] = useState(false);
     const [isEditGroupModalOpen, setIsEditGroupModalOpen] = useState(false);
+    const [isExportDiagramModalOpen, setIsExportDiagramModalOpen] = useState(false);
 
     const [isDataLoadedFromLocalStorage, setIsDataLoadedFromLocalStorage] = useState(false);
     const [isSaveDiagramModalOpen, setIsSaveDiagramModalOpen] = useState(false);
@@ -488,6 +490,7 @@ function Diagram() {
                                     <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu end>
+                                    <DropdownItem onClick={() => setIsExportDiagramModalOpen(true)}>Export diagram</DropdownItem>
                                     <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id })}>
                                         View resource
                                     </DropdownItem>
@@ -568,6 +571,12 @@ function Diagram() {
                     diagramResource={diagramResource}
                     isSaveDiagramModalOpen={isSaveDiagramModalOpen}
                     setIsSaveDiagramModalOpen={() => setIsSaveDiagramModalOpen(v => !v)}
+                />
+                <ExportDiagram
+                    diagramResource={diagramResource}
+                    diagram={reactFlowInstance?.toObject() ?? {}}
+                    isExportDiagramModalOpen={isExportDiagramModalOpen}
+                    setIsExportDiagramModalOpen={() => setIsExportDiagramModalOpen(v => !v)}
                 />
             </Container>
         </>

@@ -86,17 +86,18 @@ export default function CustomEdge({
             <StyledForeignObject height={1} width={1} x={centerX - size / 2} y={centerY - size / 2}>
                 <div xmlns="http://www.w3.org/1999/xhtml">
                     <Tippy
+                        disabled={!data}
                         content={
                             <>
-                                ID: {data.id}
+                                ID: {data?.id}
                                 <br />
-                                Label: {data.label}
+                                Label: {data?.label}
                             </>
                         }
                         interactive={true}
                         appendTo={document.body}
                     >
-                        <span>{data.label}</span>
+                        <span>{data?.label}</span>
                     </Tippy>
                 </div>
             </StyledForeignObject>
