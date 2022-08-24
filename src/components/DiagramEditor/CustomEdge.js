@@ -1,7 +1,9 @@
 import { getSmoothStepPath, Position } from 'react-flow-renderer';
 import PropTypes from 'prop-types';
-import Tippy from '@tippyjs/react';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import styled from 'styled-components';
+import { ENTITIES } from 'constants/graphSettings';
 
 const StyledForeignObject = styled.foreignObject`
     overflow: visible;
@@ -84,20 +86,16 @@ export default function CustomEdge({
             <path style={style} className="react-flow__edge-path" d={path} markerEnd={markerEnd} />
             <StyledForeignObject height={1} width={1} x={centerX} y={centerY}>
                 <div xmlns="http://www.w3.org/1999/xhtml">
-                    <Tippy
-                        disabled={!data}
-                        content={
-                            <>
-                                ID: {data?.id}
-                                <br />
-                                Label: {data?.label}
-                            </>
-                        }
-                        interactive={true}
-                        appendTo={document.body}
+                    <ConditionalWrapper
+                        condition={data?.linked}
+                        wrapper={children => (
+                            <DescriptionTooltip typeId={ENTITIES.PREDICATE} id={data?.id}>
+                                {children}
+                            </DescriptionTooltip>
+                        )}
                     >
-                        <span>{data?.label}</span>
-                    </Tippy>
+                        {data?.label}
+                    </ConditionalWrapper>
                 </div>
             </StyledForeignObject>
         </>

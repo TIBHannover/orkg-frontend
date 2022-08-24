@@ -53,10 +53,10 @@ function EditEdge({ isEditEdgeModalOpen, setIsEditEdgeModalOpen, saveEdge, addEd
                             allowCreate={true}
                             inputGroup={false}
                             onItemSelected={item => {
-                                setValue({ ...item, label: item.value });
+                                setValue({ ...item, label: item.value, _class: selectedEntity, linked: true });
                             }}
                             onNewItemSelected={item => {
-                                setValue({ id: item, label: item, value: item });
+                                setValue({ id: item, label: item, value: item, _class: selectedEntity, linked: false });
                             }}
                             value={value}
                             ols={false}
