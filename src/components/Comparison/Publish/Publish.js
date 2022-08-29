@@ -33,7 +33,7 @@ import env from '@beam-australia/react-env';
 import Select from 'react-select';
 import { getConferences } from 'services/backend/organizations';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import { useSelector } from 'react-redux';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 
