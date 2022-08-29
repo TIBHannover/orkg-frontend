@@ -54,7 +54,7 @@ const ViewPaperButton = ({ paperLink = null, doi = null, title = null }) => {
                             Alternative sources by Unpaywall
                         </DropdownItem>
                         {links.map(link => (
-                            <DropdownItem tag="a" href={link.url} target="_blank" rel="noopener noreferrer">
+                            <DropdownItem key={link.url} tag="a" href={link.url} target="_blank" rel="noopener noreferrer">
                                 {link.name}
                             </DropdownItem>
                         ))}
