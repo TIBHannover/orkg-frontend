@@ -88,7 +88,7 @@ const EntityRecognition = () => {
             {Object.keys(suggestions).length > 0 && (
                 <h3 className="h5">
                     <Tooltip message="The suggestions listed below are automatically generated based on the title and abstract from the paper. Using these suggestions is optional.">
-                        Smart suggestions
+                        Suggestions
                     </Tooltip>
                 </h3>
             )}

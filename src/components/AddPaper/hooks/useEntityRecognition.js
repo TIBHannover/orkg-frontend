@@ -2,7 +2,7 @@ import useInsertData from 'components/AddPaper/hooks/useInsertData';
 import { cloneDeep } from 'lodash';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { saveFeedback, PROPERTY_MAPPING } from 'services/orkgNlp';
+import { saveFeedback, PROPERTY_MAPPING, SERVICE_MAPPING } from 'services/orkgNlp';
 
 const useEntityRecognition = () => {
     const { nerResources, nerProperties, nerRawResponse, title, abstract } = useSelector(state => state.addPaper);
@@ -97,7 +97,7 @@ const useEntityRecognition = () => {
                     abstract,
                 },
                 response,
-                serviceName: 'CS_NER',
+                serviceName: SERVICE_MAPPING.CS_NER,
             });
         } catch (e) {
             console.log(e);

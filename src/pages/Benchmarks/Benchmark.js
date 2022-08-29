@@ -362,6 +362,7 @@ function Benchmark() {
                             <Table {...getTableProps()}>
                                 <thead>
                                     {headerGroups.map(headerGroup => (
+                                        // eslint-disable-next-line react/jsx-key
                                         <tr {...headerGroup.getHeaderGroupProps()}>
                                             {headerGroup.headers.map(column => (
                                                 <th key={column.getHeaderProps(column.getSortByToggleProps()).key}>
@@ -390,8 +391,10 @@ function Benchmark() {
                                         rows.map((row, i) => {
                                             prepareRow(row);
                                             return (
+                                                // eslint-disable-next-line react/jsx-key
                                                 <tr {...row.getRowProps()}>
                                                     {row.cells.map(cell => (
+                                                        // eslint-disable-next-line react/jsx-key
                                                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                                                     ))}
                                                 </tr>

@@ -76,8 +76,9 @@ const PdfTextAnnotation = () => {
                 onMouseOver={popupContent => setTip(highlight, highlight => popupContent)}
                 onMouseOut={hideTip}
                 key={index}
-                children={component}
-            />
+            >
+                {component}
+            </Popup>
         );
     };
 
