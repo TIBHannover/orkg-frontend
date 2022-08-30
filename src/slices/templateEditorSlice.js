@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { LOCATION_CHANGE } from 'utils';
 import { deleteStatementsByIds, createResourceStatement, getTemplateById, getTemplatesByClass } from 'services/backend/statements';
-import { cloneDeep } from 'lodash';
 import { toast } from 'react-toastify';
 import { getClasses, createClass } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
 import { createResource, updateResource } from 'services/backend/resources';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { createObject } from 'services/backend/misc';
+import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
 
 const initialState = {
     label: '',
@@ -156,122 +156,163 @@ export const saveTemplate = () => async (dispatch, getState) => {
             return null;
         }
     }
-
-    const promises = [];
-    let templateResource;
-    if (!data.templateID) {
-        templateResource = await createResource(data.label, [CLASSES.TEMPLATE]);
-        templateResource = templateResource.id;
-    } else {
-        templateResource = data.templateID;
-        await updateResource(templateResource, data.label);
-    }
-    // delete all the statement
-    if (data.templateID) {
-        if (data.statements.length > 0) {
-            await deleteStatementsByIds(data.statements);
-        }
-    }
-    if (data.isStrict) {
-        // set the statement that says this is strict template
-        const strictLiteral = await createLiteral('True');
-        promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_STRICT, strictLiteral.id));
-    }
-
-    // save template class
-    if (data.class && data.class.id) {
-        promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_CLASS, data.class.id));
-    } else {
-        // Generate class for the template
-        let templateClass = await getClasses({
-            q: templateResource,
-            exact: true,
-        });
-        if (templateClass && templateClass.totalElements === 1) {
-            promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_CLASS, templateClass.content[0].id));
+    try {
+        const promises = [];
+        let templateResource;
+        if (!data.templateID) {
+            templateResource = await createResource(data.label, [CLASSES.TEMPLATE]);
+            templateResource = templateResource.id;
         } else {
-            templateClass = await createClass(templateResource);
-            promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_CLASS, templateClass.id));
+            templateResource = data.templateID;
+            await updateResource(templateResource, data.label);
         }
-    }
 
-    // We use reverse() to create statements to keep the order of elements inside the input field
-    // save template predicate
-    if (data.predicate && data.predicate.id) {
-        promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_PREDICATE, data.predicate.id));
-    }
-
-    // save template research fields
-    if (data.researchFields && data.researchFields.length > 0) {
-        for (const researchField of data.researchFields.reverse()) {
-            promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD, researchField.id));
+        if (data.isStrict) {
+            // set the statement that says this is strict template
+            const strictLiteral = await createLiteral('True');
+            promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_STRICT, strictLiteral.id));
         }
-    }
-    // save template research problems
-    if (data.researchProblems && data.researchProblems.length > 0) {
-        for (const researchProblem of data.researchProblems.reverse()) {
-            promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM, researchProblem.id));
-        }
-    }
 
-    // save template properties
-    if (data.components && data.components.length > 0) {
-        for (const [index, property] of data.components.entries()) {
-            const component = await createResource(`Component for template ${templateResource}`, [CLASSES.TEMPLATE_COMPONENT]);
-            promises.push(createResourceStatement(templateResource, PREDICATES.HAS_TEMPLATE_COMPONENT, component.id));
-            promises.push(createResourceStatement(component.id, PREDICATES.TEMPLATE_COMPONENT_PROPERTY, property.property.id));
-            if (property.value && property.value.id) {
-                promises.push(createResourceStatement(component.id, PREDICATES.TEMPLATE_COMPONENT_VALUE, property.value.id));
-            }
-            // save Minimum Occurrence
-            if (property.minOccurs || property.minOccurs === 0) {
-                const minimumLiteral = await createLiteral(property.minOccurs);
-                promises.push(createResourceStatement(component.id, PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MIN, minimumLiteral.id));
-            }
-            // save Maximum Occurrence
-            if (property.maxOccurs || property.maxOccurs === 0) {
-                const maximumLiteral = await createLiteral(property.maxOccurs);
-                promises.push(createResourceStatement(component.id, PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MAX, maximumLiteral.id));
-            }
-            // save Order
-            const orderLiteral = await createLiteral(index);
-            promises.push(createResourceStatement(component.id, PREDICATES.TEMPLATE_COMPONENT_ORDER, orderLiteral.id));
-            // save validation rules
-            if (property.value && ['Number', 'Integer', 'String'].includes(property.value.id) && property.validationRules) {
-                for (const key in property.validationRules) {
-                    if (property.validationRules.hasOwnProperty(key)) {
-                        if (property.validationRules[key]) {
-                            const ruleLiteral = await createLiteral(`${key}#${property.validationRules[key]}`);
-                            promises.push(createResourceStatement(component.id, PREDICATES.TEMPLATE_COMPONENT_VALIDATION_RULE, ruleLiteral.id));
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // save Label Format
-    if (data.hasLabelFormat && data.labelFormat) {
-        const labelFormatLiteral = await createLiteral(data.labelFormat);
-        promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_LABEL_FORMAT, labelFormatLiteral.id));
-    }
-
-    return Promise.all(promises)
-        .then(() => {
-            if (data.templateID) {
-                toast.success('Template updated successfully');
+        // save template class
+        if (data.class && data.class.id) {
+            promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_CLASS, data.class.id));
+        } else {
+            // Generate class for the template
+            let templateClass = await getClasses({
+                q: templateResource,
+                exact: true,
+            });
+            if (templateClass && templateClass.totalElements === 1) {
+                promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_CLASS, templateClass.content[0].id));
             } else {
-                toast.success('Template created successfully');
+                templateClass = await createClass(templateResource);
+                promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_CLASS, templateClass.id));
             }
+        }
 
-            dispatch(loadTemplate(templateResource)); // reload the template
-            dispatch(setIsSaving(false));
-            dispatch(setTemplateId(templateResource));
-        })
-        .catch(() => {
-            dispatch(setHasFailedSaving(true));
-            dispatch(setIsSaving(false));
-            dispatch(setEditMode(true));
-            toast.error('Template failed saving!');
-        });
+        // We use reverse() to create statements to keep the order of elements inside the input field
+        // save template predicate
+        if (data.predicate && data.predicate.id) {
+            promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_PREDICATE, data.predicate.id));
+        }
+
+        // save template research fields
+        if (data.researchFields && data.researchFields.length > 0) {
+            for (const researchField of data.researchFields.reverse()) {
+                promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD, researchField.id));
+            }
+        }
+        // save template research problems
+        if (data.researchProblems && data.researchProblems.length > 0) {
+            for (const researchProblem of data.researchProblems.reverse()) {
+                promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM, researchProblem.id));
+            }
+        }
+
+        // save template properties
+        if (data.components && data.components.length > 0) {
+            const componentsAPICalls = [];
+            for (const [index, property] of data.components.entries()) {
+                const componentObject = {
+                    predicates: [],
+                    resource: {
+                        name: `Component for template ${templateResource}`,
+                        classes: [CLASSES.TEMPLATE_COMPONENT],
+                        values: {
+                            [PREDICATES.TEMPLATE_COMPONENT_PROPERTY]: [
+                                {
+                                    '@id': property.property.id,
+                                    '@type': ENTITIES.PREDICATE,
+                                },
+                            ],
+                            ...(property.value &&
+                                property.value.id && {
+                                    [PREDICATES.TEMPLATE_COMPONENT_VALUE]: [
+                                        {
+                                            '@id': property.value.id,
+                                            '@type': ENTITIES.CLASS,
+                                        },
+                                    ],
+                                }),
+                            ...((property.minOccurs || property.minOccurs === 0) && {
+                                [PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MIN]: [
+                                    {
+                                        text: property.minOccurs,
+                                        datatype: 'xsd:integer',
+                                    },
+                                ],
+                            }),
+                            ...((property.maxOccurs || property.maxOccurs === 0) && {
+                                [PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MAX]: [
+                                    {
+                                        text: property.maxOccurs,
+                                        datatype: 'xsd:integer',
+                                    },
+                                ],
+                            }),
+                            [PREDICATES.TEMPLATE_COMPONENT_ORDER]: [
+                                {
+                                    text: index,
+                                    datatype: 'xsd:integer',
+                                },
+                            ],
+                            ...(property.value &&
+                                ['Number', 'Integer', 'String'].includes(property.value.id) &&
+                                property.validationRules && {
+                                    [PREDICATES.TEMPLATE_COMPONENT_VALIDATION_RULE]: Object.keys(property.validationRules)
+                                        .filter(key => property.validationRules[key])
+                                        .map(key => ({
+                                            text: `${key}#${property.validationRules[key]}`,
+                                            datatype: 'xsd:integer',
+                                        })),
+                                }),
+                        },
+                    },
+                };
+                // create the component using createObject endpoint
+                componentsAPICalls.push(createObject(componentObject));
+            }
+            const components = await Promise.all(componentsAPICalls);
+            // link components to the template
+            components.map(c => promises.push(createResourceStatement(templateResource, PREDICATES.HAS_TEMPLATE_COMPONENT, c.id)));
+        }
+
+        // save Label Format
+        if (data.hasLabelFormat && data.labelFormat) {
+            const labelFormatLiteral = await createLiteral(data.labelFormat);
+            promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_LABEL_FORMAT, labelFormatLiteral.id));
+        }
+
+        // delete all the statement old
+        if (data.templateID) {
+            if (data.statements.length > 0) {
+                promises.push(deleteStatementsByIds(data.statements));
+            }
+        }
+
+        return Promise.all(promises)
+            .then(() => {
+                if (data.templateID) {
+                    toast.success('Template updated successfully');
+                } else {
+                    toast.success('Template created successfully');
+                }
+
+                dispatch(loadTemplate(templateResource)); // reload the template
+                dispatch(setIsSaving(false));
+                dispatch(setTemplateId(templateResource));
+            })
+            .catch(() => {
+                dispatch(setHasFailedSaving(true));
+                dispatch(setIsSaving(false));
+                dispatch(setEditMode(true));
+                toast.error('Template failed saving!');
+            });
+    } catch {
+        dispatch(setHasFailedSaving(true));
+        dispatch(setIsSaving(false));
+        dispatch(setEditMode(true));
+        toast.error('Template failed saving!');
+        return Promise.reject();
+    }
 };
