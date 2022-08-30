@@ -41,7 +41,6 @@ const TemplateEditorHeaderBar = () => {
     const editMode = useSelector(state => state.templateEditor.editMode);
     const isSaving = useSelector(state => state.templateEditor.isSaving);
     const label = useSelector(state => state.templateEditor.label);
-    const template = useSelector(state => state.templateEditor.template);
     const { id } = useParams();
 
     return (
@@ -57,7 +56,7 @@ const TemplateEditorHeaderBar = () => {
                                 disabled={isSaving}
                                 style={{ marginLeft: 1 }}
                                 color="secondary"
-                                onClick={() => dispatch(saveTemplate(template))}
+                                onClick={() => dispatch(saveTemplate())}
                             >
                                 {isSaving && <Icon icon={faSpinner} spin />}
                                 {editMode && <Icon icon={faSave} />}

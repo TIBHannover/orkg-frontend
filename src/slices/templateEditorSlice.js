@@ -131,10 +131,10 @@ export const loadTemplate = data => dispatch => {
     });
 };
 
-export const saveTemplate = templateData => async dispatch => {
+export const saveTemplate = () => async (dispatch, getState) => {
     dispatch(setIsSaving(true));
     dispatch(setEditMode(false));
-    const data = cloneDeep({ ...templateData });
+    const data = getState().templateEditor;
 
     if (!data.label) {
         // Make the template label mandatory
@@ -256,7 +256,7 @@ export const saveTemplate = templateData => async dispatch => {
         promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_LABEL_FORMAT, labelFormatLiteral.id));
     }
 
-    Promise.all(promises)
+    return Promise.all(promises)
         .then(() => {
             if (data.templateID) {
                 toast.success('Template updated successfully');

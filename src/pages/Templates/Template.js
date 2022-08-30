@@ -46,7 +46,6 @@ const Template = () => {
     const templateID = useSelector(state => state.templateEditor.templateID);
     const label = useSelector(state => state.templateEditor.label);
     const createdBy = useSelector(state => state.templateEditor.created_by);
-    const template = useSelector(state => state.templateEditor);
     const navigate = useNavigate();
 
     const [activeTab, setActiveTab] = useState('1');
@@ -120,7 +119,7 @@ const Template = () => {
                                 style={{ marginLeft: 1 }}
                                 color="secondary-darker"
                                 size="sm"
-                                onClick={() => dispatch(saveTemplate(template))}
+                                onClick={() => dispatch(saveTemplate())}
                             >
                                 {isSaving && <Icon icon={faSpinner} spin />}
                                 {editMode && <Icon icon={faSave} />}
