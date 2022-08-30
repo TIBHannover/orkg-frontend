@@ -149,15 +149,16 @@ const Template = () => {
                     active={isLoading || isSaving}
                     spinner
                     text={
-                        isLoading ? (
-                            'Loading...'
-                        ) : (
-                            <>
-                                <h4>Saving...</h4>
-                                <br />
-                                Please <b>do not </b>leave this page until the save process is finished.
-                            </>
-                        )
+                        <>
+                            {isLoading && 'Loading...'}
+                            {isSaving && (
+                                <>
+                                    <h4>Saving...</h4>
+                                    <br />
+                                    Please <b>do not </b>leave this page until the save process is finished.
+                                </>
+                            )}
+                        </>
                     }
                     styles={{
                         overlay: base => ({
