@@ -122,6 +122,7 @@ export const CLASSES = {
     INTEGER: 'Integer',
     BOOLEAN: 'Boolean',
     URI: 'URI',
+    PAPER_VERSION: 'PaperVersion',
     SOFTWARE: 'Software',
     EXTERNAL: 'External',
 };
