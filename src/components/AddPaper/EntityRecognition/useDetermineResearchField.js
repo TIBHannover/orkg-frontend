@@ -9,12 +9,20 @@ const useDetermineResearchField = () => {
 
     useEffect(() => {
         const determineField = async () => {
-            if (selectedResearchField === RESOURCES.RESEARCH_FIELD_COMPUTER_SCIENCE) {
+            if (
+                selectedResearchField === RESOURCES.RESEARCH_FIELD_COMPUTER_SCIENCE ||
+                selectedResearchField === RESOURCES.RESEARCH_FIELD_COMPUTATIONAL_LINGUISTICS
+            ) {
                 setIsComputerScienceField(true);
                 return;
             }
             const parentFields = await getParentResearchFields(selectedResearchField);
-            setIsComputerScienceField(parentFields.some(field => field.id === RESOURCES.RESEARCH_FIELD_COMPUTER_SCIENCE));
+            setIsComputerScienceField(
+                parentFields.some(
+                    field =>
+                        field.id === RESOURCES.RESEARCH_FIELD_COMPUTER_SCIENCE || field.id === RESOURCES.RESEARCH_FIELD_COMPUTATIONAL_LINGUISTICS,
+                ),
+            );
         };
         determineField();
     }, [selectedResearchField]);
