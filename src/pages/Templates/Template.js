@@ -119,7 +119,13 @@ const Template = () => {
                                 style={{ marginLeft: 1 }}
                                 color="secondary-darker"
                                 size="sm"
-                                onClick={() => dispatch(saveTemplate())}
+                                onClick={() => {
+                                    window.scrollTo({
+                                        behavior: 'smooth',
+                                        top: 0,
+                                    });
+                                    dispatch(saveTemplate());
+                                }}
                             >
                                 {isSaving && <Icon icon={faSpinner} spin />}
                                 {editMode && <Icon icon={faSave} />}
@@ -150,7 +156,7 @@ const Template = () => {
                     spinner
                     text={
                         <>
-                            {isLoading && 'Loading...'}
+                            {!isSaving && isLoading && 'Loading...'}
                             {isSaving && (
                                 <>
                                     <h4>Saving...</h4>
@@ -161,6 +167,10 @@ const Template = () => {
                         </>
                     }
                     styles={{
+                        content: base => ({
+                            ...base,
+                            marginTop: '30%',
+                        }),
                         overlay: base => ({
                             ...base,
                             borderRadius: 7,

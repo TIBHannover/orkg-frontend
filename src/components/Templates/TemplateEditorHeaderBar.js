@@ -56,7 +56,13 @@ const TemplateEditorHeaderBar = () => {
                                 disabled={isSaving}
                                 style={{ marginLeft: 1 }}
                                 color="secondary"
-                                onClick={() => dispatch(saveTemplate())}
+                                onClick={() => {
+                                    window.scrollTo({
+                                        behavior: 'smooth',
+                                        top: 0,
+                                    });
+                                    dispatch(saveTemplate());
+                                }}
                             >
                                 {isSaving && <Icon icon={faSpinner} spin />}
                                 {editMode && <Icon icon={faSave} />}

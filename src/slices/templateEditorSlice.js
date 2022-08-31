@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { LOCATION_CHANGE } from 'utils';
 import { deleteStatementsByIds, createResourceStatement, getTemplateById, getTemplatesByClass } from 'services/backend/statements';
 import { toast } from 'react-toastify';
+import { uniqBy } from 'lodash';
 import { getClasses, createClass } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
 import { createResource, updateResource } from 'services/backend/resources';
@@ -212,7 +213,7 @@ export const saveTemplate = () => async (dispatch, getState) => {
         // save template properties
         if (data.components && data.components.length > 0) {
             const componentsAPICalls = [];
-            for (const [index, property] of data.components.entries()) {
+            for (const [index, component] of uniqBy(data.components, 'property.id').entries()) {
                 const componentObject = {
                     predicates: [],
                     resource: {
@@ -221,31 +222,31 @@ export const saveTemplate = () => async (dispatch, getState) => {
                         values: {
                             [PREDICATES.TEMPLATE_COMPONENT_PROPERTY]: [
                                 {
-                                    '@id': property.property.id,
+                                    '@id': component.property.id,
                                     '@type': ENTITIES.PREDICATE,
                                 },
                             ],
-                            ...(property.value &&
-                                property.value.id && {
+                            ...(component.value &&
+                                component.value.id && {
                                     [PREDICATES.TEMPLATE_COMPONENT_VALUE]: [
                                         {
-                                            '@id': property.value.id,
+                                            '@id': component.value.id,
                                             '@type': ENTITIES.CLASS,
                                         },
                                     ],
                                 }),
-                            ...((property.minOccurs || property.minOccurs === 0) && {
+                            ...((component.minOccurs || component.minOccurs === 0) && {
                                 [PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MIN]: [
                                     {
-                                        text: property.minOccurs,
+                                        text: component.minOccurs,
                                         datatype: 'xsd:integer',
                                     },
                                 ],
                             }),
-                            ...((property.maxOccurs || property.maxOccurs === 0) && {
+                            ...((component.maxOccurs || component.maxOccurs === 0) && {
                                 [PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MAX]: [
                                     {
-                                        text: property.maxOccurs,
+                                        text: component.maxOccurs,
                                         datatype: 'xsd:integer',
                                     },
                                 ],
@@ -256,13 +257,13 @@ export const saveTemplate = () => async (dispatch, getState) => {
                                     datatype: 'xsd:integer',
                                 },
                             ],
-                            ...(property.value &&
-                                ['Number', 'Integer', 'String'].includes(property.value.id) &&
-                                property.validationRules && {
-                                    [PREDICATES.TEMPLATE_COMPONENT_VALIDATION_RULE]: Object.keys(property.validationRules)
-                                        .filter(key => property.validationRules[key])
+                            ...(component.value &&
+                                ['Number', 'Integer', 'String'].includes(component.value.id) &&
+                                component.validationRules && {
+                                    [PREDICATES.TEMPLATE_COMPONENT_VALIDATION_RULE]: Object.keys(component.validationRules)
+                                        .filter(key => component.validationRules[key])
                                         .map(key => ({
-                                            text: `${key}#${property.validationRules[key]}`,
+                                            text: `${key}#${component.validationRules[key]}`,
                                             datatype: 'xsd:integer',
                                         })),
                                 }),
