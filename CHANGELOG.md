@@ -3,6 +3,46 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.78.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.78.0...v0.78.1) - 2022-08-30
+
+### Changes
+
+- ux(ViewPaper): Redirect to newly created contribution [`#914`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/914)
+- feat: include CSP in meta tag [`#912`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/912)
+
+---
+## [v0.78.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.77.1...v0.78.0) - 2022-08-16
+
+### Changes
+
+- fix(Stats): update benchmarks class [`#916`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/916)
+- chore: integrate recommended react rules [`#913`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/913)
+- ui(AddPaperWizard): disable annotator for CS, separate abstract entry modal [`#911`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/911)
+- feat(AddPaperWizard): add Bioassays Semantification tool [`#907`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/907)
+- fix(StatementBrowser): Dataset table doesn't show horizontal scroll bar [`#910`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/910)
+- fix(Author): filter deleted papers [`#909`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/909)
+
+---
+## [v0.77.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.77.0...v0.77.1) - 2022-08-11
+
+### Changes
+
+- fix(PdfTextAnnotation): use package instead of CDN for loading pdfjs worker [`#908`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/908)
+
+---
+## [v0.77.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.76.0...v0.77.0) - 2022-08-10
+
+### Changes
+
+- feat(AddPaperWizard): implement NER-CS tool [`#734`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/734)
+- internal: update dependencies [`#898`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/898)
+- config(CI/CD): Set homepage to / in package.json [`#904`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/904)
+- feat(ViewPaper): integrate unpaywall [`#903`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/903)
+- ux(ContributionEditor): remember last selected data type [`#902`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/902)
+- ux(ResearchFieldSelector): improved loading indicator [`#901`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/901)
+- feat(ExistingPaperModal): disallow duplicate DOIs [`#900`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/900)
+
+---
 ## [v0.76.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.75.1...v0.76.0) - 2022-08-04
 
 ### Changes

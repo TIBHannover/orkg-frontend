@@ -42,6 +42,11 @@ const initialState = {
         byId: {},
         allIds: [],
     },
+    nerResources: [],
+    nerProperties: [],
+    nerRawResponse: {},
+    bioassayText: '',
+    bioassayRawResponse: [],
 };
 
 export const addPaperSlice = createSlice({
@@ -190,6 +195,21 @@ export const addPaperSlice = createSlice({
         saveAddPaper: (state, { payload }) => {
             state.paperNewResourceId = payload;
         },
+        setNerResources: (state, { payload }) => {
+            state.nerResources = payload;
+        },
+        setNerProperties: (state, { payload }) => {
+            state.nerProperties = payload;
+        },
+        setNerRawResponse: (state, { payload }) => {
+            state.nerRawResponse = payload;
+        },
+        setBioassayText: (state, { payload }) => {
+            state.bioassayText = payload;
+        },
+        setBioassayRawResponse: (state, { payload }) => {
+            state.bioassayRawResponse = payload;
+        },
     },
     extraReducers: {
         [LOCATION_CHANGE]: () => initialState,
@@ -219,6 +239,11 @@ export const {
     selectContribution,
     updateContributionLabel,
     saveAddPaper,
+    setNerResources,
+    setNerProperties,
+    setNerRawResponse,
+    setBioassayText,
+    setBioassayRawResponse,
 } = addPaperSlice.actions;
 
 export default addPaperSlice.reducer;
@@ -254,13 +279,7 @@ export const createContributionAction = ({ selectAfterCreation = false, fillStat
     );
 
     if (selectAfterCreation) {
-        dispatch(
-            selectResource({
-                increaseLevel: false,
-                resourceId: newResourceId,
-                label: newContributionLabel,
-            }),
-        );
+        dispatch(selectContribution(newContributionId));
     }
 
     // Dispatch loading template of classes

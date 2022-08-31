@@ -1,82 +1,92 @@
-import { createRef, Component } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES } from 'constants/graphSettings';
-import { withTheme } from 'styled-components';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
 import { followCursor } from 'tippy.js';
+import { useDispatch } from 'react-redux';
+import { updateAnnotationClass, removeAnnotation } from 'slices/addPaperSlice';
 
-class AnnotationTooltip extends Component {
-    constructor(props) {
-        super(props);
+function AnnotationTooltip(props) {
+    const tippyInstance = useRef(null);
+    const reactSelectInstance = useRef(null);
+    const dispatch = useDispatch();
+    const [defaultOptions, setDefaultOptions] = useState([]);
 
-        this.tippyInstance = createRef();
-        this.reactSelectInstance = createRef();
-    }
+    useEffect(() => {
+        setDefaultOptions(props.classOptions);
+    }, [props.classOptions]);
 
-    render() {
-        return (
-            <span>
-                <Tippy
-                    placement="top"
-                    appendTo={document.body}
-                    followCursor={true}
-                    plugins={[followCursor]}
-                    arrow={true}
-                    onHide={() => {
-                        if (this.reactSelectInstance) {
-                            this.reactSelectInstance.blur();
-                        }
-                    }}
-                    interactive={true}
-                    onCreate={instance => (this.tippyInstance.current = instance)}
-                    content={
-                        <div style={{ width: '300px' }}>
-                            <AutoComplete
-                                entityType={ENTITIES.PREDICATE}
-                                defaultOptions={this.props.defaultOptions}
-                                placeholder="Select or type to enter a property"
-                                onChange={(e, a) => {
-                                    this.props.handleChangeAnnotationClass(e, a, this.props.range);
-                                    this.tippyInstance.current.hide();
-                                }}
-                                value={{
-                                    label: this.props.range.class.label ? this.props.range.class.label : '',
-                                    id: this.props.range.class.id,
-                                    certainty: this.props.range.certainty,
-                                    range_id: this.props.range.id,
-                                }}
-                                key={value => value}
-                                isClearable
-                                openMenuOnFocus={true}
-                                autoLoadOption={true}
-                                allowCreate={true}
-                                autoFocus={false}
-                                innerRef={instance => (this.reactSelectInstance = instance)}
-                            />
-                        </div>
+    const handleChangeAnnotationClass = (selectedOption, { action }, range) => {
+        if (action === 'select-option') {
+            dispatch(updateAnnotationClass({ range, selectedOption }));
+        } else if (action === 'create-option') {
+            const newOption = {
+                label: selectedOption.label,
+                id: selectedOption.label,
+            };
+            dispatch(updateAnnotationClass({ range, selectedOption: newOption }));
+            setDefaultOptions([...defaultOptions, newOption]);
+        } else if (action === 'clear') {
+            dispatch(removeAnnotation(range));
+        }
+    };
+
+    return (
+        <span>
+            <Tippy
+                placement="top"
+                appendTo={document.body}
+                followCursor={true}
+                plugins={[followCursor]}
+                arrow={true}
+                onHide={() => {
+                    if (reactSelectInstance) {
+                        reactSelectInstance.current.blur();
                     }
-                >
-                    <span
-                        style={{ backgroundColor: this.props.getClassColor(this.props.range.class.label), color: 'black' }}
-                        id={`CR${this.props.range.id}`}
-                    >
-                        {this.props.lettersNode}
-                    </span>
-                </Tippy>
-            </span>
-        );
-    }
+                }}
+                interactive={true}
+                onCreate={instance => (tippyInstance.current = instance)}
+                content={
+                    <div style={{ width: '300px' }}>
+                        <AutoComplete
+                            entityType={ENTITIES.PREDICATE}
+                            defaultOptions={defaultOptions}
+                            placeholder="Select or type to enter a property"
+                            onChange={(e, a) => {
+                                handleChangeAnnotationClass(e, a, props.range);
+                                tippyInstance.current.hide();
+                            }}
+                            value={{
+                                label: props.range.class.label ? props.range.class.label : '',
+                                id: props.range.class.id,
+                                certainty: props.range.certainty,
+                                range_id: props.range.id,
+                            }}
+                            key={value => value}
+                            isClearable
+                            openMenuOnFocus={true}
+                            autoLoadOption={true}
+                            allowCreate={true}
+                            autoFocus={false}
+                            innerRef={instance => (reactSelectInstance.current = instance)}
+                        />
+                    </div>
+                }
+            >
+                <span style={{ backgroundColor: props.getClassColor(props.range.class.label), color: 'black' }} id={`CR${props.range.id}`}>
+                    {props.lettersNode}
+                </span>
+            </Tippy>
+        </span>
+    );
 }
+
+export default AnnotationTooltip;
 
 AnnotationTooltip.propTypes = {
     range: PropTypes.object,
     lettersNode: PropTypes.array,
-    handleChangeAnnotationClass: PropTypes.func,
-    handleValidateAnnotation: PropTypes.func,
     getClassColor: PropTypes.func.isRequired,
-    theme: PropTypes.object.isRequired,
-    defaultOptions: PropTypes.array.isRequired,
+    classOptions: PropTypes.array.isRequired,
 };
-
-export default withTheme(AnnotationTooltip);

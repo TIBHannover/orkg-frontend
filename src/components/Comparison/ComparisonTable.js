@@ -119,7 +119,7 @@ const ComparisonTable = props => {
                 accessor: 'property',
                 sticky: !isSmallScreen ? 'left' : undefined,
                 Cell: info =>
-                    (!props.transpose ? (
+                    !props.transpose ? (
                         <Properties className={`columnProperty ${info.value.group ? 'columnPropertyGroup' : ''}`}>
                             <PropertiesInner className="d-flex flex-row align-items-start justify-content-between" cellPadding={cellPadding}>
                                 <PropertyValue
@@ -161,7 +161,7 @@ const ComparisonTable = props => {
                                 </Delete>
                             )}
                         </Properties>
-                    )),
+                    ),
             },
             ...(!props.transpose && props.contributions
                 ? props.contributions
@@ -259,8 +259,10 @@ const ComparisonTable = props => {
                         className="disable-scrollbars"
                     >
                         {headerGroups.map(headerGroup => (
+                            // eslint-disable-next-line react/jsx-key
                             <div className="header" {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup.headers.map(column => (
+                                    // eslint-disable-next-line react/jsx-key
                                     <div {...column.getHeaderProps()} className="th p-0">
                                         {column.render('Header')}
                                     </div>
@@ -275,8 +277,10 @@ const ComparisonTable = props => {
                             {rows.map((row, i) => {
                                 prepareRow(row);
                                 return (
+                                    // eslint-disable-next-line react/jsx-key
                                     <div {...row.getRowProps()} className="tr p-0">
                                         {row.cells.map(cell => (
+                                            // eslint-disable-next-line react/jsx-key
                                             <div {...cell.getCellProps()} className="td p-0">
                                                 {cell.render('Cell')}
                                             </div>

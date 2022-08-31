@@ -130,7 +130,7 @@ const AnnotationTooltipNew = props => {
                                 className="rounded-pill me-2 mb-1"
                                 style={{ paddingTop: 2, paddingBottom: 2 }}
                                 size="sm"
-                                color="secondary"
+                                color="smart"
                                 key={suggestion.iri}
                                 onClick={() => handleSuggestionClick(suggestion.iri, suggestion.label)}
                             >

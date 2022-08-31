@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
-import { find } from 'lodash';
-import { PREDICATES } from 'constants/graphSettings';
+import { find, intersection } from 'lodash';
+import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { getDataBasedOnType } from 'utils';
 
 function useAuthorWorks({ authorId }) {
@@ -26,10 +26,15 @@ function useAuthorWorks({ authorId }) {
                 desc: true,
                 returnContent: false,
             }).then(result => {
+                const filteredResult = result.content.filter(
+                    item =>
+                        intersection(item.subject.classes, [CLASSES.PAPER, CLASSES.COMPARISON, CLASSES.VISUALIZATION, CLASSES.SMART_REVIEW]).length >
+                        0,
+                );
                 // Fetch the data of each work
-                if (result.content?.length) {
+                if (filteredResult?.length) {
                     return getStatementsBySubjects({
-                        ids: result.content.map(p => p.subject.id),
+                        ids: filteredResult.map(s => s.subject.id),
                     })
                         .then(statements => {
                             const items = statements.map(itemStatements => {
