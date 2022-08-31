@@ -15,10 +15,10 @@ const routes = {
     TEMPLATES: '/templates',
     TEMPLATE: '/template/:id',
     ADD_TEMPLATE: '/template/',
-    ORGANIZATIONS: '/organizations',
+    ORGANIZATIONS: '/organizations/:type',
     OBSERVATORIES: '/observatories',
     ADD_ORGANIZATION: '/addOrganization',
-    ORGANIZATION: '/organizations/:id',
+    ORGANIZATION: '/organization/:id',
     ADD_OBSERVATORY: '/organizations/:id/addObservatory',
     OBSERVATORY: '/observatory/:id',
     ADD_PAPER: {
@@ -59,6 +59,7 @@ const routes = {
     TOOLS: '/tools',
     CONTRIBUTION_EDITOR: '/contribution-editor',
     ADD_COMPARISON: '/add-comparison',
+    EVENT: '/event/:id',
     /* Legacy routes */
     PREDICATES: '/predicates',
     PREDICATE: '/predicate/:id',

@@ -464,17 +464,11 @@ const Header = () => {
                                         <Badge color="info">Beta</Badge>
                                     </small>
                                 </DropdownItem>
-                                <DropdownItem
-                                    tag={RouterNavLink}
-                                    end
-                                    to={ROUTES.ORGANIZATIONS}
-                                    onClick={closeMenu}
-                                    className="d-flex justify-content-between"
-                                >
-                                    Organizations{' '}
-                                    <small className="ms-2">
-                                        <Badge color="info">Beta</Badge>
-                                    </small>
+                                <DropdownItem key="general" tag={RouterNavLink} end to={reverse(ROUTES.ORGANIZATIONS, { type: 'general' })} onClick={closeMenu}>
+                                    Organizations
+                                </DropdownItem>
+                                <DropdownItem key="events" tag={RouterNavLink} end to={reverse(ROUTES.ORGANIZATIONS, { type: 'events' })} onClick={closeMenu}>
+                                    Event
                                 </DropdownItem>
                                 <DropdownItem divider />
 
