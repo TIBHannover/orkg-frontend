@@ -3,6 +3,17 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.79.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.78.1...v0.79.0) - 2022-08-31
+
+### Changes
+
+- feat(paper): Persistent identification of ORKG papers [`#693`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/693)
+- ux(Template): Show an overlay loading and saving indicator [`#925`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/925)
+- fix(CSP): Support loading fonts from data: [`#926`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/926)
+- style(Author): Responsive AuthorHeader component [`#921`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/921)
+- feat(CS-NER): activate for Computational Linguistics research field [`#917`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/917)
+
+---
 ## [v0.78.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.78.0...v0.78.1) - 2022-08-30
 
 ### Changes
