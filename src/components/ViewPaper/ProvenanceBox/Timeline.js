@@ -47,7 +47,7 @@ const Timeline = ({ versions, paperResource, isLoadingContributors }) => (
                                             <br />
                                             <small>
                                                 DOI:{' '}
-                                                <a href={`https://doi.org/${version.publishedResource.id}`} target="_blank" rel="noopener noreferrer">
+                                                <a href={`https://doi.org/${env('DATACITE_DOI_PREFIX')}/${version.publishedResource.id}`} target="_blank" rel="noopener noreferrer">
                                                     https://doi.org/{env('DATACITE_DOI_PREFIX')}/{version.publishedResource.id}
                                                 </a>
                                             </small>
