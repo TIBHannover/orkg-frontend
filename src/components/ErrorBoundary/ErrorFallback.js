@@ -19,48 +19,41 @@ const ErrorFallback = props => {
     return (
         <div>
             <Container className="py-4 px-2">
-                <Logo />
+                <Link to={ROUTES.HOME} color="primary" className="me-3 mb-1">
+                    <Logo />
+                </Link>
             </Container>
 
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <div className="container">
                     <div className="row justify-content-center">
                         <div className="col-md-12 text-center">
-                            <span className="display-6 d-block">Something went wrong!</span>
+                            <h1 className="display-6 d-block">Something went wrong!</h1>
                             <Icon icon={faBug} className="text-primary mt-3 mb-3" style={{ fontSize: 30 }} />
-                            <div className="mb-4 lead">
-                                We're quite sorry about this! Please try again or report an issue to help fix this problem
-                            </div>
-                            <Link to={ROUTES.HOME}>
-                                <Button color="primary" className="me-3 mb-1">
-                                    Back to home
-                                </Button>
-                            </Link>
-                            <a
+                            <div className="mb-4 lead">We're sorry about this! Please try again or report an issue to help fix this problem</div>
+                            <Button tag={Link} to={ROUTES.HOME} color="primary" className="me-3 mb-1">
+                                Back to home
+                            </Button>
+                            <Button
+                                tag="a"
                                 href={`https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/issues/new?issue[title]=${
                                     props.error
                                 }&issue[description]=%0A%0A%0A%23%23%23 Error details%0AError: ${props.error}%0A%0ALocation: ${
                                     window.location.href
                                 }%0A%0ABrowser: ${JSON.stringify(browser)}`}
+                                color="primary"
+                                outline
+                                className="me-3 mb-1"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <Button color="primary" outline className="me-3 mb-1">
-                                    Report an issue in Gitlab
-                                </Button>
-                            </a>
+                                Report an issue in Gitlab
+                            </Button>
                         </div>
                         <div>
-                            <p
-                                role="button"
-                                onKeyPress={() => setCollapse(v => !v)}
-                                onClick={() => setCollapse(v => !v)}
-                                outline
-                                size="sm"
-                                className="d-inline-block text-small"
-                            >
-                                <small className="text-muted">&#8226; Show error details</small>
-                            </p>
+                            <Button onClick={() => setCollapse(v => !v)} size="sm" color="link" className="d-inline-block px-0 text-muted">
+                                Show error details
+                            </Button>
                         </div>
                         <Collapse isOpen={collapse}>
                             <Card>
