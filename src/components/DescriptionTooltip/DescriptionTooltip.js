@@ -1,11 +1,14 @@
 import { useState } from 'react';
+import { Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
 import { truncate } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faClipboard } from '@fortawesome/free-solid-svg-icons';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { toast } from 'react-toastify';
 
 const DescriptionTooltip = props => {
     const [description, setDescription] = useState('');
@@ -49,28 +52,42 @@ const DescriptionTooltip = props => {
         <Tippy
             onTrigger={onTrigger}
             content={
-                <>
-                    {renderTypeLabel()}: {props.id}
-                    <br />
-                    Description:{' '}
-                    {!isLoading ? (
-                        description ? (
-                            <> {truncate(description, { length: 300 })}</>
+                <div>
+                    <div>
+                        <span style={{ verticalAlign: 'middle' }}>
+                            {renderTypeLabel()} id: {props.id}
+                        </span>
+                        <CopyToClipboard
+                            text={props.id}
+                            onCopy={() => {
+                                toast.dismiss();
+                                toast.success('ID copied to clipboard');
+                            }}
+                        >
+                            <Button title="Click to copy id" onClick={e => e.stopPropagation()} className="py-0 px-0 ms-1" size="sm" color="link">
+                                <Icon icon={faClipboard} size="xs" />
+                            </Button>
+                        </CopyToClipboard>
+                    </div>
+                    <div>
+                        Description:
+                        {!isLoading ? (
+                            <>
+                                {description ? (
+                                    <> {truncate(description, { length: 300 })}</>
+                                ) : (
+                                    <small className="font-italic"> No description yet</small>
+                                )}
+                            </>
                         ) : (
-                            <small className="font-italic">No description yet</small>
-                        )
-                    ) : (
-                        <Icon icon={faSpinner} spin />
-                    )}
-                    {props.extraContent && (
-                        <>
-                            <br />
-
-                            {props.extraContent}
-                        </>
-                    )}
-                </>
+                            <Icon icon={faSpinner} spin />
+                        )}
+                    </div>
+                    {props.extraContent && <div>{props.extraContent}</div>}
+                </div>
             }
+            appendTo={document.body}
+            interactive={true}
             arrow={true}
         >
             <span tabIndex="0">{props.children}</span>

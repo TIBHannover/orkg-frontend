@@ -42,15 +42,15 @@ const StatementItem = forwardRef((props, ref) => {
                         <div>
                             <div className="propertyLabel">
                                 {!property.isSaving && property.existingPredicateId && (
-                                    <Link
-                                        to={reverse(ROUTES.PROPERTY, { id: property.existingPredicateId })}
-                                        target={!propertiesAsLinks ? '_blank' : '_self'}
-                                        className={!propertiesAsLinks ? 'text-dark' : ''}
-                                    >
-                                        <DescriptionTooltip id={property.existingPredicateId} typeId={ENTITIES.PREDICATE}>
+                                    <DescriptionTooltip id={property.existingPredicateId} typeId={ENTITIES.PREDICATE}>
+                                        <Link
+                                            to={reverse(ROUTES.PROPERTY, { id: property.existingPredicateId })}
+                                            target={!propertiesAsLinks ? '_blank' : '_self'}
+                                            className={!propertiesAsLinks ? 'text-dark' : ''}
+                                        >
                                             {predicateLabel}
-                                        </DescriptionTooltip>
-                                    </Link>
+                                        </Link>
+                                    </DescriptionTooltip>
                                 )}
                                 {!property.isSaving && !property.existingPredicateId && predicateLabel}
                                 {property.isSaving && 'Saving...'}
