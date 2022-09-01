@@ -38,7 +38,6 @@ import SearchResults from 'pages/Search';
 import Stats from 'pages/Stats';
 import UserSettings from 'pages/UserSettings';
 import UserProfile from 'pages/UserProfile';
-import FeaturedComparisons from 'pages/FeaturedComparisons';
 import Data from 'pages/Data';
 import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
@@ -74,6 +73,7 @@ import ResearchProblem from './pages/ResearchProblem';
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
 const PdfTextAnnotation = lazy(() => import('pages/PdfTextAnnotation')); // for dependency "react-pdf-highlighter" ~1.16MB
 const PdfAnnotation = lazy(() => import('pages/PdfAnnotation')); // for dependency "handsontable" ~887.4KB
+const FeaturedComparisons = lazy(() => import('pages/FeaturedComparisons')); // for dependency @fontawesome/free-solid-svg-icons used to show icons
 
 const routes = [
     {
