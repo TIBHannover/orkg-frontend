@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Alert, Button, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { createLiteralStatement, createResourceStatement, getStatementsBundleBySubject } from 'services/backend/statements';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -18,7 +18,7 @@ import Tooltip from 'components/Utils/Tooltip';
 import { generateDoi } from 'services/backend/misc';
 import ROUTES from 'constants/routes';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { useMatomo } from '@jonkoops/matomo-tracker-react';
 
 const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
     const [isLoading, setIsLoading] = useState(false);

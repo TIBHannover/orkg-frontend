@@ -1,4 +1,4 @@
-import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { useMatomo } from '@jonkoops/matomo-tracker-react';
 
 /**
  * A HOC to use the Matomo hooks in class components
