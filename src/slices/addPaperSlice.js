@@ -362,6 +362,7 @@ export const getResourceObject = (data, resourceId, newProperties) => {
                     }
                     return {
                         '@id': newResources.includes(value.resourceId) ? `_${value.resourceId}` : value.resourceId,
+                        '@type': value._class,
                     };
                 }),
             };

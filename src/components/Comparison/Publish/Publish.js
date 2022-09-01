@@ -217,13 +217,11 @@ function Publish(props) {
                                 [PREDICATES.COMPARE_CONTRIBUTION]: props.contributionsList.map(contributionID => ({
                                     '@id': contributionID,
                                 })),
-                                /*
                                 [PREDICATES.HAS_PROPERTY]: props.predicatesList.map(predicateID => {
                                     const property =
                                         props.comparisonType === 'merge' ? predicateID : getPropertyObjectFromData(props.data, { id: predicateID });
-                                    return { '@id': property.id };
+                                    return { '@id': property.id, '@type': ENTITIES.PREDICATE };
                                 }),
-                                */
                                 ...(props.metaData.hasPreviousVersion && {
                                     [PREDICATES.HAS_PREVIOUS_VERSION]: [
                                         {

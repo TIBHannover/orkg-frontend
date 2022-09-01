@@ -61,7 +61,8 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     const commitChangeLabel = async (draftLabel, draftDataType) => {
         // Check if the user changed the label
         if (draftLabel !== value.label || draftDataType !== value.datatype) {
-            if (syncBackend) {
+            const sync = !syncBackend ? !!value.id : syncBackend;
+            if (sync) {
                 dispatch(setSavingValue({ id: valueId, status: true })); // To show the saving message instead of the value label
                 if (value.resourceId) {
                     const apiCall =
@@ -74,7 +75,8 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                             dispatch(setSavingValue({ id: valueId, status: false }));
                         })
                         .catch(() => {
-                            toast.error('Something went wrong while updating the label.');
+                            // TODO: Differentiate between values saved in the database and new values
+                            if (sync === syncBackend) toast.error('Something went wrong while updating the label.');
                             dispatch(setSavingValue({ id: valueId, status: false }));
                         });
                 }

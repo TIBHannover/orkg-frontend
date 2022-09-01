@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Button, ButtonGroup, UncontrolledAlert } from 'reactstrap';
+import { Button, ButtonGroup, UncontrolledAlert, Alert } from 'reactstrap';
 import SBEditorHelpModal from 'components/StatementBrowser/SBEditorHelpModal/SBEditorHelpModal';
 import TemplatesModal from 'components/StatementBrowser/TemplatesModal/TemplatesModal';
 import Tippy from '@tippyjs/react';
@@ -19,6 +19,9 @@ export default function StatementMenuHeader(props) {
     const dispatch = useDispatch();
     const preferencesTippy = useRef(null);
 
+    // If the resource exist, all changes are synced to the backend automatically
+    const syncBackend = !props.syncBackend ? !!props.resource.isExistingValue : props.syncBackend;
+
     return (
         <>
             <div className="mb-2 text-end">
@@ -37,7 +40,7 @@ export default function StatementMenuHeader(props) {
                                     <Icon className="me-1" icon={faPuzzlePiece} /> Templates
                                 </div>
                             </Tippy>
-                            {isTemplatesModalOpen && <TemplatesModal syncBackend={props.syncBackend} />}
+                            {isTemplatesModalOpen && <TemplatesModal syncBackend={syncBackend} />}
                         </Button>
                     )}
                     {props.canEdit && props.enableEdit && (
@@ -75,6 +78,13 @@ export default function StatementMenuHeader(props) {
                         <Icon icon={faQuestionCircle} />
                     </Button>
                 </UncontrolledAlert>
+            )}
+
+            {!props.syncBackend && props.canEdit && props.enableEdit && props.resource.isExistingValue && (
+                <Alert color="info">
+                    Every change you make is automatically saved <br />
+                    <small>Because this is an already saved resource in ORKG.</small>
+                </Alert>
             )}
 
             {isHelpModalOpen && <SBEditorHelpModal />}
