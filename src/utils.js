@@ -543,8 +543,8 @@ export const sortMethod = (a, b) => {
 export const generateRdfDataVocabularyFile = (data, contributions, properties, metadata) => {
     const element = document.createElement('a');
     const cubens = rdf.ns('http://purl.org/linked-data/cube#');
-    const orkgVocab = rdf.ns('http://orkg.org/orkg/vocab/#');
-    const orkgResource = rdf.ns('http://orkg.org/orkg/resource/');
+    const orkgVocab = rdf.ns('https://orkg.org/vocab/#');
+    const orkgResource = rdf.ns('https://orkg.org/resource/');
     const gds = new rdf.Graph();
     // Vocabulary properties labels
     gds.add(new rdf.Triple(cubens('dataSet'), rdf.rdfsns('label'), new rdf.Literal('dataSet')));
