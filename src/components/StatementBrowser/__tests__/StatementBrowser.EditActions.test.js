@@ -150,7 +150,7 @@ describe('ValueItem', () => {
         await clickOnEditValueButton(screen, VALUE_IDS.Resource);
         fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: 'resource label 1' } });
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        await waitForElementToBeRemoved(() => screen.queryByText(/Saving/i));
         await waitFor(() => expect(screen.getByRole('button', { name: 'resource label 1' })).toBeInTheDocument());
     });
 });
@@ -207,6 +207,7 @@ describe('ValueItem', () => {
         await selectEvent.select(selectInput, ['Text']);
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
         fireEvent.click(screen.getByRole('button', { name: 'Keep' }));
+        await waitForElementToBeRemoved(() => screen.queryByText(/Saving/i));
         expect(screen.getAllByText('Text')).toHaveLength(2);
         expect(screen.getByText('www.orkg.org')).toBeInTheDocument();
         expect(screen.queryByText(/URL/i)).toBeNull();
@@ -223,6 +224,7 @@ describe('ValueItem', () => {
         await selectEvent.select(selectInput, ['Text']);
         fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: 'New text' } });
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
+        await waitForElementToBeRemoved(() => screen.queryByText(/Saving/i));
         await waitFor(() => expect(screen.getByText('New text')).toBeInTheDocument());
         expect(screen.getAllByText('Text')).toHaveLength(2);
         expect(screen.queryByText(/Date/i)).toBeNull();
