@@ -22,25 +22,6 @@ export const useFilters = () => {
     const [createdBy, setCreatedBy] = useState(getParamFromQueryString(location.search, 'createdBy'));
     const [isLoadingFilterClasses, setIsLoadingFilterClasses] = useState(true);
 
-    const toggleFilter = filterClass => {
-        // if current filters are empty and filters should be applied, don't do anything
-        if (!selectedFilters.length && !filterClass) {
-            submitSearch(value);
-            return;
-        }
-        let _selectedFilters = [];
-        if (filterClass === null) {
-            _selectedFilters = selectedFilters.filter(s => DEFAULT_FILTERS.map(df => df.id).includes(s.id));
-        } else if (selectedFilters.map(sf => sf.id).includes(filterClass.id)) {
-            // remove the filter
-            const index = selectedFilters.map(sf => sf.id).indexOf(filterClass.id);
-            _selectedFilters = dotProp.delete(selectedFilters, index);
-        } else {
-            _selectedFilters = [...selectedFilters, filterClass];
-        }
-        setSelectedFilters(_selectedFilters);
-    };
-
     const submitSearch = useCallback(
         query => {
             const _query = decodeURIComponent(query);
@@ -68,6 +49,25 @@ export const useFilters = () => {
         [createdBy, selectedFilters],
     );
 
+    const toggleFilter = filterClass => {
+        // if current filters are empty and filters should be applied, don't do anything
+        if (!selectedFilters.length && !filterClass) {
+            submitSearch(value);
+            return;
+        }
+        let _selectedFilters = [];
+        if (filterClass === null) {
+            _selectedFilters = selectedFilters.filter(s => DEFAULT_FILTERS.map(df => df.id).includes(s.id));
+        } else if (selectedFilters.map(sf => sf.id).includes(filterClass.id)) {
+            // remove the filter
+            const index = selectedFilters.map(sf => sf.id).indexOf(filterClass.id);
+            _selectedFilters = dotProp.delete(selectedFilters, index);
+        } else {
+            _selectedFilters = [...selectedFilters, filterClass];
+        }
+        setSelectedFilters(_selectedFilters);
+    };
+
     useEffect(() => {
         setValue(searchTerm ?? '');
     }, [searchTerm]);
@@ -89,7 +89,7 @@ export const useFilters = () => {
                 }
                 return getClassById(classID);
             });
-            return Promise.all(classesCalls).then(classes => {
+            Promise.all(classesCalls).then(classes => {
                 setIsLoadingFilterClasses(false);
                 setSelectedFilters(classes);
             });
