@@ -48,8 +48,9 @@ const Contributions = () => {
         abstract,
     } = useSelector(state => state.addPaper);
     const [isOpenAbstractModal, setIsOpenAbstractModal] = useState(false);
+    const [isComputerScienceField, setIsComputerScienceField] = useState(false);
     const { resources, properties, values } = useSelector(state => state.statementBrowser);
-    const { isComputerScienceField } = useDetermineResearchField();
+    const { determineField } = useDetermineResearchField();
 
     const isBioassayField = BIOASSAYS_FIELDS_LIST.includes(selectedResearchField);
 
@@ -59,6 +60,10 @@ const Contributions = () => {
     const [isOpenBioassays, setIsOpenBioassays] = useState(false);
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        (async () => setIsComputerScienceField(await determineField({ field: selectedResearchField })))();
+    }, [determineField, selectedResearchField]);
 
     useEffect(() => {
         // if there is no contribution yet, create the first one

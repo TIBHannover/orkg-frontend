@@ -19,12 +19,15 @@ import { Helmet } from 'react-helmet';
 import moment from 'moment';
 import TitleBar from 'components/TitleBar/TitleBar';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import useDetermineResearchField from 'components/AddPaper/EntityRecognition/useDetermineResearchField';
+import { useEffect, useState } from 'react';
 
 const ViewPaper = () => {
     const { resourceId } = useParams();
     const location = useLocation();
     const viewPaper = useSelector(state => state.viewPaper);
-
+    const [shouldShowNerSurvey, setShouldShowNerSurvey] = useState(false);
+    const { determineField } = useDetermineResearchField();
     const {
         isLoading,
         isLoadingFailed,
@@ -41,6 +44,12 @@ const ViewPaper = () => {
 
     let comingFromWizard = queryString.parse(location.search);
     comingFromWizard = comingFromWizard ? comingFromWizard.comingFromWizard === 'true' : false;
+
+    useEffect(() => {
+        if (comingFromWizard) {
+            (async () => setShouldShowNerSurvey(await determineField({ field: viewPaper.researchField?.id })))();
+        }
+    }, [determineField, comingFromWizard, viewPaper.researchField?.id]);
 
     const getSEODescription = () =>
         `Published: ${viewPaper.publicationMonth ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''} ${
@@ -129,7 +138,15 @@ const ViewPaper = () => {
                                 {comingFromWizard && (
                                     <UncontrolledAlert color="info">
                                         Help us to improve the ORKG and{' '}
-                                        <a href="https://forms.gle/AgcUXuiuQzexqZmr6" target="_blank" rel="noopener noreferrer">
+                                        <a
+                                            href={
+                                                shouldShowNerSurvey
+                                                    ? 'https://tib.eu/umfragen/index.php/248163'
+                                                    : 'https://forms.gle/AgcUXuiuQzexqZmr6'
+                                            }
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
                                             fill out the online evaluation form
                                         </a>
                                         . Thank you!
