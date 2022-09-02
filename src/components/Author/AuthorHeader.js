@@ -7,25 +7,11 @@ import { faExternalLinkAlt, faEllipsisV, faGlobe, faSpinner, faPen } from '@fort
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
-import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import useAuthor from './hooks/useAuthor';
-
-const AuthorMetaInfo = styled.div`
-    border-left: 1px ${props => props.theme.secondary} solid;
-    flex-basis: 0;
-    flex-grow: 1;
-
-    &:first-of-type {
-        border-left: none;
-    }
-    .value {
-        margin-bottom: 10px;
-    }
-`;
 
 const AuthorHeader = ({ authorId }) => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -84,38 +70,38 @@ const AuthorHeader = ({ authorId }) => {
                         />
                     )}
                     <Container className="p-0">
-                        <div className="box rounded p-4 mb-3">
-                            <div className="d-flex">
+                        <div className="box rounded p-4 pb-2 mb-3">
+                            <div className="row">
                                 {author.orcid && (
-                                    <AuthorMetaInfo>
-                                        <div className="key">
+                                    <div className="col-md-3 col-sm-6">
+                                        <div>
                                             ORCID <Icon color="#A6CE39" icon={faOrcid} />
                                         </div>
-                                        <div className="value">
+                                        <div className="mb-3 text-wrap">
                                             <a href={`https://orcid.org/${author.orcid.label}`} target="_blank" rel="noopener noreferrer">
                                                 {author.orcid.label} <Icon icon={faExternalLinkAlt} />
                                             </a>
                                         </div>
-                                    </AuthorMetaInfo>
+                                    </div>
                                 )}
                                 {author.website && (
-                                    <AuthorMetaInfo className="ps-3">
-                                        <div className="key">
+                                    <div className="col-md-3 col-sm-6">
+                                        <div>
                                             Website <Icon icon={faGlobe} />
                                         </div>
-                                        <div className="value">
+                                        <div className="mb-3 text-wrap">
                                             <a href={author.website.label} target="_blank" rel="noopener noreferrer">
                                                 {author.website.label} <Icon icon={faExternalLinkAlt} />
                                             </a>
                                         </div>
-                                    </AuthorMetaInfo>
+                                    </div>
                                 )}
                                 {author.googleScholar && (
-                                    <AuthorMetaInfo className="ps-3">
-                                        <div className="key">
+                                    <div className="col-md-3 col-sm-6">
+                                        <div>
                                             Google Scholar <Icon icon={faGoogle} />
                                         </div>
-                                        <div className="value">
+                                        <div className="mb-3 text-wrap">
                                             <a
                                                 href={`https://scholar.google.com/citations?user=${author.googleScholar.label}=en&oi=ao`}
                                                 target="_blank"
@@ -124,14 +110,14 @@ const AuthorHeader = ({ authorId }) => {
                                                 {author.googleScholar.label} <Icon icon={faExternalLinkAlt} />
                                             </a>
                                         </div>
-                                    </AuthorMetaInfo>
+                                    </div>
                                 )}
                                 {author.researchGate && (
-                                    <AuthorMetaInfo className="ps-3">
-                                        <div className="key">
+                                    <div className="col-md-3 col-sm-6">
+                                        <div>
                                             ResearchGate <Icon icon={faResearchgate} />
                                         </div>
-                                        <div className="value">
+                                        <div className="mb-3 text-wrap">
                                             <a
                                                 href={`https://www.researchgate.net/profile/${author.researchGate.label}`}
                                                 target="_blank"
@@ -140,14 +126,14 @@ const AuthorHeader = ({ authorId }) => {
                                                 {author.researchGate.label} <Icon icon={faExternalLinkAlt} />
                                             </a>
                                         </div>
-                                    </AuthorMetaInfo>
+                                    </div>
                                 )}
                                 {author.linkedIn && (
-                                    <AuthorMetaInfo className="ps-3">
-                                        <div className="key">
+                                    <div className="col-md-3 col-sm-6">
+                                        <div>
                                             Linkedin <Icon icon={faLinkedin} />
                                         </div>
-                                        <div className="value">
+                                        <div className="mb-3 text-wrap">
                                             <a
                                                 href={`https://www.linkedin.com/in/${author.linkedIn.label}`}
                                                 target="_blank"
@@ -156,7 +142,7 @@ const AuthorHeader = ({ authorId }) => {
                                                 {author.linkedIn.label} <Icon icon={faExternalLinkAlt} />
                                             </a>
                                         </div>
-                                    </AuthorMetaInfo>
+                                    </div>
                                 )}
                             </div>
                         </div>

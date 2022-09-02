@@ -121,6 +121,12 @@ const useContributions = ({ paperId, contributionId }) => {
             .then(statement => {
                 dispatch(setPaperContributions([...contributions, { ...statement.object, statementId: statement.id }]));
                 dispatch(setIsAddingContribution(false));
+                navigate(
+                    reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
+                        resourceId: paperId,
+                        contributionId: statement.object.id,
+                    }),
+                );
                 toast.success('Contribution created successfully');
             })
             .catch(() => {

@@ -33,7 +33,7 @@ import env from '@beam-australia/react-env';
 import Select from 'react-select';
 import { getConferences } from 'services/backend/organizations';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import { useSelector } from 'react-redux';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 
@@ -217,13 +217,11 @@ function Publish(props) {
                                 [PREDICATES.COMPARE_CONTRIBUTION]: props.contributionsList.map(contributionID => ({
                                     '@id': contributionID,
                                 })),
-                                /*
                                 [PREDICATES.HAS_PROPERTY]: props.predicatesList.map(predicateID => {
                                     const property =
                                         props.comparisonType === 'merge' ? predicateID : getPropertyObjectFromData(props.data, { id: predicateID });
-                                    return { '@id': property.id };
+                                    return { '@id': property.id, '@type': ENTITIES.PREDICATE };
                                 }),
-                                */
                                 ...(props.metaData.hasPreviousVersion && {
                                     [PREDICATES.HAS_PREVIOUS_VERSION]: [
                                         {

@@ -32,6 +32,9 @@ const Statements = props => {
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const dispatch = useDispatch();
 
+    // If the resource exist, all changes are synced to the backend automatically
+    const syncBackend = !props.syncBackend ? !!resource.isExistingValue : props.syncBackend;
+
     useEffect(() => {
         if (props.initialSubjectId) {
             if (props.newStore) {
@@ -96,7 +99,7 @@ const Statements = props => {
             <div>
                 <ClassesItem
                     enableEdit={(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit}
-                    syncBackend={props.syncBackend}
+                    syncBackend={syncBackend}
                 />
                 <Row>
                     <Col lg={props.propertySuggestionsComponent ? 9 : 12}>
@@ -114,7 +117,7 @@ const Statements = props => {
                                                     isFirstItem={index === 0}
                                                     resourceId={selectedResource}
                                                     propertyId={propertyId}
-                                                    syncBackend={props.syncBackend}
+                                                    syncBackend={syncBackend}
                                                     renderTemplateBox={props.renderTemplateBox}
                                                 />
                                             ))}
@@ -130,7 +133,7 @@ const Statements = props => {
                             )}
 
                             {(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit && (
-                                <AddProperty resourceId={selectedResource} syncBackend={props.syncBackend} />
+                                <AddProperty resourceId={selectedResource} syncBackend={syncBackend} />
                             )}
                         </ListGroup>
                     </Col>

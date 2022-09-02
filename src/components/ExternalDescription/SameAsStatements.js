@@ -40,21 +40,21 @@ const SameAsStatements = () => {
                 {externalResources.map((resourceUrl, index) => {
                     if (resourceUrl.match(REG_DPPEDIA)) {
                         return (
-                            <div className="list-group-item" key={index}>
+                            <div className="list-group-item" key={`db${index}`}>
                                 <DbpediaAbstract externalResource={resourceUrl} />
                             </div>
                         );
                     }
                     if (resourceUrl.match(REG_WIKIDATA)) {
                         return (
-                            <div className="border rounded p-3" key={index}>
+                            <div className="border rounded p-3" key={`wiki${index}`}>
                                 <WikidataDescription externalResource={resourceUrl} />
                             </div>
                         );
                     }
                     if (resourceUrl.match(REG_WIKIPEDIA)) {
                         return (
-                            <div className="list-group-item" key={index}>
+                            <div className="list-group-item" key={`wiki${index}`}>
                                 <WikipediaSummary externalResource={resourceUrl} />
                             </div>
                         );

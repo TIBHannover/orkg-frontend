@@ -1,76 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { TransitionGroup } from 'react-transition-group';
-import { getContributorInformationById } from 'services/backend/contributors';
-import { getObservatoryById } from 'services/backend/observatories';
-import { getContributorsByResourceId } from 'services/backend/resources';
-import { getOrganization } from 'services/backend/organizations';
-import { useSelector } from 'react-redux';
-import { MISC } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
+import useProvenance from 'components/ViewPaper/hooks/useProvenance';
+import { uniqBy } from 'lodash';
 import Provenance from './Provenance';
 import Timeline from './Timeline';
 import { AnimationContainer, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
 
 const ProvenanceBox = () => {
-    const paperResource = useSelector(state => state.viewPaper.paperResource);
-    const [isLoadingProvenance, setIsLoadingProvenance] = useState(true);
-    const [isLoadingContributors, setIsLoadingContributors] = useState(true);
-    const [observatoryInfo, setObservatoryInfo] = useState(null);
-    const [organizationInfo, setOrganizationInfo] = useState(null);
-    const [createdBy, setCreatedBy] = useState(null);
-    const [contributors, setContributors] = useState([]);
-
-    useEffect(() => {
-        const loadContributors = () => {
-            setIsLoadingContributors(true);
-            getContributorsByResourceId(paperResource.id)
-                .then(contributors => {
-                    setContributors(contributors ? contributors.reverse() : []);
-                    setIsLoadingContributors(false);
-                })
-                .catch(error => {
-                    setIsLoadingContributors(false);
-                });
-        };
-        const loadProvenance = () => {
-            setIsLoadingProvenance(true);
-            const observatoryCall =
-                paperResource.observatory_id !== MISC.UNKNOWN_ID
-                    ? getObservatoryById(paperResource.observatory_id).catch(e => null)
-                    : Promise.resolve(null);
-
-            const organizationCall =
-                paperResource.organization_id !== MISC.UNKNOWN_ID
-                    ? getOrganization(paperResource.organization_id).catch(e => null)
-                    : Promise.resolve(null);
-
-            Promise.all([observatoryCall, organizationCall])
-                .then(([observatory, organization]) => {
-                    setObservatoryInfo(observatory);
-                    setOrganizationInfo(organization);
-                    setIsLoadingProvenance(false);
-                })
-                .catch(() => setIsLoadingProvenance(false));
-        };
-
-        const loadCreator = () => {
-            if (paperResource.created_by && paperResource.created_by !== MISC.UNKNOWN_ID) {
-                getContributorInformationById(paperResource.created_by)
-                    .then(creator => {
-                        setCreatedBy(creator);
-                    })
-                    .catch(e => setCreatedBy(null));
-            } else {
-                setCreatedBy(null);
-            }
-        };
-
-        loadContributors();
-        loadProvenance();
-        loadCreator();
-    }, [paperResource.created_by, paperResource.id, paperResource.observatory_id, paperResource.organization_id]);
-
+    const {
+        paperResource,
+        isLoadingProvenance,
+        isLoadingContributors,
+        observatoryInfo,
+        organizationInfo,
+        createdBy,
+        versions,
+        contributors,
+    } = useProvenance();
     const [activeTab, setActiveTab] = useState(1);
 
     return (
@@ -86,7 +34,7 @@ const ProvenanceBox = () => {
                         id="div1"
                         className={`h6 col-md-6 text-center tab ${activeTab === 1 ? 'active' : ''}`}
                         onClick={() => setActiveTab(1)}
-                        onKeyDown={e => (e.keyCode === 13 ? setActiveTab(1) : undefined)}
+                        onKeyDown={e => (e.key === 'Enter' ? setActiveTab(1) : undefined)}
                         role="button"
                         tabIndex={0}
                     >
@@ -96,7 +44,7 @@ const ProvenanceBox = () => {
                         id="div2"
                         className={`h6 col-md-6 text-center tab ${activeTab === 2 ? 'active' : ''}`}
                         onClick={() => setActiveTab(2)}
-                        onKeyDown={e => (e.keyCode === 13 ? setActiveTab(2) : undefined)}
+                        onKeyDown={e => (e.key === 'Enter' ? setActiveTab(2) : undefined)}
                         role="button"
                         tabIndex={0}
                     >
@@ -113,7 +61,7 @@ const ProvenanceBox = () => {
                                 observatoryInfo={observatoryInfo}
                                 organizationInfo={organizationInfo}
                                 paperResource={paperResource}
-                                contributors={contributors}
+                                contributors={uniqBy(contributors, 'created_by.id')}
                                 createdBy={createdBy}
                                 isLoadingProvenance={isLoadingProvenance}
                                 isLoadingContributors={isLoadingContributors}
@@ -125,7 +73,7 @@ const ProvenanceBox = () => {
                                 observatoryInfo={observatoryInfo}
                                 organizationInfo={organizationInfo}
                                 paperResource={paperResource}
-                                contributors={contributors}
+                                versions={versions}
                                 createdBy={createdBy}
                                 isLoadingContributors={isLoadingContributors}
                             />

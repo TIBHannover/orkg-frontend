@@ -6,7 +6,7 @@ import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import DATA_TYPES from 'constants/DataTypes';
 import { Button, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { faExternalLinkAlt, faClipboard } from '@fortawesome/free-solid-svg-icons';
 import { ValueItemStyle, PulsateIcon } from 'components/StatementBrowser/styled';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { Link } from 'react-router-dom';
@@ -18,6 +18,8 @@ import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip
 import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { toast } from 'react-toastify';
 import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
 import useValueItem from './hooks/useValueItem';
 
@@ -65,7 +67,26 @@ const ValueItem = props => {
                                         <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
                                             {value.id && (
                                                 <li className="mb-1">
-                                                    {capitalize(value._class)} id: {value.id}
+                                                    <span style={{ verticalAlign: 'middle' }}>
+                                                        {capitalize(value._class)} id: {value.id}
+                                                    </span>
+                                                    <CopyToClipboard
+                                                        text={props.id}
+                                                        onCopy={() => {
+                                                            toast.dismiss();
+                                                            toast.success('ID copied to clipboard');
+                                                        }}
+                                                    >
+                                                        <Button
+                                                            title="Click to copy id"
+                                                            onClick={e => e.stopPropagation()}
+                                                            className="py-0 px-0 ms-1"
+                                                            size="sm"
+                                                            color="link"
+                                                        >
+                                                            <Icon icon={faClipboard} size="xs" />
+                                                        </Button>
+                                                    </CopyToClipboard>
                                                 </li>
                                             )}
                                             {value.classes?.length > 0 && (

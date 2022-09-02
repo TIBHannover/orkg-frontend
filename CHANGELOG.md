@@ -3,6 +3,44 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.79.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.79.0...v0.79.1) - 2022-09-01
+
+### Changes
+
+- fix(ViewPaper): Broken DOI link in provenance box [`#927`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/927)
+
+---
+## [v0.79.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.78.1...v0.79.0) - 2022-08-31
+
+### Changes
+
+- feat(paper): Persistent identification of ORKG papers [`#693`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/693)
+- ux(Template): Show an overlay loading and saving indicator [`#925`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/925)
+- fix(CSP): Support loading fonts from data: [`#926`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/926)
+- style(Author): Responsive AuthorHeader component [`#921`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/921)
+- feat(CS-NER): activate for Computational Linguistics research field [`#917`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/917)
+
+---
+## [v0.78.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.78.0...v0.78.1) - 2022-08-30
+
+### Changes
+
+- ux(ViewPaper): Redirect to newly created contribution [`#914`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/914)
+- feat: include CSP in meta tag [`#912`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/912)
+
+---
+## [v0.78.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.77.1...v0.78.0) - 2022-08-16
+
+### Changes
+
+- fix(Stats): update benchmarks class [`#916`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/916)
+- chore: integrate recommended react rules [`#913`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/913)
+- ui(AddPaperWizard): disable annotator for CS, separate abstract entry modal [`#911`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/911)
+- feat(AddPaperWizard): add Bioassays Semantification tool [`#907`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/907)
+- fix(StatementBrowser): Dataset table doesn't show horizontal scroll bar [`#910`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/910)
+- fix(Author): filter deleted papers [`#909`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/909)
+
+---
 ## [v0.77.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.77.0...v0.77.1) - 2022-08-11
 
 ### Changes

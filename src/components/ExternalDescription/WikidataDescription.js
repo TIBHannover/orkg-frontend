@@ -77,8 +77,8 @@ const WikidataDescription = ({ externalResource }) => {
                             </div>
                         </PropertyStyle>
                         <ValuesStyle className="col-8 valuesList">
-                            {statementsByProperty[propertyUri].map((value, index) => (
-                                <div key={index}>
+                            {statementsByProperty[propertyUri].map(value => (
+                                <div key={value?.object?.value}>
                                     {value?.object?.type === 'uri' ? (
                                         <a href={value?.object?.value} className="text-break" target="_blank" rel="noopener noreferrer">
                                             {value.objectLabel?.value}

@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import { compose } from 'redux';
 import withMatomo from 'components/Matomo/withMatomo.js';
-import ROUTES from '../../../constants/routes.js';
+import ROUTES from 'constants/routes.js';
 
 class Finish extends Component {
     componentDidMount() {
