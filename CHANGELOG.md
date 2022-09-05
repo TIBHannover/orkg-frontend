@@ -3,6 +3,23 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.80.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.79.1...v0.80.0) - 2022-09-05
+
+### Changes
+
+- feat(ViewPaper): link to TIB portal [`#932`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/932)
+- feat(ViewPaper): update link to survey for CS papers [`#931`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/931)
+- chore(Comparison): Ditch /orkg/ from export comparison as RDF [`#930`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/930)
+- fix(Search): Error on leaving search page [`#929`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/929)
+- test: Mock resource update [`#928`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/928)
+- npm: update matomo-tracker-react [`#924`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/924)
+- ux: catch JavaScript errors and display a fallback UI [`#922`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/922)
+- optimization: lazy-loading of Featured comparisons page [`#920`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/920)
+- ux: Add copy to clipboard button to description tooltip and ID tooltip [`#923`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/923)
+- fix(AddPaper): Changes on existing resources are ignored [`#919`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/919)
+- fix(ContributionEditor): selecting the ontology sources for resources [`#918`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/918)
+
+---
 ## [v0.79.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.79.0...v0.79.1) - 2022-09-01
 
 ### Changes
