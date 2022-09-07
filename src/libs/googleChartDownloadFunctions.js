@@ -1,16 +1,16 @@
-import { jsPDF } from 'jspdf';
+import { jsPDF as JsPDF } from 'jspdf';
 
 export const downloadJPG = (chart, imageTitle) => {
-    let img = new Image();
+    const img = new Image();
     img.addEventListener('load', () => {
-        let canvas = document.createElement('canvas');
+        const canvas = document.createElement('canvas');
         canvas.width = img.width;
         canvas.height = img.height;
-        let ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d');
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, img.width, img.height);
         ctx.drawImage(img, 0, 0);
-        let link = document.createElement('a');
+        const link = document.createElement('a');
         link.href = canvas.toDataURL('image/jpeg');
         link.download = `${imageTitle}.jpg`;
 
@@ -20,18 +20,18 @@ export const downloadJPG = (chart, imageTitle) => {
 };
 
 export const downloadPDF = (chart, fileName) => {
-    let img = new Image();
+    const img = new Image();
     img.addEventListener('load', () => {
-        let canvas = document.createElement('canvas');
+        const canvas = document.createElement('canvas');
         canvas.width = img.width;
         canvas.height = img.height;
-        let ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d');
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, img.width, img.height);
         ctx.drawImage(img, 0, 0);
-        let imgData = canvas.toDataURL('image/jpeg');
+        const imgData = canvas.toDataURL('image/jpeg');
 
-        let pdf = new jsPDF({
+        const pdf = new JsPDF({
             orientation: 'landscape',
         });
         pdf.addImage(imgData, 'JPEG', 10, 10);

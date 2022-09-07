@@ -1,4 +1,4 @@
-import { faCalendar, faLink, faUser, faDownload } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faLink, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { ENTITIES } from 'constants/graphSettings';
@@ -7,9 +7,9 @@ import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCV
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { downloadJPG, downloadPDF } from 'libs/GoogleChartDownloadFunctions';
+import { downloadJPG, downloadPDF } from 'libs/googleChartDownloadFunctions';
 import {
     Badge,
     Button,
@@ -32,19 +32,19 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
         toggle();
     };
 
-    const [chartToDownload, setChartWrapper] = useState(null);
+    const [chartToDownload, setchartToDownload] = useState(null);
 
-    let [selectedFileFormat, selectFileFormat] = useState('JPGformat');
-    let [caption, enableCaption] = useState(true);
+    const [selectedFileFormat, setSelectedFileFormat] = useState('JPGformat');
+    const [caption, enableCaption] = useState(true);
 
     const downloadChart = chart => {
         if (selectedFileFormat === 'JPGformat') downloadJPG(chart, data.label);
         else if (selectedFileFormat === 'PDFformat') downloadPDF(chart, data.label);
-        setChartWrapper(null);
+        setchartToDownload(null);
     };
 
     const initChartDownload = () => {
-        setChartWrapper(
+        setchartToDownload(
             <GDCVisualizationRenderer
                 caption={caption ? data.label : undefined}
                 width="1000px"
@@ -99,28 +99,23 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                 <GDCVisualizationRenderer height="500px" model={data.reconstructionModel} />
                 <div
                     id="google-chart-rendered"
+                    className="position-absolute pe-none"
                     style={{
-                        position: 'absolute',
                         opacity: 0,
-                        pointerEvents: 'none',
                     }}
                 >
                     {chartToDownload}
                 </div>
             </ModalBody>
             <ModalFooter>
-                <Button id="PopoverLegacy" type="button">
+                <Button id="popover-download-visualization" color="light">
                     Export
                 </Button>
-                <UncontrolledPopover placement="bottom" target="PopoverLegacy" trigger="legacy">
+                <UncontrolledPopover placement="top" target="popover-download-visualization" trigger="legacy" fade={false}>
                     <PopoverHeader>Chart export</PopoverHeader>
                     <PopoverBody>
                         <Form>
-                            <FormGroup
-                                onChange={({ target }) => {
-                                    selectFileFormat(target.value);
-                                }}
-                            >
+                            <FormGroup onChange={({ target }) => setSelectedFileFormat(target.value)}>
                                 <legend style={{ fontSize: '1rem' }}>File format</legend>
                                 <FormGroup check inline>
                                     <Input defaultChecked id="JPGformat" value="JPGformat" type="radio" name="fileFormat" />
@@ -151,14 +146,15 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                                     />
                                 </FormGroup>
                             </FormGroup>
-                            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <div className="text-center">
                                 <Button
                                     onClick={e => {
                                         e.preventDefault();
                                         initChartDownload();
                                     }}
+                                    size="sm"
                                 >
-                                    Export
+                                    Download
                                 </Button>
                             </div>
                         </Form>
