@@ -1,5 +1,5 @@
 import { updateAuthors } from 'slices/reviewSlice';
-import AuthorsInput from 'components/Utils/AuthorsInput';
+import AuthorsInput from 'components/AuthorsInput/AuthorsInput';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

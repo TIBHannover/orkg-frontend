@@ -19,7 +19,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { uniqBy, flatten } from 'lodash';
-import { AuthorTag } from 'components/Utils/AuthorsInput';
+import { AuthorTag } from 'components/AuthorsInput/styled';
 
 function Publish(props) {
     const [isLoading, setIsLoading] = useState(false);

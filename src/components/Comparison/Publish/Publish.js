@@ -15,7 +15,7 @@ import { createResource } from 'services/backend/resources';
 import { getComparison, createResourceData } from 'services/similarity/index';
 import Tooltip from 'components/Utils/Tooltip';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import AuthorsInput from 'components/Utils/AuthorsInput';
+import AuthorsInput from 'components/AuthorsInput/AuthorsInput';
 import ShareCreatedContent from 'components/ShareLinkMarker/ShareCreatedContent';
 import NewerVersionWarning from 'components/Comparison/HistoryModal/NewerVersionWarning';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
