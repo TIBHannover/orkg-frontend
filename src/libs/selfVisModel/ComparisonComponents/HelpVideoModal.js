@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 function HelpVideoModal(props) {
     return (
-        <Modal size="lg" unmountOnClose={false} isOpen={props.showDialog} toggle={props.toggle}>
+        <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>Comparison visualization instruction video</ModalHeader>
             <ModalBody>
                 <div className="ratio ratio-16x9">
