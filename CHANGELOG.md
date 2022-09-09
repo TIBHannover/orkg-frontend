@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.80.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.80.0...v0.80.1) - 2022-09-09
+
+### Changes
+
+- fix(CSP): Lookup by doi [`#936`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/936)
+
+---
 ## [v0.80.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.79.1...v0.80.0) - 2022-09-05
 
 ### Changes
