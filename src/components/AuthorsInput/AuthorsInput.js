@@ -7,7 +7,7 @@ import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
-import { getPersonFullNameByORCID } from 'services/ORCID/index';
+import getPersonFullNameByORCID from 'services/ORCID/index';
 import arrayMove from 'array-move';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -18,7 +18,7 @@ const SortableItem = sortableElement(({ author, index, authorIndex, editAuthor, 
         <DragHandle />
         <div
             className="name"
-            onClick={e => editAuthor(authorIndex)}
+            onClick={() => editAuthor(authorIndex)}
             onKeyDown={e => (e.key === 'Enter' ? editAuthor(authorIndex) : undefined)}
             role="button"
             tabIndex={0}
@@ -28,7 +28,7 @@ const SortableItem = sortableElement(({ author, index, authorIndex, editAuthor, 
         </div>
         <div
             style={{ padding: '8px' }}
-            onClick={e => editAuthor(authorIndex)}
+            onClick={() => editAuthor(authorIndex)}
             onKeyDown={e => (e.key === 'Enter' ? editAuthor(authorIndex) : undefined)}
             role="button"
             tabIndex={0}
@@ -38,7 +38,7 @@ const SortableItem = sortableElement(({ author, index, authorIndex, editAuthor, 
         <div
             title={`Delete ${itemLabel}`}
             className="delete"
-            onClick={e => removeAuthor(author.id)}
+            onClick={() => removeAuthor(author.id)}
             onKeyDown={e => (e.key === 'Enter' ? removeAuthor(author.id) : undefined)}
             role="button"
             tabIndex={0}
@@ -102,7 +102,7 @@ function AuthorsInput(props) {
                         setEditMode(false);
                         setShowAuthorForm(v => !v);
                     })
-                    .catch(e => {
+                    .catch(() => {
                         setAuthorNameLoading(false);
                         toast.error(`Invalid ORCID ID. Please enter the ${props.itemLabel} name`);
                     });

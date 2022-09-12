@@ -9,5 +9,7 @@ const getFullName = name => {
     return fullName.trim();
 };
 
-export const getPersonFullNameByORCID = orcid =>
+const getPersonFullNameByORCID = orcid =>
     submitGetRequest(`${url}${orcid}/person`, { Accept: 'application/orcid+json' }).then(response => getFullName(response.name));
+
+export default getPersonFullNameByORCID;
