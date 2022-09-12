@@ -6,6 +6,7 @@ import { faTimes, faSpinner, faSort, faPen, faPlus } from '@fortawesome/free-sol
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import REGEX from 'constants/regex';
 import { getPersonFullNameByORCID } from 'services/ORCID/index';
 import arrayMove from 'array-move';
 import PropTypes from 'prop-types';
@@ -65,27 +66,22 @@ function AuthorsInput(props) {
     const inputRef = useRef(null);
 
     const handleChange = selected => {
+        let v;
         if (selected.__isNew__) {
-            selected = { ...selected, label: selected.value };
+            v = { ...selected, label: selected.value };
         } else {
-            selected = { ...selected, _class: ENTITIES.RESOURCE };
+            v = { ...selected, _class: ENTITIES.RESOURCE };
         }
-        setAuthorInput(selected);
+        setAuthorInput(v);
     };
 
-    const isORCID = value => {
-        /** Regular expression to check whether an input string is a valid ORCID id.  */
-        const ORCID_REGEX = '^\\s*(?:(?:https?://)?orcid.org/)?([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))\\s*$';
-        const supportedORCID = new RegExp(ORCID_REGEX);
-        return Boolean(value && value.replaceAll('−', '-').match(supportedORCID));
-    };
-
-    const saveAuthor = authorInput => {
-        if (authorInput && authorInput.label) {
-            if (isORCID(authorInput.label)) {
+    const isORCID = value => Boolean(value && value.replaceAll('−', '-').match(REGEX.ORCID_URL));
+    const saveAuthor = _authorInput => {
+        if (_authorInput && _authorInput.label) {
+            if (isORCID(_authorInput.label)) {
                 setAuthorNameLoading(true);
                 // Get the full name from ORCID API
-                const orcid = authorInput.label.replaceAll('−', '-').match(/([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))/g)[0];
+                const orcid = _authorInput.label.replaceAll('−', '-').match(REGEX.ORCID)[0];
                 getPersonFullNameByORCID(orcid)
                     .then(authorFullName => {
                         const newAuthor = {
@@ -112,9 +108,9 @@ function AuthorsInput(props) {
                     });
             } else {
                 const newAuthor = {
-                    ...authorInput,
-                    label: authorInput.label,
-                    id: authorInput.id ? authorInput.id : authorInput.label, // ID if the Author resource Exist
+                    ..._authorInput,
+                    label: _authorInput.label,
+                    id: _authorInput.id ? _authorInput.id : _authorInput.label, // ID if the Author resource Exist
                     orcid: '',
                     statementId: editMode && props.value[editIndex] && props.value[editIndex].statementId ? props.value[editIndex].statementId : '',
                 };
@@ -207,6 +203,7 @@ function AuthorsInput(props) {
                             innerRef={inputRef}
                             inputId="authorInput"
                             onChangeInputValue={value => setAuthorAutocompleteLabel(value)}
+                            ols={false}
                         />
                     </FormGroup>
                 </ModalBody>
@@ -219,7 +216,9 @@ function AuthorsInput(props) {
                         color="primary"
                         onClick={() => saveAuthor(authorInput || { label: authorAutocompleteLabel })}
                     >
-                        {!authorNameLoading ? editMode ? 'Save' : 'Add' : <Icon icon={faSpinner} spin />}
+                        {!authorNameLoading && editMode && 'Save'}
+                        {!authorNameLoading && !editMode && 'Add'}
+                        {authorNameLoading && <Icon icon={faSpinner} spin />}
                     </Button>{' '}
                 </ModalFooter>
             </Modal>
