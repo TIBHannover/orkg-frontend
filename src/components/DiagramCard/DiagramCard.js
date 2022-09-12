@@ -22,7 +22,7 @@ const DiagramCardStyled = styled.div`
 
 function DiagramCard({ diagram }) {
     return (
-        <DiagramCardStyled className="list-group-item list-group-item-action">
+        <DiagramCardStyled className="list-group-item">
             <Row>
                 <Col sm={12}>
                     {diagram && <Link to={reverse(ROUTES.DIAGRAM, { id: diagram.id })}>{diagram.label ? diagram.label : <em>No title</em>}</Link>}
