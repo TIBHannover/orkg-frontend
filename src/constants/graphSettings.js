@@ -125,6 +125,7 @@ export const CLASSES = {
     PAPER_VERSION: 'PaperVersion',
     SOFTWARE: 'Software',
     EXTERNAL: 'External',
+    DIAGRAM: 'Diagram',
 };
 
 export const RESOURCES = {

@@ -67,6 +67,8 @@ import ListDiff from 'pages/Lists/ListDiff';
 import ContentTypeNew from 'pages/ContentType/ContentTypeNew';
 import ContentType from 'pages/ContentType/ContentType';
 import ContentTypes from 'pages/ContentType/ContentTypes';
+import Diagrams from 'pages/Diagrams/Diagrams';
+import Diagram from 'pages/Diagrams/Diagram';
 import ResearchProblem from './pages/ResearchProblem';
 
 // use lazy loading of pages that contain large dependencies
@@ -406,6 +408,18 @@ const routes = [
     {
         path: ROUTES.CONTENT_TYPES,
         element: ContentTypes,
+    },
+    {
+        path: ROUTES.DIAGRAMS,
+        element: Diagrams,
+    },
+    {
+        path: ROUTES.DIAGRAM,
+        element: Diagram,
+    },
+    {
+        path: ROUTES.NEW_DIAGRAM,
+        element: Diagram,
     },
 ];
 

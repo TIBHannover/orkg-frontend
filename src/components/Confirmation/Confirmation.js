@@ -27,7 +27,7 @@ Confirmation.propTypes = {
     proceedLabel: PropTypes.string,
     cancelLabel: PropTypes.string,
     title: PropTypes.string,
-    message: PropTypes.string,
+    message: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     proceed: PropTypes.func, // called when ok button is clicked.
     enableEscape: PropTypes.bool,
 };
