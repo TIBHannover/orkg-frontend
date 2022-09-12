@@ -45,6 +45,8 @@ const initialState = {
     nerResources: [],
     nerProperties: [],
     nerRawResponse: {},
+    bioassayText: '',
+    bioassayRawResponse: [],
 };
 
 export const addPaperSlice = createSlice({
@@ -202,6 +204,12 @@ export const addPaperSlice = createSlice({
         setNerRawResponse: (state, { payload }) => {
             state.nerRawResponse = payload;
         },
+        setBioassayText: (state, { payload }) => {
+            state.bioassayText = payload;
+        },
+        setBioassayRawResponse: (state, { payload }) => {
+            state.bioassayRawResponse = payload;
+        },
     },
     extraReducers: {
         [LOCATION_CHANGE]: () => initialState,
@@ -234,6 +242,8 @@ export const {
     setNerResources,
     setNerProperties,
     setNerRawResponse,
+    setBioassayText,
+    setBioassayRawResponse,
 } = addPaperSlice.actions;
 
 export default addPaperSlice.reducer;
@@ -269,13 +279,7 @@ export const createContributionAction = ({ selectAfterCreation = false, fillStat
     );
 
     if (selectAfterCreation) {
-        dispatch(
-            selectResource({
-                increaseLevel: false,
-                resourceId: newResourceId,
-                label: newContributionLabel,
-            }),
-        );
+        dispatch(selectContribution(newContributionId));
     }
 
     // Dispatch loading template of classes
@@ -358,6 +362,7 @@ export const getResourceObject = (data, resourceId, newProperties) => {
                     }
                     return {
                         '@id': newResources.includes(value.resourceId) ? `_${value.resourceId}` : value.resourceId,
+                        '@type': value._class,
                     };
                 }),
             };

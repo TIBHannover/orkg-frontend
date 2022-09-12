@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Button } from 'reactstrap';
+import { Button, Alert } from 'reactstrap';
 import { getAltMetrics } from 'services/altmetric/index';
 import { loadPaper } from 'slices/viewPaperSlice';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
@@ -68,8 +68,16 @@ const PaperHeader = props => {
 
     return (
         <>
+            {viewPaper.hasVersion && (
+                <Alert color="warning" className="mt-1 container d-flex">
+                    <div className="flex-grow-1">
+                        A published version of this paper is available.{' '}
+                        <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: viewPaper.hasVersion.id })}>View published version</Link>
+                    </div>
+                </Alert>
+            )}
             <div className="d-flex align-items-start">
-                <h2 className="h4 mt-4 mb-3 flex-grow-1">
+                <h2 className={`h4 ${viewPaper.hasVersion ? 'mt-1' : 'mt-4'} mb-3 flex-grow-1`}>
                     {viewPaper.paperResource.label ? viewPaper.paperResource.label : <em>No title</em>}{' '}
                     <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
                     <div className="d-inline-block ms-1">

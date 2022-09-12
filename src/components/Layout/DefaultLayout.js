@@ -7,7 +7,7 @@ import Header from 'components/Layout/Header/Header';
 import Footer from 'components/Layout/Footer';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import useOnLocationChange from 'components/Layout/hooks/useOnLocationChange';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';

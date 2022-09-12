@@ -7,7 +7,7 @@ import theme from 'assets/scss/ThemeVariables';
 import { Provider } from 'react-redux';
 import { CookiesProvider } from 'react-cookie';
 import { ThemeProvider } from 'styled-components';
-import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
+import { MatomoProvider, createInstance } from '@jonkoops/matomo-tracker-react';
 import { DndProvider } from 'react-dnd';
 import env from '@beam-australia/react-env';
 import { HTML5Backend } from 'react-dnd-html5-backend';

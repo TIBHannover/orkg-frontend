@@ -28,6 +28,8 @@ const ViewPaperButton = ({ paperLink = null, doi = null, title = null }) => {
         }
     }, [doi, hasLoaded, isMenuOpen, title]);
 
+    const tibLink = `https://www.tib.eu/de/suchen?tx_tibsearch_search%5Bquery%5D=${encodeURIComponent(doi ? `identifier:doi\\:${doi}` : title)}`;
+
     return (
         <ButtonDropdown isOpen={isMenuOpen} toggle={() => setIsMenuOpen(v => !v)}>
             <DropdownToggle style={{ marginRight: 2 }} size="sm" color="secondary" className="px-3 d-flex align-items-center">
@@ -39,6 +41,9 @@ const ViewPaperButton = ({ paperLink = null, doi = null, title = null }) => {
                         Visit paper
                     </DropdownItem>
                 )}
+                <DropdownItem tag="a" href={tibLink} target="_blank" rel="noopener noreferrer">
+                    View in TIB portal
+                </DropdownItem>
                 {isLoading && (
                     <DropdownItem disabled>
                         <ContentLoader height="80" width="200" viewBox="0 0 200 50" speed={2} backgroundColor="#f3f3f3" foregroundColor="#ecebeb">
@@ -53,14 +58,13 @@ const ViewPaperButton = ({ paperLink = null, doi = null, title = null }) => {
                         <DropdownItem tag="a" className="dropdown-header" href="https://unpaywall.org/" target="_blank" rel="noopener noreferrer">
                             Alternative sources by Unpaywall
                         </DropdownItem>
-                        {links.map(link => (
-                            <DropdownItem tag="a" href={link.url} target="_blank" rel="noopener noreferrer">
+                        {links.map((link, index) => (
+                            <DropdownItem key={index} tag="a" href={link.url} target="_blank" rel="noopener noreferrer">
                                 {link.name}
                             </DropdownItem>
                         ))}
                     </>
                 )}
-                {!isLoading && links.length === 0 && !paperLink && <DropdownItem header>No links found</DropdownItem>}
             </DropdownMenu>
         </ButtonDropdown>
     );

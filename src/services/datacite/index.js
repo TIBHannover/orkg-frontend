@@ -1,7 +1,4 @@
-import { submitGetRequest } from 'network';
 import env from '@beam-australia/react-env';
-
-export const getComparisonDataByDOI = id => submitGetRequest(`${env('DATACITE_URL')}/${env('DATACITE_DOI_PREFIX')}/${encodeURIComponent(id)}`);
 
 export const getCitationByDOI = (DOI, style = '', header = 'text/x-bibliography') => {
     let headers = '';
@@ -16,20 +13,20 @@ export const getCitationByDOI = (DOI, style = '', header = 'text/x-bibliography'
         })
             .then(response => {
                 if (!response.ok) {
-                    reject({
+                    return reject({
                         error: new Error(`Error response. (${response.status}) ${response.statusText}`),
                         statusCode: response.status,
                         statusText: response.statusText,
                     });
-                } else {
-                    const text = response.text();
-                    if (text.then) {
-                        text.then(resolve).catch(reject);
-                    } else {
-                        return resolve(text);
-                    }
                 }
+                const text = response.text();
+                if (text.then) {
+                    return text.then(resolve).catch(reject);
+                }
+                return resolve(text);
             })
             .catch(reject);
     });
 };
+
+export default getCitationByDOI;

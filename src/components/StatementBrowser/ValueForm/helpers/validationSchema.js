@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import { CLASSES } from 'constants/graphSettings';
+import REGEX from 'constants/regex';
 
 export default function validationSchema(component) {
     let schema;
@@ -21,7 +22,9 @@ export default function validationSchema(component) {
                 schema = Joi.boolean();
                 break;
             case CLASSES.URI:
-                schema = Joi.string().uri();
+                schema = Joi.string()
+                    .regex(REGEX.URL)
+                    .message('"value" must be a valid URL');
                 break;
             default:
                 break;

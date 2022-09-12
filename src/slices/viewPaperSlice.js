@@ -148,3 +148,18 @@ export const selectContribution = ({ contributionId: id, contributionLabel }) =>
         );
     });
 };
+
+/**
+ * Get paper link
+ * @param {Object[]} viewPaper view paper redux state
+ * @return {String=} the paper link
+ */
+export const getPaperLink = state => {
+    if (state.viewPaper.url) {
+        return state.viewPaper.url.label;
+    }
+    if (state.viewPaper.doi && state.viewPaper.doi.label.startsWith('10.')) {
+        return `https://doi.org/${state.viewPaper.doi.label}`;
+    }
+    return '';
+};

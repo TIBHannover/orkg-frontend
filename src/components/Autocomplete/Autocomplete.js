@@ -129,6 +129,11 @@ function Autocomplete(props) {
         getSources();
     }, []);
 
+    // in contribution editor we need to know the status of the modal because we are using useClickAway to trigger save
+    useEffect(() => {
+        props.onOntologySelectorIsOpenStatusChange?.(ontologySelectorIsOpen);
+    }, [ontologySelectorIsOpen, props]);
+
     useEffect(() => {
         if (!isEqual(DEFAULT_SOURCES, selectedOntologies)) {
             asyncLocalStorage.setItem(STORAGE_NAME, JSON.stringify(selectedOntologies));
@@ -563,6 +568,7 @@ function Autocomplete(props) {
             setInputValue('');
         } else if (action === 'create-option') {
             props.onNewItemSelected && props.onNewItemSelected(selected.label);
+            setInputValue('');
         }
     };
 
@@ -927,6 +933,7 @@ Autocomplete.propTypes = {
     menuPortalTarget: PropTypes.object,
     cacheOptions: PropTypes.bool,
     fixedOptions: PropTypes.array,
+    onOntologySelectorIsOpenStatusChange: PropTypes.func,
 };
 
 Autocomplete.defaultProps = {

@@ -22,6 +22,7 @@ import { reverse } from 'named-urls';
 import { NavLink as RouterNavLink, useParams, useNavigate, useLocation } from 'react-router-dom';
 import TitleBar from 'components/TitleBar/TitleBar';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
+import LoadingOverlay from 'react-loading-overlay';
 import { MISC } from 'constants/graphSettings';
 import { EditModeContainer, Title } from 'components/EditModeHeader/EditModeHeader';
 
@@ -41,10 +42,10 @@ const Template = () => {
     const user = useSelector(state => state.auth.user);
     const editMode = useSelector(state => state.templateEditor.editMode);
     const isSaving = useSelector(state => state.templateEditor.isSaving);
+    const isLoading = useSelector(state => state.templateEditor.isLoading);
     const templateID = useSelector(state => state.templateEditor.templateID);
     const label = useSelector(state => state.templateEditor.label);
-    const created_by = useSelector(state => state.templateEditor.created_by);
-    const template = useSelector(state => state.templateEditor);
+    const createdBy = useSelector(state => state.templateEditor.created_by);
     const navigate = useNavigate();
 
     const [activeTab, setActiveTab] = useState('1');
@@ -103,7 +104,13 @@ const Template = () => {
                 buttonGroup={
                     <>
                         {!editMode && !isSaving ? (
-                            <RequireAuthentication component={Button} color="secondary" size="sm" onClick={() => dispatch(setEditMode(true))}>
+                            <RequireAuthentication
+                                disabled={isLoading}
+                                component={Button}
+                                color="secondary"
+                                size="sm"
+                                onClick={() => dispatch(setEditMode(true))}
+                            >
                                 <Icon icon={faPen} /> Edit
                             </RequireAuthentication>
                         ) : (
@@ -112,7 +119,13 @@ const Template = () => {
                                 style={{ marginLeft: 1 }}
                                 color="secondary-darker"
                                 size="sm"
-                                onClick={() => dispatch(saveTemplate(template))}
+                                onClick={() => {
+                                    window.scrollTo({
+                                        behavior: 'smooth',
+                                        top: 0,
+                                    });
+                                    dispatch(saveTemplate());
+                                }}
                             >
                                 {isSaving && <Icon icon={faSpinner} spin />}
                                 {editMode && <Icon icon={faSave} />}
@@ -136,93 +149,129 @@ const Template = () => {
             >
                 {!id ? 'Create new template' : 'Template'}
             </TitleBar>
-            <StyledContainer className="p-0">
-                {showHeaderBar && <TemplateEditorHeaderBar />}
-                {(editMode || isSaving) && (
-                    <EditModeContainer className="box rounded-top">
-                        <Title>{id ? 'Edit mode' : 'Create template'}</Title>
-                    </EditModeContainer>
-                )}
-                <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
-                    <div className="mb-2">
-                        {!editMode && (
-                            <>
-                                <h3 className="pb-2 mb-3" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                    {label}
-                                </h3>
-                                {created_by !== MISC.UNKNOWN_ID && (
-                                    <small className="d-inline-block me-2">
-                                        <Icon icon={faUser} /> Created by{' '}
-                                        <span className="ms-1">
-                                            <UserAvatar size={24} userId={created_by} showDisplayName={true} />
-                                        </span>
-                                    </small>
-                                )}
-                                <hr />
-                            </>
-                        )}
-                    </div>
 
-                    <div className="mb-3">
-                        <VisibilitySensor onChange={handleShowHeaderBar}>
-                            <Nav tabs>
-                                <NavItemStyled>
-                                    <NavLink
-                                        className={classnames({ active: activeTab === '1' })}
-                                        onClick={() => {
-                                            toggleTab('1');
-                                        }}
-                                    >
-                                        Description
-                                    </NavLink>
-                                </NavItemStyled>
-                                <NavItemStyled>
-                                    <NavLink
-                                        className={classnames({ active: activeTab === '2' })}
-                                        onClick={() => {
-                                            toggleTab('2');
-                                        }}
-                                    >
-                                        Properties
-                                    </NavLink>
-                                </NavItemStyled>
-                                <NavItemStyled>
-                                    <NavLink
-                                        className={classnames({ active: activeTab === '3' })}
-                                        onClick={() => {
-                                            toggleTab('3');
-                                        }}
-                                    >
-                                        Format
-                                    </NavLink>
-                                </NavItemStyled>
-                            </Nav>
-                        </VisibilitySensor>
-                        <TabContent activeTab={activeTab}>
-                            <TabPaneStyled tabId="1">
-                                <Row>
-                                    <Col sm="12">
-                                        <GeneralSettings />
-                                    </Col>
-                                </Row>
-                            </TabPaneStyled>
-                            <TabPaneStyled tabId="2">
-                                <Row>
-                                    <Col sm="12">
-                                        <ComponentsTab />
-                                    </Col>
-                                </Row>
-                            </TabPaneStyled>
-                            <TabPaneStyled tabId="3">
-                                <Row>
-                                    <Col sm="12">
-                                        <Format />
-                                    </Col>
-                                </Row>
-                            </TabPaneStyled>
-                        </TabContent>
-                    </div>
-                </div>
+            <StyledContainer className="p-0">
+                <LoadingOverlay
+                    active={isLoading || isSaving}
+                    spinner
+                    text={
+                        <>
+                            {!isSaving && isLoading && 'Loading...'}
+                            {isSaving && (
+                                <>
+                                    <h4>Saving...</h4>
+                                    <br />
+                                    Please <b>do not </b>leave this page until the save process is finished.
+                                </>
+                            )}
+                        </>
+                    }
+                    styles={{
+                        content: base => ({
+                            ...base,
+                            marginTop: '30%',
+                        }),
+                        overlay: base => ({
+                            ...base,
+                            borderRadius: 7,
+                            overflow: 'hidden',
+                            background: 'rgba(215, 215, 215, 0.7)',
+                            color: '#282828',
+                            '& svg circle': {
+                                stroke: '#282828',
+                            },
+                        }),
+                    }}
+                >
+                    <>
+                        {showHeaderBar && <TemplateEditorHeaderBar />}
+                        {(editMode || isSaving) && (
+                            <EditModeContainer className="box rounded-top">
+                                <Title>{id ? 'Edit mode' : 'Create template'}</Title>
+                            </EditModeContainer>
+                        )}
+                        <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
+                            <div className="mb-2">
+                                {!editMode && (
+                                    <>
+                                        <h3 className="pb-2 mb-3" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                            {label}
+                                        </h3>
+                                        {createdBy !== MISC.UNKNOWN_ID && (
+                                            <small className="d-inline-block me-2">
+                                                <Icon icon={faUser} /> Created by{' '}
+                                                <span className="ms-1">
+                                                    <UserAvatar size={24} userId={createdBy} showDisplayName={true} />
+                                                </span>
+                                            </small>
+                                        )}
+                                        <hr />
+                                    </>
+                                )}
+                            </div>
+
+                            <div className="mb-3">
+                                <VisibilitySensor onChange={handleShowHeaderBar}>
+                                    <Nav tabs>
+                                        <NavItemStyled>
+                                            <NavLink
+                                                className={classnames({ active: activeTab === '1' })}
+                                                onClick={() => {
+                                                    toggleTab('1');
+                                                }}
+                                            >
+                                                Description
+                                            </NavLink>
+                                        </NavItemStyled>
+                                        <NavItemStyled>
+                                            <NavLink
+                                                className={classnames({ active: activeTab === '2' })}
+                                                onClick={() => {
+                                                    toggleTab('2');
+                                                }}
+                                            >
+                                                Properties
+                                            </NavLink>
+                                        </NavItemStyled>
+                                        <NavItemStyled>
+                                            <NavLink
+                                                className={classnames({ active: activeTab === '3' })}
+                                                onClick={() => {
+                                                    toggleTab('3');
+                                                }}
+                                            >
+                                                Format
+                                            </NavLink>
+                                        </NavItemStyled>
+                                    </Nav>
+                                </VisibilitySensor>
+                                <TabContent activeTab={activeTab}>
+                                    <TabPaneStyled tabId="1">
+                                        <Row>
+                                            <Col sm="12">
+                                                <GeneralSettings />
+                                            </Col>
+                                        </Row>
+                                    </TabPaneStyled>
+                                    <TabPaneStyled tabId="2">
+                                        <Row>
+                                            <Col sm="12">
+                                                <ComponentsTab />
+                                            </Col>
+                                        </Row>
+                                    </TabPaneStyled>
+                                    <TabPaneStyled tabId="3">
+                                        <Row>
+                                            <Col sm="12">
+                                                <Format />
+                                            </Col>
+                                        </Row>
+                                    </TabPaneStyled>
+                                </TabContent>
+                            </div>
+                        </div>
+                    </>
+                </LoadingOverlay>
             </StyledContainer>
         </>
     );

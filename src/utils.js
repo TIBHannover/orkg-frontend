@@ -203,6 +203,22 @@ function getOrder(paperStatements) {
 }
 
 /**
+ * Filter the objects and return one doi object
+ * @param {Array} objects Array of object of DOI statements
+ * @param {Boolean} isDataCite The doi type to filter on (DataCite is the doi given by orkg)
+ * @return {Object} Doi object
+ */
+export const filterDoiObjects = (objects, isDataCite = false) => {
+    if (!objects.length) {
+        return '';
+    }
+    if (isDataCite) {
+        return objects.find(doi => doi.label?.startsWith(env('DATACITE_DOI_PREFIX'))) ?? '';
+    }
+    return objects.find(doi => doi.label?.startsWith('10.') && !doi.label?.startsWith(env('DATACITE_DOI_PREFIX'))) ?? '';
+};
+
+/**
  * Parse paper statements and return a a paper object
  *
  * @param {Array} paperStatements
@@ -210,7 +226,7 @@ function getOrder(paperStatements) {
 export const getPaperDataViewPaper = (paperResource, paperStatements) => {
     const authors = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHOR, false);
     const contributions = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
-
+    const doi = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_DOI, false);
     return {
         paperResource,
         // statements are ordered desc, so first author is last => thus reverse
@@ -219,10 +235,12 @@ export const getPaperDataViewPaper = (paperResource, paperStatements) => {
         contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)),
         publicationMonth: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_MONTH, true),
         publicationYear: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_YEAR, true),
-        doi: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_DOI, true),
+        doi: filterDoiObjects(doi),
         researchField: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD),
         publishedIn: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_VENUE, true),
         url: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.URL, true),
+        hasVersion: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PREVIOUS_VERSION, true),
+        dataCiteDoi: filterDoiObjects(doi, true),
     };
 };
 
@@ -525,8 +543,8 @@ export const sortMethod = (a, b) => {
 export const generateRdfDataVocabularyFile = (data, contributions, properties, metadata) => {
     const element = document.createElement('a');
     const cubens = rdf.ns('http://purl.org/linked-data/cube#');
-    const orkgVocab = rdf.ns('http://orkg.org/orkg/vocab/#');
-    const orkgResource = rdf.ns('http://orkg.org/orkg/resource/');
+    const orkgVocab = rdf.ns('https://orkg.org/vocab/#');
+    const orkgResource = rdf.ns('https://orkg.org/resource/');
     const gds = new rdf.Graph();
     // Vocabulary properties labels
     gds.add(new rdf.Triple(cubens('dataSet'), rdf.rdfsns('label'), new rdf.Literal('dataSet')));

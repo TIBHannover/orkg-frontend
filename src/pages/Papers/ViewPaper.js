@@ -19,19 +19,15 @@ import { Helmet } from 'react-helmet';
 import moment from 'moment';
 import TitleBar from 'components/TitleBar/TitleBar';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import useDetermineResearchField from 'components/AddPaper/EntityRecognition/useDetermineResearchField';
+import { useEffect, useState } from 'react';
 
 const ViewPaper = () => {
     const { resourceId } = useParams();
     const location = useLocation();
     const viewPaper = useSelector(state => state.viewPaper);
-    const paperLink = useSelector(state =>
-        state.viewPaper.url
-            ? state.viewPaper.url.label
-            : state.viewPaper.doi && state.viewPaper.doi.label.startsWith('10.')
-            ? `https://doi.org/${state.viewPaper.doi.label}`
-            : '',
-    );
-
+    const [shouldShowNerSurvey, setShouldShowNerSurvey] = useState(false);
+    const { determineField } = useDetermineResearchField();
     const {
         isLoading,
         isLoadingFailed,
@@ -48,6 +44,12 @@ const ViewPaper = () => {
 
     let comingFromWizard = queryString.parse(location.search);
     comingFromWizard = comingFromWizard ? comingFromWizard.comingFromWizard === 'true' : false;
+
+    useEffect(() => {
+        if (comingFromWizard) {
+            (async () => setShouldShowNerSurvey(await determineField({ field: viewPaper.researchField?.id })))();
+        }
+    }, [determineField, comingFromWizard, viewPaper.researchField?.id]);
 
     const getSEODescription = () =>
         `Published: ${viewPaper.publicationMonth ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''} ${
@@ -80,15 +82,7 @@ const ViewPaper = () => {
             {!isLoadingFailed && (
                 <>
                     {showHeaderBar && (
-                        <PaperHeaderBar
-                            disableEdit={env('PWC_USER_ID') === viewPaper.paperResource.created_by}
-                            paperLink={paperLink}
-                            editMode={editMode}
-                            toggle={toggle}
-                            id={resourceId}
-                            paperTitle={viewPaper.paperResource.label}
-                            doi={viewPaper.doi?.label}
-                        />
+                        <PaperHeaderBar disableEdit={env('PWC_USER_ID') === viewPaper.paperResource.created_by} editMode={editMode} toggle={toggle} />
                     )}
                     <Breadcrumbs researchFieldId={viewPaper.researchField ? viewPaper.researchField.id : null} />
 
@@ -106,11 +100,7 @@ const ViewPaper = () => {
                                 <PaperMenuBar
                                     disableEdit={env('PWC_USER_ID') === viewPaper.paperResource.created_by}
                                     editMode={editMode}
-                                    paperLink={paperLink}
                                     toggle={toggle}
-                                    id={resourceId}
-                                    label={viewPaper.paperResource?.label}
-                                    doi={viewPaper.doi?.label}
                                 />
                             }
                         >
@@ -148,7 +138,15 @@ const ViewPaper = () => {
                                 {comingFromWizard && (
                                     <UncontrolledAlert color="info">
                                         Help us to improve the ORKG and{' '}
-                                        <a href="https://forms.gle/AgcUXuiuQzexqZmr6" target="_blank" rel="noopener noreferrer">
+                                        <a
+                                            href={
+                                                shouldShowNerSurvey
+                                                    ? 'https://tib.eu/umfragen/index.php/248163'
+                                                    : 'https://forms.gle/AgcUXuiuQzexqZmr6'
+                                            }
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
                                             fill out the online evaluation form
                                         </a>
                                         . Thank you!

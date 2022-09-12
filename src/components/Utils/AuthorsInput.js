@@ -34,7 +34,7 @@ const StyledDragHandle = styled.div`
     cursor: move;
 `;
 
-const AuthorTag = styled.div`
+export const AuthorTag = styled.div`
     background-color: #e9ecef;
     display: flex;
     margin: 0 0 4px 0;

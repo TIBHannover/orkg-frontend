@@ -17,6 +17,7 @@ import { StyledItemProvenanceBox } from './styled';
 const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contributors, createdBy, isLoadingProvenance, isLoadingContributors }) => {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
     const user = useSelector(state => state.auth.user);
+    const dataCiteDoi = useSelector(state => state.viewPaper.dataCiteDoi?.label);
     const dispatch = useDispatch();
 
     return (
@@ -101,7 +102,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                     {!isLoadingContributors &&
                         contributors?.length > 0 &&
                         contributors
-                            .filter(c => c.createdBy !== MISC.UNKNOWN_ID)
+                            .filter(c => c.created_by !== MISC.UNKNOWN_ID)
                             .map((contributor, index) => (
                                 <div key={`cntbrs-${contributor.id}${index}`}>
                                     <Link
@@ -116,6 +117,16 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                     {!isLoadingContributors && contributors?.length === 0 && 'No contributors'}
                     {isLoadingContributors && 'Loading ...'}
                 </StyledItemProvenanceBox>
+                {dataCiteDoi && (
+                    <StyledItemProvenanceBox>
+                        <div className="mb-1">
+                            <b>DOI</b>
+                        </div>
+                        <a href={`https://doi.org/${dataCiteDoi}`} target="_blank" rel="noopener noreferrer">
+                            https://doi.org/{dataCiteDoi}
+                        </a>
+                    </StyledItemProvenanceBox>
+                )}
             </ul>
             {!!user && user.isCurationAllowed && (
                 <div className="text-center">

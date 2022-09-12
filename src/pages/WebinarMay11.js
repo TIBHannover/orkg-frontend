@@ -20,7 +20,7 @@ export default function WebinarMay11() {
                             height="315"
                             src="https://www.youtube.com/embed/8rqkQe_2lUE"
                             title="YouTube video player"
-                            frameborder="0"
+                            frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
                         />

@@ -1,25 +1,17 @@
 import { RESOURCES } from 'constants/graphSettings';
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { getParentResearchFields } from 'services/backend/statements';
 
 const useDetermineResearchField = () => {
-    const { selectedResearchField } = useSelector(state => state.addPaper);
-    const [isComputerScienceField, setIsComputerScienceField] = useState(false);
-
-    useEffect(() => {
-        const determineField = async () => {
-            if (selectedResearchField === RESOURCES.RESEARCH_FIELD_COMPUTER_SCIENCE) {
-                setIsComputerScienceField(true);
-                return;
-            }
-            const parentFields = await getParentResearchFields(selectedResearchField);
-            setIsComputerScienceField(parentFields.some(field => field.id === RESOURCES.RESEARCH_FIELD_COMPUTER_SCIENCE));
-        };
-        determineField();
-    }, [selectedResearchField]);
-
-    return { isComputerScienceField };
+    const determineField = async ({ field }) => {
+        if (field === RESOURCES.RESEARCH_FIELD_COMPUTER_SCIENCE || field === RESOURCES.RESEARCH_FIELD_COMPUTATIONAL_LINGUISTICS) {
+            return true;
+        }
+        const parentFields = await getParentResearchFields(field);
+        return parentFields.some(
+            _field => _field.id === RESOURCES.RESEARCH_FIELD_COMPUTER_SCIENCE || _field.id === RESOURCES.RESEARCH_FIELD_COMPUTATIONAL_LINGUISTICS,
+        );
+    };
+    return { determineField };
 };
 
 export default useDetermineResearchField;
