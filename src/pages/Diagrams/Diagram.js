@@ -133,7 +133,7 @@ function Diagram() {
                                 </DropdownToggle>
                                 <DropdownMenu end>
                                     <DropdownItem onClick={() => setIsExportDiagramModalOpen(true)}>Export diagram</DropdownItem>
-                                    <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id })}>
+                                    <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                                         View resource
                                     </DropdownItem>
                                 </DropdownMenu>

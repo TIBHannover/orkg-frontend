@@ -60,7 +60,7 @@ const VenuePage = () => {
                                     <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu end>
-                                    <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: params.venueId })}>
+                                    <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id: params.venueId })}?noRedirect`}>
                                         View resource
                                     </DropdownItem>
                                 </DropdownMenu>

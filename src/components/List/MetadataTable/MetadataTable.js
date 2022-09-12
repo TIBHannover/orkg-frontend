@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import React from 'react';
 import { Card, Table } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
@@ -19,7 +18,7 @@ function MetadataTable({ title = '', authors = [], publicationMonth = null, publ
                             <strong>Title:</strong>{' '}
                             {contentTypeId ? (
                                 <Tippy content="Entry will be linked to ORKG resource">
-                                    <Link target="_blank" to={reverse(ROUTES.RESOURCE, { id: contentTypeId })}>
+                                    <Link target="_blank" to={`${reverse(ROUTES.RESOURCE, { id: contentTypeId })}?noRedirect`}>
                                         {title} <Icon icon={faExternalLinkAlt} />
                                     </Link>
                                 </Tippy>

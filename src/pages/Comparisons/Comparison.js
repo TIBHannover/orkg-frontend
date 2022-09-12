@@ -489,7 +489,7 @@ function Comparison(props) {
                                     {metaData?.id && (
                                         <>
                                             <DropdownItem divider />
-                                            <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: metaData.id })}>
+                                            <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id: metaData.id })}?noRedirect`}>
                                                 View resource
                                             </DropdownItem>
                                         </>

@@ -7,7 +7,6 @@ import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCV
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
@@ -24,7 +23,7 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                 <div className="d-flex">
                     <h5>{data.label ?? 'No Title'}</h5>
                     <Tippy content="Go to resource page">
-                        <Link target="_blank" className="ms-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: data.id })}>
+                        <Link target="_blank" className="ms-2 resourceLink" to={`${reverse(ROUTES.RESOURCE, { id: data.id })}?noRedirect`}>
                             <Icon icon={faLink} className="text-primary" />
                         </Link>
                     </Tippy>

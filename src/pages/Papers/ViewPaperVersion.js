@@ -65,7 +65,7 @@ const ViewPaperVersion = () => {
                                     <DropdownMenu>
                                         <DropdownItem onClick={() => setShowPublishDialog(v => !v)}>Publish</DropdownItem>
                                         <DropdownItem divider />
-                                        <DropdownItem tag={NavLink} to={reverse(ROUTES.RESOURCE, { id: resourceId })}>
+                                        <DropdownItem tag={NavLink} to={`${reverse(ROUTES.RESOURCE, { id: resourceId })}?noRedirect`}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>

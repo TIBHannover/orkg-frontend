@@ -115,14 +115,15 @@ const ViewArticle = () => {
                                                             <>
                                                                 <div className="mt-3 mb-2">
                                                                     <Link
-                                                                        to={reverse(
+                                                                        to={
                                                                             section.type.id === CLASSES.RESOURCE_SECTION
-                                                                                ? ROUTES.RESOURCE
-                                                                                : ROUTES.PREDICATE,
-                                                                            {
-                                                                                id: section.contentLink.objectId,
-                                                                            },
-                                                                        )}
+                                                                                ? `${reverse(ROUTES.RESOURCE, {
+                                                                                      id: section.contentLink.objectId,
+                                                                                  })}?noRedirect`
+                                                                                : reverse(ROUTES.PREDICATE, {
+                                                                                      id: section.contentLink.objectId,
+                                                                                  })
+                                                                        }
                                                                         target="_blank"
                                                                     >
                                                                         {section.contentLink.label}
