@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import TitleBar from 'components/TitleBar/TitleBar';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 
 const Observatory = () => {
     const [error, setError] = useState(null);
@@ -126,6 +127,7 @@ const Observatory = () => {
                         researchField={researchField}
                         updateObservatoryMetadata={updateObservatoryMetadata}
                     />
+                    <ComparisonPopup />
                 </>
             )}
         </>
