@@ -4,7 +4,7 @@ import { createLiteralStatement, createResourceStatement, getStatementsByPredica
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
 import Tooltip from 'components/Utils/Tooltip';
-import AuthorsInput from 'components/Utils/AuthorsInput';
+import AuthorsInput from 'components/AuthorsInput/AuthorsInput';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import { addVisualization } from 'services/similarity';

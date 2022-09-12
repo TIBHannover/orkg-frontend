@@ -21,7 +21,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { range, getPaperData, parseCiteResult } from 'utils';
 import Tooltip from 'components/Utils/Tooltip';
-import AuthorsInput from 'components/Utils/AuthorsInput';
+import AuthorsInput from 'components/AuthorsInput/AuthorsInput';
 import Joi from 'joi';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateGeneralData, nextStep, openTour, closeTour } from 'slices/addPaperSlice';

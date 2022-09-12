@@ -13,5 +13,7 @@ const regex = {
     RESOURCE_PATTERN: /^#R([0-9])+$/,
     CLASS_PATTERN: /^#C([0-9])+$/,
     MINIMUM_LENGTH_PATTERN: 3,
+    ORCID_URL: /^(?:(?:https?:\/\/)?orcid.org\/)?([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))\/*$/,
+    ORCID: /([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))/g,
 };
 export default regex;
