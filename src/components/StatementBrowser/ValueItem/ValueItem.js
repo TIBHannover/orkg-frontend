@@ -71,7 +71,7 @@ const ValueItem = props => {
                                                         {capitalize(value._class)} id: {value.id}
                                                     </span>
                                                     <CopyToClipboard
-                                                        text={props.id}
+                                                        text={value.id}
                                                         onCopy={() => {
                                                             toast.dismiss();
                                                             toast.success('ID copied to clipboard');
