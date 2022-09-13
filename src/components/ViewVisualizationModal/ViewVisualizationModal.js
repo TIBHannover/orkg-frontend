@@ -32,7 +32,7 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
         toggle();
     };
 
-    const [chartToDownload, setchartToDownload] = useState(null);
+    const [chartToDownload, setChartToDownload] = useState(null);
 
     const [selectedFileFormat, setSelectedFileFormat] = useState('JPGformat');
     const [caption, enableCaption] = useState(true);
@@ -40,11 +40,11 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
     const downloadChart = chart => {
         if (selectedFileFormat === 'JPGformat') downloadJPG(chart, data.label);
         else if (selectedFileFormat === 'PDFformat') downloadPDF(chart, data.label);
-        setchartToDownload(null);
+        setChartToDownload(null);
     };
 
     const initChartDownload = () => {
-        setchartToDownload(
+        setChartToDownload(
             <GDCVisualizationRenderer
                 caption={caption ? data.label : undefined}
                 width="1000px"
