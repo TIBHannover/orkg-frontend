@@ -1,6 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { LOCATION_CHANGE, asyncLocalStorage } from 'utils';
-import { isPredicatesListCorrect, extendPropertyIds, similarPropertiesByLabel, generateFilterControlData } from 'components/Comparison/hooks/helpers';
+import {
+    isPredicatesListCorrect,
+    extendPropertyIds,
+    similarPropertiesByLabel,
+    generateFilterControlData,
+    activatedContributionsToList,
+} from 'components/Comparison/hooks/helpers';
 import { applyRule, getRuleByProperty } from 'components/Comparison/Filters/helpers';
 import { flatten, findIndex, cloneDeep, isEmpty, intersection } from 'lodash';
 import { DEFAULT_COMPARISON_METHOD } from 'constants/misc';
@@ -282,6 +288,7 @@ export const removeContribution = contributionId => async (dispatch, getState) =
     newProperties = await dispatch(
         extendAndSortProperties({ data: newData, properties: newProperties }, getState().comparison.configuration.comparisonType),
     );
+    dispatch(setConfigurationAttribute({ attribute: 'contributionsList', value: activatedContributionsToList(newContributions) }));
     dispatch(setContributions(newContributions));
     dispatch(setData(newData));
     dispatch(setProperties(newProperties));
