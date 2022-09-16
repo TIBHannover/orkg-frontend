@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert } from 'reactstrap';
-import { createLiteralStatement, createResourceStatement, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
+import { createLiteralStatement, createResourceStatement } from 'services/backend/statements';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
 import Tooltip from 'components/Utils/Tooltip';
@@ -8,6 +8,7 @@ import AuthorsInput from 'components/AuthorsInput/AuthorsInput';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import { addVisualization } from 'services/similarity';
+import { saveAuthors } from 'components/AuthorsInput/helpers';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
@@ -19,69 +20,12 @@ function PublishVisualization(props) {
     const displayName = useSelector(state => state.auth.user.displayName);
 
     const [visualizationCreators, setVisualizationCreators] = useState(
-        props.authors ?? [{ label: displayName, id: displayName, orcid: '', statementId: '' }],
+        props.authors ?? [{ label: displayName, id: displayName, orcid: '', statementId: '', __isNew__: true }],
     );
 
     const handleCreatorsChange = creators => {
-        creators = creators || [];
-        setVisualizationCreators(creators);
-    };
-
-    // TODO: improve code by using reduce function and unify code with paper edit dialog
-    const saveCreators = async (creators, resourceId) => {
-        const authors = creators;
-
-        for (const author of authors) {
-            // create the author
-            if (author.orcid) {
-                // Create author with ORCID
-                // check if there's an author resource
-                const responseJson = await getStatementsByPredicateAndLiteral({
-                    predicateId: PREDICATES.HAS_ORCID,
-                    literal: author.orcid,
-                    subjectClass: CLASSES.AUTHOR,
-                    items: 1,
-                });
-                if (responseJson.length > 0) {
-                    // Author resource exists
-                    const authorResource = responseJson[0];
-                    const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, authorResource.subject.id);
-                    authors.statementId = authorStatement.id;
-                    authors.id = authorResource.subject.id;
-                    authors.class = authorResource.subject._class;
-                    authors.classes = authorResource.subject.classes;
-                } else {
-                    // Author resource doesn't exist
-                    // Create resource author
-                    const authorResource = await createResource(author.label, [CLASSES.AUTHOR]);
-                    const orcidLiteral = await createLiteral(author.orcid);
-                    await createLiteralStatement(authorResource.id, PREDICATES.HAS_ORCID, orcidLiteral.id);
-                    const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, authorResource.id);
-                    authors.statementId = authorStatement.id;
-                    authors.id = authorResource.id;
-                    authors.class = authorResource._class;
-                    authors.classes = authorResource.classes;
-                }
-            } else {
-                // Author resource exists
-                if (author.label !== author.id) {
-                    const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, author.id);
-                    authors.statementId = authorStatement.id;
-                    authors.id = author.id;
-                    authors.class = author._class;
-                    authors.classes = author.classes;
-                } else {
-                    // Author resource doesn't exist
-                    const newLiteral = await createLiteral(author.label);
-                    // Create literal of author
-                    const authorStatement = await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
-                    authors.statementId = authorStatement.id;
-                    authors.id = newLiteral.id;
-                    authors.class = authorStatement.object._class;
-                    authors.classes = authorStatement.object.classes;
-                }
-            }
-        }
+        const _creators = creators || [];
+        setVisualizationCreators(_creators);
     };
 
     const modelExists = () => {
@@ -138,15 +82,15 @@ function PublishVisualization(props) {
                         toast.error('Please enter a title and description');
                     } else {
                         const newResource = await createResource(title || '', [CLASSES.VISUALIZATION]);
-                        // we need not to create a resource statement on the comparision;
+                        // we need not to create a resource statement on the comparison;
                         backendReferenceResource = newResource.id;
 
                         await createResourceStatement(props.comparisonId, PREDICATES.HAS_VISUALIZATION, backendReferenceResource);
                         const predicateId = PREDICATES.DESCRIPTION;
                         const literalDescription = await createLiteral(description || '');
                         await createLiteralStatement(backendReferenceResource, predicateId, literalDescription.id);
-                        await saveCreators(visualizationCreators, backendReferenceResource);
-                        const reconstructionModel = createReconstructionModel(backendReferenceResource); // NOW for my own backend <<<<
+                        await saveAuthors(visualizationCreators, backendReferenceResource);
+                        const reconstructionModel = createReconstructionModel(backendReferenceResource);
                         await createReconstructionModelInBackend(backendReferenceResource, reconstructionModel);
                         setIsLoading(false);
                         // close this modal

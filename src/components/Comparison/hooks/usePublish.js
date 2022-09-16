@@ -1,15 +1,9 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
-import {
-    createLiteralStatement,
-    createResourceStatement,
-    getStatementsByPredicateAndLiteral,
-    getStatementsBySubjectAndPredicate,
-} from 'services/backend/statements';
+import { createResourceStatement, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { generateDoi, createObject } from 'services/backend/misc';
 import { createLiteral } from 'services/backend/literals';
-import { createResource } from 'services/backend/resources';
 import { getComparison, createResourceData } from 'services/similarity/index';
 import { useSelector, useDispatch } from 'react-redux';
 import { reverse } from 'named-urls';
@@ -17,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { filterObjectOfStatementsByPredicateAndClass, getPublicUrl } from 'utils';
 import { setDoi } from 'slices/comparisonSlice';
 import { getComparisonURLConfig, getPropertyObjectFromData } from 'components/Comparison/hooks/helpers';
+import { saveAuthors } from 'components/AuthorsInput/helpers';
 import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import { getConferences } from 'services/backend/organizations';
@@ -61,7 +56,9 @@ function usePublish() {
         setReferences(comparisonResource?.references && comparisonResource.references.length > 0 ? comparisonResource.references : ['']);
         setSubject(comparisonResource && comparisonResource.subject ? comparisonResource.subject : undefined);
         setComparisonCreators(
-            comparisonResource.authors ? comparisonResource.authors : [{ label: displayName, id: displayName, orcid: '', statementId: '' }],
+            comparisonResource.authors
+                ? comparisonResource.authors
+                : [{ label: displayName, id: displayName, orcid: '', statementId: '', __isNew__: true }],
         );
     }, [comparisonResource, displayName]);
 
@@ -73,62 +70,6 @@ function usePublish() {
         };
         getConferencesList();
     }, []);
-
-    // TODO: improve code by using reduce function and unify code with paper edit dialog
-    const saveCreators = async (creators, resourceId) => {
-        const authors = creators;
-        for (const author of authors) {
-            // create the author
-            if (author.orcid) {
-                // Create author with ORCID
-                // check if there's an author resource
-                const responseJson = await getStatementsByPredicateAndLiteral({
-                    predicateId: PREDICATES.HAS_ORCID,
-                    literal: author.orcid,
-                    subjectClass: CLASSES.AUTHOR,
-                    items: 1,
-                });
-                if (responseJson.length > 0) {
-                    // Author resource exists
-                    const authorResource = responseJson[0];
-                    const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, authorResource.subject.id);
-                    authors.statementId = authorStatement.id;
-                    authors.id = authorResource.subject.id;
-                    authors.class = authorResource.subject._class;
-                    authors.classes = authorResource.subject.classes;
-                } else {
-                    // Author resource doesn't exist
-                    // Create resource author
-                    const authorResource = await createResource(author.label, [CLASSES.AUTHOR]);
-                    const orcidLiteral = await createLiteral(author.orcid);
-                    await createLiteralStatement(authorResource.id, PREDICATES.HAS_ORCID, orcidLiteral.id);
-                    const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, authorResource.id);
-                    authors.statementId = authorStatement.id;
-                    authors.id = authorResource.id;
-                    authors.class = authorResource._class;
-                    authors.classes = authorResource.classes;
-                }
-            } else {
-                // Author resource exists
-                if (author.label !== author.id) {
-                    const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, author.id);
-                    authors.statementId = authorStatement.id;
-                    authors.id = author.id;
-                    authors.class = author._class;
-                    authors.classes = author.classes;
-                } else {
-                    // Author resource doesn't exist
-                    const newLiteral = await createLiteral(author.label);
-                    // Create literal of author
-                    const authorStatement = await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
-                    authors.statementId = authorStatement.id;
-                    authors.id = newLiteral.id;
-                    authors.class = authorStatement.object._class;
-                    authors.classes = authorStatement.object.classes;
-                }
-            }
-        }
-    };
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -204,7 +145,7 @@ function usePublish() {
                         },
                     };
                     const createdComparison = await createObject(comparisonObject);
-                    await saveCreators(comparisonCreators, createdComparison.id);
+                    await saveAuthors(comparisonCreators, createdComparison.id);
                     await createResourceData({
                         resourceId: createdComparison.id,
                         data: { url: `${comparisonURLConfig}&response_hash=${response_hash}` },
@@ -232,7 +173,7 @@ function usePublish() {
     const publishDOI = async comparisonId => {
         try {
             if (id && comparisonResource?.authors.length === 0) {
-                await saveCreators(comparisonCreators, id);
+                await saveAuthors(comparisonCreators, id);
             }
             // Load ORCID of curators
             let comparisonCreatorsORCID = comparisonCreators.map(async curator => {

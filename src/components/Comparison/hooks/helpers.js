@@ -1,7 +1,22 @@
 import queryString from 'query-string';
-import { getArrayParamFromQueryString, getParamFromQueryString, stringComparePosition } from 'utils';
-import { uniq, without, flattenDepth, groupBy, flatten, last, find } from 'lodash';
+import { getArrayParamFromQueryString, getParamFromQueryString } from 'utils';
+import { isEmpty, uniq, without, flattenDepth, groupBy, flatten, last, find } from 'lodash';
 import { DEFAULT_COMPARISON_METHOD } from 'constants/misc';
+import rdf from 'rdf';
+
+// returns the position of the first differing character between
+// $left and $right, or -1 if either is empty
+export const stringComparePosition = (left, right) => {
+    if (isEmpty(left) || isEmpty(right)) {
+        return -1;
+    }
+    let i;
+    i = 0;
+    while (left[i] && left[i] === right[i]) {
+        i++;
+    }
+    return i - 1;
+};
 
 /**
  * Parse comparison configuration from url
@@ -219,4 +234,109 @@ export const getPropertyObjectFromData = (data, value) => {
     return notEmptyCell && notEmptyCell.path?.length && notEmptyCell.pathLabels?.length
         ? { id: last(notEmptyCell.path), label: last(notEmptyCell.pathLabels) }
         : value;
+};
+
+export const generateRdfDataVocabularyFile = (data, contributions, properties, metadata) => {
+    const element = document.createElement('a');
+    const cubens = rdf.ns('http://purl.org/linked-data/cube#');
+    const orkgVocab = rdf.ns('https://orkg.org/vocab/#');
+    const orkgResource = rdf.ns('https://orkg.org/resource/');
+    const gds = new rdf.Graph();
+    // Vocabulary properties labels
+    gds.add(new rdf.Triple(cubens('dataSet'), rdf.rdfsns('label'), new rdf.Literal('dataSet')));
+    gds.add(new rdf.Triple(cubens('structure'), rdf.rdfsns('label'), new rdf.Literal('structure')));
+    gds.add(new rdf.Triple(cubens('component'), rdf.rdfsns('label'), new rdf.Literal('component')));
+    gds.add(new rdf.Triple(cubens('componentProperty'), rdf.rdfsns('label'), new rdf.Literal('component Property')));
+    gds.add(new rdf.Triple(cubens('componentAttachment'), rdf.rdfsns('label'), new rdf.Literal('component Attachment')));
+    gds.add(new rdf.Triple(cubens('dimension'), rdf.rdfsns('label'), new rdf.Literal('dimension')));
+    gds.add(new rdf.Triple(cubens('attribute'), rdf.rdfsns('label'), new rdf.Literal('attribute')));
+    gds.add(new rdf.Triple(cubens('measure'), rdf.rdfsns('label'), new rdf.Literal('measure')));
+    gds.add(new rdf.Triple(cubens('order'), rdf.rdfsns('label'), new rdf.Literal('order')));
+    // BNodes
+    const ds = new rdf.BlankNode();
+    const dsd = new rdf.BlankNode();
+    // Dataset
+    gds.add(new rdf.Triple(ds, rdf.rdfns('type'), cubens('DataSet')));
+    // Metadata
+    const dcterms = rdf.ns('http://purl.org/dc/terms/#');
+    gds.add(new rdf.Triple(ds, dcterms('title'), new rdf.Literal(metadata.title ? metadata.title : 'Comparison - ORKG')));
+    gds.add(new rdf.Triple(ds, dcterms('description'), new rdf.Literal(metadata.description ? metadata.description : 'Description')));
+    gds.add(new rdf.Triple(ds, dcterms('creator'), new rdf.Literal(metadata.creator ? metadata.creator : 'Creator')));
+    gds.add(new rdf.Triple(ds, dcterms('date'), new rdf.Literal(metadata.date ? metadata.date : 'Date')));
+    gds.add(new rdf.Triple(ds, dcterms('license'), new rdf.NamedNode('https://creativecommons.org/licenses/by-sa/4.0/')));
+    gds.add(new rdf.Triple(ds, rdf.rdfsns('label'), new rdf.Literal('Comparison - ORKG')));
+    gds.add(new rdf.Triple(ds, cubens('structure'), dsd));
+    // DataStructureDefinition
+    gds.add(new rdf.Triple(dsd, rdf.rdfns('type'), cubens('DataStructureDefinition')));
+    gds.add(new rdf.Triple(dsd, rdf.rdfsns('label'), new rdf.Literal('Data Structure Definition')));
+    const cs = {};
+    const dt = {};
+    // components
+    const columns = [{ id: 'Properties', title: 'Properties' }, ...contributions.filter(c => c.active).map((contribution, index) => contribution)];
+    columns.forEach((column, index) => {
+        if (column.id === 'Properties') {
+            cs[column.id] = new rdf.BlankNode();
+            dt[column.id] = orkgVocab('Property');
+        } else {
+            cs[column.id] = new rdf.BlankNode();
+            dt[column.id] = orkgResource(`${column.id}`);
+        }
+
+        gds.add(new rdf.Triple(dsd, cubens('component'), cs[column.id]));
+        gds.add(new rdf.Triple(cs[column.id], rdf.rdfns('type'), cubens('ComponentSpecification')));
+        gds.add(new rdf.Triple(cs[column.id], rdf.rdfsns('label'), new rdf.Literal('Component Specification')));
+        gds.add(new rdf.Triple(cs[column.id], cubens('order'), new rdf.Literal(index.toString())));
+        if (column.id === 'Properties') {
+            gds.add(new rdf.Triple(cs[column.id], cubens('dimension'), dt[column.id]));
+            gds.add(new rdf.Triple(dt[column.id], rdf.rdfns('type'), cubens('DimensionProperty')));
+        } else {
+            gds.add(new rdf.Triple(cs[column.id], cubens('measure'), dt[column.id]));
+            gds.add(new rdf.Triple(dt[column.id], rdf.rdfns('type'), cubens('MeasureProperty')));
+        }
+        gds.add(new rdf.Triple(dt[column.id], rdf.rdfns('type'), cubens('ComponentProperty')));
+        gds.add(new rdf.Triple(dt[column.id], rdf.rdfsns('label'), new rdf.Literal(column.title.toString())));
+    });
+    // data
+    properties
+        .filter(property => property.active && data[property.id])
+        .map((property, index) => {
+            const bno = new rdf.BlankNode();
+            gds.add(new rdf.Triple(bno, rdf.rdfns('type'), cubens('Observation')));
+            gds.add(new rdf.Triple(bno, rdf.rdfsns('label'), new rdf.Literal(`Observation #{${index + 1}}`)));
+            gds.add(new rdf.Triple(bno, cubens('dataSet'), ds));
+            gds.add(new rdf.Triple(bno, dt.Properties.toString(), new rdf.Literal(property.label.toString())));
+            contributions.map((contribution, index2) => {
+                if (contribution.active) {
+                    const cell = data[property.id][index2];
+                    if (cell.length > 0) {
+                        cell.map(v => {
+                            if (v.type && v.type === 'resource') {
+                                gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), orkgResource(`${v.resourceId}`)));
+                            } else {
+                                gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal(`${v.label ? v.label : ''}`)));
+                            }
+                            return null;
+                        });
+                    } else {
+                        gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal('Empty')));
+                    }
+                }
+                return null;
+            });
+            return null;
+        });
+    // Create the RDF file
+    const file = new Blob(
+        [
+            gds
+                .toArray()
+                .map(t => t.toString())
+                .join('\n'),
+        ],
+        { type: 'text/n3' },
+    );
+    element.href = URL.createObjectURL(file);
+    element.download = 'ComparisonRDF.n3';
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
 };

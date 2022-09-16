@@ -19,7 +19,7 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import { openAuthDialog } from 'slices/authSlice';
 import { CSVLink } from 'react-csv';
 import PropTypes from 'prop-types';
-import { generateRdfDataVocabularyFile } from 'utils';
+import { generateRdfDataVocabularyFile } from 'components/Comparison/hooks/helpers';
 import Tippy from '@tippyjs/react';
 import { useCookies } from 'react-cookie';
 import ExactMatch from 'assets/img/comparison-exact-match.svg';

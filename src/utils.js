@@ -2,19 +2,10 @@ import capitalize from 'capitalize';
 import { CLASSES, MISC, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import ROUTES from 'constants/routes';
-import { find, flatten, isEqual, isString, uniq, sortBy, uniqBy, isEmpty, cloneDeep } from 'lodash';
+import { isString, sortBy, uniqBy } from 'lodash';
 import { unescape } from 'he';
 import { reverse } from 'named-urls';
 import queryString from 'query-string';
-import rdf from 'rdf';
-import { createLiteral as createLiteralApi } from 'services/backend/literals';
-import { createResource } from 'services/backend/resources';
-import {
-    createLiteralStatement,
-    createResourceStatement,
-    deleteStatementsByIds,
-    getStatementsByPredicateAndLiteral,
-} from 'services/backend/statements';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 import slugifyString from 'slugify';
@@ -62,57 +53,6 @@ export function getParamFromQueryString(locationSearch, param, boolean = false) 
         return boolean ? true : value;
     }
     return value;
-}
-
-export function groupBy(array, group) {
-    const hash = Object.create(null);
-    const result = [];
-
-    array.forEach(a => {
-        const groupByElement = a[group];
-        if (!hash[groupByElement]) {
-            hash[groupByElement] = [];
-            result.push(hash[groupByElement]);
-        }
-        hash[groupByElement].push(a);
-    });
-
-    return result;
-}
-
-export function groupByObjectWithId(array, propertyName) {
-    const hash = Object.create(null);
-    const result = [];
-
-    array.forEach(a => {
-        const groupId = a[propertyName].id;
-        if (!hash[groupId]) {
-            hash[groupId] = [];
-            result.push(hash[groupId]);
-        }
-        hash[groupId].push(a);
-    });
-
-    return result;
-}
-
-export function deleteArrayEntryByObjectValue(arr, object, value) {
-    const newArr = [...arr];
-
-    let indexToDelete = -1;
-
-    for (let i = 0; i < newArr.length; i += 1) {
-        if (newArr[i][object] === value) {
-            indexToDelete = i;
-            break;
-        }
-    }
-
-    if (indexToDelete > -1) {
-        newArr.splice(indexToDelete, 1);
-    }
-
-    return newArr;
 }
 
 export const guid = () => {
@@ -539,111 +479,6 @@ export const sortMethod = (a, b) => {
     return 0;
 };
 
-export const generateRdfDataVocabularyFile = (data, contributions, properties, metadata) => {
-    const element = document.createElement('a');
-    const cubens = rdf.ns('http://purl.org/linked-data/cube#');
-    const orkgVocab = rdf.ns('https://orkg.org/vocab/#');
-    const orkgResource = rdf.ns('https://orkg.org/resource/');
-    const gds = new rdf.Graph();
-    // Vocabulary properties labels
-    gds.add(new rdf.Triple(cubens('dataSet'), rdf.rdfsns('label'), new rdf.Literal('dataSet')));
-    gds.add(new rdf.Triple(cubens('structure'), rdf.rdfsns('label'), new rdf.Literal('structure')));
-    gds.add(new rdf.Triple(cubens('component'), rdf.rdfsns('label'), new rdf.Literal('component')));
-    gds.add(new rdf.Triple(cubens('componentProperty'), rdf.rdfsns('label'), new rdf.Literal('component Property')));
-    gds.add(new rdf.Triple(cubens('componentAttachment'), rdf.rdfsns('label'), new rdf.Literal('component Attachment')));
-    gds.add(new rdf.Triple(cubens('dimension'), rdf.rdfsns('label'), new rdf.Literal('dimension')));
-    gds.add(new rdf.Triple(cubens('attribute'), rdf.rdfsns('label'), new rdf.Literal('attribute')));
-    gds.add(new rdf.Triple(cubens('measure'), rdf.rdfsns('label'), new rdf.Literal('measure')));
-    gds.add(new rdf.Triple(cubens('order'), rdf.rdfsns('label'), new rdf.Literal('order')));
-    // BNodes
-    const ds = new rdf.BlankNode();
-    const dsd = new rdf.BlankNode();
-    // Dataset
-    gds.add(new rdf.Triple(ds, rdf.rdfns('type'), cubens('DataSet')));
-    // Metadata
-    const dcterms = rdf.ns('http://purl.org/dc/terms/#');
-    gds.add(new rdf.Triple(ds, dcterms('title'), new rdf.Literal(metadata.title ? metadata.title : 'Comparison - ORKG')));
-    gds.add(new rdf.Triple(ds, dcterms('description'), new rdf.Literal(metadata.description ? metadata.description : 'Description')));
-    gds.add(new rdf.Triple(ds, dcterms('creator'), new rdf.Literal(metadata.creator ? metadata.creator : 'Creator')));
-    gds.add(new rdf.Triple(ds, dcterms('date'), new rdf.Literal(metadata.date ? metadata.date : 'Date')));
-    gds.add(new rdf.Triple(ds, dcterms('license'), new rdf.NamedNode('https://creativecommons.org/licenses/by-sa/4.0/')));
-    gds.add(new rdf.Triple(ds, rdf.rdfsns('label'), new rdf.Literal('Comparison - ORKG')));
-    gds.add(new rdf.Triple(ds, cubens('structure'), dsd));
-    // DataStructureDefinition
-    gds.add(new rdf.Triple(dsd, rdf.rdfns('type'), cubens('DataStructureDefinition')));
-    gds.add(new rdf.Triple(dsd, rdf.rdfsns('label'), new rdf.Literal('Data Structure Definition')));
-    const cs = {};
-    const dt = {};
-    // components
-    const columns = [{ id: 'Properties', title: 'Properties' }, ...contributions.filter(c => c.active).map((contribution, index) => contribution)];
-    columns.forEach((column, index) => {
-        if (column.id === 'Properties') {
-            cs[column.id] = new rdf.BlankNode();
-            dt[column.id] = orkgVocab('Property');
-        } else {
-            cs[column.id] = new rdf.BlankNode();
-            dt[column.id] = orkgResource(`${column.id}`);
-        }
-
-        gds.add(new rdf.Triple(dsd, cubens('component'), cs[column.id]));
-        gds.add(new rdf.Triple(cs[column.id], rdf.rdfns('type'), cubens('ComponentSpecification')));
-        gds.add(new rdf.Triple(cs[column.id], rdf.rdfsns('label'), new rdf.Literal('Component Specification')));
-        gds.add(new rdf.Triple(cs[column.id], cubens('order'), new rdf.Literal(index.toString())));
-        if (column.id === 'Properties') {
-            gds.add(new rdf.Triple(cs[column.id], cubens('dimension'), dt[column.id]));
-            gds.add(new rdf.Triple(dt[column.id], rdf.rdfns('type'), cubens('DimensionProperty')));
-        } else {
-            gds.add(new rdf.Triple(cs[column.id], cubens('measure'), dt[column.id]));
-            gds.add(new rdf.Triple(dt[column.id], rdf.rdfns('type'), cubens('MeasureProperty')));
-        }
-        gds.add(new rdf.Triple(dt[column.id], rdf.rdfns('type'), cubens('ComponentProperty')));
-        gds.add(new rdf.Triple(dt[column.id], rdf.rdfsns('label'), new rdf.Literal(column.title.toString())));
-    });
-    // data
-    properties
-        .filter(property => property.active && data[property.id])
-        .map((property, index) => {
-            const bno = new rdf.BlankNode();
-            gds.add(new rdf.Triple(bno, rdf.rdfns('type'), cubens('Observation')));
-            gds.add(new rdf.Triple(bno, rdf.rdfsns('label'), new rdf.Literal(`Observation #{${index + 1}}`)));
-            gds.add(new rdf.Triple(bno, cubens('dataSet'), ds));
-            gds.add(new rdf.Triple(bno, dt.Properties.toString(), new rdf.Literal(property.label.toString())));
-            contributions.map((contribution, index2) => {
-                if (contribution.active) {
-                    const cell = data[property.id][index2];
-                    if (cell.length > 0) {
-                        cell.map(v => {
-                            if (v.type && v.type === 'resource') {
-                                gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), orkgResource(`${v.resourceId}`)));
-                            } else {
-                                gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal(`${v.label ? v.label : ''}`)));
-                            }
-                            return null;
-                        });
-                    } else {
-                        gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal('Empty')));
-                    }
-                }
-                return null;
-            });
-            return null;
-        });
-    // Create the RDF file
-    const file = new Blob(
-        [
-            gds
-                .toArray()
-                .map(t => t.toString())
-                .join('\n'),
-        ],
-        { type: 'text/n3' },
-    );
-    element.href = URL.createObjectURL(file);
-    element.download = 'ComparisonRDF.n3';
-    document.body.appendChild(element); // Required for this to work in FireFox
-    element.click();
-};
-
 /**
  * Filter a list of statements by predicate id and return the subject (including the statement id and created_at)
  *
@@ -861,103 +696,6 @@ export function getRelatedResourcesData(resourcesStatements) {
 }
 
 /**
- * Truncating middle portion of a string
- *
- * @param {String} str string
- * @param {Number} firstCharCount first Char Count
- * @param {Number} endCharCount end Char count
- * @param {Number} dotCount dotCount
- * @return {Array} the list of values
- */
-export function truncStringPortion(str, firstCharCount = str.length, endCharCount = 0, dotCount = 3) {
-    if (str === null) {
-        return '';
-    }
-    if (
-        (firstCharCount === 0 && endCharCount === 0) ||
-        firstCharCount >= str.length ||
-        endCharCount >= str.length ||
-        firstCharCount + endCharCount >= str.length
-    ) {
-        return str;
-    }
-    if (endCharCount === 0) {
-        return str.slice(0, firstCharCount) + '.'.repeat(dotCount);
-    }
-    return str.slice(0, firstCharCount) + '.'.repeat(dotCount) + str.slice(str.length - endCharCount);
-}
-
-// TODO: refactor the authors dialog and create a hook to put this function
-export async function saveAuthors({ prevAuthors, newAuthors, resourceId }) {
-    if (isEqual(prevAuthors, newAuthors)) {
-        return prevAuthors;
-    }
-
-    const statementsIds = [];
-    // remove all authors statement from reducer
-    for (const author of prevAuthors) {
-        statementsIds.push(author.statementId);
-    }
-    deleteStatementsByIds(statementsIds);
-
-    // Add all authors from the state
-    const authors = cloneDeep(newAuthors);
-    for (const [i, author] of newAuthors.entries()) {
-        // create the author
-        if (author.orcid) {
-            // Create author with ORCID
-            // check if there's an author resource
-            const responseJson = await getStatementsByPredicateAndLiteral({
-                predicateId: PREDICATES.HAS_ORCID,
-                literal: author.orcid,
-                subjectClass: CLASSES.AUTHOR,
-                items: 1,
-            });
-            if (responseJson.length > 0) {
-                // Author resource exists
-                const authorResource = responseJson[0];
-                const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, authorResource.subject.id);
-                authors[i].statementId = authorStatement.id;
-                authors[i].id = authorResource.subject.id;
-                authors[i].class = authorResource.subject._class;
-                authors[i].classes = authorResource.subject.classes;
-            } else {
-                // Author resource doesn't exist
-                // Create resource author
-                const authorResource = await createResource(author.label, [CLASSES.AUTHOR]);
-                const createLiteral = await createLiteralApi(author.orcid);
-                await createLiteralStatement(authorResource.id, PREDICATES.HAS_ORCID, createLiteral.id);
-                const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, authorResource.id);
-                authors[i].statementId = authorStatement.id;
-                authors[i].id = authorResource.id;
-                authors[i].class = authorResource._class;
-                authors[i].classes = authorResource.classes;
-            }
-        } else {
-            // Author resource exists
-            if (author.label !== author.id) {
-                const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, author.id);
-                authors[i].statementId = authorStatement.id;
-                authors[i].id = author.id;
-                authors[i].class = author._class;
-                authors[i].classes = author.classes;
-            } else {
-                // Author resource doesn't exist
-                const newLiteral = await createLiteralApi(author.label);
-                // Create literal of author
-                const authorStatement = await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
-                authors[i].statementId = authorStatement.id;
-                authors[i].id = newLiteral.id;
-                authors[i].class = authorStatement.object._class;
-                authors[i].classes = authorStatement.object.classes;
-            }
-        }
-    }
-
-    return authors;
-}
-
-/**
  * Get resource link based on class
  *
  * @param {String} classId class ID
@@ -1155,61 +893,6 @@ export const getDataBasedOnType = (resource, statements) => {
         return getListData(resource, statements);
     }
     return undefined;
-};
-
-// returns the position of the first differing character between
-// $left and $right, or -1 if either is empty
-export const stringComparePosition = (left, right) => {
-    if (isEmpty(left) || isEmpty(right)) {
-        return -1;
-    }
-    let i;
-    i = 0;
-    while (left[i] && left[i] === right[i]) {
-        i++;
-    }
-    return i - 1;
-};
-
-// returns the part of the string preceding (but not including) the
-// final directory delimiter, or empty if none are found
-export const truncateToLastDir = str => str.substr(0, str.lastIndexOf('/')).toString();
-
-export const groupArrayByDirectoryPrefix = strings => {
-    const groups = {};
-    const numStrings = strings?.length;
-    let i;
-    for (i = 0; i < numStrings; i++) {
-        let j;
-        for (j = i + 1; j < numStrings; j++) {
-            const pos = stringComparePosition(strings[i], strings[j]);
-            const prefix = truncateToLastDir(strings[i].substr(0, pos + 1));
-            // append to grouping for this prefix. include both strings - this
-            // gives duplicates which we'll merge later
-            groups[prefix] = groups[prefix]
-                ? [
-                      ...groups[prefix],
-                      {
-                          0: strings[i],
-                          1: strings[j],
-                      },
-                  ]
-                : [
-                      {
-                          0: strings[i],
-                          1: strings[j],
-                      },
-                  ];
-        }
-    }
-    let _key_;
-    for (_key_ in groups) {
-        let group;
-        group = groups[_key_];
-        // to remove duplicates introduced above
-        group = uniq(flatten(group));
-    }
-    return groups;
 };
 
 const isInTest = typeof global.it === 'function';
