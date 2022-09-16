@@ -16,20 +16,31 @@ const GDCVisualizationRenderer = props => {
         }
     });
 
+    const chartEvents = [
+        {
+            eventName: 'ready',
+            callback({ chartWrapper }) {
+                if (props.downloadChart) props.downloadChart(chartWrapper.getChart());
+            },
+        },
+    ];
+
     return (
-        <div>
+        <>
             <Chart
                 chartType={props.model.data.visMethod}
                 data={props.model.data.googleChartsData}
                 height={props.height ?? undefined}
+                width={props.width ?? '100%'}
                 options={{
+                    title: props.caption ?? undefined,
                     showRowNumber: true,
                     enableInteractivity: !props.disableInteractivity,
-                    width: props.width ?? '100%',
                     ...(props.height ? { height: props.height } : {}),
                 }}
+                chartEvents={props.downloadChart ? chartEvents : undefined}
             />
-        </div>
+        </>
     );
 };
 
@@ -37,6 +48,8 @@ GDCVisualizationRenderer.propTypes = {
     model: PropTypes.any,
     height: PropTypes.string,
     width: PropTypes.string,
+    caption: PropTypes.string,
+    downloadChart: PropTypes.func,
     disableInteractivity: PropTypes.bool,
 };
 

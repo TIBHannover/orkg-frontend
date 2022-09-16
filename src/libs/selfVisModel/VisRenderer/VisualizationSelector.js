@@ -17,7 +17,7 @@ export default class VisualizationSelector extends Component {
             errorMessage: '',
             errorCode: -1,
         };
-        this.supportedVisualizationMethods = ['Table', 'BarChart', 'ColumnChart', 'ScatterChart', 'LineChart'];
+        this.supportedVisualizationMethods = ['Table', 'BarChart', 'ColumnChart', 'ScatterChart', 'LineChart', 'PieChart'];
         this.selfVisModel = new SelfVisDataModel(); // this access the instance of the data (its a singleton)
         this.selfVisModel.setRenderingEngine('Google-Charts'); // we only have GC at the moment;
     }
