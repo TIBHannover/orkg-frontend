@@ -19,7 +19,7 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import { openAuthDialog } from 'slices/authSlice';
 import { CSVLink } from 'react-csv';
 import PropTypes from 'prop-types';
-import { generateRdfDataVocabularyFile } from 'components/Comparison/hooks/helpers';
+import { generateRdfDataVocabularyFile, activatedContributionsToList } from 'components/Comparison/hooks/helpers';
 import Tippy from '@tippyjs/react';
 import { useCookies } from 'react-cookie';
 import ExactMatch from 'assets/img/comparison-exact-match.svg';
@@ -57,7 +57,7 @@ const ComparisonHeaderMenu = props => {
     const comparisonType = useSelector(state => state.comparison.configuration.comparisonType);
     const responseHash = useSelector(state => state.comparison.configuration.responseHash);
     const transpose = useSelector(state => state.comparison.configuration.transpose);
-    const contributionsList = useSelector(state => state.comparison.configuration.contributionsList);
+    const contributionsList = useSelector(state => activatedContributionsToList(state.comparison.contributions));
 
     const [, setCookie] = useCookies();
     const navigate = useNavigate();

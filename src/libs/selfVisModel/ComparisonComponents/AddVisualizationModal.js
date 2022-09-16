@@ -15,6 +15,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
+import { activatedContributionsToList } from 'components/Comparison/hooks/helpers';
 import HelpVideoModal from './HelpVideoModal';
 import PublishVisualization from './PublishVisualization';
 
@@ -62,7 +63,7 @@ function AddVisualizationModal() {
     const prevShowDialog = usePrevious(isOpenVisualizationModal);
 
     const predicatesList = useSelector(state => state.comparison.configuration.predicatesList);
-    const contributionsList = useSelector(state => state.comparison.configuration.contributionsList);
+    const contributionsList = useSelector(state => activatedContributionsToList(state.comparison.contributions));
 
     const loadVisualizations = () => {
         getStatementsBySubjectAndPredicate({ subjectId: comparisonResource.id, predicateId: PREDICATES.HAS_VISUALIZATION }).then(statements => {

@@ -166,7 +166,7 @@ export const activatedContributionsToList = contributionsData => {
 export function getComparisonURLConfig(comparisonState) {
     const params = queryString.stringify(
         {
-            contributions: comparisonState.configuration.contributionsList.join(','),
+            contributions: activatedContributionsToList(comparisonState.contributions).join(','),
             properties: comparisonState.configuration.predicatesList.map(predicate => encodeURIComponent(predicate)).join(','),
             type: comparisonState.configuration.comparisonType,
             transpose: comparisonState.configuration.transpose,

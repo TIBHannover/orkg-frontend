@@ -10,7 +10,7 @@ import { reverse } from 'named-urls';
 import { useNavigate } from 'react-router-dom';
 import { filterObjectOfStatementsByPredicateAndClass, getPublicUrl } from 'utils';
 import { setDoi } from 'slices/comparisonSlice';
-import { getComparisonURLConfig, getPropertyObjectFromData } from 'components/Comparison/hooks/helpers';
+import { getComparisonURLConfig, getPropertyObjectFromData, activatedContributionsToList } from 'components/Comparison/hooks/helpers';
 import { saveAuthors } from 'components/AuthorsInput/helpers';
 import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
@@ -40,7 +40,7 @@ function usePublish() {
     const comparisonType = useSelector(state => state.comparison.configuration.comparisonType);
     const responseHash = useSelector(state => state.comparison.configuration.responseHash);
     const predicatesList = useSelector(state => state.comparison.configuration.predicatesList);
-    const contributionsList = useSelector(state => state.comparison.configuration.contributionsList);
+    const contributionsList = useSelector(state => activatedContributionsToList(state.comparison.contributions));
 
     const { trackEvent } = useMatomo();
     const displayName = useSelector(state => state.auth?.user?.displayName ?? null);

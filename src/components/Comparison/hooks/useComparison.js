@@ -152,7 +152,7 @@ function useComparison({ id }) {
             .then(async comparisonData => {
                 // mocking function to allow for deletion of contributions via the url
                 comparisonData.contributions.forEach((contribution, index) => {
-                    if (!contributionsList.includes(contribution.id)) {
+                    if (contributionsList?.length > 0 && !contributionsList.includes(contribution.id)) {
                         comparisonData.contributions[index].active = false;
                     } else {
                         comparisonData.contributions[index].active = true;

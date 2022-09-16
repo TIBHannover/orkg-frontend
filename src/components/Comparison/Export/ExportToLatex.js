@@ -15,7 +15,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
-import { getComparisonURLConfig } from 'components/Comparison/hooks/helpers';
+import { getComparisonURLConfig, activatedContributionsToList } from 'components/Comparison/hooks/helpers';
 import { setConfigurationAttribute, setShortLink, getMatrixOfComparison } from 'slices/comparisonSlice';
 import { PREDICATES } from 'constants/graphSettings';
 import { getPublicUrl } from 'utils';
@@ -43,7 +43,7 @@ const ExportToLatex = ({ showDialog, toggle }) => {
     const comparisonType = useSelector(state => state.comparison.configuration.comparisonType);
     const responseHash = useSelector(state => state.comparison.configuration.responseHash);
     const transpose = useSelector(state => state.comparison.configuration.transpose);
-    const contributionsList = useSelector(state => state.comparison.configuration.contributionsList);
+    const contributionsList = useSelector(state => activatedContributionsToList(state.comparison.contributions));
 
     const generateLatex = async () => {
         setLatexTableLoading(true);

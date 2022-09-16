@@ -8,7 +8,7 @@ import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { createShortLink, getComparison } from 'services/similarity/index';
 import ShareCreatedContent from 'components/ShareLinkMarker/ShareCreatedContent';
-import { getComparisonURLConfig } from 'components/Comparison/hooks/helpers';
+import { getComparisonURLConfig, activatedContributionsToList } from 'components/Comparison/hooks/helpers';
 import { setConfigurationAttribute, setShortLink } from 'slices/comparisonSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPublicUrl, slugify } from 'utils';
@@ -23,7 +23,7 @@ const Share = ({ showDialog, toggle }) => {
     const shortLink = useSelector(state => state.comparison.shortLink);
     const comparisonType = useSelector(state => state.comparison.configuration.comparisonType);
     const responseHash = useSelector(state => state.comparison.configuration.responseHash);
-    const contributionsList = useSelector(state => state.comparison.configuration.contributionsList);
+    const contributionsList = useSelector(state => activatedContributionsToList(state.comparison.contributions));
     const comparisonURLConfig = useSelector(state => getComparisonURLConfig(state.comparison));
 
     const generateShortLink = async () => {
