@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import CellEditor from 'libs/selfVisModel/RenderingComponents/CellEditor';
 import CellSelector from 'libs/selfVisModel/RenderingComponents/CellSelector';
 import VisualizationWidget from 'libs/selfVisModel/VisRenderer/VisualizationWidget';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import { setIsOpenVisualizationModal, setVisualizations } from 'slices/comparisonSlice';
+import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { usePrevious } from 'react-use';
 import Tippy from '@tippyjs/react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { useSelector, useDispatch } from 'react-redux';
+import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import HelpVideoModal from './HelpVideoModal';
 import PublishVisualization from './PublishVisualization';
 
@@ -39,7 +43,7 @@ const TabButton = styled.div`
     }
 `;
 
-function AddVisualizationModal(props) {
+function AddVisualizationModal() {
     const [processStep, setProcessStep] = useState(0);
     const [windowHeight, setWindowHeight] = useState(0);
     const [windowWidth, setWindowWidth] = useState(0);
@@ -47,7 +51,30 @@ function AddVisualizationModal(props) {
     const [showPublishVisualizationDialog, setShowPublishVisualizationDialog] = useState(false);
     const [showVideoModal, setShowVideoModal] = useState(false);
     const prevProcessStep = usePrevious(processStep);
-    const prevShowDialog = usePrevious(props.showDialog);
+
+    const dispatch = useDispatch();
+    const { data } = useSelector(state => state.comparison);
+    const contributions = useSelector(state => state.comparison.contributions.filter(c => c.active));
+    const properties = useSelector(state => state.comparison.properties.filter(c => c.active));
+    const comparisonResource = useSelector(state => state.comparison.comparisonResource);
+    const useReconstructedDataInVisualization = useSelector(state => state.comparison.useReconstructedDataInVisualization);
+    const isOpenVisualizationModal = useSelector(state => state.comparison.isOpenVisualizationModal);
+    const prevShowDialog = usePrevious(isOpenVisualizationModal);
+
+    const predicatesList = useSelector(state => state.comparison.configuration.predicatesList);
+    const contributionsList = useSelector(state => state.comparison.configuration.contributionsList);
+
+    const loadVisualizations = () => {
+        getStatementsBySubjectAndPredicate({ subjectId: comparisonResource.id, predicateId: PREDICATES.HAS_VISUALIZATION }).then(statements => {
+            const visualizations = filterObjectOfStatementsByPredicateAndClass(
+                statements,
+                PREDICATES.HAS_VISUALIZATION,
+                false,
+                CLASSES.VISUALIZATION,
+            );
+            dispatch(setVisualizations(visualizations));
+        });
+    };
 
     const updateDimensions = () => {
         const offset = 300;
@@ -71,9 +98,9 @@ function AddVisualizationModal(props) {
     }, []);
 
     useEffect(() => {
-        if (props.showDialog) {
+        if (isOpenVisualizationModal) {
             if (!prevShowDialog) {
-                if (props.useReconstructedData) {
+                if (useReconstructedDataInVisualization) {
                     // set the state last tab;
                     setProcessStep(2);
                 } else {
@@ -90,7 +117,7 @@ function AddVisualizationModal(props) {
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.showDialog, processStep]);
+    }, [isOpenVisualizationModal, processStep]);
 
     const compareWidth = assumedWidth => {
         const modalBody = document.getElementById('selfVisServiceModalBody');
@@ -103,14 +130,21 @@ function AddVisualizationModal(props) {
     const onLoadModal = () => {
         // check if we need to run the parser
         const mmr = new SelfVisDataModel(); // this is a singleton
-        mmr.integrateInputData(props.initialData);
+        mmr.integrateInputData({
+            metaData: comparisonResource,
+            contributions,
+            properties,
+            data,
+            contributionsList,
+            predicatesList,
+        });
     };
 
     return (
         <>
             <Modal
-                isOpen={props.showDialog}
-                toggle={props.toggle}
+                isOpen={isOpenVisualizationModal}
+                toggle={() => dispatch(setIsOpenVisualizationModal(!isOpenVisualizationModal))}
                 size="lg"
                 onOpened={() => {
                     onLoadModal();
@@ -118,7 +152,7 @@ function AddVisualizationModal(props) {
                 }}
                 style={{ maxWidth: '90%', marginBottom: 0 }}
             >
-                <ModalHeader toggle={props.toggle}>
+                <ModalHeader toggle={() => dispatch(setIsOpenVisualizationModal(!isOpenVisualizationModal))}>
                     Create comparison visualization
                     <Button
                         outline
@@ -164,10 +198,10 @@ function AddVisualizationModal(props) {
                         toggle={() => setShowPublishVisualizationDialog(!showPublishVisualizationDialog)}
                         closeAllAndReloadVisualizations={() => {
                             setShowPublishVisualizationDialog(!showPublishVisualizationDialog);
-                            props.toggle();
-                            props.updatePreviewComponent();
+                            dispatch(setIsOpenVisualizationModal(!isOpenVisualizationModal));
+                            loadVisualizations();
                         }}
-                        comparisonId={props.initialData.metaData.id}
+                        comparisonId={comparisonResource.id}
                     />
                 </ModalBody>
                 <ModalFooter className="p-2">
@@ -200,7 +234,7 @@ function AddVisualizationModal(props) {
                         )}
                         {processStep === 2 && (
                             <>
-                                {props.initialData.metaData.id && (
+                                {comparisonResource.id && (
                                     <RequireAuthentication
                                         component={Button}
                                         color="primary"
@@ -213,7 +247,7 @@ function AddVisualizationModal(props) {
                                     </RequireAuthentication>
                                 )}
 
-                                {!props.initialData.metaData.id && (
+                                {!comparisonResource.id && (
                                     <Tippy
                                         hideOnClick={false}
                                         content="Cannot publish visualization to a unpublished comparison. You must publish the comparison first."
@@ -229,13 +263,5 @@ function AddVisualizationModal(props) {
         </>
     );
 }
-
-AddVisualizationModal.propTypes = {
-    useReconstructedData: PropTypes.bool.isRequired,
-    showDialog: PropTypes.bool.isRequired,
-    toggle: PropTypes.func.isRequired,
-    updatePreviewComponent: PropTypes.func.isRequired,
-    initialData: PropTypes.object,
-};
 
 export default AddVisualizationModal;
