@@ -1,65 +1,31 @@
 import { useState, useEffect } from 'react';
 import { Container, ListGroup } from 'reactstrap';
-import { getStatementsBySubjects } from 'services/backend/statements';
-import { getComparisonsByOrganizationId, getSeriesListByConferenceId } from 'services/backend/organizations';
-import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
+import { getSeriesListByConferenceId } from 'services/backend/organizations';
 import ContentLoader from 'react-content-loader';
-import { getComparisonData, groupVersionsOfComparisons } from 'utils';
 import { find } from 'lodash';
 import PropTypes from 'prop-types';
-import { getConferenceEventsByDoi } from 'services/datacite';
 import EventsCard from './EventsCard';
 
-const ConferenceEvents = ({ organizationId }) => {
+const ConferenceEvents = ({ conferenceId }) => {
     const [isLoadingConferences, setIsLoadingConferences] = useState(null);
     const [conferencesList, setConferencesList] = useState([]);
 
     useEffect(() => {
         const loadConferences = async () => {
-            let res = [];
             setIsLoadingConferences(true);
-            getSeriesListByConferenceId(organizationId)
+            getSeriesListByConferenceId(conferenceId)
                 .then(responseJson => {
-                    console.log(responseJson);
                     setConferencesList(responseJson);
-                    // document.title = `${responseJson.name} - Organization - ORKG`;
-                    // (responseJson.id);
-                    // (responseJson.name);
-                    // responseJson.homepage);
-                    // (responseJson.logo);
-                    // setIsLoading(false);
-                    // (responseJson.created_by);
-                    // (responseJson.type);
-                    // (responseJson.metadata && responseJson.metadata.date ? responseJson.metadata.date : '');
-                    // (responseJson.metadata && responseJson.metadata.is_double_blind && responseJson.metadata.is_double_blind);
-                    // (responseJson.doi);
+                    document.title = `${responseJson.name} - Conference - ORKG`;
                 })
                 .catch(error => {
                     setIsLoadingConferences(false);
                 });
-            /*
-            const ev = getConferenceEventsByDoi(conferenceDoi);
-            Promise.all([ev])
-            .then(async data => {
-            let res = [];
-            const ri = data[0].data.attributes.relatedIdentifiers;
-            for (let i = 0; i < ri.length; i += 1) {
-            const evv = await getConferenceEventsByDoi(ri[i].relatedIdentifier);
-            res.push({
-            doi: evv.data.id,
-            title: evv.data.attributes.titles.find(t => t.titleType === null).title,
-            dates: evv.data.attributes.dates,
-            process: evv.data.attributes.descriptions.find(d => d.descriptionType === 'Methods').description,
-            });
-            }
-            setConferencesList(res);
-            })
-            .catch(e => {}); */
             setIsLoadingConferences(false);
         };
 
         loadConferences();
-    }, [organizationId, organizationId]);
+    }, [conferenceId]);
 
     return (
         <>
@@ -71,7 +37,6 @@ const ConferenceEvents = ({ organizationId }) => {
             <Container className="p-0 box rounded">
                 {!isLoadingConferences && (
                     <ListGroup>
-                        {console.log(conferencesList)}
                         {conferencesList.length > 0 ? (
                             <>
                                 {conferencesList.map(conference => (
@@ -107,7 +72,7 @@ const ConferenceEvents = ({ organizationId }) => {
 };
 
 ConferenceEvents.propTypes = {
-    organizationId: PropTypes.string.isRequired,
+    conferenceId: PropTypes.string.isRequired,
 };
 
 export default ConferenceEvents;

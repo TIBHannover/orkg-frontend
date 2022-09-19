@@ -10,49 +10,45 @@ import ROUTES from 'constants/routes';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { useSelector } from 'react-redux';
 import { reverse } from 'named-urls';
+import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
+import { MISC } from 'constants/graphSettings';
 
 const Organizations = () => {
+    const params = useParams();
     const [organizations, setOrganizations] = useState([]);
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
-    const [typeName, setTypeName] = useState('');
     const [route, setRoute] = useState('');
+    const typeName = ORGANIZATIONS_TYPES.find(t => t.label === params.type).alternateLabel;
     const user = useSelector(state => state.auth.user);
-    const params = useParams();
 
     useEffect(() => {
         const loadOrganizations = type => {
             setIsNextPageLoading(true);
-            let orgs = [];
-            console.log(type);
-            if (type === 'General') {
-                orgs = getAllOrganizations();
-                setTypeName('organization');
+            let organizationsList = [];
+            if (type === MISC.ORGANIZATION) {
+                organizationsList = getAllOrganizations();
                 setRoute(ROUTES.ORGANIZATION);
-            } else if (type === 'Event') {
-                orgs = getConferences();
-                console.log(orgs);
-                setTypeName('conference');
+            } else if (type === MISC.CONFERENCE) {
+                organizationsList = getConferences();
                 setRoute(ROUTES.EVENT);
             }
 
-            Promise.resolve(orgs)
+            Promise.resolve(organizationsList)
                 .then(orgs => {
-                    console.log(orgs);
                     if (orgs.length > 0) {
                         setOrganizations(orgs);
                         setIsNextPageLoading(false);
                     } else {
                         setIsNextPageLoading(false);
-                        setOrganizations([]);
                     }
                 })
                 .catch(error => {
                     setIsNextPageLoading(false);
                 });
         };
-        loadOrganizations(params.type);
+        loadOrganizations(typeName);
         document.title = `${typeName}s - ORKG`;
-    }, [params.type, typeName]);
+    }, [typeName]);
 
     return (
         <>
@@ -73,7 +69,6 @@ const Organizations = () => {
                 }
             >
                 View all {typeName}s
-                {console.log(organizations)}
             </TitleBar>
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5 clearfix">
                 {organizations.length > 0 && (

@@ -17,7 +17,6 @@ import { reverse } from 'named-urls';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { ORGANIZATIONS_TYPES, ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import ConferenceEvents from 'components/Organization/ConferenceEvents';
-import { MISC } from 'constants/graphSettings';
 
 const StyledOrganizationHeader = styled.div`
     .logoContainer {
@@ -58,11 +57,7 @@ const Organization = () => {
     const [logo, setLogo] = useState(null);
     const [createdBy, setCreatedBy] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
-    const [type, setType] = useState(null);
-    const [date, setDate] = useState(null);
-    const [isDoubleBlind, setIsDoubleBlind] = useState(false);
-    const [doi, setDoi] = useState(null);
-    const typeName = orgType === 'General' ? 'organization' : orgType === 'Event' ? 'conference' : '';
+    const typeName = ORGANIZATIONS_TYPES.find(t => t.label === params.type).alternateLabel;
     const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
@@ -70,7 +65,6 @@ const Organization = () => {
             setIsLoading(true);
             getOrganization(id)
                 .then(responseJson => {
-                    console.log(responseJson);
                     document.title = `${responseJson.name} - ${typeName} - ORKG`;
                     setOrganizationId(responseJson.id);
                     setLabel(responseJson.name);
@@ -78,26 +72,19 @@ const Organization = () => {
                     setLogo(responseJson.logo);
                     setIsLoading(false);
                     setCreatedBy(responseJson.created_by);
-                    // setType(responseJson.type);
-                    // setDate(responseJson.metadata && responseJson.metadata.date ? responseJson.metadata.date : '');
-                    // setIsDoubleBlind(responseJson.metadata && responseJson.metadata.is_double_blind && responseJson.metadata.is_double_blind);
-                    // setDoi(responseJson.doi);
                 })
                 .catch(error => {
                     setIsLoading(false);
                     setError(error);
                 });
-            };
+        };
         findOrg();
     }, [id, typeName]);
 
-    const updateOrganizationMetadata = (label, url, logo, type, date, isDoubleBlind) => {
+    const updateOrganizationMetadata = (label, url, logo) => {
         setLabel(label);
         setURL(url);
         setLogo(logo);
-        setType(type);
-        setDate(date);
-        setIsDoubleBlind(isDoubleBlind);
     };
 
     return (
@@ -151,11 +138,16 @@ const Organization = () => {
                             </Row>
                         </StyledOrganizationHeader>
                         <hr />
-                    {console.log(orgType)}
-                    {(ORGANIZATIONS_MISC.GENERAL === ORGANIZATIONS_TYPES.find(t => t.label === orgType)?.id) && <Members organizationsId={organizationId} />}
+                        {ORGANIZATIONS_MISC.GENERAL === ORGANIZATIONS_TYPES.find(t => t.label === orgType)?.id && (
+                            <Members organizationsId={organizationId} />
+                        )}
                     </Container>
-                    {ORGANIZATIONS_MISC.EVENT === ORGANIZATIONS_TYPES.find(t => t.label === orgType)?.id && <ConferenceEvents organizationId={organizationId} />}
-                    {ORGANIZATIONS_MISC.GENERAL === ORGANIZATIONS_TYPES.find(t => t.label === orgType)?.id && <Observatories organizationsId={organizationId} />}
+                    {ORGANIZATIONS_MISC.EVENT === ORGANIZATIONS_TYPES.find(t => t.label === orgType)?.id && (
+                        <ConferenceEvents conferenceId={organizationId} />
+                    )}
+                    {ORGANIZATIONS_MISC.GENERAL === ORGANIZATIONS_TYPES.find(t => t.label === orgType)?.id && (
+                        <Observatories organizationsId={organizationId} />
+                    )}
                 </>
             )}
             <EditOrganization
@@ -166,9 +158,7 @@ const Organization = () => {
                 url={url}
                 previewSrc={logo}
                 updateOrganizationMetadata={updateOrganizationMetadata}
-                type={type || ''}
-                date={date || ''}
-                isDoubleBlind={isDoubleBlind || false}
+                typeName={typeName}
             />
         </>
     );

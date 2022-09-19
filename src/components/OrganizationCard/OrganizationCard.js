@@ -33,7 +33,6 @@ const StyledOrganizationCard = styled.div`
     }
 `;
 function OrganizationCard(props) {
-    console.log(props.type);
     return (
         <div className="col-4 mb-3">
             {props.organization.logo && (

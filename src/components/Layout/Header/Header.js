@@ -37,6 +37,8 @@ import { scrollbarWidth } from '@xobotyi/scrollbar-width';
 import AboutMenu from 'components/Layout/Header/AboutMenu';
 import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
 import Nfdi4dsButton from 'components/Layout/Header/Nfdi4dsButton';
+import capitalize from 'capitalize';
+import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import SearchForm from './SearchForm';
 import AddNew from './AddNew';
 
@@ -464,11 +466,23 @@ const Header = () => {
                                         <Badge color="info">Beta</Badge>
                                     </small>
                                 </DropdownItem>
-                                <DropdownItem key="general" tag={RouterNavLink} end to={reverse(ROUTES.ORGANIZATIONS, { type: 'General' })} onClick={closeMenu}>
+                                <DropdownItem
+                                    key="general"
+                                    tag={RouterNavLink}
+                                    end
+                                    to={reverse(ROUTES.ORGANIZATIONS, { type: capitalize(ORGANIZATIONS_MISC.GENERAL) })}
+                                    onClick={closeMenu}
+                                >
                                     Organizations
                                 </DropdownItem>
-                                <DropdownItem key="events" tag={RouterNavLink} end to={reverse(ROUTES.ORGANIZATIONS, { type: 'Event' })} onClick={closeMenu}>
-                                    Event
+                                <DropdownItem
+                                    key="events"
+                                    tag={RouterNavLink}
+                                    end
+                                    to={reverse(ROUTES.ORGANIZATIONS, { type: capitalize(ORGANIZATIONS_MISC.EVENT) })}
+                                    onClick={closeMenu}
+                                >
+                                    Events
                                 </DropdownItem>
                                 <DropdownItem divider />
 
