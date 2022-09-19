@@ -1,17 +1,22 @@
-import { faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDoubleLeft, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import useEntityRecognition from 'components/AddPaper/hooks/useEntityRecognition';
+import usePredicatesRecommendation from 'components/AddPaper/hooks/usePredicatesRecommendation';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import useInsertData from 'components/AddPaper/hooks/useInsertData';
 import Tooltip from 'components/Utils/Tooltip';
 import { capitalize } from 'lodash';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useDebounce } from 'react-use';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 import { getNerResults } from 'services/orkgNlp';
+import { ENTITIES } from 'constants/graphSettings';
+import { createPropertyAction as createProperty } from 'slices/statementBrowserSlice';
 import { setNerProperties, setNerResources, setNerRawResponse } from 'slices/addPaperSlice';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const AnimationContainer = styled(CSSTransition)`
     &.slide-left-enter {
@@ -52,21 +57,28 @@ const ValueItem = styled(ListGroupItem)`
     }
 `;
 
-const EntityRecognition = () => {
+const EntityRecognition = ({ isComputerScienceField }) => {
     const { title, abstract, nerProperties } = useSelector(state => state.addPaper);
+    const [isLoadingNER, setIsLoadingNER] = useState(false);
     const dispatch = useDispatch();
     const { handleInsertData } = useInsertData();
-    const { suggestions } = useEntityRecognition();
+    const { suggestions } = useEntityRecognition({ isComputerScienceField });
+    const { recommendedPredicates, isLoadingRP } = usePredicatesRecommendation();
+    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
 
     useDebounce(
         () => {
             const processNlpData = async () => {
+                setIsLoadingNER(true);
                 const data = await getNerResults({ title, abstract });
                 dispatch(setNerResources(data.resources));
                 dispatch(setNerProperties(data.properties));
                 dispatch(setNerRawResponse(data.response));
+                setIsLoadingNER(false);
             };
-            processNlpData();
+            if (isComputerScienceField) {
+                processNlpData();
+            }
         },
         500,
         [abstract, dispatch, title],
@@ -85,12 +97,22 @@ const EntityRecognition = () => {
 
     return (
         <>
-            {Object.keys(suggestions).length > 0 && (
-                <h3 className="h5">
+            {(isLoadingNER || Object.keys(suggestions).length > 0 || recommendedPredicates?.length > 0 || isLoadingRP) && (
+                <h3 className="h5 mb-3">
                     <Tooltip message="The suggestions listed below are automatically generated based on the title and abstract from the paper. Using these suggestions is optional.">
                         Suggestions
                     </Tooltip>
                 </h3>
+            )}
+            {(isLoadingNER || Object.keys(suggestions).length > 0) && (
+                <h6 className="h6 mt-2">
+                    Statements{' '}
+                    {isLoadingNER && (
+                        <>
+                            <Icon icon={faSpinner} spin />
+                        </>
+                    )}
+                </h6>
             )}
             <ListGroup>
                 {Object.keys(suggestions).map(key => (
@@ -126,9 +148,54 @@ const EntityRecognition = () => {
                         </TransitionGroup>
                     </Fragment>
                 ))}
+
+                {(isLoadingRP || recommendedPredicates.length > 0) && (
+                    <h6 className="h6 mt-1">
+                        Properties{' '}
+                        {isLoadingRP && (
+                            <>
+                                <Icon icon={faSpinner} spin />
+                            </>
+                        )}
+                    </h6>
+                )}
+                <TransitionGroup component={null}>
+                    {recommendedPredicates.map((p, index) => (
+                        <AnimationContainer
+                            key={index}
+                            classNames="slide-left"
+                            className="py-2 d-flex align-items-center px-2"
+                            timeout={{ enter: 600, exit: 600 }}
+                        >
+                            <ValueItem
+                                action
+                                style={{ fontSize: '90%', cursor: 'pointer' }}
+                                onClick={() =>
+                                    dispatch(
+                                        createProperty({
+                                            resourceId: selectedResource,
+                                            existingPredicateId: p.id,
+                                            label: p.label,
+                                            isTemplate: false,
+                                            createAndSelect: true,
+                                        }),
+                                    )
+                                }
+                            >
+                                <DescriptionTooltip id={p.id} typeId={ENTITIES.PREDICATE}>
+                                    <Icon icon={faAngleDoubleLeft} className="text-smart me-2" /> {p.label}
+                                </DescriptionTooltip>
+                            </ValueItem>
+                        </AnimationContainer>
+                    ))}
+                </TransitionGroup>
             </ListGroup>
         </>
     );
+};
+
+EntityRecognition.propTypes = {
+    isComputerScienceField: PropTypes.bool.isRequired,
 };
 
 export default EntityRecognition;
