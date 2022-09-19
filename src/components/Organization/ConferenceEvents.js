@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, ListGroup } from 'reactstrap';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getComparisonsByOrganizationId, getConferenceSeriesById } from 'services/backend/organizations';
+import { getComparisonsByOrganizationId, getSeriesListByConferenceId } from 'services/backend/organizations';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import ContentLoader from 'react-content-loader';
 import { getComparisonData, groupVersionsOfComparisons } from 'utils';
@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { getConferenceEventsByDoi } from 'services/datacite';
 import EventsCard from './EventsCard';
 
-const ConferenceEvents = ({ organizationId, conferenceDoi }) => {
+const ConferenceEvents = ({ organizationId }) => {
     const [isLoadingConferences, setIsLoadingConferences] = useState(null);
     const [conferencesList, setConferencesList] = useState([]);
 
@@ -18,7 +18,7 @@ const ConferenceEvents = ({ organizationId, conferenceDoi }) => {
         const loadConferences = async () => {
             let res = [];
             setIsLoadingConferences(true);
-            getConferenceSeriesById(organizationId)
+            getSeriesListByConferenceId(organizationId)
                 .then(responseJson => {
                     console.log(responseJson);
                     setConferencesList(responseJson);
@@ -59,7 +59,7 @@ const ConferenceEvents = ({ organizationId, conferenceDoi }) => {
         };
 
         loadConferences();
-    }, [organizationId, conferenceDoi, organizationId]);
+    }, [organizationId, organizationId]);
 
     return (
         <>
@@ -75,7 +75,7 @@ const ConferenceEvents = ({ organizationId, conferenceDoi }) => {
                         {conferencesList.length > 0 ? (
                             <>
                                 {conferencesList.map(conference => (
-                                    <EventsCard conference={conference} key={`pc${conference.doi}`} />
+                                    <EventsCard conference={conference} key={`pc${conference.display_id}`} />
                                 ))}
                             </>
                         ) : (
@@ -108,7 +108,6 @@ const ConferenceEvents = ({ organizationId, conferenceDoi }) => {
 
 ConferenceEvents.propTypes = {
     organizationId: PropTypes.string.isRequired,
-    conferenceDoi: PropTypes.string.isRequired,
 };
 
 export default ConferenceEvents;

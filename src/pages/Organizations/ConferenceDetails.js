@@ -114,7 +114,7 @@ const ConferenceDetails = () => {
                             </Col>
                         </Row>
                     </Container>
-                    <Comparisons />
+                    <Comparisons organizationsId={observatoryId} />
 
                     <EditObservatory
                         showDialog={showEditDialog}

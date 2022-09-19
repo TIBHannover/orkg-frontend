@@ -19,15 +19,17 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import { ORGANIZATIONS_TYPES, ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import { useSelector, useDispatch } from 'react-redux';
 
-const AddOrganization = () => {
+const AddConference = () => {
     const params = useParams();
-    console.log(params.type);
+    console.log(params.id);
     const [redirect, setRedirect] = useState(false);
     const [name, setName] = useState('');
     const [website, setWebsite] = useState('');
     const [displayId, setDisplayId] = useState('');
     const [permalink, setPermalink] = useState('');
     const [logo, setLogo] = useState('');
+    const [date, setDate] = useState('');
+    const [isDoubleBlind, setIsDoubleBlind] = useState(false);
     const [editorState, setEditorState] = useState('edit');
     const organizationType = ORGANIZATIONS_TYPES.find(t => t.label === params.type)?.id;
     const displayType = organizationType === 'GENERAL' ? 'organization' : organizationType === 'CONFERENCE' ? 'conference' : '';
@@ -38,24 +40,9 @@ const AddOrganization = () => {
     const user = useSelector(state => state.auth.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    // redirect: false,
-    // name: '',
-    // website: '',
-    // display_id: '',
-    // permalink: '',
-    // logo: '',
-    // editorState: 'edit',
-    // organizationType: ORGANIZATIONS_TYPES.find(t => ORGANIZATIONS_MISC.GENERAL === t.id)?.id,
-    // date: '',
-    // isDoubleBlind: false,
-    // type: this.props.match.params.type,
-    // };
-
-    // this.publicOrganizationRoute = `${getPublicUrl()}${reverse(ROUTES.ORGANIZATION, { id: ' ' })}`;
-    // }
 
     useEffect(() => {
-        document.title = `Create ${displayType} - ORKG`;
+        document.title = 'Create conference series - ORKG';
     }, [displayType]);
 
     const createNewOrganization = async () => {
@@ -77,46 +64,40 @@ const AddOrganization = () => {
             setEditorState('edit');
             return;
         }
-        if (logo.length === 0) {
-            toast.error('Please upload an organization logo');
-            setEditorState('edit');
-            return;
-        }
+        // if (logo.length === 0) {
+        // toast.error('Please upload an organization logo');
+        // setEditorState('edit');
+        // return;
+        // }
 
         /* if (organizationType.length === 0) {
             toast.error('Please select an organization type');
             setEditorState('edit');
             return;
-        }
+        } */
 
         if (ORGANIZATIONS_TYPES.find(t => t.id === organizationType)?.requireDate && date.length === 0) {
             toast.error('Please select conference date');
             setEditorState('edit');
             return;
-        } */
+        }
 
-        // try {
-        //    let responseJson = '';
-        //    if (organizationType === ORGANIZATIONS_MISC.CONFERENCE) {
-        //        responseJson = await createConference(name, logo[0], this.props.user.id, website, permalink, organizationType, {
-        //            date,
-        //            is_double_blind: isDoubleBlind,
-        //        });
-        //    } else {
-        //        responseJson = await createOrganization(name, logo[0], this.props.user.id, website, permalink, organizationType);
-        //    }
         try {
-            const responseJson = await createOrganization(name, logo[0], user.id, website, permalink, organizationType);
+            // create conference
+            const responseJson = await createConference(params.id, name, website, permalink, {
+                date,
+                is_double_blind: true,
+            });
             console.log(responseJson);
-            navigateToOrganization(responseJson.display_id);
+            navigateToConference(responseJson.display_id);
         } catch (error) {
             setEditorState('edit');
             console.error(error);
-            toast.error(`Error creating ${displayType} ${error.message}`);
+            toast.error(`Error creating conference series ${error.message}`);
         }
     };
 
-    const navigateToOrganization = display_id => {
+    const navigateToConference = display_id => {
         setEditorState('edit');
         // setDisplayId(display_id);
         setRedirect(false);
@@ -155,7 +136,7 @@ const AddOrganization = () => {
 
     return (
         <>
-            <TitleBar>Create {displayType}</TitleBar>
+            <TitleBar>Create conference series</TitleBar>
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 {!!user && user.isCurationAllowed && (
                     <Form className="ps-3 pe-3 pt-2">
@@ -213,6 +194,30 @@ const AddOrganization = () => {
                             />
                         </FormGroup>
                         <FormGroup>
+                            <Label for="conferenceDate">Conference date</Label>
+                            <Input
+                                onChange={e => setDate(e.target.value)}
+                                type="date"
+                                name="date"
+                                id="conferenceDate"
+                                value={date}
+                                placeholder="yyyy-mm-dd"
+                            />
+                        </FormGroup>
+                        <FormGroup check>
+                            <Input
+                                onChange={e => setIsDoubleBlind(e.target.value)}
+                                type="checkbox"
+                                name="isDoubleBlind"
+                                id="doubleBlind"
+                                checked={isDoubleBlind}
+                            />
+                            <Label for="doubleBlind" check>
+                                Double blind
+                                <Tooltip message="By default the conference is considered single-blind." />
+                            </Label>
+                        </FormGroup>
+                        {/* <FormGroup>
                             <Label for="organizationLogo">Logo</Label>
                             <br />
                             {logo && logo.length > 0 && (
@@ -221,7 +226,7 @@ const AddOrganization = () => {
                                 </div>
                             )}
                             <Input type="file" id="organizationLogo" onChange={handlePreview} />
-                        </FormGroup>
+                            </FormGroup> */}
 
                         <Button color="primary" onClick={createNewOrganization} className="mb-2 mt-2" disabled={loading}>
                             {!loading ? 'Create organization' : <span>Loading</span>}
@@ -240,4 +245,4 @@ const AddOrganization = () => {
     );
 };
 
-export default AddOrganization;
+export default AddConference;

@@ -9,6 +9,7 @@ import { useParams, Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { useSelector } from 'react-redux';
+import { reverse } from 'named-urls';
 
 const Organizations = () => {
     const [organizations, setOrganizations] = useState([]);
@@ -23,12 +24,13 @@ const Organizations = () => {
             setIsNextPageLoading(true);
             let orgs = [];
             console.log(type);
-            if (type === 'general') {
+            if (type === 'General') {
                 orgs = getAllOrganizations();
                 setTypeName('organization');
                 setRoute(ROUTES.ORGANIZATION);
-            } else if (type === 'events') {
+            } else if (type === 'Event') {
                 orgs = getConferences();
+                console.log(orgs);
                 setTypeName('conference');
                 setRoute(ROUTES.EVENT);
             }
@@ -63,20 +65,21 @@ const Organizations = () => {
                             color="secondary"
                             size="sm"
                             className="btn btn-secondary btn-sm flex-shrink-0"
-                            to={ROUTES.ADD_ORGANIZATION}
+                            to={reverse(ROUTES.ADD_ORGANIZATION, { type: params.type })}
                         >
                             <Icon icon={faPlus} /> Create {typeName}
                         </RequireAuthentication>
                     )
                 }
             >
-                View all {typeName}
+                View all {typeName}s
+                {console.log(organizations)}
             </TitleBar>
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5 clearfix">
                 {organizations.length > 0 && (
                     <div className="mt-3 row justify-content-center">
                         {organizations.map(organization => (
-                            <OrganizationCard key={organization.display_id} organization={{ ...organization }} route={route} />
+                            <OrganizationCard key={organization.display_id} organization={{ ...organization }} route={route} type={params.type} />
                         ))}
                     </div>
                 )}

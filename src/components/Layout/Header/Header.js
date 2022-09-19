@@ -464,10 +464,10 @@ const Header = () => {
                                         <Badge color="info">Beta</Badge>
                                     </small>
                                 </DropdownItem>
-                                <DropdownItem key="general" tag={RouterNavLink} end to={reverse(ROUTES.ORGANIZATIONS, { type: 'general' })} onClick={closeMenu}>
+                                <DropdownItem key="general" tag={RouterNavLink} end to={reverse(ROUTES.ORGANIZATIONS, { type: 'General' })} onClick={closeMenu}>
                                     Organizations
                                 </DropdownItem>
-                                <DropdownItem key="events" tag={RouterNavLink} end to={reverse(ROUTES.ORGANIZATIONS, { type: 'events' })} onClick={closeMenu}>
+                                <DropdownItem key="events" tag={RouterNavLink} end to={reverse(ROUTES.ORGANIZATIONS, { type: 'Event' })} onClick={closeMenu}>
                                     Event
                                 </DropdownItem>
                                 <DropdownItem divider />

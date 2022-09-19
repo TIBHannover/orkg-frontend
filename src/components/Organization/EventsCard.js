@@ -21,13 +21,12 @@ const EventsCardStyled = styled.li`
 `;
 
 function EventsCard(props) {
-    console.log(props.conference.doi);
     return (
         <EventsCardStyled style={{ flexWrap: 'wrap' }} className="list-group-item d-flex py-3 pe-4 ps-4">
             <div className="col-md-9 d-flex p-0">
                 <div className="d-flex flex-column">
                     <div className="mb-2">
-                        <Link to={reverse(ROUTES.CONFERENCE, { id: encodeURIComponent(props.conference.doi) })}>
+                        <Link to={reverse(ROUTES.EVENT_SERIES, { id: encodeURIComponent(props.conference.display_id) })}>
                             {props.conference.name ? props.conference.name : <em>No title</em>}
                         </Link>
                     </div>
@@ -45,7 +44,7 @@ function EventsCard(props) {
 
 EventsCard.propTypes = {
     conference: PropTypes.shape({
-        doi: PropTypes.string,
+        display_id: PropTypes.string,
         name: PropTypes.string,
         description: PropTypes.string,
         dates: PropTypes.array,

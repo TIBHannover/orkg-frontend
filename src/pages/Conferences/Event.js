@@ -15,9 +15,8 @@ import EditOrganization from 'components/Organization/EditOrganization';
 import { SubTitle } from 'components/styled';
 import { reverse } from 'named-urls';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { ORGANIZATIONS_TYPES, ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
+import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import ConferenceEvents from 'components/Organization/ConferenceEvents';
-import { MISC } from 'constants/graphSettings';
 
 const StyledOrganizationHeader = styled.div`
     .logoContainer {
@@ -47,9 +46,6 @@ const StyledOrganizationHeader = styled.div`
 `;
 
 const Organization = () => {
-    const params = useParams();
-    const id = params.id;
-    const orgType = params.type;
     const [error, setError] = useState(null);
     const [label, setLabel] = useState(null);
     const [url, setURL] = useState(null);
@@ -62,7 +58,7 @@ const Organization = () => {
     const [date, setDate] = useState(null);
     const [isDoubleBlind, setIsDoubleBlind] = useState(false);
     const [doi, setDoi] = useState(null);
-    const typeName = orgType === 'General' ? 'organization' : orgType === 'Event' ? 'conference' : '';
+    const { id } = useParams();
     const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
@@ -70,26 +66,25 @@ const Organization = () => {
             setIsLoading(true);
             getOrganization(id)
                 .then(responseJson => {
-                    console.log(responseJson);
-                    document.title = `${responseJson.name} - ${typeName} - ORKG`;
+                    document.title = `${responseJson.name} - Organization - ORKG`;
                     setOrganizationId(responseJson.id);
                     setLabel(responseJson.name);
                     setURL(responseJson.homepage);
                     setLogo(responseJson.logo);
                     setIsLoading(false);
                     setCreatedBy(responseJson.created_by);
-                    // setType(responseJson.type);
-                    // setDate(responseJson.metadata && responseJson.metadata.date ? responseJson.metadata.date : '');
-                    // setIsDoubleBlind(responseJson.metadata && responseJson.metadata.is_double_blind && responseJson.metadata.is_double_blind);
-                    // setDoi(responseJson.doi);
+                    setType(responseJson.type);
+                    setDate(responseJson.metadata && responseJson.metadata.date ? responseJson.metadata.date : '');
+                    setIsDoubleBlind(responseJson.metadata && responseJson.metadata.is_double_blind && responseJson.metadata.is_double_blind);
+                    setDoi(responseJson.doi);
                 })
                 .catch(error => {
                     setIsLoading(false);
                     setError(error);
                 });
-            };
+        };
         findOrg();
-    }, [id, typeName]);
+    }, [id]);
 
     const updateOrganizationMetadata = (label, url, logo, type, date, isDoubleBlind) => {
         setLabel(label);
@@ -107,7 +102,7 @@ const Organization = () => {
             {!isLoading && !error && label && (
                 <>
                     <TitleBar
-                        titleAddition={<SubTitle>{typeName}</SubTitle>}
+                        titleAddition={<SubTitle>Organization</SubTitle>}
                         buttonGroup={
                             !!user &&
                             (user.id === createdBy || user.isCurationAllowed) && (
@@ -116,10 +111,10 @@ const Organization = () => {
                                         size="sm"
                                         color="secondary"
                                         tag={Link}
-                                        to={reverse(typeName === 'organization' ? ROUTES.ADD_OBSERVATORY : ROUTES.ADD_EVENT, { id: organizationId })}
+                                        to={reverse(ROUTES.ADD_OBSERVATORY, { id: organizationId })}
                                         style={{ marginRight: 2 }}
                                     >
-                                        <Icon icon={faPlus} /> Create {typeName === 'organization' ? 'observatory' : 'conference'}
+                                        <Icon icon={faPlus} /> Create observatory
                                     </Button>
                                     <Button color="secondary" size="sm" onClick={() => setShowEditDialog(v => !v)}>
                                         <Icon icon={faPen} /> Edit
@@ -151,11 +146,14 @@ const Organization = () => {
                             </Row>
                         </StyledOrganizationHeader>
                         <hr />
-                    {console.log(orgType)}
-                    {(ORGANIZATIONS_MISC.GENERAL === ORGANIZATIONS_TYPES.find(t => t.label === orgType)?.id) && <Members organizationsId={organizationId} />}
+
+                        <Members organizationsId={organizationId} />
                     </Container>
-                    {ORGANIZATIONS_MISC.EVENT === ORGANIZATIONS_TYPES.find(t => t.label === orgType)?.id && <ConferenceEvents organizationId={organizationId} />}
-                    {ORGANIZATIONS_MISC.GENERAL === ORGANIZATIONS_TYPES.find(t => t.label === orgType)?.id && <Observatories organizationsId={organizationId} />}
+                    {type === ORGANIZATIONS_MISC.CONFERENCE && doi ? (
+                        <ConferenceEvents organizationId={organizationId} conferenceDoi={doi} />
+                    ) : (
+                        <Observatories organizationsId={organizationId} />
+                    )}
                 </>
             )}
             <EditOrganization
