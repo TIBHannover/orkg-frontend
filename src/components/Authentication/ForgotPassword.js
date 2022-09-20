@@ -21,6 +21,7 @@ class ForgotPassword extends Component {
     }
 
     resetPasswordPassword = () => {
+        document.body.style.overflow = 'auto scroll';
         this.props.toggleAuthDialog();
     };
 
