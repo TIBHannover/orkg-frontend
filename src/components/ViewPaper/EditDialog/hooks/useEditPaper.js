@@ -1,26 +1,31 @@
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { PREDICATES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
-import { isEqual, cloneDeep } from 'lodash';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createLiteral as createLiteralApi, updateLiteral } from 'services/backend/literals';
 import { markAsUnverified, markAsVerified, getIsVerified } from 'services/backend/papers';
-import { createResource, getResource, updateResource } from 'services/backend/resources';
+import { getResource, updateResource } from 'services/backend/resources';
 import {
     createLiteralStatement,
     createResourceStatement,
     deleteStatementById,
-    deleteStatementsByIds,
-    getStatementsByPredicateAndLiteral,
     getStatementsBySubject,
     updateStatement,
 } from 'services/backend/statements';
+import { updateAuthors as updateAuthorsHelper } from 'components/AuthorsInput/helpers';
 
 const useEditPaper = () => {
     const [isLoadingEdit, setIsLoadingEdit] = useState(false);
     const [isLoadingAuthors, setIsLoadingAuthors] = useState(false);
     const user = useSelector(state => state.auth.user);
+
+    const updateAuthors = async ({ prevAuthors, authors, paperId }) => {
+        setIsLoadingAuthors(true);
+        const authorsUpdated = await updateAuthorsHelper({ prevAuthors, newAuthors: authors, resourceId: paperId });
+        setIsLoadingAuthors(false);
+        return authorsUpdated;
+    };
 
     const editPaper = async ({ paper, month, year, authors, prevAuthors, doi, publishedIn, researchField, url, isVerified }) => {
         // Validate title
@@ -168,78 +173,6 @@ const useEditPaper = () => {
             };
         }
         return null;
-    };
-
-    const updateAuthors = async ({ prevAuthors, authors, paperId }) => {
-        // Check if there is changes on the authors
-        if (isEqual(prevAuthors, authors)) {
-            return authors;
-        }
-        setIsLoadingAuthors(true);
-
-        const statementsIds = [];
-        // remove all authors statement from reducer
-        for (const author of prevAuthors) {
-            statementsIds.push(author.statementId);
-        }
-        deleteStatementsByIds(statementsIds);
-
-        // Add all authors from the state
-        const authorsUpdated = cloneDeep([...authors]);
-        for (const [i, author] of authorsUpdated.entries()) {
-            // create the author
-            if (author.orcid) {
-                // Create author with ORCID
-                // check if there's an author resource
-                const responseJson = await getStatementsByPredicateAndLiteral({
-                    predicateId: PREDICATES.HAS_ORCID,
-                    literal: author.orcid,
-                    subjectClass: CLASSES.AUTHOR,
-                    items: 1,
-                });
-                if (responseJson.length > 0) {
-                    // Author resource exists
-                    const authorResource = responseJson[0];
-                    const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, authorResource.subject.id);
-                    authorsUpdated[i].statementId = authorStatement.id;
-                    authorsUpdated[i].id = authorResource.subject.id;
-                    authorsUpdated[i].class = authorResource.subject._class;
-                    authorsUpdated[i].classes = authorResource.subject.classes;
-                } else {
-                    // Author resource doesn't exist
-                    // Create resource author
-                    const authorResource = await createResource(author.label, [CLASSES.AUTHOR]);
-                    const createLiteral = await createLiteralApi(author.orcid);
-                    await createLiteralStatement(authorResource.id, PREDICATES.HAS_ORCID, createLiteral.id);
-                    const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, authorResource.id);
-                    authorsUpdated[i].statementId = authorStatement.id;
-                    authorsUpdated[i].id = authorResource.id;
-                    authorsUpdated[i].class = authorResource._class;
-                    authorsUpdated[i].classes = authorResource.classes;
-                }
-            } else {
-                // Author resource exists
-                if (author.label !== author.id) {
-                    const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, author.id);
-                    authorsUpdated[i].statementId = authorStatement.id;
-                    authorsUpdated[i].id = author.id;
-                    authorsUpdated[i].class = author._class;
-                    authorsUpdated[i].classes = author.classes;
-                } else {
-                    // Author resource doesn't exist
-                    const newLiteral = await createLiteralApi(author.label);
-                    // Create literal of author
-                    const authorStatement = await createLiteralStatement(paperId, PREDICATES.HAS_AUTHOR, newLiteral.id);
-                    authorsUpdated[i].statementId = authorStatement.id;
-                    authorsUpdated[i].id = newLiteral.id;
-                    authorsUpdated[i].class = authorStatement.object._class;
-                    authorsUpdated[i].classes = authorStatement.object.classes;
-                }
-            }
-        }
-        setIsLoadingAuthors(false);
-
-        return authorsUpdated;
     };
 
     return { editPaper, updateAuthors, loadPaperData, isLoadingEdit, isLoadingAuthors };

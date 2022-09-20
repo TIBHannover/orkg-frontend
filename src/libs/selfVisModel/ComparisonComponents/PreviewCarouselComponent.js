@@ -13,6 +13,14 @@ const PreviewCarouselComponent = props => {
     const { width: scrollContainerBodyWidth } = useResizeObserver({ ref: carouselRef });
     const childWidth = 215;
 
+    const handleRightArrowShow = (left, max) => {
+        setShowArrowRight(left !== max);
+    };
+
+    const handleLeftArrowShow = val => {
+        setShowArrowLeft(val > 0);
+    };
+
     const executeUpdates = () => {
         const item = carouselRef.current;
         const areaWidth = item.scrollWidth;
@@ -24,14 +32,6 @@ const PreviewCarouselComponent = props => {
             handleLeftArrowShow(left);
             handleRightArrowShow(left, leftMax);
         }
-    };
-
-    const handleRightArrowShow = (left, max) => {
-        setShowArrowRight(left !== max);
-    };
-
-    const handleLeftArrowShow = val => {
-        setShowArrowLeft(val > 0);
     };
 
     const handleScrollLeft = () => {
@@ -97,7 +97,7 @@ const PreviewCarouselComponent = props => {
 
     return (
         <div style={{ paddingTop: '10px', height: '200px' }}>
-            <h2 className="h5 mb-2 mt-2">Visualizations</h2>
+            <h5 className="mb-2 mt-2">Visualizations</h5>
             <div
                 onScroll={() => executeUpdates()}
                 ref={carouselRef}

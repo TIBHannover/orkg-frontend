@@ -33,7 +33,9 @@ const ObservatoryModal = props => {
             id: props.resourceId,
         }).then(() => {
             toast.success('Observatory assigned to resource successfully');
-            props.callBack && props.callBack(observatory?.id ?? MISC.UNKNOWN_ID, organization?.id ?? MISC.UNKNOWN_ID);
+            if (props.callBack) {
+                props.callBack(observatory?.id ?? MISC.UNKNOWN_ID, organization?.id ?? MISC.UNKNOWN_ID);
+            }
             props.toggle();
         });
     };

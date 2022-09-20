@@ -111,6 +111,7 @@ function AuthorsInput(props) {
                     ..._authorInput,
                     label: _authorInput.label,
                     id: _authorInput.id ? _authorInput.id : _authorInput.label, // ID if the Author resource Exist
+                    ...(!_authorInput.id ? { __isNew__: true } : {}),
                     orcid: '',
                     statementId: editMode && props.value[editIndex] && props.value[editIndex].statementId ? props.value[editIndex].statementId : '',
                 };
@@ -211,11 +212,7 @@ function AuthorsInput(props) {
                     <Button color="light" onClick={() => setShowAuthorForm(v => !v)}>
                         Cancel
                     </Button>
-                    <Button
-                        disabled={authorNameLoading}
-                        color="primary"
-                        onClick={() => saveAuthor(authorInput || { label: authorAutocompleteLabel })}
-                    >
+                    <Button disabled={authorNameLoading} color="primary" onClick={() => saveAuthor(authorInput)}>
                         {!authorNameLoading && editMode && 'Save'}
                         {!authorNameLoading && !editMode && 'Add'}
                         {authorNameLoading && <Icon icon={faSpinner} spin />}
