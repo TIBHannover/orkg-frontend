@@ -2,6 +2,8 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import capitalize from 'capitalize';
+import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import { useSelector } from 'react-redux';
 
 const OrganizationBannerStyled = styled.div`
@@ -32,7 +34,7 @@ const OrganizationBanner = () => {
 
     const link = observatory.id
         ? reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })
-        : reverse(ROUTES.ORGANIZATION, { id: observatory.organization.display_id });
+        : reverse(ROUTES.ORGANIZATION, { type: capitalize(ORGANIZATIONS_MISC.GENERAL), id: observatory.organization.display_id });
 
     return (
         <OrganizationBannerStyled>

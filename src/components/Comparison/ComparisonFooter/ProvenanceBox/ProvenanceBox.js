@@ -11,6 +11,8 @@ import ROUTES from 'constants/routes';
 import styled from 'styled-components';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
+import capitalize from 'capitalize';
+import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import { useSelector } from 'react-redux';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 
@@ -99,7 +101,13 @@ function ProvenanceBox() {
                     <div className="col-4">
                         <div className={!observatory.organization.logo ? 'm-4' : ''}>
                             <StyledOrganizationCard className="card h-100 border-0">
-                                <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: observatory.organization.display_id })}>
+                                <Link
+                                    className="logoContainer"
+                                    to={reverse(ROUTES.ORGANIZATION, {
+                                        type: capitalize(ORGANIZATIONS_MISC.GENERAL),
+                                        id: observatory.organization.display_id,
+                                    })}
+                                >
                                     {observatory.organization.logo ? (
                                         <img
                                             className="mx-auto p-2"
