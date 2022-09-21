@@ -199,13 +199,13 @@ export const saveTemplate = () => async (dispatch, getState) => {
 
         // save template research fields
         if (data.researchFields && data.researchFields.length > 0) {
-            for (const researchField of data.researchFields.reverse()) {
+            for (const researchField of [...data.researchFields].reverse()) {
                 promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD, researchField.id));
             }
         }
         // save template research problems
         if (data.researchProblems && data.researchProblems.length > 0) {
-            for (const researchProblem of data.researchProblems.reverse()) {
+            for (const researchProblem of [...data.researchProblems].reverse()) {
                 promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM, researchProblem.id));
             }
         }
