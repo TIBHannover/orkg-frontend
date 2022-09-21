@@ -38,21 +38,6 @@ const AddOrganization = () => {
     const user = useSelector(state => state.auth.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    // redirect: false,
-    // name: '',
-    // website: '',
-    // display_id: '',
-    // permalink: '',
-    // logo: '',
-    // editorState: 'edit',
-    // organizationType: ORGANIZATIONS_TYPES.find(t => ORGANIZATIONS_MISC.GENERAL === t.id)?.id,
-    // date: '',
-    // isDoubleBlind: false,
-    // type: this.props.match.params.type,
-    // };
-
-    // this.publicOrganizationRoute = `${getPublicUrl()}${reverse(ROUTES.ORGANIZATION, { id: ' ' })}`;
-    // }
 
     useEffect(() => {
         document.title = `Create ${displayType} - ORKG`;
@@ -60,7 +45,6 @@ const AddOrganization = () => {
 
     const createNewOrganization = async () => {
         setEditorState('loading');
-        // const { name, logo, website, permalink, organizationType, date, isDoubleBlind } = this.state;
 
         if (!name || name.length === 0) {
             toast.error('Please enter an organization name');
@@ -83,31 +67,8 @@ const AddOrganization = () => {
             return;
         }
 
-        /* if (organizationType.length === 0) {
-            toast.error('Please select an organization type');
-            setEditorState('edit');
-            return;
-        }
-
-        if (ORGANIZATIONS_TYPES.find(t => t.id === organizationType)?.requireDate && date.length === 0) {
-            toast.error('Please select conference date');
-            setEditorState('edit');
-            return;
-        } */
-
-        // try {
-        //    let responseJson = '';
-        //    if (organizationType === ORGANIZATIONS_MISC.CONFERENCE) {
-        //        responseJson = await createConference(name, logo[0], this.props.user.id, website, permalink, organizationType, {
-        //            date,
-        //            is_double_blind: isDoubleBlind,
-        //        });
-        //    } else {
-        //        responseJson = await createOrganization(name, logo[0], this.props.user.id, website, permalink, organizationType);
-        //    }
         try {
             const responseJson = await createOrganization(name, logo[0], user.id, website, permalink, organizationType);
-            console.log(responseJson);
             navigateToOrganization(responseJson.display_id);
         } catch (error) {
             setEditorState('edit');
@@ -118,7 +79,6 @@ const AddOrganization = () => {
 
     const navigateToOrganization = display_id => {
         setEditorState('edit');
-        // setDisplayId(display_id);
         setRedirect(false);
         setName('');
         setDisplayId('');
@@ -143,15 +103,6 @@ const AddOrganization = () => {
     };
 
     const loading = editorState === 'loading';
-    // if (redirect) {
-    // setRedirect(false);
-    // setName('');
-    // setDisplayId('');
-    // setWebsite('');
-    // setPermalink('');
-
-    // return <Navigate to={reverse(ROUTES.ORGANIZATION, { id: displayId })} />;
-    // }
 
     return (
         <>

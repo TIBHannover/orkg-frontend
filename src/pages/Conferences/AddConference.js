@@ -16,12 +16,11 @@ import slugify from 'slugify';
 import ROUTES from 'constants/routes';
 import Tooltip from 'components/Utils/Tooltip';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { ORGANIZATIONS_TYPES, ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
+import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
 import { useSelector, useDispatch } from 'react-redux';
 
 const AddConference = () => {
     const params = useParams();
-    console.log(params.id);
     const [redirect, setRedirect] = useState(false);
     const [name, setName] = useState('');
     const [website, setWebsite] = useState('');
@@ -33,21 +32,17 @@ const AddConference = () => {
     const [editorState, setEditorState] = useState('edit');
     const organizationType = ORGANIZATIONS_TYPES.find(t => t.label === params.type)?.id;
     const displayType = organizationType === 'GENERAL' ? 'organization' : organizationType === 'CONFERENCE' ? 'conference' : '';
-    const publicOrganizationRoute = `${getPublicUrl()}${reverse(
-        organizationType === 'GENERAL' ? ROUTES.ORGANIZATION : organizationType === 'CONFERENCE' ? ROUTES.EVENT : '',
-        { id: ' ' },
-    )}`;
+    const publicConferenceRoute = `${getPublicUrl()}${reverse(ROUTES.EVENT_SERIES, { id: ' ' })}`;
     const user = useSelector(state => state.auth.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
         document.title = 'Create conference series - ORKG';
-    }, [displayType]);
+    }, []);
 
-    const createNewOrganization = async () => {
+    const createNewConference = async () => {
         setEditorState('loading');
-        // const { name, logo, website, permalink, organizationType, date, isDoubleBlind } = this.state;
 
         if (!name || name.length === 0) {
             toast.error('Please enter an organization name');
@@ -64,31 +59,18 @@ const AddConference = () => {
             setEditorState('edit');
             return;
         }
-        // if (logo.length === 0) {
-        // toast.error('Please upload an organization logo');
-        // setEditorState('edit');
-        // return;
-        // }
 
-        /* if (organizationType.length === 0) {
-            toast.error('Please select an organization type');
-            setEditorState('edit');
-            return;
-        } */
-
-        if (ORGANIZATIONS_TYPES.find(t => t.id === organizationType)?.requireDate && date.length === 0) {
+        if (date.length === 0) {
             toast.error('Please select conference date');
             setEditorState('edit');
             return;
         }
 
         try {
-            // create conference
             const responseJson = await createConference(params.id, name, website, permalink, {
                 date,
-                is_double_blind: true,
+                is_double_blind: isDoubleBlind,
             });
-            console.log(responseJson);
             navigateToConference(responseJson.display_id);
         } catch (error) {
             setEditorState('edit');
@@ -99,40 +81,15 @@ const AddConference = () => {
 
     const navigateToConference = display_id => {
         setEditorState('edit');
-        // setDisplayId(display_id);
         setRedirect(false);
         setName('');
         setDisplayId('');
         setWebsite('');
         setPermalink('');
-        navigate(
-            reverse(organizationType === 'GENERAL' ? ROUTES.ORGANIZATION : organizationType === 'CONFERENCE' ? ROUTES.EVENT : '', { id: display_id }),
-        );
-    };
-
-    const handlePreview = async e => {
-        e.preventDefault();
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        if (e.target.files.length === 0) {
-            return;
-        }
-        reader.onloadend = e => {
-            setLogo([reader.result]);
-        };
-        reader.readAsDataURL(file);
+        navigate(reverse(ROUTES.EVENT_SERIES, { id: display_id }));
     };
 
     const loading = editorState === 'loading';
-    // if (redirect) {
-    // setRedirect(false);
-    // setName('');
-    // setDisplayId('');
-    // setWebsite('');
-    // setPermalink('');
-
-    // return <Navigate to={reverse(ROUTES.ORGANIZATION, { id: displayId })} />;
-    // }
 
     return (
         <>
@@ -141,7 +98,7 @@ const AddConference = () => {
                 {!!user && user.isCurationAllowed && (
                     <Form className="ps-3 pe-3 pt-2">
                         <FormGroup>
-                            <Label for="organizationName">Name</Label>
+                            <Label for="conferenceName">Name</Label>
                             <Input
                                 onChange={e => {
                                     setName(e.target.value);
@@ -155,7 +112,7 @@ const AddConference = () => {
                                 }}
                                 type="text"
                                 name="name"
-                                id="organizationName"
+                                id="conferenceName"
                                 disabled={loading}
                                 value={name}
                             />
@@ -163,17 +120,17 @@ const AddConference = () => {
 
                         <FormGroup>
                             <div>
-                                <Label for="organizationPermalink">
+                                <Label for="conferencePermalink">
                                     Permalink
-                                    <Tooltip message="Permalink field allows to identify the organization page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
+                                    <Tooltip message="Permalink field allows to identify the conference page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
                                 </Label>
                                 <InputGroup>
-                                    <span className="input-group-text">{publicOrganizationRoute}</span>
+                                    <span className="input-group-text">{publicConferenceRoute}</span>
                                     <Input
                                         onChange={e => setPermalink(e.target.value)}
                                         type="text"
                                         name="permalink"
-                                        id="organizationPermalink"
+                                        id="conferencePermalink"
                                         disabled={loading}
                                         placeholder="name"
                                         value={permalink}
@@ -182,12 +139,12 @@ const AddConference = () => {
                             </div>
                         </FormGroup>
                         <FormGroup>
-                            <Label for="organizationWebsite">Website</Label>
+                            <Label for="conferenceWebsite">Website</Label>
                             <Input
                                 onChange={e => setWebsite(e.target.value)}
                                 type="text"
                                 name="website"
-                                id="organizationWebsite"
+                                id="conferenceWebsite"
                                 disabled={loading}
                                 value={website}
                                 placeholder="https://www.example.com"
@@ -206,7 +163,7 @@ const AddConference = () => {
                         </FormGroup>
                         <FormGroup check>
                             <Input
-                                onChange={e => setIsDoubleBlind(e.target.value)}
+                                onChange={e => setIsDoubleBlind(e.target.checked)}
                                 type="checkbox"
                                 name="isDoubleBlind"
                                 id="doubleBlind"
@@ -217,26 +174,16 @@ const AddConference = () => {
                                 <Tooltip message="By default the conference is considered single-blind." />
                             </Label>
                         </FormGroup>
-                        {/* <FormGroup>
-                            <Label for="organizationLogo">Logo</Label>
-                            <br />
-                            {logo && logo.length > 0 && (
-                                <div className="mb-2">
-                                    <img src={logo} style={{ width: '20%', height: '20%' }} alt="organization logo" />
-                                </div>
-                            )}
-                            <Input type="file" id="organizationLogo" onChange={handlePreview} />
-                            </FormGroup> */}
 
-                        <Button color="primary" onClick={createNewOrganization} className="mb-2 mt-2" disabled={loading}>
-                            {!loading ? 'Create organization' : <span>Loading</span>}
+                        <Button color="primary" onClick={createNewConference} className="mb-2 mt-2" disabled={loading}>
+                            {!loading ? 'Create conference' : <span>Loading</span>}
                         </Button>
                     </Form>
                 )}
                 {(!user || !user.isCurationAllowed) && (
                     <>
                         <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => dispatch(openAuthDialog({ action: 'signin' }))}>
-                            <Icon className="me-1" icon={faUser} /> Sign in to create organization
+                            <Icon className="me-1" icon={faUser} /> Sign in to create conference
                         </Button>
                     </>
                 )}
