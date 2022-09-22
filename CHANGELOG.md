@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.82.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.82.0...v0.82.1) - 2022-09-22
+
+### Changes
+
+- fix(TemplateEditor): Saving a template with use cases [`#950`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/950)
+- refactor(Comparison): use redux to manage the state [`#947`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/947)
+
+---
 ## [v0.82.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.81.0...v0.82.0) - 2022-09-13
 
 ### Changes
