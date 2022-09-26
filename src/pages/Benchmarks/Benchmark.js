@@ -27,6 +27,7 @@ import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowser
 import { useParams, useNavigate, NavLink, Link } from 'react-router-dom';
 import { useTable, useSortBy } from 'react-table';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { CLASSES } from 'constants/graphSettings';
 
 function getTicksAxisH(data) {
     const dateRange = data.slice(1).map((value, index) => value[0]);
@@ -253,7 +254,13 @@ function Benchmark() {
                             </Link>
                         </div>
                         <div>
-                            <i>Dataset:</i> {resourceData.label}
+                            <i>Dataset:</i>{' '}
+                            <Link
+                                to={reverse(ROUTES.CONTENT_TYPE_NO_MODE, { type: CLASSES.DATASET, id: resourceData.id })}
+                                style={{ textDecoration: 'none', flex: 1 }}
+                            >
+                                {resourceData.label}
+                            </Link>
                         </div>
 
                         <>{resourceData.description && <p className="m-0">{resourceData.description}</p>}</>
