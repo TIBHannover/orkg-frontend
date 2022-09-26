@@ -98,9 +98,9 @@ const TableCell = props => {
                             }
                             style={{ cursor: resourceType !== ENTITIES.PREDICATE ? 'pointer' : 'default' }}
                             onKeyDown={e =>
-                                (e.keyCode === 13
+                                e.keyCode === 13
                                     ? () =>
-                                          (resourceType !== ENTITIES.PREDICATE
+                                          resourceType !== ENTITIES.PREDICATE
                                               ? openStatementBrowser(
                                                     data.path[isEqualPaths ? index : index + 1],
                                                     path,
@@ -113,8 +113,8 @@ const TableCell = props => {
                                                           }))
                                                         : [],
                                                 )
-                                              : null)
-                                    : undefined)
+                                              : null
+                                    : undefined
                             }
                             role="button"
                             tabIndex={0}

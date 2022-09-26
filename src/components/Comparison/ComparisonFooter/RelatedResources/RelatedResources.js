@@ -1,66 +1,57 @@
-import { Component } from 'react';
-import PropTypes from 'prop-types';
+import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { Card, CardImg, CardText, CardBody, CardTitle, Button, CardColumns } from 'reactstrap';
 import { getRelatedResourcesData } from 'utils';
+import { ENTITIES } from 'constants/graphSettings';
+import REGEX from 'constants/regex';
 
-class RelatedResources extends Component {
-    constructor(props) {
-        super(props);
-        // eslint-disable-next-line no-useless-escape
-        this.urlRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/gi;
-
-        this.state = {
-            relatedResources: [],
-        };
-    }
-
-    componentDidMount() {
-        this.loadResources();
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.resourcesStatements !== prevProps.resourcesStatements) {
-            this.loadResources();
-        }
-    }
+function RelatedResources() {
+    const isLoadingMetadata = useSelector(state => state.comparison.isLoadingMetadata);
+    const isFailedLoadingMetadata = useSelector(state => state.comparison.isFailedLoadingMetadata);
+    const resources = useSelector(state => state.comparison.comparisonResource.resources);
+    const [relatedResources, setRelatedResources] = useState([]);
 
     // Support for related resources in two different formats:
     // 1) Comparison -[RelatedResource]-> "Literal url"
     // 1) Comparison -[RelatedResource]-> Resource
     //    Resource -[Url]-> "Literal url"
     //    Resource -[Image]-> "Literal, base64 encoded image"
-    loadResources = async () => {
-        if (this.props.resourcesStatements.length > 0) {
-            let relatedResources = this.props.resourcesStatements
-                .filter(r => r._class === 'literal')
+    const loadResources = useCallback(() => {
+        if (resources.length > 0) {
+            const literalRelatedResources = resources
+                .filter(r => r._class === ENTITIES.LITERAL)
                 .map(resource => ({
                     url: resource.label,
                 }));
-            await getStatementsBySubjects({
-                ids: this.props.resourcesStatements.filter(r => r._class !== 'literal').map(r => r.id),
-            }).then(resourcesStatements => {
-                relatedResources = [...relatedResources, ...getRelatedResourcesData(resourcesStatements)];
-            });
-            this.setState({ relatedResources });
+            if (literalRelatedResources.length !== resources.length) {
+                getStatementsBySubjects({
+                    ids: resources.filter(r => r._class !== ENTITIES.LITERAL).map(r => r.id),
+                }).then(resourcesStatements => {
+                    setRelatedResources([...literalRelatedResources, ...getRelatedResourcesData(resourcesStatements)]);
+                });
+            } else {
+                setRelatedResources(literalRelatedResources);
+            }
         }
-    };
+    }, [resources]);
 
-    render() {
-        return (
-            this.state.relatedResources.length > 0 && (
+    useEffect(() => {
+        loadResources();
+    }, [loadResources]);
+
+    return (
+        <div>
+            {!isLoadingMetadata && !isFailedLoadingMetadata && resources?.length > 0 && (
                 <>
-                    <h3 className="mt-5 h5">Related resources</h3>
+                    <h5 className="mt-5">Related resources</h5>
                     <CardColumns className="d-flex row">
-                        {this.state.relatedResources.map((resource, index) => {
-                            const isLink = new RegExp(this.urlRegex).test(resource.url);
-
+                        {relatedResources.map((resource, index) => {
+                            const isLink = new RegExp(REGEX.URL).test(resource.url);
                             return (
                                 <div className="col-sm-3" key={`rr${index}`}>
                                     <Card>
-                                        {resource.image && (
-                                            <CardImg top width="100%" src={resource.image ? resource.image : ''} alt="Card image cap" />
-                                        )}
+                                        {resource.image && <CardImg top width="100%" src={resource.image ?? ''} alt="Related resource image" />}
                                         <CardBody>
                                             {resource.title && <CardTitle>{resource.title}</CardTitle>}
                                             {resource.description && <CardText>{resource.description}</CardText>}
@@ -80,13 +71,9 @@ class RelatedResources extends Component {
                         })}
                     </CardColumns>
                 </>
-            )
-        );
-    }
+            )}
+        </div>
+    );
 }
-
-RelatedResources.propTypes = {
-    resourcesStatements: PropTypes.array.isRequired,
-};
 
 export default RelatedResources;

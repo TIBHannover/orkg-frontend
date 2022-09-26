@@ -9,6 +9,7 @@ import review from 'slices/reviewSlice';
 import templateEditor from 'slices/templateEditorSlice';
 import pdfAnnotation from 'slices/pdfAnnotationSlice';
 import pdfTextAnnotation from 'slices/pdfTextAnnotationSlice';
+import comparison from 'slices/comparisonSlice';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default routerReducer =>
@@ -24,4 +25,5 @@ export default routerReducer =>
         templateEditor,
         pdfAnnotation,
         pdfTextAnnotation,
+        comparison,
     });

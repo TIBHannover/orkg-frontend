@@ -3,6 +3,33 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.82.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.82.0...v0.82.1) - 2022-09-22
+
+### Changes
+
+- fix(TemplateEditor): Saving a template with use cases [`#950`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/950)
+- refactor(Comparison): use redux to manage the state [`#947`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/947)
+
+---
+## [v0.82.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.81.0...v0.82.0) - 2022-09-13
+
+### Changes
+
+- fix(CSP): Twitter timeline [`#944`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/944)
+
+---
+## [v0.81.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.80.1...v0.81.0) - 2022-09-12
+
+### Changes
+
+- fix(ViewPaper): Verify citations count before showing it [`#940`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/940)
+- fix(AuthorsInput): Disable selecting authors from wikidata in add paper wizard [`#939`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/939)
+- feat: Diagrams [`#915`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/915)
+- fix: use regular expression to validate uri [`#938`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/938)
+- Help video modal issue fixed [`#937`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/937)
+- fix(CSP): Loading description from Wikipedia [`#934`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/934)
+
+---
 ## [v0.80.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.80.0...v0.80.1) - 2022-09-09
 
 ### Changes
