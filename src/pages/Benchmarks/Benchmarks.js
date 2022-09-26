@@ -18,7 +18,7 @@ function Benchmarks() {
             <TitleBar
                 titleAddition={
                     <div className="text-muted mt-1">
-                        {benchmarks.length === 0 && isLoadingBenchmarks ? <Icon icon={faSpinner} spin /> : benchmarks.length} benchmarks{' '}
+                        on {benchmarks.length === 0 && isLoadingBenchmarks ? <Icon icon={faSpinner} spin /> : benchmarks.length} research problem{' '}
                         {!!filter &&
                             `(${benchmarks.filter(b => b.research_problem.label.toLowerCase().includes(filter.toLowerCase())).length} filtered)`}
                     </div>
