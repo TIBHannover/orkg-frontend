@@ -10,7 +10,7 @@ function DataSources() {
     return (
         <div>
             {!isLoadingMetadata && !isFailedLoadingMetadata && references?.length > 0 && (
-                <div style={{ lineHeight: 1.5 }}>
+                <div id="dataSources" style={{ lineHeight: 1.5 }}>
                     <h5 className="mt-5">Data sources</h5>
                     <ul>
                         {references.map((reference, index) => (

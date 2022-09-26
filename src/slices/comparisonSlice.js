@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { LOCATION_CHANGE, asyncLocalStorage } from 'utils';
+import { match } from 'path-to-regexp';
+import ROUTES from 'constants/routes';
 import {
     isPredicatesListCorrect,
     extendPropertyIds,
@@ -142,9 +144,15 @@ export const comparisonSlice = createSlice({
         },
     },
     extraReducers: {
-        [LOCATION_CHANGE]: (state, { payload }) => ({
-            ...initialState,
-        }),
+        [LOCATION_CHANGE]: (state, { payload }) => {
+            const matchComparison = match(ROUTES.COMPARISON);
+            const parsedPayload = matchComparison(payload.location.pathname);
+            if (parsedPayload && parsedPayload.params?.comparisonId === state.comparisonResource.id) {
+                // when it's the same comparison  (just the hash changed) do not init
+                return state;
+            }
+            return initialState;
+        },
     },
 });
 
