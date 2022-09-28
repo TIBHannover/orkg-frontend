@@ -14,7 +14,7 @@ import { getComparisonURLConfig, getPropertyObjectFromData, activatedContributio
 import { saveAuthors } from 'components/AuthorsInput/helpers';
 import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
-import { getConferences } from 'services/backend/organizations';
+import { getConferencesSeries } from 'services/backend/organizations';
 
 function usePublish() {
     const comparisonResource = useSelector(state => state.comparison.comparisonResource);
@@ -64,7 +64,7 @@ function usePublish() {
 
     useEffect(() => {
         const getConferencesList = () => {
-            getConferences().then(response => {
+            getConferencesSeries().then(response => {
                 setConferencesList(response);
             });
         };

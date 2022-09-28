@@ -470,7 +470,7 @@ const Header = () => {
                                     key="general"
                                     tag={RouterNavLink}
                                     end
-                                    to={reverse(ROUTES.ORGANIZATIONS, { type: capitalize(ORGANIZATIONS_MISC.GENERAL) })}
+                                    to={reverse(ROUTES.ORGANIZATIONS, { type: 'General' })}
                                     onClick={closeMenu}
                                 >
                                     Organizations
@@ -479,7 +479,7 @@ const Header = () => {
                                     key="events"
                                     tag={RouterNavLink}
                                     end
-                                    to={reverse(ROUTES.ORGANIZATIONS, { type: capitalize(ORGANIZATIONS_MISC.EVENT) })}
+                                    to={reverse(ROUTES.ORGANIZATIONS, { type: 'Event' })}
                                     onClick={closeMenu}
                                 >
                                     Events
