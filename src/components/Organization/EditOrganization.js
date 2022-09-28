@@ -62,8 +62,8 @@ class EditOrganization extends Component {
     handleSubmit = async e => {
         const value = this.state.label;
         const image = this.state.previewSrc;
-        const { url } = this.state;
-        const { id } = this.props;
+        const url = this.state.url;
+        const id = this.props.id;
 
         let isUpdatedLabel = false;
         let isUpdatedImage = false;
@@ -104,7 +104,7 @@ class EditOrganization extends Component {
         }
 
         if (isUpdatedLabel || isUpdatedUrl || isUpdatedImage) {
-            toast.success('Organization updated successfully');
+            toast.success(`${this.props.typeName} updated successfully`);
             this.props.updateOrganizationMetadata(
                 value,
                 url,
@@ -163,14 +163,14 @@ class EditOrganization extends Component {
                         <>
                             {' '}
                             <FormGroup>
-                                <Label for="ResourceLabel">{capitalize(this.props.typeName)} name</Label>
+                                <Label for="organizationLabel">{capitalize(this.props.typeName)} name</Label>
                                 <Input
                                     onChange={this.handleChange}
                                     type="text"
                                     name="label"
-                                    id="ResourceLabel"
+                                    id="organizationLabel"
                                     value={this.state.label}
-                                    placeholder={`${this.props.typeName} Name`}
+                                    placeholder={`${this.props.typeName} name`}
                                     disabled={isLoading}
                                 />
                             </FormGroup>
