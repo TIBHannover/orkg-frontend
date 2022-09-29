@@ -54,8 +54,9 @@ const AuthorHeader = ({ authorId }) => {
                                 </ButtonDropdown>
                             </>
                         }
+                        titleAddition="Author"
                     >
-                        Author: {author.label}
+                        {author.label}
                     </TitleBar>
 
                     {editMode && (
