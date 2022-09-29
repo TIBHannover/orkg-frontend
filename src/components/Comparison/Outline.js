@@ -34,7 +34,9 @@ const ListItem = styled.li`
     border-top: 1px solid #c7ccda;
     padding: 5px 0;
     font-size: 95%;
-
+    a {
+        color: #5c5c75;
+    }
     &:first-child {
         border-top: none;
     }
@@ -53,47 +55,33 @@ const Outline = () => {
             <Box fullWidth={fullWidth}>
                 <ol style={{ listStyle: 'none' }} className="p-0 m-0">
                     <ListItem>
-                        <Link to="#description" className="text-secondary">
-                            Description
-                        </Link>
+                        <Link to="#description">Description</Link>
                     </ListItem>
                     {showVisualizations && (
                         <ListItem>
-                            <Link to="#visualizations" className="text-secondary">
-                                Visualizations
-                            </Link>
+                            <Link to="#visualizations">Visualizations</Link>
                         </ListItem>
                     )}
                     <ListItem>
-                        <Link to="#comparisonTable" className="text-secondary">
-                            Comparison table
-                        </Link>
+                        <Link to="#comparisonTable">Comparison table</Link>
                     </ListItem>
                     {showRelatedResources && (
                         <ListItem>
-                            <Link to="#relatedResources" className="text-secondary">
-                                Related resources
-                            </Link>
+                            <Link to="#relatedResources">Related resources</Link>
                         </ListItem>
                     )}
                     {showRelatedFigures && (
                         <ListItem>
-                            <Link to="#relatedFigures" className="text-secondary">
-                                Related figures
-                            </Link>
+                            <Link to="#relatedFigures">Related figures</Link>
                         </ListItem>
                     )}
                     {showReferences && (
                         <ListItem>
-                            <Link to="#dataSources" className="text-secondary">
-                                Data sources
-                            </Link>
+                            <Link to="#dataSources">Data sources</Link>
                         </ListItem>
                     )}
                     <ListItem>
-                        <Link to="#provenance" className="text-secondary">
-                            Provenance
-                        </Link>
+                        <Link to="#provenance">Provenance</Link>
                     </ListItem>
                 </ol>
             </Box>
