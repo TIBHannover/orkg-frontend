@@ -10,6 +10,7 @@ import {
     DropdownMenu,
     DropdownItem,
     ListGroupItem,
+    ListGroup,
 } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
 import ROUTES from 'constants/routes.js';
@@ -72,9 +73,10 @@ const VenuePage = () => {
                     <Container className="p-0">
                         <Card>
                             <CardHeader>
-                                {/* TODO: Show the total number of papers when number of items is provided with the paginated result
-                                        <div className="float-end"><b>{this.state.papers.length}</b> Papers</div>
-                                    */}
+                                <div className="float-end">
+                                    <b>{totalElements}</b> Papers
+                                </div>
+
                                 <h3 className="h4 mt-4 mb-4">{venue?.label}</h3>
                             </CardHeader>
                             <CardBody>
@@ -87,11 +89,11 @@ const VenuePage = () => {
                     <br />
                     <Container className="p-0">
                         {papers.length > 0 && (
-                            <div>
+                            <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
                                 {papers.map(resource => (
                                     <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />
                                 ))}
-                            </div>
+                            </ListGroup>
                         )}
                         {totalElements === 0 && !isNextPageLoading && (
                             <ListGroupItem tag="div" className="text-center p-4">
