@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
 import { setProvenance, setObservatoryId, setOrganizationId } from 'slices/comparisonSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import { getConferenceAndOrganizationInformation } from 'services/backend/organizations';
 
 function useProvenance() {
     const id = useSelector(state => state.comparison.comparisonResource.id);
@@ -18,6 +19,10 @@ function useProvenance() {
             if (observatoryId && observatoryId) {
                 getObservatoryAndOrganizationInformation(observatoryId, organizationId).then(provenance => {
                     dispatch(setProvenance(provenance));
+                });
+            } else if (observatoryId === MISC.UNKNOWN_ID && organizationId && organizationId !== MISC.UNKNOWN_ID) {
+                getConferenceAndOrganizationInformation(organizationId).then(conference => {
+                    dispatch(setProvenance(conference));
                 });
             } else {
                 dispatch(setProvenance(null));

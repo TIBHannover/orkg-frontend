@@ -32,7 +32,7 @@ const ComparisonMetaData = () => {
     };
 
     const isDoubleBlind =
-        provenance?.organization?.metadata?.is_double_blind && moment().format('YYYY-MM-DD') < provenance?.organization?.metadata?.date;
+        provenance?.metadata?.is_double_blind && moment().format('YYYY-MM-DD') < provenance?.metadata?.date;
 
     const ldJson = {
         mainEntity: {

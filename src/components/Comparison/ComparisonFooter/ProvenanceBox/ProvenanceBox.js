@@ -57,8 +57,7 @@ function ProvenanceBox() {
         return null;
     }
 
-    const isDoubleBlind =
-        observatory?.organization?.metadata?.is_double_blind && moment().format('YYYY-MM-DD') < observatory?.organization?.metadata?.date;
+    const isDoubleBlind = observatory?.metadata?.is_double_blind && moment().format('YYYY-MM-DD') < observatory?.metadata?.date;
 
     return (
         <div id="provenance" className="container box rounded-3 mt-4">
@@ -76,7 +75,11 @@ function ProvenanceBox() {
                                     )}
                                 </p>
                                 <h4 className="mb-3">
-                                    <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}>{observatory.name}</Link>
+                                    {observatory?.metadata ? (
+                                        <Link to={reverse(ROUTES.EVENT_SERIES, { id: observatory.display_id })}>{observatory.name}</Link>
+                                    ) : (
+                                        <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}>{observatory.name}</Link>
+                                    )}
                                 </h4>
                             </>
                         )}
