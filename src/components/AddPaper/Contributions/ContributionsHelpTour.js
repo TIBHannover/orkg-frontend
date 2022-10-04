@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie';
 import { closeTour, openTour } from 'slices/addPaperSlice';
 import { Steps } from 'intro.js-react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { faExternalLinkAlt, faVideo } from '@fortawesome/free-solid-svg-icons';
 import env from '@beam-australia/react-env';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -43,28 +43,23 @@ function ContributionsHelpTour() {
                           {
                               element: '.contributionData',
                               intro: (
-                                  <span>
+                                  <div style={{ width: '400px' }}>
                                       Entering contribution data is the most important part of adding a paper (this part takes around 10-20 minutes).
                                       In this section you enter the data relevant to your paper. The challenge here is to capture the most important
                                       aspects of your paper and to represent this here. <br />
                                       <br />
                                       The data is entered in a <strong>property and value </strong> structure. First you choose a property (e.g.
                                       method) and afterwards you add a value to this property (e.g. semi-structured interviews). <br />
-                                      <br />
-                                      <iframe
-                                          width="480"
-                                          height="480"
-                                          src="https://www.youtube.com/embed/dPBz9uAbHqo?rel=0"
-                                          frameBorder="0"
-                                          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                          allowFullScreen="true"
-                                          title="ORKG - How to add contribution data"
-                                      />
                                       <hr />
+                                      <a href="https://www.youtube.com/watch?v=dPBz9uAbHqo" target="_blank" rel="noopener noreferrer">
+                                          Video - How to add contribution data <Icon size="sm" icon={faVideo} />{' '}
+                                          <Icon size="sm" icon={faExternalLinkAlt} />
+                                      </a>
+                                      <br />
                                       <a href="https://www.orkg.org/paper/R8186" target="_blank" rel="noopener noreferrer">
                                           View paper that has been used in this example <Icon size="sm" icon={faExternalLinkAlt} />
                                       </a>
-                                  </span>
+                                  </div>
                               ),
                               position: 'top',
                           },
