@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { lazy } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import ResourceDetails from 'pages/Resources/Resource';
 import AddPaper from 'pages/AddPaper';
 import AuthorPage from 'pages/AuthorPage';
@@ -426,47 +426,59 @@ const routes = [
 const legacyRoutes = [
     {
         path: ROUTES.SMART_REVIEW_NEW,
-        element: () => <Navigate to={{ pathname: ROUTES.REVIEW_NEW, state: { status: 301 } }} />,
+        element: () => <Navigate to={ROUTES.REVIEW_NEW} replace />,
     },
     {
         path: ROUTES.SMART_REVIEW_DIFF,
-        element: ({ match }) => (
-            <Navigate
-                to={{ pathname: reverse(ROUTES.REVIEW_DIFF, { oldId: match.params.oldId, newId: match.params.newId }), state: { status: 301 } }}
-            />
-        ),
+        element: () => {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const { oldId, newId } = useParams();
+            return <Navigate to={reverse(ROUTES.REVIEW_DIFF, { oldId, newId })} replace />;
+        },
     },
     {
         path: ROUTES.SMART_REVIEW,
-        element: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.REVIEW, { id: match.params.id }), state: { status: 301 } }} />,
+        element: () => {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const { id } = useParams();
+            return <Navigate to={reverse(ROUTES.REVIEW, { id })} replace />;
+        },
     },
     {
         path: ROUTES.SMART_REVIEWS,
-        element: () => <Navigate to={{ pathname: ROUTES.REVIEWS, state: { status: 301 } }} />,
+        element: () => <Navigate to={ROUTES.REVIEWS} replace />,
     },
     {
         path: ROUTES.LITERATURE_LISTS,
-        element: () => <Navigate to={{ pathname: ROUTES.LISTS, state: { status: 301 } }} />,
+        element: () => <Navigate to={ROUTES.LISTS} replace />,
     },
     {
         path: ROUTES.LITERATURE_LIST,
-        element: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.LIST, { id: match.params.id }), state: { status: 301 } }} />,
+        element: () => {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const { id } = useParams();
+            return <Navigate to={reverse(ROUTES.LIST, { id })} replace />;
+        },
     },
     {
         path: ROUTES.LITERATURE_LIST_EMBED,
-        element: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.LIST_EMBED, { id: match.params.id }), state: { status: 301 } }} />,
+        element: () => {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const { id, embed } = useParams();
+            return <Navigate to={reverse(ROUTES.LIST_EMBED, { id, embed })} replace />;
+        },
     },
     {
         path: ROUTES.LITERATURE_LIST_NEW,
-        element: () => <Navigate to={{ pathname: ROUTES.LIST_NEW, state: { status: 301 } }} />,
+        element: () => <Navigate to={ROUTES.LIST_NEW} replace />,
     },
     {
         path: ROUTES.LITERATURE_LIST_DIFF,
-        element: ({ match }) => (
-            <Navigate
-                to={{ pathname: reverse(ROUTES.LIST_DIFF, { oldId: match.params.oldId, newId: match.params.newId }), state: { status: 301 } }}
-            />
-        ),
+        element: () => {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const { oldId, newId } = useParams();
+            return <Navigate to={reverse(ROUTES.LIST_DIFF, { oldId, newId })} replace />;
+        },
     },
 ];
 
