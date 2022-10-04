@@ -1,26 +1,17 @@
-import { useEffect, useState } from 'react';
-import {
-    Container,
-    Card,
-    CardText,
-    CardBody,
-    CardHeader,
-    ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    ListGroupItem,
-} from 'reactstrap';
-import { getResource } from 'services/backend/resources';
-import ROUTES from 'constants/routes.js';
-import PaperCard from 'components/PaperCard/PaperCard';
-import { faSpinner, faAngleDoubleDown, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
+import { faAngleDoubleDown, faEllipsisV, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import useVenuePapers from 'components/Venue/useVenuePapers';
-import { NavLink, useParams } from 'react-router-dom';
-import { reverse } from 'named-urls';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
+import PaperCard from 'components/PaperCard/PaperCard';
+import { SubTitle } from 'components/styled';
 import TitleBar from 'components/TitleBar/TitleBar';
+import useVenuePapers from 'components/Venue/useVenuePapers';
+import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
+import pluralize from 'pluralize';
+import { useEffect, useState } from 'react';
+import { NavLink, useParams } from 'react-router-dom';
+import { ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle, ListGroup, ListGroupItem } from 'reactstrap';
+import { getResource } from 'services/backend/resources';
 
 const VenuePage = () => {
     const params = useParams();
@@ -66,32 +57,17 @@ const VenuePage = () => {
                                 </DropdownMenu>
                             </ButtonDropdown>
                         }
+                        titleAddition={<SubTitle>Venue ({pluralize('paper', totalElements, true)})</SubTitle>}
                     >
-                        Venue
+                        {venue?.label}
                     </TitleBar>
                     <Container className="p-0">
-                        <Card>
-                            <CardHeader>
-                                {/* TODO: Show the total number of papers when number of items is provided with the paginated result
-                                        <div className="float-end"><b>{this.state.papers.length}</b> Papers</div>
-                                    */}
-                                <h3 className="h4 mt-4 mb-4">{venue?.label}</h3>
-                            </CardHeader>
-                            <CardBody>
-                                <CardText>
-                                    List of papers in <i>{venue?.label}</i> venue
-                                </CardText>
-                            </CardBody>
-                        </Card>
-                    </Container>
-                    <br />
-                    <Container className="p-0">
                         {papers.length > 0 && (
-                            <div>
+                            <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
                                 {papers.map(resource => (
                                     <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />
                                 ))}
-                            </div>
+                            </ListGroup>
                         )}
                         {totalElements === 0 && !isNextPageLoading && (
                             <ListGroupItem tag="div" className="text-center p-4">
