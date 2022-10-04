@@ -163,6 +163,7 @@ function Resource() {
                                 [link.routeParams]: params.id,
                                 slug: link.hasSlug ? responseJson.label : undefined,
                             }),
+                            { replace: true },
                         );
                     }
                     if (responseJson.classes.includes(CLASSES.VISUALIZATION)) {
