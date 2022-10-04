@@ -220,7 +220,7 @@ function Benchmark() {
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu end>
-                                        <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: datasetId })}>
+                                        <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id: datasetId })}?noRedirect`}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>

@@ -31,7 +31,7 @@ const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate, showResourc
                     <Link
                         style={{ right: 45, position: 'absolute', top: 12 }}
                         className="ms-2"
-                        to={reverse(ROUTES.RESOURCE, { id: resource?.id })}
+                        to={`${reverse(ROUTES.RESOURCE, { id: resource?.id })}?noRedirect`}
                         target="_blank"
                         rel="noopener noreferrer"
                     >

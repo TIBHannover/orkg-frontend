@@ -721,7 +721,7 @@ export const getResourceLink = (classId, id) => {
         default: [ROUTES.RESOURCE, 'id'],
     };
     const [route, idParam] = links[classId] || links.default;
-    return reverse(route, { [idParam]: id });
+    return `${reverse(route, { [idParam]: id })}${route === ROUTES.RESOURCE ? '?noRedirect' : ''}`;
 };
 
 /**
@@ -737,7 +737,7 @@ export const getLinkByEntityType = (_class, id) => {
         [ENTITIES.CLASS]: ROUTES.CLASS,
         [ENTITIES.PREDICATE]: ROUTES.PROPERTY,
     };
-    return links[_class] ? reverse(links[_class], { id }) : '';
+    return links[_class] ? `${reverse(links[_class], { id })}?noRedirect` : '';
 };
 
 /**

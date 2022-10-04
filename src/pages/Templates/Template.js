@@ -138,7 +138,7 @@ const Template = () => {
                                     <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu end>
-                                    <DropdownItem tag={RouterNavLink} end to={reverse(ROUTES.RESOURCE, { id })}>
+                                    <DropdownItem tag={RouterNavLink} end to={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                                         View resource
                                     </DropdownItem>
                                 </DropdownMenu>
