@@ -1,30 +1,15 @@
-import { useContext } from 'react';
-import Tour from 'reactour';
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
+import { Steps } from 'intro.js-react';
 import PropTypes from 'prop-types';
-import { ThemeContext } from 'styled-components';
 
 const Help = props => {
-    const themeContext = useContext(ThemeContext);
-
-    const disableBody = target =>
-        disableBodyScroll(target, {
-            reserveScrollBarGap: true,
-        });
-
-    const enableBody = target => enableBodyScroll(target);
-
     const handleCloseTour = () => {
-        enableBody();
         props.setIsOpen(false);
     };
 
-    const tourStyle = { borderTop: `4px solid ${themeContext.primary}` };
-
     const tourSteps = [
         {
-            content: (
-                <>
+            intro: (
+                <div style={{ width: '400px' }}>
                     <p>
                         A warm welcome at the <strong>ORKG paper annotator</strong>! In this help tour, we will explain the key features of the
                         annotator tool.
@@ -34,13 +19,12 @@ const Help = props => {
                         sentence by selecting the type.
                     </p>
                     <p>Let's have a look at some of the features. Click the arrow below.</p>
-                </>
+                </div>
             ),
-            style: { ...tourStyle, maxWidth: 400 },
         },
         {
-            selector: '#completion-bar',
-            content: (
+            element: '#completion-bar',
+            intro: (
                 <>
                     <p>
                         This is the completion bar, indicating your progress while annotating. This bar is there to help you understand when you have
@@ -51,7 +35,6 @@ const Help = props => {
                     </p>
                 </>
             ),
-            style: tourStyle,
         },
         /* {
             selector: '#smart-sentence-detection',
@@ -80,8 +63,8 @@ const Help = props => {
             style: tourStyle
         }, */
         {
-            selector: '#annotation-categories',
-            content: (
+            element: '#annotation-categories',
+            intro: (
                 <>
                     <p>Here, the five most important annotation types are listed. In total, there are 25 types you can use to annotate a sentence.</p>
                     <p>
@@ -91,11 +74,10 @@ const Help = props => {
                     <p>If you annotate one of the other 20 types, they will automatically appear at the bottom of this list.</p>
                 </>
             ),
-            style: tourStyle,
         },
         {
-            selector: '#save-annotations',
-            content: (
+            element: '#save-annotations',
+            intro: (
                 <>
                     <p>You made it to the end of the tour! Once you are done with annotating your paper, you can save the results here.</p>
                     <p>
@@ -105,23 +87,17 @@ const Help = props => {
                     </p>
                 </>
             ),
-            style: tourStyle,
         },
     ];
 
     return (
         <>
-            <Tour
-                onAfterOpen={disableBody}
-                onBeforeClose={enableBody}
-                showNumber={false}
-                accentColor={themeContext.primary}
-                rounded={10}
-                onRequestClose={handleCloseTour}
-                isOpen={props.isOpen}
-                startAt={0}
-                maskClassName="opacity-75"
+            <Steps
+                onExit={handleCloseTour}
+                enabled={props.isOpen}
+                initialStep={0}
                 steps={tourSteps}
+                options={{ tooltipClass: 'introjs-ORKG-tooltip' }}
             />
         </>
     );

@@ -25,3 +25,11 @@ body {
     outline: 0 !important;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
+// intro.js 
+.introjs-ORKG-tooltip .introjs-bullets ul li a,.introjs-ORKG-tooltip .introjs-bullets ul li a.active{
+    background-color: $primary;
+}
+.introjs-ORKG-tooltip{
+    max-width: 550px !important;
+}

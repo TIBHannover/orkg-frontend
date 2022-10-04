@@ -59,6 +59,7 @@ export default function SignUp() {
                                     },
                                 }),
                             );
+                            document.body.style.overflow = 'auto scroll';
                             dispatch(toggleAuthDialog());
                             setIsLoading(false);
                             setErrors(null);
