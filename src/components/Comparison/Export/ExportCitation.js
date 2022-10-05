@@ -40,7 +40,12 @@ class ExportCitation extends Component {
                 ),
             ),
         ).then(citations => {
-            this.setState({ citations: zipObject(this.CITATION_STYLES.map(s => s.styleID), citations) });
+            this.setState({
+                citations: zipObject(
+                    this.CITATION_STYLES.map(s => s.styleID),
+                    citations,
+                ),
+            });
         });
     };
 

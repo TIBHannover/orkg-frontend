@@ -15,7 +15,11 @@ const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate, showResourc
 
     const handleSave = async () => {
         setIsLoading(true);
-        const updatedResource = await updateResource(resource.id, label, classes.map(c => c.id));
+        const updatedResource = await updateResource(
+            resource.id,
+            label,
+            classes.map(c => c.id),
+        );
         if (updatedResource && afterUpdate) {
             afterUpdate(updatedResource);
         }

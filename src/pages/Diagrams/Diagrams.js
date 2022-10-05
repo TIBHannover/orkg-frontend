@@ -21,7 +21,11 @@ const Diagrams = () => {
     const fetchItems = async ({ resourceClass, page, pageSize }) => {
         let items = [];
 
-        const { content: resources, last, totalElements } = await getResourcesByClass({
+        const {
+            content: resources,
+            last,
+            totalElements,
+        } = await getResourcesByClass({
             id: resourceClass,
             page,
             items: pageSize,
@@ -32,7 +36,10 @@ const Diagrams = () => {
         if (resources.length) {
             items = await getStatementsBySubjects({ ids: resources.map(item => item.id) }).then(statements =>
                 statements.map(statementsForSubject =>
-                    getVisualizationData(resources.find(resource => resource.id === statementsForSubject.id), statementsForSubject.statements),
+                    getVisualizationData(
+                        resources.find(resource => resource.id === statementsForSubject.id),
+                        statementsForSubject.statements,
+                    ),
                 ),
             );
         }

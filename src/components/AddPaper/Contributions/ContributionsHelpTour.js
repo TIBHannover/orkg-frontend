@@ -193,11 +193,4 @@ const mapDispatchToProps = dispatch => ({
     closeTour: () => dispatch(closeTour()),
 });
 
-export default compose(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps,
-    ),
-    withTheme,
-    withCookies,
-)(ContributionsHelpTour);
+export default compose(connect(mapStateToProps, mapDispatchToProps), withTheme, withCookies)(ContributionsHelpTour);

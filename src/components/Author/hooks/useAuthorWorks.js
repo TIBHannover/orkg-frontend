@@ -38,7 +38,10 @@ function useAuthorWorks({ authorId }) {
                     })
                         .then(statements => {
                             const items = statements.map(itemStatements => {
-                                const itemSubject = find(result.content.map(p => p.subject), { id: itemStatements.id });
+                                const itemSubject = find(
+                                    result.content.map(p => p.subject),
+                                    { id: itemStatements.id },
+                                );
                                 return getDataBasedOnType(itemSubject, itemStatements.statements);
                             });
                             setWorks(prevResources => [...prevResources, ...items]);

@@ -44,9 +44,8 @@ const RemoveTableButton = styled(Button)`
 const TableSelect = props => {
     const tableRegions = useSelector(state => state.pdfAnnotation.tableRegions);
     const selectedTool = useSelector(state => state.pdfAnnotation.selectedTool);
-    const [onMouseDown, onMouseUp, onMouseMove, pointerStyles, rect, handleExtract, deleteRegion, extractionModal, toggleModel] = useTableSelect(
-        props,
-    );
+    const [onMouseDown, onMouseUp, onMouseMove, pointerStyles, rect, handleExtract, deleteRegion, extractionModal, toggleModel] =
+        useTableSelect(props);
 
     return (
         <>

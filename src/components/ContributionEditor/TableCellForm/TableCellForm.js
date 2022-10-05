@@ -70,7 +70,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
     });
 
     const createValue = () => {
-        if ((entityType === ENTITIES.LITERAL && inputValue.trim()) || (entityType === ENTITIES.RESOURCE || inputFormType === 'empty')) {
+        if ((entityType === ENTITIES.LITERAL && inputValue.trim()) || entityType === ENTITIES.RESOURCE || inputFormType === 'empty') {
             onSubmit();
         }
     };

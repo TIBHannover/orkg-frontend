@@ -182,64 +182,74 @@ export const {
 
 export default listSlice.reducer;
 
-export const updateTitle = ({ id, title }) => async dispatch => {
-    dispatch(titleUpdated(title));
-    dispatch(setIsLoading(true));
-    await updateResource(id, title);
-    dispatch(setIsLoading(false));
-};
+export const updateTitle =
+    ({ id, title }) =>
+    async dispatch => {
+        dispatch(titleUpdated(title));
+        dispatch(setIsLoading(true));
+        await updateResource(id, title);
+        dispatch(setIsLoading(false));
+    };
 
-export const updateResearchField = ({ statementId, listId, researchField }) => async dispatch => {
-    if (statementId) {
-        updateStatement(statementId, {
-            subject_id: listId,
-            predicate_id: PREDICATES.HAS_RESEARCH_FIELD,
-            object_id: researchField.id,
-        });
-    } else {
-        const statement = await createResourceStatement(listId, PREDICATES.HAS_RESEARCH_FIELD, researchField.id);
-        statementId = statement.id;
-    }
-    researchField.statementId = statementId;
+export const updateResearchField =
+    ({ statementId, listId, researchField }) =>
+    async dispatch => {
+        if (statementId) {
+            updateStatement(statementId, {
+                subject_id: listId,
+                predicate_id: PREDICATES.HAS_RESEARCH_FIELD,
+                object_id: researchField.id,
+            });
+        } else {
+            const statement = await createResourceStatement(listId, PREDICATES.HAS_RESEARCH_FIELD, researchField.id);
+            statementId = statement.id;
+        }
+        researchField.statementId = statementId;
 
-    dispatch(researchFieldUpdated(researchField));
-};
+        dispatch(researchFieldUpdated(researchField));
+    };
 
-export const updateSectionTitle = ({ sectionId, title }) => async dispatch => {
-    dispatch(
-        sectionTitleUpdated({
-            title,
-            sectionId,
-        }),
-    );
-    dispatch(setIsLoading(true));
-    await updateResource(sectionId, title);
-    dispatch(setIsLoading(false));
-};
+export const updateSectionTitle =
+    ({ sectionId, title }) =>
+    async dispatch => {
+        dispatch(
+            sectionTitleUpdated({
+                title,
+                sectionId,
+            }),
+        );
+        dispatch(setIsLoading(true));
+        await updateResource(sectionId, title);
+        dispatch(setIsLoading(false));
+    };
 
-export const updateSectionHeadingLevel = ({ id, level }) => async dispatch => {
-    dispatch(
-        sectionHeadingLevelUpdated({
-            level,
-            id,
-        }),
-    );
-    dispatch(setIsLoading(true));
-    await updateLiteral(id, level);
-    dispatch(setIsLoading(false));
-};
+export const updateSectionHeadingLevel =
+    ({ id, level }) =>
+    async dispatch => {
+        dispatch(
+            sectionHeadingLevelUpdated({
+                level,
+                id,
+            }),
+        );
+        dispatch(setIsLoading(true));
+        await updateLiteral(id, level);
+        dispatch(setIsLoading(false));
+    };
 
-export const updateSectionMarkdown = ({ id, markdown }) => async dispatch => {
-    dispatch(
-        sectionMarkdownUpdated({
-            markdown,
-            id,
-        }),
-    );
-    dispatch(setIsLoading(true));
-    await updateLiteral(id, markdown);
-    dispatch(setIsLoading(false));
-};
+export const updateSectionMarkdown =
+    ({ id, markdown }) =>
+    async dispatch => {
+        dispatch(
+            sectionMarkdownUpdated({
+                markdown,
+                id,
+            }),
+        );
+        dispatch(setIsLoading(true));
+        await updateLiteral(id, markdown);
+        dispatch(setIsLoading(false));
+    };
 
 export const deleteSection = id => async dispatch => {
     try {
@@ -259,148 +269,162 @@ export const deleteSection = id => async dispatch => {
     }
 };
 
-export const createSection = ({ listId, afterIndex, sectionType }) => async (dispatch, getState) => {
-    dispatch(setIsLoading(true));
-    dispatch(isLoadingSortSectionSet(true));
+export const createSection =
+    ({ listId, afterIndex, sectionType }) =>
+    async (dispatch, getState) => {
+        dispatch(setIsLoading(true));
+        dispatch(isLoadingSortSectionSet(true));
 
-    let typeId = '';
-    let sectionResourceId = null;
-    let markdownLiteralId = null;
-    let headingLiteralId = null;
-    const headingLevel = 2;
-    if (sectionType === 'text') {
-        // markdown section
-        typeId = CLASSES.TEXT_SECTION;
+        let typeId = '';
+        let sectionResourceId = null;
+        let markdownLiteralId = null;
+        let headingLiteralId = null;
+        const headingLevel = 2;
+        if (sectionType === 'text') {
+            // markdown section
+            typeId = CLASSES.TEXT_SECTION;
 
-        const sectionResource = await createResource('', [typeId]);
-        const markdownLiteral = await createLiteral('');
-        await createResourceStatement(listId, PREDICATES.HAS_SECTION, sectionResource.id);
-        await createLiteralStatement(sectionResource.id, PREDICATES.HAS_CONTENT, markdownLiteral.id);
-        sectionResourceId = sectionResource.id;
-        markdownLiteralId = markdownLiteral.id;
-        const headingLiteral = await createLiteral(headingLevel);
-        await createLiteralStatement(sectionResource.id, PREDICATES.HAS_HEADING_LEVEL, headingLiteral.id);
-        headingLiteralId = headingLiteral.id;
-    } else if (sectionType === 'list') {
-        // markdown section
-        typeId = CLASSES.LIST_SECTION;
+            const sectionResource = await createResource('', [typeId]);
+            const markdownLiteral = await createLiteral('');
+            await createResourceStatement(listId, PREDICATES.HAS_SECTION, sectionResource.id);
+            await createLiteralStatement(sectionResource.id, PREDICATES.HAS_CONTENT, markdownLiteral.id);
+            sectionResourceId = sectionResource.id;
+            markdownLiteralId = markdownLiteral.id;
+            const headingLiteral = await createLiteral(headingLevel);
+            await createLiteralStatement(sectionResource.id, PREDICATES.HAS_HEADING_LEVEL, headingLiteral.id);
+            headingLiteralId = headingLiteral.id;
+        } else if (sectionType === 'list') {
+            // markdown section
+            typeId = CLASSES.LIST_SECTION;
 
-        const sectionResource = await createResource('', [typeId]);
-        await createResourceStatement(listId, PREDICATES.HAS_SECTION, sectionResource.id);
-        sectionResourceId = sectionResource.id;
-    }
-    dispatch(
-        sectionAdded({
-            afterIndex,
-            sectionId: sectionResourceId,
-            markdownId: markdownLiteralId,
-            headingId: headingLiteralId,
-            headingLevel,
-            typeId,
-        }),
-    );
-    // sort the sections after adding a new section
-    dispatch(
-        sortSections({
-            listId,
-            sections: getState().list.sections,
-        }),
-    );
-    dispatch(setIsLoading(false));
-};
-
-export const sortSections = ({ listId, sections }) => async dispatch => {
-    dispatch(setIsLoading(true));
-    dispatch(isLoadingSortSectionSet(true));
-    dispatch(sectionsSorted(sections));
-
-    const sectionSubjectStatement = await getStatementsBySubjectAndPredicate({ subjectId: listId, predicateId: PREDICATES.HAS_SECTION });
-    const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
-    await deleteStatementsByIds(sectionSubjectStatementIds);
-
-    for (const section of sections) {
-        await createResourceStatement(listId, PREDICATES.HAS_SECTION, section.id);
-    }
-
-    dispatch(setIsLoading(false));
-    dispatch(isLoadingSortSectionSet(false));
-};
-
-export const moveSection = ({ listId, sections, oldIndex, newIndex }) => async dispatch => {
-    const sectionsNewOrder = arrayMove(sections, oldIndex, newIndex);
-    dispatch(sortSections({ listId, sections: sectionsNewOrder }));
-};
-
-export const addListEntry = ({ contentTypeData, sectionId }) => async dispatch => {
-    const entryResource = await createResource('Entry');
-    const statement = await createResourceStatement(sectionId, PREDICATES.HAS_ENTRY, entryResource.id);
-    await createResourceStatement(entryResource.id, PREDICATES.HAS_LINK, contentTypeData.contentType.id);
-
-    dispatch(
-        listEntryAdded({
-            entry: entryResource,
-            statementId: statement.id,
-            sectionId,
-            contentTypeData,
-        }),
-    );
-};
-
-export const deleteListEntry = ({ statementId, sectionId }) => async dispatch => {
-    try {
-        await deleteStatementById(statementId);
+            const sectionResource = await createResource('', [typeId]);
+            await createResourceStatement(listId, PREDICATES.HAS_SECTION, sectionResource.id);
+            sectionResourceId = sectionResource.id;
+        }
         dispatch(
-            listEntryDeleted({
-                statementId,
+            sectionAdded({
+                afterIndex,
+                sectionId: sectionResourceId,
+                markdownId: markdownLiteralId,
+                headingId: headingLiteralId,
+                headingLevel,
+                typeId,
+            }),
+        );
+        // sort the sections after adding a new section
+        dispatch(
+            sortSections({
+                listId,
+                sections: getState().list.sections,
+            }),
+        );
+        dispatch(setIsLoading(false));
+    };
+
+export const sortSections =
+    ({ listId, sections }) =>
+    async dispatch => {
+        dispatch(setIsLoading(true));
+        dispatch(isLoadingSortSectionSet(true));
+        dispatch(sectionsSorted(sections));
+
+        const sectionSubjectStatement = await getStatementsBySubjectAndPredicate({ subjectId: listId, predicateId: PREDICATES.HAS_SECTION });
+        const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
+        await deleteStatementsByIds(sectionSubjectStatementIds);
+
+        for (const section of sections) {
+            await createResourceStatement(listId, PREDICATES.HAS_SECTION, section.id);
+        }
+
+        dispatch(setIsLoading(false));
+        dispatch(isLoadingSortSectionSet(false));
+    };
+
+export const moveSection =
+    ({ listId, sections, oldIndex, newIndex }) =>
+    async dispatch => {
+        const sectionsNewOrder = arrayMove(sections, oldIndex, newIndex);
+        dispatch(sortSections({ listId, sections: sectionsNewOrder }));
+    };
+
+export const addListEntry =
+    ({ contentTypeData, sectionId }) =>
+    async dispatch => {
+        const entryResource = await createResource('Entry');
+        const statement = await createResourceStatement(sectionId, PREDICATES.HAS_ENTRY, entryResource.id);
+        await createResourceStatement(entryResource.id, PREDICATES.HAS_LINK, contentTypeData.contentType.id);
+
+        dispatch(
+            listEntryAdded({
+                entry: entryResource,
+                statementId: statement.id,
+                sectionId,
+                contentTypeData,
+            }),
+        );
+    };
+
+export const deleteListEntry =
+    ({ statementId, sectionId }) =>
+    async dispatch => {
+        try {
+            await deleteStatementById(statementId);
+            dispatch(
+                listEntryDeleted({
+                    statementId,
+                    sectionId,
+                }),
+            );
+            toast.success('The entry has been deleted successfully');
+        } catch (e) {
+            toast.error('The entry is not deleted. Reload the page and try again');
+        }
+    };
+
+export const updateListEntryDescription =
+    ({ description, entryId, descriptionLiteralId, sectionId }) =>
+    async dispatch => {
+        dispatch(setIsLoading(true));
+        if (!descriptionLiteralId) {
+            const descriptionLiteral = await createLiteral(description);
+            createLiteralStatement(entryId, PREDICATES.DESCRIPTION, descriptionLiteral.id);
+        } else {
+            updateLiteral(descriptionLiteralId, description);
+        }
+
+        dispatch(
+            listEntryDescriptionUpdated({
+                description,
+                entryId,
                 sectionId,
             }),
         );
-        toast.success('The entry has been deleted successfully');
-    } catch (e) {
-        toast.error('The entry is not deleted. Reload the page and try again');
-    }
-};
+        dispatch(setIsLoading(false));
+    };
 
-export const updateListEntryDescription = ({ description, entryId, descriptionLiteralId, sectionId }) => async dispatch => {
-    dispatch(setIsLoading(true));
-    if (!descriptionLiteralId) {
-        const descriptionLiteral = await createLiteral(description);
-        createLiteralStatement(entryId, PREDICATES.DESCRIPTION, descriptionLiteral.id);
-    } else {
-        updateLiteral(descriptionLiteralId, description);
-    }
+export const sortListEntries =
+    ({ sectionId, entries, oldIndex, newIndex }) =>
+    async dispatch => {
+        dispatch(setIsLoading(true));
+        dispatch(isLoadingSortSectionSet(true));
 
-    dispatch(
-        listEntryDescriptionUpdated({
-            description,
-            entryId,
-            sectionId,
-        }),
-    );
-    dispatch(setIsLoading(false));
-};
+        const entriesNewOrder = cloneDeep(arrayMove(entries, oldIndex, newIndex));
+        const sectionSubjectStatement = await getStatementsBySubjectAndPredicate({ subjectId: sectionId, predicateId: PREDICATES.HAS_ENTRY });
+        const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
+        await deleteStatementsByIds(sectionSubjectStatementIds);
 
-export const sortListEntries = ({ sectionId, entries, oldIndex, newIndex }) => async dispatch => {
-    dispatch(setIsLoading(true));
-    dispatch(isLoadingSortSectionSet(true));
+        for (const [index, entry] of entriesNewOrder.entries()) {
+            const { id } = await createResourceStatement(sectionId, PREDICATES.HAS_ENTRY, entry.entry.id);
+            entriesNewOrder[index].statementId = id;
+        }
 
-    const entriesNewOrder = cloneDeep(arrayMove(entries, oldIndex, newIndex));
-    const sectionSubjectStatement = await getStatementsBySubjectAndPredicate({ subjectId: sectionId, predicateId: PREDICATES.HAS_ENTRY });
-    const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
-    await deleteStatementsByIds(sectionSubjectStatementIds);
+        dispatch(
+            listEntriesSorted({
+                entries: entriesNewOrder,
+                sectionId,
+            }),
+        );
 
-    for (const [index, entry] of entriesNewOrder.entries()) {
-        const { id } = await createResourceStatement(sectionId, PREDICATES.HAS_ENTRY, entry.entry.id);
-        entriesNewOrder[index].statementId = id;
-    }
-
-    dispatch(
-        listEntriesSorted({
-            entries: entriesNewOrder,
-            sectionId,
-        }),
-    );
-
-    dispatch(setIsLoading(false));
-    dispatch(isLoadingSortSectionSet(false));
-};
+        dispatch(setIsLoading(false));
+        dispatch(isLoadingSortSectionSet(false));
+    };

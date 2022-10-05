@@ -714,7 +714,7 @@ export default class GraphVis {
         // create the links
         const makerContainer = d3.select('#graphRendering_arrows');
         if (this.renderedLink) {
-            this.renderedLink.each(function(link) {
+            this.renderedLink.each(function (link) {
                 // force it to be draw!
                 link.render(d3.select(this), makerContainer);
                 if (link.visible()) {
@@ -784,7 +784,7 @@ export default class GraphVis {
     }
 
     drawRenderingElements(elements, forceDraw) {
-        elements.each(function(item) {
+        elements.each(function (item) {
             if (forceDraw === true) {
                 item.render(d3.select(this));
                 item.addHoverEvents();
@@ -824,7 +824,7 @@ export default class GraphVis {
         // create the links
         const makerContainer = d3.select('#graphRendering_arrows');
         if (this.renderedLink) {
-            this.renderedLink.each(function(link) {
+            this.renderedLink.each(function (link) {
                 if (link.visible()) {
                     link.render(d3.select(this), makerContainer);
                     link.updateDrawPosition();

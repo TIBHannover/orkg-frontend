@@ -14,9 +14,9 @@ function useVisualizationResearchField({ visualizationId }) {
             predicateId: PREDICATES.HAS_VISUALIZATION,
         })
             .then(comparison =>
-                (comparison?.length > 0
+                comparison?.length > 0
                     ? getStatementsBySubjectAndPredicate({ subjectId: comparison[0].subject.id, predicateId: PREDICATES.HAS_SUBJECT })
-                    : []),
+                    : [],
             )
             .then(comparisonStatement => {
                 setIsLoading(false);

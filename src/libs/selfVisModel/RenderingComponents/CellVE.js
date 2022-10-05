@@ -29,7 +29,7 @@ const CellVE = props => {
     const prevCellValueIsValid = usePrevious(cellValueIsValid);
     const inputRefs = useRef(null);
 
-    const propertyCell = selfVisModel.mrrModel.propertyAnchors[(props.data?.positionPropertyAnchor)];
+    const propertyCell = selfVisModel.mrrModel.propertyAnchors[props.data?.positionPropertyAnchor];
     const mapper = propertyCell?.getPropertyMapperType();
     const disableCellValueEdit = false; // this flag is used to disable the editing of the cell values, headers still editable
 

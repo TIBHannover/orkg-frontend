@@ -4,7 +4,12 @@ import selectEvent from 'react-select-event';
 import StatementBrowser from '../StatementBrowser';
 import { statementBrowser1P7V } from '../ValueItem/__mocks__/StatementBrowserDataValueItem';
 
-jest.mock('react-flip-move', () => ({ children }) => children);
+jest.mock(
+    'react-flip-move',
+    () =>
+        ({ children }) =>
+            children,
+);
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
 
 const setup = (

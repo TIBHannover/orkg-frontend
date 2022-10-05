@@ -85,7 +85,10 @@ const SectionContentLink = props => {
         );
         const paperStatements = (await Promise.all(paperStatementsPromises)).flatMap(statement => statement);
         const paperIds = uniq(paperStatements.map(statement => statement.subject.id));
-        const statementsByPaper = groupBy((await getStatementsBySubjects({ ids: paperIds })).flatMap(({ statements }) => statements), 'subject.id');
+        const statementsByPaper = groupBy(
+            (await getStatementsBySubjects({ ids: paperIds })).flatMap(({ statements }) => statements),
+            'subject.id',
+        );
 
         for (const statements of Object.values(statementsByPaper)) {
             const paper = statements[0]?.subject;

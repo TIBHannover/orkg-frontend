@@ -28,7 +28,7 @@ const PreviewCarouselComponent = props => {
         const left = item.scrollLeft;
         const leftMax = item.scrollLeftMax;
         const needUpdate = clientWidth < areaWidth;
-        if (needUpdate || (showArrowLeft || showArrowRight)) {
+        if (needUpdate || showArrowLeft || showArrowRight) {
             handleLeftArrowShow(left);
             handleRightArrowShow(left, leftMax);
         }

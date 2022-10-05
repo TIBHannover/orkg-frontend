@@ -15,7 +15,7 @@ export default class MachineReadableRepresentation {
         this.createPropertyAnchors(this.mrrModel);
         this.createDataItemAnchors(this.mrrModel);
 
-        this.mrrModel.getRow = function(index) {};
+        this.mrrModel.getRow = function (index) {};
     };
 
     getResult = () => this.mrrModel;

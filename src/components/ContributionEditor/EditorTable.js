@@ -12,15 +12,10 @@ import FlipMove from 'react-flip-move';
 const EditorTable = ({ scrollContainerBody }) => {
     const { contributions, papers, statements, properties, resources, literals } = useSelector(state => state.contributionEditor);
     const { generateTableMatrix } = useContributionEditor();
-    const { data, columns } = useMemo(() => generateTableMatrix({ contributions, papers, statements, properties, resources, literals }), [
-        contributions,
-        generateTableMatrix,
-        literals,
-        papers,
-        properties,
-        resources,
-        statements,
-    ]);
+    const { data, columns } = useMemo(
+        () => generateTableMatrix({ contributions, papers, statements, properties, resources, literals }),
+        [contributions, generateTableMatrix, literals, papers, properties, resources, statements],
+    );
 
     const defaultColumn = useMemo(
         () => ({

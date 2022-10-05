@@ -17,8 +17,9 @@ const SectionOntology = ({ section, isEditable = false }) => {
             const propertyIds = properties.map(property => property.id);
 
             const entities = section.dataTable.entities.map(entity => {
-                const statements = orderBy(entity.statements.filter(statement => propertyIds.includes(statement.predicate.id)), statement =>
-                    propertyIds.findIndex(element => element === statement.predicate.id),
+                const statements = orderBy(
+                    entity.statements.filter(statement => propertyIds.includes(statement.predicate.id)),
+                    statement => propertyIds.findIndex(element => element === statement.predicate.id),
                 );
 
                 if (!statements || statements.length === 0) {

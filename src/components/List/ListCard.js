@@ -23,7 +23,11 @@ const CardStyled = styled.div`
 `;
 
 const ListCard = ({ versions, showBadge, showCurationFlags }) => {
-    const { researchField, authors, isLoading: isLoadingMetaData } = useCardData({
+    const {
+        researchField,
+        authors,
+        isLoading: isLoadingMetaData,
+    } = useCardData({
         id: versions[0]?.id,
         initResearchField: versions[0]?.researchField,
         initAuthors: versions[0]?.authors,

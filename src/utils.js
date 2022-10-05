@@ -543,7 +543,10 @@ export function listToTree(list) {
 
 function convertTreeToFlat(treeStructure) {
     const flatten = (children, extractChildren) =>
-        Array.prototype.concat.apply(children, children.map(x => flatten(extractChildren(x) || [], extractChildren)));
+        Array.prototype.concat.apply(
+            children,
+            children.map(x => flatten(extractChildren(x) || [], extractChildren)),
+        );
     const extractChildren = x => x.versions ?? [];
     const flat = flatten(extractChildren(treeStructure), extractChildren);
     return flat;

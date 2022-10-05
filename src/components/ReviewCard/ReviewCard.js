@@ -23,7 +23,11 @@ const ReviewCardStyled = styled.div`
 `;
 
 const ReviewCard = ({ versions, showCurationFlags, showBadge }) => {
-    const { researchField, authors, isLoading: isLoadingMetaData } = useCardData({
+    const {
+        researchField,
+        authors,
+        isLoading: isLoadingMetaData,
+    } = useCardData({
         id: versions[0]?.id,
         initResearchField: versions[0]?.researchField,
         initAuthors: versions[0]?.authors,

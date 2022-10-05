@@ -17,7 +17,11 @@ const Resources = () => {
     );
 
     const fetchItems = async ({ page, pageSize }) => {
-        const { content: items, last, totalElements } = await getResources({
+        const {
+            content: items,
+            last,
+            totalElements,
+        } = await getResources({
             page,
             items: pageSize,
             sortBy: 'created_at',
