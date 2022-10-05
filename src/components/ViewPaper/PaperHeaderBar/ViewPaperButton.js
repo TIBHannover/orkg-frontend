@@ -28,7 +28,9 @@ const ViewPaperButton = ({ paperLink = null, doi = null, title = null }) => {
         }
     }, [doi, hasLoaded, isMenuOpen, title]);
 
-    const tibLink = `https://www.tib.eu/de/suchen?tx_tibsearch_search%5Bquery%5D=${encodeURIComponent(doi ? `identifier:doi\\:${doi}` : title)}`;
+    const tibLink = `https://www.tib.eu/de/suchen?tx_tibsearch_search%5Bquery%5D=${encodeURIComponent(
+        doi ? `identifier:doi\\:${doi}` : `"${title}"`,
+    )}`;
 
     return (
         <ButtonDropdown isOpen={isMenuOpen} toggle={() => setIsMenuOpen(v => !v)}>
