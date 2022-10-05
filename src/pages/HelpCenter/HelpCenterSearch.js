@@ -22,8 +22,9 @@ const HelpCenterSearch = () => {
                     // can be made more readable by using an object and converting it with 'qs' package to a string
                     where: words
                         .map(word => {
-                            const where = `_where[_or][${whereCount}][title_contains]=${word}&_where[_or][${whereCount +
-                                1}][content_contains]=${word}`;
+                            const where = `_where[_or][${whereCount}][title_contains]=${word}&_where[_or][${
+                                whereCount + 1
+                            }][content_contains]=${word}`;
                             whereCount += 2;
                             return where;
                         })

@@ -128,7 +128,4 @@ const mapDispatchToProps = dispatch => ({
     updateSettings: data => dispatch(updateSettings(data)),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(StatementBrowserDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(StatementBrowserDialog);

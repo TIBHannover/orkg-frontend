@@ -2,7 +2,12 @@ import { render, screen, waitFor, waitForElementToBeRemoved } from 'testUtils';
 import { ENTITIES } from 'constants/graphSettings';
 import StatementBrowser from '../StatementBrowser';
 
-jest.mock('react-flip-move', () => ({ children }) => children);
+jest.mock(
+    'react-flip-move',
+    () =>
+        ({ children }) =>
+            children,
+);
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
 
 const setup = async (

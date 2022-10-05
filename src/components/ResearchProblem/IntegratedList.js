@@ -26,28 +26,17 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
     const location = useLocation();
     const params = queryString.parse(location.search);
 
-    const {
-        items,
-        sort,
-        isLoading,
-        hasNextPage,
-        isLastPageReached,
-        totalElements,
-        page,
-        classesFilter,
-        handleLoadMore,
-        setClassesFilter,
-        setSort,
-    } = useResearchProblemContent({
-        researchProblemId: id,
-        slug,
-        initialSort: params.sort ?? 'combined',
-        initialClassFilterOptions: DEFAULT_CLASSES_FILTER,
-        initClassesFilter: params.classesFilter
-            ? DEFAULT_CLASSES_FILTER.filter(i => params.classesFilter.split(',').includes(i.id))
-            : DEFAULT_CLASSES_FILTER,
-        updateURL: true,
-    });
+    const { items, sort, isLoading, hasNextPage, isLastPageReached, totalElements, page, classesFilter, handleLoadMore, setClassesFilter, setSort } =
+        useResearchProblemContent({
+            researchProblemId: id,
+            slug,
+            initialSort: params.sort ?? 'combined',
+            initialClassFilterOptions: DEFAULT_CLASSES_FILTER,
+            initClassesFilter: params.classesFilter
+                ? DEFAULT_CLASSES_FILTER.filter(i => params.classesFilter.split(',').includes(i.id))
+                : DEFAULT_CLASSES_FILTER,
+            updateURL: true,
+        });
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
     const handleSelect = classFilter => {

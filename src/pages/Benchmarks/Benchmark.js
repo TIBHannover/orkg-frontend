@@ -36,16 +36,9 @@ function getTicksAxisH(data) {
     const ticksAxisH = [];
     let year = -1;
     for (
-        let i = moment(minDate.getTime())
-            .subtract(1, 'M')
-            .valueOf();
-        i <=
-        moment(maxDate.getTime())
-            .add(1, 'M')
-            .valueOf();
-        i = moment(i)
-            .add(1, 'M')
-            .valueOf()
+        let i = moment(minDate.getTime()).subtract(1, 'M').valueOf();
+        i <= moment(maxDate.getTime()).add(1, 'M').valueOf();
+        i = moment(i).add(1, 'M').valueOf()
     ) {
         const tick = new Date(i);
         if (year !== moment(tick).format('MMM yyyy')) {
@@ -115,10 +108,10 @@ function Benchmark() {
         [],
     );
 
-    const data = useMemo(() => (benchmarkDatasetPapers && benchmarkDatasetPapers[selectedMetric] ? benchmarkDatasetPapers[selectedMetric] : []), [
-        selectedMetric,
-        benchmarkDatasetPapers,
-    ]);
+    const data = useMemo(
+        () => (benchmarkDatasetPapers && benchmarkDatasetPapers[selectedMetric] ? benchmarkDatasetPapers[selectedMetric] : []),
+        [selectedMetric, benchmarkDatasetPapers],
+    );
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {

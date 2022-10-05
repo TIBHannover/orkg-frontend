@@ -20,7 +20,7 @@ jest.setTimeout(20000);
 // required due to the usage of react-slick https://github.com/akiran/react-slick/issues/742
 window.matchMedia =
     window.matchMedia ||
-    function() {
+    function () {
         return {
             matches: false,
             addListener() {},

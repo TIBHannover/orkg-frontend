@@ -555,13 +555,11 @@ const GeneralData = () => {
                         ? [
                               {
                                   element: '#doiInputGroup',
-                                  intro:
-                                      'Start by entering the DOI or the BibTeX of the paper you want to add. Then, click on "Lookup" to fetch paper meta-data automatically.',
+                                  intro: 'Start by entering the DOI or the BibTeX of the paper you want to add. Then, click on "Lookup" to fetch paper meta-data automatically.',
                               },
                               {
                                   element: '#entryOptions',
-                                  intro:
-                                      'In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button on the right.',
+                                  intro: 'In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button on the right.',
                               },
                               {
                                   element: '#helpIcon',
@@ -571,8 +569,7 @@ const GeneralData = () => {
                         : [
                               {
                                   element: '#entryOptions',
-                                  intro:
-                                      'In case you have the DOI, you can enter the doi to fetch paper meta-data automatically. Do this by pressing the "By DOI" button on the left.',
+                                  intro: 'In case you have the DOI, you can enter the doi to fetch paper meta-data automatically. Do this by pressing the "By DOI" button on the left.',
                               },
                               {
                                   element: '#manuelInputGroup',

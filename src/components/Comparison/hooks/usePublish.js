@@ -46,7 +46,7 @@ function usePublish() {
     const displayName = useSelector(state => state.auth?.user?.displayName ?? null);
 
     const handleCreatorsChange = creators => {
-        let _creators = creators || [];
+        const _creators = creators || [];
         setComparisonCreators(_creators);
     };
 

@@ -30,9 +30,9 @@ const MarkdownRenderer = ({ text, id }) => {
             const keyFormatted = formatReferenceKey(reference);
             const matchingReference = getReferenceByKey(keyFormatted);
             if (matchingReference) {
-                return `([${matchingReference?.parsedReference?.author?.[0]?.family ?? 'Unknown'}, ${matchingReference?.parsedReference?.issued?.[
-                    'date-parts'
-                ]?.[0]?.[0] ?? ''}](#reference${keyFormatted}))`;
+                return `([${matchingReference?.parsedReference?.author?.[0]?.family ?? 'Unknown'}, ${
+                    matchingReference?.parsedReference?.issued?.['date-parts']?.[0]?.[0] ?? ''
+                }](#reference${keyFormatted}))`;
             }
             return '<strong>[?]</strong>';
         },

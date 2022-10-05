@@ -267,7 +267,7 @@ export default class BaseElement {
         }
     }
 
-    updateDrawPosition = function() {
+    updateDrawPosition = function () {
         // to be inherited from others
         console.log('to be inherited from others');
     };

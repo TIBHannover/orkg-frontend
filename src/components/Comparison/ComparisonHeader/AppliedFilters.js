@@ -9,7 +9,10 @@ export default function AppliedFilters() {
     const dispatch = useDispatch();
     const filterControlData = useSelector(state => state.comparison.filterControlData);
 
-    const removeRuleFactory = ({ propertyId, type, value }) => () => dispatch(removeRule({ propertyId, type, value }));
+    const removeRuleFactory =
+        ({ propertyId, type, value }) =>
+        () =>
+            dispatch(removeRule({ propertyId, type, value }));
 
     const displayRules = () =>
         []

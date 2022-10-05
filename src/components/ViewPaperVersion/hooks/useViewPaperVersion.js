@@ -55,7 +55,10 @@ const useViewPaperVersion = ({ paperId }) => {
                     setContributions(uniqBy(contributionsNodes, 'id').reverse());
                 });
                 const pStatements = await getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD] });
-                const paperData = getPaperDataViewPaper(paperResource, pStatements.statements?.filter(s => s.subject.id === paperId));
+                const paperData = getPaperDataViewPaper(
+                    paperResource,
+                    pStatements.statements?.filter(s => s.subject.id === paperId),
+                );
                 const livePaperId = await getOriginalPaperId(paperId);
                 dispatch(loadPaper({ ...paperData, originalPaperId: livePaperId }));
                 setAuthorsORCID(pStatements.statements, paperId);

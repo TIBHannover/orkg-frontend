@@ -1,7 +1,12 @@
 import { render, screen } from 'testUtils';
 import App from './App';
 
-jest.mock('react-responsive-tabs', () => ({ children }) => null);
+jest.mock(
+    'react-responsive-tabs',
+    () =>
+        ({ children }) =>
+            null,
+);
 
 window.scrollTo = jest.fn();
 

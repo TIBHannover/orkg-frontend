@@ -79,10 +79,7 @@ const video = {
             } else {
                 return match;
             }
-            return tag
-                .replace(/%1/g, fUrl)
-                .replace('%2', d.width)
-                .replace('%3', d.height);
+            return tag.replace(/%1/g, fUrl).replace('%2', d.width).replace('%3', d.height);
         });
     },
 };

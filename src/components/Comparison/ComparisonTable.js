@@ -48,7 +48,7 @@ const ComparisonTable = props => {
                       .map((property, index) => ({
                           property,
                           values: contributions.map((contribution, index2) => {
-                              let _data = cloneDeep(data?.[property.id] ? data[property.id]?.[index2] : null);
+                              const _data = cloneDeep(data?.[property.id] ? data[property.id]?.[index2] : null);
                               return _data?.sort((a, b) => a?.label?.localeCompare(b?.label));
                           }),
                       }))
@@ -57,7 +57,7 @@ const ComparisonTable = props => {
                       values: properties
                           .filter(property => property.active)
                           .map((property, index2) => {
-                              let _data = cloneDeep(data[property.id] ? data[property.id]?.[index] : null);
+                              const _data = cloneDeep(data[property.id] ? data[property.id]?.[index] : null);
                               return _data?.sort((a, b) => a?.label?.localeCompare(b?.label));
                           }),
                   }))),

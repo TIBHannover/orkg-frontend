@@ -105,7 +105,4 @@ Organizations.propTypes = {
     user: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(Organizations);
+export default connect(mapStateToProps, mapDispatchToProps)(Organizations);

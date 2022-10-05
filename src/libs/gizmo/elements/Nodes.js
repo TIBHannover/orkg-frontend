@@ -374,7 +374,7 @@ export default class Node extends BaseElement {
         this.y = py;
     }
 
-    updateDrawPosition = function() {
+    updateDrawPosition = function () {
         if (this.svgRoot) {
             this.svgRoot.attr('transform', `translate(${this.x},${this.y})`);
             this.linkElements.forEach(link => {
@@ -383,14 +383,14 @@ export default class Node extends BaseElement {
         }
     };
 
-    getRadius = function() {
+    getRadius = function () {
         if (this.shapeRadius) {
             return this.shapeRadius;
         }
         return parseInt(this.configObject.radius);
     };
 
-    getRenderingShape = function() {
+    getRenderingShape = function () {
         return this.renderingElement;
     };
 
@@ -453,7 +453,7 @@ export default class Node extends BaseElement {
         }
     }
 
-    addDoubleClickAction = function() {
+    addDoubleClickAction = function () {
         const that = this;
         that.svgRoot.on('dblclick', () => {
             d3.event.stopPropagation();

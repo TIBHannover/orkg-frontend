@@ -35,7 +35,11 @@ function ContentTypes() {
     );
 
     const fetchItems = async ({ page, pageSize }) => {
-        const { content: items, last, totalElements } = await getResourcesByClass({
+        const {
+            content: items,
+            last,
+            totalElements,
+        } = await getResourcesByClass({
             id: type,
             page,
             items: pageSize,

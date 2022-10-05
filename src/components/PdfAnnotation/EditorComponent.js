@@ -310,7 +310,4 @@ const mapDispatchToProps = dispatch => ({
     setLabelCache: payload => dispatch(setLabelCache(payload)),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(EditorComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(EditorComponent);

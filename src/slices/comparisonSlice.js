@@ -352,15 +352,17 @@ export const updateRulesOfProperty = (newRules, propertyId) => (dispatch, getSta
  * @param {String} type Filter type
  * @param {String} value Filter value
  */
-export const removeRule = ({ propertyId, type, value }) => (dispatch, getState) => {
-    const newState = [...getState().comparison.filterControlData];
-    const toChangeIndex = newState.findIndex(item => item.property.id === propertyId);
-    const toChange = { ...newState[toChangeIndex] };
-    toChange.rules = toChange.rules.filter(item => !(item.propertyId === propertyId && item.type === type && item.value === value));
-    newState[toChangeIndex] = toChange;
-    dispatch(applyAllRules(newState));
-    dispatch(setFilterControlData(newState));
-};
+export const removeRule =
+    ({ propertyId, type, value }) =>
+    (dispatch, getState) => {
+        const newState = [...getState().comparison.filterControlData];
+        const toChangeIndex = newState.findIndex(item => item.property.id === propertyId);
+        const toChange = { ...newState[toChangeIndex] };
+        toChange.rules = toChange.rules.filter(item => !(item.propertyId === propertyId && item.type === type && item.value === value));
+        newState[toChangeIndex] = toChange;
+        dispatch(applyAllRules(newState));
+        dispatch(setFilterControlData(newState));
+    };
 
 /**
  * Function to toggle group visibility. If the comparison is published, the configuration is stored in local storage

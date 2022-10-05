@@ -256,11 +256,4 @@ const mapDispatchToProps = dispatch => ({
     loadPaperData: data => dispatch(loadPaperData(data)),
 });
 
-export default compose(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps,
-    ),
-    withTheme,
-    withCookies,
-)(AddPaper);
+export default compose(connect(mapStateToProps, mapDispatchToProps), withTheme, withCookies)(AddPaper);

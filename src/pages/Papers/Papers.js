@@ -35,7 +35,11 @@ const Papers = () => {
     };
 
     const fetchItems = async ({ page, pageSize }) => {
-        const { content: items, last, totalElements } = await getResourcesByClass({
+        const {
+            content: items,
+            last,
+            totalElements,
+        } = await getResourcesByClass({
             id: CLASSES.PAPER,
             page,
             items: pageSize,
