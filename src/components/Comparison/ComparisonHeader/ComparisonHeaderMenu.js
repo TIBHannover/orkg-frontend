@@ -383,7 +383,11 @@ const ComparisonHeaderMenu = props => {
                                     {comparisonResource?.id && (
                                         <>
                                             <DropdownItem divider />
-                                            <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: comparisonResource.id })}>
+                                            <DropdownItem
+                                                tag={NavLink}
+                                                end
+                                                to={`${reverse(ROUTES.RESOURCE, { id: comparisonResource.id })}?noRedirect`}
+                                            >
                                                 View resource
                                             </DropdownItem>
                                         </>

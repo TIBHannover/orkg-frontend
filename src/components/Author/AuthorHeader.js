@@ -47,15 +47,16 @@ const AuthorHeader = ({ authorId }) => {
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu end>
-                                        <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: authorId })}>
+                                        <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id: authorId })}?noRedirect`}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </ButtonDropdown>
                             </>
                         }
+                        titleAddition="Author"
                     >
-                        Author: {author.label}
+                        {author.label}
                     </TitleBar>
 
                     {editMode && (

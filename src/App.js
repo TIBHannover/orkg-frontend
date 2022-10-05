@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/dist/backdrop.css';
 import 'tippy.js/animations/shift-away.css';
+import 'intro.js/introjs.css';
 import '@citation-js/plugin-bibtex';
 import '@citation-js/plugin-doi';
 import '@citation-js/plugin-csl';

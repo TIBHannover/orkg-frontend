@@ -54,7 +54,7 @@ const ResearchFields = () => {
                             <Icon icon={faEllipsisV} />
                         </DropdownToggle>
                         <DropdownMenu end>
-                            <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: RESOURCES.RESEARCH_FIELD_MAIN })}>
+                            <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id: RESOURCES.RESEARCH_FIELD_MAIN })}?noRedirect`}>
                                 View resource
                             </DropdownItem>
                         </DropdownMenu>

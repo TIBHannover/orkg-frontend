@@ -115,10 +115,10 @@ const ClassInstances = props => {
                                 {instances.map(instance => (
                                     <tr key={instance.id}>
                                         <td>
-                                            <Link to={reverse(ROUTES.RESOURCE, { id: instance.id })}>{instance.id}</Link>
+                                            <Link to={`${reverse(ROUTES.RESOURCE, { id: instance.id })}?noRedirect`}>{instance.id}</Link>
                                         </td>
                                         <td>
-                                            <Link to={reverse(ROUTES.RESOURCE, { id: instance.id })}>{instance.label}</Link>
+                                            <Link to={`${reverse(ROUTES.RESOURCE, { id: instance.id })}?noRedirect`}>{instance.label}</Link>
                                         </td>
                                         <td>{instance.shared}</td>
                                     </tr>
