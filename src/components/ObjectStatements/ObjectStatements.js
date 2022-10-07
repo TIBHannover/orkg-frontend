@@ -71,7 +71,9 @@ const ObjectStatements = props => {
             <Button color="secondary" size="sm" className="mt-5" onClick={() => setShowObjectStatements(!showObjectStatements)}>
                 {!showObjectStatements ? 'Show' : 'Hide'} object statements
             </Button>
-
+            <Button tag={Link} to={reverse(ROUTES.USAGE_PAGE, { id: resourceId })} color="secondary" size="sm" className="mt-5 ms-2">
+                Papers referring to this resource
+            </Button>
             <Collapse isOpen={showObjectStatements}>
                 {statements.length > 0 && (
                     <div>
