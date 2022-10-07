@@ -158,7 +158,4 @@ GeneralSettings.propTypes = {
     user: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(GeneralSettings);
+export default connect(mapStateToProps, mapDispatchToProps)(GeneralSettings);

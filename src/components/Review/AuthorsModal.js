@@ -1,10 +1,10 @@
 import { updateAuthors } from 'slices/reviewSlice';
 import AuthorsInput from 'components/AuthorsInput/AuthorsInput';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { saveAuthors } from 'utils';
+import { updateAuthors as updateAuthorsHelper } from 'components/AuthorsInput/helpers';
 
 const AuthorsModal = props => {
     const { show, toggle } = props;
@@ -26,7 +26,7 @@ const AuthorsModal = props => {
     };
 
     const handleSave = async () => {
-        const _authors = await saveAuthors({ prevAuthors: authorResources, newAuthors: authors, resourceId: paper.id });
+        const _authors = await updateAuthorsHelper({ prevAuthors: authorResources, newAuthors: authors, resourceId: paper.id });
         dispatch(updateAuthors(_authors));
         toggle();
     };

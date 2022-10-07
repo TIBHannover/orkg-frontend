@@ -52,6 +52,7 @@ const SignIn = props => {
                         redirectRoute: null,
                     }),
                 );
+                document.body.style.overflow = 'auto scroll';
                 dispatch(toggleAuthDialog());
                 setLoading(false);
                 trackEvent({ category: 'authentication', action: 'sign-in' });

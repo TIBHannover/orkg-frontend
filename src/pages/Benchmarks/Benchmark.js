@@ -27,24 +27,18 @@ import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowser
 import { useParams, useNavigate, NavLink, Link } from 'react-router-dom';
 import { useTable, useSortBy } from 'react-table';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { CLASSES } from 'constants/graphSettings';
 
 function getTicksAxisH(data) {
-    const dateRange = data.slice(1).map((value, index) => value[0]);
+    const dateRange = data.slice(1).map(value => value[0]);
     const maxDate = new Date(Math.max.apply(null, dateRange));
     const minDate = new Date(Math.min.apply(null, dateRange));
     const ticksAxisH = [];
     let year = -1;
     for (
-        let i = moment(minDate.getTime())
-            .subtract(1, 'M')
-            .valueOf();
-        i <=
-        moment(maxDate.getTime())
-            .add(1, 'M')
-            .valueOf();
-        i = moment(i)
-            .add(1, 'M')
-            .valueOf()
+        let i = moment(minDate.getTime()).subtract(1, 'M').valueOf();
+        i <= moment(maxDate.getTime()).add(1, 'M').valueOf();
+        i = moment(i).add(1, 'M').valueOf()
     ) {
         const tick = new Date(i);
         if (year !== moment(tick).format('MMM yyyy')) {
@@ -114,10 +108,10 @@ function Benchmark() {
         [],
     );
 
-    const data = useMemo(() => (benchmarkDatasetPapers && benchmarkDatasetPapers[selectedMetric] ? benchmarkDatasetPapers[selectedMetric] : []), [
-        selectedMetric,
-        benchmarkDatasetPapers,
-    ]);
+    const data = useMemo(
+        () => (benchmarkDatasetPapers && benchmarkDatasetPapers[selectedMetric] ? benchmarkDatasetPapers[selectedMetric] : []),
+        [selectedMetric, benchmarkDatasetPapers],
+    );
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
@@ -219,7 +213,7 @@ function Benchmark() {
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu end>
-                                        <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: datasetId })}>
+                                        <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id: datasetId })}?noRedirect`}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>
@@ -253,7 +247,13 @@ function Benchmark() {
                             </Link>
                         </div>
                         <div>
-                            <i>Dataset:</i> {resourceData.label}
+                            <i>Dataset:</i>{' '}
+                            <Link
+                                to={reverse(ROUTES.CONTENT_TYPE_NO_MODE, { type: CLASSES.DATASET, id: resourceData.id })}
+                                style={{ textDecoration: 'none', flex: 1 }}
+                            >
+                                {resourceData.label}
+                            </Link>
                         </div>
 
                         <>{resourceData.description && <p className="m-0">{resourceData.description}</p>}</>
@@ -370,15 +370,9 @@ function Benchmark() {
                                                         {column.render('Header')}
                                                         {/* Add a sort direction indicator */}
                                                         <div className="ms-1">
-                                                            {column.isSorted ? (
-                                                                column.isSortedDesc ? (
-                                                                    <Icon icon={faSortUp} className="ms-1" />
-                                                                ) : (
-                                                                    <Icon icon={faSortDown} />
-                                                                )
-                                                            ) : (
-                                                                ''
-                                                            )}
+                                                            {column.isSorted && column.isSortedDesc && <Icon icon={faSortUp} className="ms-1" />}
+
+                                                            {column.isSorted && !column.isSortedDesc && <Icon icon={faSortDown} />}
                                                         </div>
                                                     </div>
                                                 </th>
@@ -388,7 +382,7 @@ function Benchmark() {
                                 </thead>
                                 <tbody {...getTableBodyProps()}>
                                     {rows?.length > 0 &&
-                                        rows.map((row, i) => {
+                                        rows.map(row => {
                                             prepareRow(row);
                                             return (
                                                 // eslint-disable-next-line react/jsx-key

@@ -3,7 +3,12 @@ import { fireEvent, render, screen, waitFor, within, waitForElementToBeRemoved }
 import EditTable from '../EditorTable';
 import { contribution, contributionLiteralOnly } from '../__mocks__/ContributionEditorData';
 
-jest.mock('react-flip-move', () => ({ children }) => children);
+jest.mock(
+    'react-flip-move',
+    () =>
+        ({ children }) =>
+            children,
+);
 
 // mock the ResizeObserver
 class ResizeObserver {

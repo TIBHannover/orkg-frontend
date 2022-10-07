@@ -62,7 +62,7 @@ const ViewArticleStatementBrowser = ({ id }) => {
                                         property.values.map(value => (
                                             <ValueItemStyle key={value.id}>
                                                 {value._class === 'resource' ? (
-                                                    <Link to={reverse(ROUTES.RESOURCE, { id: value.id })}>{value.label}</Link>
+                                                    <Link to={`${reverse(ROUTES.RESOURCE, { id: value.id })}?noRedirect`}>{value.label}</Link>
                                                 ) : (
                                                     value.label
                                                 )}

@@ -18,7 +18,7 @@ const TableEditor = props => {
     const cachedLabels = useSelector(state => state.pdfAnnotation.cachedLabels);
     const { removeEmptyRows, mergeCellValues, renderTable } = useTableEditor(props.id, props.setRef);
 
-    const renderer = function(instance, td, row, col, prop, value, cellProperties) {
+    const renderer = function (instance, td, row, col, prop, value, cellProperties) {
         // I tried it with a nice RendererComponent, but after a lot of trying this just isn't supported well in Hansontable
         // (e.g., having auto resized column etc. will not work. Something that is crucial for tables with an unknown column amount)
         // So in the end, just using vanilla JS seems to be the only possible solution

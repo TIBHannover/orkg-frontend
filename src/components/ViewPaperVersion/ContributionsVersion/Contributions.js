@@ -19,20 +19,13 @@ import Breadcrumbs from '../BreadCrumbs';
 const Contributions = props => {
     const { resourceId, contributionId } = useParams();
 
-    const {
-        isLoading,
-        isLoadingContributionFailed,
-        selectedContribution,
-        contributionData,
-        handleResourceClick,
-        resourceHistory,
-        handleBackClick,
-    } = useContributions({
-        paperId: resourceId,
-        contributionId,
-        contributions: props.contributions,
-        paperStatements: props.paperStatements,
-    });
+    const { isLoading, isLoadingContributionFailed, selectedContribution, contributionData, handleResourceClick, resourceHistory, handleBackClick } =
+        useContributions({
+            paperId: resourceId,
+            contributionId,
+            contributions: props.contributions,
+            paperStatements: props.paperStatements,
+        });
     const navigate = useNavigate();
 
     const onTabChange = key => {

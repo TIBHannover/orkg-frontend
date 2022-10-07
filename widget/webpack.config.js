@@ -22,10 +22,10 @@ module.exports = (env, argv) => {
                 new webpack.DefinePlugin({
                     'process.env.BACKEND_URL': isDevBuild
                         ? JSON.stringify('http://localhost:8080/api/')
-                        : JSON.stringify('https://www.orkg.org/api/'),
+                        : JSON.stringify('https://orkg.org/api/'),
                     'process.env.FRONTEND_SERVER_URL': isDevBuild
                         ? JSON.stringify('http://localhost:3000/')
-                        : JSON.stringify('https://www.orkg.org/'),
+                        : JSON.stringify('https://orkg.org/'),
                 }),
                 ...(isDevBuild
                     ? [new webpack.SourceMapDevToolPlugin(), new copyWebpackPlugin({ patterns: [{ from: 'demo/' }] })]

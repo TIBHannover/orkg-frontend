@@ -157,11 +157,7 @@ const RDFDataCube = props => {
             text: (rows, id, filterValue) =>
                 rows.filter(row => {
                     const rowValue = row.values[id].label;
-                    return rowValue !== undefined
-                        ? String(rowValue)
-                              .toLowerCase()
-                              .startsWith(String(filterValue).toLowerCase())
-                        : true;
+                    return rowValue !== undefined ? String(rowValue).toLowerCase().startsWith(String(filterValue).toLowerCase()) : true;
                 }),
         }),
         [],

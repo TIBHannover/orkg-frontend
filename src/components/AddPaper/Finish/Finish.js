@@ -60,7 +60,4 @@ const mapStateToProps = state => ({
     paperNewResourceId: state.addPaper.paperNewResourceId,
 });
 
-export default compose(
-    connect(mapStateToProps),
-    withMatomo,
-)(Finish);
+export default compose(connect(mapStateToProps), withMatomo)(Finish);

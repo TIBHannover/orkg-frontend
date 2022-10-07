@@ -21,7 +21,11 @@ const Lists = () => {
     const fetchItems = async ({ resourceClass, page, pageSize }) => {
         let items = [];
 
-        const { content: resources, last, totalElements } = await getResourcesByClass({
+        const {
+            content: resources,
+            last,
+            totalElements,
+        } = await getResourcesByClass({
             id: resourceClass,
             page,
             items: pageSize,
@@ -32,7 +36,10 @@ const Lists = () => {
         if (resources.length) {
             items = await getStatementsBySubjects({ ids: resources.map(item => item.id) }).then(statements =>
                 statements.map(statementsForSubject =>
-                    getListData(resources.find(_resource => _resource.id === statementsForSubject.id), statementsForSubject.statements),
+                    getListData(
+                        resources.find(_resource => _resource.id === statementsForSubject.id),
+                        statementsForSubject.statements,
+                    ),
                 ),
             );
             const groupedByPaper = groupBy(items, 'listId');

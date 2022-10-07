@@ -15,7 +15,11 @@ const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate, showResourc
 
     const handleSave = async () => {
         setIsLoading(true);
-        const updatedResource = await updateResource(resource.id, label, classes.map(c => c.id));
+        const updatedResource = await updateResource(
+            resource.id,
+            label,
+            classes.map(c => c.id),
+        );
         if (updatedResource && afterUpdate) {
             afterUpdate(updatedResource);
         }
@@ -31,7 +35,7 @@ const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate, showResourc
                     <Link
                         style={{ right: 45, position: 'absolute', top: 12 }}
                         className="ms-2"
-                        to={reverse(ROUTES.RESOURCE, { id: resource?.id })}
+                        to={`${reverse(ROUTES.RESOURCE, { id: resource?.id })}?noRedirect`}
                         target="_blank"
                         rel="noopener noreferrer"
                     >

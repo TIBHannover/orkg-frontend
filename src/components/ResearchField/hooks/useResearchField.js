@@ -40,9 +40,11 @@ function useResearchField(initialVal = {}) {
             getStatementsBySubjectAndPredicate({ subjectId: rfId, predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD }).then(result => {
                 if (result.length > 0) {
                     getResearchFieldsStats().then(stats => {
-                        const orderedSubRF = orderBy(result.map(s => ({ ...s.object, numPapers: stats[s.object.id] })), item => item.numPapers, [
-                            'desc',
-                        ]);
+                        const orderedSubRF = orderBy(
+                            result.map(s => ({ ...s.object, numPapers: stats[s.object.id] })),
+                            item => item.numPapers,
+                            ['desc'],
+                        );
                         setSubResearchFields(orderedSubRF);
                     });
                 } else {

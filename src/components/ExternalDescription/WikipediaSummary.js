@@ -37,7 +37,7 @@ class WikipediaSummary extends Component {
 
         fetch(url)
             .then(response => response.json())
-            .then(function(data) {
+            .then(function (data) {
                 if (data.extract) {
                     self.setState({
                         summary: data.extract,

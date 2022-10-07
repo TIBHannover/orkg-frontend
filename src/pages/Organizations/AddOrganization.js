@@ -280,7 +280,4 @@ AddOrganization.propTypes = {
     user: PropTypes.object,
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(AddOrganization);
+export default connect(mapStateToProps, mapDispatchToProps)(AddOrganization);

@@ -9,7 +9,7 @@ import { Badge } from 'reactstrap';
 
 const AuthorBadges = ({ authors }) =>
     authors.map((author, index) =>
-        (author.classes && author.classes.includes(CLASSES.AUTHOR) ? (
+        author.classes && author.classes.includes(CLASSES.AUTHOR) ? (
             <Link
                 key={index}
                 to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
@@ -26,7 +26,7 @@ const AuthorBadges = ({ authors }) =>
             <Badge color="light" className="me-2 mb-2" key={index} typeof="foaf:Person">
                 <Icon icon={faUser} className="text-secondary" aria-label="Author name" /> {author.label}
             </Badge>
-        )),
+        ),
     );
 
 AuthorBadges.propTypes = {

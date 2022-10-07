@@ -63,7 +63,7 @@ function PaperMenuBar(props) {
                         Publish
                     </RequireAuthentication>
                     <DropdownItem divider />
-                    <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id })}>
+                    <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                         View resource
                     </DropdownItem>
                 </DropdownMenu>

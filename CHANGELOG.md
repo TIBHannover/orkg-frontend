@@ -3,6 +3,32 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.83.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.82.1...v0.83.0) - 2022-10-06
+
+### Changes
+
+- internal: update prettier and eslint-plugin-prettier [`#951`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/951)
+- fix(ViewPaper): link to TIB portal via exact match paper titles [`#958`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/958)
+- fix(Widget): remove www from public URLs [`#959`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/959)
+- fix(AddPaper): replace reactour with intro.js [`#949`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/949)
+- fix(Page): add support tib domain to CSP [`#957`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/957)
+- Style: show the container of items in Venue page [`#956`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/956)
+- feat(Resource): Automate the redirection to the dedicated page [`#941`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/941)
+- fix: Redirects broken of legacy pages with params [`#955`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/955)
+- fix(Search): Ignore draft comparisons in search result of resources [`#954`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/954)
+- Benchmarks: Head title change and link dataset resource in benchmark page to content type page [`#952`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/952)
+- fix(StatementBrowser): copy the correct value ID [`#943`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/943)
+- fix: make ComparisonPopup visible on the research problem and observatory pages [`#942`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/942)
+
+---
+## [v0.82.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.82.0...v0.82.1) - 2022-09-22
+
+### Changes
+
+- fix(TemplateEditor): Saving a template with use cases [`#950`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/950)
+- refactor(Comparison): use redux to manage the state [`#947`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/947)
+
+---
 ## [v0.82.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.81.0...v0.82.0) - 2022-09-13
 
 ### Changes

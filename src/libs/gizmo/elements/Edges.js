@@ -32,21 +32,21 @@ export default class Edge extends BaseElement {
         this.svgRoot.classed('hidden', true);
     }
 
-    propertyNode = function(p) {
+    propertyNode = function (p) {
         if (!arguments.length) {
             return this.prop;
         }
         this.prop = p;
     };
 
-    domainNode = function(d) {
+    domainNode = function (d) {
         if (!arguments.length) {
             return this.domain;
         }
         this.domain = d;
     };
 
-    rangeNode = function(r) {
+    rangeNode = function (r) {
         if (!arguments.length) {
             return this.range;
         }
@@ -59,7 +59,7 @@ export default class Edge extends BaseElement {
         DrawTools().drawArrowHead(this.svgRoot, markerContainer, `${this.id()}_arrowHead`, this.configObject);
     }
 
-    updateDrawPosition = function() {
+    updateDrawPosition = function () {
         if (this.renderingLine) {
             const that = this;
             this.renderingLine.attr('d', this.lineFunction(that.calculateLinkPath()));

@@ -9,16 +9,8 @@ import Timeline from './Timeline';
 import { AnimationContainer, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
 
 const ProvenanceBox = () => {
-    const {
-        paperResource,
-        isLoadingProvenance,
-        isLoadingContributors,
-        observatoryInfo,
-        organizationInfo,
-        createdBy,
-        versions,
-        contributors,
-    } = useProvenance();
+    const { paperResource, isLoadingProvenance, isLoadingContributors, observatoryInfo, organizationInfo, createdBy, versions, contributors } =
+        useProvenance();
     const [activeTab, setActiveTab] = useState(1);
 
     return (

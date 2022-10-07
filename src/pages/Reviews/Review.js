@@ -269,7 +269,7 @@ const Review = () => {
                                 <Icon icon={faEllipsisV} />
                             </DropdownToggle>
                             <DropdownMenu end>
-                                <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id })}>
+                                <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                                     View resource
                                 </DropdownItem>
                             </DropdownMenu>

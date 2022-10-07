@@ -28,19 +28,10 @@ const ViewPaper = () => {
     const viewPaper = useSelector(state => state.viewPaper);
     const [shouldShowNerSurvey, setShouldShowNerSurvey] = useState(false);
     const { determineField } = useDetermineResearchField();
-    const {
-        isLoading,
-        isLoadingFailed,
-        showHeaderBar,
-        editMode,
-        showGraphModal,
-        toggle,
-        handleShowHeaderBar,
-        setEditMode,
-        setShowGraphModal,
-    } = useViewPaper({
-        paperId: resourceId,
-    });
+    const { isLoading, isLoadingFailed, showHeaderBar, editMode, showGraphModal, toggle, handleShowHeaderBar, setEditMode, setShowGraphModal } =
+        useViewPaper({
+            paperId: resourceId,
+        });
 
     let comingFromWizard = queryString.parse(location.search);
     comingFromWizard = comingFromWizard ? comingFromWizard.comingFromWizard === 'true' : false;

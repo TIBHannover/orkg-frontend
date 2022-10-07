@@ -93,13 +93,13 @@ export const submitPutRequest = (url, headers, data, jsonStringify = true) => {
     if (token) {
         myHeaders.append('Authorization', `Bearer ${token}`);
     }
-
+    let _data = data;
     if (jsonStringify) {
-        data = JSON.stringify(data);
+        _data = JSON.stringify(_data);
     }
 
     return new Promise((resolve, reject) => {
-        fetch(url, { method: 'PUT', headers: myHeaders, body: data })
+        fetch(url, { method: 'PUT', headers: myHeaders, body: _data })
             .then(response => {
                 if (!response.ok) {
                     const json = response.json();

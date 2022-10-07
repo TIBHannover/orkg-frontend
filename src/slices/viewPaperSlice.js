@@ -94,60 +94,62 @@ export const {
 
 export default viewPaperSlice.reducer;
 
-export const selectContribution = ({ contributionId: id, contributionLabel }) => (dispatch, getState) => {
-    const contributionIsLoaded = !!getState().statementBrowser.resources.byId[id];
+export const selectContribution =
+    ({ contributionId: id, contributionLabel }) =>
+    (dispatch, getState) => {
+        const contributionIsLoaded = !!getState().statementBrowser.resources.byId[id];
 
-    if (!contributionIsLoaded) {
-        // let resourceId = guid(); //use this as ID in the future, when changing the data is possible
+        if (!contributionIsLoaded) {
+            // let resourceId = guid(); //use this as ID in the future, when changing the data is possible
 
-        dispatch(
-            createResource({
-                // only needed for connecting properties, label is shown in the breadcrumb
-                resourceId: id,
-                label: contributionLabel,
-                existingResourceId: id,
-            }),
-        );
-        // this will create or set the selected contribution id in the statementBrowser (HERE CREATE)
-        dispatch(
-            createContributionObject({
-                id,
-            }),
-        );
+            dispatch(
+                createResource({
+                    // only needed for connecting properties, label is shown in the breadcrumb
+                    resourceId: id,
+                    label: contributionLabel,
+                    existingResourceId: id,
+                }),
+            );
+            // this will create or set the selected contribution id in the statementBrowser (HERE CREATE)
+            dispatch(
+                createContributionObject({
+                    id,
+                }),
+            );
 
-        dispatch(
-            fetchStatementsForResource({
-                resourceId: id,
-                depth: 3, // load depth 3 the first time
-            }),
-        );
-        dispatch(clearResourceHistory());
-    }
-    // this will create or set the selected contribution id in the statementBrowser (HERE SELECT)
-    Promise.resolve(
-        dispatch(
-            createContributionObject({
-                id,
-            }),
-        ),
-    ).then(() => {
-        dispatch(
-            selectResource({
-                increaseLevel: false,
-                resourceId: id,
-                label: contributionLabel,
-                resetLevel: false,
-            }),
-        );
+            dispatch(
+                fetchStatementsForResource({
+                    resourceId: id,
+                    depth: 3, // load depth 3 the first time
+                }),
+            );
+            dispatch(clearResourceHistory());
+        }
+        // this will create or set the selected contribution id in the statementBrowser (HERE SELECT)
+        Promise.resolve(
+            dispatch(
+                createContributionObject({
+                    id,
+                }),
+            ),
+        ).then(() => {
+            dispatch(
+                selectResource({
+                    increaseLevel: false,
+                    resourceId: id,
+                    label: contributionLabel,
+                    resetLevel: false,
+                }),
+            );
 
-        // this will load the contribution data/history into the statementBrowser
-        dispatch(
-            loadContributionHistory({
-                id,
-            }),
-        );
-    });
-};
+            // this will load the contribution data/history into the statementBrowser
+            dispatch(
+                loadContributionHistory({
+                    id,
+                }),
+            );
+        });
+    };
 
 /**
  * Get paper link

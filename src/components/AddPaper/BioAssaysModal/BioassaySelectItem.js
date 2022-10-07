@@ -31,7 +31,7 @@ export default function BioassaySelectItem(props) {
                                             <ValueItemStyle key={`p${resource.id}`} className="suggested_value d-flex">
                                                 <div className="flex-grow-1">
                                                     <Label>
-                                                        <Link target="_blank" to={reverse(ROUTES.RESOURCE, { id: resource.id })}>
+                                                        <Link target="_blank" to={`${reverse(ROUTES.RESOURCE, { id: resource.id })}?noRedirect`}>
                                                             {resource.label}
                                                         </Link>
                                                     </Label>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
     Row,
     Col,
@@ -19,7 +19,7 @@ import {
 } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { range, getPaperData, parseCiteResult } from 'utils';
+import { range, parseCiteResult } from 'utils';
 import Tooltip from 'components/Utils/Tooltip';
 import AuthorsInput from 'components/AuthorsInput/AuthorsInput';
 import Joi from 'joi';
@@ -27,20 +27,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateGeneralData, nextStep, openTour, closeTour } from 'slices/addPaperSlice';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { useCookies } from 'react-cookie';
-import styled, { ThemeContext } from 'styled-components';
+import styled from 'styled-components';
 import moment from 'moment';
 import { Cite } from '@citation-js/core';
-import Tour from 'reactour';
+import { Steps } from 'intro.js-react';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-import { getStatementsBySubject } from 'services/backend/statements';
-import { getPaperByDOI, getPaperByTitle } from 'services/backend/misc';
-import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import env from '@beam-australia/react-env';
 import AutocompleteContentTypeTitle from 'components/AutocompleteContentTypeTitle/AutocompleteContentTypeTitle';
 import Confirm from 'components/Confirmation/Confirmation';
-import ExistingTitleModal from 'components/ExistingPaperModal/ExistingTitleModal';
-import ExistingDoiModal from 'components/ExistingPaperModal/ExistingDoiModal';
 import useExistingPaper from 'components/ExistingPaperModal/useExistingPaper';
 
 const Container = styled(CSSTransition)`
@@ -78,36 +73,20 @@ const GeneralData = () => {
     );
     const dispatch = useDispatch();
     const refLookup = useRef(null);
-    const theme = useContext(ThemeContext);
+    const refIntroJS = useRef(null);
     const location = useLocation();
     const [cookies, setCookie] = useCookies(['takeTourClosed', 'takeTour']);
     // Hide the tour if a cookie 'takeTour' exist
     const [isFirstVisit, setIsFirstVisit] = useState(!(cookies && cookies.takeTour));
-    const [showHelpButton, setShowHelpButton] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
     const [dataEntry, setDataEntry] = useState('doi');
     const [validation, setValidation] = useState(null);
     const [errors, setErrors] = useState(null);
     const { checkIfPaperExists, ExistingPaperModels } = useExistingPaper();
 
-    const disableBody = target =>
-        disableBodyScroll(target, {
-            reserveScrollBarGap: true,
-        });
-    const enableBody = target => enableBodyScroll(target);
-
-    useEffect(() => {
-        const entryParam = queryString.parse(location.search).entry;
-        if (entryParam) {
-            dispatch(updateGeneralData({ entry: entryParam }));
-            handleLookupClick(entryParam);
-        }
-
-        return () => {
-            clearAllBodyScrollLocks();
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const requestCloseTour = () => {
+        dispatch(closeTour());
+    };
 
     // TODO this logic should be placed inside an action creator
     const handleLookupClick = async lookDoi => {
@@ -180,6 +159,22 @@ const GeneralData = () => {
             });
     };
 
+    useEffect(() => {
+        const entryParam = queryString.parse(location.search).entry;
+        if (entryParam) {
+            dispatch(updateGeneralData({ entry: entryParam }));
+            handleLookupClick(entryParam);
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if (refIntroJS?.current) {
+            refIntroJS?.current.introJs?.exit?.();
+        }
+    }, [dataEntry]);
+
     const handleInputChange = e => {
         if (isTourOpen) {
             requestCloseTour();
@@ -200,10 +195,10 @@ const GeneralData = () => {
     };
 
     const handleAuthorsChange = tags => {
-        tags = tags || [];
+        const _tags = tags || [];
         dispatch(
             updateGeneralData({
-                authors: tags,
+                authors: _tags,
             }),
         );
     };
@@ -215,7 +210,6 @@ const GeneralData = () => {
             dispatch(closeTour());
         } else {
             setCookie('takeTourClosed', true);
-            setShowHelpButton(true);
         }
     };
 
@@ -225,22 +219,15 @@ const GeneralData = () => {
         dispatch(openTour());
     };
 
-    const requestCloseTour = () => {
-        dispatch(closeTour());
-        if (cookies && !cookies.takeTourClosed) {
-            setShowHelpButton(true);
-        }
-    };
-
     const handleNextClick = async () => {
         // TODO do some sort of validation, before proceeding to the next step
-        const errors = [];
+        const _errors = [];
 
         if (!title || title.trim().length < 1) {
-            errors.push('Please enter the title of your paper or click on "Lookup" if you entered the doi.');
+            _errors.push('Please enter the title of your paper or click on "Lookup" if you entered the doi.');
         }
 
-        if (errors.length === 0) {
+        if (_errors.length === 0) {
             dispatch(
                 updateGeneralData({
                     title,
@@ -258,7 +245,7 @@ const GeneralData = () => {
                 dispatch(nextStep());
             }
         } else {
-            setErrors(errors);
+            setErrors(_errors);
         }
     };
 
@@ -269,6 +256,19 @@ const GeneralData = () => {
     const handleLearnMore = step => {
         dispatch(openTour(step));
     };
+
+    const updateData = paper =>
+        dispatch(
+            updateGeneralData({
+                title: paper.label,
+                authors: paper?.authors?.length > 0 ? paper.authors.map(author => ({ label: author.name })) : [],
+                publicationYear: paper.year || '',
+                publishedIn: paper.venue || '',
+                doi: paper.externalIds?.DOI || '',
+                entry: paper.externalIds?.DOI || '',
+                url: paper.externalIds?.ArXiv ? `https://arxiv.org/abs/${paper.externalIds?.ArXiv}` : '',
+            }),
+        );
 
     const handleTitleOptionClick = async paper => {
         if (authors.length > 0 || publicationMonth || publicationYear || url || publishedIn) {
@@ -285,24 +285,11 @@ const GeneralData = () => {
         }
     };
 
-    const updateData = paper =>
-        dispatch(
-            updateGeneralData({
-                title: paper.label,
-                authors: paper?.authors?.length > 0 ? paper.authors.map(author => ({ label: author.name })) : [],
-                publicationYear: paper.year || '',
-                publishedIn: paper.venue || '',
-                doi: paper.externalIds?.DOI || '',
-                entry: paper.externalIds?.DOI || '',
-                url: paper.externalIds?.ArXiv ? `https://arxiv.org/abs/${paper.externalIds?.ArXiv}` : '',
-            }),
-        );
-
     return (
         <div>
             <div className="row mt-4">
                 <div className="col-md-8">
-                    <h2 className="h4">General paper data</h2>
+                    <h2>General paper data</h2>
                 </div>
                 <div className="col-md-4 mb-2" style={{ textAlign: 'right' }}>
                     <ButtonGroup id="entryOptions">
@@ -376,7 +363,9 @@ const GeneralData = () => {
                                             onChange={handleInputChange}
                                             invalid={!!validation}
                                             onKeyPress={target => {
-                                                target.charCode === 13 && handleLookupClick(entry);
+                                                if (target.key === 'Enter') {
+                                                    handleLookupClick(entry);
+                                                }
                                             }}
                                         />
                                         <FormFeedback className="order-1">{validation}</FormFeedback>
@@ -560,74 +549,45 @@ const GeneralData = () => {
                 Next step
             </Button>
 
-            <Tour
-                onAfterOpen={disableBody}
-                onBeforeClose={enableBody}
+            <Steps
                 steps={[
                     ...(dataEntry === 'doi'
                         ? [
                               {
-                                  selector: '#doiInputGroup',
-                                  content:
-                                      'Start by entering the DOI or the BibTeX of the paper you want to add. Then, click on "Lookup" to fetch paper meta-data automatically.',
-                                  style: { borderTop: '4px solid #E86161' },
-                                  action: node => (node ? node.focus() : null),
+                                  element: '#doiInputGroup',
+                                  intro: 'Start by entering the DOI or the BibTeX of the paper you want to add. Then, click on "Lookup" to fetch paper meta-data automatically.',
                               },
                               {
-                                  selector: '#entryOptions',
-                                  content:
-                                      'In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button on the right.',
-                                  style: { borderTop: '4px solid #E86161' },
+                                  element: '#entryOptions',
+                                  intro: 'In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button on the right.',
+                              },
+                              {
+                                  element: '#helpIcon',
+                                  intro: 'If you want to start the tour again at a later point, you can do so from this button.',
                               },
                           ]
                         : [
                               {
-                                  selector: '#entryOptions',
-                                  content:
-                                      'In case you have the DOI, you can enter the doi to fetch paper meta-data automatically. Do this by pressing the "By DOI" button on the left.',
-                                  style: { borderTop: '4px solid #E86161' },
-                                  action: node => (node ? node.focus() : null),
+                                  element: '#entryOptions',
+                                  intro: 'In case you have the DOI, you can enter the doi to fetch paper meta-data automatically. Do this by pressing the "By DOI" button on the left.',
                               },
                               {
-                                  selector: '#manuelInputGroup',
-                                  content: 'You can enter the general paper data manually using this form.',
-                                  style: { borderTop: '4px solid #E86161' },
-                                  action: node => (node ? node.focus() : null),
+                                  element: '#manuelInputGroup',
+                                  intro: 'You can enter the general paper data manually using this form.',
+                              },
+                              {
+                                  element: '#helpIcon',
+                                  intro: 'If you want to start the tour again at a later point, you can do so from this button.',
                               },
                           ]),
                 ]}
-                showNumber={false}
-                accentColor={theme.primary}
-                rounded={10}
-                onRequestClose={requestCloseTour}
-                isOpen={isTourOpen}
-                startAt={tourStartAt}
-                maskClassName="opacity-75"
+                onExit={requestCloseTour}
+                enabled={isTourOpen}
+                initialStep={tourStartAt}
+                ref={refIntroJS}
+                options={{ tooltipClass: 'introjs-ORKG-tooltip' }}
             />
 
-            <Tour
-                disableInteraction={false}
-                onAfterOpen={disableBody}
-                onBeforeClose={enableBody}
-                steps={[
-                    {
-                        selector: '#helpIcon',
-                        content: 'If you want to start the tour again at a later point, you can do so from this button.',
-                        style: { borderTop: '4px solid #E86161' },
-                    },
-                ]}
-                showNumber={false}
-                accentColor={theme.primary}
-                rounded={10}
-                onRequestClose={() => {
-                    setShowHelpButton(false);
-                }}
-                isOpen={showHelpButton}
-                startAt={0}
-                showButtons={false}
-                showNavigation={false}
-                maskClassName="opacity-75"
-            />
             <ExistingPaperModels onContinue={() => dispatch(nextStep())} />
         </div>
     );

@@ -111,81 +111,85 @@ export default pdfAnnotationSlice.reducer;
  *
  * @param {Object} pdf the uploaded pdf file object
  */
-export const convertPdf = ({ files }) => dispatch => {
-    dispatch(fetchPDFConvertRequest());
+export const convertPdf =
+    ({ files }) =>
+    dispatch => {
+        dispatch(fetchPDFConvertRequest());
 
-    if (files.length === 0) {
-        return;
-    }
+        if (files.length === 0) {
+            return;
+        }
 
-    const pdf = files[0];
+        const pdf = files[0];
 
-    const form = new FormData();
-    form.append('pdf', pdf);
+        const form = new FormData();
+        form.append('pdf', pdf);
 
-    fetch(`${env('ANNOTATION_SERVICE_URL')}convertPdf/`, {
-        method: 'POST',
-        body: form,
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error while converting PDF to HTML');
-            } else {
-                return response.text();
-            }
+        fetch(`${env('ANNOTATION_SERVICE_URL')}convertPdf/`, {
+            method: 'POST',
+            body: form,
         })
-        .then(data => {
-            const parseData = parse(data, {
-                style: true, // retrieve content in <style> (hurts performance but required)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error while converting PDF to HTML');
+                } else {
+                    return response.text();
+                }
+            })
+            .then(data => {
+                const parseData = parse(data, {
+                    style: true, // retrieve content in <style> (hurts performance but required)
+                });
+                const pages = parseData.querySelectorAll('.pf').map(page => page.outerHTML);
+                const styles = parseData.querySelectorAll('style').map(style => style.outerHTML);
+
+                dispatch(
+                    setFile({
+                        pdf: window.URL.createObjectURL(pdf),
+                        pages,
+                        styles,
+                    }),
+                );
+
+                dispatch(parsePdf({ pdf }));
+            })
+            .catch(err => {
+                console.log(err);
+                toast.error('Unexpected error occurred, the PDF could not be converted. Please try it again');
+                dispatch(failedToConvertPdf());
             });
-            const pages = parseData.querySelectorAll('.pf').map(page => page.outerHTML);
-            const styles = parseData.querySelectorAll('style').map(style => style.outerHTML);
-
-            dispatch(
-                setFile({
-                    pdf: window.URL.createObjectURL(pdf),
-                    pages,
-                    styles,
-                }),
-            );
-
-            dispatch(parsePdf({ pdf }));
-        })
-        .catch(err => {
-            console.log(err);
-            toast.error('Unexpected error occurred, the PDF could not be converted. Please try it again');
-            dispatch(failedToConvertPdf());
-        });
-};
+    };
 
 /**
  * Parsing the PDF using Grobid, needed for getting individual references
  *
  * @param {Object} pdf the uploaded pdf file object
  */
-export const parsePdf = ({ pdf }) => dispatch => {
-    dispatch(fetchPDFParseRequest());
+export const parsePdf =
+    ({ pdf }) =>
+    dispatch => {
+        dispatch(fetchPDFParseRequest());
 
-    const form = new FormData();
-    form.append('input', pdf);
+        const form = new FormData();
+        form.append('input', pdf);
 
-    fetch(`${env('GROBID_URL')}api/processFulltextDocument`, {
-        method: 'POST',
-        body: form,
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error fetching Grobid parse');
-            } else {
-                return response.text();
-            }
+        fetch(`${env('GROBID_URL')}api/processFulltextDocument`, {
+            method: 'POST',
+            body: form,
         })
-        .then(data => {
-            dispatch(setParsedPdfData(data));
-        })
-        .catch(err => {
-            console.log(err);
-            toast.error('The references from the uploaded PDF could not be extracted');
-            dispatch(fetchPDFParseFailure());
-        });
-};
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error fetching Grobid parse');
+                } else {
+                    return response.text();
+                }
+            })
+            .then(data => {
+                dispatch(setParsedPdfData(data));
+            })
+            .catch(err => {
+                console.log(err);
+                toast.error('The references from the uploaded PDF could not be extracted');
+                dispatch(fetchPDFParseFailure());
+            });
+    };

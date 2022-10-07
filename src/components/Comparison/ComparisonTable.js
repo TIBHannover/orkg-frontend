@@ -4,56 +4,65 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PropertyValue from 'components/Comparison/PropertyValue';
 import ROUTES from 'constants/routes';
-import { functions, isEqual, omit } from 'lodash';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import { ScrollSyncPane } from 'react-scroll-sync';
 import { useTable, useFlexLayout } from 'react-table';
 import { useSticky } from 'react-table-sticky';
-import { getPropertyObjectFromData, groupArrayByDirectoryPrefix } from 'utils';
+import { groupArrayByDirectoryPrefix, getPropertyObjectFromData } from 'components/Comparison/hooks/helpers';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeContribution } from 'slices/comparisonSlice';
+import { cloneDeep, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import { useMedia } from 'react-use';
 import TableCell from './TableCell';
 import { ReactTableWrapper, Contribution, Delete, ItemHeader, ItemHeaderInner, Properties, PropertiesInner } from './styled';
 
-const compareProps = (prevProps, nextProps) =>
-    // remove functions from equality check (mainly targeting "removeContribution"), otherwise it is always false
-    isEqual(omit(prevProps, functions(prevProps)), omit(nextProps, functions(nextProps)));
 const ComparisonTable = props => {
+    const dispatch = useDispatch();
+    const filterControlData = useSelector(state => state.comparison.filterControlData);
+    const data = useSelector(state => state.comparison.data);
+    const properties = useSelector(state => state.comparison.properties);
+    const contributions = useSelector(state => state.comparison.contributions);
+    const viewDensity = useSelector(state => state.comparison.configuration.viewDensity);
+    const comparisonType = useSelector(state => state.comparison.configuration.comparisonType);
+    const transpose = useSelector(state => state.comparison.configuration.transpose);
+    const hiddenGroups = useSelector(state => state.comparison.hiddenGroups ?? []);
+
     const scrollContainerHead = useRef(null);
-    const smallerFontSize = props.viewDensity === 'compact';
+    const smallerFontSize = viewDensity === 'compact';
     const isSmallScreen = useMedia('(max-width: 576px)');
 
     let cellPadding = 10;
-    if (props.viewDensity === 'normal') {
+    if (viewDensity === 'normal') {
         cellPadding = 5;
-    } else if (props.viewDensity === 'compact') {
+    } else if (viewDensity === 'compact') {
         cellPadding = 1;
     }
 
-    const data = useMemo(() => {
+    const tableData = useMemo(() => {
         let dataFrame = [
-            ...(!props.transpose
-                ? props.properties
-                      .filter(property => property.active && props.data[property.id])
+            ...(!transpose
+                ? properties
+                      .filter(property => property.active && data[property.id])
                       .map((property, index) => ({
                           property,
-                          values: props.contributions.map((contribution, index2) => {
-                              const data = props.data[property.id] ? props.data[property.id][index2] : null;
-                              return data.sort((a, b) => a?.label?.localeCompare(b?.label));
+                          values: contributions.map((contribution, index2) => {
+                              const _data = cloneDeep(data?.[property.id] ? data[property.id]?.[index2] : null);
+                              return _data?.sort((a, b) => a?.label?.localeCompare(b?.label));
                           }),
                       }))
-                : props.contributions.map((contribution, index) => ({
+                : contributions.map((contribution, index) => ({
                       property: contribution,
-                      values: props.properties
+                      values: properties
                           .filter(property => property.active)
                           .map((property, index2) => {
-                              const data = props.data[property.id] ? props.data[property.id][index] : null;
-                              return data.sort((a, b) => a?.label?.localeCompare(b?.label));
+                              const _data = cloneDeep(data[property.id] ? data[property.id]?.[index] : null);
+                              return _data?.sort((a, b) => a?.label?.localeCompare(b?.label));
                           }),
                   }))),
         ];
-        if (!props.transpose && props.comparisonType === 'path') {
+        if (!transpose && comparisonType === 'path') {
             let groups = omit(groupArrayByDirectoryPrefix(dataFrame.map((dO, index) => dO.property.id)), '');
             groups = Object.keys(groups);
             const shownGroups = [];
@@ -89,10 +98,10 @@ const ComparisonTable = props => {
                     });
                     return null;
                 });
-            dataFrame = dataFrame.filter(row => !props.hiddenGroups.includes(row.property.inGroupId) || row.property.group);
+            dataFrame = dataFrame.filter(row => !hiddenGroups.includes(row.property.inGroupId) || row.property.group);
         }
         return dataFrame;
-    }, [props.transpose, props.properties, props.contributions, props.comparisonType, props.data, props.hiddenGroups]);
+    }, [comparisonType, contributions, data, properties, hiddenGroups, transpose]);
 
     const defaultColumn = useMemo(
         () => ({
@@ -104,43 +113,42 @@ const ComparisonTable = props => {
     );
 
     const columns = useMemo(() => {
-        if (props.filterControlData.length === 0) {
+        if (filterControlData.length === 0) {
             return [];
         }
         return [
             {
                 Header: (
                     <Properties>
-                        <PropertiesInner transpose={props.transpose} className="first">
+                        <PropertiesInner transpose={transpose} className="first">
                             Properties
                         </PropertiesInner>
                     </Properties>
                 ),
                 accessor: 'property',
                 sticky: !isSmallScreen ? 'left' : undefined,
-                Cell: info =>
-                    !props.transpose ? (
-                        <Properties className={`columnProperty ${info.value.group ? 'columnPropertyGroup' : ''}`}>
-                            <PropertiesInner className="d-flex flex-row align-items-start justify-content-between" cellPadding={cellPadding}>
-                                <PropertyValue
-                                    embeddedMode={props.embeddedMode}
-                                    filterControlData={props.filterControlData}
-                                    updateRulesOfProperty={props.updateRulesOfProperty}
-                                    similar={info.value.similar}
-                                    label={info.value.label}
-                                    id={info.value.id}
-                                    group={info.value.group ?? false}
-                                    grouped={info.value.grouped ?? false}
-                                    groupId={info.value.groupId ?? null}
-                                    handleToggleShow={props.handleToggleGroupVisibility}
-                                    property={props.comparisonType === 'merge' ? info.value : getPropertyObjectFromData(props.data, info.value)}
-                                    hiddenGroups={props.hiddenGroups}
-                                />
-                            </PropertiesInner>
-                        </Properties>
-                    ) : (
+                Cell: info => {
+                    if (!transpose) {
+                        return (
+                            <Properties className={`columnProperty ${info.value.group ? 'columnPropertyGroup' : ''}`}>
+                                <PropertiesInner className="d-flex flex-row align-items-start justify-content-between" cellPadding={cellPadding}>
+                                    <PropertyValue
+                                        embeddedMode={props.embeddedMode}
+                                        similar={info.value.similar}
+                                        label={info.value.label}
+                                        id={info.value.id}
+                                        group={info.value.group ?? false}
+                                        grouped={info.value.grouped ?? false}
+                                        groupId={info.value.groupId ?? null}
+                                        property={comparisonType === 'merge' ? info.value : getPropertyObjectFromData(data, info.value)}
+                                    />
+                                </PropertiesInner>
+                            </Properties>
+                        );
+                    }
+                    return (
                         <Properties className="columnContribution">
-                            <PropertiesInner transpose={props.transpose}>
+                            <PropertiesInner transpose={transpose}>
                                 <Link
                                     to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                                         resourceId: info.value.paperId,
@@ -155,16 +163,17 @@ const ComparisonTable = props => {
                                 </Contribution>
                             </PropertiesInner>
 
-                            {!props.embeddedMode && props.contributions.filter(contribution => contribution.active).length > 2 && (
-                                <Delete onClick={() => props.removeContribution(info.value.id)}>
+                            {!props.embeddedMode && contributions.filter(contribution => contribution.active).length > 2 && (
+                                <Delete onClick={() => dispatch(removeContribution(info.value.id))}>
                                     <Icon icon={faTimes} />
                                 </Delete>
                             )}
                         </Properties>
-                    ),
+                    );
+                },
             },
-            ...(!props.transpose && props.contributions
-                ? props.contributions
+            ...(!transpose && contributions
+                ? contributions
                       .map((contribution, index) => {
                           if (contribution.active) {
                               return {
@@ -187,8 +196,8 @@ const ComparisonTable = props => {
                                               </Contribution>
                                           </ItemHeaderInner>
 
-                                          {!props.embeddedMode && props.contributions.filter(contribution => contribution.active).length > 2 && (
-                                              <Delete onClick={() => props.removeContribution(contribution.id)}>
+                                          {!props.embeddedMode && contributions.filter(c => c.active).length > 2 && (
+                                              <Delete onClick={() => dispatch(removeContribution(contribution.id))}>
                                                   <Icon icon={faTimes} />
                                               </Delete>
                                           )}
@@ -197,29 +206,27 @@ const ComparisonTable = props => {
                                   accessor: d =>
                                       // return d.values[index].length > 0 ? d.values[index][0].label : '';
                                       d.values[index],
-                                  Cell: cell => <TableCell data={cell.value} viewDensity={props.viewDensity} />, // Custom cell components!
+                                  Cell: cell => <TableCell data={cell.value} viewDensity={viewDensity} />, // Custom cell components!
                               };
                           }
                           return null;
                       })
                       .filter(Boolean)
-                : props.properties
-                      .filter(property => property.active && props.data[property.id])
+                : properties
+                      .filter(property => property.active && data[property.id])
                       .map((property, index) => ({
                           id: property.id, // <-here
                           Header: () => (
                               <ItemHeader key={`property${property.id}`}>
-                                  <ItemHeaderInner className="d-flex flex-row align-items-center justify-content-between" transpose={props.transpose}>
+                                  <ItemHeaderInner className="d-flex flex-row align-items-center justify-content-between" transpose={transpose}>
                                       <PropertyValue
                                           embeddedMode={props.embeddedMode}
-                                          filterControlData={props.filterControlData}
-                                          updateRulesOfProperty={props.updateRulesOfProperty}
                                           similar={property.similar}
                                           label={property.label}
                                           id={property.id}
                                           group={property.group ?? false}
                                           grouped={property.grouped ?? false}
-                                          property={props.comparisonType === 'merge' ? property : getPropertyObjectFromData(props.data, property)}
+                                          property={comparisonType === 'merge' ? property : getPropertyObjectFromData(data, property)}
                                       />
                                   </ItemHeaderInner>
                               </ItemHeader>
@@ -227,17 +234,27 @@ const ComparisonTable = props => {
                           accessor: d =>
                               // return d.values[index].length > 0 ? d.values[index][0].label : '';
                               d.values[index],
-                          Cell: cell => <TableCell data={cell.value} viewDensity={props.viewDensity} />, // Custom cell components!
+                          Cell: cell => <TableCell data={cell.value} viewDensity={viewDensity} />, // Custom cell components!
                       }))),
         ];
-        // TODO: remove disable lint rule: useCallback for removeContribution and add used dependencies
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.transpose, props.properties, props.contributions, props.filterControlData, props.viewDensity, isSmallScreen, props.hiddenGroups]);
+    }, [
+        cellPadding,
+        comparisonType,
+        contributions,
+        data,
+        dispatch,
+        filterControlData.length,
+        isSmallScreen,
+        properties,
+        props.embeddedMode,
+        transpose,
+        viewDensity,
+    ]);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
             columns,
-            data,
+            data: tableData,
             defaultColumn,
         },
         useFlexLayout,
@@ -302,25 +319,12 @@ const ComparisonTable = props => {
 };
 
 ComparisonTable.propTypes = {
-    contributions: PropTypes.array.isRequired,
-    data: PropTypes.object.isRequired,
-    properties: PropTypes.array.isRequired,
-    removeContribution: PropTypes.func.isRequired,
-    transpose: PropTypes.bool.isRequired,
-    comparisonType: PropTypes.string.isRequired,
-    viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact']),
     scrollContainerBody: PropTypes.object.isRequired,
-    filterControlData: PropTypes.array.isRequired,
-    updateRulesOfProperty: PropTypes.func.isRequired,
     embeddedMode: PropTypes.bool.isRequired,
-    hiddenGroups: PropTypes.array,
-    handleToggleGroupVisibility: PropTypes.func,
 };
 
 ComparisonTable.defaultProps = {
     embeddedMode: false,
-    hiddenGroups: [],
-    handleToggleGroupVisibility: null,
 };
 
-export default memo(ComparisonTable, compareProps);
+export default memo(ComparisonTable);

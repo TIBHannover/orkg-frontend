@@ -25,21 +25,21 @@ export default class Property extends BaseElement {
         this.linkElement().makeInvisibleForAnimation();
     }
 
-    linkElement = function(d) {
+    linkElement = function (d) {
         if (!arguments.length) {
             return this.link;
         }
         this.link = d;
     };
 
-    domainNode = function(d) {
+    domainNode = function (d) {
         if (!arguments.length) {
             return this.domain;
         }
         this.domain = d;
     };
 
-    rangeNode = function(r) {
+    rangeNode = function (r) {
         if (!arguments.length) {
             return this.range;
         }
@@ -53,7 +53,7 @@ export default class Property extends BaseElement {
         this.updateTextPosition();
     }
 
-    updateDrawPosition = function() {
+    updateDrawPosition = function () {
         if (this.propertyType === 'single') {
             // compute center of the domain range part ;
             this.x = 0.5 * (this.range.x + this.domain.x);
@@ -65,7 +65,7 @@ export default class Property extends BaseElement {
         }
     };
 
-    getForceLink = function() {
+    getForceLink = function () {
         const that = this;
         return [
             {

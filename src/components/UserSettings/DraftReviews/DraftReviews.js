@@ -28,7 +28,11 @@ const DraftReviews = () => {
     );
 
     const fetchItems = async ({ resourceClass, page, pageSize }) => {
-        const { content: resources, last, totalElements } = await getResourcesByClass({
+        const {
+            content: resources,
+            last,
+            totalElements,
+        } = await getResourcesByClass({
             id: resourceClass,
             page,
             items: pageSize,

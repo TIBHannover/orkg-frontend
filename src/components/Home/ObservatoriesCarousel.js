@@ -99,13 +99,15 @@ function ObservatoriesCarousel(props) {
                                     to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}
                                     style={{ textDecoration: 'none', height: '80px', width: '100%', overflow: 'hidden' }}
                                 >
-                                    {observatory.orgs.slice(0, 2).map((
-                                        o, // show only two logos
-                                    ) => (
-                                        <div key={`imageLogo${o.id}`} className="flex-grow-1">
-                                            <img className="orgLogo" height="60px" src={o.logo} alt={`${o.name} logo`} />
-                                        </div>
-                                    ))}
+                                    {observatory.orgs.slice(0, 2).map(
+                                        (
+                                            o, // show only two logos
+                                        ) => (
+                                            <div key={`imageLogo${o.id}`} className="flex-grow-1">
+                                                <img className="orgLogo" height="60px" src={o.logo} alt={`${o.name} logo`} />
+                                            </div>
+                                        ),
+                                    )}
                                 </Link>
                             </div>
                             <CardFooterStyled className="text-muted">
