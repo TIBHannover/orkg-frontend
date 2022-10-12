@@ -10,7 +10,7 @@ import { Fragment, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useDebounce } from 'react-use';
-import { ListGroup, ListGroupItem } from 'reactstrap';
+import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import { getNerResults } from 'services/orkgNlp';
 import { ENTITIES } from 'constants/graphSettings';
 import { createPropertyAction as createProperty } from 'slices/statementBrowserSlice';
@@ -57,6 +57,15 @@ const ValueItem = styled(ListGroupItem)`
     }
 `;
 
+const ShowMoreButton = styled(Button)`
+    &:focus {
+        outline: 0 !important;
+        box-shadow: none;
+    }
+`;
+
+const MAX_PROPERTIES_ITEMS = 8;
+
 const EntityRecognition = ({ isComputerScienceField }) => {
     const { title, abstract, nerProperties } = useSelector(state => state.addPaper);
     const [isLoadingNER, setIsLoadingNER] = useState(false);
@@ -65,6 +74,7 @@ const EntityRecognition = ({ isComputerScienceField }) => {
     const { suggestions } = useEntityRecognition({ isComputerScienceField });
     const { recommendedPredicates, isLoadingRP } = usePredicatesRecommendation();
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
+    const [showMorePredicates, setShowMorePredicates] = useState(false);
 
     useDebounce(
         () => {
@@ -94,6 +104,8 @@ const EntityRecognition = ({ isComputerScienceField }) => {
                 },
             },
         ]);
+
+    const _recommendedPredicates = showMorePredicates ? recommendedPredicates : recommendedPredicates.slice(0, MAX_PROPERTIES_ITEMS);
 
     return (
         <>
@@ -148,7 +160,8 @@ const EntityRecognition = ({ isComputerScienceField }) => {
                         </TransitionGroup>
                     </Fragment>
                 ))}
-
+            </ListGroup>
+            <ListGroup>
                 {(isLoadingRP || recommendedPredicates.length > 0) && (
                     <h6 className="h6 mt-1">
                         Properties{' '}
@@ -159,8 +172,8 @@ const EntityRecognition = ({ isComputerScienceField }) => {
                         )}
                     </h6>
                 )}
-                <TransitionGroup component={null}>
-                    {recommendedPredicates.map((p, index) => (
+                <TransitionGroup component={null} height="30px">
+                    {_recommendedPredicates.map((p, index) => (
                         <AnimationContainer
                             key={index}
                             classNames="slide-left"
@@ -188,6 +201,17 @@ const EntityRecognition = ({ isComputerScienceField }) => {
                             </ValueItem>
                         </AnimationContainer>
                     ))}
+                    {recommendedPredicates.length > MAX_PROPERTIES_ITEMS && (
+                        <ShowMoreButton
+                            onClick={() => setShowMorePredicates(v => !v)}
+                            color="link"
+                            size="sm"
+                            className="p-0 ms-2"
+                            style={{ outline: 0 }}
+                        >
+                            {showMorePredicates ? 'Show less suggestions' : 'Show more suggestions'}
+                        </ShowMoreButton>
+                    )}
                 </TransitionGroup>
             </ListGroup>
         </>
