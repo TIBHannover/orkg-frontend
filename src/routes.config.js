@@ -144,7 +144,7 @@ const routes = [
     },
     {
         path: ROUTES.ADD_PAPER.GENERAL_DATA,
-        element: requireAuthentication(AddPaper),
+        element: AddPaper,
     },
     {
         /* TODO: slug for the paper title */
