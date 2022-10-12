@@ -44,7 +44,7 @@ const SectionComparison = ({ id, sectionId }) => {
         setStore(store);
     }, []);
 
-    const url = env('URL') + reverse(ROUTES.COMPARISON, { comparisonId: id }).replace('/', '', 1);
+    const url = env('URL') + reverse(ROUTES.COMPARISON, { comparisonId: id });
 
     return (
         <>
