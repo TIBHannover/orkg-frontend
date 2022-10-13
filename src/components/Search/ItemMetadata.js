@@ -9,8 +9,9 @@ import { faCalendar, faTags, faArrowRight, faUser } from '@fortawesome/free-soli
 import pluralize from 'pluralize';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { MISC } from 'constants/graphSettings';
+import ProvenanceBox from 'components/Resource/ProvenanceBox';
 
-const ItemMetadata = ({ item, showClasses, showCreatedAt, showCreatedBy }) => (
+const ItemMetadata = ({ item, showClasses, showCreatedAt, showCreatedBy, showProvenance, editMode }) => (
     <div className="d-flex">
         <div className="flex-grow-1">
             {showCreatedAt && (
@@ -41,6 +42,11 @@ const ItemMetadata = ({ item, showClasses, showCreatedAt, showCreatedBy }) => (
                         <UserAvatar size={24} userId={item.created_by} showDisplayName={true} />
                     </span>
                 </small>
+            )}
+            {showProvenance && (
+                <span className="d-block">
+                    <ProvenanceBox item={item} editMode={editMode} />
+                </span>
             )}
         </div>
         <div className="d-flex align-items-end">
@@ -73,15 +79,19 @@ const ItemMetadata = ({ item, showClasses, showCreatedAt, showCreatedBy }) => (
 
 ItemMetadata.propTypes = {
     item: PropTypes.object.isRequired,
+    editMode: PropTypes.bool.isRequired,
     showClasses: PropTypes.bool,
     showCreatedAt: PropTypes.bool,
     showCreatedBy: PropTypes.bool,
+    showProvenance: PropTypes.bool,
 };
 
 ItemMetadata.defaultProps = {
+    editMode: false,
     showClasses: false,
     showCreatedAt: false,
     showCreatedBy: false,
+    showProvenance: false,
 };
 
 export default ItemMetadata;
