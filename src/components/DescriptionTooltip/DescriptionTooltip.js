@@ -1,5 +1,5 @@
 import { useState, Fragment } from 'react';
-import { Button } from 'reactstrap';
+import { Button, Table } from 'reactstrap';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
 import { truncate } from 'lodash';
@@ -11,6 +11,41 @@ import { PREDICATES, ENTITIES } from 'constants/graphSettings';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { getResourceLink } from 'utils';
 import { toast } from 'react-toastify';
+import styled from 'styled-components';
+
+const TippyStyle = styled(Tippy)`
+    &.tippy-box[data-theme~='descriptionTooltip'] .tippy-content {
+        padding: 0 !important;
+        table {
+            border-collapse: collapse;
+            color: #fff;
+            overflow-wrap: break-word;
+            table-layout: fixed;
+            width: 100%;
+        }
+        table td,
+        table th {
+            border: 1px solid black;
+        }
+        table td:first-child {
+            width: 100px;
+        }
+        table tr:first-child td {
+            border-top: 0;
+        }
+        table tr:last-child td {
+            border-bottom: 0;
+        }
+        table tr td:first-child,
+        table tr th:first-child {
+            border-left: 0;
+        }
+        table tr td:last-child,
+        table tr th:last-child {
+            border-right: 0;
+        }
+    }
+`;
 
 const DescriptionTooltip = props => {
     const [description, setDescription] = useState('');
@@ -51,57 +86,73 @@ const DescriptionTooltip = props => {
     };
 
     return (
-        <Tippy
+        <TippyStyle
+            theme="descriptionTooltip"
             onTrigger={onTrigger}
             content={
-                <div>
-                    <div>
-                        <span style={{ verticalAlign: 'middle' }}>
-                            {renderTypeLabel()} id: {props.id}
-                        </span>
-                        <CopyToClipboard
-                            text={props.id}
-                            onCopy={() => {
-                                toast.dismiss();
-                                toast.success('ID copied to clipboard');
-                            }}
-                        >
-                            <Button title="Click to copy id" onClick={e => e.stopPropagation()} className="py-0 px-0 ms-1" size="sm" color="link">
-                                <Icon icon={faClipboard} size="xs" />
-                            </Button>
-                        </CopyToClipboard>
-                    </div>
-                    {props.classes?.length > 0 && (
-                        <div>
-                            Instance of:{' '}
-                            {props.classes.map((c, index) => (
-                                <Fragment key={index}>
-                                    <Link to={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
-                                        {c}
-                                    </Link>
-                                    {index + 1 < props.classes.length && ','}
-                                </Fragment>
-                            ))}
-                        </div>
-                    )}
-                    {props._class !== ENTITIES.LITERAL && (
-                        <div>
-                            Description:
-                            {!isLoading ? (
-                                <>
-                                    {description ? (
-                                        <> {truncate(description, { length: 300 })}</>
+                <Table className="rounded">
+                    <tbody>
+                        <tr>
+                            <td>{renderTypeLabel()} id</td>
+                            <td>
+                                <span>{props.id}</span>
+                                <CopyToClipboard
+                                    text={props.id}
+                                    onCopy={() => {
+                                        toast.dismiss();
+                                        toast.success('ID copied to clipboard');
+                                    }}
+                                >
+                                    <Button
+                                        title="Click to copy id"
+                                        onClick={e => e.stopPropagation()}
+                                        className="py-0 px-0 ms-1"
+                                        size="sm"
+                                        color="link"
+                                        style={{ verticalAlign: 'middle' }}
+                                    >
+                                        <Icon icon={faClipboard} size="xs" />
+                                    </Button>
+                                </CopyToClipboard>
+                            </td>
+                        </tr>
+                        {props.classes?.length > 0 && (
+                            <tr>
+                                <td>Instance of</td>
+                                <td>
+                                    {props.classes.map((c, index) => (
+                                        <Fragment key={index}>
+                                            <Link to={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
+                                                {c}
+                                            </Link>
+                                            {index + 1 < props.classes.length && ','}
+                                        </Fragment>
+                                    ))}
+                                </td>
+                            </tr>
+                        )}
+                        {props._class !== ENTITIES.LITERAL && (
+                            <tr>
+                                <td>Description</td>
+                                <td>
+                                    {' '}
+                                    {!isLoading ? (
+                                        <>
+                                            {description ? (
+                                                <> {truncate(description, { length: 300 })}</>
+                                            ) : (
+                                                <small className="font-italic"> No description yet</small>
+                                            )}
+                                        </>
                                     ) : (
-                                        <small className="font-italic"> No description yet</small>
+                                        <Icon icon={faSpinner} spin />
                                     )}
-                                </>
-                            ) : (
-                                <Icon icon={faSpinner} spin />
-                            )}
-                        </div>
-                    )}
-                    {props.extraContent && <div>{props.extraContent}</div>}
-                </div>
+                                </td>
+                            </tr>
+                        )}
+                        {props.extraContent && props.extraContent}
+                    </tbody>
+                </Table>
             }
             delay={[500, 0]}
             appendTo={document.body}
@@ -110,7 +161,7 @@ const DescriptionTooltip = props => {
             arrow={true}
         >
             <span tabIndex="0">{props.children}</span>
-        </Tippy>
+        </TippyStyle>
     );
 };
 
