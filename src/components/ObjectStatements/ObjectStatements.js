@@ -8,6 +8,7 @@ import { reverse } from 'named-urls';
 import { getLinkByEntityType } from 'utils';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 
 const ObjectStatements = props => {
     const pageSize = 10;
@@ -88,16 +89,24 @@ const ObjectStatements = props => {
                                 {statements.map(statement => (
                                     <tr key={statement.id}>
                                         <td>
-                                            {getLinkByEntityType(statement.subject._class, statement.subject.id) ? (
-                                                <Link to={getLinkByEntityType(statement.subject._class, statement.subject.id)}>
-                                                    {statement.subject.label}
-                                                </Link>
-                                            ) : (
-                                                statement.subject.label
-                                            )}
+                                            <DescriptionTooltip
+                                                classes={statement.subject.classes}
+                                                id={statement.subject.id}
+                                                _class={statement.subject._class}
+                                            >
+                                                {getLinkByEntityType(statement.subject._class, statement.subject.id) ? (
+                                                    <Link to={getLinkByEntityType(statement.subject._class, statement.subject.id)}>
+                                                        {statement.subject.label}
+                                                    </Link>
+                                                ) : (
+                                                    statement.subject.label
+                                                )}
+                                            </DescriptionTooltip>
                                         </td>
                                         <td>
-                                            <Link to={reverse(ROUTES.PROPERTY, { id: statement.predicate.id })}>{statement.predicate.label}</Link>
+                                            <DescriptionTooltip id={statement.predicate.id} _class={statement.predicate._class}>
+                                                <Link to={reverse(ROUTES.PROPERTY, { id: statement.predicate.id })}>{statement.predicate.label}</Link>
+                                            </DescriptionTooltip>
                                         </td>
                                         <td>{statement.object.label}</td>
                                     </tr>
