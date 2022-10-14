@@ -89,7 +89,7 @@ export default function CustomEdge({
                     <ConditionalWrapper
                         condition={data?.linked}
                         wrapper={children => (
-                            <DescriptionTooltip typeId={ENTITIES.PREDICATE} id={data?.id}>
+                            <DescriptionTooltip _class={ENTITIES.PREDICATE} id={data?.id}>
                                 {children}
                             </DescriptionTooltip>
                         )}

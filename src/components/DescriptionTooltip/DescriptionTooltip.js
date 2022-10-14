@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useState, Fragment } from 'react';
 import { Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
 import { truncate } from 'lodash';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faClipboard } from '@fortawesome/free-solid-svg-icons';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
+import { PREDICATES, ENTITIES } from 'constants/graphSettings';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { getResourceLink } from 'utils';
 import { toast } from 'react-toastify';
 
 const DescriptionTooltip = props => {
@@ -16,7 +18,7 @@ const DescriptionTooltip = props => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     const onTrigger = () => {
-        if (!isLoaded) {
+        if (!isLoaded && props._class !== ENTITIES.LITERAL) {
             setIsLoading(true);
             getStatementsBySubjectAndPredicate({ subjectId: props.id, predicateId: PREDICATES.DESCRIPTION })
                 .then(descriptionStatement => {
@@ -34,15 +36,15 @@ const DescriptionTooltip = props => {
     };
 
     const renderTypeLabel = () => {
-        switch (props.typeId) {
+        switch (props._class) {
             case ENTITIES.PREDICATE:
                 return 'Property';
             case ENTITIES.RESOURCE:
                 return 'Resource';
             case ENTITIES.CLASS:
                 return 'Class';
-            case CLASSES.PROBLEM:
-                return 'Research problem';
+            case ENTITIES.LITERAL:
+                return 'Literal';
             default:
                 return 'Resource';
         }
@@ -69,24 +71,43 @@ const DescriptionTooltip = props => {
                             </Button>
                         </CopyToClipboard>
                     </div>
-                    <div>
-                        Description:
-                        {!isLoading ? (
-                            <>
-                                {description ? (
-                                    <> {truncate(description, { length: 300 })}</>
-                                ) : (
-                                    <small className="font-italic"> No description yet</small>
-                                )}
-                            </>
-                        ) : (
-                            <Icon icon={faSpinner} spin />
+                    <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
+                        {props.classes?.length > 0 && (
+                            <li className="mb-1">
+                                Instance of:{' '}
+                                {props.classes.map((c, index) => (
+                                    <Fragment key={index}>
+                                        <Link to={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
+                                            {c}
+                                        </Link>
+                                        {index + 1 < props.classes.length && ','}
+                                    </Fragment>
+                                ))}
+                            </li>
                         )}
-                    </div>
+                    </ul>
+                    {props._class !== ENTITIES.LITERAL && (
+                        <div>
+                            Description:
+                            {!isLoading ? (
+                                <>
+                                    {description ? (
+                                        <> {truncate(description, { length: 300 })}</>
+                                    ) : (
+                                        <small className="font-italic"> No description yet</small>
+                                    )}
+                                </>
+                            ) : (
+                                <Icon icon={faSpinner} spin />
+                            )}
+                        </div>
+                    )}
                     {props.extraContent && <div>{props.extraContent}</div>}
                 </div>
             }
+            delay={[500, 0]}
             appendTo={document.body}
+            disabled={props.disabled}
             interactive={true}
             arrow={true}
         >
@@ -98,8 +119,14 @@ const DescriptionTooltip = props => {
 DescriptionTooltip.propTypes = {
     children: PropTypes.node.isRequired,
     id: PropTypes.string.isRequired,
+    _class: PropTypes.string.isRequired,
+    classes: PropTypes.array.isRequired,
     extraContent: PropTypes.string,
-    typeId: PropTypes.string.isRequired,
+    disabled: PropTypes.array.isRequired,
+};
+
+DescriptionTooltip.defaultProps = {
+    disabled: false,
 };
 
 export default DescriptionTooltip;

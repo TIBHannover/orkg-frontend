@@ -16,6 +16,7 @@ import styled from 'styled-components';
 import Confirm from 'components/ConfirmationModal/ConfirmationModal';
 import { ENTITIES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 
 export const ClassesStyle = styled.div`
     background-color: ${props => props.theme.lightLighter};
@@ -132,9 +133,11 @@ const ClassesItem = props => {
                             <div className="mx-1" style={{ padding: '3.5px 0' }}>
                                 {classes?.map((c, index) => (
                                     <Fragment key={c.id}>
-                                        <Link target="_blank" to={reverse(ROUTES.CLASS, { id: c.id })}>
-                                            {c.label}
-                                        </Link>
+                                        <DescriptionTooltip id={c.id} _class={ENTITIES.CLASS}>
+                                            <Link target="_blank" to={reverse(ROUTES.CLASS, { id: c.id })}>
+                                                {c.label}
+                                            </Link>
+                                        </DescriptionTooltip>
                                         {index + 1 !== classes.length && ', '}
                                     </Fragment>
                                 ))}

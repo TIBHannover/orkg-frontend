@@ -56,55 +56,13 @@ const ValueItem = props => {
                 {!value.isEditing || !props.enableEdit ? (
                     <div>
                         {!value.isSaving && (
-                            <Tippy
+                            <DescriptionTooltip
                                 disabled={
                                     !preferences.showValueInfo || (!value.id && !value.classes?.length) || value?.classes?.includes(CLASSES.PROBLEM)
                                 }
-                                delay={[500, 0]}
-                                interactive={true}
-                                content={
-                                    <div className="p-1">
-                                        <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
-                                            {value.id && (
-                                                <li className="mb-1">
-                                                    <span style={{ verticalAlign: 'middle' }}>
-                                                        {capitalize(value._class)} id: {value.id}
-                                                    </span>
-                                                    <CopyToClipboard
-                                                        text={value.id}
-                                                        onCopy={() => {
-                                                            toast.dismiss();
-                                                            toast.success('ID copied to clipboard');
-                                                        }}
-                                                    >
-                                                        <Button
-                                                            title="Click to copy id"
-                                                            onClick={e => e.stopPropagation()}
-                                                            className="py-0 px-0 ms-1"
-                                                            size="sm"
-                                                            color="link"
-                                                        >
-                                                            <Icon icon={faClipboard} size="xs" />
-                                                        </Button>
-                                                    </CopyToClipboard>
-                                                </li>
-                                            )}
-                                            {value.classes?.length > 0 && (
-                                                <li className="mb-1">
-                                                    Instance of:{' '}
-                                                    {value.classes.map((c, index) => (
-                                                        <Fragment key={index}>
-                                                            <Link to={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
-                                                                {c}
-                                                            </Link>
-                                                            {index + 1 < value.classes.length && ','}
-                                                        </Fragment>
-                                                    ))}
-                                                </li>
-                                            )}
-                                        </ul>
-                                    </div>
-                                }
+                                id={value?.id}
+                                _class={value._class}
+                                classes={value.classes}
                             >
                                 <span tabIndex="0">
                                     {resource && !resource.isFetching && value._class !== ENTITIES.LITERAL && !resourcesAsLinks && (
@@ -117,9 +75,7 @@ const ValueItem = props => {
                                                     })}
                                                     target="_blank"
                                                 >
-                                                    <DescriptionTooltip id={existingResourceId} typeId={CLASSES.PROBLEM}>
-                                                        {resource.label} <Icon icon={faExternalLinkAlt} />
-                                                    </DescriptionTooltip>
+                                                    {resource.label} <Icon icon={faExternalLinkAlt} />
                                                 </Link>
                                             ) : (
                                                 <Button
@@ -181,7 +137,7 @@ const ValueItem = props => {
                                         </div>
                                     )}
                                 </span>
-                            </Tippy>
+                            </DescriptionTooltip>
                         )}
                         {value.isSaving && 'Saving...'}
                         <ValueItemOptions id={props.id} enableEdit={props.enableEdit} syncBackend={props.syncBackend} handleOnClick={handleOnClick} />

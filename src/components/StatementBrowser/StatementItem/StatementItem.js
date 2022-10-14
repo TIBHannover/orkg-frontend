@@ -42,7 +42,7 @@ const StatementItem = forwardRef((props, ref) => {
                         <div>
                             <div className="propertyLabel">
                                 {!property.isSaving && property.existingPredicateId && (
-                                    <DescriptionTooltip id={property.existingPredicateId} typeId={ENTITIES.PREDICATE}>
+                                    <DescriptionTooltip id={property.existingPredicateId} _class={ENTITIES.PREDICATE}>
                                         <Link
                                             to={reverse(ROUTES.PROPERTY, { id: property.existingPredicateId })}
                                             target={!propertiesAsLinks ? '_blank' : '_self'}
