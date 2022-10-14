@@ -71,21 +71,19 @@ const DescriptionTooltip = props => {
                             </Button>
                         </CopyToClipboard>
                     </div>
-                    <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
-                        {props.classes?.length > 0 && (
-                            <li className="mb-1">
-                                Instance of:{' '}
-                                {props.classes.map((c, index) => (
-                                    <Fragment key={index}>
-                                        <Link to={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
-                                            {c}
-                                        </Link>
-                                        {index + 1 < props.classes.length && ','}
-                                    </Fragment>
-                                ))}
-                            </li>
-                        )}
-                    </ul>
+                    {props.classes?.length > 0 && (
+                        <div>
+                            Instance of:{' '}
+                            {props.classes.map((c, index) => (
+                                <Fragment key={index}>
+                                    <Link to={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
+                                        {c}
+                                    </Link>
+                                    {index + 1 < props.classes.length && ','}
+                                </Fragment>
+                            ))}
+                        </div>
+                    )}
                     {props._class !== ENTITIES.LITERAL && (
                         <div>
                             Description:

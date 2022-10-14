@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import Tippy from '@tippyjs/react';
 import { ENTITIES } from 'constants/graphSettings';
 import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleUp, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
-import ValuePlugins from '../ValuePlugins/ValuePlugins';
-import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
+import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
+import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 
 export const Item = styled.div`
     padding-right: 10px;
@@ -162,12 +162,11 @@ const TableCell = props => {
                                 (date.type === ENTITIES.RESOURCE ? (
                                     <span key={`value-${date.resourceId}`}>
                                         {index > 0 && <ItemInnerSeparator />}
-                                        <Tippy
-                                            content={PathTooltipContent(date, data[index])}
-                                            arrow={true}
-                                            disabled={date.pathLabels?.length <= 1}
-                                            interactive={true}
-                                            appendTo={document.body}
+                                        <DescriptionTooltip
+                                            id={date.resourceId}
+                                            _class={date.type}
+                                            classes={date.classes ?? []}
+                                            extraContent={date.pathLabels?.length > 1 ? PathTooltipContent(date, data[index]) : ''}
                                         >
                                             <div
                                                 className="btn-link"
@@ -179,24 +178,22 @@ const TableCell = props => {
                                             >
                                                 <ValuePlugins type="resource">{date.label}</ValuePlugins>
                                             </div>
-                                        </Tippy>
+                                        </DescriptionTooltip>
                                     </span>
                                 ) : (
                                     <span key={`value-${date.label}-${index}`}>
                                         {index > 0 && <ItemInnerSeparator />}
-                                        <Tippy
-                                            content={PathTooltipContent(date, data[index])}
-                                            arrow={true}
-                                            disabled={date.pathLabels?.length <= 1}
-                                            interactive={true}
-                                            appendTo={document.body}
+                                        <DescriptionTooltip
+                                            id={date.resourceId}
+                                            _class={date.type}
+                                            extraContent={date.pathLabels?.length > 1 ? PathTooltipContent(date, data[index]) : ''}
                                         >
                                             <span>
                                                 <ValuePlugins type="literal" options={{ inModal: true }}>
                                                     {date.label}
                                                 </ValuePlugins>
                                             </span>
-                                        </Tippy>
+                                        </DescriptionTooltip>
                                     </span>
                                 )),
                         )}
