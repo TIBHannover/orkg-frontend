@@ -54,8 +54,8 @@ const ValueItem = props => {
                             <DescriptionTooltip
                                 disabled={
                                     !preferences.showDescriptionTooltips ||
-                                    (!value.id && !value.classes?.length) ||
-                                    value?.classes?.includes(CLASSES.PROBLEM)
+                                    !value.id ||
+                                    (value?.classes?.includes(CLASSES.PROBLEM) && !resourcesAsLinks)
                                 }
                                 id={value?.id}
                                 _class={value._class}
