@@ -169,9 +169,9 @@ DescriptionTooltip.propTypes = {
     children: PropTypes.node.isRequired,
     id: PropTypes.string.isRequired,
     _class: PropTypes.string.isRequired,
-    classes: PropTypes.array.isRequired,
+    classes: PropTypes.array,
     extraContent: PropTypes.string,
-    disabled: PropTypes.array.isRequired,
+    disabled: PropTypes.bool.isRequired,
 };
 
 DescriptionTooltip.defaultProps = {

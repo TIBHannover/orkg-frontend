@@ -23,15 +23,16 @@ function ValueDatatype(props) {
             {props.value._class === ENTITIES.RESOURCE && (
                 <small>
                     <Badge color="light" className="ms-2 me-2">
-                        {Object.values(
-                            props.value.classes.map(c => (
-                                <DescriptionTooltip key={c} id={c} _class={ENTITIES.CLASS} disabled={!preferences.showDescriptionTooltips}>
-                                    <Link target="_blank" style={{ color: '#60687a' }} to={reverse(ROUTES.CLASS, { id: c })}>
-                                        {c}
-                                    </Link>
-                                </DescriptionTooltip>
-                            )),
-                        ).reduce((prev, curr) => [prev, ', ', curr])}
+                        {props.value.classes?.length > 0 &&
+                            props.value.classes
+                                .map(c => (
+                                    <DescriptionTooltip key={c} id={c} _class={ENTITIES.CLASS} disabled={!preferences.showDescriptionTooltips}>
+                                        <Link target="_blank" style={{ color: '#60687a' }} to={reverse(ROUTES.CLASS, { id: c })}>
+                                            {c}
+                                        </Link>
+                                    </DescriptionTooltip>
+                                ))
+                                .reduce((prev, curr) => [prev, ', ', curr])}
                     </Badge>
                 </small>
             )}
