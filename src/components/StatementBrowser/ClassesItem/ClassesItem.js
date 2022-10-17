@@ -133,7 +133,7 @@ const ClassesItem = props => {
                             <div className="mx-1" style={{ padding: '3.5px 0' }}>
                                 {classes?.map((c, index) => (
                                     <Fragment key={c.id}>
-                                        <DescriptionTooltip id={c.id} _class={ENTITIES.CLASS}>
+                                        <DescriptionTooltip id={c.id} _class={ENTITIES.CLASS} disabled={!preferences.showDescriptionTooltips}>
                                             <Link target="_blank" to={reverse(ROUTES.CLASS, { id: c.id })}>
                                                 {c.label}
                                             </Link>

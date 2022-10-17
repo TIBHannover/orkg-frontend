@@ -15,9 +15,8 @@ export const statementBrowserOneProperty = {
         isPreferencesOpen: false,
         preferences: {
             showClasses: false,
-            showStatementInfo: true,
-            showValueInfo: true,
-            showLiteralDataTypes: true,
+            showDescriptionTooltips: true,
+            showInlineDataTypes: true,
         },
         resources: {
             byId: {

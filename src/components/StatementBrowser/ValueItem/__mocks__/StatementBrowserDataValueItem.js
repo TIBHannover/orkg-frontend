@@ -15,9 +15,8 @@ export const statementBrowser1P2V = {
         isPreferencesOpen: false,
         preferences: {
             showClasses: false,
-            showStatementInfo: true,
-            showValueInfo: true,
-            showLiteralDataTypes: true,
+            showDescriptionTooltips: true,
+            showInlineDataTypes: true,
         },
         resources: {
             byId: {
@@ -136,9 +135,8 @@ export const statementBrowser1P7V = {
         isPreferencesOpen: false,
         preferences: {
             showClasses: false,
-            showStatementInfo: true,
-            showValueInfo: true,
-            showLiteralDataTypes: true,
+            showDescriptionTooltips: true,
+            showInlineDataTypes: true,
         },
         resources: {
             byId: {
@@ -532,9 +530,8 @@ export const statementBrowser1QBDataset = {
         isPreferencesOpen: false,
         preferences: {
             showClasses: false,
-            showStatementInfo: true,
-            showValueInfo: true,
-            showLiteralDataTypes: true,
+            showDescriptionTooltips: true,
+            showInlineDataTypes: true,
         },
         resources: {
             byId: {

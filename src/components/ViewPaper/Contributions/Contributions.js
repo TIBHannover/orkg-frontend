@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
-import ContributionComparisons from 'components/ViewPaper/ContirbutionComparisons/ContributionComparisons';
+import ContributionComparisons from 'components/ViewPaper/ContributionComparisons/ContributionComparisons';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import { reverse } from 'named-urls';
 import AddToComparison from 'components/PaperCard/AddToComparison';

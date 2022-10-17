@@ -21,6 +21,7 @@ import env from '@beam-australia/react-env';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
+import ValueDatatype from './ValueDatatype/ValueDatatype';
 import useValueItem from './hooks/useValueItem';
 
 const cookies = new Cookies();
@@ -58,7 +59,9 @@ const ValueItem = props => {
                         {!value.isSaving && (
                             <DescriptionTooltip
                                 disabled={
-                                    !preferences.showValueInfo || (!value.id && !value.classes?.length) || value?.classes?.includes(CLASSES.PROBLEM)
+                                    !preferences.showDescriptionTooltips ||
+                                    (!value.id && !value.classes?.length) ||
+                                    value?.classes?.includes(CLASSES.PROBLEM)
                                 }
                                 id={value?.id}
                                 _class={value._class}
@@ -127,18 +130,12 @@ const ValueItem = props => {
                                             <ValuePlugins type={ENTITIES.LITERAL}>
                                                 {value.label !== '' ? value.label.toString() : <i>No label</i>}
                                             </ValuePlugins>
-                                            {preferences.showLiteralDataTypes && (
-                                                <small>
-                                                    <Badge color="light" className="ms-2" title={value.datatype}>
-                                                        {DATA_TYPES.find(dt => dt.type === value.datatype)?.name ?? value.datatype}
-                                                    </Badge>
-                                                </small>
-                                            )}
                                         </div>
                                     )}
                                 </span>
                             </DescriptionTooltip>
                         )}
+                        {preferences.showInlineDataTypes && <ValueDatatype value={value} />}
                         {value.isSaving && 'Saving...'}
                         <ValueItemOptions id={props.id} enableEdit={props.enableEdit} syncBackend={props.syncBackend} handleOnClick={handleOnClick} />
                     </div>
