@@ -51,6 +51,7 @@ const ConferenceDetails = () => {
                     <Container className="p-0">
                         <Row className="mt-3">
                             <Col md="6" className="d-flex">
+                                 {/* TODO */}
                                 <ResearchProblemsBox id={conferenceId} by="conference" />
                             </Col>
                             <Col md="6" className="d-flex">

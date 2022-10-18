@@ -106,7 +106,7 @@ const Organization = () => {
                                         to={reverse(typeName === 'organization' ? ROUTES.ADD_OBSERVATORY : ROUTES.ADD_EVENT, { id: organizationId })}
                                         style={{ marginRight: 2 }}
                                     >
-                                        <Icon icon={faPlus} /> Create {typeName === 'organization' ? 'observatory' : 'conference'}
+                                        <Icon icon={faPlus} /> Create {typeName === 'organization' ? 'observatory' : 'conference event'}
                                     </Button>
                                     <Button color="secondary" size="sm" onClick={() => setShowEditDialog(v => !v)}>
                                         <Icon icon={faPen} /> Edit
