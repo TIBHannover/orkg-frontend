@@ -29,7 +29,7 @@ import moment from 'moment';
 import { reverse } from 'named-urls';
 import NotFound from 'pages/NotFound';
 import { useParams, useNavigate, NavLink } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import Confirm from 'components/Confirmation/Confirmation';
@@ -42,6 +42,7 @@ import { usePrevious } from 'react-use';
 import LoadingOverlay from 'components/ArticleBuilder/LoadingOverlay';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { Helmet } from 'react-helmet';
+import InternalServerError from 'pages/InternalServerError';
 
 const GlobalStyle = createGlobalStyle`
     // ensure printing only prints the contents and no other elements
@@ -85,7 +86,7 @@ const Review = () => {
     const prevIsOpenPublishModal = usePrevious(isOpenPublishModal);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { load, isLoading, isNotFound, getVersions } = useLoad();
+    const { load, isLoading, isNotFound, hasFailed, getVersions } = useLoad();
     const { id } = useParams();
     const version = versions.find(version => version.id === id);
     const versionNumber = versions.length ? versions.length - versions.findIndex(version => version.id === id) : null;
@@ -130,6 +131,10 @@ const Review = () => {
 
     if (isNotFound) {
         return <NotFound />;
+    }
+
+    if (hasFailed) {
+        return <InternalServerError />;
     }
 
     const ldJson = {
