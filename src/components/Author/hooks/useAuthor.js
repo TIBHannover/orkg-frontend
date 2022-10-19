@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { getAuthorData } from 'utils';
 import { getResource } from 'services/backend/resources';
+import { searchAuthorOnWikidata } from 'services/wikidata';
 
 function useAuthor({ authorId }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -12,8 +13,16 @@ function useAuthor({ authorId }) {
     const loadAuthorData = useCallback(() => {
         setIsLoading(true);
         Promise.all([getResource(authorId), getStatementsBySubject({ id: authorId })])
-            .then(([authorResource, authorStatements]) => {
-                setAuthor(getAuthorData(authorResource, authorStatements));
+            .then(async ([authorResource, authorStatements]) => {
+                const authorInfo = getAuthorData(authorResource, authorStatements);
+                if (authorInfo.orcid) {
+                        await searchAuthorOnWikidata(authorInfo.orcid.label).then(response => {
+                            if (response.results.bindings.length > 0) {
+                                authorInfo.dblp = response.results.bindings[0].dblpId.value;
+                            }
+                        });
+                }
+                setAuthor(authorInfo);
                 setIsLoading(false);
                 setIsFailedLoading(false);
                 document.title = `${authorResource.label} - ORKG`;
