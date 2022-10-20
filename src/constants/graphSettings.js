@@ -70,6 +70,12 @@ export const PREDICATES = {
     SOLUTION: 'Solution',
     HAS_VIDEO: 'HasVideo',
     IS_ANONYMIZED: 'IsAnonymized',
+    CSVW_COLUMNS: 'CSVW_Columns',
+    CSVW_ROWS: 'CSVW_Rows',
+    CSVW_CELLS: 'CSVW_Cells',
+    CSVW_NUMBER: 'CSVW_Number',
+    CSVW_VALUE: 'CSVW_Value',
+    CSVW_NAME: 'CSVW_Name',
 };
 
 export const CLASSES = {
@@ -93,6 +99,7 @@ export const CLASSES = {
     CLASS: 'Classes',
     RESOURCE: 'Resources',
     QB_DATASET_CLASS: 'QBDataset',
+    CSVW_TABLE: 'Table',
     LOCATION: 'DCLocation',
     SENTENCE: 'Sentence',
     BENCHMARK: 'C14022',

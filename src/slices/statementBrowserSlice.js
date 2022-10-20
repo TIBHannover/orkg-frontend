@@ -1457,7 +1457,10 @@ export function addStatements(statements, resourceId, depth) {
                     // check if statement.object.id is not already loaded (propertyIds.length===0)
                     const resource = getState().statementBrowser.resources.byId[statement.object.id];
                     // resource.propertyIds?.length === 0
-                    if (filterStatementsBySubjectId(statements, statement.object.id)?.length && resource?.propertyIds?.length === 0) {
+                    if (
+                        filterStatementsBySubjectId(statements, statement.object.id)?.length &&
+                        (resource?.propertyIds?.length === 0 || resource.fetchedDepth < depth)
+                    ) {
                         // Add required properties and add statements
                         return dispatch(createRequiredPropertiesInResource(statement.object.id))
                             .then(() => dispatch(addStatements(statements, statement.object.id, depth - 1)))
@@ -1655,4 +1658,39 @@ export function getSubjectIdByValue(state, valueId) {
     const value = state.statementBrowser.values.byId[valueId];
     const predicate = state.statementBrowser.properties.byId[value.propertyId];
     return predicate?.resourceId;
+}
+
+/**
+ * Get CSV Table by value ID
+ * @param {Object} state Current state of the Store
+ * @param {String} valueId Value ID
+ * @return {Object} Table
+ */
+export function getTableByValueId(state, valueId) {
+    const value = state.statementBrowser.values.byId[valueId];
+    const columnsPropertyId = getPropertyIdByByResourceAndPredicateId(state, value.resourceId, PREDICATES.CSVW_COLUMNS);
+    const rowsPropertyId = getPropertyIdByByResourceAndPredicateId(state, value.resourceId, PREDICATES.CSVW_ROWS);
+    let cols = state.statementBrowser.properties.byId[columnsPropertyId];
+    cols = cols.valueIds.map(v => {
+        const c = state.statementBrowser.values.byId[v];
+        const namePropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_NAME);
+        let names = state.statementBrowser.properties.byId[namePropertyId];
+        names = names.valueIds.map(n => state.statementBrowser.values.byId[n]);
+        return { ...c, names };
+    });
+    let lines = state.statementBrowser.properties.byId[rowsPropertyId];
+    lines = lines.valueIds.map(v => {
+        const r = state.statementBrowser.values.byId[v];
+        const cellsPropertyId = getPropertyIdByByResourceAndPredicateId(state, r.resourceId, PREDICATES.CSVW_CELLS);
+        let cells = state.statementBrowser.properties.byId[cellsPropertyId];
+        cells = cells.valueIds.map(w => {
+            const c = state.statementBrowser.values.byId[w];
+            const valuePropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_VALUE);
+            let values = state.statementBrowser.properties.byId[valuePropertyId];
+            values = values?.valueIds.map(l => state.statementBrowser.values.byId[l]) ?? [];
+            return { ...c, values };
+        });
+        return { ...r, cells };
+    });
+    return { cols, lines };
 }

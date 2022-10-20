@@ -4,12 +4,14 @@ import { deleteValue, setIsDeletingValue, setIsHelpModalOpen, toggleEditValue, i
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faTable, faCheck, faTimes, faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import { fetchStatementsForResource } from 'slices/statementBrowserSlice';
 import { deleteStatementById } from 'services/backend/statements';
 import { useDispatch, useSelector } from 'react-redux';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import RDFDataCube from 'components/RDFDataCube/RDFDataCube';
+import CSVWTable from 'components/CSVWTable/CSVWTable';
 import { toast } from 'react-toastify';
 import InfoTippy from './InfoTippy';
 
@@ -22,6 +24,23 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
     const dispatch = useDispatch();
 
     const [modalDataset, setModalDataset] = useState(false);
+    const [isCSVWModelOpen, setIsCSVWModelOpen] = useState(false);
+
+    const handleViewTableClick = async e => {
+        const { existingResourceId } = resource;
+
+        if (existingResourceId) {
+            if (!resource.isFetching && resource.fetchedDepth < 3) {
+                await dispatch(
+                    fetchStatementsForResource({
+                        resourceId: resource.id,
+                        depth: 3,
+                    }),
+                );
+            }
+        }
+        setIsCSVWModelOpen(true);
+    };
 
     const handleDeleteValue = async () => {
         if (syncBackend) {
@@ -61,6 +80,12 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                 <>
                     {modalDataset && <RDFDataCube show={modalDataset} toggleModal={() => setModalDataset(prev => !prev)} id={id} />}
                     <StatementActionButton title="Visualize data in tabular form" icon={faTable} action={handleDatasetClick} />
+                </>
+            )}
+            {value.classes?.includes(CLASSES.CSVW_TABLE) && (
+                <>
+                    {isCSVWModelOpen && <CSVWTable show={isCSVWModelOpen} toggleModal={() => setIsCSVWModelOpen(prev => !prev)} id={id} />}
+                    <StatementActionButton title="Visualize data in tabular form" icon={faTable} action={() => handleViewTableClick()} />
                 </>
             )}
             <div className="valueOptions">
