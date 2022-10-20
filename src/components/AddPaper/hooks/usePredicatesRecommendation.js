@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { uniqBy } from 'lodash';
 import { getRecommendedPredicates } from 'services/orkgNlp';
 import { getExistingPredicatesByResource } from 'slices/statementBrowserSlice';
 import { setPredicatesRawResponse } from 'slices/addPaperSlice';
@@ -39,7 +40,10 @@ const usePredicatesRecommendation = () => {
     }, [abstract, dispatch, title]);
 
     return {
-        recommendedPredicates: recommendedPredicates.filter(x => !existingPropertyIds.includes(x.id)),
+        recommendedPredicates: uniqBy(
+            recommendedPredicates.filter(x => !existingPropertyIds.includes(x.id)),
+            'id',
+        ),
         isLoadingRP,
     };
 };
