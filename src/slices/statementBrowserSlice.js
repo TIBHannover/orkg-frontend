@@ -1704,3 +1704,22 @@ export function getTableByValueId(state, valueId) {
     // cols: sortBy(cols, obj => parseInt(obj.number.label ?? '0', 10))
     return { cols, lines: sortBy(lines, obj => parseInt(obj.number.label ?? '0', 10)) };
 }
+
+/**
+ * Get Depth of value by id
+ * @param {Object} state Current state of the Store
+ * @param {String} valueId Value ID
+ * @return {Integer} Depth
+ */
+export function getDepthByValueId(state, valueId) {
+    const value = state.statementBrowser.values.byId[valueId];
+    const resource = state.statementBrowser.resources.byId[value.resourceId];
+    if (resource.propertyIds.length === 0) {
+        return 0;
+    }
+    const property = state.statementBrowser.properties.byId[resource.propertyIds[0]];
+    if (!property && property.valueIds === 0) {
+        return 1;
+    }
+    return 1 + getDepthByValueId(state, property.valueIds[0]);
+}

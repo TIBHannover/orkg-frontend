@@ -15,7 +15,12 @@ import {
     DropdownToggle,
     InputGroup,
 } from 'reactstrap';
-import { selectResourceAction as selectResource, fetchStatementsForResource, getTableByValueId } from 'slices/statementBrowserSlice';
+import {
+    selectResourceAction as selectResource,
+    fetchStatementsForResource,
+    getTableByValueId,
+    getDepthByValueId,
+} from 'slices/statementBrowserSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
@@ -46,21 +51,21 @@ const DefaultColumnFilter = ({ column: { filterValue, preFilteredRows, setFilter
 function CSVWTable(props) {
     const value = useSelector(state => state.statementBrowser.values.byId[props.id]);
     const resource = useSelector(state => state.statementBrowser.resources.byId[value.resourceId]);
+    const fetchedDepth = useSelector(state => getDepthByValueId(state, props.id));
     const { lines, cols } = useSelector(state => getTableByValueId(state, props.id), shallowEqual);
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const dispatch = useDispatch();
-
     const columnsSortMethod = useCallback((rowA, rowB, id, desc) => sortMethod(rowA.original[id].value?.label, rowB.original[id].value?.label), []);
 
     useEffect(() => {
         const handleViewTableClick = async e => {
             const { existingResourceId } = resource;
             if (existingResourceId) {
-                if (!resource.isFetching && resource.fetchedDepth < 3) {
+                if (!resource.isFetching && fetchedDepth < 3) {
                     await dispatch(
                         fetchStatementsForResource({
-                            resourceId: resource.id,
+                            resourceId: resource.existingResourceId,
                             depth: 3,
                         }),
                     );
@@ -68,7 +73,7 @@ function CSVWTable(props) {
             }
         };
         handleViewTableClick();
-    }, [dispatch, resource]);
+    }, [dispatch, fetchedDepth, resource]);
 
     const defaultColumn = useMemo(
         () => ({
@@ -108,20 +113,24 @@ function CSVWTable(props) {
         () =>
             cols?.map(c => ({
                 Header: c.name?.label ?? 'No Label',
-                accessor: c.id,
+                accessor: c.existingResourceId,
                 sortType: columnsSortMethod,
                 Cell: innerProps => (
                     <span
-                        onKeyDown={e => (e.key === 'Enter' ? handleCellClick(e, innerProps.value, PREDICATES.CSVW_CELLS) : undefined)}
+                        onKeyDown={e => (e.key === 'Enter' ? handleCellClick(e, innerProps?.value, PREDICATES.CSVW_CELLS) : undefined)}
                         role="button"
                         tabIndex={0}
-                        onClick={e => handleCellClick(e, innerProps.value, PREDICATES.CSVW_CELLS)}
+                        onClick={e => handleCellClick(e, innerProps?.value, PREDICATES.CSVW_CELLS)}
                     >
-                        {innerProps.value.value?.label ?? ''}
+                        {innerProps?.value?.value?.label ?? (
+                            <small>
+                                <i>N/A</i>
+                            </small>
+                        )}
                     </span>
                 ),
             })) ?? [],
-        [resource],
+        [resource, lines?.length, cols.length],
     );
 
     const data = useMemo(
@@ -129,13 +138,13 @@ function CSVWTable(props) {
             lines?.map(r => {
                 let values = r.cells.map(c => c) ?? [];
                 values = values.map((c, index) => ({
-                    [cols[index].id]: c,
+                    [cols[index].existingResourceId]: c,
                 }));
                 values.cells = r;
                 values = Object.assign({}, ...values);
                 return values;
             }) ?? [],
-        [resource],
+        [resource, lines?.length, cols.length, columns],
     );
 
     const {
@@ -201,9 +210,11 @@ function CSVWTable(props) {
                                             <CSVLink
                                                 headers={cols.map(h => ({
                                                     label: h.name?.label ?? 'No Label',
-                                                    key: h.id,
+                                                    key: h.existingResourceId,
                                                 }))}
-                                                data={data.map(c => Object.assign({}, ...Object.keys(c).map(v => ({ [v]: c[v].value.label }))))}
+                                                data={data?.map(
+                                                    c => Object.assign({}, ...Object.keys(c).map(v => ({ [v]: c[v]?.value?.label ?? '' }))) ?? [],
+                                                )}
                                                 filename={`${value.label}.csv`}
                                                 className="dropdown-item"
                                                 target="_blank"
@@ -258,8 +269,8 @@ function CSVWTable(props) {
                                                 // eslint-disable-next-line react/jsx-key
                                                 <tr {...row.getRowProps()}>
                                                     {row.cells.map(cell => (
+                                                        // eslint-disable-next-line react/jsx-key
                                                         <td
-                                                            key={cell.id}
                                                             {...cell.getCellProps()}
                                                             onKeyDown={e =>
                                                                 e.key === 'Enter'
