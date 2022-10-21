@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import {
     Alert,
     Modal,
@@ -22,6 +22,7 @@ import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import { useTable, usePagination, useSortBy, useFilters } from 'react-table';
 import { CSVLink } from 'react-csv';
 import PropTypes from 'prop-types';
+import { sortMethod } from 'utils';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 
 // Define a default UI for filtering
@@ -49,6 +50,8 @@ function CSVWTable(props) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const dispatch = useDispatch();
+
+    const columnsSortMethod = useCallback((rowA, rowB, id, desc) => sortMethod(rowA.original[id].value?.label, rowB.original[id].value?.label), []);
 
     useEffect(() => {
         const handleViewTableClick = async e => {
@@ -104,8 +107,9 @@ function CSVWTable(props) {
     const columns = useMemo(
         () =>
             cols?.map(c => ({
-                Header: c.names?.[0]?.label ?? 'No Label',
+                Header: c.name?.label ?? 'No Label',
                 accessor: c.id,
+                sortType: columnsSortMethod,
                 Cell: innerProps => (
                     <span
                         onKeyDown={e => (e.key === 'Enter' ? handleCellClick(e, innerProps.value, PREDICATES.CSVW_CELLS) : undefined)}
@@ -113,7 +117,7 @@ function CSVWTable(props) {
                         tabIndex={0}
                         onClick={e => handleCellClick(e, innerProps.value, PREDICATES.CSVW_CELLS)}
                     >
-                        {innerProps.value.values?.[0]?.label ?? ''}
+                        {innerProps.value.value?.label ?? ''}
                     </span>
                 ),
             })) ?? [],

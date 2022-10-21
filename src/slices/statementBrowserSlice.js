@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { LOCATION_CHANGE, guid, filterStatementsBySubjectId } from 'utils';
 import { ENTITIES, PREDICATES, CLASSES } from 'constants/graphSettings';
 import { match } from 'path-to-regexp';
-import { last, flatten, uniqBy, orderBy, uniq } from 'lodash';
+import { last, flatten, uniqBy, orderBy, uniq, sortBy } from 'lodash';
 import ROUTES from 'constants/routes';
 import { Cookies } from 'react-cookie';
 import { getEntity } from 'services/backend/misc';
@@ -1675,25 +1675,32 @@ export function getTableByValueId(state, valueId) {
         cols?.valueIds?.map(v => {
             const c = state.statementBrowser.values.byId[v];
             const namePropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_NAME);
-            let names = state.statementBrowser.properties.byId[namePropertyId];
-            names = names?.valueIds?.map(n => state.statementBrowser.values.byId[n]) ?? [];
-            return { ...c, names };
+            const numberPropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_NUMBER);
+            let name = state.statementBrowser.properties.byId[namePropertyId];
+            let number = state.statementBrowser.properties.byId[numberPropertyId];
+            name = name?.valueIds?.map(n => state.statementBrowser.values.byId[n])?.[0] ?? {};
+            number = number?.valueIds?.map(n => state.statementBrowser.values.byId[n])?.[0] ?? {};
+            return { ...c, name, number };
         }) ?? [];
     let lines = state.statementBrowser.properties.byId[rowsPropertyId];
     lines =
         lines?.valueIds?.map(v => {
             const r = state.statementBrowser.values.byId[v];
             const cellsPropertyId = getPropertyIdByByResourceAndPredicateId(state, r.resourceId, PREDICATES.CSVW_CELLS);
+            const numberPropertyId = getPropertyIdByByResourceAndPredicateId(state, r.resourceId, PREDICATES.CSVW_NUMBER);
             let cells = state.statementBrowser.properties.byId[cellsPropertyId];
+            let number = state.statementBrowser.properties.byId[numberPropertyId];
+            number = number?.valueIds?.map(n => state.statementBrowser.values.byId[n])?.[0] ?? {};
             cells =
                 cells?.valueIds?.map(w => {
                     const c = state.statementBrowser.values.byId[w];
                     const valuePropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_VALUE);
-                    let values = state.statementBrowser.properties.byId[valuePropertyId];
-                    values = values?.valueIds.map(l => state.statementBrowser.values.byId[l]) ?? [];
-                    return { ...c, values, row: r };
+                    let value = state.statementBrowser.properties.byId[valuePropertyId];
+                    value = value?.valueIds.map(l => state.statementBrowser.values.byId[l])?.[0] ?? {};
+                    return { ...c, value, row: r };
                 }) ?? [];
-            return { ...r, cells };
+            return { ...r, cells, number };
         }) ?? [];
-    return { cols, lines };
+    // cols: sortBy(cols, obj => parseInt(obj.number.label ?? '0', 10))
+    return { cols, lines: sortBy(lines, obj => parseInt(obj.number.label ?? '0', 10)) };
 }
