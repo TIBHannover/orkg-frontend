@@ -1691,7 +1691,7 @@ export function getTableByValueId(state, valueId) {
                     const valuePropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_VALUE);
                     let values = state.statementBrowser.properties.byId[valuePropertyId];
                     values = values?.valueIds.map(l => state.statementBrowser.values.byId[l]) ?? [];
-                    return { ...c, values };
+                    return { ...c, values, row: r };
                 }) ?? [];
             return { ...r, cells };
         }) ?? [];

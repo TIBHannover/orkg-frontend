@@ -15,13 +15,14 @@ import {
     DropdownToggle,
     InputGroup,
 } from 'reactstrap';
-import { fetchStatementsForResource, getTableByValueId } from 'slices/statementBrowserSlice';
+import { selectResourceAction as selectResource, fetchStatementsForResource, getTableByValueId } from 'slices/statementBrowserSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import { useTable, usePagination, useSortBy, useFilters } from 'react-table';
 import { CSVLink } from 'react-csv';
 import PropTypes from 'prop-types';
+import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 
 // Define a default UI for filtering
 // eslint-disable-next-line react/prop-types
@@ -84,11 +85,37 @@ function CSVWTable(props) {
         [],
     );
 
+    const handleCellClick = (e, r, propertyId) => {
+        // Clicking on the label opens the cell and clicking on empty space open the row
+        e.stopPropagation();
+        if (r._class !== ENTITIES.LITERAL) {
+            dispatch(
+                selectResource({
+                    increaseLevel: true,
+                    resourceId: r.resourceId,
+                    label: r.label ? r.label : 'No label',
+                    propertyLabel: PREDICATES.CSVW_ROWS === propertyId ? 'rows' : 'cells',
+                }),
+            );
+            props.toggleModal();
+        }
+    };
+
     const columns = useMemo(
         () =>
             cols?.map(c => ({
                 Header: c.names?.[0]?.label ?? 'No Label',
                 accessor: c.id,
+                Cell: innerProps => (
+                    <span
+                        onKeyDown={e => (e.key === 'Enter' ? handleCellClick(e, innerProps.value, PREDICATES.CSVW_CELLS) : undefined)}
+                        role="button"
+                        tabIndex={0}
+                        onClick={e => handleCellClick(e, innerProps.value, PREDICATES.CSVW_CELLS)}
+                    >
+                        {innerProps.value.values?.[0]?.label ?? ''}
+                    </span>
+                ),
             })) ?? [],
         [resource],
     );
@@ -96,10 +123,11 @@ function CSVWTable(props) {
     const data = useMemo(
         () =>
             lines?.map(r => {
-                let values = r.cells.map(c => c?.values?.[0]?.label ?? '') ?? [];
+                let values = r.cells.map(c => c) ?? [];
                 values = values.map((c, index) => ({
                     [cols[index].id]: c,
                 }));
+                values.cells = r;
                 values = Object.assign({}, ...values);
                 return values;
             }) ?? [],
@@ -185,8 +213,8 @@ function CSVWTable(props) {
                                     </DropdownMenu>
                                 </Dropdown>
                             </div>
-                            <div className="text-nowrap d-block overflow-auto">
-                                <Table {...getTableProps()} striped bordered>
+                            <div className="text-nowrap d-block overflow-auto ">
+                                <Table {...getTableProps()} striped bordered hover>
                                     <thead>
                                         {headerGroups.map(headerGroup => (
                                             // eslint-disable-next-line react/jsx-key
@@ -226,8 +254,20 @@ function CSVWTable(props) {
                                                 // eslint-disable-next-line react/jsx-key
                                                 <tr {...row.getRowProps()}>
                                                     {row.cells.map(cell => (
-                                                        // eslint-disable-next-line react/jsx-key
-                                                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                                        <td
+                                                            key={cell.id}
+                                                            {...cell.getCellProps()}
+                                                            onKeyDown={e =>
+                                                                e.key === 'Enter'
+                                                                    ? handleCellClick(e, cell.value.row, PREDICATES.CSVW_ROWS)
+                                                                    : undefined
+                                                            }
+                                                            role="button"
+                                                            tabIndex={0}
+                                                            onClick={e => handleCellClick(e, cell.value.row, PREDICATES.CSVW_ROWS)}
+                                                        >
+                                                            {cell.render('Cell')}
+                                                        </td>
                                                     ))}
                                                 </tr>
                                             );
