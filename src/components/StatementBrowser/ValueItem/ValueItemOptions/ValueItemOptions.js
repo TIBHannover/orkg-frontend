@@ -4,7 +4,6 @@ import { deleteValue, setIsDeletingValue, setIsHelpModalOpen, toggleEditValue, i
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faTable, faCheck, faTimes, faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
-import { fetchStatementsForResource } from 'slices/statementBrowserSlice';
 import { deleteStatementById } from 'services/backend/statements';
 import { useDispatch, useSelector } from 'react-redux';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
@@ -25,22 +24,6 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
 
     const [modalDataset, setModalDataset] = useState(false);
     const [isCSVWModelOpen, setIsCSVWModelOpen] = useState(false);
-
-    const handleViewTableClick = async e => {
-        const { existingResourceId } = resource;
-
-        if (existingResourceId) {
-            if (!resource.isFetching && resource.fetchedDepth < 3) {
-                await dispatch(
-                    fetchStatementsForResource({
-                        resourceId: resource.id,
-                        depth: 3,
-                    }),
-                );
-            }
-        }
-        setIsCSVWModelOpen(true);
-    };
 
     const handleDeleteValue = async () => {
         if (syncBackend) {
@@ -85,7 +68,7 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
             {value.classes?.includes(CLASSES.CSVW_TABLE) && (
                 <>
                     {isCSVWModelOpen && <CSVWTable show={isCSVWModelOpen} toggleModal={() => setIsCSVWModelOpen(prev => !prev)} id={id} />}
-                    <StatementActionButton title="Visualize data in tabular form" icon={faTable} action={() => handleViewTableClick()} />
+                    <StatementActionButton title="Visualize data in tabular form" icon={faTable} action={() => setIsCSVWModelOpen(true)} />
                 </>
             )}
             <div className="valueOptions">

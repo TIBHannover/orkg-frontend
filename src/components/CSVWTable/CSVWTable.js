@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
+    Alert,
     Modal,
     ModalHeader,
     ModalBody,
@@ -14,10 +15,10 @@ import {
     DropdownToggle,
     InputGroup,
 } from 'reactstrap';
-import { getTableByValueId } from 'slices/statementBrowserSlice';
+import { fetchStatementsForResource, getTableByValueId } from 'slices/statementBrowserSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
-import { useSelector, shallowEqual } from 'react-redux';
+import { faSpinner, faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import { useTable, usePagination, useSortBy, useFilters } from 'react-table';
 import { CSVLink } from 'react-csv';
 import PropTypes from 'prop-types';
@@ -46,6 +47,25 @@ function CSVWTable(props) {
     const { lines, cols } = useSelector(state => getTableByValueId(state, props.id), shallowEqual);
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const handleViewTableClick = async e => {
+            const { existingResourceId } = resource;
+            if (existingResourceId) {
+                if (!resource.isFetching && resource.fetchedDepth < 3) {
+                    await dispatch(
+                        fetchStatementsForResource({
+                            resourceId: resource.id,
+                            depth: 3,
+                        }),
+                    );
+                }
+            }
+        };
+        handleViewTableClick();
+    }, [dispatch, resource]);
+
     const defaultColumn = useMemo(
         () => ({
             Filter: DefaultColumnFilter,
@@ -66,24 +86,24 @@ function CSVWTable(props) {
 
     const columns = useMemo(
         () =>
-            cols.map(c => ({
+            cols?.map(c => ({
                 Header: c.names?.[0]?.label ?? 'No Label',
                 accessor: c.id,
-            })),
-        [],
+            })) ?? [],
+        [resource],
     );
 
     const data = useMemo(
         () =>
-            lines.map(r => {
+            lines?.map(r => {
                 let values = r.cells.map(c => c?.values?.[0]?.label ?? '') ?? [];
                 values = values.map((c, index) => ({
                     [cols[index].id]: c,
                 }));
                 values = Object.assign({}, ...values);
                 return values;
-            }),
-        [],
+            }) ?? [],
+        [resource],
     );
 
     const {
@@ -136,82 +156,85 @@ function CSVWTable(props) {
             <ModalHeader toggle={props.toggleModal}>View Tabular Data: {value.label}</ModalHeader>
             <ModalBody>
                 <>
-                    {!resource.isFetching ? (
+                    {!resource.isFetching && !resource.isFailedFetching && (
                         <>
-                            <Dropdown className="float-end mb-2" isOpen={dropdownOpen} toggle={() => setDropdownOpen(prevState => !prevState)}>
-                                <DropdownToggle color="secondary" size="sm">
-                                    <span className="me-2">Options</span> <Icon icon={faEllipsisV} />
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem header>Export</DropdownItem>
-                                    {rows.length > 0 ? (
-                                        <CSVLink
-                                            headers={cols.map(h => ({
-                                                label: h.names?.[0]?.label ?? 'No Label',
-                                                key: h.id,
-                                            }))}
-                                            data={data}
-                                            filename={`${value.label}.csv`}
-                                            className="dropdown-item"
-                                            target="_blank"
-                                            onClick={exportAsCsv}
-                                        >
-                                            Export as CSV
-                                        </CSVLink>
-                                    ) : (
-                                        ''
-                                    )}
-                                </DropdownMenu>
-                            </Dropdown>
-                            <Table {...getTableProps()} striped bordered className="text-nowrap d-block overflow-auto">
-                                <thead>
-                                    {headerGroups.map(headerGroup => (
-                                        // eslint-disable-next-line react/jsx-key
-                                        <tr {...headerGroup.getHeaderGroupProps()}>
-                                            {headerGroup.headers.map(column => (
-                                                // Add the sorting props to control sorting. For this example
-                                                // we can add them into the header props
-                                                <th key={column.getHeaderProps(column.getSortByToggleProps()).key}>
-                                                    <div {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                                        {column.render('Header')}
-                                                        {/* Add a sort direction indicator */}
-                                                        <span>
-                                                            {column.isSorted ? (
-                                                                <>
-                                                                    {column.isSortedDesc ? (
-                                                                        <Icon icon={faSortUp} className="ms-1" />
-                                                                    ) : (
-                                                                        <Icon icon={faSortDown} className="ms-1" />
-                                                                    )}
-                                                                </>
-                                                            ) : (
-                                                                ''
-                                                            )}
-                                                        </span>
-                                                    </div>
-                                                    {/* Render the columns filter UI */}
-                                                    <div>{column.canFilter ? column.render('Filter') : null}</div>
-                                                </th>
-                                            ))}
-                                        </tr>
-                                    ))}
-                                </thead>
-                                <tbody {...getTableBodyProps()}>
-                                    {page.map((row, i) => {
-                                        prepareRow(row);
-                                        return (
+                            <div className="d-flex flex-row-reverse">
+                                <Dropdown className="mb-2" isOpen={dropdownOpen} toggle={() => setDropdownOpen(prevState => !prevState)}>
+                                    <DropdownToggle color="secondary" size="sm">
+                                        <span className="me-2">Options</span> <Icon icon={faEllipsisV} />
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DropdownItem header>Export</DropdownItem>
+                                        {rows.length > 0 ? (
+                                            <CSVLink
+                                                headers={cols.map(h => ({
+                                                    label: h.names?.[0]?.label ?? 'No Label',
+                                                    key: h.id,
+                                                }))}
+                                                data={data}
+                                                filename={`${value.label}.csv`}
+                                                className="dropdown-item"
+                                                target="_blank"
+                                                onClick={exportAsCsv}
+                                            >
+                                                Export as CSV
+                                            </CSVLink>
+                                        ) : (
+                                            ''
+                                        )}
+                                    </DropdownMenu>
+                                </Dropdown>
+                            </div>
+                            <div className="text-nowrap d-block overflow-auto">
+                                <Table {...getTableProps()} striped bordered>
+                                    <thead>
+                                        {headerGroups.map(headerGroup => (
                                             // eslint-disable-next-line react/jsx-key
-                                            <tr {...row.getRowProps()}>
-                                                {row.cells.map(cell => (
-                                                    // eslint-disable-next-line react/jsx-key
-                                                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                                {headerGroup.headers.map(column => (
+                                                    // Add the sorting props to control sorting. For this example
+                                                    // we can add them into the header props
+                                                    <th key={column.getHeaderProps(column.getSortByToggleProps()).key}>
+                                                        <div {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                                            {column.render('Header')}
+                                                            {/* Add a sort direction indicator */}
+                                                            <span>
+                                                                {column.isSorted ? (
+                                                                    <>
+                                                                        {column.isSortedDesc ? (
+                                                                            <Icon icon={faSortUp} className="ms-1" />
+                                                                        ) : (
+                                                                            <Icon icon={faSortDown} className="ms-1" />
+                                                                        )}
+                                                                    </>
+                                                                ) : (
+                                                                    ''
+                                                                )}
+                                                            </span>
+                                                        </div>
+                                                        {/* Render the columns filter UI */}
+                                                        <div>{column.canFilter ? column.render('Filter') : null}</div>
+                                                    </th>
                                                 ))}
                                             </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </Table>
-
+                                        ))}
+                                    </thead>
+                                    <tbody {...getTableBodyProps()}>
+                                        {page.map((row, i) => {
+                                            prepareRow(row);
+                                            return (
+                                                // eslint-disable-next-line react/jsx-key
+                                                <tr {...row.getRowProps()}>
+                                                    {row.cells.map(cell => (
+                                                        // eslint-disable-next-line react/jsx-key
+                                                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                                    ))}
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </Table>
+                            </div>
                             <Pagination aria-label="Page navigation" className="float-start">
                                 <PaginationItem title="First page" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
                                     <PaginationLink first />
@@ -254,17 +277,30 @@ function CSVWTable(props) {
                                             setPageSize(Number(e.target.value));
                                         }}
                                     >
-                                        {[10, 20, 30, 40, 50].map(pageSize => (
-                                            <option key={pageSize} value={pageSize}>
-                                                Show {pageSize}
+                                        {[10, 20, 30, 40, 50].map(_pageSize => (
+                                            <option key={_pageSize} value={_pageSize}>
+                                                Show {_pageSize}
                                             </option>
                                         ))}
                                     </Input>
                                 </InputGroup>
                             </div>
                         </>
-                    ) : (
-                        'Loading...'
+                    )}
+
+                    {resource.isFetching && (
+                        <div className="text-center text-primary mt-4 mb-4">
+                            <span style={{ fontSize: 80 }}>
+                                <Icon icon={faSpinner} spin />
+                            </span>
+                            <br />
+                            <h2 className="h5">Loading table...</h2>
+                        </div>
+                    )}
+                    {!resource.isFetching && resource.isFailedFetching && (
+                        <div className="text-center text-primary mt-4 mb-4">
+                            <Alert color="light">Failed to load dataset, please try again later</Alert>
+                        </div>
                     )}
                 </>
             </ModalBody>

@@ -1671,26 +1671,29 @@ export function getTableByValueId(state, valueId) {
     const columnsPropertyId = getPropertyIdByByResourceAndPredicateId(state, value.resourceId, PREDICATES.CSVW_COLUMNS);
     const rowsPropertyId = getPropertyIdByByResourceAndPredicateId(state, value.resourceId, PREDICATES.CSVW_ROWS);
     let cols = state.statementBrowser.properties.byId[columnsPropertyId];
-    cols = cols.valueIds.map(v => {
-        const c = state.statementBrowser.values.byId[v];
-        const namePropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_NAME);
-        let names = state.statementBrowser.properties.byId[namePropertyId];
-        names = names.valueIds.map(n => state.statementBrowser.values.byId[n]);
-        return { ...c, names };
-    });
+    cols =
+        cols?.valueIds?.map(v => {
+            const c = state.statementBrowser.values.byId[v];
+            const namePropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_NAME);
+            let names = state.statementBrowser.properties.byId[namePropertyId];
+            names = names?.valueIds?.map(n => state.statementBrowser.values.byId[n]) ?? [];
+            return { ...c, names };
+        }) ?? [];
     let lines = state.statementBrowser.properties.byId[rowsPropertyId];
-    lines = lines.valueIds.map(v => {
-        const r = state.statementBrowser.values.byId[v];
-        const cellsPropertyId = getPropertyIdByByResourceAndPredicateId(state, r.resourceId, PREDICATES.CSVW_CELLS);
-        let cells = state.statementBrowser.properties.byId[cellsPropertyId];
-        cells = cells.valueIds.map(w => {
-            const c = state.statementBrowser.values.byId[w];
-            const valuePropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_VALUE);
-            let values = state.statementBrowser.properties.byId[valuePropertyId];
-            values = values?.valueIds.map(l => state.statementBrowser.values.byId[l]) ?? [];
-            return { ...c, values };
-        });
-        return { ...r, cells };
-    });
+    lines =
+        lines?.valueIds?.map(v => {
+            const r = state.statementBrowser.values.byId[v];
+            const cellsPropertyId = getPropertyIdByByResourceAndPredicateId(state, r.resourceId, PREDICATES.CSVW_CELLS);
+            let cells = state.statementBrowser.properties.byId[cellsPropertyId];
+            cells =
+                cells?.valueIds?.map(w => {
+                    const c = state.statementBrowser.values.byId[w];
+                    const valuePropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_VALUE);
+                    let values = state.statementBrowser.properties.byId[valuePropertyId];
+                    values = values?.valueIds.map(l => state.statementBrowser.values.byId[l]) ?? [];
+                    return { ...c, values };
+                }) ?? [];
+            return { ...r, cells };
+        }) ?? [];
     return { cols, lines };
 }
