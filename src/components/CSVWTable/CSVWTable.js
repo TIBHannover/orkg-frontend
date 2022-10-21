@@ -200,10 +200,10 @@ function CSVWTable(props) {
                                         {rows.length > 0 ? (
                                             <CSVLink
                                                 headers={cols.map(h => ({
-                                                    label: h.names?.[0]?.label ?? 'No Label',
+                                                    label: h.name?.label ?? 'No Label',
                                                     key: h.id,
                                                 }))}
-                                                data={data}
+                                                data={data.map(c => Object.assign({}, ...Object.keys(c).map(v => ({ [v]: c[v].value.label }))))}
                                                 filename={`${value.label}.csv`}
                                                 className="dropdown-item"
                                                 target="_blank"
