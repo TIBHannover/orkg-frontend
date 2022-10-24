@@ -19,7 +19,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const AddResource = () => {
-    const isDOI = new RegExp(REGEX.DOI);
+    const isDOI = new RegExp(REGEX.DOI_ID);
     const classesAutocompleteRef = useRef(null);
     const [label, setLabel] = useState('');
     const [classes, setClasses] = useState([]);
