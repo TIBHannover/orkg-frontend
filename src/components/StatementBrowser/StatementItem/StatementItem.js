@@ -11,11 +11,13 @@ import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/Sta
 import defaultProperties from 'constants/defaultProperties';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES } from 'constants/graphSettings';
+import { useSelector } from 'react-redux';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import useStatementItem from './hooks/useStatementItem';
 
+// eslint-disable-next-line react/display-name
 const StatementItem = forwardRef((props, ref) => {
     const {
         propertiesAsLinks,
@@ -34,6 +36,8 @@ const StatementItem = forwardRef((props, ref) => {
         syncBackend: props.syncBackend,
     });
 
+    const preferences = useSelector(state => state.statementBrowser.preferences);
+
     return (
         <StatementsGroupStyle ref={ref} className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'} list-group-item`}>
             <div className="row gx-0">
@@ -42,7 +46,11 @@ const StatementItem = forwardRef((props, ref) => {
                         <div>
                             <div className="propertyLabel">
                                 {!property.isSaving && property.existingPredicateId && (
-                                    <DescriptionTooltip id={property.existingPredicateId} typeId={ENTITIES.PREDICATE}>
+                                    <DescriptionTooltip
+                                        id={property.existingPredicateId}
+                                        _class={ENTITIES.PREDICATE}
+                                        disabled={!preferences.showDescriptionTooltips}
+                                    >
                                         <Link
                                             to={reverse(ROUTES.PROPERTY, { id: property.existingPredicateId })}
                                             target={!propertiesAsLinks ? '_blank' : '_self'}

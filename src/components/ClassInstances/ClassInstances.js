@@ -8,6 +8,7 @@ import { debounce } from 'lodash';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 
 const ClassInstances = props => {
     const pageSize = 10;
@@ -115,10 +116,14 @@ const ClassInstances = props => {
                                 {instances.map(instance => (
                                     <tr key={instance.id}>
                                         <td>
-                                            <Link to={`${reverse(ROUTES.RESOURCE, { id: instance.id })}?noRedirect`}>{instance.id}</Link>
+                                            <DescriptionTooltip id={instance.id} _class={instance._class} classes={instance.classes}>
+                                                <Link to={`${reverse(ROUTES.RESOURCE, { id: instance.id })}?noRedirect`}>{instance.id}</Link>
+                                            </DescriptionTooltip>
                                         </td>
                                         <td>
-                                            <Link to={`${reverse(ROUTES.RESOURCE, { id: instance.id })}?noRedirect`}>{instance.label}</Link>
+                                            <DescriptionTooltip id={instance.id} _class={instance._class} classes={instance.classes}>
+                                                <Link to={`${reverse(ROUTES.RESOURCE, { id: instance.id })}?noRedirect`}>{instance.label}</Link>
+                                            </DescriptionTooltip>
                                         </td>
                                         <td>{instance.shared}</td>
                                     </tr>
