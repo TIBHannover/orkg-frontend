@@ -90,7 +90,7 @@ const DescriptionTooltip = props => {
             theme="descriptionTooltip"
             onTrigger={onTrigger}
             content={
-                <Table className="rounded">
+                <Table className="rounded mb-0">
                     <tbody>
                         <tr>
                             <td>{renderTypeLabel()} id</td>
