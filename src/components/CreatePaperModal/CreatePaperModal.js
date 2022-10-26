@@ -30,7 +30,7 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
 
         const doiEntry = initialValue.startsWith('http') ? initialValue.substring(initialValue.indexOf('10.')) : initialValue;
 
-        if (REGEX.DOI.test(doiEntry)) {
+        if (REGEX.DOI_ID.test(doiEntry)) {
             setDoi(doiEntry);
             setLookupOnMount(true);
         } else {
@@ -45,7 +45,7 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
             month,
             year,
             authors,
-            doi: REGEX.DOI.test(doi) ? doi : null,
+            doi: REGEX.DOI_ID.test(doi) ? doi : null,
             publishedIn,
             researchField,
             url,
