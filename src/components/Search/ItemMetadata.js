@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Button, Input, InputGroup, InputGroupText } from 'reactstrap';
+import { Badge, Button, Input, InputGroup, InputGroupText } from 'reactstrap';
 import moment from 'moment';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
@@ -15,36 +15,36 @@ const ItemMetadata = ({ item, showClasses, showCreatedAt, showCreatedBy, showPro
     <div className="d-flex">
         <div className="flex-grow-1">
             {showCreatedAt && (
-                <small className="d-inline-block me-2">
+                <Badge color="light" className="me-2">
                     <Icon size="sm" icon={faCalendar} className="me-1" /> {moment(item.created_at).format('DD MMMM YYYY - H:mm')}
-                </small>
+                </Badge>
             )}
             {item.shared > 0 && (
-                <small className="d-inline-block me-2">
+                <Badge color="light" className="me-2">
                     <span>
                         <Icon icon={faArrowRight} />
                     </span>
-                    {` Referred: ${pluralize('time', item.shared, true)}`}
-                </small>
+                    {` Referred ${pluralize('time', item.shared, true)}`}
+                </Badge>
             )}
             {showClasses && item.classes?.length > 0 && (
-                <small className="d-inline-block me-2">
+                <Badge color="light" className="me-2">
                     <span>
-                        <Icon icon={faTags} /> {' Instance of: '}
+                        <Icon icon={faTags} /> {' Instance of '}
                     </span>
                     {item.classes.join(', ')}
-                </small>
+                </Badge>
             )}
             {showCreatedBy && item.created_by !== MISC.UNKNOWN_ID && (
-                <small className="d-inline-block me-2">
+                <Badge color="light" className="me-2">
                     <Icon icon={faUser} /> Created by{' '}
-                    <span className="ms-1">
-                        <UserAvatar size={24} userId={item.created_by} showDisplayName={true} />
+                    <span className="ms-1 d-inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
+                        <UserAvatar size={20} userId={item.created_by} showDisplayName={true} />
                     </span>
-                </small>
+                </Badge>
             )}
             {showProvenance && (
-                <span className="d-block">
+                <span className="d-inline-block">
                     <ProvenanceBox item={item} editMode={editMode} />
                 </span>
             )}

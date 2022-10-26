@@ -1,7 +1,7 @@
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { faCircle, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faBinoculars, faPen, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { MISC } from 'constants/graphSettings';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import useProvenance from 'components/Resource/hooks/useProvenance';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import { Badge } from 'reactstrap';
 
 function ProvenanceBox({ item, editMode }) {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
@@ -23,23 +24,25 @@ function ProvenanceBox({ item, editMode }) {
     return (
         <>
             {provenance?.organization?.id && organizationId !== MISC.UNKNOWN_ID && (
-                <small className="d-inline-block me-2">
-                    <Icon icon={faCircle} /> Organization:
+                <Badge color="light" className="me-2">
+                    <Icon icon={faUsers} /> Organization
                     <span className="ms-1">
                         <Link to={reverse(ROUTES.ORGANIZATION, { id: provenance.organization.display_id })}>{provenance.organization.name}</Link>
                     </span>
-                </small>
+                </Badge>
             )}
             {provenance?.id && observatoryId !== MISC.UNKNOWN_ID && (
-                <small className="d-inline-block me-2">
-                    <Icon icon={faCircle} /> Observatory:
+                <Badge color="light" className="me-2">
+                    <Icon icon={faBinoculars} /> Observatory
                     <span className="ms-1">
                         <Link to={reverse(ROUTES.OBSERVATORY, { id: provenance.display_id })}>{provenance.name}</Link>
                     </span>
-                </small>
+                </Badge>
             )}
             {editMode && organizationId === MISC.UNKNOWN_ID && observatoryId === MISC.UNKNOWN_ID && (
-                <small className="d-inline-block me-2">Not assigned to any observatory</small>
+                <Badge color="light" className="me-2">
+                    Not assigned to any observatory
+                </Badge>
             )}
             {editMode && isCurationAllowed && (
                 <StatementActionButton title="Edit provenance" icon={faPen} action={() => setShowAssignObservatory(v => !v)} />
