@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
-import { MISC } from 'constants/graphSettings';
 import { setProvenance, setObservatoryId, setOrganizationId } from 'slices/comparisonSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -16,7 +15,7 @@ function useProvenance() {
          * Load Provenance data
          */
         const loadProvenanceInfos = () => {
-            if (observatoryId && observatoryId !== MISC.UNKNOWN_ID) {
+            if (observatoryId && observatoryId) {
                 getObservatoryAndOrganizationInformation(observatoryId, organizationId).then(provenance => {
                     dispatch(setProvenance(provenance));
                 });

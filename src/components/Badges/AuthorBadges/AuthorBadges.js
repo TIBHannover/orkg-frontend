@@ -24,7 +24,7 @@ const AuthorBadges = ({ authors }) =>
             </Link>
         ) : (
             <Badge color="light" className="me-2 mb-2" key={index} typeof="foaf:Person">
-                <Icon icon={faUser} className="text-secondary" aria-label="Author name" /> {author.label}
+                <Icon icon={faUser} aria-label="Author name" /> {author.label}
             </Badge>
         ),
     );

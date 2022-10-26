@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Row, Card, CardBody, CardTitle, Button } from 'reactstrap';
+import { useState } from 'react';
+import { Row, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
