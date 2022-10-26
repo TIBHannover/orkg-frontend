@@ -77,8 +77,10 @@ export const reviewSlice = createSlice({
         },
         sectionLinkUpdated: (state, { payload: { id, objectId, label } }) => {
             const index = state.sections.findIndex(section => section?.id === id);
-            state.sections[index].contentLink.objectId = objectId;
-            state.sections[index].contentLink.label = label;
+            state.sections[index].contentLink = {
+                objectId,
+                label,
+            };
         },
         sectionTypeUpdated: (state, { payload: { sectionId, sectionType } }) => {
             const index = state.sections.findIndex(section => section.id === sectionId);
