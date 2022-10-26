@@ -45,7 +45,7 @@ const PropertySuggestions = () => {
                     onChange={e => setFilterValue(e.target.value)}
                 />
                 <div className="list-group" style={{ maxHeight: !isExpanded ? 400 : 5000, overflowY: 'auto' }} ref={ref}>
-                    {filteredSuggestions.map((c, index) => (
+                    {filteredSuggestions.map(c => (
                         <ListGroupItem
                             action
                             onClick={() => {
@@ -59,7 +59,7 @@ const PropertySuggestions = () => {
                                     }),
                                 );
                             }}
-                            key={`suggested-property-${index}`}
+                            key={`suggested-property-${c.property.id}`}
                             className="py-2 px-3"
                             style={{ cursor: 'pointer' }}
                         >

@@ -15,7 +15,7 @@ const PropertySuggestions = () => {
         <Col lg="12">
             <p className="text-muted mt-4">Suggested properties</p>
             <ListGroup>
-                {suggestedProperties.map((c, index) => (
+                {suggestedProperties.map(c => (
                     <ListGroupItem
                         action
                         onClick={() => {
@@ -29,7 +29,7 @@ const PropertySuggestions = () => {
                                 }),
                             );
                         }}
-                        key={`suggested-property-${index}`}
+                        key={`suggested-property-${c.property.id}`}
                         className="py-2 px-3"
                         style={{ cursor: 'pointer' }}
                     >
