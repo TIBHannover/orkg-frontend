@@ -89,7 +89,7 @@ function PreviewVisualizationComparison() {
     }, [visualizations]);
 
     return (
-        <div>
+        <div id="visualizations">
             {!isLoadingMetadata && !isFailedLoadingMetadata && (
                 <>
                     {!isLoadingVisualizationData && visData?.length > 0 && (

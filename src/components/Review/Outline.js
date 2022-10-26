@@ -36,7 +36,9 @@ const ListItem = styled.li`
     border-top: 1px solid #c7ccda;
     padding: 5px 0;
     font-size: 95%;
-
+    a {
+        color: #5c5c75;
+    }
     &:first-child {
         border-top: none;
     }
@@ -53,20 +55,14 @@ const Outline = ({ editMode = false }) => {
                         .filter(section => section?.title?.label)
                         .map(section => (
                             <ListItem key={section.id}>
-                                <Link to={`#section-${section.id}`} className="text-secondary">
-                                    {section.title.label}
-                                </Link>
+                                <Link to={`#section-${section.id}`}>{section.title.label}</Link>
                             </ListItem>
                         ))}
                     <ListItem>
-                        <Link to="#section-acknowledgements" className="text-secondary">
-                            Acknowledgements
-                        </Link>
+                        <Link to="#section-acknowledgements">Acknowledgements</Link>
                     </ListItem>
                     <ListItem>
-                        <Link to="#section-references" className="text-secondary">
-                            References
-                        </Link>
+                        <Link to="#section-references">References</Link>
                     </ListItem>
                 </ol>
             </Box>
