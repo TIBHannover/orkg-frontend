@@ -39,7 +39,7 @@ const OrganizationBanner = () => {
     }
     const link = observatory.id
         ? reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })
-        : reverse(ROUTES.ORGANIZATION, { type: capitalize(ORGANIZATIONS_MISC.GENERAL), id: observatory.organization.display_id });
+        : route;
 
     return (
         <OrganizationBannerStyled>

@@ -1,37 +1,28 @@
-import { Component } from 'react';
 import { useState, useEffect } from 'react';
-import { useParams, Navigate, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
-import { createOrganization, createConference } from 'services/backend/organizations';
+import { createConference } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { openAuthDialog } from 'slices/authSlice';
-import PropTypes from 'prop-types';
 import REGEX from 'constants/regex';
-import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
 import { getPublicUrl } from 'utils';
 import slugify from 'slugify';
 import ROUTES from 'constants/routes';
 import Tooltip from 'components/Utils/Tooltip';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
 import { useSelector, useDispatch } from 'react-redux';
 
 const AddConference = () => {
     const params = useParams();
-    const [redirect, setRedirect] = useState(false);
     const [name, setName] = useState('');
     const [website, setWebsite] = useState('');
-    const [displayId, setDisplayId] = useState('');
     const [permalink, setPermalink] = useState('');
-    const [logo, setLogo] = useState('');
     const [date, setDate] = useState('');
     const [isDoubleBlind, setIsDoubleBlind] = useState(false);
     const [editorState, setEditorState] = useState('edit');
-    const organizationType = ORGANIZATIONS_TYPES.find(t => t.label === params.type)?.id;
-    const displayType = organizationType === 'GENERAL' ? 'organization' : organizationType === 'CONFERENCE' ? 'conference' : '';
     const publicConferenceRoute = `${getPublicUrl()}${reverse(ROUTES.EVENT_SERIES, { id: ' ' })}`;
     const user = useSelector(state => state.auth.user);
     const dispatch = useDispatch();
@@ -40,6 +31,14 @@ const AddConference = () => {
     useEffect(() => {
         document.title = 'Create conference series - ORKG';
     }, []);
+
+    const navigateToConference = display_id => {
+        setEditorState('edit');
+        setName('');
+        setWebsite('');
+        setPermalink('');
+        navigate(reverse(ROUTES.EVENT_SERIES, { id: display_id }));
+    };
 
     const createNewConference = async () => {
         setEditorState('loading');
@@ -77,16 +76,6 @@ const AddConference = () => {
             console.error(error);
             toast.error(`Error creating conference series ${error.message}`);
         }
-    };
-
-    const navigateToConference = display_id => {
-        setEditorState('edit');
-        setRedirect(false);
-        setName('');
-        setDisplayId('');
-        setWebsite('');
-        setPermalink('');
-        navigate(reverse(ROUTES.EVENT_SERIES, { id: display_id }));
     };
 
     const loading = editorState === 'loading';

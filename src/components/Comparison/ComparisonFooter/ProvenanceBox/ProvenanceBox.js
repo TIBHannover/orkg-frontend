@@ -11,8 +11,7 @@ import ROUTES from 'constants/routes';
 import styled from 'styled-components';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
-import capitalize from 'capitalize';
-import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
+import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
 import { useSelector } from 'react-redux';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 
@@ -107,8 +106,7 @@ function ProvenanceBox() {
                                 <Link
                                     className="logoContainer"
                                     to={reverse(ROUTES.ORGANIZATION, {
-                                        type: capitalize(ORGANIZATIONS_MISC.GENERAL),
-                                        id: observatory.organization.display_id,
+                                        type: ORGANIZATIONS_TYPES.find(t => t.id === observatory.organization.type)?.label,
                                     })}
                                 >
                                     {observatory.organization.logo ? (

@@ -23,12 +23,8 @@ const AddOrganization = () => {
     const [permalink, setPermalink] = useState('');
     const [logo, setLogo] = useState('');
     const [editorState, setEditorState] = useState('edit');
-    const organizationType = ORGANIZATIONS_TYPES.find(t => t.label === params.type)?.id;
-    const displayType = organizationType === 'GENERAL' ? 'organization' : organizationType === 'CONFERENCE' ? 'conference' : '';
-    const publicOrganizationRoute = `${getPublicUrl()}${reverse(
-        organizationType === 'GENERAL' ? ROUTES.ORGANIZATION : organizationType === 'CONFERENCE' ? ROUTES.EVENT : '',
-        { id: ' ' },
-    )}`;
+    const organizationType = ORGANIZATIONS_TYPES.find(t => t.label === params.type);
+    const publicOrganizationRoute = `${getPublicUrl()}${reverse(ROUTES.ORGANIZATION, { type: organizationType?.label, id: ' ' })}`;
     const user = useSelector(state => state.auth.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -36,6 +32,14 @@ const AddOrganization = () => {
     useEffect(() => {
         document.title = `Create ${organizationType?.alternateLabel} - ORKG`;
     }, [organizationType]);
+
+    const navigateToOrganization = display_id => {
+        setEditorState('edit');
+        setName('');
+        setWebsite('');
+        setPermalink('');
+        navigate(reverse(ROUTES.ORGANIZATION, { type: organizationType?.label, id: display_id }));
+    };
 
     const createNewOrganization = async () => {
         setEditorState('loading');
@@ -71,16 +75,6 @@ const AddOrganization = () => {
         }
     };
 
-    const navigateToOrganization = display_id => {
-        setEditorState('edit');
-        setName('');
-        setWebsite('');
-        setPermalink('');
-        navigate(
-            reverse(organizationType === 'GENERAL' ? ROUTES.ORGANIZATION : organizationType === 'CONFERENCE' ? ROUTES.EVENT : '', { id: display_id }),
-        );
-    };
-
     const handlePreview = async e => {
         e.preventDefault();
         const file = e.target.files[0];
@@ -88,7 +82,7 @@ const AddOrganization = () => {
         if (e.target.files.length === 0) {
             return;
         }
-        reader.onloadend = e => {
+        reader.onloadend = () => {
             setLogo([reader.result]);
         };
         reader.readAsDataURL(file);
