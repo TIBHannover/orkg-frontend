@@ -8,7 +8,7 @@ import REGEX from 'constants/regex';
 class Doi extends Component {
     constructor(props) {
         super(props);
-        this.supportedValues = new RegExp(REGEX.DOI);
+        this.supportedValues = new RegExp(REGEX.DOI_ID);
     }
 
     render() {

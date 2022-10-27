@@ -68,7 +68,7 @@ export default function AddContribution(props) {
         const doi = searchQuery.startsWith('http') ? searchQuery.substring(searchQuery.indexOf('10.')) : searchQuery;
 
         // The entry is a DOI, check if it exists in the database
-        if (doi.trim().match(new RegExp(REGEX.DOI))) {
+        if (doi.trim().match(new RegExp(REGEX.DOI_ID))) {
             getPaperByDOI(doi.trim())
                 .then(result =>
                     getStatementsBySubjectAndPredicate({

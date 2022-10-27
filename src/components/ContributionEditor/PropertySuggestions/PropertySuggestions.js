@@ -32,7 +32,7 @@ const PropertySuggestions = () => {
                                 className="py-2 px-3"
                                 style={{ cursor: 'pointer' }}
                             >
-                                <DescriptionTooltip id={c.property.id} typeId={ENTITIES.PREDICATE}>
+                                <DescriptionTooltip id={c.property.id} _class={ENTITIES.PREDICATE}>
                                     <div className="d-flex">
                                         <div className="flex-grow-1">
                                             <Icon icon={faPlus} className="me-1 text-muted" /> {c.property.label}

@@ -57,7 +57,7 @@ const MarkdownRenderer = ({ text, id }) => {
 
                 if (reference) {
                     _usedReferences[reference.parsedReference.id] = reference;
-                } else if (REGEX.DOI.test(keyFormatted) && !fetchedDois.includes(keyFormatted)) {
+                } else if (REGEX.DOI_ID.test(keyFormatted) && !fetchedDois.includes(keyFormatted)) {
                     setFetchedDois(v => [...v, keyFormatted]);
                     try {
                         const data = await Cite.async(keyFormatted);

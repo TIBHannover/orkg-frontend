@@ -27,11 +27,11 @@ const StyledUserAvatar = styled.span`
 `;
 
 const StyledSpinnerGravatar = styled.div`
-    width: 28px;
-    height: 28px;
+    width: ${props => props.size}px;
+    height: ${props => props.size}px;
     display: inline-block;
     text-align: center;
-    line-height: 28px;
+    line-height: ${props => props.size}px;
     color: ${props => props.theme.secondary};
     border: 2px solid ${props => props.theme.lightDarker};
     cursor: pointer;
@@ -80,7 +80,7 @@ const UserAvatar = ({ userId, size, appendToTooltip, showDisplayName, linkTarget
                                 </>
                             )}
                             {userId && isLoadingContributor && (
-                                <StyledSpinnerGravatar className="rounded-circle">
+                                <StyledSpinnerGravatar className="rounded-circle" size={size}>
                                     <Icon icon={faSpinner} spin />
                                 </StyledSpinnerGravatar>
                             )}

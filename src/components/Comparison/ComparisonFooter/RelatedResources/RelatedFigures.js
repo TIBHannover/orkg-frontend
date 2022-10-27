@@ -46,7 +46,7 @@ const RelatedFigures = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [photoIndex, setPhotoIndex] = useState(0);
     const [relatedFigures, setRelatedFigures] = useState([]);
-    const location = useLocation();
+    const { hash } = useLocation();
 
     const openLightBox = (index = 0) => {
         setIsOpen(!isOpen);
@@ -75,7 +75,6 @@ const RelatedFigures = () => {
 
     const scrollTo = useCallback(
         header => {
-            const { hash } = location;
             const id = isString(hash) ? hash.replace('#', '') : null;
             if (!header || header.id !== id) {
                 return;
@@ -85,14 +84,16 @@ const RelatedFigures = () => {
                 top: header.offsetTop - 90,
             });
         },
-        [location.hash],
+        [hash],
     );
 
     if (!isLoadingMetadata && !isFailedLoadingMetadata && figures?.length > 0) {
         return (
             <>
                 <GlobalStyle />
-                <h5 className="mt-5">Related figures</h5>
+                <h5 id="relatedFigures" className="mt-5">
+                    Related figures
+                </h5>
                 <CardColumns className="d-flex row">
                     {relatedFigures.map((figure, index) => (
                         <div className="col-sm-3" key={`figure${figure.figureId}`} ref={scrollTo} id={figure.figureId}>
@@ -103,7 +104,7 @@ const RelatedFigures = () => {
                                     width="100%"
                                     src={figure.src}
                                     alt={`figure #${figure.figureId}`}
-                                    className={location.hash === `#${figure.figureId}` ? 'blink-figure' : ''}
+                                    className={hash === `#${figure.figureId}` ? 'blink-figure' : ''}
                                 />
                             </CardStyled>
                         </div>

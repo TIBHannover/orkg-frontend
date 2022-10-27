@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.84.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.83.0...v0.84.0) - 2022-10-12
+
+### Changes
+
+- fix readme table [`#963`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/963)
+- feat(AddPaper): don't require authentication for the first step [`#962`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/962)
+- fix(LiteratureList): embed list [`#961`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/961)
+
+---
 ## [v0.83.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.82.1...v0.83.0) - 2022-10-06
 
 ### Changes

@@ -145,6 +145,16 @@ const AuthorHeader = ({ authorId }) => {
                                         </div>
                                     </div>
                                 )}
+                                {author.dblp && (
+                                    <div className="col-md-3 col-sm-6">
+                                        <div>DBLP</div>
+                                        <div className="mb-3 text-wrap">
+                                            <a href={`https://dblp.org/pid/${author.dblp}`} target="_blank" rel="noopener noreferrer">
+                                                {author.dblp} <Icon icon={faExternalLinkAlt} />
+                                            </a>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </Container>

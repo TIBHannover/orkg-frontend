@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { getStatementsBySubject, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { getResource } from 'services/backend/resources';
 import { getComparison, getResourceData } from 'services/similarity/index';
@@ -40,7 +40,7 @@ import { getComparisonConfiguration, generateFilterControlData } from './helpers
 const DEFAULT_COMPARISON_METHOD = 'path';
 
 function useComparison({ id }) {
-    const location = useLocation();
+    const { search } = useLocation();
     const navigate = useNavigate();
     const params = useParams();
     const comparisonId = id || params.comparisonId;
@@ -56,7 +56,6 @@ function useComparison({ id }) {
     const contributions = useSelector(state => state.comparison.contributions);
     const isLoadingResult = useSelector(state => state.comparison.isLoadingResult);
     const data = useSelector(state => state.comparison.data);
-    const hiddenGroups = useSelector(state => state.comparison.hiddenGroups);
 
     /**
      * Load comparison meta data and comparison config
@@ -230,10 +229,10 @@ function useComparison({ id }) {
      * Parse previous version from query param
      */
     useEffect(() => {
-        if (!comparisonId && queryString.parse(location.search)?.hasPreviousVersion) {
-            getResource(queryString.parse(location.search).hasPreviousVersion).then(prevVersion => dispatch(setHasPreviousVersion(prevVersion)));
+        if (!comparisonId && queryString.parse(search)?.hasPreviousVersion) {
+            getResource(queryString.parse(search).hasPreviousVersion).then(prevVersion => dispatch(setHasPreviousVersion(prevVersion)));
         }
-    }, [comparisonId, dispatch, location.search]);
+    }, [comparisonId, dispatch, search]);
 
     /**
      * Get research field of the first contribution if no research field is found
@@ -262,19 +261,19 @@ function useComparison({ id }) {
             // Update browser title
             document.title = 'Comparison - ORKG';
 
-            dispatch(setConfigurationAttribute({ attribute: 'responseHash', value: getParamFromQueryString(location.search, 'response_hash') }));
+            dispatch(setConfigurationAttribute({ attribute: 'responseHash', value: getParamFromQueryString(search, 'response_hash') }));
             dispatch(
                 setConfigurationAttribute({
                     attribute: 'comparisonType',
-                    value: getParamFromQueryString(location.search, 'type') ?? DEFAULT_COMPARISON_METHOD,
+                    value: getParamFromQueryString(search, 'type') ?? DEFAULT_COMPARISON_METHOD,
                 }),
             );
-            dispatch(setConfigurationAttribute({ attribute: 'transpose', value: getParamFromQueryString(location.search, 'transpose', true) }));
-            const contributionsIDs = without(uniq(getArrayParamFromQueryString(location.search, 'contributions')), undefined, null, '') ?? [];
+            dispatch(setConfigurationAttribute({ attribute: 'transpose', value: getParamFromQueryString(search, 'transpose', true) }));
+            const contributionsIDs = without(uniq(getArrayParamFromQueryString(search, 'contributions')), undefined, null, '') ?? [];
             dispatch(setConfigurationAttribute({ attribute: 'contributionsList', value: contributionsIDs }));
-            dispatch(setConfigurationAttribute({ attribute: 'predicatesList', value: getArrayParamFromQueryString(location.search, 'properties') }));
+            dispatch(setConfigurationAttribute({ attribute: 'predicatesList', value: getArrayParamFromQueryString(search, 'properties') }));
         }
-    }, [comparisonId, dispatch, loadComparisonMetaData, location.search]);
+    }, [comparisonId, dispatch, loadComparisonMetaData, search]);
 
     /**
      * Update comparison if:

@@ -19,13 +19,20 @@ import Breadcrumbs from '../BreadCrumbs';
 const Contributions = props => {
     const { resourceId, contributionId } = useParams();
 
-    const { isLoading, isLoadingContributionFailed, selectedContribution, contributionData, handleResourceClick, resourceHistory, handleBackClick } =
-        useContributions({
-            paperId: resourceId,
-            contributionId,
-            contributions: props.contributions,
-            paperStatements: props.paperStatements,
-        });
+    const {
+        isLoading,
+        isLoadingContributionFailed,
+        selectedContribution,
+        contributionData,
+        handleResourceClick,
+        resourceHistory,
+        handleBackClick,
+    } = useContributions({
+        paperId: resourceId,
+        contributionId,
+        contributions: props.contributions,
+        paperStatements: props.paperStatements,
+    });
     const navigate = useNavigate();
 
     const onTabChange = key => {
@@ -111,7 +118,7 @@ const Contributions = props => {
                                                                         <PropertyStyle className="col-4" tabIndex="0" key={`p${i}`}>
                                                                             <div>
                                                                                 <div className="propertyLabel">
-                                                                                    <DescriptionTooltip id={cd} typeId={ENTITIES.PREDICATE}>
+                                                                                    <DescriptionTooltip id={cd} _class={ENTITIES.PREDICATE}>
                                                                                         {contributionData[cd][0].predicate.label}
                                                                                     </DescriptionTooltip>
                                                                                 </div>

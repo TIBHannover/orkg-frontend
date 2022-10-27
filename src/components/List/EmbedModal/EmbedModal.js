@@ -19,7 +19,7 @@ function EmbedModal({ isOpen, toggle, id }) {
     const src = `${env('URL')}${reverse(ROUTES.LIST_EMBED, {
         id,
         embed: 'embed',
-    }).replace('/', '', 1)}`;
+    })}`;
 
     const code = `<iframe src="${src}"  width="${width}" height="480px" title="${title}"/>`;
 

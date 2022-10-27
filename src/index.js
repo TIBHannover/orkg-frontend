@@ -7,15 +7,17 @@ import theme from 'assets/scss/ThemeVariables';
 import { Provider } from 'react-redux';
 import { CookiesProvider } from 'react-cookie';
 import { ThemeProvider } from 'styled-components';
+import { plugins } from '@citation-js/core';
 import { MatomoProvider, createInstance } from '@jonkoops/matomo-tracker-react';
 import { DndProvider } from 'react-dnd';
 import env from '@beam-australia/react-env';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { HistoryRouter as Router } from 'redux-first-history/rr6';
-import rootReducer from './slices/rootReducer';
-import configureStore from './store';
-import { unregister } from './registerServiceWorker';
-import App from './App';
+import REGEX from 'constants/regex';
+import rootReducer from 'slices/rootReducer';
+import configureStore from 'store';
+import { unregister } from 'registerServiceWorker';
+import App from 'App';
 
 const matomoInstance =
     env('MATOMO_TRACKER') === 'true'
@@ -32,6 +34,21 @@ const matomoInstance =
               },
           })
         : undefined;
+
+// https://github.com/citation-js/citation-js/issues/182
+plugins.input.add('@doi/api', {
+    parseType: {
+        dataType: 'String',
+        predicate: REGEX.DOI_URL,
+        extends: '@else/url',
+    },
+});
+plugins.input.add('@doi/id', {
+    parseType: {
+        dataType: 'String',
+        predicate: REGEX.DOI_ID,
+    },
+});
 
 const { store, history } = configureStore();
 const container = document.getElementById('root');
