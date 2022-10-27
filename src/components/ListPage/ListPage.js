@@ -202,7 +202,7 @@ ListPage.propTypes = {
     reset: PropTypes.bool,
     setReset: PropTypes.func,
     hideTitleBar: PropTypes.bool,
-    infoContainerText: PropTypes.string,
+    infoContainerText: PropTypes.object,
 };
 
 export default ListPage;
