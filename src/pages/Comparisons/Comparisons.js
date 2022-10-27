@@ -56,6 +56,16 @@ const Comparisons = () => {
         </>
     );
 
+    const infoContainerText = (
+        <>
+            ORKG comparisons provide condensed overviews of the state-of-the-art for a particular research question.{' '}
+            <a href="https://orkg.org/about/15/Comparisons" rel="noreferrer" target="_blank">
+                Learn more in the help center
+            </a>
+            .
+        </>
+    );
+
     return (
         <ListPage
             label="comparisons"
@@ -64,6 +74,7 @@ const Comparisons = () => {
             fetchItems={fetchItems}
             buttons={buttons}
             pageSize={15}
+            infoContainerText={infoContainerText}
         />
     );
 };
