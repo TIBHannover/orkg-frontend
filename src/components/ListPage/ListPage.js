@@ -20,6 +20,7 @@ const ListPage = ({
     disableSearch = false,
     hideTitleBar = false,
     reset = false,
+    infoContainerText = null,
     setReset = () => {},
 }) => {
     const [results, setResults] = useState([]);
@@ -130,6 +131,11 @@ const ListPage = ({
                     View {label}
                 </TitleBar>
             )}
+            {infoContainerText && (
+                <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
+                    {infoContainerText}
+                </Container>
+            )}
             <Container className="p-0">
                 {results.length > 0 && (
                     <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
@@ -196,6 +202,7 @@ ListPage.propTypes = {
     reset: PropTypes.bool,
     setReset: PropTypes.func,
     hideTitleBar: PropTypes.bool,
+    infoContainerText: PropTypes.string,
 };
 
 export default ListPage;

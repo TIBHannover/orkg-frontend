@@ -120,18 +120,15 @@ const Observatories = () => {
     return (
         <>
             <TitleBar>View all observatories</TitleBar>
+            <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
+                Observatories organize research contributions in a particular research field and are curated by research organizations active in the
+                respective field.{' '}
+                <a href="https://orkg.org/about/27/Observatories" target="_blank" rel="noreferrer">
+                    Learn more in the help center
+                </a>
+                .
+            </Container>
             <Container className="box rounded p-4 clearfix">
-                <p>
-                    <i>Observatories</i> organize research contributions in a particular research field and are curated by research organizations
-                    active in the respective field.{' '}
-                </p>
-                <p>
-                    Further information about observatories can be also found in the{' '}
-                    <a href="https://orkg.org/about/27/Observatories" target="_blank" rel="noopener noreferrer">
-                        ORKG help center
-                    </a>
-                    .
-                </p>
                 {observatories && Object.keys(observatories).length > 0 && (
                     <Row className="g-0">
                         <Col md={3} sm={12}>
