@@ -5,8 +5,6 @@ import styled from 'styled-components';
 import capitalize from 'capitalize';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import { useSelector } from 'react-redux';
-import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
-import capitalize from 'capitalize';
 
 const OrganizationBannerStyled = styled.div`
     float: right;

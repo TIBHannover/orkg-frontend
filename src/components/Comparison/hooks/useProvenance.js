@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
 import { setProvenance, setObservatoryId, setOrganizationId } from 'slices/comparisonSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import { MISC } from 'constants/graphSettings';
 import { getConferenceAndOrganizationInformation } from 'services/backend/organizations';
 
 function useProvenance() {
