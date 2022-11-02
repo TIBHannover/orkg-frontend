@@ -37,8 +37,7 @@ import { scrollbarWidth } from '@xobotyi/scrollbar-width';
 import AboutMenu from 'components/Layout/Header/AboutMenu';
 import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
 import Nfdi4dsButton from 'components/Layout/Header/Nfdi4dsButton';
-import capitalize from 'capitalize';
-import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
+import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
 import SearchForm from './SearchForm';
 import AddNew from './AddNew';
 
@@ -467,19 +466,21 @@ const Header = () => {
                                     </small>
                                 </DropdownItem>
                                 <DropdownItem
-                                    key="general"
                                     tag={RouterNavLink}
                                     end
-                                    to={reverse(ROUTES.ORGANIZATIONS, { type: 'General' })}
+                                    to={reverse(ROUTES.ORGANIZATIONS, {
+                                        type: ORGANIZATIONS_TYPES.find(o => o.id === ORGANIZATIONS_MISC.GENERAL).label,
+                                    })}
                                     onClick={closeMenu}
                                 >
                                     Organizations
                                 </DropdownItem>
                                 <DropdownItem
-                                    key="events"
                                     tag={RouterNavLink}
                                     end
-                                    to={reverse(ROUTES.ORGANIZATIONS, { type: 'Event' })}
+                                    to={reverse(ROUTES.ORGANIZATIONS, {
+                                        type: ORGANIZATIONS_TYPES.find(o => o.id === ORGANIZATIONS_MISC.EVENT).label,
+                                    })}
                                     onClick={closeMenu}
                                 >
                                     Events

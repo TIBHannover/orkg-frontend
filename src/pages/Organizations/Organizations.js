@@ -25,6 +25,7 @@ const Organizations = () => {
         const loadOrganizations = type => {
             setIsNextPageLoading(true);
             let organizationsList = [];
+            setOrganizations([]);
             if (type === MISC.ORGANIZATION) {
                 organizationsList = getAllOrganizations();
                 setRoute(ROUTES.ORGANIZATION);
