@@ -6,7 +6,7 @@ import { SubTitle } from 'components/styled';
 import NotFound from 'pages/NotFound';
 import { useParams } from 'react-router-dom';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { getConferenceById } from 'services/backend/organizations';
+import { getConferenceById } from 'services/backend/conferencesseries';
 import Comparisons from 'components/Organization/Comparisons';
 import ConferenceMetadataBox from 'components/Observatory/ConferenceMetadataBox';
 

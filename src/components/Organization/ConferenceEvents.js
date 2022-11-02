@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container, ListGroup } from 'reactstrap';
-import { getSeriesListByConferenceId } from 'services/backend/organizations';
+import { getSeriesListByConferenceId } from 'services/backend/conferencesseries';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import EventsCard from './EventsCard';

@@ -3,7 +3,7 @@ import { getObservatoryAndOrganizationInformation } from 'services/backend/obser
 import { setProvenance, setObservatoryId, setOrganizationId } from 'slices/comparisonSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { MISC } from 'constants/graphSettings';
-import { getConferenceAndOrganizationInformation } from 'services/backend/organizations';
+import { getConferenceAndOrganizationInformation } from 'services/backend/conferencesseries';
 
 function useProvenance() {
     const id = useSelector(state => state.comparison.comparisonResource.id);
@@ -17,7 +17,7 @@ function useProvenance() {
          * Load Provenance data
          */
         const loadProvenanceInfos = () => {
-            if (observatoryId && observatoryId) {
+            if (observatoryId) {
                 getObservatoryAndOrganizationInformation(observatoryId, organizationId).then(provenance => {
                     dispatch(setProvenance(provenance));
                 });
