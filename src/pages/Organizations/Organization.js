@@ -143,7 +143,7 @@ const Organization = () => {
                         )}
                     </Container>
                     {ORGANIZATIONS_MISC.EVENT === ORGANIZATIONS_TYPES.find(t => t.label === orgType)?.id && (
-                        <ConferenceEvents conferenceId={organizationId} />
+                        <ConferenceEvents conferenceId={organizationId} conferenceName={label} />
                     )}
                     {ORGANIZATIONS_MISC.GENERAL === ORGANIZATIONS_TYPES.find(t => t.label === orgType)?.id && (
                         <Observatories organizationsId={organizationId} />

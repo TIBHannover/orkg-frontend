@@ -5,7 +5,7 @@ import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import EventsCard from './EventsCard';
 
-const ConferenceEvents = ({ conferenceId }) => {
+const ConferenceEvents = ({ conferenceId, conferenceName }) => {
     const [isLoadingConferences, setIsLoadingConferences] = useState(null);
     const [conferencesList, setConferencesList] = useState([]);
 
@@ -15,7 +15,7 @@ const ConferenceEvents = ({ conferenceId }) => {
             getSeriesListByConferenceId(conferenceId)
                 .then(responseJson => {
                     setConferencesList(responseJson);
-                    document.title = `${responseJson.name} - Conference - ORKG`;
+                    document.title = `${conferenceName} - Conference - ORKG`;
                 })
                 .catch(error => {
                     setIsLoadingConferences(false);
@@ -24,7 +24,7 @@ const ConferenceEvents = ({ conferenceId }) => {
         };
 
         loadConferences();
-    }, [conferenceId]);
+    }, [conferenceId, conferenceName]);
 
     return (
         <>
@@ -72,6 +72,7 @@ const ConferenceEvents = ({ conferenceId }) => {
 
 ConferenceEvents.propTypes = {
     conferenceId: PropTypes.string.isRequired,
+    conferenceName: PropTypes.string.isRequired,
 };
 
 export default ConferenceEvents;
