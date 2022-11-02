@@ -47,6 +47,7 @@ const initialState = {
     nerRawResponse: {},
     bioassayText: '',
     bioassayRawResponse: [],
+    pdfName: null,
 };
 
 export const addPaperSlice = createSlice({

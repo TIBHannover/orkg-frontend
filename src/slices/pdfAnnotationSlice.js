@@ -3,6 +3,7 @@ import env from '@beam-australia/react-env';
 import { parse } from 'node-html-parser';
 import { toast } from 'react-toastify';
 import { guid } from 'utils';
+import processPdf from 'services/grobid';
 
 /*
     This state is used mostly by handsontable package. and it require to disable immutableCheck of redux in development mode.
@@ -167,29 +168,37 @@ export const convertPdf =
  */
 export const parsePdf =
     ({ pdf }) =>
-    dispatch => {
+    async dispatch => {
         dispatch(fetchPDFParseRequest());
 
         const form = new FormData();
         form.append('input', pdf);
 
-        fetch(`${env('GROBID_URL')}api/processFulltextDocument`, {
-            method: 'POST',
-            body: form,
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error fetching Grobid parse');
-                } else {
-                    return response.text();
-                }
-            })
-            .then(data => {
-                dispatch(setParsedPdfData(data));
-            })
-            .catch(err => {
-                console.log(err);
-                toast.error('The references from the uploaded PDF could not be extracted');
-                dispatch(fetchPDFParseFailure());
-            });
+        try {
+            dispatch(setParsedPdfData(await processPdf({ pdf })));
+        } catch (e) {
+            console.log(e);
+            toast.error('The references from the uploaded PDF could not be extracted');
+            dispatch(fetchPDFParseFailure());
+        }
+
+        // fetch(`${env('GROBID_URL')}api/processFulltextDocument`, {
+        //     method: 'POST',
+        //     body: form,
+        // })
+        //     .then(response => {
+        //         if (!response.ok) {
+        //             throw new Error('Error fetching Grobid parse');
+        //         } else {
+        //             return response.text();
+        //         }
+        //     })
+        //     .then(data => {
+        //         dispatch(setParsedPdfData(data));
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //         toast.error('The references from the uploaded PDF could not be extracted');
+        //         dispatch(fetchPDFParseFailure());
+        //     });
     };
