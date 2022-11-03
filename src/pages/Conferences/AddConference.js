@@ -82,7 +82,7 @@ const AddConference = () => {
 
     return (
         <>
-            <TitleBar>Create conference series</TitleBar>
+            <TitleBar>Create conference</TitleBar>
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 {!!user && user.isCurationAllowed && (
                     <Form className="ps-3 pe-3 pt-2">

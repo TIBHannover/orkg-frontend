@@ -17,7 +17,7 @@ function useProvenance() {
          * Load Provenance data
          */
         const loadProvenanceInfos = () => {
-            if (observatoryId) {
+            if (observatoryId && observatoryId !== MISC.UNKNOWN_ID) {
                 getObservatoryAndOrganizationInformation(observatoryId, organizationId).then(provenance => {
                     dispatch(setProvenance(provenance));
                 });

@@ -138,8 +138,6 @@ export const RESOURCES = {
 export const MISC = {
     DEFAULT_LITERAL_DATATYPE: 'xsd:string',
     UNKNOWN_ID: '00000000-0000-0000-0000-000000000000',
-    ORGANIZATION: 'organization',
-    CONFERENCE: 'conference',
 };
 
 /* entities usually are returned by the backend (in _class) to specify the type of node  */

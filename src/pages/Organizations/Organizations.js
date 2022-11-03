@@ -11,7 +11,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import { useSelector } from 'react-redux';
 import { reverse } from 'named-urls';
 import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
-import { MISC } from 'constants/graphSettings';
+import { ORGANIZATION, CONFERENCE } from 'constants/organizationsMisc';
 
 const Organizations = () => {
     const params = useParams();
@@ -26,10 +26,10 @@ const Organizations = () => {
             setIsNextPageLoading(true);
             let organizationsList = [];
             setOrganizations([]);
-            if (type === MISC.ORGANIZATION) {
+            if (type === ORGANIZATION) {
                 organizationsList = getAllOrganizations();
                 setRoute(ROUTES.ORGANIZATION);
-            } else if (type === MISC.CONFERENCE) {
+            } else if (type === CONFERENCE) {
                 organizationsList = getConferences();
                 setRoute(ROUTES.EVENT);
             }

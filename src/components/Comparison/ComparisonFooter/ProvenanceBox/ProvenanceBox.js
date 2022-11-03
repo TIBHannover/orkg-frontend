@@ -107,6 +107,7 @@ function ProvenanceBox() {
                                     className="logoContainer"
                                     to={reverse(ROUTES.ORGANIZATION, {
                                         type: ORGANIZATIONS_TYPES.find(t => t.id === observatory.organization.type)?.label,
+                                        id: observatory.organization.display_id,
                                     })}
                                 >
                                     {observatory.organization.logo ? (
