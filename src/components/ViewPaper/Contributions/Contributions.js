@@ -134,12 +134,26 @@ const Contributions = props => {
                                 ))}
                             </Tabs>
                         </StyledContributionTabs>
+                        {!isLoading && contributions?.length === 0 && (
+                            <Alert className="mt-1 mb-0 rounded" color="warning">
+                                This paper has no contributions yet
+                                <br />
+                                {props.enableEdit ? (
+                                    <span style={{ fontSize: '0.875rem' }}>Start by adding a contribution using the top right (+) button</span>
+                                ) : (
+                                    <span style={{ fontSize: '0.875rem' }}>Please contribute by editing</span>
+                                )}
+                                <br />
+                            </Alert>
+                        )}
                     </Col>
 
                     <div className="col-md-3">
-                        <div className="d-flex mb-3 rounded px-3 py-2" style={{ border: '1px solid rgb(219,221,229)' }}>
-                            <AddToComparison showLabel={true} paper={{ id: resourceId, label: paperTitle, contributions }} />
-                        </div>
+                        {contributions?.length > 0 && (
+                            <div className="d-flex mb-3 rounded px-3 py-2" style={{ border: '1px solid rgb(219,221,229)' }}>
+                                <AddToComparison showLabel={true} paper={{ id: resourceId, label: paperTitle, contributions }} />
+                            </div>
+                        )}
                         <ProvenanceBox />
                     </div>
                 </Row>
