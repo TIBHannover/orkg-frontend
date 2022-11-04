@@ -10,7 +10,6 @@ import { reverse } from 'named-urls';
 import AddToComparison from 'components/PaperCard/AddToComparison';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
-import { StyledStatementItem } from 'components/StatementBrowser/styled';
 import { useSelector } from 'react-redux';
 import { StyledContributionTabs, GlobalStyle } from 'components/ContributionTabs/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -140,7 +139,7 @@ const Contributions = props => {
                                 This paper has no contributions yet
                                 <br />
                                 {props.enableEdit ? (
-                                    <span style={{ fontSize: '0.875rem' }}>Start by adding a contribution from above right corner (+) button</span>
+                                    <span style={{ fontSize: '0.875rem' }}>Start by adding a contribution using the top right (+) button</span>
                                 ) : (
                                     <span style={{ fontSize: '0.875rem' }}>Please contribute by editing</span>
                                 )}
