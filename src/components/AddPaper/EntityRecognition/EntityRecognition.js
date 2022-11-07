@@ -161,17 +161,17 @@ const EntityRecognition = ({ isComputerScienceField }) => {
                     </Fragment>
                 ))}
             </ListGroup>
+            {(isLoadingRP || recommendedPredicates.length > 0) && (
+                <h6 className="h6 mt-1">
+                    Properties{' '}
+                    {isLoadingRP && (
+                        <>
+                            <Icon icon={faSpinner} spin />
+                        </>
+                    )}
+                </h6>
+            )}
             <ListGroup>
-                {(isLoadingRP || recommendedPredicates.length > 0) && (
-                    <h6 className="h6 mt-1">
-                        Properties{' '}
-                        {isLoadingRP && (
-                            <>
-                                <Icon icon={faSpinner} spin />
-                            </>
-                        )}
-                    </h6>
-                )}
                 <TransitionGroup component={null} height="30px">
                     {_recommendedPredicates.map((p, index) => (
                         <AnimationContainer
@@ -201,19 +201,15 @@ const EntityRecognition = ({ isComputerScienceField }) => {
                             </ValueItem>
                         </AnimationContainer>
                     ))}
-                    {recommendedPredicates.length > MAX_PROPERTIES_ITEMS && (
-                        <ShowMoreButton
-                            onClick={() => setShowMorePredicates(v => !v)}
-                            color="link"
-                            size="sm"
-                            className="p-0 ms-2"
-                            style={{ outline: 0 }}
-                        >
-                            {showMorePredicates ? 'Show less suggestions' : 'Show more suggestions'}
-                        </ShowMoreButton>
-                    )}
                 </TransitionGroup>
             </ListGroup>
+            {recommendedPredicates.length > MAX_PROPERTIES_ITEMS && (
+                <div className="text-center">
+                    <ShowMoreButton onClick={() => setShowMorePredicates(v => !v)} color="link" size="sm" className="p-0 ms-2" style={{ outline: 0 }}>
+                        {showMorePredicates ? 'Show less suggestions' : 'Show more suggestions'}
+                    </ShowMoreButton>
+                </div>
+            )}
         </>
     );
 };
