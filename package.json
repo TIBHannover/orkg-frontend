@@ -148,7 +148,7 @@
         "prettier": "^2.7.1",
         "react-scripts": "5.0.1",
         "react-select-event": "^5.5.0",
-        "sass": "^1.54.1"
+        "sass": "^1.56.0"
     },
     "jest-junit": {
         "classNameTemplate": "{classname}",
