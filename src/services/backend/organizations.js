@@ -39,3 +39,5 @@ export const getUsersByOrganizationId = id => submitGetRequest(`${organizationsU
 export const getComparisonsByOrganizationId = id => submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/comparisons`);
 
 export const getConferences = () => submitGetRequest(`${organizationsUrl}conferences`);
+
+export const getProblemsByOrganizationId = id => submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/problems`);

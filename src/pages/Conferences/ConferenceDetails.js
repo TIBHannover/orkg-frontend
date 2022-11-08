@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Col, Row, Container } from 'reactstrap';
 import InternalServerError from 'pages/InternalServerError';
-import ResearchProblemsBox from 'components/ResearchProblemsBox/ResearchProblemsBox';
 import { SubTitle } from 'components/styled';
 import NotFound from 'pages/NotFound';
 import { useParams } from 'react-router-dom';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { getConferenceById } from 'services/backend/conferencesseries';
 import Comparisons from 'components/Organization/Comparisons';
-import ConferenceMetadataBox from 'components/Observatory/ConferenceMetadataBox';
+import ConferenceMetadataBox from './ConferenceMetadataBox';
+import ResearchProblemBox from './ResearchProblemBox';
 
 const ConferenceDetails = () => {
     const [error, setError] = useState(null);
@@ -51,8 +51,7 @@ const ConferenceDetails = () => {
                     <Container className="p-0">
                         <Row className="mt-3">
                             <Col md="6" className="d-flex">
-                                 {/* TODO */}
-                                <ResearchProblemsBox id={conferenceId} by="conference" />
+                                <ResearchProblemBox id={conferenceId} />
                             </Col>
                             <Col md="6" className="d-flex">
                                 <ConferenceMetadataBox url={url} metadata={metadata} isLoading={isLoading} />

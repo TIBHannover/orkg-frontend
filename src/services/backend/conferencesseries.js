@@ -5,11 +5,7 @@ import { getOrganization } from './organizations';
 export const conferenceSeriesUrl = `${url}conferences-series/`;
 
 export const createConference = (organization_id, name, url, display_id, metadata) =>
-    submitPostRequest(
-        `${conferenceSeriesUrl}`,
-        { 'Content-Type': 'application/json' },
-        { organization_id, name, display_id, url, metadata },
-    );
+    submitPostRequest(`${conferenceSeriesUrl}`, { 'Content-Type': 'application/json' }, { organization_id, name, display_id, url, metadata });
 
 export const getConferencesSeries = () => submitGetRequest(`${conferenceSeriesUrl}`);
 
@@ -20,9 +16,9 @@ export const getConferenceById = id => submitGetRequest(`${conferenceSeriesUrl}$
 export const getConferenceAndOrganizationInformation = organizationId =>
     getConferenceById(organizationId)
         .then(async confResponse => {
-                try {
+            try {
                 const orgResponse = await getOrganization(confResponse.organizationId);
-                return ({
+                return {
                     name: confResponse.name,
                     display_id: confResponse.display_id,
                     metadata: confResponse.metadata,
@@ -33,15 +29,15 @@ export const getConferenceAndOrganizationInformation = organizationId =>
                         display_id: orgResponse.display_id,
                         type: orgResponse.type,
                     },
-                });
+                };
             } catch {
-                return ({
+                return {
                     id: organizationId,
                     name: confResponse.name,
                     display_id: confResponse.display_id,
                     metadata: confResponse,
                     organization: null,
-                });
+                };
             }
         })
         .catch(() => null);
