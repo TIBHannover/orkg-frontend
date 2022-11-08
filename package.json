@@ -100,12 +100,11 @@
         "react-visibility-sensor": "^5.1.1",
         "reactstrap": "^9.1.5",
         "redux": "^4.2.0",
-        "redux-first-history": "^5.0.12",
+        "redux-first-history": "^5.1.1",
         "sbd": "^1.0.19",
         "showdown": "^2.1.0",
         "showdown-footnotes": "^2.1.2",
         "slugify": "^1.6.5",
-        "source-map-explorer": "^2.5.2",
         "stopwords-en": "^0.3.0",
         "strict-mode": "^1.1.5",
         "string-format": "^2.0.0",
@@ -148,7 +147,8 @@
         "prettier": "^2.7.1",
         "react-scripts": "5.0.1",
         "react-select-event": "^5.5.1",
-        "sass": "^1.56.0"
+        "sass": "^1.56.0",
+        "source-map-explorer": "^2.5.3"
     },
     "jest-junit": {
         "classNameTemplate": "{classname}",
