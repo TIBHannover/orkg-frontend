@@ -61,7 +61,7 @@
         "react-contexify": "^5.0.0",
         "react-cookie": "^4.1.1",
         "react-copy-to-clipboard": "^5.1.0",
-        "react-countup": "^6.3.0",
+        "react-countup": "^6.3.2",
         "react-csv": "^2.2.2",
         "react-diff-viewer": "^3.1.1",
         "react-dnd": "^14.0.3",
@@ -142,12 +142,12 @@
         "faker": "^5.5.3",
         "husky": "^8.0.2",
         "jest-canvas-mock": "^2.4.0",
-        "jest-junit": "^14.0.0",
+        "jest-junit": "^14.0.1",
         "lint-staged": "^13.0.3",
         "msw": "^0.44.2",
         "prettier": "^2.7.1",
         "react-scripts": "5.0.1",
-        "react-select-event": "^5.5.0",
+        "react-select-event": "^5.5.1",
         "sass": "^1.56.0"
     },
     "jest-junit": {
