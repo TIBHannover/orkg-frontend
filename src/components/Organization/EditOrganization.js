@@ -65,17 +65,17 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
         }
 
         if (value !== label && value.length !== 0) {
-            await updateOrganizationName(id, value);
+            await updateName(id, value);
             isUpdatedLabel = true;
         }
 
         if (OrgUrl !== url && OrgUrl.match(URL_REGEX)) {
-            await updateOrganizationUrl(id, url);
+            await updateUrl(id, url);
             isUpdatedUrl = true;
         }
 
         if (image !== previewSrc && image.length !== 0) {
-            await updateOrganizationLogo(id, image[0]);
+            await updateLogo(id, image[0]);
             isUpdatedImage = true;
         }
 
@@ -88,7 +88,7 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
         }
     };
 
-    const updateOrganizationName = async (id, name) => {
+    const updateName = async (id, name) => {
         setIsLoadingName(true);
         try {
             await updateOrganizationName(id, name);
@@ -100,7 +100,7 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
         }
     };
 
-    const updateOrganizationUrl = async (id, url) => {
+    const updateUrl = async (id, url) => {
         setIsLoadingUrl(true);
         try {
             await updateOrganizationUrl(id, url);
@@ -112,7 +112,7 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
         }
     };
 
-    const updateOrganizationLogo = async (id, image) => {
+    const updateLogo = async (id, image) => {
         setIsLoadingLogo(true);
         try {
             await updateOrganizationLogo(id, image);
