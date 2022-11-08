@@ -3,7 +3,7 @@ import { Container, ListGroup } from 'reactstrap';
 import { getSeriesListByConferenceId } from 'services/backend/conferencesseries';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
-import EventsCard from './EventsCard';
+import EventsCard from '../../components/Organization/EventsCard';
 
 const ConferenceEvents = ({ conferenceId, conferenceName }) => {
     const [isLoadingConferences, setIsLoadingConferences] = useState(null);

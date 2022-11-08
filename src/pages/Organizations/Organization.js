@@ -16,7 +16,7 @@ import { SubTitle } from 'components/styled';
 import { reverse } from 'named-urls';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { ORGANIZATIONS_TYPES, ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
-import ConferenceEvents from 'components/Organization/ConferenceEvents';
+import ConferenceEvents from 'pages/Conferences/ConferenceEvents';
 
 const StyledOrganizationHeader = styled.div`
     .logoContainer {
