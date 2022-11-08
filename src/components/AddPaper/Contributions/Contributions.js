@@ -32,6 +32,7 @@ import {
     updateContributionLabelAction as updateContributionLabel,
 } from 'slices/addPaperSlice';
 import { updateSettings } from 'slices/statementBrowserSlice';
+import env from '@beam-australia/react-env';
 import ContributionsHelpTour from './ContributionsHelpTour';
 
 const Contributions = () => {
@@ -92,9 +93,10 @@ const Contributions = () => {
         if (isBioassayField) {
             handleSaveBioassaysFeedback();
         }
-
-        handleSavePredicatesRecommendationFeedback(properties);
-
+        if (env('IS_TESTING_SERVER') === 'true') {
+            // because this feature is disabled in production
+            handleSavePredicatesRecommendationFeedback(properties);
+        }
         // save add paper
         dispatch(
             saveAddPaper({
