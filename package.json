@@ -109,7 +109,7 @@
         "stopwords-en": "^0.3.0",
         "strict-mode": "^1.1.5",
         "string-format": "^2.0.0",
-        "styled-components": "^5.3.5",
+        "styled-components": "^5.3.6",
         "typed.js": "^2.0.12",
         "use-resize-observer": "^9.0.2"
     },
