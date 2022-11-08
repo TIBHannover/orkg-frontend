@@ -215,8 +215,8 @@ export const addPaperSlice = createSlice({
             state.bioassayRawResponse = payload;
         },
     },
-    extraReducers: {
-        [LOCATION_CHANGE]: () => initialState,
+    extraReducers: builder => {
+        builder.addCase(LOCATION_CHANGE, () => initialState);
     },
 });
 
