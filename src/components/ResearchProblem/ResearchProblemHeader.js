@@ -39,6 +39,11 @@ const ResearchProblemHeader = ({ id }) => {
         featured: researchProblemData?.featured,
     });
 
+    const subProblems =
+        !showMoreFields && researchProblemData.subProblems?.length > 0
+            ? researchProblemData.subProblems.slice(0, 9)
+            : researchProblemData.subProblems;
+
     return (
         <>
             {!isLoading && !isFailedLoading && <CheckSlug label={researchProblemData.label} route={ROUTES.RESEARCH_PROBLEM} />}
@@ -144,7 +149,7 @@ const ResearchProblemHeader = ({ id }) => {
 
                                 <h2 className="h5">Subproblems</h2>
                                 <div>
-                                    {researchProblemData.subProblems.slice(0, 9).map(subfield => (
+                                    {subProblems.map(subfield => (
                                         <Link
                                             key={`index${subfield.id}`}
                                             to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
@@ -157,24 +162,9 @@ const ResearchProblemHeader = ({ id }) => {
                                             </Badge>
                                         </Link>
                                     ))}
-                                    {researchProblemData.subProblems.length > 9 &&
-                                        showMoreFields &&
-                                        researchProblemData.subProblems.slice(9).map(subfield => (
-                                            <Link
-                                                key={`index${subfield.id}`}
-                                                to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
-                                                    researchProblemId: subfield.id,
-                                                    slug: subfield.label,
-                                                })}
-                                            >
-                                                <Badge color="light" className="me-2 mb-2">
-                                                    {subfield.label}
-                                                </Badge>
-                                            </Link>
-                                        ))}
                                     {researchProblemData.subProblems.length > 9 && (
                                         <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm" className="p-0 ms-2">
-                                            {showMoreFields ? 'Show less subfields' : 'Show more subfields'}
+                                            {showMoreFields ? 'Show less subproblems' : 'Show more subproblems'}
                                         </Button>
                                     )}
                                 </div>

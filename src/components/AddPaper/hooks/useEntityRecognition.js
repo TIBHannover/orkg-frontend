@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { saveFeedback, PROPERTY_MAPPING, SERVICE_MAPPING } from 'services/orkgNlp';
 
-const useEntityRecognition = () => {
+const useEntityRecognition = ({ isComputerScienceField }) => {
     const { nerResources, nerProperties, nerRawResponse, title, abstract } = useSelector(state => state.addPaper);
     const { properties, values } = useSelector(state => state.statementBrowser);
     const { getExistingStatement } = useInsertData();
@@ -12,22 +12,25 @@ const useEntityRecognition = () => {
     const getSuggestions = useCallback(
         ({ onlyUsedSuggestions = false }) => {
             const _nerEntities = {};
-            for (const key of Object.keys(nerResources)) {
-                _nerEntities[key] = nerResources[key].filter(item => {
-                    const isExistingStatement = getExistingStatement({
-                        object: {
-                            label: item.label,
-                        },
-                        property: {
-                            label: nerProperties?.[key]?.label,
-                        },
+            if (isComputerScienceField) {
+                for (const key of Object.keys(nerResources)) {
+                    _nerEntities[key] = nerResources[key].filter(item => {
+                        const isExistingStatement = getExistingStatement({
+                            object: {
+                                label: item.label,
+                            },
+                            property: {
+                                label: nerProperties?.[key]?.label,
+                            },
+                        });
+                        return (isExistingStatement && onlyUsedSuggestions) || (!isExistingStatement && !onlyUsedSuggestions);
                     });
-                    return (isExistingStatement && onlyUsedSuggestions) || (!isExistingStatement && !onlyUsedSuggestions);
-                });
+                }
             }
+
             return _nerEntities;
         },
-        [getExistingStatement, nerProperties, nerResources],
+        [getExistingStatement, nerProperties, nerResources, isComputerScienceField],
     );
 
     const suggestions = getSuggestions({ onlyUsedSuggestions: false });

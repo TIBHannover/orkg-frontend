@@ -49,7 +49,7 @@ const ItemMetadata = ({ item, showClasses, showCreatedAt, showCreatedBy, showPro
                 </span>
             )}
         </div>
-        <div className="d-flex align-items-end">
+        <div className="d-flex align-items-end flex-shrink-0">
             <InputGroup size="sm">
                 <InputGroupText className="py-0">ID</InputGroupText>
                 <Input
