@@ -37,7 +37,7 @@ const ResearchProblemBox = ({ id }) => {
         <div className="box rounded-3 p-3 flex-grow-1">
             {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
             <h5>Research problems </h5>
-            {!isLoading && problems.length > 0 ? (
+            {!isLoading && problems.length > 0 && (
                 <ul className="ps-3 pt-2">
                     {problems.slice(0, 5).map(rp => (
                         <li key={`p${rp.id}`}>
@@ -49,9 +49,8 @@ const ResearchProblemBox = ({ id }) => {
                         </li>
                     ))}
                 </ul>
-            ) : (
-                <div className="text-center mt-4 mb-4">Loading research problems ...</div>
             )}
+            {isLoading && <div className="text-center mt-4 mb-4">Loading research problems ...</div>}
             {!isLoading && problems.length === 0 && <div className="text-center my-4">No research problems yet</div>}
             {problems.length > 5 && (
                 <div className="text-center mt-2">

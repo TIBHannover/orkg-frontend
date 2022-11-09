@@ -16,14 +16,14 @@ import { ORGANIZATION, CONFERENCE } from 'constants/organizationsMisc';
 const Organizations = () => {
     const params = useParams();
     const [organizations, setOrganizations] = useState([]);
-    const [isNextPageLoading, setIsNextPageLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [route, setRoute] = useState('');
     const typeName = ORGANIZATIONS_TYPES.find(t => t.label === params.type).alternateLabel;
     const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
         const loadOrganizations = type => {
-            setIsNextPageLoading(true);
+            setIsLoading(true);
             let organizationsList = [];
             setOrganizations([]);
             if (type === ORGANIZATION) {
@@ -38,13 +38,13 @@ const Organizations = () => {
                 .then(orgs => {
                     if (orgs.length > 0) {
                         setOrganizations(orgs);
-                        setIsNextPageLoading(false);
+                        setIsLoading(false);
                     } else {
-                        setIsNextPageLoading(false);
+                        setIsLoading(false);
                     }
                 })
                 .catch(error => {
-                    setIsNextPageLoading(false);
+                    setIsLoading(false);
                 });
         };
         loadOrganizations(typeName);
@@ -79,8 +79,8 @@ const Organizations = () => {
                         ))}
                     </div>
                 )}
-                {organizations.length === 0 && !isNextPageLoading && <div className="text-center mt-4 mb-4">No {typeName}s yet</div>}
-                {isNextPageLoading && (
+                {organizations.length === 0 && !isLoading && <div className="text-center mt-4 mb-4">No {typeName}s yet</div>}
+                {isLoading && (
                     <div className="text-center mt-4 mb-4">
                         <Icon icon={faSpinner} spin /> Loading
                     </div>

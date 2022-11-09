@@ -125,7 +125,6 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
     };
 
     const isLoading = isLoadingName || isLoadingUrl || isLoadingLogo;
-    console.log(isLoading);
     return (
         <>
             <Modal isOpen={showDialog} toggle={toggle}>
