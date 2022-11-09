@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.86.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.85.0...v0.86.0) - 2022-11-09
+
+### Changes
+
+- feat(AddPaper): Predicates recommendation service [`#948`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/948)
+- UX: Paper with no contributions [`#977`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/977)
+
+---
 ## [v0.85.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.84.0...v0.85.0) - 2022-11-03
 
 ### Changes
