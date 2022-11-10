@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, useRef, useMemo } from 'react';
 import { useContextMenu } from 'react-contexify';
 import { DIAGRAM_CONTEXT_MENU_ID } from 'constants/misc';
-import { applyEdgeChanges, applyNodeChanges, addEdge } from 'react-flow-renderer';
+import { applyEdgeChanges, applyNodeChanges, addEdge } from 'reactflow';
 import { guid, asyncLocalStorage } from 'utils';
 import Confirm from 'components/Confirmation/Confirmation';
 import { getResourceData } from 'services/similarity/index';
