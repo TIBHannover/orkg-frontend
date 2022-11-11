@@ -122,8 +122,9 @@ export const convertPdf =
         }
 
         const pdf = files[0];
-
-        convertPdfAPI(pdf)
+        const form = new FormData();
+        form.append('file', pdf);
+        convertPdfAPI(form)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Error while converting PDF to HTML');

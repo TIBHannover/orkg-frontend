@@ -50,8 +50,12 @@ function useExtractionModal(props) {
                     }
                 })
                 .then(data => {
-                    console.log(data);
-                    dispatch(setTableData({ id: props.id, tableData: Object.values(data.payload.table) }));
+                    dispatch(
+                        setTableData({
+                            id: props.id,
+                            tableData: zip(...Object.values(data.payload.table)).map(i => i.map(j => (j !== 'nan' ? j : ''))),
+                        }),
+                    );
                     setLoading(false);
                 })
                 .catch(err => {
