@@ -1,6 +1,6 @@
 import 'react-app-polyfill/ie9';
 import 'react-app-polyfill/stable';
-import 'fast-text-encoding/text';
+import 'fast-text-encoding/text.min';
 import 'jspdf/dist/polyfills.es.js';
 import { createRoot } from 'react-dom/client';
 import theme from 'assets/scss/ThemeVariables';
