@@ -14,7 +14,7 @@ import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import { StyledContributionTabs } from 'components/ContributionTabs/styled';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tooltip from 'components/Utils/Tooltip';
-import Tabs, { TabPane } from 'rc-tabs';
+import Tabs from 'rc-tabs';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import BIOASSAYS_FIELDS_LIST from 'constants/bioassayFieldList';
@@ -234,24 +234,22 @@ const Contributions = () => {
                             activeKey={selectedContribution}
                             onChange={onTabChange}
                             destroyInactiveTabPane={true}
-                        >
-                            {contributions.allIds.map(contributionId => {
+                            items={contributions.allIds.map(contributionId => {
                                 const contribution = contributions.byId[contributionId];
-                                return (
-                                    <TabPane
-                                        tab={
-                                            <ContributionTab
-                                                handleChangeContributionLabel={handleChange}
-                                                isSelected={contribution.id === selectedContribution}
-                                                canDelete={contributions.allIds.length !== 1}
-                                                contribution={contribution}
-                                                key={contribution.id}
-                                                toggleDeleteContribution={toggleDeleteContribution}
-                                                enableEdit={true}
-                                            />
-                                        }
-                                        key={contribution.id}
-                                    >
+                                return {
+                                    label: (
+                                        <ContributionTab
+                                            handleChangeContributionLabel={handleChange}
+                                            isSelected={contribution.id === selectedContribution}
+                                            canDelete={contributions.allIds.length !== 1}
+                                            contribution={contribution}
+                                            key={contribution.id}
+                                            toggleDeleteContribution={toggleDeleteContribution}
+                                            enableEdit={true}
+                                        />
+                                    ),
+                                    key: contribution.id,
+                                    children: (
                                         <div className="contributionData">
                                             <StatementBrowser
                                                 enableEdit={true}
@@ -262,10 +260,10 @@ const Contributions = () => {
                                                 renderTemplateBox={true}
                                             />
                                         </div>
-                                    </TabPane>
-                                );
+                                    ),
+                                };
                             })}
-                        </Tabs>
+                        />
                     </StyledContributionTabs>
                 </Col>
 
