@@ -117,6 +117,21 @@ export const saveFeedback = async ({ request, response, serviceName }) =>
 export const semantifyBioassays = text =>
     submitPostRequest(`${nlpServiceUrl}clustering/bioassays/`, { 'Content-Type': 'application/json' }, { text });
 
+export const extractTable = form =>
+    fetch(`${nlpServiceUrl}tools/pdf/table/extract`, {
+        method: 'POST',
+        body: form,
+    });
+
+export const convertPdf = file => {
+    const form = new FormData();
+    form.append('file', file);
+    return fetch(`${nlpServiceUrl}tools/pdf/convert`, {
+        method: 'POST',
+        body: form,
+    });
+};
+
 export const getRecommendedPredicates = async ({ title, abstract }) => {
     const { payload } = await submitPostRequest(
         `${nlpServiceUrl}clustering/predicates`,
