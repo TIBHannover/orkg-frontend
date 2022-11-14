@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Menu, Item } from 'react-contexify';
 import { DIAGRAM_CONTEXT_MENU_ID } from 'constants/misc';
-import 'react-contexify/dist/ReactContexify.min.css';
+import 'react-contexify/ReactContexify.css';
 
 const ContextMenu = ({ actions, currentMenu }) => (
     <>
