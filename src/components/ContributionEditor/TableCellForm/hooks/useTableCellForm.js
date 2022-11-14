@@ -24,9 +24,14 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
 
     const canAddValue = useSelector(state => canAddValueAction(state, contributionId, propertyId));
 
-    const isLiteralField = useSelector(state =>
-        editMode ? value._class === ENTITIES.LITERAL : isLiteral(getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId)),
-    );
+    const isLiteralField = useSelector(state => {
+        if (editMode) {
+            return value._class === ENTITIES.LITERAL;
+        }
+        return getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId)?.length === 0
+            ? true
+            : isLiteral(getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId));
+    });
 
     const isUniqLabel = !!(valueClass && valueClass.id === CLASSES.PROBLEM);
 

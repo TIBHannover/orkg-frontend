@@ -1559,18 +1559,18 @@ export const fetchStatementsForResource =
  * @return {Boolean} if this input field is Literal
  */
 export const isLiteral = components => {
-    let isLiteral = false;
+    let _isLiteral = false;
     for (const typeId of components.map(tc => tc.value?.id)) {
         if (
             DATA_TYPES.filter(dt => dt._class === ENTITIES.LITERAL)
                 .map(t => t.classId)
                 .includes(typeId)
         ) {
-            isLiteral = true;
+            _isLiteral = true;
             break;
         }
     }
-    return isLiteral;
+    return _isLiteral;
 };
 
 /**
