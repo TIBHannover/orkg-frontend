@@ -14,7 +14,7 @@ import { getComparisonURLConfig, getPropertyObjectFromData, activatedContributio
 import { saveAuthors } from 'components/AuthorsInput/helpers';
 import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
-import { getConferencesSeries } from 'services/backend/conferencesseries';
+import { getConferencesSeries } from 'services/backend/conferences-series';
 
 function usePublish() {
     const comparisonResource = useSelector(state => state.comparison.comparisonResource);

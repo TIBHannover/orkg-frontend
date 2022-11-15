@@ -5,7 +5,7 @@ import { SubTitle } from 'components/styled';
 import NotFound from 'pages/NotFound';
 import { useParams } from 'react-router-dom';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { getConferenceById } from 'services/backend/conferencesseries';
+import { getConferenceById } from 'services/backend/conferences-series';
 import Comparisons from 'components/Organization/Comparisons';
 import ConferenceMetadataBox from './ConferenceMetadataBox';
 import ResearchProblemBox from './ResearchProblemBox';

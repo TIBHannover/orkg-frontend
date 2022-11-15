@@ -10,8 +10,7 @@ import ROUTES from 'constants/routes';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { useSelector } from 'react-redux';
 import { reverse } from 'named-urls';
-import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
-import { ORGANIZATION, CONFERENCE } from 'constants/organizationsMisc';
+import { ORGANIZATIONS_TYPES, ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 
 const Organizations = () => {
     const params = useParams();
@@ -26,10 +25,10 @@ const Organizations = () => {
             setIsLoading(true);
             let organizationsList = [];
             setOrganizations([]);
-            if (type === ORGANIZATION) {
+            if (type === ORGANIZATIONS_MISC.ORGANIZATION) {
                 organizationsList = getAllOrganizations();
                 setRoute(ROUTES.ORGANIZATION);
-            } else if (type === CONFERENCE) {
+            } else if (type === ORGANIZATIONS_MISC.CONFERENCE) {
                 organizationsList = getConferences();
                 setRoute(ROUTES.EVENT);
             }
@@ -43,7 +42,7 @@ const Organizations = () => {
                         setIsLoading(false);
                     }
                 })
-                .catch(error => {
+                .catch(() => {
                     setIsLoading(false);
                 });
         };

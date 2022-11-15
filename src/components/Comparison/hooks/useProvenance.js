@@ -3,7 +3,7 @@ import { getObservatoryAndOrganizationInformation } from 'services/backend/obser
 import { setProvenance, setObservatoryId, setOrganizationId } from 'slices/comparisonSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { MISC } from 'constants/graphSettings';
-import { getConferenceAndOrganizationInformation } from 'services/backend/conferencesseries';
+import { getConferenceAndOrganizationInformation } from 'services/backend/conferences-series';
 
 function useProvenance() {
     const id = useSelector(state => state.comparison.comparisonResource.id);

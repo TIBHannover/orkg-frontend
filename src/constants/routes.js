@@ -19,6 +19,7 @@ const routes = {
     OBSERVATORIES: '/observatories',
     ADD_ORGANIZATION: '/addOrganization/:type',
     ORGANIZATION: '/organization/:type/:id',
+    CONFERENCE: '/conference/:id',
     EVENT: '/event/:id',
     ADD_EVENT: '/organizations/:id/addEvent',
     EVENT_SERIES: '/eventSeries/:id',
@@ -90,7 +91,6 @@ const routes = {
     DIAGRAMS: '/diagrams',
     DIAGRAM: '/diagram/:id',
     NEW_DIAGRAM: '/diagram/',
-    CONFERENCE: '/conference/:id',
 };
 /**
  * Legacy routes are used to redirect old URLs to new ones
