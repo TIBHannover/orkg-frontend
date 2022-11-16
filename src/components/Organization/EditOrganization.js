@@ -36,7 +36,40 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
         reader.readAsDataURL(file);
     };
 
-    const handleSubmit = async e => {
+    const updateName = async (_id, name) => {
+        setIsLoadingName(true);
+        try {
+            await updateOrganizationName(_id, name);
+            setIsLoadingName(false);
+        } catch (error) {
+            setIsLoadingName(false);
+            toast.error(`Error updating ${typeName} ${error.message}`);
+        }
+    };
+
+    const updateUrl = async (_id, _url) => {
+        setIsLoadingUrl(true);
+        try {
+            await updateOrganizationUrl(_id, _url);
+            setIsLoadingUrl(false);
+        } catch (error) {
+            setIsLoadingUrl(false);
+            toast.error(`Error updating ${typeName} ${error.message}`);
+        }
+    };
+
+    const updateLogo = async (_id, image) => {
+        setIsLoadingLogo(true);
+        try {
+            await updateOrganizationLogo(_id, image);
+            setIsLoadingLogo(false);
+        } catch (error) {
+            setIsLoadingLogo(false);
+            toast.error(`Error updating ${typeName} ${error.message}`);
+        }
+    };
+
+    const handleSubmit = async () => {
         const value = organizationLabel;
         const image = organizationPreviewSrc;
         const OrgUrl = organizationUrl;
@@ -88,42 +121,6 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
         }
     };
 
-    const updateName = async (id, name) => {
-        setIsLoadingName(true);
-        try {
-            await updateOrganizationName(id, name);
-            setIsLoadingName(false);
-        } catch (error) {
-            setIsLoadingName(false);
-            console.error(error);
-            toast.error(`Error updating ${typeName} ${error.message}`);
-        }
-    };
-
-    const updateUrl = async (id, url) => {
-        setIsLoadingUrl(true);
-        try {
-            await updateOrganizationUrl(id, url);
-            setIsLoadingUrl(false);
-        } catch (error) {
-            setIsLoadingUrl(false);
-            console.error(error);
-            toast.error(`Error updating ${typeName} ${error.message}`);
-        }
-    };
-
-    const updateLogo = async (id, image) => {
-        setIsLoadingLogo(true);
-        try {
-            await updateOrganizationLogo(id, image);
-            setIsLoadingLogo(false);
-        } catch (error) {
-            setIsLoadingLogo(false);
-            console.error(error);
-            toast.error(`Error updating ${typeName} ${error.message}`);
-        }
-    };
-
     const isLoading = isLoadingName || isLoadingUrl || isLoadingLogo;
     return (
         <>
@@ -131,12 +128,10 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
                 <ModalHeader toggle={toggle}>Update {typeName}</ModalHeader>
                 <ModalBody>
                     <>
-                        {' '}
                         <FormGroup>
                             <Label for="organizationLabel">{capitalize(typeName)} name</Label>
                             <Input
                                 onChange={e => {
-                                    console.log(e.target.value);
                                     setOrganizationLabel(e.target.value);
                                 }}
                                 type="text"
