@@ -95,6 +95,16 @@ const Papers = () => {
         </>
     );
 
+    const infoContainerText = (
+        <>
+            ORKG papers describe scholarly articles in a structured and semantic manner.{' '}
+            <a href="https://orkg.org/about/20/Papers" rel="noreferrer" target="_blank">
+                Learn more in the help center
+            </a>
+            .
+        </>
+    );
+
     return (
         <>
             <ListPage
@@ -106,6 +116,7 @@ const Papers = () => {
                 disableSearch={verified !== null}
                 reset={reset}
                 setReset={setReset}
+                infoContainerText={infoContainerText}
             />
             <ComparisonPopup />
         </>

@@ -14,14 +14,16 @@ import useComparison from 'components/Comparison/hooks/useComparison';
 import PreviewVisualizationComparison from 'libs/selfVisModel/ComparisonComponents/PreviewVisualizationComparison';
 import ComparisonHeaderMenu from 'components/Comparison/ComparisonHeader/ComparisonHeaderMenu';
 import AppliedFilters from 'components/Comparison/ComparisonHeader/AppliedFilters';
+import Outline from 'components/Comparison/Outline';
 import { useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 import { useSelector } from 'react-redux';
+import useScroll from 'components/Review/hooks/useScroll';
 
 const Comparison = () => {
     const { comparisonId } = useParams();
-
+    useScroll();
     const { comparisonResource, navigateToNewURL } = useComparison({ id: comparisonId });
 
     const isFailedLoadingMetadata = useSelector(state => state.comparison.isFailedLoadingMetadata);
@@ -55,7 +57,8 @@ const Comparison = () => {
         <div>
             <ComparisonHeaderMenu navigateToNewURL={navigateToNewURL} />
 
-            <ContainerAnimated className="box rounded pt-4 pb-4 ps-5 pe-5 clearfix position-relative" style={containerStyle}>
+            <ContainerAnimated id="description" className="box rounded pt-4 pb-4 ps-5 pe-5 clearfix position-relative" style={containerStyle}>
+                {comparisonResource.id && <Outline />}
                 <ComparisonMetaData />
 
                 {!isFailedLoadingMetadata && !isFailedLoadingResult && (

@@ -52,31 +52,25 @@ export default function Preferences({ closeTippy }) {
             <div className="mb-2">
                 <Input
                     type="switch"
-                    id="showStatementInfo"
-                    name="showStatementInfo"
+                    id="showDescriptionTooltips"
+                    name="showDescriptionTooltips"
                     onChange={settingsInputSwitched}
-                    checked={preferences.showStatementInfo}
+                    checked={preferences.showDescriptionTooltips}
                 />{' '}
-                <Label for="showStatementInfo" className="mb-0">
-                    Show information about the statement
-                </Label>
-            </div>
-            <div className="mb-2">
-                <Input type="switch" id="showValueInfo" name="showValueInfo" onChange={settingsInputSwitched} checked={preferences.showValueInfo} />{' '}
-                <Label for="showValueInfo" className="mb-0">
-                    Show information tooltip of values
+                <Label for="showDescriptionTooltips" className="mb-0">
+                    Show description tooltips
                 </Label>
             </div>
             <div className="mb-2">
                 <Input
                     type="switch"
-                    id="showLiteralDataTypes"
-                    name="showLiteralDataTypes"
+                    id="showInlineDataTypes"
+                    name="showInlineDataTypes"
                     onChange={settingsInputSwitched}
-                    checked={preferences.showLiteralDataTypes}
+                    checked={preferences.showInlineDataTypes}
                 />{' '}
-                <Label for="showLiteralDataTypes" className="mb-0">
-                    Show data type of literals
+                <Label for="showInlineDataTypes" className="mb-0">
+                    Show inline data types of values
                 </Label>
             </div>
         </PreferencesStyle>

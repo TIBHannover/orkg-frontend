@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Row, Card, CardBody, CardTitle, Button } from 'reactstrap';
+import { useState } from 'react';
+import { Row, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
@@ -59,7 +59,7 @@ function ProvenanceBox() {
         observatory?.organization?.metadata?.is_double_blind && moment().format('YYYY-MM-DD') < observatory?.organization?.metadata?.date;
 
     return (
-        <div className="container box rounded-3 mt-4">
+        <div id="provenance" className="container box rounded-3 mt-4">
             <Row>
                 <div className="col-8 d-flex align-items-center ">
                     <div className="pt-4 pb-4 ps-4 pe-4">

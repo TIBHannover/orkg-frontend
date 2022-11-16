@@ -35,7 +35,7 @@ function TemplateComponentProperty(props) {
                 <div className="propertyLabel">
                     {props.property?.id ? (
                         <Link to={reverse(ROUTES.PROPERTY, { id: props.property.id })} target="_blank" className="text-dark">
-                            <DescriptionTooltip id={props.property.id} typeId={ENTITIES.PREDICATE}>
+                            <DescriptionTooltip id={props.property.id} _class={ENTITIES.PREDICATE}>
                                 {props.property.label}
                             </DescriptionTooltip>
                         </Link>

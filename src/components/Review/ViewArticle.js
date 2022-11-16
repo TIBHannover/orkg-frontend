@@ -36,7 +36,7 @@ const ViewArticle = () => {
     const latestVersionId = versions?.[0]?.id;
     const newVersionAvailable = isPublished && latestVersionId !== id;
     const toggleHistoryModal = () => dispatch(toggleHistoryModalAction());
-    const url = env('URL') + reverse(ROUTES.REVIEW, { id }).replace('/', '', 1);
+    const url = env('URL') + reverse(ROUTES.REVIEW, { id });
 
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: id,

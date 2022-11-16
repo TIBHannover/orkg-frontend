@@ -3,6 +3,39 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.86.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.85.0...v0.86.0) - 2022-11-09
+
+### Changes
+
+- feat(AddPaper): Predicates recommendation service [`#948`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/948)
+- UX: Paper with no contributions [`#977`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/977)
+
+---
+## [v0.85.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.84.0...v0.85.0) - 2022-11-03
+
+### Changes
+
+- feat(List): add info message on top of list pages [`#973`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/973)
+- fix(Review): losing selected comparison for newly creation sections [`#972`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/972)
+- feat: Description tooltip on all entities [`#965`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/965)
+- ux(Comparison): Add a table of contents to a comparison page [`#953`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/953)
+- feat(Resource): Change the provenance of a resource [`#964`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/964)
+- CSP: add 127.0.0.1 for local development [`#966`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/966)
+- fix: Incorrectly identified error message for Valid DOI [`#967`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/967)
+- fix(Template): wrong property description is displayed [`#971`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/971)
+- feat(Author): Show author's DBLP id [`#968`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/968)
+- fix(Review): catch loading error and show message [`#969`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/969)
+
+---
+## [v0.84.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.83.0...v0.84.0) - 2022-10-12
+
+### Changes
+
+- fix readme table [`#963`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/963)
+- feat(AddPaper): don't require authentication for the first step [`#962`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/962)
+- fix(LiteratureList): embed list [`#961`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/961)
+
+---
 ## [v0.83.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.82.1...v0.83.0) - 2022-10-06
 
 ### Changes

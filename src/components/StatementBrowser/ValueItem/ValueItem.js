@@ -1,26 +1,21 @@
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import { useSelector } from 'react-redux';
-import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import DATA_TYPES from 'constants/DataTypes';
-import { Button, Badge } from 'reactstrap';
+import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt, faClipboard } from '@fortawesome/free-solid-svg-icons';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { ValueItemStyle, PulsateIcon } from 'components/StatementBrowser/styled';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { Link } from 'react-router-dom';
 import { getResourceLink, reverseWithSlug } from 'utils';
-import capitalize from 'capitalize';
-import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
-import CopyToClipboard from 'react-copy-to-clipboard';
-import { toast } from 'react-toastify';
 import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
+import ValueDatatype from './ValueDatatype/ValueDatatype';
 import useValueItem from './hooks/useValueItem';
 
 const cookies = new Cookies();
@@ -56,55 +51,15 @@ const ValueItem = props => {
                 {!value.isEditing || !props.enableEdit ? (
                     <div>
                         {!value.isSaving && (
-                            <Tippy
+                            <DescriptionTooltip
                                 disabled={
-                                    !preferences.showValueInfo || (!value.id && !value.classes?.length) || value?.classes?.includes(CLASSES.PROBLEM)
+                                    !preferences.showDescriptionTooltips ||
+                                    !value.id ||
+                                    (value?.classes?.includes(CLASSES.PROBLEM) && !resourcesAsLinks)
                                 }
-                                delay={[500, 0]}
-                                interactive={true}
-                                content={
-                                    <div className="p-1">
-                                        <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
-                                            {value.id && (
-                                                <li className="mb-1">
-                                                    <span style={{ verticalAlign: 'middle' }}>
-                                                        {capitalize(value._class)} id: {value.id}
-                                                    </span>
-                                                    <CopyToClipboard
-                                                        text={value.id}
-                                                        onCopy={() => {
-                                                            toast.dismiss();
-                                                            toast.success('ID copied to clipboard');
-                                                        }}
-                                                    >
-                                                        <Button
-                                                            title="Click to copy id"
-                                                            onClick={e => e.stopPropagation()}
-                                                            className="py-0 px-0 ms-1"
-                                                            size="sm"
-                                                            color="link"
-                                                        >
-                                                            <Icon icon={faClipboard} size="xs" />
-                                                        </Button>
-                                                    </CopyToClipboard>
-                                                </li>
-                                            )}
-                                            {value.classes?.length > 0 && (
-                                                <li className="mb-1">
-                                                    Instance of:{' '}
-                                                    {value.classes.map((c, index) => (
-                                                        <Fragment key={index}>
-                                                            <Link to={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
-                                                                {c}
-                                                            </Link>
-                                                            {index + 1 < value.classes.length && ','}
-                                                        </Fragment>
-                                                    ))}
-                                                </li>
-                                            )}
-                                        </ul>
-                                    </div>
-                                }
+                                id={value?.id}
+                                _class={value._class}
+                                classes={value.classes}
                             >
                                 <span tabIndex="0">
                                     {resource && !resource.isFetching && value._class !== ENTITIES.LITERAL && !resourcesAsLinks && (
@@ -117,9 +72,7 @@ const ValueItem = props => {
                                                     })}
                                                     target="_blank"
                                                 >
-                                                    <DescriptionTooltip id={existingResourceId} typeId={CLASSES.PROBLEM}>
-                                                        {resource.label} <Icon icon={faExternalLinkAlt} />
-                                                    </DescriptionTooltip>
+                                                    {resource.label} <Icon icon={faExternalLinkAlt} />
                                                 </Link>
                                             ) : (
                                                 <Button
@@ -171,18 +124,12 @@ const ValueItem = props => {
                                             <ValuePlugins type={ENTITIES.LITERAL}>
                                                 {value.label !== '' ? value.label.toString() : <i>No label</i>}
                                             </ValuePlugins>
-                                            {preferences.showLiteralDataTypes && (
-                                                <small>
-                                                    <Badge color="light" className="ms-2" title={value.datatype}>
-                                                        {DATA_TYPES.find(dt => dt.type === value.datatype)?.name ?? value.datatype}
-                                                    </Badge>
-                                                </small>
-                                            )}
                                         </div>
                                     )}
                                 </span>
-                            </Tippy>
+                            </DescriptionTooltip>
                         )}
+                        {preferences.showInlineDataTypes && <ValueDatatype value={value} />}
                         {value.isSaving && 'Saving...'}
                         <ValueItemOptions id={props.id} enableEdit={props.enableEdit} syncBackend={props.syncBackend} handleOnClick={handleOnClick} />
                     </div>

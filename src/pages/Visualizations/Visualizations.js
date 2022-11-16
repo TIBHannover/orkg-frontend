@@ -33,6 +33,16 @@ const Visualizations = () => {
         };
     };
 
+    const infoContainerText = (
+        <>
+            ORKG visualizations are generated from ORKG comparisons.{' '}
+            <a href="https://orkg.org/about/15/Comparisons" rel="noreferrer" target="_blank">
+                Learn more in the help center
+            </a>
+            .
+        </>
+    );
+
     return (
         <ListPage
             label="visualizations"
@@ -40,6 +50,7 @@ const Visualizations = () => {
             renderListItem={renderListItem}
             fetchItems={fetchItems}
             pageSize={10}
+            infoContainerText={infoContainerText}
         />
     );
 };

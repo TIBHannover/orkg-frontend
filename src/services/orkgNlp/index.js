@@ -116,3 +116,17 @@ export const saveFeedback = async ({ request, response, serviceName }) =>
 
 export const semantifyBioassays = text =>
     submitPostRequest(`${nlpServiceUrl}clustering/bioassays/`, { 'Content-Type': 'application/json' }, { text });
+
+export const getRecommendedPredicates = async ({ title, abstract }) => {
+    const { payload } = await submitPostRequest(
+        `${nlpServiceUrl}clustering/predicates`,
+        {
+            'Content-Type': 'application/json',
+        },
+        {
+            title,
+            abstract,
+        },
+    );
+    return payload;
+};

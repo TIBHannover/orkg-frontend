@@ -6,6 +6,7 @@ import AbstractModal from 'components/AddPaper/AbstractModal/AbstractModal';
 import EntityRecognition from 'components/AddPaper/EntityRecognition/EntityRecognition';
 import useDetermineResearchField from 'components/AddPaper/EntityRecognition/useDetermineResearchField';
 import useEntityRecognition from 'components/AddPaper/hooks/useEntityRecognition';
+import useFeedbacks from 'components/AddPaper/hooks/useFeedbacks';
 import useBioassays from 'components/AddPaper/hooks/useBioassays';
 import Confirm from 'components/Confirmation/Confirmation';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
@@ -31,6 +32,7 @@ import {
     updateContributionLabelAction as updateContributionLabel,
 } from 'slices/addPaperSlice';
 import { updateSettings } from 'slices/statementBrowserSlice';
+import env from '@beam-australia/react-env';
 import ContributionsHelpTour from './ContributionsHelpTour';
 
 const Contributions = () => {
@@ -54,8 +56,9 @@ const Contributions = () => {
 
     const isBioassayField = BIOASSAYS_FIELDS_LIST.includes(selectedResearchField);
 
-    const { handleSaveFeedback } = useEntityRecognition();
+    const { handleSaveFeedback } = useEntityRecognition({ isComputerScienceField });
     const { handleSaveBioassaysFeedback } = useBioassays();
+    const { handleSavePredicatesRecommendationFeedback } = useFeedbacks();
 
     const [isOpenBioassays, setIsOpenBioassays] = useState(false);
 
@@ -89,6 +92,10 @@ const Contributions = () => {
         }
         if (isBioassayField) {
             handleSaveBioassaysFeedback();
+        }
+        if (env('IS_TESTING_SERVER') === 'true') {
+            // because this feature is disabled in production
+            handleSavePredicatesRecommendationFeedback(properties);
         }
         // save add paper
         dispatch(
@@ -262,8 +269,8 @@ const Contributions = () => {
                     </StyledContributionTabs>
                 </Col>
 
-                <Col lg="3" className="ps-lg-3 mt-5">
-                    {isComputerScienceField && <EntityRecognition />}
+                <Col lg="3" className="ps-lg-3 mt-2">
+                    <EntityRecognition isComputerScienceField={isComputerScienceField} />
                 </Col>
             </Row>
 

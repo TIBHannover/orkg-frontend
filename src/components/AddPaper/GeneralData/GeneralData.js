@@ -37,6 +37,7 @@ import env from '@beam-australia/react-env';
 import AutocompleteContentTypeTitle from 'components/AutocompleteContentTypeTitle/AutocompleteContentTypeTitle';
 import Confirm from 'components/Confirmation/Confirmation';
 import useExistingPaper from 'components/ExistingPaperModal/useExistingPaper';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 
 const Container = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -289,7 +290,7 @@ const GeneralData = () => {
         <div>
             <div className="row mt-4">
                 <div className="col-md-8">
-                    <h2>General paper data</h2>
+                    <h2 className="h4">General paper data</h2>
                 </div>
                 <div className="col-md-4 mb-2" style={{ textAlign: 'right' }}>
                     <ButtonGroup id="entryOptions">
@@ -545,9 +546,9 @@ const GeneralData = () => {
                     ))}
                 </ul>
             )}
-            <Button color="primary" className="float-end mb-4" onClick={handleNextClick} data-test="nextStep">
+            <RequireAuthentication component={Button} color="primary" className="float-end mb-4" onClick={handleNextClick} data-test="nextStep">
                 Next step
-            </Button>
+            </RequireAuthentication>
 
             <Steps
                 steps={[
