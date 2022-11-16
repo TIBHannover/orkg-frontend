@@ -46,9 +46,7 @@ const StyledOrganizationHeader = styled.div`
 `;
 
 const Organization = () => {
-    const params = useParams();
-    const id = params.id;
-    const orgType = params.type;
+    const { id, type: orgType } = useParams();
     const [error, setError] = useState(null);
     const [label, setLabel] = useState(null);
     const [url, setURL] = useState(null);
@@ -57,7 +55,7 @@ const Organization = () => {
     const [logo, setLogo] = useState(null);
     const [createdBy, setCreatedBy] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
-    const typeName = ORGANIZATIONS_TYPES.find(t => t.label === params.type).alternateLabel;
+    const typeName = ORGANIZATIONS_TYPES.find(t => t.label === orgType).alternateLabel;
     const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
@@ -73,18 +71,18 @@ const Organization = () => {
                     setIsLoading(false);
                     setCreatedBy(responseJson.created_by);
                 })
-                .catch(error => {
+                .catch(_error => {
                     setIsLoading(false);
-                    setError(error);
+                    setError(_error);
                 });
         };
         findOrg();
     }, [id, typeName]);
 
-    const updateOrganizationMetadata = (label, url, logo) => {
-        setLabel(label);
-        setURL(url);
-        setLogo(logo);
+    const updateOrganizationMetadata = (_label, _url, _logo) => {
+        setLabel(_label);
+        setURL(_url);
+        setLogo(_logo);
     };
 
     return (
@@ -137,9 +135,11 @@ const Organization = () => {
                                 )}
                             </Row>
                         </StyledOrganizationHeader>
-                        <hr />
                         {ORGANIZATIONS_MISC.GENERAL === ORGANIZATIONS_TYPES.find(t => t.label === orgType)?.id && (
-                            <Members organizationsId={organizationId} />
+                            <>
+                                <hr />
+                                <Members organizationsId={organizationId} />
+                            </>
                         )}
                     </Container>
                     {ORGANIZATIONS_MISC.EVENT === ORGANIZATIONS_TYPES.find(t => t.label === orgType)?.id && (
