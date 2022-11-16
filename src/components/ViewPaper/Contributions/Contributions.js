@@ -15,7 +15,7 @@ import { StyledContributionTabs, GlobalStyle } from 'components/ContributionTabs
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import Tabs from 'rc-tabs';
-import SimilarContributions from '../SimilarContributions';
+import SimilarContributions from 'components/ViewPaper/SimilarContributions/SimilarContributions';
 import useContributions from './hooks/useContributions';
 
 const Contributions = props => {
@@ -24,9 +24,6 @@ const Contributions = props => {
     const {
         isLoading,
         isLoadingContributionFailed,
-        isSimilarContributionsLoading,
-        isSimilarContributionsFailedLoading,
-        similarContributions,
         selectedContribution,
         contributions,
         paperTitle,
@@ -111,12 +108,7 @@ const Contributions = props => {
                                                         />
                                                     </FormGroup>
 
-                                                    <SimilarContributions
-                                                        similarContributions={similarContributions.slice(0, 3)}
-                                                        isLoading={isSimilarContributionsLoading}
-                                                        isFailed={isSimilarContributionsFailedLoading}
-                                                        contributionId={contribution.id}
-                                                    />
+                                                    {selectedContribution && <SimilarContributions contributionId={selectedContribution} />}
 
                                                     {contribution.id && <ContributionComparisons contributionId={contribution.id} />}
                                                 </div>
