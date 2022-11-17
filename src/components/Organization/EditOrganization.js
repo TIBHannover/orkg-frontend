@@ -93,7 +93,7 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
         }
         // validate image
         if (image !== previewSrc && image.length === 0) {
-            toast.error('Please enter an organization image');
+            toast.error('Please upload an organization image');
             return false;
         }
 
@@ -108,13 +108,13 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
         }
 
         if (image !== previewSrc && image.length !== 0) {
-            await updateLogo(id, image[0]);
+            await updateLogo(id, image);
             isUpdatedImage = true;
         }
 
         if (isUpdatedLabel || isUpdatedUrl || isUpdatedImage) {
             toast.success(`${typeName} updated successfully`);
-            updateOrganizationMetadata(value, url, image !== previewSrc && image.length !== 0 ? image[0] : previewSrc);
+            updateOrganizationMetadata(value, url, image !== previewSrc && image.length !== 0 ? image : previewSrc);
             toggle();
         } else {
             toggle();
