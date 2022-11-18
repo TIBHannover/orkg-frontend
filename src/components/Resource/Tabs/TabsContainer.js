@@ -29,7 +29,7 @@ function TabsContainer({ id, classes, editMode, canEdit }) {
     return (
         <Container className="mt-2 p-0">
             <GlobalStyle />
-            <StyledContributionTabs>
+            <StyledContributionTabs disablePadding={true}>
                 <Tabs
                     destroyInactiveTabPane={true}
                     onChange={onTabChange}
@@ -39,15 +39,17 @@ function TabsContainer({ id, classes, editMode, canEdit }) {
                             label: 'Statements',
                             key: 'statements',
                             children: (
-                                <StatementBrowser
-                                    enableEdit={editMode && canEdit}
-                                    syncBackend={editMode}
-                                    openExistingResourcesInDialog={false}
-                                    initialSubjectId={id}
-                                    newStore={true}
-                                    propertiesAsLinks={true}
-                                    resourcesAsLinks={true}
-                                />
+                                <div className="p-4">
+                                    <StatementBrowser
+                                        enableEdit={editMode && canEdit}
+                                        syncBackend={editMode}
+                                        openExistingResourcesInDialog={false}
+                                        initialSubjectId={id}
+                                        newStore={true}
+                                        propertiesAsLinks={true}
+                                        resourcesAsLinks={true}
+                                    />
+                                </div>
                             ),
                         },
                         ...(classes?.includes(CLASSES.VISUALIZATION)
