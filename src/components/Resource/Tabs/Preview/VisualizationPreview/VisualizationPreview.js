@@ -3,6 +3,7 @@ import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCV
 import { getVisualization } from 'services/similarity';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import { Alert } from 'reactstrap';
 
 function VisualizationPreview({ id }) {
     const [visualizationModelForGDC, setVisualizationModelForGDC] = useState(undefined);
@@ -30,6 +31,11 @@ function VisualizationPreview({ id }) {
             {isLoading && 'Loading...'}
             {!isLoading && !isLoadingFailed && visualizationModelForGDC && (
                 <GDCVisualizationRenderer height="500px" model={visualizationModelForGDC} />
+            )}
+            {!isLoading && isLoadingFailed && (
+                <div className="p-3">
+                    <Alert color="warning">Error loading visualization preview</Alert>
+                </div>
             )}
         </div>
     );

@@ -17,6 +17,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import pluralize from 'pluralize';
 import Authors from './Authors';
+import Paths from './Paths';
 
 const PaperCardStyled = styled.div`
     &.selected {
@@ -132,6 +133,13 @@ const PaperCard = props => {
                             </p>
                         )}
                     </div>
+                    {props.paths?.length > 0 && (
+                        <div className="mb-1">
+                            <small>
+                                <Paths paths={props.paths} />
+                            </small>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -181,6 +189,7 @@ PaperCard.propTypes = {
     linkTarget: PropTypes.string,
     showContributionCount: PropTypes.bool.isRequired,
     route: PropTypes.string,
+    paths: PropTypes.array,
 };
 
 PaperCard.defaultProps = {

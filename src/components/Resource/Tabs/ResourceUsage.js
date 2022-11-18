@@ -21,6 +21,7 @@ function ResourceUsage({ id }) {
                     ...object.paper,
                     ...(!paperCardData ? { isLoading: true } : getPaperData(object.paper, paperCardData?.statements)),
                 }}
+                paths={object.path}
                 key={object.paper.id}
             />
         );
