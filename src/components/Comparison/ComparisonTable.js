@@ -269,7 +269,7 @@ const ComparisonTable = props => {
                 className="table sticky mb-0 p-0"
                 style={{ height: 'max-content', fontSize: smallerFontSize ? '0.95rem' : '1rem' }}
             >
-                <ScrollSyncPane group="one" attachTo={props.scrollContainerBody}>
+                <ScrollSyncPane group="one" attachTo={scrollContainerHead}>
                     <div
                         ref={scrollContainerHead}
                         style={{ overflow: 'auto', top: '71px', position: 'sticky', zIndex: '3' }}
