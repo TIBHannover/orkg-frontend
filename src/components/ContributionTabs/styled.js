@@ -71,7 +71,7 @@ export const StyledContributionTabs = styled.div`
     .rc-tabs-tabpane {
         width: 100%;
         flex: none;
-
+        background-color: #fff;
         border-radius: ${props => props.theme.borderRadius};
         border-width: ${props => props.theme.borderWidth};
         border-color: ${props => props.theme.lightDarker};

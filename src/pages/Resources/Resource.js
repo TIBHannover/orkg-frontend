@@ -6,7 +6,7 @@ import InternalServerError from 'pages/InternalServerError';
 import EditableHeader from 'components/EditableHeader';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import NotFound from 'pages/NotFound';
-import { useLocation, Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes.js';
 import { useSelector } from 'react-redux';
@@ -29,9 +29,7 @@ import DEDICATED_PAGE_LINKS from 'components/Resource/hooks/redirectionSettings'
 import useQuery from 'components/Resource/hooks/useQuery';
 
 function Resource() {
-    const params = useParams();
-    const resourceId = params.id;
-    const location = useLocation();
+    const { id } = useParams();
     const navigate = useNavigate();
     const query = useQuery();
     const noRedirect = query.get('noRedirect');
@@ -45,12 +43,12 @@ function Resource() {
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const showDeleteButton = editMode && isCurationAllowed;
     const [hasDOI, setHasDOI] = useState(false);
-    const { deleteResource } = useDeleteResource({ resourceId, redirect: true });
+    const { deleteResource } = useDeleteResource({ resourceId: id, redirect: true });
     const [canEdit, setCanEdit] = useState(false);
     const [createdBy, setCreatedBy] = useState(null);
     const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
-        resourceId: params.id,
+        resourceId: id,
         unlisted: resource?.unlisted,
         featured: resource?.featured,
     });
@@ -69,7 +67,7 @@ function Resource() {
     useEffect(() => {
         const findResource = async () => {
             setIsLoading(true);
-            getResource(resourceId)
+            getResource(id)
                 .then(responseJson => {
                     document.title = `${responseJson.label} - Resource - ORKG`;
                     setCreatedBy(responseJson.created_by);
@@ -78,7 +76,7 @@ function Resource() {
                     if (noRedirect === null && link) {
                         navigate(
                             reverseWithSlug(link.route, {
-                                [link.routeParams]: params.id,
+                                [link.routeParams]: id,
                                 slug: link.hasSlug ? responseJson.label : undefined,
                             }),
                             { replace: true },
@@ -86,7 +84,7 @@ function Resource() {
                     }
 
                     if (responseJson.classes.includes(CLASSES.COMPARISON)) {
-                        getStatementsBySubjectAndPredicate({ subjectId: params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
+                        getStatementsBySubjectAndPredicate({ subjectId: id, predicateId: PREDICATES.HAS_DOI }).then(st => {
                             if (st.length > 0) {
                                 setIsLoading(false);
                                 setHasDOI(true);
@@ -115,7 +113,8 @@ function Resource() {
                 });
         };
         findResource();
-    }, [location, params.id, resourceId, isCurationAllowed, getDedicatedLink, noRedirect, navigate]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id, isCurationAllowed, getDedicatedLink]);
 
     useEffect(() => {
         setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && !resource.shared);
@@ -152,7 +151,7 @@ function Resource() {
                                         size="sm"
                                         tag={Link}
                                         to={reverseWithSlug(dedicatedLink.route, {
-                                            [dedicatedLink.routeParams]: params.id,
+                                            [dedicatedLink.routeParams]: id,
                                             slug: dedicatedLink.hasSlug ? resource.label : undefined,
                                         })}
                                         style={{ marginRight: 2 }}
@@ -234,7 +233,7 @@ function Resource() {
                             </h3>
                         ) : (
                             <>
-                                <EditableHeader id={params.id} value={resource.label} onChange={handleHeaderChange} entityType={ENTITIES.RESOURCE} />
+                                <EditableHeader id={id} value={resource.label} onChange={handleHeaderChange} entityType={ENTITIES.RESOURCE} />
                                 {showDeleteButton && (
                                     <ConditionalWrapper
                                         condition={!canBeDeleted}
@@ -263,7 +262,7 @@ function Resource() {
                     </Container>
                 </>
             )}
-            <TabsContainer classes={resource?.classes} id={resourceId} editMode={editMode} canEdit={canEdit} />
+            <TabsContainer classes={resource?.classes} id={id} editMode={editMode} canEdit={canEdit} />
             <PapersWithCodeModal isOpen={isOpenPWCModal} toggle={() => setIsOpenPWCModal(v => !v)} />
         </>
     );

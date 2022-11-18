@@ -16,7 +16,7 @@ function Trend() {
     ];
     return (
         <div>
-            <Chart options={{ colors: ['rgb(232, 97, 97)'] }} chartType="ColumnChart" width="100%" height="400px" data={data} />
+            <Chart options={{ colors: ['rgb(232, 97, 97)'] }} chartType="ColumnChart" width="100%" height="500px" data={data} />
         </div>
     );
 }

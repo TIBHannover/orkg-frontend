@@ -91,6 +91,10 @@ const routes = [
         element: ResourceDetails,
     },
     {
+        path: ROUTES.RESOURCE_TABS,
+        element: ResourceDetails,
+    },
+    {
         path: ROUTES.ADD_RESOURCE,
         element: requireAuthentication(AddResource),
     },
