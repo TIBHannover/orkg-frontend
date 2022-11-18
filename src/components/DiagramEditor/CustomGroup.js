@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Handle, Position } from 'react-flow-renderer';
+import { Handle, Position } from 'reactflow';
 import styled from 'styled-components';
 
 const StyledGroupHeader = styled.div`

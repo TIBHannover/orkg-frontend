@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import env from '@beam-australia/react-env';
 import { parse } from 'node-html-parser';
 import { toast } from 'react-toastify';
+import { convertPdf as convertPdfAPI } from 'services/orkgNlp/index';
 import { guid } from 'utils';
 
 /*
@@ -121,14 +122,9 @@ export const convertPdf =
         }
 
         const pdf = files[0];
-
         const form = new FormData();
-        form.append('pdf', pdf);
-
-        fetch(`${env('ANNOTATION_SERVICE_URL')}convertPdf/`, {
-            method: 'POST',
-            body: form,
-        })
+        form.append('file', pdf);
+        convertPdfAPI(form)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Error while converting PDF to HTML');

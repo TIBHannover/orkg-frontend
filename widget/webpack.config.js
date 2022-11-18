@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const copyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+
 const bundleOutputDir = './dist';
 const bundleReleaseOutputDir = './../public';
 
@@ -20,12 +21,8 @@ module.exports = (env, argv) => {
             },
             plugins: [
                 new webpack.DefinePlugin({
-                    'process.env.BACKEND_URL': isDevBuild
-                        ? JSON.stringify('http://localhost:8080/api/')
-                        : JSON.stringify('https://orkg.org/api/'),
-                    'process.env.FRONTEND_SERVER_URL': isDevBuild
-                        ? JSON.stringify('http://localhost:3000/')
-                        : JSON.stringify('https://orkg.org/'),
+                    'process.env.BACKEND_URL': isDevBuild ? JSON.stringify('http://localhost:8080/api/') : JSON.stringify('https://orkg.org/api/'),
+                    'process.env.FRONTEND_SERVER_URL': isDevBuild ? JSON.stringify('http://localhost:3000/') : JSON.stringify('https://orkg.org/'),
                 }),
                 ...(isDevBuild
                     ? [new webpack.SourceMapDevToolPlugin(), new copyWebpackPlugin({ patterns: [{ from: 'demo/' }] })]
