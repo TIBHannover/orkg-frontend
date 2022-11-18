@@ -9,7 +9,7 @@ import { zip, omit, isString, cloneDeep } from 'lodash';
 import { PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { saveFullPaper } from 'services/backend/papers';
-import env from '@beam-australia/react-env';
+import { extractTable } from 'services/orkgNlp/index';
 
 function useExtractionModal(props) {
     const [loading, setLoading] = useState(false);
@@ -22,6 +22,8 @@ function useExtractionModal(props) {
     const tableData = useSelector(state => state.pdfAnnotation.tableData[props.id]);
     const extractionSuccessful = tableData && tableData.length > 0;
 
+    const pxToPoint = x => (x * 72) / 96;
+
     useEffect(() => {
         const performTableExtraction = async () => {
             // only extract the table if it hasn't been extracted yet
@@ -29,29 +31,17 @@ function useExtractionModal(props) {
                 return;
             }
 
-            const csvTableToObject = csv => {
-                let fullData = [];
-
-                if (csv.length) {
-                    fullData = readString(csv, {}).data; // .join('\n')
-                }
-
-                dispatch(setTableData({ id: props.id, tableData: fullData }));
-            };
-
             setLoading(true);
 
             const { x, y, w, h } = props.region;
 
             const form = new FormData();
-            form.append('pdf', await fetch(pdf).then(content => content.blob()));
-            form.append('region', `${pxToPoint(y)},${pxToPoint(x)},${pxToPoint(y + h)},${pxToPoint(x + w)}`);
-            form.append('page_number', props.pageNumber);
-
-            fetch(`${env('ANNOTATION_SERVICE_URL')}extractTable/`, {
-                method: 'POST',
-                body: form,
-            })
+            form.append('file', await fetch(pdf).then(content => content.blob()));
+            form.append(
+                'payload',
+                JSON.stringify({ page_number: props.pageNumber, region: [pxToPoint(y), pxToPoint(x), pxToPoint(y + h), pxToPoint(x + w)] }),
+            );
+            extractTable(form)
                 .then(response => {
                     if (!response.ok) {
                         console.log('err');
@@ -60,7 +50,12 @@ function useExtractionModal(props) {
                     }
                 })
                 .then(data => {
-                    csvTableToObject(data);
+                    dispatch(
+                        setTableData({
+                            id: props.id,
+                            tableData: zip(...Object.values(data.payload.table)).map(i => i.map(j => (j !== 'nan' ? j : ''))),
+                        }),
+                    );
                     setLoading(false);
                 })
                 .catch(err => {
@@ -69,8 +64,6 @@ function useExtractionModal(props) {
         };
         performTableExtraction();
     }, [props.region, props.pageNumber, props.id, pdf, dispatch, tableData, readString]);
-
-    const pxToPoint = x => (x * 72) / 96;
 
     /**
      * Download the table as CSV
