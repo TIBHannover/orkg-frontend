@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
@@ -10,6 +11,10 @@ import { Link } from 'react-router-dom';
 import { getPredicates } from 'services/backend/predicates';
 
 const Properties = () => {
+    useEffect(() => {
+        document.title = 'Properties list - ORKG';
+    });
+
     const renderListItem = property => (
         <ShortRecord key={property.id} header={property.label} href={reverse(ROUTES.PROPERTY, { id: property.id })}>
             {property.id}

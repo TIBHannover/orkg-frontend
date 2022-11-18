@@ -1,8 +1,8 @@
-import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
-import PaperCard from 'components/PaperCard/PaperCard';
-import VisualizationCard from 'components/VisualizationCard/VisualizationCard';
-import ReviewCard from 'components/ReviewCard/ReviewCard';
-import ListCard from 'components/List/ListCard';
+import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
+import PaperCard from 'components/Cards/PaperCard/PaperCard';
+import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
+import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
+import ListCard from 'components/Cards/ListCard/ListCard';
 import PropTypes from 'prop-types';
 import { useCallback } from 'react';
 import { CLASSES } from 'constants/graphSettings';

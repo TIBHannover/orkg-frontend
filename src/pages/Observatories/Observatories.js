@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import ObservatoryCard from 'components/ObservatoryCard/ObservatoryCard';
+import ObservatoryCard from 'components/Cards/ObservatoryCard/ObservatoryCard';
 import { getAllObservatories, getObservatoriesStats } from 'services/backend/observatories';
 import { getAllOrganizations } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

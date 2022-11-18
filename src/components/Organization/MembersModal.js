@@ -1,5 +1,5 @@
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-import ContributorCard from 'components/ContributorCard/ContributorCard';
+import ContributorCard from 'components/Cards/ContributorCard/ContributorCard';
 import PropTypes from 'prop-types';
 
 const MembersModal = ({ members, openModal, setOpenModal }) => (

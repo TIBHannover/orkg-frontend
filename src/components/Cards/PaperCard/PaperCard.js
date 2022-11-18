@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar, faFile } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
-import AddToComparison from 'components/PaperCard/AddToComparison';
+import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';

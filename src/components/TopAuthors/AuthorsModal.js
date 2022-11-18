@@ -2,7 +2,7 @@ import ContentLoader from 'react-content-loader';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
-import AuthorCard from 'components/AuthorCard/AuthorCard';
+import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 import useResearchProblemAuthors from './hooks/useResearchProblemAuthors';

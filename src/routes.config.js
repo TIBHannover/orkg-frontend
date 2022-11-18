@@ -4,7 +4,6 @@ import { Navigate, useParams } from 'react-router-dom';
 import ResourceDetails from 'pages/Resources/Resource';
 import AddPaper from 'pages/AddPaper';
 import AuthorPage from 'pages/AuthorPage';
-import UsagePage from 'pages/UsagePage';
 import VenuePage from 'pages/VenuePage';
 import AddResource from 'pages/Resources/AddResource';
 import Comparison from 'pages/Comparisons/Comparison';
@@ -224,10 +223,6 @@ const routes = [
     {
         path: ROUTES.AUTHOR_PAGE,
         element: AuthorPage,
-    },
-    {
-        path: ROUTES.USAGE_PAGE,
-        element: UsagePage,
     },
     {
         path: ROUTES.CHANGELOG,

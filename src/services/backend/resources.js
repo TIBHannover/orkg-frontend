@@ -97,6 +97,29 @@ export const getResourcesByClass = async ({
     return resources;
 };
 
+export const getResourceUsageInPapers = async ({
+    id,
+    page = 0,
+    items: size = 9999,
+    sortBy = 'paper.created_at',
+    desc = true,
+    returnContent = false,
+}) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify(
+        { page, size, sort, desc },
+        {
+            skipNull: true,
+            skipEmptyString: true,
+        },
+    );
+
+    const resources = await submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/papers/?${params}`).then(res =>
+        returnContent ? res.content : res,
+    );
+    return resources;
+};
+
 export const markAsFeatured = id => submitPutRequest(`${resourcesUrl}${id}/metadata/featured`, { 'Content-Type': 'application/json' });
 
 export const removeFeaturedFlag = id => submitDeleteRequest(`${resourcesUrl}${id}/metadata/featured`, { 'Content-Type': 'application/json' });

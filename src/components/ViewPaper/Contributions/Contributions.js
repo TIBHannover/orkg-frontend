@@ -7,7 +7,7 @@ import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import ContributionComparisons from 'components/ViewPaper/ContributionComparisons/ContributionComparisons';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import { reverse } from 'named-urls';
-import AddToComparison from 'components/PaperCard/AddToComparison';
+import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import { useSelector } from 'react-redux';

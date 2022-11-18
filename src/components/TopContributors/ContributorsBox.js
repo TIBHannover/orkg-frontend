@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import useContributors from 'components/TopContributors/hooks/useContributors';
-import ContributorCard from 'components/ContributorCard/ContributorCard';
+import ContributorCard from 'components/Cards/ContributorCard/ContributorCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'react-content-loader';

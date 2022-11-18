@@ -6,7 +6,7 @@ import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Alert } from 'reactstrap';
 import { getResourcesByClass } from 'services/backend/resources';

@@ -1,4 +1,4 @@
-import PaperCard from 'components/PaperCard/PaperCard';
+import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import PropTypes from 'prop-types';
 import { Alert, Modal, ModalBody, ModalHeader } from 'reactstrap';
 

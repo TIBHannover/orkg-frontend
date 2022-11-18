@@ -1,11 +1,9 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Container, Button, Alert } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import InternalServerError from 'pages/InternalServerError';
 import EditableHeader from 'components/EditableHeader';
-import ObjectStatements from 'components/ObjectStatements/ObjectStatements';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import NotFound from 'pages/NotFound';
 import { useLocation, Link, useParams, useNavigate } from 'react-router-dom';
@@ -15,12 +13,9 @@ import { useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
-import { toast } from 'react-toastify';
 import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import env from '@beam-australia/react-env';
-import { getVisualization } from 'services/similarity';
-import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
@@ -29,83 +24,9 @@ import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeMo
 import TitleBar from 'components/TitleBar/TitleBar';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 import ItemMetadata from 'components/Search/ItemMetadata';
-
-const DEDICATED_PAGE_LINKS = {
-    [CLASSES.PAPER]: {
-        label: 'Paper',
-        route: ROUTES.VIEW_PAPER,
-        routeParams: 'resourceId',
-    },
-    [CLASSES.PAPER_VERSION]: {
-        label: 'Paper',
-        route: ROUTES.VIEW_PAPER,
-        routeParams: 'resourceId',
-    },
-    [CLASSES.PROBLEM]: {
-        label: 'Research problem',
-        route: ROUTES.RESEARCH_PROBLEM,
-        routeParams: 'researchProblemId',
-        hasSlug: true,
-    },
-    [CLASSES.COMPARISON]: {
-        label: 'Comparison',
-        route: ROUTES.COMPARISON,
-        routeParams: 'comparisonId',
-    },
-    [CLASSES.AUTHOR]: {
-        label: 'Author',
-        route: ROUTES.AUTHOR_PAGE,
-        routeParams: 'authorId',
-    },
-    [CLASSES.RESEARCH_FIELD]: {
-        label: 'Research field',
-        route: ROUTES.RESEARCH_FIELD,
-        routeParams: 'researchFieldId',
-        hasSlug: true,
-    },
-    [CLASSES.VENUE]: {
-        label: 'Venue',
-        route: ROUTES.VENUE_PAGE,
-        routeParams: 'venueId',
-    },
-    [CLASSES.TEMPLATE]: {
-        label: 'Template',
-        route: ROUTES.TEMPLATE,
-        routeParams: 'id',
-    },
-    [CLASSES.CONTRIBUTION]: {
-        label: 'Contribution',
-        route: ROUTES.CONTRIBUTION,
-        routeParams: 'id',
-    },
-    [CLASSES.SMART_REVIEW]: {
-        label: 'Review',
-        route: ROUTES.REVIEW,
-        routeParams: 'id',
-    },
-    [CLASSES.SMART_REVIEW_PUBLISHED]: {
-        label: 'Review',
-        route: ROUTES.REVIEW,
-        routeParams: 'id',
-    },
-    [CLASSES.LITERATURE_LIST]: {
-        label: 'List',
-        route: ROUTES.LIST,
-        routeParams: 'id',
-    },
-    [CLASSES.LITERATURE_LIST_PUBLISHED]: {
-        label: 'List',
-        route: ROUTES.LIST,
-        routeParams: 'id',
-    },
-};
-
-// A custom hook that builds on useLocation to parse the query string
-function useQuery() {
-    const { search } = useLocation();
-
-    return useMemo(() => new URLSearchParams(search), [search]);
-}
+import TabsContainer from 'components/Resource/Tabs/TabsContainer';
+import DEDICATED_PAGE_LINKS from 'components/Resource/hooks/redirectionSettings';
+import useQuery from 'components/Resource/hooks/useQuery';
 
 function Resource() {
     const params = useParams();
@@ -119,13 +40,10 @@ function Resource() {
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
     const [canBeDeleted, setCanBeDeleted] = useState(false);
-    const [visualizationModelForGDC, setVisualizationModelForGDC] = useState(undefined);
-    const [hasVisualizationModelForGDC, setHasVisualizationModelForGDC] = useState(false);
     const values = useSelector(state => state.statementBrowser.values);
     const properties = useSelector(state => state.statementBrowser.properties);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const showDeleteButton = editMode && isCurationAllowed;
-    const [hasObjectStatement, setHasObjectStatement] = useState(false);
     const [hasDOI, setHasDOI] = useState(false);
     const { deleteResource } = useDeleteResource({ resourceId, redirect: true });
     const [canEdit, setCanEdit] = useState(false);
@@ -166,21 +84,7 @@ function Resource() {
                             { replace: true },
                         );
                     }
-                    if (responseJson.classes.includes(CLASSES.VISUALIZATION)) {
-                        getVisualization(resourceId)
-                            .then(model => {
-                                setVisualizationModelForGDC(model);
-                                setHasVisualizationModelForGDC(true);
-                            })
-                            .catch(() => {
-                                setVisualizationModelForGDC(undefined);
-                                setHasVisualizationModelForGDC(false);
-                                toast.error('Error loading visualization preview');
-                            });
-                    } else {
-                        setVisualizationModelForGDC(undefined);
-                        setHasVisualizationModelForGDC(false);
-                    }
+
                     if (responseJson.classes.includes(CLASSES.COMPARISON)) {
                         getStatementsBySubjectAndPredicate({ subjectId: params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
                             if (st.length > 0) {
@@ -205,7 +109,6 @@ function Resource() {
                     }
                 })
                 .catch(err => {
-                    console.error(err);
                     setResource(null);
                     setError(err);
                     setIsLoading(false);
@@ -215,8 +118,8 @@ function Resource() {
     }, [location, params.id, resourceId, isCurationAllowed, getDedicatedLink, noRedirect, navigate]);
 
     useEffect(() => {
-        setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && !hasObjectStatement);
-    }, [values, properties, hasObjectStatement]);
+        setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && !resource.shared);
+    }, [values, properties, resource.shared]);
 
     const handleHeaderChange = val => {
         setResource(prev => ({ ...prev, label: val }));
@@ -316,7 +219,7 @@ function Resource() {
                         </Alert>
                     )}
                     <EditModeHeader isVisible={editMode && canEdit} />
-                    <Container className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
+                    <Container className={`box clearfix pt-4 pb-4 ps-4 pe-4 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
                         {!editMode || !canEdit ? (
                             <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                 {resource.label || (
@@ -357,31 +260,10 @@ function Resource() {
                         )}
 
                         <ItemMetadata item={resource} showCreatedAt={true} showCreatedBy={true} showProvenance={true} editMode={editMode} />
-                        <hr />
-                        {/* Adding Visualization Component here */}
-                        {hasVisualizationModelForGDC && (
-                            <div className="mb-4">
-                                <GDCVisualizationRenderer model={visualizationModelForGDC} />
-                                <hr />
-                            </div>
-                        )}
-                        <h3 className="h5">Statements</h3>
-                        <div className="clearfix">
-                            <StatementBrowser
-                                key={`SB${resource.classes.map(c => c.id).join(',')}`}
-                                enableEdit={editMode && canEdit}
-                                syncBackend={editMode}
-                                openExistingResourcesInDialog={false}
-                                initialSubjectId={resourceId}
-                                newStore={true}
-                                propertiesAsLinks={true}
-                                resourcesAsLinks={true}
-                            />
-                        </div>
-                        <ObjectStatements resourceId={params.id} setHasObjectStatement={setHasObjectStatement} />
                     </Container>
                 </>
             )}
+            <TabsContainer classes={resource?.classes} id={resourceId} editMode={editMode} canEdit={canEdit} />
             <PapersWithCodeModal isOpen={isOpenPWCModal} toggle={() => setIsOpenPWCModal(v => !v)} />
         </>
     );
