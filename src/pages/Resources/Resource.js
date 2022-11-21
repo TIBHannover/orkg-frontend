@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Container, Button, Alert } from 'reactstrap';
+import { Container, Button } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import InternalServerError from 'pages/InternalServerError';
 import EditableHeader from 'components/EditableHeader';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
@@ -12,21 +11,21 @@ import ROUTES from 'constants/routes.js';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { ENTITIES } from 'constants/graphSettings';
 import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import env from '@beam-australia/react-env';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import { reverseWithSlug } from 'utils';
-import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeModal';
 import TitleBar from 'components/TitleBar/TitleBar';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 import ItemMetadata from 'components/Search/ItemMetadata';
 import TabsContainer from 'components/Resource/Tabs/TabsContainer';
 import DEDICATED_PAGE_LINKS from 'components/Resource/hooks/redirectionSettings';
 import useQuery from 'components/Resource/hooks/useQuery';
+import getPreventEditCase from 'components/Resource/hooks/preventEditing';
+import PreventModal from 'components/Resource/PreventModal/PreventModal';
 
 function Resource() {
     const { id } = useParams();
@@ -37,16 +36,14 @@ function Resource() {
     const [resource, setResource] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
+    const [preventEditCase, setPreventEditCase] = useState(null);
     const [canBeDeleted, setCanBeDeleted] = useState(false);
     const values = useSelector(state => state.statementBrowser.values);
     const properties = useSelector(state => state.statementBrowser.properties);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const showDeleteButton = editMode && isCurationAllowed;
-    const [hasDOI, setHasDOI] = useState(false);
     const { deleteResource } = useDeleteResource({ resourceId: id, redirect: true });
-    const [canEdit, setCanEdit] = useState(false);
-    const [createdBy, setCreatedBy] = useState(null);
-    const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
+    const [isOpenPreventModal, setIsOpenPreventModal] = useState(false);
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: id,
         unlisted: resource?.unlisted,
@@ -68,9 +65,8 @@ function Resource() {
         const findResource = async () => {
             setIsLoading(true);
             getResource(id)
-                .then(responseJson => {
+                .then(async responseJson => {
                     document.title = `${responseJson.label} - Resource - ORKG`;
-                    setCreatedBy(responseJson.created_by);
                     setResource(responseJson);
                     const link = getDedicatedLink(responseJson.classes);
                     if (noRedirect === null && link) {
@@ -82,29 +78,9 @@ function Resource() {
                             { replace: true },
                         );
                     }
-
-                    if (responseJson.classes.includes(CLASSES.COMPARISON)) {
-                        getStatementsBySubjectAndPredicate({ subjectId: id, predicateId: PREDICATES.HAS_DOI }).then(st => {
-                            if (st.length > 0) {
-                                setIsLoading(false);
-                                setHasDOI(true);
-                                setCanEdit(isCurationAllowed);
-                            } else {
-                                setIsLoading(false);
-                                if (env('PWC_USER_ID') === responseJson.created_by) {
-                                    setCanEdit(false);
-                                } else {
-                                    setCanEdit(true);
-                                }
-                            }
-                        });
-                    } else if (responseJson.classes.includes(CLASSES.RESEARCH_FIELD)) {
-                        setIsLoading(false);
-                        setCanEdit(isCurationAllowed);
-                    } else {
-                        setIsLoading(false);
-                        setCanEdit(true);
-                    }
+                    const prevent = await getPreventEditCase(responseJson);
+                    setPreventEditCase(prevent);
+                    setIsLoading(false);
                 })
                 .catch(err => {
                     setResource(null);
@@ -117,8 +93,8 @@ function Resource() {
     }, [id, isCurationAllowed, getDedicatedLink]);
 
     useEffect(() => {
-        setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && !resource.shared);
-    }, [values, properties, resource.shared]);
+        setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && resource?.shared === 0);
+    }, [values, properties, resource?.shared]);
 
     const handleHeaderChange = val => {
         setResource(prev => ({ ...prev, label: val }));
@@ -159,67 +135,31 @@ function Resource() {
                                         <Icon icon={faExternalLinkAlt} className="me-1" /> {dedicatedLink.label} view
                                     </Button>
                                 )}
-                                {canEdit && !editMode && (
+                                {!editMode && (
                                     <RequireAuthentication
                                         component={Button}
                                         className="float-end"
                                         color="secondary"
                                         size="sm"
-                                        onClick={() => (env('PWC_USER_ID') === createdBy ? setIsOpenPWCModal(true) : setEditMode(v => !v))}
+                                        onClick={() => (!isCurationAllowed && preventEditCase ? setIsOpenPreventModal(true) : setEditMode(v => !v))}
                                     >
                                         <Icon icon={faPen} /> Edit
                                     </RequireAuthentication>
                                 )}
-                                {canEdit && editMode && (
+                                {editMode && (
                                     <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
                                         <Icon icon={faTimes} /> Stop editing
                                     </Button>
-                                )}
-                                {!canEdit && !editMode && (
-                                    <Tippy
-                                        hideOnClick={false}
-                                        interactive={!!resource.classes.find(c => c.id === CLASSES.RESEARCH_FIELD)}
-                                        content={
-                                            <>
-                                                {env('PWC_USER_ID') === createdBy &&
-                                                    'This resource cannot be edited because it is from an external source. Our provenance feature is in active development.'}
-                                                {env('PWC_USER_ID') !== createdBy && resource.classes.find(c => c.id === CLASSES.RESEARCH_FIELD) && (
-                                                    <>
-                                                        This resource can not be edited. Please visit the{' '}
-                                                        <a
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            href="https://www.orkg.org/help-center/article/20/ORKG_Research_fields_taxonomy"
-                                                        >
-                                                            ORKG help center
-                                                        </a>{' '}
-                                                        if you have any suggestions to improve the research fields taxonomy.
-                                                    </>
-                                                )}
-                                                {env('PWC_USER_ID') !== createdBy &&
-                                                    !resource.classes.find(c => c.id === CLASSES.RESEARCH_FIELD) &&
-                                                    'This resource can not be edited because it has a published DOI.'}
-                                            </>
-                                        }
-                                    >
-                                        <span className="btn btn-secondary btn-sm disabled">
-                                            <Icon icon={faPen} /> <span>Edit</span>
-                                        </span>
-                                    </Tippy>
                                 )}
                             </>
                         }
                     >
                         Resource view
                     </TitleBar>
-                    {editMode && hasDOI && (
-                        <Alert className="container" color="danger">
-                            This resource should not be edited because it has a published DOI, please make sure that you know what are you doing!
-                        </Alert>
-                    )}
-                    <EditModeHeader isVisible={editMode && canEdit} />
+                    {editMode && preventEditCase?.warningOnEdit && preventEditCase.warningOnEdit}
+                    <EditModeHeader isVisible={editMode} />
                     <Container className={`box clearfix pt-4 pb-4 ps-4 pe-4 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
-                        {!editMode || !canEdit ? (
+                        {!editMode ? (
                             <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                 {resource.label || (
                                     <i>
@@ -260,10 +200,16 @@ function Resource() {
 
                         <ItemMetadata item={resource} showCreatedAt={true} showCreatedBy={true} showProvenance={true} editMode={editMode} />
                     </Container>
+                    <TabsContainer classes={resource?.classes} id={id} editMode={editMode} />
+                    {preventEditCase && (
+                        <PreventModal
+                            {...preventEditCase.preventModalProps(resource)}
+                            isOpen={isOpenPreventModal}
+                            toggle={() => setIsOpenPreventModal(v => !v)}
+                        />
+                    )}
                 </>
             )}
-            <TabsContainer classes={resource?.classes} id={id} editMode={editMode} canEdit={canEdit} />
-            <PapersWithCodeModal isOpen={isOpenPWCModal} toggle={() => setIsOpenPWCModal(v => !v)} />
         </>
     );
 }

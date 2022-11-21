@@ -12,7 +12,7 @@ import ROUTES from 'constants/routes.js';
 import ResourceUsage from './ResourceUsage';
 import Trend from './Trend';
 
-function TabsContainer({ id, classes, editMode, canEdit }) {
+function TabsContainer({ id, classes, editMode }) {
     const { activeTab } = useParams();
 
     const navigate = useNavigate();
@@ -41,7 +41,7 @@ function TabsContainer({ id, classes, editMode, canEdit }) {
                             children: (
                                 <div className="p-4">
                                     <StatementBrowser
-                                        enableEdit={editMode && canEdit}
+                                        enableEdit={editMode}
                                         syncBackend={editMode}
                                         openExistingResourcesInDialog={false}
                                         initialSubjectId={id}
@@ -89,7 +89,6 @@ TabsContainer.propTypes = {
     id: PropTypes.string.isRequired,
     editMode: PropTypes.bool.isRequired,
     classes: PropTypes.array,
-    canEdit: PropTypes.bool.isRequired,
 };
 
 export default TabsContainer;
