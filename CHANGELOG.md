@@ -3,6 +3,17 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.86.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.86.0...v0.86.1) - 2022-11-21
+
+### Changes
+
+- fix(CsvImport): remove prefix and suffix from header labels [`#986`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/986)
+- fix(Comparison): scrolling with buttons and shadow not working [`#984`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/984)
+- fix(Outline): prevent rerender of parent component [`#985`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/985)
+- NLP: update the api calls [`#981`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/981)
+- fix(Comparison): hide the outline when the comparison is fullscreen [`#978`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/978)
+
+---
 ## [v0.86.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.85.0...v0.86.0) - 2022-11-09
 
 ### Changes
