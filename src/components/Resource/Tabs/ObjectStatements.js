@@ -45,7 +45,14 @@ const ObjectStatements = ({ id }) => {
                 </div>
             </div>
             <hr className="mt-0" />
-            <ListPage label="" boxShadow={false} hideTitleBar={true} renderListItem={renderListItem} fetchItems={fetchItems} disableSearch={true} />
+            <ListPage
+                label="statements"
+                boxShadow={false}
+                hideTitleBar={true}
+                renderListItem={renderListItem}
+                fetchItems={fetchItems}
+                disableSearch={true}
+            />
         </div>
     );
 };
