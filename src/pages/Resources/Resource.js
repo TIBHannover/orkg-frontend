@@ -6,14 +6,12 @@ import EditableHeader from 'components/EditableHeader';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import NotFound from 'pages/NotFound';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes.js';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { ENTITIES } from 'constants/graphSettings';
 import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
@@ -37,11 +35,7 @@ function Resource() {
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
     const [preventEditCase, setPreventEditCase] = useState(null);
-    const [canBeDeleted, setCanBeDeleted] = useState(false);
-    const values = useSelector(state => state.statementBrowser.values);
-    const properties = useSelector(state => state.statementBrowser.properties);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
-    const showDeleteButton = editMode && isCurationAllowed;
     const { deleteResource } = useDeleteResource({ resourceId: id, redirect: true });
     const [isOpenPreventModal, setIsOpenPreventModal] = useState(false);
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
@@ -91,10 +85,6 @@ function Resource() {
         findResource();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, isCurationAllowed, getDedicatedLink]);
-
-    useEffect(() => {
-        setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && resource?.shared === 0);
-    }, [values, properties, resource?.shared]);
 
     const handleHeaderChange = val => {
         setResource(prev => ({ ...prev, label: val }));
@@ -174,26 +164,10 @@ function Resource() {
                         ) : (
                             <>
                                 <EditableHeader id={id} value={resource.label} onChange={handleHeaderChange} entityType={ENTITIES.RESOURCE} />
-                                {showDeleteButton && (
-                                    <ConditionalWrapper
-                                        condition={!canBeDeleted}
-                                        wrapper={children => (
-                                            <Tippy content="The resource cannot be deleted because it is used in statements (either as subject or object)">
-                                                <span>{children}</span>
-                                            </Tippy>
-                                        )}
-                                    >
-                                        <Button
-                                            color="danger"
-                                            size="sm"
-                                            className="mt-2 mb-3"
-                                            style={{ marginLeft: 'auto' }}
-                                            onClick={deleteResource}
-                                            disabled={!canBeDeleted}
-                                        >
-                                            <Icon icon={faTrash} /> Delete resource
-                                        </Button>
-                                    </ConditionalWrapper>
+                                {editMode && isCurationAllowed && (
+                                    <Button color="danger" size="sm" className="mt-2 mb-3" style={{ marginLeft: 'auto' }} onClick={deleteResource}>
+                                        <Icon icon={faTrash} /> Delete resource
+                                    </Button>
                                 )}
                             </>
                         )}
