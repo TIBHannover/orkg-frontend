@@ -133,13 +133,6 @@ const PaperCard = props => {
                             </p>
                         )}
                     </div>
-                    {props.paths?.length > 0 && (
-                        <div className="mb-1">
-                            <small>
-                                <Paths paths={props.paths} />
-                            </small>
-                        </div>
-                    )}
                 </div>
             </div>
 
@@ -151,6 +144,13 @@ const PaperCard = props => {
                 </div>
                 {props.showCreator && <UserAvatar userId={props.paper.created_by} />}
             </div>
+            {props.paths?.length > 0 && (
+                <div className={`${showActionButtons ? 'ps-4' : 'ps-5'} mb-1`}>
+                    <small>
+                        <Paths paths={props.paths} />
+                    </small>
+                </div>
+            )}
         </PaperCardStyled>
     );
 };
