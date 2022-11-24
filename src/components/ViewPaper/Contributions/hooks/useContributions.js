@@ -66,6 +66,7 @@ const useContributions = ({ paperId, contributionId }) => {
             } else {
                 setLoadingContributionFailed(true);
             }
+            /*
             getSimilarContribution(selectedContribution)
                 .then(sContributions => {
                     const sContributionsData = sContributions.map(paper =>
@@ -86,6 +87,7 @@ const useContributions = ({ paperId, contributionId }) => {
                     setIsSimilarContributionsLoading(false);
                     setIsSimilarContributionsFailedLoading(true);
                 });
+                */
             setIsLoading(false);
         };
         handleSelectContribution(selectedContribution);
