@@ -108,7 +108,7 @@ const Contributions = props => {
                                                         />
                                                     </FormGroup>
 
-                                                    {selectedContribution && <SimilarContributions contributionId={selectedContribution} />}
+                                                    {/* selectedContribution && <SimilarContributions contributionId={selectedContribution} /> */}
 
                                                     {contribution.id && <ContributionComparisons contributionId={contribution.id} />}
                                                 </div>
