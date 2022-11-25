@@ -39,29 +39,27 @@ const SidebarStyledBox = styled.div`
     }
 `;
 
-const FeaturedItemsBox = ({ researchFieldId, researchFieldLabel }) => {
-    const getTabs = () =>
-        DEFAULT_CLASSES_FILTER.map(featuredClass => ({
-            title: (
-                <Tippy content={featuredClass.tippyContent} disabled={!featuredClass.tippyContent}>
-                    <div className="text-center">{featuredClass.label}</div>
-                </Tippy>
-            ),
-            getContent: () => (
-                <FeaturedItems researchFieldLabel={researchFieldLabel} researchFieldId={researchFieldId} featuredClass={featuredClass} />
-            ),
-            key: featuredClass.id,
-            tabClassName: 'tab h6',
-        }));
-
-    return (
-        <SidebarStyledBox className="box rounded-3 mt-3">
-            <ResponsiveTabs>
-                <Tabs items={getTabs()} />
-            </ResponsiveTabs>
-        </SidebarStyledBox>
-    );
-};
+const FeaturedItemsBox = ({ researchFieldId, researchFieldLabel }) => (
+    <SidebarStyledBox className="box rounded-3 mt-3">
+        <ResponsiveTabs>
+            <Tabs
+                items={DEFAULT_CLASSES_FILTER.map(featuredClass => ({
+                    title: (
+                        <Tippy content={featuredClass.tippyContent} disabled={!featuredClass.tippyContent}>
+                            <div className="text-center">{featuredClass.label}</div>
+                        </Tippy>
+                    ),
+                    getContent: () => (
+                        <FeaturedItems researchFieldLabel={researchFieldLabel} researchFieldId={researchFieldId} featuredClass={featuredClass} />
+                    ),
+                    key: featuredClass.id,
+                    tabClassName: 'tab h6',
+                }))}
+                unmountOnExit={false}
+            />
+        </ResponsiveTabs>
+    </SidebarStyledBox>
+);
 
 FeaturedItemsBox.propTypes = {
     researchFieldId: PropTypes.string.isRequired,
