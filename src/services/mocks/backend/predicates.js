@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 import { predicatesUrl } from 'services/backend/predicates';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 
 const predicates = [
     rest.get(predicatesUrl, (req, res, ctx) =>

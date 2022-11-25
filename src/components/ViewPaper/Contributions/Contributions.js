@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import { StyledContributionTabs, GlobalStyle } from 'components/ContributionTabs/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
-import Tabs, { TabPane } from 'rc-tabs';
+import Tabs from 'rc-tabs';
 import SimilarContributions from '../SimilarContributions';
 import useContributions from './hooks/useContributions';
 
@@ -83,56 +83,56 @@ const Contributions = props => {
                                 activeKey={selectedContribution}
                                 destroyInactiveTabPane={true}
                                 onChange={onTabChange}
-                            >
-                                {contributions.map(contribution => (
-                                    <TabPane
-                                        tab={
-                                            <ContributionTab
-                                                handleChangeContributionLabel={handleChangeContributionLabel}
-                                                isSelected={contribution.id === selectedContribution}
-                                                canDelete={contributions.length !== 1}
-                                                contribution={contribution}
-                                                key={contribution.id}
-                                                toggleDeleteContribution={toggleDeleteContribution}
-                                                enableEdit={props.enableEdit}
-                                            />
-                                        }
-                                        key={contribution.id}
-                                    >
-                                        {!isLoadingContributionFailed && (
-                                            <div>
-                                                <FormGroup>
-                                                    <StatementBrowser
-                                                        enableEdit={props.enableEdit}
-                                                        syncBackend={props.enableEdit}
-                                                        openExistingResourcesInDialog={false}
-                                                        initOnLocationChange={false}
-                                                        keyToKeepStateOnLocationChange={resourceId}
-                                                        renderTemplateBox={true}
+                                items={contributions.map(contribution => ({
+                                    label: (
+                                        <ContributionTab
+                                            handleChangeContributionLabel={handleChangeContributionLabel}
+                                            isSelected={contribution.id === selectedContribution}
+                                            canDelete={contributions.length !== 1}
+                                            contribution={contribution}
+                                            key={contribution.id}
+                                            toggleDeleteContribution={toggleDeleteContribution}
+                                            enableEdit={props.enableEdit}
+                                        />
+                                    ),
+                                    key: contribution.id,
+                                    children: (
+                                        <>
+                                            {!isLoadingContributionFailed && (
+                                                <div>
+                                                    <FormGroup>
+                                                        <StatementBrowser
+                                                            enableEdit={props.enableEdit}
+                                                            syncBackend={props.enableEdit}
+                                                            openExistingResourcesInDialog={false}
+                                                            initOnLocationChange={false}
+                                                            keyToKeepStateOnLocationChange={resourceId}
+                                                            renderTemplateBox={true}
+                                                        />
+                                                    </FormGroup>
+
+                                                    <SimilarContributions
+                                                        similarContributions={similarContributions.slice(0, 3)}
+                                                        isLoading={isSimilarContributionsLoading}
+                                                        isFailed={isSimilarContributionsFailedLoading}
+                                                        contributionId={contribution.id}
                                                     />
-                                                </FormGroup>
 
-                                                <SimilarContributions
-                                                    similarContributions={similarContributions.slice(0, 3)}
-                                                    isLoading={isSimilarContributionsLoading}
-                                                    isFailed={isSimilarContributionsFailedLoading}
-                                                    contributionId={contribution.id}
-                                                />
-
-                                                {contribution.id && <ContributionComparisons contributionId={contribution.id} />}
-                                            </div>
-                                        )}
-                                        {isLoadingContributionFailed && (
-                                            <>
-                                                <Alert className="mt-4 mb-5" color="danger">
-                                                    {contributions.length === 0 && 'This paper has no contributions yet'}
-                                                    {contributions.length !== 0 && "Contribution doesn't exist"}
-                                                </Alert>
-                                            </>
-                                        )}
-                                    </TabPane>
-                                ))}
-                            </Tabs>
+                                                    {contribution.id && <ContributionComparisons contributionId={contribution.id} />}
+                                                </div>
+                                            )}
+                                            {isLoadingContributionFailed && (
+                                                <>
+                                                    <Alert className="mt-4 mb-5" color="danger">
+                                                        {contributions.length === 0 && 'This paper has no contributions yet'}
+                                                        {contributions.length !== 0 && "Contribution doesn't exist"}
+                                                    </Alert>
+                                                </>
+                                            )}
+                                        </>
+                                    ),
+                                }))}
+                            />
                         </StyledContributionTabs>
                         {!isLoading && contributions?.length === 0 && (
                             <Alert className="mt-1 mb-0 rounded" color="warning">

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Handle, Position } from 'react-flow-renderer';
+import { Handle, Position } from 'reactflow';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { filterSubjectOfStatementsByPredicateAndClass, getResourceLink } from 'utils';

@@ -97,10 +97,6 @@ function useExtractionModal(props) {
         </div>
     );
 
-    const handleImportData = async () => {
-        importTableData();
-    };
-
     const predefinedColumns = [
         'paper:title',
         'paper:authors',
@@ -110,6 +106,10 @@ function useExtractionModal(props) {
         'paper:research_field',
         'contribution:research_problem',
     ];
+
+    const getFirstValue = (object, key, defaultValue = '') => (key in object && object[key].length && object[key][0] ? object[key][0] : defaultValue);
+
+    const clearImportError = () => setImportError(null);
 
     const importTableData = async () => {
         clearImportError();
@@ -148,11 +148,11 @@ function useExtractionModal(props) {
 
             // make use of an array for cells, in case multiple columns exist with the same label
             let rowObject = {};
-            for (const [index, headerItem] of header.entries()) {
+            for (const [index2, headerItem] of header.entries()) {
                 if (!(headerItem in rowObject)) {
                     rowObject[headerItem] = [];
                 }
-                rowObject[headerItem].push(row[index]);
+                rowObject[headerItem].push(row[index2]);
             }
 
             const title = getFirstValue(rowObject, 'paper:title');
@@ -283,14 +283,14 @@ function useExtractionModal(props) {
         }
     };
 
-    const getFirstValue = (object, key, defaultValue = '') => (key in object && object[key].length && object[key][0] ? object[key][0] : defaultValue);
+    const handleImportData = async () => {
+        importTableData();
+    };
 
     const transposeTable = () => {
         const transposed = zip(...cloneDeep(tableData));
         dispatch(setTableData({ id: props.id, tableData: transposed }));
     };
-
-    const clearImportError = () => setImportError(null);
 
     return [
         loading,

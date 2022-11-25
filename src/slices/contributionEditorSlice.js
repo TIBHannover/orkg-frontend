@@ -168,8 +168,8 @@ export const contributionEditorSlice = createSlice({
             state.previousInputDataType = payload;
         },
     },
-    extraReducers: {
-        [LOCATION_CHANGE]: () => initialState,
+    extraReducers: builder => {
+        builder.addCase(LOCATION_CHANGE, () => initialState);
     },
 });
 

@@ -31,7 +31,7 @@ import {
     statementsR54875,
     statementsR54009,
 } from 'services/mocks/backend/__mocks__/Statements';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 
 const statements = [
     rest.get(`${statementsUrl}:id/bundle/`, (req, res, ctx) => {
