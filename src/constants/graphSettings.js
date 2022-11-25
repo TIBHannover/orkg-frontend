@@ -76,6 +76,7 @@ export const PREDICATES = {
     CSVW_NUMBER: 'CSVW_Number',
     CSVW_VALUE: 'CSVW_Value',
     CSVW_NAME: 'CSVW_Name',
+    CSVW_TITLES: 'CSVW_Titles',
 };
 
 export const CLASSES = {

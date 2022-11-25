@@ -1674,13 +1674,13 @@ export function getTableByValueId(state, valueId) {
     cols =
         cols?.valueIds?.map(v => {
             const c = state.statementBrowser.values.byId[v];
-            const namePropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_NAME);
+            const titlesPropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_TITLES);
             const numberPropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_NUMBER);
-            let name = state.statementBrowser.properties.byId[namePropertyId];
+            let titles = state.statementBrowser.properties.byId[titlesPropertyId];
             let number = state.statementBrowser.properties.byId[numberPropertyId];
-            name = name?.valueIds?.map(n => state.statementBrowser.values.byId[n])?.[0] ?? {};
+            titles = titles?.valueIds?.map(n => state.statementBrowser.values.byId[n])?.[0] ?? {};
             number = number?.valueIds?.map(n => state.statementBrowser.values.byId[n])?.[0] ?? {};
-            return { ...c, name, number };
+            return { ...c, titles, number };
         }) ?? [];
     let lines = state.statementBrowser.properties.byId[rowsPropertyId];
     lines =

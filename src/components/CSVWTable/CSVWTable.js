@@ -112,7 +112,7 @@ function CSVWTable(props) {
     const columns = useMemo(
         () =>
             cols?.map(c => ({
-                Header: c.name?.label ?? 'No Label',
+                Header: c.titles?.label ?? 'No Label',
                 accessor: c.existingResourceId,
                 sortType: columnsSortMethod,
                 Cell: innerProps => (
@@ -209,7 +209,7 @@ function CSVWTable(props) {
                                         {rows.length > 0 ? (
                                             <CSVLink
                                                 headers={cols.map(h => ({
-                                                    label: h.name?.label ?? 'No Label',
+                                                    label: h.titles?.label ?? 'No Label',
                                                     key: h.existingResourceId,
                                                 }))}
                                                 data={data?.map(
