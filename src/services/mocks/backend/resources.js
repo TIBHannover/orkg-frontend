@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 import { resourcesUrl } from 'services/backend/resources';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 
 const resources = [
     rest.get(resourcesUrl, (req, res, ctx) =>

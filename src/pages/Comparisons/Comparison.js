@@ -19,13 +19,10 @@ import { useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 import { useSelector } from 'react-redux';
-import useScroll from 'components/Review/hooks/useScroll';
 
 const Comparison = () => {
     const { comparisonId } = useParams();
-    useScroll();
     const { comparisonResource, navigateToNewURL } = useComparison({ id: comparisonId });
-
     const isFailedLoadingMetadata = useSelector(state => state.comparison.isFailedLoadingMetadata);
     const isLoadingResult = useSelector(state => state.comparison.isLoadingResult);
     const isFailedLoadingResult = useSelector(state => state.comparison.isFailedLoadingResult);

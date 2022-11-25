@@ -151,6 +151,16 @@ const Templates = () => {
         setFilterLabel(e.target.value);
     };
 
+    const infoContainerText = (
+        <>
+            Templates allows to specify the structure of content types, and they can be used when describing research contributions.{' '}
+            <a href="https://orkg.org/about/19/Templates" rel="noreferrer" target="_blank">
+                Learn more in the help center
+            </a>
+            .
+        </>
+    );
+
     return (
         <>
             <TitleBar
@@ -174,14 +184,12 @@ const Templates = () => {
             >
                 View all templates
             </TitleBar>
-            <Container className="box rounded pt-4 pb-2 ps-5 pe-5 clearfix">
-                <Alert color="info" fade={false}>
-                    Templates allows to specify the structure of content types, and they can be used when describing research contributions. Further
-                    information about templates can be also found in the{' '}
-                    <a href="https://orkg.org/about/19/Templates" target="_blank" rel="noopener noreferrer">
-                        ORKG help center
-                    </a>
-                </Alert>
+            {infoContainerText && (
+                <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
+                    {infoContainerText}
+                </Container>
+            )}
+            <Container className="box rounded pt-4 pb-2 ps-4 pe-4 clearfix">
                 <Form className="mb-3">
                     <Row>
                         <Col md={6}>

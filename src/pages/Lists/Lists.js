@@ -73,6 +73,16 @@ const Lists = () => {
         </>
     );
 
+    const infoContainerText = (
+        <>
+            ORKG lists provide a way to organize state-of-the-art literature for a specific research domain.{' '}
+            <a href="https://orkg.org/about/17/Lists" rel="noreferrer" target="_blank">
+                Learn more in the help center
+            </a>
+            .
+        </>
+    );
+
     return (
         <ListPage
             label="lists"
@@ -80,6 +90,7 @@ const Lists = () => {
             renderListItem={renderListItem}
             fetchItems={fetchItems}
             buttons={buttons}
+            infoContainerText={infoContainerText}
         />
     );
 };

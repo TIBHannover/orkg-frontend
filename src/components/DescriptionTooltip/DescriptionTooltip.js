@@ -170,7 +170,7 @@ DescriptionTooltip.propTypes = {
     id: PropTypes.string.isRequired,
     _class: PropTypes.string.isRequired,
     classes: PropTypes.array,
-    extraContent: PropTypes.string,
+    extraContent: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     disabled: PropTypes.bool.isRequired,
 };
 

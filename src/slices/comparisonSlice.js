@@ -143,8 +143,8 @@ export const comparisonSlice = createSlice({
             state.hiddenGroups = payload;
         },
     },
-    extraReducers: {
-        [LOCATION_CHANGE]: (state, { payload }) => {
+    extraReducers: builder => {
+        builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
             const matchComparison = match(ROUTES.COMPARISON);
             const parsedPayload = matchComparison(payload.location.pathname);
             if (parsedPayload && parsedPayload.params?.comparisonId === state.comparisonResource.id) {
@@ -152,7 +152,7 @@ export const comparisonSlice = createSlice({
                 return state;
             }
             return initialState;
-        },
+        });
     },
 });
 

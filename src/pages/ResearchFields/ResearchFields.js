@@ -63,27 +63,15 @@ const ResearchFields = () => {
             >
                 Research fields taxonomy
             </TitleBar>
+            <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
+                The ORKG research fields taxonomy facilitates browsing and exploring the research knowledge graph.{' '}
+                <a href="https://www.orkg.org/help-center/article/20/ORKG_Research_fields_taxonomy" target="_blank" rel="noreferrer">
+                    Learn more in the help center
+                </a>
+                .
+            </Container>
             <Container className="p-0">
                 <div className="box rounded-3 p-4">
-                    <div className="d-flex">
-                        <div>
-                            <p>
-                                The <i>ORKG Research fields taxonomy</i> is used to organize and facilitate browsing and exploring the research
-                                knowledge graph.
-                            </p>
-                            <div>
-                                Further information about the taxonomy can be found in the{' '}
-                                <a
-                                    href="https://www.orkg.org/help-center/article/20/ORKG_Research_fields_taxonomy"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    ORKG help center
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <hr />
                     <Row>
                         <Col md="5" className="border-right">
                             <ResearchFieldSelector

@@ -1,10 +1,12 @@
+import useScroll from 'components/Review/hooks/useScroll';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Wrapper = styled.aside`
     position: absolute;
-    left: ${props => (!props.fullWidth ? '-200px' : '-50px')};
+    left: -200px;
+    display: ${props => (!props.fullWidth ? 'block' : 'none')};
     height: 100%;
     z-index: 999;
     // when the screen is too small, hide the outline, the responsiveness can be improved in the future
@@ -43,6 +45,7 @@ const ListItem = styled.li`
 `;
 
 const Outline = () => {
+    useScroll();
     const showReferences = useSelector(state => state.comparison.comparisonResource?.references?.length > 0 ?? false);
     const showRelatedResources = useSelector(state => state.comparison.comparisonResource?.resources?.length > 0 ?? false);
     const showRelatedFigures = useSelector(state => state.comparison.comparisonResource?.figures?.length > 0 ?? false);

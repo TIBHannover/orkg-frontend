@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { Button } from 'reactstrap';
 import { useCookies } from 'react-cookie';
 import { closeTour, openTour } from 'slices/addPaperSlice';
 import { Steps } from 'intro.js-react';
@@ -7,6 +6,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt, faVideo } from '@fortawesome/free-solid-svg-icons';
 import env from '@beam-australia/react-env';
 import { useSelector, useDispatch } from 'react-redux';
+import ANNOTATION_TOOLTIP from 'assets/img/annotationTooltip.png';
 
 function ContributionsHelpTour() {
     const { isTourOpen, tourStartAt, showAbstractDialog, abstractDialogView } = useSelector(state => state.addPaper);
@@ -81,7 +81,7 @@ function ContributionsHelpTour() {
                                             text.
                                             <br />
                                             When you hover on one of the annotations, you get this 3 options in a tooltip: <br />
-                                            <img src={require('../../../assets/img/annotationTooltip.png')} alt="" className="img-responsive" />
+                                            <img src={ANNOTATION_TOOLTIP} alt="" className="img-responsive" />
                                             <br />
                                             <ol>
                                                 <li>Change the annotation label.</li>

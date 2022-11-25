@@ -3,6 +3,48 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.86.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.86.1...v0.86.2) - 2022-11-24
+
+### Changes
+
+- Disable similar contribution temporarily [`#987`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/987)
+
+---
+## [v0.86.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.86.0...v0.86.1) - 2022-11-21
+
+### Changes
+
+- fix(CsvImport): remove prefix and suffix from header labels [`#986`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/986)
+- fix(Comparison): scrolling with buttons and shadow not working [`#984`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/984)
+- fix(Outline): prevent rerender of parent component [`#985`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/985)
+- NLP: update the api calls [`#981`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/981)
+- fix(Comparison): hide the outline when the comparison is fullscreen [`#978`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/978)
+
+---
+## [v0.86.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.85.0...v0.86.0) - 2022-11-09
+
+### Changes
+
+- feat(AddPaper): Predicates recommendation service [`#948`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/948)
+- UX: Paper with no contributions [`#977`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/977)
+
+---
+## [v0.85.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.84.0...v0.85.0) - 2022-11-03
+
+### Changes
+
+- feat(List): add info message on top of list pages [`#973`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/973)
+- fix(Review): losing selected comparison for newly creation sections [`#972`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/972)
+- feat: Description tooltip on all entities [`#965`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/965)
+- ux(Comparison): Add a table of contents to a comparison page [`#953`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/953)
+- feat(Resource): Change the provenance of a resource [`#964`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/964)
+- CSP: add 127.0.0.1 for local development [`#966`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/966)
+- fix: Incorrectly identified error message for Valid DOI [`#967`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/967)
+- fix(Template): wrong property description is displayed [`#971`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/971)
+- feat(Author): Show author's DBLP id [`#968`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/968)
+- fix(Review): catch loading error and show message [`#969`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/969)
+
+---
 ## [v0.84.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.83.0...v0.84.0) - 2022-10-12
 
 ### Changes
