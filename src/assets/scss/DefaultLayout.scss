@@ -4,6 +4,7 @@
 @import '~bootstrap/scss/mixins';
 
 body {
+  
     color: #646464;
     overflow-y: scroll; // always show scrollbars to prevent moving elements when scrollbars become visible
 }
@@ -32,4 +33,9 @@ body {
 }
 .introjs-ORKG-tooltip{
     max-width: 550px !important;
+}
+
+// react-contexify
+.contexify_item:not(.contexify_item-disabled):hover > .contexify_itemContent, .contexify_item:not(.contexify_item-disabled):focus > .contexify_itemContent {
+    background-color: $primary;
 }

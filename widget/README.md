@@ -1,6 +1,6 @@
 # ORKG Widget Documentation
 
-bundle size: **8.23 kB**
+bundle size: **8.57 kB**
 
 ### How to use:
 
@@ -9,11 +9,11 @@ Place the following code on your website and set the parameter data-doi.
 ```html
 <div class="orkg-widget" data-doi="10.1007/s00799-015-0158-y"></div>
 <script>
-    (function(w, d, s, o, f, js, fjs) {
+    (function (w, d, s, o, f, js, fjs) {
         w['ORKG-Widget'] = o;
         w[o] =
             w[o] ||
-            function() {
+            function () {
                 (w[o].q = w[o].q || []).push(arguments);
             };
         (js = d.createElement(s)), (fjs = d.getElementsByTagName(s)[0]);

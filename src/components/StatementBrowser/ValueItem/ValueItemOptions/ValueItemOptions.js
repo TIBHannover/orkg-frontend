@@ -141,7 +141,7 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                         )}
                     </>
                 )}
-                {preferences.showStatementInfo && <InfoTippy id={id} />}
+                <InfoTippy id={id} />
             </div>
         </>
     );

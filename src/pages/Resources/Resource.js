@@ -356,7 +356,7 @@ function Resource() {
                             </>
                         )}
 
-                        <ItemMetadata item={resource} showCreatedAt={true} showCreatedBy={true} />
+                        <ItemMetadata item={resource} showCreatedAt={true} showCreatedBy={true} showProvenance={true} editMode={editMode} />
                         <hr />
                         {/* Adding Visualization Component here */}
                         {hasVisualizationModelForGDC && (

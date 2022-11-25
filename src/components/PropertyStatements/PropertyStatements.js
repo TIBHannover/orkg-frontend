@@ -5,6 +5,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getLinkByEntityType } from 'utils';
 import { Link } from 'react-router-dom';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import usePropertyStatements from './hooks/usePropertyStatements';
 
 const PropertyStatements = ({ propertyId }) => {
@@ -46,23 +47,35 @@ const PropertyStatements = ({ propertyId }) => {
                                 {statements.map(statement => (
                                     <tr key={statement.id}>
                                         <td>
-                                            {getLinkByEntityType(statement.subject._class, statement.subject.id) ? (
-                                                <Link to={getLinkByEntityType(statement.subject._class, statement.subject.id)}>
-                                                    {statement.subject.label}
-                                                </Link>
-                                            ) : (
-                                                statement.subject.label
-                                            )}
+                                            <DescriptionTooltip
+                                                classes={statement.subject.classes}
+                                                id={statement.subject.id}
+                                                _class={statement.subject._class}
+                                            >
+                                                {getLinkByEntityType(statement.subject._class, statement.subject.id) ? (
+                                                    <Link to={getLinkByEntityType(statement.subject._class, statement.subject.id)}>
+                                                        {statement.subject.label}
+                                                    </Link>
+                                                ) : (
+                                                    statement.subject.label
+                                                )}
+                                            </DescriptionTooltip>
                                         </td>
                                         <td>{statement.predicate.label}</td>
                                         <td>
-                                            {getLinkByEntityType(statement.object._class, statement.object.id) ? (
-                                                <Link to={getLinkByEntityType(statement.object._class, statement.object.id)}>
-                                                    {statement.object.label}
-                                                </Link>
-                                            ) : (
-                                                statement.object.label
-                                            )}
+                                            <DescriptionTooltip
+                                                classes={statement.object.classes}
+                                                id={statement.object.id}
+                                                _class={statement.object._class}
+                                            >
+                                                {getLinkByEntityType(statement.object._class, statement.object.id) ? (
+                                                    <Link to={getLinkByEntityType(statement.object._class, statement.object.id)}>
+                                                        {statement.object.label}
+                                                    </Link>
+                                                ) : (
+                                                    statement.object.label
+                                                )}
+                                            </DescriptionTooltip>
                                         </td>
                                     </tr>
                                 ))}

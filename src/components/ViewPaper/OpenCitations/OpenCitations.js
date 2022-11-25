@@ -34,7 +34,7 @@ function OpenCitations({ doi }) {
             >
                 <span className="me-2 mb-2">
                     <Badge color="light">
-                        <Icon icon={faComment} className="text-secondary" /> {pluralize('citation', citationCount, true)}
+                        <Icon icon={faComment} /> {pluralize('citation', citationCount, true)}
                     </Badge>
                 </span>
             </Tippy>

@@ -43,9 +43,8 @@ const initialState = {
     isPreferencesOpen: false,
     preferences: {
         showClasses: getPreferenceFromCookies('showClasses') ?? false,
-        showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
-        showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
-        showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? true,
+        showDescriptionTooltips: getPreferenceFromCookies('showDescriptionTooltips') ?? true,
+        showInlineDataTypes: getPreferenceFromCookies('showInlineDataTypes') ?? false,
     },
     resources: {
         byId: {},
@@ -87,10 +86,12 @@ export const statementBrowserSlice = createSlice({
         updatePreferences: (state, { payload }) => {
             state.preferences = {
                 showClasses: typeof payload.showClasses === 'boolean' ? payload.showClasses : state.preferences.showClasses,
-                showStatementInfo: typeof payload.showStatementInfo === 'boolean' ? payload.showStatementInfo : state.preferences.showStatementInfo,
-                showValueInfo: typeof payload.showValueInfo === 'boolean' ? payload.showValueInfo : state.preferences.showValueInfo,
-                showLiteralDataTypes:
-                    typeof payload.showLiteralDataTypes === 'boolean' ? payload.showLiteralDataTypes : state.preferences.showLiteralDataTypes,
+                showDescriptionTooltips:
+                    typeof payload.showDescriptionTooltips === 'boolean'
+                        ? payload.showDescriptionTooltips
+                        : state.preferences.showDescriptionTooltips,
+                showInlineDataTypes:
+                    typeof payload.showInlineDataTypes === 'boolean' ? payload.showInlineDataTypes : state.preferences.showInlineDataTypes,
             };
         },
         createResource: (state, { payload }) => {
@@ -370,9 +371,8 @@ export const statementBrowserSlice = createSlice({
             ...initialState,
             preferences: {
                 showClasses: getPreferenceFromCookies('showClasses') ?? false,
-                showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
-                showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
-                showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? false,
+                showDescriptionTooltips: getPreferenceFromCookies('showDescriptionTooltips') ?? true,
+                showInlineDataTypes: getPreferenceFromCookies('showInlineDataTypes') ?? false,
             },
         }),
         /** -- Handling for creation of contribution objects* */
@@ -427,14 +427,14 @@ export const statementBrowserSlice = createSlice({
             state.templates[templateID].isFetching = status;
         },
     },
-    extraReducers: {
-        [LOCATION_CHANGE]: (state, { payload }) => {
+    extraReducers: builder => {
+        builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
             // prevent reset location for content type page (location change is trigger on edit mode)
             if (
                 state.keyToKeepStateOnLocationChange === match(ROUTES.CONTENT_TYPE)(payload.location.pathname)?.params?.id ||
                 state.keyToKeepStateOnLocationChange === match(ROUTES.CONTENT_TYPE_NO_MODE)(payload.location.pathname)?.params?.id
             ) {
-                return;
+                return null;
             }
 
             // from redux-first-history, reset the wizard when the page is changed
@@ -459,12 +459,11 @@ export const statementBrowserSlice = createSlice({
                 ...initialState,
                 preferences: {
                     showClasses: getPreferenceFromCookies('showClasses') ?? false,
-                    showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
-                    showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
-                    showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? false,
+                    showDescriptionTooltips: getPreferenceFromCookies('showDescriptionTooltips') ?? true,
+                    showInlineDataTypes: getPreferenceFromCookies('showInlineDataTypes') ?? false,
                 },
             };
-        },
+        });
     },
 });
 
@@ -1563,18 +1562,18 @@ export const fetchStatementsForResource =
  * @return {Boolean} if this input field is Literal
  */
 export const isLiteral = components => {
-    let isLiteral = false;
+    let _isLiteral = false;
     for (const typeId of components.map(tc => tc.value?.id)) {
         if (
             DATA_TYPES.filter(dt => dt._class === ENTITIES.LITERAL)
                 .map(t => t.classId)
                 .includes(typeId)
         ) {
-            isLiteral = true;
+            _isLiteral = true;
             break;
         }
     }
-    return isLiteral;
+    return _isLiteral;
 };
 
 /**

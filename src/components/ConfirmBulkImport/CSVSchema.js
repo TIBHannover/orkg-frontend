@@ -55,7 +55,7 @@ export default function checkDataValidation(data) {
             'string.base': "Research field ID should be a type of 'text'",
             'string.pattern.base': "doesn't have a valid research field ID",
         }),
-        doi: Joi.string().pattern(new RegExp(REGEX.DOI)).allow('').messages({
+        doi: Joi.string().pattern(new RegExp(REGEX.DOI_ID)).allow('').messages({
             'string.pattern.base': 'Doi must be a valid and without the resolver (e.g. 10.1145/3360901.3364435)',
         }),
         url: Joi.string().pattern(new RegExp(REGEX.URL)).allow('').messages({

@@ -1,5 +1,4 @@
 import { Cite } from '@citation-js/core';
-import useScroll from 'components/Review/hooks/useScroll';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -29,7 +28,6 @@ const ListReferences = () => {
     const isEditing = useSelector(state => state.review.isEditing);
     const [bibliography, setBibliography] = useState(null);
     const location = useLocation();
-    useScroll();
     const [error, setError] = useState(false);
 
     useEffect(() => {

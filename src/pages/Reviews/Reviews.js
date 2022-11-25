@@ -78,6 +78,16 @@ const Reviews = () => {
         </>
     );
 
+    const infoContainerText = (
+        <>
+            ORKG reviews are dynamic, community maintained scholarly articles and are especially suitable for survey papers.{' '}
+            <a href="https://orkg.org/about/16/Reviews" rel="noreferrer" target="_blank">
+                Learn more in the help center
+            </a>
+            .
+        </>
+    );
+
     return (
         <ListPage
             label="reviews"
@@ -85,6 +95,7 @@ const Reviews = () => {
             renderListItem={renderListItem}
             fetchItems={fetchItems}
             buttons={buttons}
+            infoContainerText={infoContainerText}
         />
     );
 };

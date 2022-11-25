@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Alert, Button, Form, FormGroup, Label, Table } from 'reactstrap';
+import { Alert, Button, Form, FormGroup, Label, Table, InputGroup } from 'reactstrap';
 import ConfirmBulkImport from 'components/ConfirmBulkImport/ConfirmBulkImport';
-import CsvReader from 'react-csv-reader';
+import { useCSVReader } from 'react-papaparse';
 import styled from 'styled-components';
 import StepContainer from 'components/StepContainer';
 import Tippy from '@tippyjs/react';
@@ -25,26 +25,25 @@ const PARSER_OPTIONS = {
 
 const CsvImport = () => {
     const [data, setData] = useState([]);
-    const [, setFileName] = useState(null);
     const [error, setError] = useState(null);
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
     const [isFinished, setIsFinished] = useState(false);
+    const { CSVReader } = useCSVReader();
 
-    const handleOnFileLoaded = (_data, fileInfo) => {
+    const validateCsv = _data => {
+        const validations = checkDataValidation(_data);
+        return setError(validations);
+    };
+
+    const handleOnFileLoaded = ({ _data }) => {
         setData(_data.map(r => r.map(s => (s ? s.trim() : ''))));
         setIsFinished(false);
-        setFileName(fileInfo.name);
         validateCsv(_data);
     };
 
     useEffect(() => {
         document.title = 'CSV import - ORKG';
     }, []);
-
-    const validateCsv = _data => {
-        const validations = checkDataValidation(_data);
-        return setError(validations);
-    };
 
     const title = (
         <>
@@ -73,14 +72,32 @@ const CsvImport = () => {
                     <FormGroup>
                         <Label for="select-csv-file">Select CSV file</Label>
                         <div className="custom-file">
-                            <CsvReader
-                                inputId="select-csv-file"
-                                cssClass="csv-reader-input"
-                                cssInputClass="form-control"
-                                onFileLoaded={handleOnFileLoaded}
-                                parserOptions={PARSER_OPTIONS}
-                                inputStyle={{ marginLeft: '5px' }}
-                            />
+                            <CSVReader
+                                accept=".csv, text/csv"
+                                config={PARSER_OPTIONS}
+                                onUploadAccepted={result => handleOnFileLoaded({ _data: result.data })}
+                            >
+                                {({ getRootProps, acceptedFile, ProgressBar }) => (
+                                    <>
+                                        <InputGroup>
+                                            <Button {...getRootProps()}>Browse file</Button>
+                                            <div
+                                                {...getRootProps()}
+                                                style={{
+                                                    border: '1px solid #ccc',
+                                                    lineHeight: 2.2,
+                                                    paddingLeft: 10,
+                                                    flexGrow: '1',
+                                                }}
+                                            >
+                                                {acceptedFile && acceptedFile.name}
+                                                {!acceptedFile && 'No file is selected'}
+                                            </div>
+                                        </InputGroup>
+                                        <ProgressBar style={{ backgroundColor: '#dbdde5' }} />
+                                    </>
+                                )}
+                            </CSVReader>
                         </div>
                     </FormGroup>
                 </Form>
@@ -116,8 +133,8 @@ const CsvImport = () => {
                                     {data.slice(1).map((row, i) => (
                                         <tr key={i}>
                                             <th scope="row">{i + 1}</th>
-                                            {row.map((value, i) => (
-                                                <td key={i}>{value}</td>
+                                            {row.map((value, j) => (
+                                                <td key={j}>{value}</td>
                                             ))}
                                         </tr>
                                     ))}
