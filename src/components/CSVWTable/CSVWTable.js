@@ -52,7 +52,7 @@ function CSVWTable(props) {
     const value = useSelector(state => state.statementBrowser.values.byId[props.id]);
     const resource = useSelector(state => state.statementBrowser.resources.byId[value.resourceId]);
     const fetchedDepth = useSelector(state => getDepthByValueId(state, props.id));
-    const { lines, cols } = useSelector(state => getTableByValueId(state, props.id), shallowEqual);
+    const { lines, cols, isTitlesColumnsExist } = useSelector(state => getTableByValueId(state, props.id), shallowEqual);
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const dispatch = useDispatch();
@@ -111,10 +111,11 @@ function CSVWTable(props) {
 
     const columns = useMemo(
         () =>
-            cols?.map(c => ({
+            cols?.map((c, index) => ({
                 Header: c.titles?.label ?? 'No Label',
                 accessor: c.existingResourceId,
                 sortType: columnsSortMethod,
+                disableFilters: isTitlesColumnsExist && index === 0,
                 Cell: innerProps => (
                     <span
                         onKeyDown={e => (e.key === 'Enter' ? handleCellClick(e, innerProps?.value, PREDICATES.CSVW_CELLS) : undefined)}
@@ -122,7 +123,7 @@ function CSVWTable(props) {
                         tabIndex={0}
                         onClick={e => handleCellClick(e, innerProps?.value, PREDICATES.CSVW_CELLS)}
                     >
-                        {innerProps?.value?.value?.label ?? (
+                        {innerProps?.value?.value?.label ?? innerProps?.value?.label ?? (
                             <small>
                                 <i>N/A</i>
                             </small>
@@ -138,10 +139,13 @@ function CSVWTable(props) {
             lines?.map(r => {
                 let values = r.cells.map(c => c) ?? [];
                 values = values.map((c, index) => ({
-                    [cols[index].existingResourceId]: c,
+                    [cols[!isTitlesColumnsExist ? index : index + 1].existingResourceId]: c,
                 }));
                 values.cells = r;
                 values = Object.assign({}, ...values);
+                if (isTitlesColumnsExist) {
+                    values.titles = r.titles;
+                }
                 return values;
             }) ?? [],
         [resource, lines?.length, cols.length, columns],

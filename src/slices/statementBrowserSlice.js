@@ -1682,26 +1682,55 @@ export function getTableByValueId(state, valueId) {
             return { ...c, titles, number };
         }) ?? [];
     let lines = state.statementBrowser.properties.byId[rowsPropertyId];
+    let isTitlesColumnsExist = false;
     lines =
         lines?.valueIds?.map(v => {
             const r = state.statementBrowser.values.byId[v];
             const cellsPropertyId = getPropertyIdByByResourceAndPredicateId(state, r.resourceId, PREDICATES.CSVW_CELLS);
             const numberPropertyId = getPropertyIdByByResourceAndPredicateId(state, r.resourceId, PREDICATES.CSVW_NUMBER);
+            const titlesPropertyId = getPropertyIdByByResourceAndPredicateId(state, r.resourceId, PREDICATES.CSVW_TITLES);
+            if (titlesPropertyId) {
+                isTitlesColumnsExist = true;
+            }
             let cells = state.statementBrowser.properties.byId[cellsPropertyId];
             let number = state.statementBrowser.properties.byId[numberPropertyId];
             number = number?.valueIds?.map(n => state.statementBrowser.values.byId[n])?.[0] ?? {};
+            let titles = state.statementBrowser.properties.byId[titlesPropertyId];
+            titles = titles?.valueIds?.map(n => state.statementBrowser.values.byId[n])?.[0] ?? {};
             cells =
                 cells?.valueIds?.map(w => {
                     const c = state.statementBrowser.values.byId[w];
                     const valuePropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_VALUE);
-                    let value = state.statementBrowser.properties.byId[valuePropertyId];
-                    value = value?.valueIds.map(l => state.statementBrowser.values.byId[l])?.[0] ?? {};
-                    return { ...c, value, row: r };
+                    let _value = state.statementBrowser.properties.byId[valuePropertyId];
+                    _value = _value?.valueIds.map(l => state.statementBrowser.values.byId[l])?.[0] ?? {};
+                    return { ...c, value: _value, row: r };
                 }) ?? [];
-            return { ...r, cells, number };
+            return { ...r, cells, number, titles };
         }) ?? [];
     // cols: sortBy(cols, obj => parseInt(obj.number.label ?? '0', 10))
-    return { cols, lines: sortBy(lines, obj => parseInt(obj.number.label ?? '0', 10)) };
+    return {
+        cols: isTitlesColumnsExist
+            ? [
+                  {
+                      existingResourceId: 'titles',
+                      id: '',
+                      label: '',
+                      classes: ['Column'],
+                      titles: {
+                          id: '',
+                          label: '',
+                      },
+                      number: {
+                          id: '',
+                          label: '',
+                      },
+                  },
+                  ...cols,
+              ]
+            : cols,
+        lines: sortBy(lines, obj => parseInt(obj.number.label ?? '0', 10)),
+        isTitlesColumnsExist,
+    };
 }
 
 /**
