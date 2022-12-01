@@ -33,11 +33,11 @@ function TabsContainer({ id, classes, editMode }) {
                 <Tabs
                     destroyInactiveTabPane={true}
                     onChange={onTabChange}
-                    activeKey={activeTab ?? 'statements'}
+                    activeKey={activeTab ?? 'information'}
                     items={[
                         {
-                            label: 'Statements',
-                            key: 'statements',
+                            label: 'Resource information',
+                            key: 'information',
                             children: (
                                 <div className="p-4">
                                     <StatementBrowser
@@ -69,13 +69,13 @@ function TabsContainer({ id, classes, editMode }) {
                         },
                         */
                         {
-                            label: 'Papers usage',
+                            label: 'In papers',
                             key: 'papers',
                             children: <ResourceUsage id={id} />,
                         },
                         {
-                            label: 'Statement by object',
-                            key: 'object',
+                            label: 'In statements',
+                            key: 'statements',
                             children: <ObjectStatements id={id} />,
                         },
                     ]}

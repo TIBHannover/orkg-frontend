@@ -30,7 +30,9 @@ function VisualizationPreview({ id }) {
         <div>
             {isLoading && 'Loading...'}
             {!isLoading && !isLoadingFailed && visualizationModelForGDC && (
-                <GDCVisualizationRenderer height="500px" model={visualizationModelForGDC} />
+                <div className="p-3">
+                    <GDCVisualizationRenderer height="500px" model={visualizationModelForGDC} />
+                </div>
             )}
             {!isLoading && isLoadingFailed && (
                 <div className="p-3">
