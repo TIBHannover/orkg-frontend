@@ -123,7 +123,7 @@ function CSVWTable(props) {
                         tabIndex={0}
                         onClick={e => handleCellClick(e, innerProps?.value, PREDICATES.CSVW_CELLS)}
                     >
-                        {innerProps?.value?.value?.label ?? innerProps?.value?.label ?? (
+                        {innerProps?.value?.value?.label ?? <b>{innerProps?.value?.label}</b> ?? (
                             <small>
                                 <i>N/A</i>
                             </small>
