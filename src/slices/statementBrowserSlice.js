@@ -19,6 +19,7 @@ import {
 import { createResource as createResourceApi, updateResourceClasses as updateResourceClassesApi } from 'services/backend/resources';
 import DATA_TYPES from 'constants/DataTypes.js';
 import { toast } from 'react-toastify';
+import REGEX from 'constants/regex';
 
 const cookies = new Cookies();
 
@@ -1707,6 +1708,14 @@ export function getTableByValueId(state, valueId) {
                 }) ?? [];
             return { ...r, cells, number, titles };
         }) ?? [];
+    // Assumption : If the row title is Row X it essentially means that no row title was given by the user
+    // Row X is the "default" row title automatically assigned by the Python and R libs.
+    if (isTitlesColumnsExist) {
+        const findTitleNotRowX = lines.find(r => !REGEX.CSW_ROW_TITLES_VALUE.test(r.titles?.label?.toLowerCase?.() ?? ''));
+        if (!findTitleNotRowX) {
+            isTitlesColumnsExist = false;
+        }
+    }
     // cols: sortBy(cols, obj => parseInt(obj.number.label ?? '0', 10))
     return {
         cols: isTitlesColumnsExist
