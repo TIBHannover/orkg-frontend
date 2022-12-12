@@ -15,6 +15,7 @@ import { removeContribution } from 'slices/comparisonSlice';
 import { cloneDeep, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import { useMedia } from 'react-use';
+import { Scrollbar } from 'react-scrollbars-custom';
 import TableCell from './TableCell';
 import { ReactTableWrapper, Contribution, Delete, ItemHeader, ItemHeaderInner, Properties, PropertiesInner } from './styled';
 
@@ -289,7 +290,39 @@ const ComparisonTable = props => {
                     </div>
                 </ScrollSyncPane>
                 <ScrollSyncPane group="one" attachTo={props.scrollContainerBody}>
-                    <div ref={props.scrollContainerBody} style={{ overflow: 'auto' }}>
+                    <Scrollbar
+                        style={{ width: '100%' }}
+                        translateContentSizeYToHolder
+                        noScrollY
+                        wrapperProps={{
+                            renderer: ({ elementRef, ...restProps }) => <div {...restProps} ref={elementRef} className="position-static" />,
+                        }}
+                        scrollerProps={{
+                            renderer: ({ elementRef, ...restProps }) => (
+                                <div
+                                    {...restProps}
+                                    ref={el => {
+                                        elementRef(el);
+                                        props.scrollContainerBody.current = el;
+                                    }}
+                                    className="position-static px-0"
+                                />
+                            ),
+                        }}
+                        trackXProps={{
+                            renderer: ({ elementRef, ...restProps }) => (
+                                <div {...restProps} ref={elementRef} className="position-sticky d-block w-100" />
+                            ),
+                        }}
+                        thumbXProps={{
+                            renderer: ({ elementRef, ...restProps }) => (
+                                <div {...restProps} ref={elementRef} className="p-0" style={{ ...restProps.style, cursor: 'default' }} />
+                            ),
+                        }}
+                        contentProps={{
+                            renderer: ({ elementRef, ...restProps }) => <div {...restProps} ref={elementRef} className="d-block" />,
+                        }}
+                    >
                         <div {...getTableBodyProps()} className="comparisonBody" style={{ ...getTableProps().style }}>
                             {rows.map((row, i) => {
                                 prepareRow(row);
@@ -306,7 +339,7 @@ const ComparisonTable = props => {
                                 );
                             })}
                         </div>
-                    </div>
+                    </Scrollbar>
                 </ScrollSyncPane>
             </div>
             {rows.length === 0 && (

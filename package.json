@@ -1,6 +1,6 @@
 {
     "name": "orkg-frontend",
-    "version": "0.86.2",
+    "version": "0.87.0",
     "private": true,
     "homepage": "/",
     "dependencies": {
@@ -83,6 +83,7 @@
         "react-responsive-tabs": "^4.4.3",
         "react-router-dom": "^6.3.0",
         "react-scroll-sync": "^0.11.0",
+        "react-scrollbars-custom": "^4.1.1",
         "react-select": "^5.6.0",
         "react-select-async-paginate": "^0.7.0",
         "react-slick": "^0.29.0",

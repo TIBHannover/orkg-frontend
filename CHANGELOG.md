@@ -3,6 +3,17 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.87.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.86.2...v0.87.0) - 2022-12-08
+
+### Changes
+
+- fix(StatementBrowser): make default properties follow the style guidelines [`#990`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/990)
+- feat(Comparison): improve horizontal scrolling by always showing scrollbar [`#988`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/988)
+- refactor(ViewPaper): Prevent getting similar contributions without an ID [`#982`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/982)
+- Optimize(Home): Prevent reloading content while switching between tabs [`#983`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/983)
+- internal: Update dependencies [`#980`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/980)
+
+---
 ## [v0.86.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.86.1...v0.86.2) - 2022-11-24
 
 ### Changes

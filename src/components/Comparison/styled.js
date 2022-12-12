@@ -46,7 +46,7 @@ export const ScrollButton = styled(Button)`
         cursor: pointer;
         transition: 0.2s filter;
         padding: 0;
-        margin: 0;
+        margin: 5px 0 0 0;
         line-height: 1;
         border: 0;
 
@@ -114,6 +114,10 @@ export const ReactTableWrapper = styled.div`
         }
     }
 
+    .table > :not(caption) > * > * {
+        padding: initial; // remove default bootstrap table padding
+    }
+
     .table {
         position: relative;
         scroll-behavior: smooth;
@@ -139,8 +143,6 @@ export const ReactTableWrapper = styled.div`
         }
 
         &.sticky {
-            overflow: scroll;
-
             .header {
                 top: 0;
             }
@@ -275,7 +277,7 @@ export const ClickableScrollButton = styled.button`
         cursor: e-resize;
         right: 0;
         top: 0;
-        height: 100%;
+        height: calc(100% - 2px);
         box-shadow: rgba(0, 0, 0, 0.18) -9px 0px 5px -5px inset;
 
         &:hover {
@@ -287,7 +289,7 @@ export const ClickableScrollButton = styled.button`
         cursor: w-resize;
         left: ${props => props.leftOffset};
         top: 10px;
-        height: calc(100% - 20px);
+        height: calc(100% - 12px);
 
         box-shadow: rgba(0, 0, 0, 0.18) 9px 0px 5px -5px inset;
 
