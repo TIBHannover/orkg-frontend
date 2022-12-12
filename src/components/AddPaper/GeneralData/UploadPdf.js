@@ -6,6 +6,8 @@ import { toast } from 'react-toastify';
 import { Alert, Button } from 'reactstrap';
 import processPdf from 'services/grobid';
 import { updateGeneralData } from 'slices/addPaperSlice';
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
+import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/build/pdf';
 
 const UploadPdf = () => {
     const { pdfName } = useSelector(state => state.addPaper);
@@ -14,6 +16,39 @@ const UploadPdf = () => {
 
     const handleOnDrop = async files => {
         try {
+            // metadata extraction via embedded XML
+            GlobalWorkerOptions.workerSrc = pdfjsWorker;
+
+            const reader = new FileReader();
+            reader.onload = async () => {
+                const data = new Uint8Array(reader.result);
+                const loadingTask = getDocument({ data });
+                const pdf = await loadingTask.promise;
+                const metadata = await pdf.getMetadata();
+                if (metadata?.metadata?._data) {
+                    const processedPdf = new window.DOMParser().parseFromString(metadata.metadata._data, 'text/xml');
+                    // you might want to replace 'querySelector' with 'querySelectorAll' to get all the values if there are multiple annotations of the same type
+                    const researchField = processedPdf.querySelector('hasResearchField label')?.textContent;
+                    const objective = processedPdf.querySelector('objective')?.textContent;
+                    const result = processedPdf.querySelector('result')?.textContent;
+                    const conclusion = processedPdf.querySelector('conclusion')?.textContent;
+                    const researchProblem = processedPdf.querySelector('researchproblem')?.textContent;
+                    const method = processedPdf.querySelector('method')?.textContent;
+
+                    console.log({
+                        researchField,
+                        objective,
+                        result,
+                        conclusion,
+                        researchProblem,
+                        method,
+                    });
+                }
+            };
+
+            reader.readAsArrayBuffer(files[0]);
+
+            // metadata extraction via Grobid
             const processedPdf = await new window.DOMParser().parseFromString(await processPdf({ pdf: files[0] }), 'text/xml');
             const title = processedPdf.querySelector('fileDesc titleStmt title')?.textContent;
             const authors = [...processedPdf.querySelectorAll('fileDesc biblStruct author')].map(author => ({
@@ -36,7 +71,7 @@ const UploadPdf = () => {
             );
             toast.success('PDF parsed successfully');
         } catch (e) {
-            toast.success('Something went wrong while parsing the PDF');
+            toast.error('Something went wrong while parsing the PDF', e);
         }
     };
 
