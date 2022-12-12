@@ -65,7 +65,7 @@ function usePublish() {
     useEffect(() => {
         const getConferencesList = () => {
             getConferencesSeries().then(response => {
-                setConferencesList(response);
+                setConferencesList(response.content);
             });
         };
         getConferencesList();
