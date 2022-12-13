@@ -36,7 +36,8 @@ export const getAllObservatoriesByOrganizationId = id => submitGetRequest(`${org
 
 export const getUsersByOrganizationId = id => submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/users`);
 
-export const getComparisonsByOrganizationId = id => submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/comparisons`);
+export const getComparisonsByOrganizationId = (id, page) =>
+ submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/comparisons/?page=${page}&size=5`);
 
 export const getConferences = () => submitGetRequest(`${organizationsUrl}conferences`);
 
