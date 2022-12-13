@@ -14,7 +14,9 @@ import ComparisonHeaderMenu from 'components/Comparison/ComparisonHeader/Compari
 import AppliedFilters from 'components/Comparison/ComparisonHeader/AppliedFilters';
 import Outline from 'components/Comparison/Outline';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useCookies } from 'react-cookie';
+import { setConfigurationAttribute } from 'slices/comparisonSlice';
 
 const Comparison = () => {
     const { comparisonId } = useParams();
@@ -25,12 +27,18 @@ const Comparison = () => {
     const contributionsList = useSelector(state => state.comparison.configuration.contributionsList);
     const fullWidth = useSelector(state => state.comparison.configuration.fullWidth);
     const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 100px)' } : {};
+    const [cookies] = useCookies(['useFullWidthForComparisonTable']);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (comparisonResource?.label) {
             document.title = `${comparisonResource.label} - Comparison - ORKG`;
         }
-    }, [comparisonResource]);
+        // if the comparison has more than 3 contributions, and the cookie is not set, make the table full width
+        if (!cookies.useFullWidthForComparisonTable && !fullWidth && contributionsList.length > 3) {
+            dispatch(setConfigurationAttribute({ attribute: 'fullWidth', value: true }));
+        }
+    }, [comparisonResource, contributionsList.length, cookies, dispatch, fullWidth]);
 
     return (
         <div>
