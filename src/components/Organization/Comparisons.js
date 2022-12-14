@@ -92,7 +92,6 @@ const Comparisons = ({ organizationsId }) => {
                         {!hasNextPage && isLastPageReached && currentPage !== 1 && (
                             <div className="text-center m-2">You have reached the last page</div>
                         )}
-                        {comparisonsList.length === 0 && !isLoadingComparisons && <div className="text-center mt-4 mb-4">No Comparisons</div>}
                     </ListGroup>
                 )}
                 {isLoadingComparisons && (
@@ -120,6 +119,7 @@ const Comparisons = ({ organizationsId }) => {
                         )}
                     </div>
                 )}
+                {comparisonsList.length === 0 && !isLoadingComparisons && <div className="text-center p-4">No Comparisons</div>}
             </Container>
         </>
     );
