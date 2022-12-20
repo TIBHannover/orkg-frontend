@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.88.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.87.0...v0.88.0) - 2022-12-13
+
+### Changes
+
+- fix(Comparison): Disable saving selected properties on path comparison method [`#994`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/994)
+- feat(CsvImport): add additional label for newly imported papers [`#991`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/991)
+- feat(Comparison): make full width if there are more than three contributions [`#992`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/992)
+- feat(AuthorBadges): collapse authors when there are more than 15 entries [`#993`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/993)
+
+---
 ## [v0.87.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.86.2...v0.87.0) - 2022-12-08
 
 ### Changes

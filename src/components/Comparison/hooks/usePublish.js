@@ -120,9 +120,12 @@ function usePublish() {
                                 [PREDICATES.COMPARE_CONTRIBUTION]: contributionsList.map(contributionID => ({
                                     '@id': contributionID,
                                 })),
-                                [PREDICATES.HAS_PROPERTY]: predicatesList.map(predicateID => {
-                                    const property = comparisonType === 'merge' ? predicateID : getPropertyObjectFromData(data, { id: predicateID });
-                                    return { '@id': property.id, '@type': ENTITIES.PREDICATE };
+                                ...(comparisonType === 'merge' && {
+                                    [PREDICATES.HAS_PROPERTY]: predicatesList.map(predicateID => {
+                                        const property =
+                                            comparisonType === 'merge' ? predicateID : getPropertyObjectFromData(data, { id: predicateID });
+                                        return { '@id': property.id, '@type': ENTITIES.PREDICATE };
+                                    }),
                                 }),
                                 ...(comparisonResource.hasPreviousVersion && {
                                     [PREDICATES.HAS_PREVIOUS_VERSION]: [
