@@ -22,7 +22,7 @@ const ResearchProblemBox = ({ id }) => {
             setIsLoading(true);
             getProblemsByOrganizationId(id)
                 .then(response => {
-                    setProblems(response);
+                    setProblems(response.content);
                     setIsLoading(false);
                 })
                 .catch(error => {

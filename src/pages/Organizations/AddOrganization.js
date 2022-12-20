@@ -70,7 +70,8 @@ const AddOrganization = () => {
             navigateToOrganization(responseJson.display_id);
         } catch (error) {
             setEditorState('edit');
-            toast.error(`Error creating ${organizationType?.alternateLabel} ${error.message}`);
+            console.log(error);
+            toast.error(`Error creating ${organizationType?.alternateLabel}: ${error.errors[0].message}`);
         }
     };
 

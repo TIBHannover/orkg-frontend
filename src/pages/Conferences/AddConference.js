@@ -14,14 +14,15 @@ import ROUTES from 'constants/routes';
 import Tooltip from 'components/Utils/Tooltip';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { useSelector, useDispatch } from 'react-redux';
+import { CONFERENCE_REVIEW_TYPE } from 'constants/organizationsTypes';
 
 const AddConference = () => {
     const params = useParams();
     const [name, setName] = useState('');
     const [website, setWebsite] = useState('');
     const [permalink, setPermalink] = useState('');
-    const [date, setDate] = useState('');
-    const [isDoubleBlind, setIsDoubleBlind] = useState(false);
+    const [startDate, setStartDate] = useState('');
+    const [reviewType, setReviewType] = useState('');
     const [editorState, setEditorState] = useState('edit');
     const publicConferenceRoute = `${getPublicUrl()}${reverse(ROUTES.EVENT_SERIES, { id: ' ' })}`;
     const user = useSelector(state => state.auth.user);
@@ -30,6 +31,8 @@ const AddConference = () => {
 
     useEffect(() => {
         document.title = 'Create conference series - ORKG';
+        // make single-blind the default option
+        setReviewType(CONFERENCE_REVIEW_TYPE.find(t => t.label === 'Single-blind')?.id);
     }, []);
 
     const navigateToConference = display_id => {
@@ -59,16 +62,22 @@ const AddConference = () => {
             return;
         }
 
-        if (date.length === 0) {
+        if (startDate.length === 0) {
             toast.error('Please select conference date');
+            setEditorState('edit');
+            return;
+        }
+
+        if (reviewType.length === 0) {
+            toast.error('Please select conference review process');
             setEditorState('edit');
             return;
         }
 
         try {
             const responseJson = await createConference(params.id, name, website, permalink, {
-                date,
-                is_double_blind: isDoubleBlind,
+                start_date: startDate,
+                review_type: reviewType,
             });
             navigateToConference(responseJson.display_id);
         } catch (error) {
@@ -142,28 +151,32 @@ const AddConference = () => {
                         <FormGroup>
                             <Label for="conferenceDate">Conference date</Label>
                             <Input
-                                onChange={e => setDate(e.target.value)}
+                                onChange={e => setStartDate(e.target.value)}
                                 type="date"
                                 name="date"
                                 id="conferenceDate"
-                                value={date}
+                                value={startDate}
                                 placeholder="yyyy-mm-dd"
                             />
                         </FormGroup>
-                        <FormGroup check>
+                        <FormGroup>
+                            <Label for="reviewTupe">Review process</Label>
                             <Input
-                                onChange={e => setIsDoubleBlind(e.target.checked)}
-                                type="checkbox"
-                                name="isDoubleBlind"
-                                id="doubleBlind"
-                                checked={isDoubleBlind}
-                            />
-                            <Label for="doubleBlind" check>
-                                Double blind
-                                <Tooltip message="By default the conference is considered single-blind." />
-                            </Label>
+                                onChange={e => {
+                                    setReviewType(CONFERENCE_REVIEW_TYPE.find(t => t.id === e.target.value)?.id);
+                                }}
+                                value={reviewType}
+                                name="reviewType"
+                                type="select"
+                                id="conferenceReviewType"
+                            >
+                                {CONFERENCE_REVIEW_TYPE.map(option => (
+                                    <option key={option.id} value={option.id}>
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </Input>
                         </FormGroup>
-
                         <Button color="primary" onClick={createNewConference} className="mb-2 mt-2" disabled={loading}>
                             {!loading ? 'Create conference' : <span>Loading</span>}
                         </Button>

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { faExternalLinkAlt, faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { CONFERENCE_REVIEW_TYPE } from 'constants/organizationsTypes';
 
 function ConferenceMetadataBox({ url, metadata, isLoading }) {
     return (
@@ -13,9 +14,9 @@ function ConferenceMetadataBox({ url, metadata, isLoading }) {
                         <Icon size="sm" icon={faGlobe} /> {url} {url && <Icon size="sm" icon={faExternalLinkAlt} />}
                     </a>
                     <br />
-                    <b>Conference date</b>: {metadata.date}
+                    <b>Conference date</b>: {metadata.start_date}
                     <br />
-                    <b>Review process</b>: {metadata.is_double_blind ? 'Double-blind' : 'Single-blind'}
+                    <b>Review process</b>: {CONFERENCE_REVIEW_TYPE.find(t => t.id === metadata.review_process)?.label}
                 </div>
             ) : (
                 <div className="text-center mt-4 mb-4">Loading conference information ...</div>

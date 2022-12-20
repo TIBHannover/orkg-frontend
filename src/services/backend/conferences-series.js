@@ -2,12 +2,12 @@ import { url } from 'constants/misc';
 import { submitGetRequest, submitPostRequest } from 'network';
 import { getOrganization } from './organizations';
 
-export const conferenceSeriesUrl = `${url}conferences-series/`;
+export const conferenceSeriesUrl = `${url}conference-series/`;
 
 export const createConference = (organization_id, name, url, display_id, metadata) =>
     submitPostRequest(`${conferenceSeriesUrl}`, { 'Content-Type': 'application/json' }, { organization_id, name, display_id, url, metadata });
 
-export const getConferencesSeries = () => submitGetRequest(`${conferenceSeriesUrl}?size=9999`);
+export const getConferencesSeries = () => submitGetRequest(`${conferenceSeriesUrl}`);
 
 export const getSeriesListByConferenceId = id => submitGetRequest(`${conferenceSeriesUrl}${encodeURIComponent(id)}/series`);
 

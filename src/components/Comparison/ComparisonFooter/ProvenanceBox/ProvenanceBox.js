@@ -14,6 +14,7 @@ import moment from 'moment';
 import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
 import { useSelector } from 'react-redux';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
+import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
 
 const StyledOrganizationCard = styled.div`
     border: 0;
@@ -55,8 +56,7 @@ function ProvenanceBox() {
     if (isEmpty(observatory) && !createdBy && (!user || (!!user && !user.isCurationAllowed))) {
         return null;
     }
-
-    const isDoubleBlind = observatory?.metadata?.is_double_blind && moment().format('YYYY-MM-DD') < observatory?.metadata?.date;
+    const isDoubleBlind = observatory?.metadata?.review_process === CONFERENCE_REVIEW_MISC.DOUBLE_BLIND && moment().format('YYYY-MM-DD') < observatory?.metadata?.start_date;
 
     return (
         <div id="provenance" className="container box rounded-3 mt-4">
