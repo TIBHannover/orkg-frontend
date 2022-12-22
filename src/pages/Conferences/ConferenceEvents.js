@@ -14,7 +14,7 @@ const ConferenceEvents = ({ conferenceId, conferenceName }) => {
             setIsLoadingConferences(true);
             getSeriesListByConferenceId(conferenceId)
                 .then(responseJson => {
-                    setConferencesList(responseJson);
+                    setConferencesList(responseJson.content);
                     document.title = `${conferenceName} - Conference - ORKG`;
                 })
                 .catch(() => {
