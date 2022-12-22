@@ -17,6 +17,7 @@ import { reverse } from 'named-urls';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { ORGANIZATIONS_TYPES, ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import ConferenceEvents from 'pages/Conferences/ConferenceEvents';
+import { upperFirst } from 'lodash';
 
 const StyledOrganizationHeader = styled.div`
     .logoContainer {
@@ -92,7 +93,7 @@ const Organization = () => {
             {!isLoading && !error && label && (
                 <>
                     <TitleBar
-                        titleAddition={<SubTitle>{typeName}</SubTitle>}
+                        titleAddition={<SubTitle>{upperFirst(typeName)}</SubTitle>}
                         buttonGroup={
                             !!user &&
                             (user.id === createdBy || user.isCurationAllowed) && (

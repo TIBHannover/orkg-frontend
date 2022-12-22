@@ -17,7 +17,7 @@ const ConferenceEvents = ({ conferenceId, conferenceName }) => {
                     setConferencesList(responseJson);
                     document.title = `${conferenceName} - Conference - ORKG`;
                 })
-                .catch(error => {
+                .catch(() => {
                     setIsLoadingConferences(false);
                 });
             setIsLoadingConferences(false);
@@ -30,7 +30,7 @@ const ConferenceEvents = ({ conferenceId, conferenceName }) => {
         <>
             <Container className="d-flex align-items-center mt-4 mb-4">
                 <div className="d-flex flex-grow-1">
-                    <h1 className="h5 flex-shrink-0 mb-0">Conference Events</h1>
+                    <h1 className="h5 flex-shrink-0 mb-0">Conference events</h1>
                 </div>
             </Container>
             <Container className="p-0 box rounded">
@@ -43,7 +43,7 @@ const ConferenceEvents = ({ conferenceId, conferenceName }) => {
                                 ))}
                             </>
                         ) : (
-                            <div className="text-center mt-4 mb-4">No Conferences</div>
+                            <div className="text-center mt-4 mb-4">No conferences</div>
                         )}
                     </ListGroup>
                 )}

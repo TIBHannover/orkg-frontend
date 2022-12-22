@@ -119,7 +119,7 @@ const Comparisons = ({ organizationsId }) => {
                         )}
                     </div>
                 )}
-                {comparisonsList.length === 0 && !isLoadingComparisons && <div className="text-center p-4">No Comparisons</div>}
+                {comparisonsList.length === 0 && !isLoadingComparisons && <div className="text-center p-4">No comparisons</div>}
             </Container>
         </>
     );

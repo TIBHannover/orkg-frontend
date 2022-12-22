@@ -160,7 +160,7 @@ const AddConference = () => {
                             />
                         </FormGroup>
                         <FormGroup>
-                            <Label for="reviewTupe">Review process</Label>
+                            <Label for="conferenceReviewType">Review process</Label>
                             <Input
                                 onChange={e => {
                                     setReviewType(CONFERENCE_REVIEW_TYPE.find(t => t.id === e.target.value)?.id);
