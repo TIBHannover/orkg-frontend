@@ -91,7 +91,7 @@ const AddConference = () => {
 
     return (
         <>
-            <TitleBar>Create conference</TitleBar>
+            <TitleBar>Create conference event</TitleBar>
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 {!!user && user.isCurationAllowed && (
                     <Form className="ps-3 pe-3 pt-2">
@@ -185,7 +185,7 @@ const AddConference = () => {
                 {(!user || !user.isCurationAllowed) && (
                     <>
                         <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => dispatch(openAuthDialog({ action: 'signin' }))}>
-                            <Icon className="me-1" icon={faUser} /> Sign in to create conference
+                            <Icon className="me-1" icon={faUser} /> Sign in to create conference event
                         </Button>
                     </>
                 )}

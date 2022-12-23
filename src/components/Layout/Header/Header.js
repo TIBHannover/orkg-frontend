@@ -483,7 +483,7 @@ const Header = () => {
                                     })}
                                     onClick={closeMenu}
                                 >
-                                    Events
+                                    Conferences
                                 </DropdownItem>
                                 <DropdownItem divider />
 

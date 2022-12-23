@@ -22,7 +22,7 @@ const routes = {
     CONFERENCE: '/conference/:id',
     EVENT: '/event/:id',
     ADD_EVENT: '/organizations/:id/addEvent',
-    EVENT_SERIES: '/eventSeries/:id',
+    EVENT_SERIES: '/event-series/:id',
     ADD_OBSERVATORY: '/organizations/:id/addObservatory',
     OBSERVATORY: '/observatory/:id',
     ADD_PAPER: {
