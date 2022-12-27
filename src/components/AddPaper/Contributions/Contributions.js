@@ -11,7 +11,7 @@ import useBioassays from 'components/AddPaper/hooks/useBioassays';
 import Confirm from 'components/Confirmation/Confirmation';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
-import { StyledContributionTabs } from 'components/ContributionTabs/styled';
+import { StyledContributionTabs, GlobalStyle } from 'components/ContributionTabs/styled';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tooltip from 'components/Utils/Tooltip';
 import Tabs from 'rc-tabs';
@@ -162,6 +162,7 @@ const Contributions = () => {
 
     return (
         <div>
+            <GlobalStyle />
             <div className="d-flex align-items-center mt-4 mb-4">
                 <h2 className="h4 flex-shrink-0">
                     <Tooltip
