@@ -1,6 +1,5 @@
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import PropTypes from 'prop-types';
-import Tippy from '@tippyjs/react';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverseWithSlug } from 'utils';
@@ -16,9 +15,7 @@ const ResearchProblemsModal = ({ problems, openModal, setOpenModal }) => (
             <ul className="ps-3 pe-3">
                 {problems.map(rp => (
                     <li key={`p${rp.id}`}>
-                        <Tippy content={rp.label}>
-                            <Link to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>{rp.label}</Link>
-                        </Tippy>
+                        <Link to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>{rp.label}</Link>
                     </li>
                 ))}
             </ul>
