@@ -7,8 +7,8 @@ import { useParams } from 'react-router-dom';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { getConferenceById } from 'services/backend/conferences-series';
 import Comparisons from 'components/Organization/Comparisons';
-import ConferenceMetadataBox from '../../components/Conference/ConferenceMetadataBox';
-import ResearchProblemBox from '../../components/Conference/ResearchProblemBox';
+import ConferenceMetadataBox from 'components/Conference/ConferenceMetadataBox';
+import ResearchProblemBox from 'components/Conference/ResearchProblemBox';
 
 const ConferenceDetails = () => {
     const [error, setError] = useState(null);
@@ -45,8 +45,8 @@ const ConferenceDetails = () => {
             {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
             {!isLoading && !error && label && (
                 <>
-                    <TitleBar titleAddition={<SubTitle>{label}</SubTitle>} wrap={false}>
-                        Conference
+                    <TitleBar titleAddition={<SubTitle>Conference event</SubTitle>} wrap={false}>
+                        {label}
                     </TitleBar>
                     <Container className="p-0">
                         <Row className="mt-3">
