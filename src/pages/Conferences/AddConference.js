@@ -35,12 +35,12 @@ const AddConference = () => {
         setReviewType(CONFERENCE_REVIEW_TYPE.find(t => t.label === 'Single-blind')?.id);
     }, []);
 
-    const navigateToConference = display_id => {
+    const navigateToConference = displayId => {
         setEditorState('edit');
         setName('');
         setWebsite('');
         setPermalink('');
-        navigate(reverse(ROUTES.EVENT_SERIES, { id: display_id }));
+        navigate(reverse(ROUTES.EVENT_SERIES, { id: displayId }));
     };
 
     const createNewConference = async () => {
@@ -178,7 +178,7 @@ const AddConference = () => {
                             </Input>
                         </FormGroup>
                         <Button color="primary" onClick={createNewConference} className="mb-2 mt-2" disabled={loading}>
-                            {!loading ? 'Create conference' : <span>Loading</span>}
+                            {!loading ? 'Create conference event' : <span>Loading</span>}
                         </Button>
                     </Form>
                 )}
