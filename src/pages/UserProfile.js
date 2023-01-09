@@ -16,6 +16,8 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link, useParams } from 'react-router-dom';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
+import capitalize from 'capitalize';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.dark};
@@ -182,10 +184,10 @@ const UserProfile = props => {
                                 <div className="col-md-4 mt-4 mt-md-0">
                                     {organizationData && (
                                         <StyledOrganizationCard>
-                                            <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: organizationData.display_id })}>
+                                            <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { type: capitalize(ORGANIZATIONS_MISC.GENERAL), id: organizationData.display_id })}>
                                                 <img className="mx-auto p-2" src={organizationData.logo} alt={`${organizationData.name} logo`} />
                                             </Link>
-                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: organizationData.display_id })}>
+                                            <Link to={reverse(ROUTES.ORGANIZATION, { type: capitalize(ORGANIZATIONS_MISC.GENERAL), id: organizationData.display_id })}>
                                                 {organizationData?.name}
                                             </Link>
                                         </StyledOrganizationCard>

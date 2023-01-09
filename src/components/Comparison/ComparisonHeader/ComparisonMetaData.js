@@ -12,6 +12,7 @@ import ROUTES from 'constants/routes.js';
 import { useNavigate, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet';
+import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
 
 const ComparisonMetaData = () => {
     const comparisonResource = useSelector(state => state.comparison.comparisonResource);
@@ -32,7 +33,7 @@ const ComparisonMetaData = () => {
     };
 
     const isDoubleBlind =
-        provenance?.organization?.metadata?.is_double_blind && moment().format('YYYY-MM-DD') < provenance?.organization?.metadata?.date;
+        provenance?.metadata?.review_process === CONFERENCE_REVIEW_MISC.DOUBLE_BLIND && moment().format('YYYY-MM-DD') < provenance?.metadata?.start_date;
 
     const ldJson = {
         mainEntity: {

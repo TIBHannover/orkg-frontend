@@ -37,6 +37,7 @@ import { scrollbarWidth } from '@xobotyi/scrollbar-width';
 import AboutMenu from 'components/Layout/Header/AboutMenu';
 import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
 import Nfdi4dsButton from 'components/Layout/Header/Nfdi4dsButton';
+import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
 import SearchForm from './SearchForm';
 import AddNew from './AddNew';
 
@@ -467,14 +468,22 @@ const Header = () => {
                                 <DropdownItem
                                     tag={RouterNavLink}
                                     end
-                                    to={ROUTES.ORGANIZATIONS}
+                                    to={reverse(ROUTES.ORGANIZATIONS, {
+                                        type: ORGANIZATIONS_TYPES.find(o => o.id === ORGANIZATIONS_MISC.GENERAL).label,
+                                    })}
                                     onClick={closeMenu}
-                                    className="d-flex justify-content-between"
                                 >
-                                    Organizations{' '}
-                                    <small className="ms-2">
-                                        <Badge color="info">Beta</Badge>
-                                    </small>
+                                    Organizations
+                                </DropdownItem>
+                                <DropdownItem
+                                    tag={RouterNavLink}
+                                    end
+                                    to={reverse(ROUTES.ORGANIZATIONS, {
+                                        type: ORGANIZATIONS_TYPES.find(o => o.id === ORGANIZATIONS_MISC.EVENT).label,
+                                    })}
+                                    onClick={closeMenu}
+                                >
+                                    Conferences
                                 </DropdownItem>
                                 <DropdownItem divider />
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
-import { createOrganization } from 'services/backend/organizations';
+import { createConference } from 'services/backend/conferences-series';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { openAuthDialog } from 'slices/authSlice';
@@ -13,35 +13,37 @@ import slugify from 'slugify';
 import ROUTES from 'constants/routes';
 import Tooltip from 'components/Utils/Tooltip';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
 import { useSelector, useDispatch } from 'react-redux';
+import { CONFERENCE_REVIEW_TYPE } from 'constants/organizationsTypes';
 
-const AddOrganization = () => {
+const AddConference = () => {
     const params = useParams();
     const [name, setName] = useState('');
     const [website, setWebsite] = useState('');
     const [permalink, setPermalink] = useState('');
-    const [logo, setLogo] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [reviewType, setReviewType] = useState('');
     const [editorState, setEditorState] = useState('edit');
-    const organizationType = ORGANIZATIONS_TYPES.find(t => t.label === params.type);
-    const publicOrganizationRoute = `${getPublicUrl()}${reverse(ROUTES.ORGANIZATION, { type: organizationType?.label, id: ' ' })}`;
+    const publicConferenceRoute = `${getPublicUrl()}${reverse(ROUTES.EVENT_SERIES, { id: ' ' })}`;
     const user = useSelector(state => state.auth.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = `Create ${organizationType?.alternateLabel} - ORKG`;
-    }, [organizationType]);
+        document.title = 'Create conference series - ORKG';
+        // make single-blind the default option
+        setReviewType(CONFERENCE_REVIEW_TYPE.find(t => t.label === 'Single-blind')?.id);
+    }, []);
 
-    const navigateToOrganization = display_id => {
+    const navigateToConference = displayId => {
         setEditorState('edit');
         setName('');
         setWebsite('');
         setPermalink('');
-        navigate(reverse(ROUTES.ORGANIZATION, { type: organizationType?.label, id: display_id }));
+        navigate(reverse(ROUTES.EVENT_SERIES, { id: displayId }));
     };
 
-    const createNewOrganization = async () => {
+    const createNewConference = async () => {
         setEditorState('loading');
 
         if (!name || name.length === 0) {
@@ -59,45 +61,42 @@ const AddOrganization = () => {
             setEditorState('edit');
             return;
         }
-        if (logo.length === 0) {
-            toast.error('Please upload an organization logo');
+
+        if (startDate.length === 0) {
+            toast.error('Please select conference date');
+            setEditorState('edit');
+            return;
+        }
+
+        if (reviewType.length === 0) {
+            toast.error('Please select conference review process');
             setEditorState('edit');
             return;
         }
 
         try {
-            const responseJson = await createOrganization(name, logo[0], user.id, website, permalink, organizationType?.id);
-            navigateToOrganization(responseJson.display_id);
+            const responseJson = await createConference(params.id, name, website, permalink, {
+                start_date: startDate,
+                review_type: reviewType,
+            });
+            navigateToConference(responseJson.display_id);
         } catch (error) {
             setEditorState('edit');
-            console.log(error);
-            toast.error(`Error creating ${organizationType?.alternateLabel}: ${error.errors[0].message}`);
+            console.error(error);
+            toast.error(`Error creating conference series ${error.message}`);
         }
-    };
-
-    const handlePreview = async e => {
-        e.preventDefault();
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        if (e.target.files.length === 0) {
-            return;
-        }
-        reader.onloadend = () => {
-            setLogo([reader.result]);
-        };
-        reader.readAsDataURL(file);
     };
 
     const loading = editorState === 'loading';
 
     return (
         <>
-            <TitleBar>Create {organizationType?.alternateLabel}</TitleBar>
+            <TitleBar>Create conference event</TitleBar>
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 {!!user && user.isCurationAllowed && (
                     <Form className="ps-3 pe-3 pt-2">
                         <FormGroup>
-                            <Label for="organizationName">Name</Label>
+                            <Label for="conferenceName">Name</Label>
                             <Input
                                 onChange={e => {
                                     setName(e.target.value);
@@ -111,7 +110,7 @@ const AddOrganization = () => {
                                 }}
                                 type="text"
                                 name="name"
-                                id="organizationName"
+                                id="conferenceName"
                                 disabled={loading}
                                 value={name}
                             />
@@ -119,17 +118,17 @@ const AddOrganization = () => {
 
                         <FormGroup>
                             <div>
-                                <Label for="organizationPermalink">
+                                <Label for="conferencePermalink">
                                     Permalink
-                                    <Tooltip message="Permalink field allows to identify the organization page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
+                                    <Tooltip message="Permalink field allows to identify the conference page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
                                 </Label>
                                 <InputGroup>
-                                    <span className="input-group-text">{publicOrganizationRoute}</span>
+                                    <span className="input-group-text">{publicConferenceRoute}</span>
                                     <Input
                                         onChange={e => setPermalink(e.target.value)}
                                         type="text"
                                         name="permalink"
-                                        id="organizationPermalink"
+                                        id="conferencePermalink"
                                         disabled={loading}
                                         placeholder="name"
                                         value={permalink}
@@ -138,37 +137,55 @@ const AddOrganization = () => {
                             </div>
                         </FormGroup>
                         <FormGroup>
-                            <Label for="organizationWebsite">Website</Label>
+                            <Label for="conferenceWebsite">Website</Label>
                             <Input
                                 onChange={e => setWebsite(e.target.value)}
                                 type="text"
                                 name="website"
-                                id="organizationWebsite"
+                                id="conferenceWebsite"
                                 disabled={loading}
                                 value={website}
                                 placeholder="https://www.example.com"
                             />
                         </FormGroup>
                         <FormGroup>
-                            <Label for="organizationLogo">Logo</Label>
-                            <br />
-                            {logo && logo.length > 0 && (
-                                <div className="mb-2">
-                                    <img src={logo} style={{ width: '20%', height: '20%' }} alt="organization logo" />
-                                </div>
-                            )}
-                            <Input type="file" id="organizationLogo" onChange={handlePreview} />
+                            <Label for="conferenceDate">Conference date</Label>
+                            <Input
+                                onChange={e => setStartDate(e.target.value)}
+                                type="date"
+                                name="date"
+                                id="conferenceDate"
+                                value={startDate}
+                                placeholder="yyyy-mm-dd"
+                            />
                         </FormGroup>
-
-                        <Button color="primary" onClick={createNewOrganization} className="mb-2 mt-2" disabled={loading}>
-                            {!loading ? 'Create organization' : <span>Loading</span>}
+                        <FormGroup>
+                            <Label for="conferenceReviewType">Review process</Label>
+                            <Input
+                                onChange={e => {
+                                    setReviewType(CONFERENCE_REVIEW_TYPE.find(t => t.id === e.target.value)?.id);
+                                }}
+                                value={reviewType}
+                                name="reviewType"
+                                type="select"
+                                id="conferenceReviewType"
+                            >
+                                {CONFERENCE_REVIEW_TYPE.map(option => (
+                                    <option key={option.id} value={option.id}>
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </Input>
+                        </FormGroup>
+                        <Button color="primary" onClick={createNewConference} className="mb-2 mt-2" disabled={loading}>
+                            {!loading ? 'Create conference event' : <span>Loading</span>}
                         </Button>
                     </Form>
                 )}
                 {(!user || !user.isCurationAllowed) && (
                     <>
                         <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => dispatch(openAuthDialog({ action: 'signin' }))}>
-                            <Icon className="me-1" icon={faUser} /> Sign in to create organization
+                            <Icon className="me-1" icon={faUser} /> Sign in to create conference event
                         </Button>
                     </>
                 )}
@@ -177,4 +194,4 @@ const AddOrganization = () => {
     );
 };
 
-export default AddOrganization;
+export default AddConference;
