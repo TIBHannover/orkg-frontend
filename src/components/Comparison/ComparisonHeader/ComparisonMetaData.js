@@ -1,4 +1,4 @@
-import { Alert } from 'reactstrap';
+import { Alert, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
@@ -99,7 +99,7 @@ const ComparisonMetaData = () => {
                     <div className="flex-grow-1">
                         {(comparisonResource.label || comparisonResource.id) && (
                             <>
-                                <h4 className="mb-4 mt-4">
+                                <h4 className="mb-2 mt-4">
                                     {comparisonResource.label}{' '}
                                     {comparisonResource.id && (
                                         <MarkFeaturedUnlistedContainer
@@ -111,23 +111,23 @@ const ComparisonMetaData = () => {
                                     )}
                                 </h4>
                                 <div>
-                                    {comparisonResource.description && (
-                                        <div style={{ lineHeight: 1.5 }} className="h6 mb-2">
-                                            {comparisonResource.description}
-                                        </div>
-                                    )}
                                     <div>
                                         {comparisonResource.created_at && (
-                                            <span className="badge bg-light me-2">
-                                                <Icon icon={faCalendar} className="text-primary" />{' '}
+                                            <Badge color="light" className="me-2 mb-2">
+                                                <Icon icon={faCalendar} />{' '}
                                                 {comparisonResource.created_at ? moment(comparisonResource.created_at).format('MMMM') : ''}{' '}
                                                 {comparisonResource.created_at ? moment(comparisonResource.created_at).format('YYYY') : ''}
-                                            </span>
+                                            </Badge>
                                         )}
                                         {comparisonResource.authors?.length > 0 && !isDoubleBlind && (
                                             <AuthorBadges authors={comparisonResource.authors} />
                                         )}
                                     </div>
+                                    {comparisonResource.description && (
+                                        <div style={{ lineHeight: 1.5 }} className="h6 mb-2">
+                                            {comparisonResource.description}
+                                        </div>
+                                    )}
                                     {comparisonResource.doi && (
                                         <div className="mb-1" style={{ lineHeight: 1.5 }}>
                                             <small>

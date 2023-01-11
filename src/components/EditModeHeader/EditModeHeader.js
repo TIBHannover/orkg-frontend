@@ -1,8 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Container } from 'reactstrap';
-import { CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
+import { CSSTransition } from 'react-transition-group';
+import { Container } from 'reactstrap';
+import styled from 'styled-components';
 
 const AnimationContainer = styled(CSSTransition)`
     &.slide-enter {
@@ -43,13 +42,19 @@ export const Title = styled.div`
     }
 `;
 
-function EditModeHeader({ isVisible }) {
+function EditModeHeader({ isVisible, message = null }) {
     return (
         <AnimationContainer in={isVisible} unmountOnExit classNames="slide" timeout={{ enter: 800, exit: 800 }}>
             <div>
                 <EditModeContainer className="rounded-top">
                     <Title>
-                        Edit mode <span className="ps-2">Every change you make is automatically saved</span>
+                        {!message ? (
+                            <>
+                                Edit mode <span className="ps-2">Every change you make is automatically saved</span>
+                            </>
+                        ) : (
+                            message
+                        )}
                     </Title>
                 </EditModeContainer>
             </div>
@@ -59,6 +64,7 @@ function EditModeHeader({ isVisible }) {
 
 EditModeHeader.propTypes = {
     isVisible: PropTypes.bool.isRequired,
+    message: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 };
 
 export default EditModeHeader;

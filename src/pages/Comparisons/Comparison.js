@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Alert } from 'reactstrap';
+import { Alert, Container } from 'reactstrap';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/Comparison';
 import ProvenanceBox from 'components/Comparison/ComparisonFooter/ProvenanceBox/ProvenanceBox';
@@ -12,11 +12,11 @@ import useComparison from 'components/Comparison/hooks/useComparison';
 import PreviewVisualizationComparison from 'libs/selfVisModel/ComparisonComponents/PreviewVisualizationComparison';
 import ComparisonHeaderMenu from 'components/Comparison/ComparisonHeader/ComparisonHeaderMenu';
 import AppliedFilters from 'components/Comparison/ComparisonHeader/AppliedFilters';
-import Outline from 'components/Comparison/Outline';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import { setConfigurationAttribute } from 'slices/comparisonSlice';
+import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 
 const Comparison = () => {
     const { comparisonId } = useParams();
@@ -26,8 +26,11 @@ const Comparison = () => {
     const isFailedLoadingResult = useSelector(state => state.comparison.isFailedLoadingResult);
     const contributionsList = useSelector(state => state.comparison.configuration.contributionsList);
     const fullWidth = useSelector(state => state.comparison.configuration.fullWidth);
+    const isEditing = useSelector(state => state.comparison.isEditing);
     const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 100px)' } : {};
     const [cookies] = useCookies(['useFullWidthForComparisonTable']);
+    const isPublished = !!comparisonResource.id;
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -44,21 +47,26 @@ const Comparison = () => {
         <div>
             <ComparisonHeaderMenu navigateToNewURL={navigateToNewURL} />
 
-            <ContainerAnimated id="description" className="box rounded pt-4 pb-4 ps-5 pe-5 clearfix position-relative" style={containerStyle}>
-                {comparisonResource.id && <Outline />}
-                <ComparisonMetaData />
+            <Container id="description" className="box rounded clearfix position-relative mb-4 px-5">
+                {isPublished && (
+                    <div className="pt-2 pb-3">
+                        <ComparisonMetaData />
+                    </div>
+                )}
 
+                {!isLoadingResult && contributionsList.length > 1 && <PreviewVisualizationComparison />}
+
+                <AppliedFilters />
+            </Container>
+
+            <Container className="box rounded p-0 clearfix position-relative overflow-hidden" style={{ marginBottom: isEditing ? 10 : 0 }}>
+                <EditModeHeader isVisible={isEditing} message="Edit mode" />
+            </Container>
+
+            <ContainerAnimated className="box rounded p-0 clearfix position-relative" style={containerStyle}>
                 {!isFailedLoadingMetadata && !isFailedLoadingResult && (
                     <>
-                        <AppliedFilters />
-
-                        {!isLoadingResult && contributionsList.length > 1 && (
-                            <div className="mt-1">
-                                <PreviewVisualizationComparison />
-
-                                <ComparisonTable object={comparisonResource} />
-                            </div>
-                        )}
+                        {!isLoadingResult && contributionsList.length > 1 && <ComparisonTable object={comparisonResource} />}
 
                         {!isLoadingResult && contributionsList.length <= 1 && (
                             <Alert className="mt-3 text-center" color="danger">
@@ -69,13 +77,14 @@ const Comparison = () => {
                         {isLoadingResult && <ComparisonLoadingComponent />}
                     </>
                 )}
+            </ContainerAnimated>
 
+            <Container className="box rounded px-5 clearfix position-relative mt-4">
                 <RelatedResources />
                 <RelatedFigures />
                 <DataSources />
-            </ContainerAnimated>
-
-            {comparisonResource.id && <ProvenanceBox />}
+            </Container>
+            {isPublished && <ProvenanceBox />}
         </div>
     );
 };
