@@ -1,15 +1,13 @@
-import PropTypes from 'prop-types';
-import { Badge, Button, Input, InputGroup, InputGroupText } from 'reactstrap';
-import moment from 'moment';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { toast } from 'react-toastify';
+import { faArrowRight, faCalendar, faTags, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faCalendar, faTags, faArrowRight, faUser } from '@fortawesome/free-solid-svg-icons';
-import pluralize from 'pluralize';
+import CopyId from 'components/CopyId/CopyId';
+import ProvenanceBox from 'components/Resource/ProvenanceBox';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { MISC } from 'constants/graphSettings';
-import ProvenanceBox from 'components/Resource/ProvenanceBox';
+import moment from 'moment';
+import pluralize from 'pluralize';
+import PropTypes from 'prop-types';
+import { Badge } from 'reactstrap';
 
 const ItemMetadata = ({ item, showClasses, showCreatedAt, showCreatedBy, showProvenance, editMode }) => (
     <div className="d-flex">
@@ -50,29 +48,7 @@ const ItemMetadata = ({ item, showClasses, showCreatedAt, showCreatedBy, showPro
             )}
         </div>
         <div className="d-flex align-items-end flex-shrink-0">
-            <InputGroup size="sm">
-                <InputGroupText className="py-0">ID</InputGroupText>
-                <Input
-                    bsSize="sm"
-                    className="text-muted py-0 bg-white"
-                    length={item.id.length}
-                    disabled
-                    value={item.id}
-                    style={{ width: 80, minHeight: 'initial', fontSize: '80%' }}
-                    aria-label="ID"
-                />
-                <CopyToClipboard
-                    text={item.id}
-                    onCopy={() => {
-                        toast.dismiss();
-                        toast.success('ID copied to clipboard');
-                    }}
-                >
-                    <Button className="py-0 border border-light-darker d-flex align-items-center" size="sm" color="light">
-                        <Icon icon={faClipboard} color="#6c757d" size="xs" />
-                    </Button>
-                </CopyToClipboard>
-            </InputGroup>
+            <CopyId id={item.id} />
         </div>
     </div>
 );

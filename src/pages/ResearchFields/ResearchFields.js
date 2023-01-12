@@ -12,6 +12,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { Button, ButtonDropdown, Col, Container, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'reactstrap';
 import { reverseWithSlug } from 'utils';
 import TitleBar from 'components/TitleBar/TitleBar';
+import CopyId from 'components/CopyId/CopyId';
 
 const ResearchFields = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -86,23 +87,29 @@ const ResearchFields = () => {
                         <Col md="7">
                             {selectedResearchField && (
                                 <>
-                                    <div className="d-flex justify-content-between align-items-start mb-3">
-                                        <h2 className="h5">{researchFieldLabel} papers</h2>
-                                        {selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN && (
-                                            <Button
-                                                tag={Link}
-                                                to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                                                    researchFieldId: selectedResearchField,
-                                                    slug: researchFieldLabel,
-                                                })}
-                                                color="light"
-                                                size="sm"
-                                                className="flex-shrink-0 ms-2"
-                                            >
-                                                Visit field page
-                                            </Button>
-                                        )}
+                                    <div className="d-flex justify-content-between align-items-center mb-3">
+                                        <h2 className="h5">{researchFieldLabel}</h2>
+                                        <div className="d-flex align-items-center justify-content-end flex-wrap">
+                                            <div className="flex-shrink-0 my-1">
+                                                <CopyId id={selectedResearchField} />
+                                            </div>
+                                            {selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN && (
+                                                <Button
+                                                    tag={Link}
+                                                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                                        researchFieldId: selectedResearchField,
+                                                        slug: researchFieldLabel,
+                                                    })}
+                                                    color="light"
+                                                    size="sm"
+                                                    className="flex-shrink-0 ms-2 my-1"
+                                                >
+                                                    Visit field page
+                                                </Button>
+                                            )}
+                                        </div>
                                     </div>
+                                    <hr />
                                     <Papers id={selectedResearchField} boxShadow={false} showBreadcrumbs={false} />
                                 </>
                             )}
