@@ -11,7 +11,6 @@ const HelpCenterCategory = () => {
     const [category, setCategory] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isNotFound, setIsNotFound] = useState(false);
-    const [articles, setArticles] = useState([]);
     const params = useParams();
 
     useEffect(() => {
@@ -21,9 +20,7 @@ const HelpCenterCategory = () => {
         const getData = async () => {
             try {
                 setIsLoading(true);
-                const _category = await getHelpCategory(params.id);
-                setArticles(_category.help_articles.sort((a, b) => (parseInt(a.order) > parseInt(b.order) ? 1 : -1)));
-                setCategory(_category);
+                setCategory((await getHelpCategory(params.id)).data);
             } catch (e) {
                 setIsNotFound(true);
             } finally {
@@ -50,19 +47,19 @@ const HelpCenterCategory = () => {
                             <BreadcrumbItem>
                                 <Link to={ROUTES.HELP_CENTER}>Help center</Link>
                             </BreadcrumbItem>
-                            <BreadcrumbItem active>{category.title}</BreadcrumbItem>
+                            <BreadcrumbItem active>{category.attributes?.title}</BreadcrumbItem>
                         </Breadcrumb>
-                        <h1 className="h3 my-4">{category.title}</h1>
+                        <h1 className="h3 my-4">{category.attributes?.title}</h1>
                         <ul>
-                            {articles.map(article => (
+                            {category.attributes?.help_articles?.data?.map(article => (
                                 <li key={article.id}>
                                     <Link
                                         to={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                             id: article.id,
-                                            slug: article.title,
+                                            slug: article.attributes?.title,
                                         })}
                                     >
-                                        {article.title}
+                                        {article.attributes?.title}
                                     </Link>
                                 </li>
                             ))}

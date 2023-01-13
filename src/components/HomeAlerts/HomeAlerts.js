@@ -1,4 +1,3 @@
-import { orderBy } from 'lodash';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { Alert } from 'reactstrap';
@@ -19,12 +18,9 @@ const HomeAlerts = () => {
     const [alerts, setAlerts] = useState([]);
 
     useEffect(() => {
-        const fetchAlerts = async () => {
-            let _alerts = await getHomeAlerts();
-            _alerts = orderBy(_alerts, 'order');
-            setAlerts(_alerts);
-        };
-        fetchAlerts();
+        (async () => {
+            setAlerts((await getHomeAlerts()).data);
+        })();
     }, []);
 
     if (alerts.length === 0) {
@@ -32,9 +28,9 @@ const HomeAlerts = () => {
     }
 
     return alerts.map(alert =>
-        !alert.hideAfterDate || moment() < moment(alert.hideAfterDate) ? (
-            <AlertStyled key={alert.id} color={alert.color} className="box mt-2">
-                <div dangerouslySetInnerHTML={{ __html: converter.makeHtml(alert.message) }} />
+        !alert.attributes?.hideAfterDate || moment() < moment(alert.attributes?.hideAfterDate) ? (
+            <AlertStyled key={alert.id} color={alert.attributes?.color} className="box mt-2">
+                <div dangerouslySetInnerHTML={{ __html: converter.makeHtml(alert.attributes?.message) }} />
             </AlertStyled>
         ) : null,
     );

@@ -29,7 +29,7 @@ export default function News() {
     useEffect(() => {
         const loadNews = async () => {
             setIsLoading(true);
-            setItems(await getNewsCards({ limit: 8, sort: 'created_at:DESC' }));
+            setItems((await getNewsCards({ limit: 8, sort: 'createdAt:desc' })).data);
             setIsLoading(false);
         };
         loadNews();
@@ -55,7 +55,7 @@ export default function News() {
         setActiveIndex(newIndex);
     };
 
-    return !isLoading && moment(items?.[0]?.published_at) > moment().subtract(2, 'months') ? (
+    return !isLoading && moment(items?.[0]?.attributes?.publishedAt) > moment().subtract(2, 'months') ? (
         <div className="mt-3 box rounded d-flex flex-column overflow-hidden">
             <div className="d-flex align-items-center pt-3 ps-3 pe-3 pb-0">
                 <div className="flex-grow-1">
@@ -74,12 +74,12 @@ export default function News() {
                                 <Card style={{ border: 0, minHeight: 150 }}>
                                     <CardBody className="pt-0 mb-0 d-flex justify-content-center flex-column">
                                         <CardTitle tag="h5" className="pt-0 d-flex">
-                                            {item.title}
+                                            {item.attributes?.title}
                                         </CardTitle>
                                         <CardSubtitle
                                             tag="h6"
                                             className="mb-1 text-muted"
-                                            dangerouslySetInnerHTML={{ __html: converter.makeHtml(item.message) }}
+                                            dangerouslySetInnerHTML={{ __html: converter.makeHtml(item.attributes?.message) }}
                                         />
                                     </CardBody>
                                 </Card>

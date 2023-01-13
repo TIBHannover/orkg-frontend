@@ -39,7 +39,7 @@ const About = () => {
 
     // load menu items
     useEffect(() => {
-        if (!page?.category?.id) {
+        if (!page?.attributes?.category?.data?.id) {
             setMenuItems([]);
             return;
         }
@@ -47,7 +47,7 @@ const About = () => {
         const getMenu = async () => {
             setIsLoadingMenu(true);
             try {
-                setMenuItems(await getAboutPagesMenu(page?.category?.id));
+                setMenuItems((await getAboutPagesMenu(page?.attributes?.category?.data?.id)).data);
             } catch (e) {
                 console.log(e);
                 setIsFailedLoadingMenu(true);
@@ -57,7 +57,7 @@ const About = () => {
         };
 
         getMenu();
-    }, [page?.category?.id]);
+    }, [page]);
 
     useEffect(() => {
         document.title = `${page?.title ?? ''} - ORKG`;
@@ -80,8 +80,8 @@ const About = () => {
                             <Nav>
                                 {menuItems.map(item => (
                                     <NavItem key={item.id} className={item.id === page?.id ? 'rounded bg-light' : ''}>
-                                        <Link className="nav-link" to={reverseWithSlug(ROUTES.ABOUT, { id: item.id, slug: item.title })}>
-                                            {item.title}
+                                        <Link className="nav-link" to={reverseWithSlug(ROUTES.ABOUT, { id: item.id, slug: item.attributes?.title })}>
+                                            {item.attributes?.title}
                                         </Link>
                                     </NavItem>
                                 ))}
