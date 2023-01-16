@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { getTemplateRecommendations } from 'services/orkgNlp';
 import { differenceBy } from 'lodash';
 import useUsedTemplates from 'components/StatementBrowser/TemplatesModal/hooks/useUsedTemplates';
-// import env from '@beam-australia/react-env';
 
 const useTemplatesRecommendation = () => {
     const { title, abstract } = useSelector(state => state.addPaper);
@@ -14,10 +13,6 @@ const useTemplatesRecommendation = () => {
 
     useEffect(() => {
         const fetchRecommendation = () => {
-            // disable this feature in production
-            // if (env('IS_TESTING_SERVER') !== 'true') {
-            //    return;
-            // }
             setIsLoadingRT(true);
             getTemplateRecommendations({ title, abstract })
                 .then(result => {
