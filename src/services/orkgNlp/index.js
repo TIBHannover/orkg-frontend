@@ -142,3 +142,18 @@ export const getRecommendedPredicates = async ({ title, abstract }) => {
     );
     return payload;
 };
+
+export const getTemplateRecommendations = async ({ title, abstract, topN = 5 }) => {
+    const { payload } = await submitPostRequest(
+        `${nlpServiceUrl}nli/templates`,
+        {
+            'Content-Type': 'application/json',
+        },
+        {
+            title,
+            abstract,
+            top_n: topN,
+        },
+    );
+    return payload;
+};

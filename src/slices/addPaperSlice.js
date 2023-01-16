@@ -46,6 +46,7 @@ const initialState = {
     nerProperties: [],
     nerRawResponse: {},
     predicatesRawResponse: {},
+    templatesRawResponse: {},
     bioassayText: '',
     bioassayRawResponse: [],
 };
@@ -208,6 +209,9 @@ export const addPaperSlice = createSlice({
         setPredicatesRawResponse: (state, { payload }) => {
             state.predicatesRawResponse = payload;
         },
+        setTemplatesRawResponse: (state, { payload }) => {
+            state.templatesRawResponse = payload;
+        },
         setBioassayText: (state, { payload }) => {
             state.bioassayText = payload;
         },
@@ -247,6 +251,7 @@ export const {
     setNerProperties,
     setNerRawResponse,
     setPredicatesRawResponse,
+    setTemplatesRawResponse,
     setBioassayText,
     setBioassayRawResponse,
 } = addPaperSlice.actions;
