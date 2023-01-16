@@ -29,7 +29,7 @@ export default function News() {
     useEffect(() => {
         const loadNews = async () => {
             setIsLoading(true);
-            setItems((await getNewsCards({ limit: 8, sort: 'createdAt:desc' })).data);
+            setItems((await getNewsCards({ limit: 8, sort: 'createdAt:desc' })).data || []);
             setIsLoading(false);
         };
         loadNews();
