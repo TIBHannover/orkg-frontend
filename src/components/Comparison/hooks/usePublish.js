@@ -8,7 +8,7 @@ import { getComparison, createResourceData } from 'services/similarity/index';
 import { useSelector, useDispatch } from 'react-redux';
 import { reverse } from 'named-urls';
 import { useNavigate } from 'react-router-dom';
-import { filterObjectOfStatementsByPredicateAndClass, getPublicUrl } from 'utils';
+import { filterObjectOfStatementsByPredicateAndClass, getPublicUrl, getErrorMessage } from 'utils';
 import { setDoi } from 'slices/comparisonSlice';
 import { getComparisonURLConfig, getPropertyObjectFromData, activatedContributionsToList } from 'components/Comparison/hooks/helpers';
 import { saveAuthors } from 'components/AuthorsInput/helpers';
@@ -169,7 +169,7 @@ function usePublish() {
                 publishDOI(id);
             }
         } catch (error) {
-            toast.error(`Error publishing a comparison : ${error.message}`);
+            toast.error(`Error publishing a comparison : ${getErrorMessage(error)}`);
             setIsLoading(false);
         }
     };

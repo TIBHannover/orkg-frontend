@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LOCATION_CHANGE, guid } from 'utils';
+import { LOCATION_CHANGE, guid, getErrorMessage } from 'utils';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 import { mergeWith, isArray, uniqBy, merge } from 'lodash';
@@ -420,7 +420,7 @@ export const saveAddPaperAction = data => async dispatch => {
         dispatch(blockNavigation({ status: false }));
     } catch (e) {
         console.log(e);
-        toast.error('Something went wrong while saving this paper.');
+        toast.error(`Something went wrong while saving this paper: ${getErrorMessage(e)}`);
         dispatch(previousStep());
     }
 };
