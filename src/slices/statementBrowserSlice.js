@@ -1291,7 +1291,8 @@ export function fillResourceWithTemplate({ templateID, resourceId, syncBackend =
  * @return {Boolean} if the class template should be fetched or not
  */
 function shouldFetchTemplatesOfClass(state, classID) {
-    if (has(state.statementBrowser.classes, classID)) {
+    const classObj = state.statementBrowser.classes[classID];
+    if (!classObj) {
         return true;
     }
     return false;
