@@ -1073,19 +1073,24 @@ export function getSuggestedProperties(state, resourceId) {
  */
 export const updateResourceClassesAction =
     ({ resourceId, classes, syncBackend = false }) =>
-    (dispatch, getState) => {
+    async (dispatch, getState) => {
         const resource = getState().statementBrowser.resources.byId[resourceId];
+        let apiResponse = Promise.resolve();
         if (resource) {
-            dispatch(updateResourceClasses({ resourceId, classes: uniq(classes?.filter(c => c) ?? []) }));
-            // Fetch templates
-            const templatesOfClassesLoading = classes && classes?.filter(c => c).map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
-            // Add required properties
-            Promise.all(templatesOfClassesLoading).then(() => dispatch(createRequiredPropertiesInResource(resourceId)));
-            if (syncBackend) {
-                return updateResourceClassesApi(resourceId, uniq(classes?.filter(c => c) ?? []));
+            try {
+                if (syncBackend) {
+                    apiResponse = await updateResourceClassesApi(resourceId, uniq(classes?.filter(c => c) ?? []));
+                }
+                dispatch(updateResourceClasses({ resourceId, classes: uniq(classes?.filter(c => c) ?? []) }));
+                // Fetch templates
+                const templatesOfClassesLoading = classes && classes?.filter(c => c).map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+                // Add required properties
+                Promise.all(templatesOfClassesLoading).then(() => dispatch(createRequiredPropertiesInResource(resourceId)));
+            } catch (e) {
+                return Promise.reject();
             }
         }
-        return Promise.resolve();
+        return syncBackend ? apiResponse : Promise.resolve();
     };
 
 /**
