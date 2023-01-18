@@ -97,10 +97,10 @@ export const getErrorMessage = (errors, field = null) => {
         return null;
     }
     if (field === null) {
-        return errors.message ? errors.message : null;
+        return errors.message ? errors.message?.replace?.('Predicate', 'Property') : null;
     }
     const fieldError = errors.errors ? errors.errors.find(e => e.field === field) : null;
-    return fieldError ? capitalize(fieldError.message) : null;
+    return fieldError ? capitalize(fieldError.message).replace('Predicate', 'Property') : null;
 };
 
 /**

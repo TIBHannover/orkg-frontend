@@ -10,7 +10,7 @@ import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
 import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import { getContributorsByResourceId } from 'services/backend/resources';
-import { getPublicUrl, filterObjectOfStatementsByPredicateAndClass } from 'utils';
+import { getPublicUrl, filterObjectOfStatementsByPredicateAndClass, getErrorMessage } from 'utils';
 import { getStatementsBySubject, createResourceStatement, deleteStatementById, getStatementsBundleBySubject } from 'services/backend/statements';
 import { createResourceData } from 'services/similarity/index';
 import { useSelector } from 'react-redux';
@@ -159,7 +159,7 @@ function Publish(props) {
         try {
             publishDOI(viewPaper.paperResource.id);
         } catch (error) {
-            toast.error(`Error publishing a paper : ${error.message}`);
+            toast.error(`Error publishing a paper : ${getErrorMessage(error)}`);
             setIsLoading(false);
         }
     };
