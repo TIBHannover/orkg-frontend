@@ -48,11 +48,7 @@ const Comparison = () => {
             <ComparisonHeaderMenu navigateToNewURL={navigateToNewURL} />
 
             <Container id="description" className="box rounded clearfix position-relative mb-4 px-5">
-                {isPublished && (
-                    <div className="pt-2 pb-3">
-                        <ComparisonMetaData />
-                    </div>
-                )}
+                <ComparisonMetaData />
 
                 {!isLoadingResult && contributionsList.length > 1 && <PreviewVisualizationComparison />}
 
