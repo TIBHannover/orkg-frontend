@@ -41,12 +41,10 @@ function RelatedResources() {
     }, [loadResources]);
 
     return (
-        <div>
+        <>
             {!isLoadingMetadata && !isFailedLoadingMetadata && resources?.length > 0 && (
-                <>
-                    <h5 id="relatedResources" className="mt-5">
-                        Related resources
-                    </h5>
+                <div className="py-3">
+                    <h5 id="relatedResources">Related resources</h5>
                     <CardColumns className="d-flex row">
                         {relatedResources.map((resource, index) => {
                             const isLink = new RegExp(REGEX.URL).test(resource.url);
@@ -72,9 +70,9 @@ function RelatedResources() {
                             );
                         })}
                     </CardColumns>
-                </>
+                </div>
             )}
-        </div>
+        </>
     );
 }
 

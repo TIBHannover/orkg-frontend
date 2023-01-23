@@ -96,7 +96,7 @@ const PreviewCarouselComponent = props => {
     }, [scrollContainerBodyWidth]);
 
     return (
-        <div style={{ paddingTop: '10px', height: '200px' }}>
+        <div style={{ height: '170px' }}>
             <h5 className="mb-2 mt-2">Visualizations</h5>
             <div
                 onScroll={() => executeUpdates()}

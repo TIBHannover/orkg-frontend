@@ -7,7 +7,7 @@ import EditorTable from 'components/ContributionEditor/EditorTable';
 import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
 import TableLoadingIndicator from 'components/ContributionEditor/TableLoadingIndicator';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
-import TableScrollContainer from 'components/Comparison/TableScrollContainer';
+import TableScrollContainer from 'components/Comparison/Table/TableScrollContainer';
 import CreateContributionModal from 'components/CreateContributionModal/CreateContributionModal';
 import CreatePaperModal from 'components/CreatePaperModal/CreatePaperModal';
 import routes from 'constants/routes';
