@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.90.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.89.0...v0.90.0) - 2023-01-24
+
+### Changes
+
+- feat(Comparison): support drag and drop, new design, edit mode [`#998`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/998)
+- ux(AddPaper): Show backend error message [`#1002`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1002)
+- fix(CORS): Loading dbpedia abstract [`#1005`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1005)
+- feat(ResearchFields): add input to copy field ID without leaving the page [`#999`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/999)
+
+---
 ## [v0.89.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.88.0...v0.89.0) - 2023-01-09
 
 ### Changes
