@@ -10,9 +10,9 @@ function DataSources() {
     return (
         <div>
             {!isLoadingMetadata && !isFailedLoadingMetadata && references?.length > 0 && (
-                <div id="dataSources" style={{ lineHeight: 1.5 }}>
-                    <h5 className="mt-5">Data sources</h5>
-                    <ul>
+                <div id="dataSources" className="py-3" style={{ lineHeight: 1.5 }}>
+                    <h5>Data sources</h5>
+                    <ul className="m-0">
                         {references.map((reference, index) => (
                             <li key={`ref${index}`}>
                                 <small>

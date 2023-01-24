@@ -1,108 +1,92 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { Container } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faPlus } from '@fortawesome/free-solid-svg-icons';
 import OrganizationCard from 'components/Cards/OrganizationCard/OrganizationCard';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import { getAllOrganizations } from 'services/backend/organizations';
-import { openAuthDialog } from 'slices/authSlice';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { getAllOrganizations, getConferences } from 'services/backend/organizations';
+import { useParams, Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { useSelector } from 'react-redux';
+import { reverse } from 'named-urls';
+import { ORGANIZATIONS_TYPES, ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 
-class Organizations extends Component {
-    constructor(props) {
-        super(props);
+const Organizations = () => {
+    const params = useParams();
+    const [organizations, setOrganizations] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [route, setRoute] = useState('');
+    const typeName = ORGANIZATIONS_TYPES.find(t => t.label === params.type).alternateLabel;
+    const user = useSelector(state => state.auth.user);
 
-        this.state = {
-            organizations: [],
-            isNextPageLoading: false,
-        };
-    }
+    useEffect(() => {
+        const loadOrganizations = type => {
+            setIsLoading(true);
+            let organizationsList = [];
+            setOrganizations([]);
+            if (type === ORGANIZATIONS_MISC.ORGANIZATION) {
+                organizationsList = getAllOrganizations();
+                setRoute(ROUTES.ORGANIZATION);
+            } else if (type === ORGANIZATIONS_MISC.CONFERENCE) {
+                organizationsList = getConferences();
+                setRoute(ROUTES.EVENT);
+            }
 
-    componentDidMount() {
-        document.title = 'Organizations - ORKG';
-        this.loadOrganizations();
-    }
-
-    loadOrganizations = () => {
-        this.setState({ isNextPageLoading: true });
-        getAllOrganizations()
-            .then(organizationsData => {
-                if (organizationsData.length > 0) {
-                    this.setState({
-                        organizations: organizationsData,
-                        isNextPageLoading: false,
-                    });
-                } else {
-                    this.setState({
-                        isNextPageLoading: false,
-                    });
-                }
-            })
-            .catch(error => {
-                this.setState({
-                    isNextPageLoading: false,
-                });
-            });
-    };
-
-    render() {
-        return (
-            <>
-                <TitleBar
-                    buttonGroup={
-                        !!this.props.user &&
-                        this.props.user.isCurationAllowed && (
-                            <RequireAuthentication
-                                component={Link}
-                                color="secondary"
-                                size="sm"
-                                className="btn btn-secondary btn-sm flex-shrink-0"
-                                to={ROUTES.ADD_ORGANIZATION}
-                            >
-                                <Icon icon={faPlus} /> Create organization
-                            </RequireAuthentication>
-                        )
+            Promise.resolve(organizationsList)
+                .then(orgs => {
+                    if (orgs.length > 0) {
+                        setOrganizations(orgs);
+                        setIsLoading(false);
+                    } else {
+                        setIsLoading(false);
                     }
-                >
-                    View all organizations
-                </TitleBar>
-                <Container className="box rounded pt-4 pb-4 ps-5 pe-5 clearfix">
-                    {this.state.organizations.length > 0 && (
-                        <div className="mt-3 row justify-content-center">
-                            {this.state.organizations.map(organization => (
-                                <OrganizationCard key={organization.display_id} organization={{ ...organization }} />
-                            ))}
-                        </div>
-                    )}
-                    {this.state.organizations.length === 0 && !this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">No organizations yet</div>
-                    )}
-                    {this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">
-                            <Icon icon={faSpinner} spin /> Loading
-                        </div>
-                    )}
-                </Container>
-            </>
-        );
-    }
-}
+                })
+                .catch(() => {
+                    setIsLoading(false);
+                });
+        };
+        loadOrganizations(typeName);
+        document.title = `${typeName}s - ORKG`;
+    }, [typeName]);
 
-const mapStateToProps = state => ({
-    user: state.auth.user,
-});
-
-const mapDispatchToProps = dispatch => ({
-    openAuthDialog: payload => dispatch(openAuthDialog(payload)),
-});
-
-Organizations.propTypes = {
-    openAuthDialog: PropTypes.func.isRequired,
-    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
+    return (
+        <>
+            <TitleBar
+                buttonGroup={
+                    !!user &&
+                    user.isCurationAllowed && (
+                        <RequireAuthentication
+                            component={Link}
+                            color="secondary"
+                            size="sm"
+                            className="btn btn-secondary btn-sm flex-shrink-0"
+                            to={reverse(ROUTES.ADD_ORGANIZATION, { type: params.type })}
+                        >
+                            <Icon icon={faPlus} /> Create {typeName}
+                        </RequireAuthentication>
+                    )
+                }
+            >
+                View all {typeName}s
+            </TitleBar>
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5 clearfix">
+                {organizations.length > 0 && (
+                    <div className="mt-3 row justify-content-center">
+                        {organizations.map(organization => (
+                            <OrganizationCard key={organization.display_id} organization={{ ...organization }} route={route} type={params.type} />
+                        ))}
+                    </div>
+                )}
+                {organizations.length === 0 && !isLoading && <div className="text-center mt-4 mb-4">No {typeName}s yet</div>}
+                {isLoading && (
+                    <div className="text-center mt-4 mb-4">
+                        <Icon icon={faSpinner} spin /> Loading
+                    </div>
+                )}
+            </Container>
+        </>
+    );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Organizations);
+export default Organizations;

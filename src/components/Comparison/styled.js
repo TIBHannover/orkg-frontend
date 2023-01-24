@@ -46,7 +46,7 @@ export const ScrollButton = styled(Button)`
         cursor: pointer;
         transition: 0.2s filter;
         padding: 0;
-        margin: 0;
+        margin: 5px 0 0 0;
         line-height: 1;
         border: 0;
 
@@ -100,6 +100,13 @@ export const ReactTableWrapper = styled.div`
                 color: ${props => props.theme.primary};
                 background: #d77171;
             }
+            // animate the background change on hover
+            .tr .td > div > div {
+                transition: background 0.2s;
+            }
+            .tr .td .columnProperty > div {
+                transition: background 0.2s;
+            }
         }
     }
 
@@ -112,6 +119,10 @@ export const ReactTableWrapper = styled.div`
                 background: #8b91a5;
             }
         }
+    }
+
+    .table > :not(caption) > * > * {
+        padding: initial; // remove default bootstrap table padding
     }
 
     .table {
@@ -135,14 +146,16 @@ export const ReactTableWrapper = styled.div`
         }
 
         .comparisonBody .tr:last-child .td > div > div:first-child {
-            border-radius: 0 0 11px 11px !important;
+            // border-radius: 0 0 0 ${props => props.theme.borderRadius} !important;
         }
 
         &.sticky {
-            overflow: scroll;
-
             .header {
                 top: 0;
+
+                .th:last-child > div > div {
+                    border-radius: 0 ${props => props.theme.borderRadius} 0 0;
+                }
             }
 
             .comparisonBody {
@@ -157,7 +170,7 @@ export const Properties = styled.div`
     margin: 0;
     height: 100%;
     position: relative;
-    background: #fff;
+    background: ${props => props.theme.light};
 
     // for contribution editor, show edit/delete buttons on hover
     &:hover .cell-buttons {
@@ -170,7 +183,7 @@ export const PropertiesInner = styled.div`
     height: 100%;
     color: #fff;
     padding: ${props => props.cellPadding ?? 10}px 10px;
-    border-bottom: ${props => (props.transpose ? '2px solid #fff!important' : '2px solid #8B91A5!important')};
+    border-bottom: ${props => (props.transpose ? 'thin solid #fff!important' : 'thin solid #8B91A5!important')};
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: normal;
@@ -179,19 +192,18 @@ export const PropertiesInner = styled.div`
     }
 
     &.first {
-        border-radius: 11px 11px 0 0;
+        border-radius: ${props => props.theme.borderRadius} 0 0 0;
         background: ${props => props.theme.secondary};
     }
 
     &.last {
-        border-radius: 0 0 11px 11px;
+        border-radius: 0 0 0 ${props => props.theme.borderRadius};
     }
 `;
 
 export const ItemHeader = styled.div`
     min-height: 50px;
-    padding: 0 10px !important;
-    background-color: #fff;
+    background-color: ${props => props.theme.light};
     margin: 0;
     height: 100%;
     position: relative;
@@ -200,7 +212,7 @@ export const ItemHeader = styled.div`
 export const ItemHeaderInner = styled.div`
     padding: 5px 10px;
     background: ${props => (!props.transpose ? props => props.theme.primary : props => props.theme.secondary)};
-    border-radius: 11px 11px 0 0;
+    border-radius: 0 0 0 0;
     color: #fff;
     height: 100%;
     word-wrap: break-word;
@@ -218,7 +230,7 @@ export const Contribution = styled.div`
     color: #fff;
     font-size: 90%;
     font-style: italic;
-    border-top: 1px solid #d75050;
+    border-top: thin solid #d75050;
     margin-top: 2px;
     padding-top: 2px;
     &.contribution-editor {
@@ -238,7 +250,7 @@ export const Delete = styled.button`
     position: absolute;
     border: 0;
     top: 0px;
-    right: 5px;
+    right: 0px;
     background: #ffa3a3;
     border-radius: 20px;
     width: 24px;
@@ -275,7 +287,7 @@ export const ClickableScrollButton = styled.button`
         cursor: e-resize;
         right: 0;
         top: 0;
-        height: 100%;
+        height: calc(100% - 2px);
         box-shadow: rgba(0, 0, 0, 0.18) -9px 0px 5px -5px inset;
 
         &:hover {
@@ -287,7 +299,7 @@ export const ClickableScrollButton = styled.button`
         cursor: w-resize;
         left: ${props => props.leftOffset};
         top: 10px;
-        height: calc(100% - 20px);
+        height: calc(100% - 12px);
 
         box-shadow: rgba(0, 0, 0, 0.18) 9px 0px 5px -5px inset;
 

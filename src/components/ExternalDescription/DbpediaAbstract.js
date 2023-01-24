@@ -4,6 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import DBPEDIA_LOGO from 'assets/img/sameas/dbpedia.png';
 import PropTypes from 'prop-types';
+import { getAbstractByURI } from 'services/dbpedia';
 
 class DbpediaAbstract extends Component {
     constructor(props) {
@@ -30,29 +31,13 @@ class DbpediaAbstract extends Component {
     getAbstract = () => {
         this.setState({ isLoading: true, loadingFailed: false });
         const resource = this.props.externalResource;
-        const endpoint = 'http://dbpedia.org/sparql';
-        const query = `SELECT ?abstract WHERE {<${resource}> <http://dbpedia.org/ontology/abstract> ?abstract . FILTER (lang(?abstract) = 'en')} LIMIT 500`;
-        const url = `${endpoint}?query=${encodeURIComponent(query)}&format=json`;
-        const self = this;
-
-        fetch(url)
-            .then(response => response.json())
-            .then(function (data) {
-                if (
-                    data.results &&
-                    data.results.bindings &&
-                    data.results.bindings.length > 0 &&
-                    data.results.bindings[0].abstract &&
-                    data.results.bindings[0].abstract.value
-                ) {
-                    self.setState({
-                        abstract: data.results.bindings[0].abstract.value,
-                        isLoading: false,
-                        loadingFailed: false,
-                    });
-                } else {
-                    this.setState({ isLoading: false, loadingFailed: true });
-                }
+        getAbstractByURI(resource)
+            .then(_abstract => {
+                this.setState({
+                    abstract: _abstract,
+                    isLoading: false,
+                    loadingFailed: !_abstract,
+                });
             })
             .catch(error => {
                 this.setState({ isLoading: false, loadingFailed: true });

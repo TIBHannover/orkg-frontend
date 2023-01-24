@@ -89,11 +89,9 @@ const RelatedFigures = () => {
 
     if (!isLoadingMetadata && !isFailedLoadingMetadata && figures?.length > 0) {
         return (
-            <>
+            <div className="py-3">
                 <GlobalStyle />
-                <h5 id="relatedFigures" className="mt-5">
-                    Related figures
-                </h5>
+                <h5 id="relatedFigures">Related figures</h5>
                 <CardColumns className="d-flex row">
                     {relatedFigures.map((figure, index) => (
                         <div className="col-sm-3" key={`figure${figure.figureId}`} ref={scrollTo} id={figure.figureId}>
@@ -123,7 +121,7 @@ const RelatedFigures = () => {
                         reactModalStyle={{ overlay: { zIndex: 1050 } }}
                     />
                 )}
-            </>
+            </div>
         );
     }
 

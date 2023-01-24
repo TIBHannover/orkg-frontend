@@ -3,8 +3,13 @@
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins';
 
+html {
+    // set to 'smooth' by bootstrap
+    // required to fix scrolling issue with react-beautiful-dnd https://github.com/atlassian/react-beautiful-dnd/issues/2441
+    scroll-behavior: auto !important;
+}
+
 body {
-  
     color: #646464;
     overflow-y: scroll; // always show scrollbars to prevent moving elements when scrollbars become visible
 }
@@ -27,15 +32,17 @@ body {
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-// intro.js 
-.introjs-ORKG-tooltip .introjs-bullets ul li a,.introjs-ORKG-tooltip .introjs-bullets ul li a.active{
+// intro.js
+.introjs-ORKG-tooltip .introjs-bullets ul li a,
+.introjs-ORKG-tooltip .introjs-bullets ul li a.active {
     background-color: $primary;
 }
-.introjs-ORKG-tooltip{
+.introjs-ORKG-tooltip {
     max-width: 550px !important;
 }
 
 // react-contexify
-.contexify_item:not(.contexify_item-disabled):hover > .contexify_itemContent, .contexify_item:not(.contexify_item-disabled):focus > .contexify_itemContent {
+.contexify_item:not(.contexify_item-disabled):hover > .contexify_itemContent,
+.contexify_item:not(.contexify_item-disabled):focus > .contexify_itemContent {
     background-color: $primary;
 }

@@ -79,7 +79,7 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
                                 name: orgResponse.name,
                                 logo: orgResponse.logo,
                                 display_id: orgResponse.display_id,
-                                metadata: orgResponse.metadata,
+                                type: orgResponse.type,
                             },
                         }))
                         .catch(() => ({
@@ -109,7 +109,7 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
                     name: orgResponse.name,
                     logo: orgResponse.logo,
                     display_id: orgResponse.display_id,
-                    metadata: orgResponse.metadata,
+                    type: orgResponse.type,
                 },
             }))
             .catch(() => Promise.resolve(null));

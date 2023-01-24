@@ -8,13 +8,14 @@ import { getComparison, createResourceData } from 'services/similarity/index';
 import { useSelector, useDispatch } from 'react-redux';
 import { reverse } from 'named-urls';
 import { useNavigate } from 'react-router-dom';
-import { filterObjectOfStatementsByPredicateAndClass, getPublicUrl } from 'utils';
+import { filterObjectOfStatementsByPredicateAndClass, getPublicUrl, getErrorMessage } from 'utils';
 import { setDoi } from 'slices/comparisonSlice';
 import { getComparisonURLConfig, getPropertyObjectFromData, activatedContributionsToList } from 'components/Comparison/hooks/helpers';
 import { saveAuthors } from 'components/AuthorsInput/helpers';
 import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
-import { getConferences } from 'services/backend/organizations';
+import { getConferencesSeries } from 'services/backend/conferences-series';
+import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
 
 function usePublish() {
     const comparisonResource = useSelector(state => state.comparison.comparisonResource);
@@ -64,8 +65,8 @@ function usePublish() {
 
     useEffect(() => {
         const getConferencesList = () => {
-            getConferences().then(response => {
-                setConferencesList(response);
+            getConferencesSeries().then(response => {
+                setConferencesList(response.content);
             });
         };
         getConferencesList();
@@ -119,9 +120,12 @@ function usePublish() {
                                 [PREDICATES.COMPARE_CONTRIBUTION]: contributionsList.map(contributionID => ({
                                     '@id': contributionID,
                                 })),
-                                [PREDICATES.HAS_PROPERTY]: predicatesList.map(predicateID => {
-                                    const property = comparisonType === 'merge' ? predicateID : getPropertyObjectFromData(data, { id: predicateID });
-                                    return { '@id': property.id, '@type': ENTITIES.PREDICATE };
+                                ...(comparisonType === 'merge' && {
+                                    [PREDICATES.HAS_PROPERTY]: predicatesList.map(predicateID => {
+                                        const property =
+                                            comparisonType === 'merge' ? predicateID : getPropertyObjectFromData(data, { id: predicateID });
+                                        return { '@id': property.id, '@type': ENTITIES.PREDICATE };
+                                    }),
                                 }),
                                 ...(comparisonResource.hasPreviousVersion && {
                                     [PREDICATES.HAS_PREVIOUS_VERSION]: [
@@ -131,7 +135,7 @@ function usePublish() {
                                     ],
                                 }),
                                 ...(conference &&
-                                    conference.metadata?.is_double_blind && {
+                                    conference.metadata?.review_process === CONFERENCE_REVIEW_MISC.DOUBLE_BLIND && {
                                         [PREDICATES.IS_ANONYMIZED]: [
                                             {
                                                 text: true,
@@ -165,7 +169,7 @@ function usePublish() {
                 publishDOI(id);
             }
         } catch (error) {
-            toast.error(`Error publishing a comparison : ${error.message}`);
+            toast.error(`Error publishing a comparison : ${getErrorMessage(error)}`);
             setIsLoading(false);
         }
     };

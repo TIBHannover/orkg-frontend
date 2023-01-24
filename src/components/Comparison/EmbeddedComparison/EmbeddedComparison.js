@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 const EmbeddedComparison = props => {
     const { isLoadingResult, data, contributions } = useComparison({
         id: props.id,
+        isEmbeddedMode: true,
     });
 
     useEffect(() => {
@@ -17,7 +18,7 @@ const EmbeddedComparison = props => {
     }, [contributions, data, isLoadingResult, props]);
     return (
         <>
-            {props.id && !isLoadingResult && contributions.length > 0 && <Comparison embeddedMode={true} />}
+            {props.id && !isLoadingResult && contributions.length > 0 && <Comparison />}
             {props.id && isLoadingResult && <ComparisonLoadingComponent />}
         </>
     );

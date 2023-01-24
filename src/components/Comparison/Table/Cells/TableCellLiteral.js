@@ -1,0 +1,49 @@
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
+import { useState } from 'react';
+import { useMeasure } from 'react-use';
+import { Button } from 'reactstrap';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faChevronCircleUp, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
+import PropTypes from 'prop-types';
+import PathTooltipContent from 'components/Comparison/Table/Cells/PathTooltipContent';
+
+const TableCellLiteral = ({ entity }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [ref, { height }] = useMeasure();
+
+    let showButton = false;
+
+    if (height >= 200) {
+        showButton = true;
+    }
+
+    return (
+        <>
+            <div ref={ref} className="overflow-hidden" style={{ maxHeight: isExpanded ? 'initial' : 200 }}>
+                <DescriptionTooltip
+                    id={entity.resourceId}
+                    _class={entity.type}
+                    extraContent={entity.pathLabels?.length > 1 ? <PathTooltipContent data={entity} cellDataValue={entity} /> : ''}
+                >
+                    <span>
+                        <ValuePlugins type="literal" options={{ inModal: true }}>
+                            {entity.label}
+                        </ValuePlugins>
+                    </span>
+                </DescriptionTooltip>
+            </div>
+            {showButton && (
+                <Button color="secondary" outline size="sm" className="mt-1 border-0" onClick={() => setIsExpanded(v => !v)}>
+                    {isExpanded ? 'Hide more' : 'Show more'} <Icon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
+                </Button>
+            )}
+        </>
+    );
+};
+
+TableCellLiteral.propTypes = {
+    entity: PropTypes.object.isRequired,
+};
+
+export default TableCellLiteral;

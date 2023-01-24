@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { createResourceStatement, deleteStatementById } from 'services/backend/statements';
-import { updateResource, createResource, getResource } from 'services/backend/resources';
+import { updateResource, createResource } from 'services/backend/resources';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateContributionLabel } from 'slices/statementBrowserSlice';
 import { toast } from 'react-toastify';
@@ -8,7 +8,6 @@ import Confirm from 'components/Confirmation/Confirmation';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
-import { getSimilarContribution } from 'services/similarity/index';
 import { useNavigate } from 'react-router-dom';
 import {
     selectContribution,
@@ -19,9 +18,6 @@ import {
 } from 'slices/viewPaperSlice';
 
 const useContributions = ({ paperId, contributionId }) => {
-    const [similarContributions, setSimilarContributions] = useState([]);
-    const [isSimilarContributionsLoading, setIsSimilarContributionsLoading] = useState(true);
-    const [isSimilarContributionsFailedLoading, setIsSimilarContributionsFailedLoading] = useState(false);
     const contributions = useSelector(state => state.viewPaper.contributions);
     const [selectedContribution, setSelectedContribution] = useState(contributionId);
     const paperResource = useSelector(state => state.viewPaper.paperResource);
@@ -42,8 +38,7 @@ const useContributions = ({ paperId, contributionId }) => {
                 }
                 const selected = contributionId && contributions.some(el => el.id === contributionId) ? contributionId : contributions[0].id;
                 setSelectedContribution(selected);
-            } catch (error) {
-                console.log(error);
+            } catch {
                 setLoadingContributionFailed(true);
             }
         }
@@ -51,7 +46,6 @@ const useContributions = ({ paperId, contributionId }) => {
 
     useEffect(() => {
         const handleSelectContribution = cId => {
-            setIsSimilarContributionsLoading(true);
             setIsLoading(true);
             // get the contribution label
             const contributionResource = contributions.find(c => c.id === selectedContribution);
@@ -66,26 +60,6 @@ const useContributions = ({ paperId, contributionId }) => {
             } else {
                 setLoadingContributionFailed(true);
             }
-            getSimilarContribution(selectedContribution)
-                .then(sContributions => {
-                    const sContributionsData = sContributions.map(paper =>
-                        // Fetch the data of each paper
-                        getResource(paper.paperId).then(paperResource => {
-                            paper.title = paperResource.label;
-                            return paper;
-                        }),
-                    );
-                    Promise.all(sContributionsData).then(results => {
-                        setSimilarContributions(results);
-                        setIsSimilarContributionsLoading(false);
-                        setIsSimilarContributionsFailedLoading(false);
-                    });
-                })
-                .catch(error => {
-                    setSimilarContributions([]);
-                    setIsSimilarContributionsLoading(false);
-                    setIsSimilarContributionsFailedLoading(true);
-                });
             setIsLoading(false);
         };
         handleSelectContribution(selectedContribution);
@@ -169,9 +143,6 @@ const useContributions = ({ paperId, contributionId }) => {
     return {
         isLoading,
         isLoadingContributionFailed,
-        isSimilarContributionsLoading,
-        isSimilarContributionsFailedLoading,
-        similarContributions,
         selectedContribution,
         contributions,
         paperTitle: paperResource.label,

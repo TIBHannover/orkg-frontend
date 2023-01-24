@@ -52,12 +52,13 @@ const FilterButton = styled(Button)`
     }
 `;
 
-const PropertyValue = ({ id, label, property, similar, embeddedMode, group, grouped = false, groupId }) => {
+const PropertyCell = ({ id, label, property, similar, group, grouped = false, groupId }) => {
     const [showStatementBrowser, setShowStatementBrowser] = useState(false);
     const [showFilterDialog, setShowFilterDialog] = useState(false);
     const dispatch = useDispatch();
     const updateRulesFactory = newRules => dispatch(updateRulesOfProperty(newRules, id));
     const filterControlData = useSelector(state => state.comparison.filterControlData);
+    const isEmbeddedMode = useSelector(state => state.comparison.isEmbeddedMode);
     const hiddenGroups = useSelector(state => state.comparison.hiddenGroups);
 
     const handleOpenStatementBrowser = () => {
@@ -96,7 +97,7 @@ const PropertyValue = ({ id, label, property, similar, embeddedMode, group, grou
                             </div>
                         </DescriptionTooltip>
                     </Button>
-                    {!embeddedMode && (
+                    {!isEmbeddedMode && (
                         <>
                             <FilterWrapper
                                 data={{
@@ -151,22 +152,20 @@ const PropertyValue = ({ id, label, property, similar, embeddedMode, group, grou
     );
 };
 
-PropertyValue.propTypes = {
+PropertyCell.propTypes = {
     label: PropTypes.string.isRequired,
     id: PropTypes.string,
     property: PropTypes.object.isRequired,
     similar: PropTypes.array,
     group: PropTypes.bool,
     grouped: PropTypes.bool,
-    embeddedMode: PropTypes.bool.isRequired,
     groupId: PropTypes.string,
 };
 
-PropertyValue.defaultProps = {
+PropertyCell.defaultProps = {
     label: PropTypes.string.isRequired,
     similar: PropTypes.array,
-    embeddedMode: false,
     groupId: null,
 };
 
-export default PropertyValue;
+export default PropertyCell;

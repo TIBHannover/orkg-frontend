@@ -12,6 +12,8 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { Button } from 'reactstrap';
 import { MISC } from 'constants/graphSettings';
+import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
+import capitalize from 'capitalize';
 import { StyledItemProvenanceBox } from './styled';
 
 const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contributors, createdBy, isLoadingProvenance, isLoadingContributors }) => {
@@ -51,6 +53,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                                 )}
                                 <Link
                                     to={reverse(ROUTES.ORGANIZATION, {
+                                        type: capitalize(ORGANIZATIONS_MISC.GENERAL),
                                         id: organizationInfo.display_id,
                                     })}
                                 >
