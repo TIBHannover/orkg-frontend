@@ -3,7 +3,7 @@ import { getPaperData } from 'utils';
 import ListPage from 'components/ListPage/ListPage';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import { useState } from 'react';
-import { getResourceUsageInPapers } from 'services/backend/resources';
+import { getPapersLinkedToResource } from 'services/backend/papers';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
@@ -13,16 +13,16 @@ function ResourceUsage({ id }) {
     const [totalPapers, setTotalPapers] = useState(0);
 
     const renderListItem = object => {
-        const paperCardData = statements.find(({ id: _id }) => _id === object.paper.id);
+        const paperCardData = statements.find(({ id: _id }) => _id === object.id);
         return (
             <PaperCard
                 paper={{
-                    title: object.paper.label,
-                    ...object.paper,
-                    ...(!paperCardData ? { isLoading: true } : getPaperData(object.paper, paperCardData?.statements)),
+                    title: object.label,
+                    ...object,
+                    ...(!paperCardData ? { isLoading: true } : getPaperData(object, paperCardData?.statements)),
                 }}
                 paths={object.path}
-                key={object.paper.id}
+                key={object.id}
             />
         );
     };
@@ -32,7 +32,7 @@ function ResourceUsage({ id }) {
             content: items,
             last,
             totalElements,
-        } = await getResourceUsageInPapers({
+        } = await getPapersLinkedToResource({
             id,
             page,
             items: pageSize,
@@ -40,7 +40,7 @@ function ResourceUsage({ id }) {
         setTotalPapers(totalElements);
         // promise to prevent blocking loading of the additional paper data
         if (items.length > 0) {
-            getStatementsBySubjects({ ids: items.map(p => p.paper.id) }).then(_statements => {
+            getStatementsBySubjects({ ids: items.map(p => p.id) }).then(_statements => {
                 setStatements(prevStatements => [...prevStatements, ..._statements]);
             });
         }
