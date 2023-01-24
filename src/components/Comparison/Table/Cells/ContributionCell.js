@@ -1,0 +1,47 @@
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { removeContribution } from 'slices/comparisonSlice';
+import { Contribution, Delete } from 'components/Comparison/styled';
+import { memo } from 'react';
+import { isEqual } from 'lodash';
+
+const ContributionCell = ({ contribution }) => {
+    const dispatch = useDispatch();
+    const contributions = useSelector(state => state.comparison.contributions);
+    const isEditing = useSelector(state => state.comparison.isEditing);
+    const isEmbeddedMode = useSelector(state => state.comparison.isEmbeddedMode);
+
+    return (
+        <>
+            <Link
+                to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
+                    resourceId: contribution.paperId,
+                    contributionId: contribution.id,
+                })}
+            >
+                {contribution.title ? contribution.title : <em>No title</em>}
+            </Link>
+            <br />
+            <Contribution>
+                {contribution.contributionLabel} {contribution.year && `- ${contribution.year}`}
+            </Contribution>
+
+            {isEditing && !isEmbeddedMode && contributions.filter(_contribution => _contribution.active).length > 2 && (
+                <Delete onClick={() => dispatch(removeContribution(contribution.id))}>
+                    <Icon icon={faTimes} />
+                </Delete>
+            )}
+        </>
+    );
+};
+
+ContributionCell.propTypes = {
+    contribution: PropTypes.object.isRequired,
+};
+
+export default memo(ContributionCell, isEqual);

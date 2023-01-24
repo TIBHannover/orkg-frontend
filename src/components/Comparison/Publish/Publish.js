@@ -23,6 +23,7 @@ import { CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 import usePublish from 'components/Comparison/hooks/usePublish';
+import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
 
 const StyledCustomInput = styled(Input)`
     margin-right: 0;
@@ -288,27 +289,28 @@ function Publish(props) {
                                     </AuthorTag>
                                 ))}
                         </FormGroup>
-                        {!id && (!conference || !conference.metadata.is_double_blind) && (
-                            <FormGroup>
-                                <div>
-                                    <Tooltip message="A DOI will be assigned to published comparison and it cannot be changed in future.">
-                                        <StyledCustomInput
-                                            onChange={e => {
-                                                setAssignDOI(e.target.checked);
-                                            }}
-                                            checked={assignDOI}
-                                            id="switchAssignDoi"
-                                            type="switch"
-                                            name="customSwitch"
-                                            label="Assign a DOI to the comparison"
-                                        />{' '}
-                                        <Label for="switchAssignDoi" className="mb-0">
-                                            Assign a DOI to the comparison
-                                        </Label>
-                                    </Tooltip>
-                                </div>
-                            </FormGroup>
-                        )}
+                        {!id &&
+                            (!conference || conference.metadata.review_process !== CONFERENCE_REVIEW_MISC.DOUBLE_BLIND) && (
+                                <FormGroup>
+                                    <div>
+                                        <Tooltip message="A DOI will be assigned to published comparison and it cannot be changed in future.">
+                                            <StyledCustomInput
+                                                onChange={e => {
+                                                    setAssignDOI(e.target.checked);
+                                                }}
+                                                checked={assignDOI}
+                                                id="switchAssignDoi"
+                                                type="switch"
+                                                name="customSwitch"
+                                                label="Assign a DOI to the comparison"
+                                            />{' '}
+                                            <Label for="switchAssignDoi" className="mb-0">
+                                                Assign a DOI to the comparison
+                                            </Label>
+                                        </Tooltip>
+                                    </div>
+                                </FormGroup>
+                            )}
                         <FormGroup>
                             <Label>
                                 <Tooltip message="Enter a reference to the data sources from which the comparison is generated">

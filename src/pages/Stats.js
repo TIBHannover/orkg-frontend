@@ -7,6 +7,8 @@ import { getStats } from 'services/backend/stats';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
+import capitalize from 'capitalize';
 
 const Stats = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -50,7 +52,7 @@ const Stats = () => {
                 </Row>
                 <Row>
                     <ColoredStatsBox number={stats.users} label="Users" isLoading={isLoading} />
-                    <ColoredStatsBox link={reverse(ROUTES.ORGANIZATIONS)} number={stats.organizations} label="Organizations" isLoading={isLoading} />
+                    <ColoredStatsBox link={reverse(ROUTES.ORGANIZATIONS, { type: capitalize(ORGANIZATIONS_MISC.GENERAL) })} number={stats.organizations} label="Organizations" isLoading={isLoading} />
                     <ColoredStatsBox link={reverse(ROUTES.OBSERVATORIES)} number={stats.observatories} label="Observatories" isLoading={isLoading} />
                     <ColoredStatsBox
                         link={reverse(ROUTES.BENCHMARKS)}

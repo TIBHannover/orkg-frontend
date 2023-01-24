@@ -1,22 +1,24 @@
-import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import { useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import { Button } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import { ValueItemStyle, PulsateIcon } from 'components/StatementBrowser/styled';
-import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import { Link } from 'react-router-dom';
-import { getResourceLink, reverseWithSlug } from 'utils';
-import ROUTES from 'constants/routes';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
-import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
-import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
-import ValueDatatype from './ValueDatatype/ValueDatatype';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
+import { ValueItemStyle } from 'components/StatementBrowser/styled';
+import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
+import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { Cookies } from 'react-cookie';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { Button } from 'reactstrap';
+import { getResourceLink, reverseWithSlug } from 'utils';
 import useValueItem from './hooks/useValueItem';
+import ValueDatatype from './ValueDatatype/ValueDatatype';
+import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
 
 const cookies = new Cookies();
 
@@ -34,6 +36,8 @@ const ValueItem = props => {
         formattedLabel,
     } = useValueItem({ valueId: props.id, propertyId: props.propertyId, syncBackend: props.syncBackend, contextStyle: props.contextStyle });
 
+    const [isTooltipVisible, setIsTooltipVisible] = useState(props.showHelp && value._class === ENTITIES.RESOURCE);
+
     const resourcesAsLinks = useSelector(state => state.statementBrowser.resourcesAsLinks);
     const preferences = useSelector(state => state.statementBrowser.preferences);
     const existingResourceId = resource ? resource.existingResourceId : false;
@@ -44,6 +48,11 @@ const ValueItem = props => {
     } else if (value._class !== ENTITIES.LITERAL) {
         handleOnClick = handleResourceClick;
     }
+
+    const dismissResourceTooltip = () => {
+        cookies.set('showedValueHelp', true, { path: env('PUBLIC_URL'), maxAge: 2628000 });
+        setIsTooltipVisible(false);
+    };
 
     return (
         <>
@@ -75,36 +84,52 @@ const ValueItem = props => {
                                                     {resource.label} <Icon icon={faExternalLinkAlt} />
                                                 </Link>
                                             ) : (
-                                                <Button
-                                                    className="p-0 text-start objectLabel"
-                                                    color="link"
-                                                    onClick={() => {
-                                                        cookies.set('showedValueHelp', true, { path: env('PUBLIC_URL'), maxAge: 604800 });
-                                                        handleOnClick();
-                                                    }}
-                                                    style={{ userSelect: 'text' }}
+                                                <Tippy
+                                                    visible={isTooltipVisible}
+                                                    appendTo={document.body}
+                                                    interactive
+                                                    zIndex={1}
+                                                    content={
+                                                        <div style={{ padding: 5 }}>
+                                                            Click on a resource <br />
+                                                            for more details.
+                                                            <div className="text-end">
+                                                                <Button
+                                                                    color="link"
+                                                                    size="sm"
+                                                                    className="p-0 fw-bold text-decoration-none mt-2 text-white"
+                                                                    onClick={dismissResourceTooltip}
+                                                                >
+                                                                    Got it
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                    }
                                                 >
-                                                    {value._class === ENTITIES.CLASS && <div className="typeCircle">C</div>}
-                                                    {value._class === ENTITIES.PREDICATE && <div className="typeCircle">P</div>}
-                                                    {props.showHelp && value._class === ENTITIES.RESOURCE ? (
-                                                        <span style={{ position: 'relative' }}>
-                                                            <PulsateIcon />
+                                                    <span>
+                                                        <Button
+                                                            className="p-0 text-start objectLabel"
+                                                            color="link"
+                                                            onClick={() => {
+                                                                dismissResourceTooltip();
+                                                                handleOnClick();
+                                                            }}
+                                                            style={{ userSelect: 'text' }}
+                                                        >
+                                                            {value._class === ENTITIES.CLASS && <div className="typeCircle">C</div>}
+                                                            {value._class === ENTITIES.PREDICATE && <div className="typeCircle">P</div>}
                                                             <ValuePlugins type="resource">
                                                                 {formattedLabel !== '' ? formattedLabel.toString() : <i>No label</i>}
                                                             </ValuePlugins>
-                                                        </span>
-                                                    ) : (
-                                                        <ValuePlugins type="resource">
-                                                            {formattedLabel !== '' ? formattedLabel.toString() : <i>No label</i>}
-                                                        </ValuePlugins>
-                                                    )}
-                                                    {resource && resource.existingResourceId && openExistingResourcesInDialog && (
-                                                        <span>
-                                                            {' '}
-                                                            <Icon icon={faExternalLinkAlt} />
-                                                        </span>
-                                                    )}
-                                                </Button>
+                                                            {resource && resource.existingResourceId && openExistingResourcesInDialog && (
+                                                                <span>
+                                                                    {' '}
+                                                                    <Icon icon={faExternalLinkAlt} />
+                                                                </span>
+                                                            )}
+                                                        </Button>
+                                                    </span>
+                                                </Tippy>
                                             )}
                                         </>
                                     )}

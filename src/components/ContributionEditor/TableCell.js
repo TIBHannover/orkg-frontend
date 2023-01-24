@@ -1,6 +1,6 @@
 import TableCellValue from 'components/ContributionEditor/TableCellValue';
 import TableCellValueCreate from 'components/ContributionEditor/TableCellValueCreate';
-import { Item, ItemInner } from 'components/Comparison/TableCell';
+import { Item, ItemInner } from 'components/Comparison/Table/Cells/TableCell';
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
