@@ -21,7 +21,13 @@ const ComparisonAuthorsModel = ({ comparisonId, toggle }) => {
                 <ListGroup flush className="overflow-hidden rounded">
                     {authors.map((author, index) => (
                         <ListGroupItem className="py-2 px-4" key={index}>
-                            <AuthorCard author={author.author.value} papers={author.info} isVisibleGoogleScholar />
+                            <AuthorCard
+                                author={author.author.value}
+                                papers={author.info}
+                                isVisibleGoogleScholar
+                                isVisibleShowCitations
+                                semanticScholarAuthors={author.semanticScholarAuthors}
+                            />
                         </ListGroupItem>
                     ))}
 

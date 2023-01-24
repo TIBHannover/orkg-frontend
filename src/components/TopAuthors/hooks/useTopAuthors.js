@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getAuthorsByComparisonId } from 'services/backend/comparisons';
 import { getAuthorsByResearchProblemId } from 'services/backend/problems';
 
@@ -55,12 +55,6 @@ function useTopAuthors({ researchProblemId = null, comparisonId = null, pageSize
         loadAuthors(0);
     }, [loadAuthors]);
 
-    const handleLoadMore = () => {
-        if (!isLoading) {
-            loadAuthors(page);
-        }
-    };
-
-    return { authors, isLoading, page, handleLoadMore, isLast, loadNext };
+    return { authors, isLoading, page, isLast, loadNext };
 }
 export default useTopAuthors;

@@ -35,6 +35,7 @@ const ResearchProblemAuthorsModal = ({ researchProblemId, openModal, setOpenModa
                                         author={author.author.value}
                                         paperAmount={pluralize('paper', author.papers, true)}
                                         isVisibleGoogleScholar
+                                        isVisibleShowCitations
                                     />
                                 </div>
                             </div>

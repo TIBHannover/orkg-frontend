@@ -1,51 +1,115 @@
-import { faFile, faGraduationCap } from '@fortawesome/free-solid-svg-icons';
+import { faFile, faGraduationCap, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes';
 import { isString } from 'lodash';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { Fragment } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Badge, FormGroup, Input, Label, ListGroup, ListGroupItem } from 'reactstrap';
+import { getAuthorsByLabel } from 'services/semanticScholar';
 
 const GOOGLE_SCHOLAR_URL = 'https://scholar.google.com/scholar?q=';
 
-function AuthorCard({ author, paperAmount = null, papers = null, isVisibleGoogleScholar = false }) {
+const SEMANTIC_SCHOLAR_AUTHORS_LIMIT = 3;
+function AuthorCard({ author, paperAmount = null, papers = null, isVisibleGoogleScholar = false, isVisibleShowCitations = false }) {
+    const [isCitationsEnabled, setIsCitationsEnabled] = useState(false);
+    const [semanticScholarAuthors, setSemanticScholarAuthors] = useState([]);
+    const [isLoadingSemanticScholar, setIsLoadingSemanticScholar] = useState(false);
+    const [isLoadedSemanticScholar, setIsLoadedSemanticScholar] = useState(false);
+    const authorLabel = isString(author) ? author : author?.label;
+
+    useEffect(() => {
+        (async () => {
+            if (!isCitationsEnabled || !authorLabel || isLoadedSemanticScholar) {
+                return;
+            }
+
+            try {
+                setIsLoadingSemanticScholar(true);
+                setSemanticScholarAuthors((await getAuthorsByLabel({ label: authorLabel, limit: SEMANTIC_SCHOLAR_AUTHORS_LIMIT }))?.data ?? []);
+                setIsLoadingSemanticScholar(false);
+                setIsLoadedSemanticScholar(true);
+            } catch (e) {
+                toast.error('Error while loading Semantic Scholar citation data. Please try it again in a few minutes.');
+                console.error(e);
+            }
+        })();
+    }, [authorLabel, isCitationsEnabled, isLoadedSemanticScholar, semanticScholarAuthors]);
+
     return (
         <>
-            <div>
+            <div className="d-flex justify-content-between">
                 {!isString(author) && (
                     <Link to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })} target="_blank">
                         {author.label}
                     </Link>
                 )}
                 {isString(author) && <span>{author}</span>}
+                {isVisibleShowCitations && (
+                    <small>
+                        <FormGroup switch className="d-inline-block ms-3">
+                            <Label check>
+                                <Input type="switch" role="switch" checked={isCitationsEnabled} onChange={() => setIsCitationsEnabled(v => !v)} />
+                                <Tippy
+                                    interactive
+                                    content={
+                                        <>
+                                            This feature is in beta, citation counts might be inaccurate or wrong. Citation data provided by{' '}
+                                            <a href="https://www.semanticscholar.org/" target="_blank" rel="noreferrer">
+                                                Semantic Scholar
+                                            </a>
+                                            .
+                                        </>
+                                    }
+                                >
+                                    <span>Show citations</span>
+                                </Tippy>
+                            </Label>
+                        </FormGroup>
+                    </small>
+                )}
             </div>
             <small>
                 {isVisibleGoogleScholar && (
-                    <span>
-                        <a href={GOOGLE_SCHOLAR_URL + encodeURIComponent(isString(author) ? author : author.label)} target="_blank" rel="noreferrer">
-                            <Icon icon={faGraduationCap} /> <span>Google Scholar</span>
-                        </a>
-                        <span className="px-1 text-muted">•</span>
-                    </span>
+                    <a href={GOOGLE_SCHOLAR_URL + encodeURIComponent(authorLabel)} target="_blank" rel="noreferrer" className="me-2">
+                        <Badge color="light" size="sm">
+                            <Icon icon={faGraduationCap} className="text-primary" /> <span>Google Scholar</span>
+                        </Badge>
+                    </a>
                 )}
-                {paperAmount && (
-                    <>
-                        <span className="text-muted">{paperAmount}</span>
-                    </>
-                )}
+                {paperAmount && <span className="text-muted">{paperAmount}</span>}
                 {papers &&
                     papers.map((paper, index) => (
-                        <Fragment key={index}>
-                            {' '}
-                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.paper_id })} target="_blank">
-                                <Icon icon={faFile} />{' '}
-                                <span className="text-primary">{moment.localeData().ordinal(paper.author_index + 1)} author</span>
-                            </Link>
-                            {papers.length < index && <span className="px-1 text-muted">•</span>}
-                        </Fragment>
+                        <Link key={index} to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.paper_id })} target="_blank">
+                            <Badge color="light" size="sm">
+                                <Icon icon={faFile} className="text-primary" /> {moment.localeData().ordinal(paper.author_index + 1)} author
+                            </Badge>
+                        </Link>
                     ))}
+
+                {isCitationsEnabled && (
+                    <ListGroup className="my-2">
+                        {semanticScholarAuthors.length > 0 &&
+                            semanticScholarAuthors.map(result => (
+                                <ListGroupItem key={result.authorId}>
+                                    <a href={result.url} target="_blank" rel="noreferrer">
+                                        {result.name}
+                                    </a>{' '}
+                                    - Citations {result.citationCount} - h-index {result.hIndex}
+                                </ListGroupItem>
+                            ))}
+                        {isLoadedSemanticScholar && semanticScholarAuthors.length === 0 && <ListGroupItem>Author not found</ListGroupItem>}
+                        {isLoadingSemanticScholar && (
+                            <ListGroupItem>
+                                <Icon icon={faSpinner} spin /> Loading
+                            </ListGroupItem>
+                        )}
+                    </ListGroup>
+                )}
             </small>
         </>
     );
@@ -55,7 +119,9 @@ AuthorCard.propTypes = {
     author: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
     paperAmount: PropTypes.string,
     papers: PropTypes.array,
+    semanticScholarAuthors: PropTypes.array,
     isVisibleGoogleScholar: PropTypes.bool,
+    isVisibleShowCitations: PropTypes.bool,
 };
 
 export default AuthorCard;
