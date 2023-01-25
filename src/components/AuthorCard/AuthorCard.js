@@ -75,17 +75,17 @@ function AuthorCard({ author, paperAmount = null, papers = null, isVisibleGoogle
             </div>
             <small>
                 {isVisibleGoogleScholar && (
-                    <a href={GOOGLE_SCHOLAR_URL + encodeURIComponent(authorLabel)} target="_blank" rel="noreferrer" className="me-2">
+                    <a href={GOOGLE_SCHOLAR_URL + encodeURIComponent(authorLabel)} target="_blank" rel="noreferrer" className="me-1">
                         <Badge color="light" size="sm">
                             <Icon icon={faGraduationCap} className="text-primary" /> <span>Google Scholar</span>
                         </Badge>
                     </a>
                 )}
-                {paperAmount && <span className="text-muted">{paperAmount}</span>}
+                {paperAmount && <span className="text-muted ms-1">{paperAmount}</span>}
                 {papers &&
                     papers.map((paper, index) => (
                         <Link key={index} to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.paper_id })} target="_blank">
-                            <Badge color="light" size="sm">
+                            <Badge color="light" size="sm" className="ms-1">
                                 <Icon icon={faFile} className="text-primary" /> {moment.localeData().ordinal(paper.author_index + 1)} author
                             </Badge>
                         </Link>
