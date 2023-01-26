@@ -7,6 +7,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleUp, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import PathTooltipContent from 'components/Comparison/Table/Cells/PathTooltipContent';
+import Tippy from '@tippyjs/react';
 
 const TableCellLiteral = ({ entity }) => {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -34,9 +35,13 @@ const TableCellLiteral = ({ entity }) => {
                 </DescriptionTooltip>
             </div>
             {showButton && (
-                <Button color="secondary" outline size="sm" className="mt-1 border-0" onClick={() => setIsExpanded(v => !v)}>
-                    {isExpanded ? 'Hide more' : 'Show more'} <Icon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
-                </Button>
+                <Tippy content={entity.label} disabled={isExpanded}>
+                    <span>
+                        <Button color="secondary" outline size="sm" className="mt-1 border-0" onClick={() => setIsExpanded(v => !v)}>
+                            {isExpanded ? 'Hide more' : 'Show more'} <Icon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
+                        </Button>
+                    </span>
+                </Tippy>
             )}
         </>
     );
