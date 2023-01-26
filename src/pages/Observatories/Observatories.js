@@ -1,14 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ObservatoryCard from 'components/Cards/ObservatoryCard/ObservatoryCard';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import TitleBar from 'components/TitleBar/TitleBar';
+import { groupBy } from 'lodash';
+import { useCallback, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Col, Container, NavLink, Row, TabContent, TabPane } from 'reactstrap';
 import { getAllObservatories, getObservatoriesStats } from 'services/backend/observatories';
 import { getAllOrganizations } from 'services/backend/organizations';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { useLocation } from 'react-router-dom';
-import { Container, Col, Row, TabContent, TabPane, NavLink } from 'reactstrap';
 import styled from 'styled-components';
-import { groupBy } from 'lodash';
-import TitleBar from 'components/TitleBar/TitleBar';
 
 const TabPaneStyled = styled(TabPane)`
     border-top: 0;
@@ -64,58 +64,53 @@ const Observatories = () => {
             return;
         }
 
-        const activeTab = hash.replace('#', '');
+        const _activeTab = hash.replace('#', '');
 
-        setActiveTab(parseInt(activeTab));
+        setActiveTab(parseInt(_activeTab, 10));
     }, [location]);
-
-    useEffect(() => {
-        document.title = 'Observatories - ORKG';
-        loadObservatories();
-        updateActiveTab();
-    }, [updateActiveTab]);
 
     useEffect(() => {
         updateActiveTab();
     }, [location, updateActiveTab]);
 
-    const loadObservatories = () => {
+    const loadObservatories = async () => {
         setIsNextPageLoading(true);
-        const observatories = getAllObservatories();
-        const obsStats = getObservatoriesStats();
-        const organizations = getAllOrganizations();
 
-        Promise.all([observatories, obsStats, organizations])
-            .then(async data => {
-                const observatoriesData = [];
-                for (const observatory of data[0]) {
-                    const obsresource = data[1].find(el => el.observatory_id === observatory.id);
-                    if (obsresource) {
-                        observatory.numPapers = obsresource.resources;
-                        observatory.numComparisons = obsresource.comparisons;
-                    } else {
-                        observatory.numPapers = 0;
-                        observatory.numComparisons = 0;
-                    }
+        try {
+            const observatoriesPromise = getAllObservatories();
+            const observatoryStatsPromise = getObservatoriesStats();
+            const organizationsPromise = getAllOrganizations();
+            const data = await Promise.all([observatoriesPromise, observatoryStatsPromise, organizationsPromise]);
 
-                    for (let i = 0; i < observatory.organization_ids.length; i++) {
-                        const org = data[2].find(o1 => o1.id === observatory.organization_ids[i]);
-                        observatory.organization_ids[i] = org;
-                    }
-                    observatoriesData.push(observatory);
-                }
-                const g = groupBy(observatoriesData, 'research_field.label');
-                g['All research fields'] = observatoriesData;
-
-                setObservatories(g);
-                setIsNextPageLoading(false);
-                setFailedLoading(false);
-            })
-            .catch(e => {
-                setFailedLoading(true);
-                setIsNextPageLoading(false);
+            const observatoriesData = data[0].map(observatory => {
+                const observatoryResource = data[1].find(el => el.observatory_id === observatory.id);
+                return {
+                    ...observatory,
+                    numPapers: observatoryResource?.resources ?? 0,
+                    numComparisons: observatoryResource?.comparisons ?? 0,
+                    organizations: observatory.organization_ids
+                        .map(organizationId => data[2].find(o1 => o1.id === organizationId))
+                        .sort((a, b) => a.name?.toLowerCase().localeCompare(b.name?.toLowerCase())),
+                };
             });
+
+            setObservatories({
+                ...groupBy(observatoriesData, 'research_field.label'),
+                'All research fields': observatoriesData,
+            });
+            setFailedLoading(false);
+        } catch (e) {
+            console.log(e);
+            setFailedLoading(true);
+        } finally {
+            setIsNextPageLoading(false);
+        }
     };
+
+    useEffect(() => {
+        document.title = 'Observatories - ORKG';
+        loadObservatories();
+    }, []);
 
     return (
         <>
