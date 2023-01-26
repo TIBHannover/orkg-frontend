@@ -116,16 +116,18 @@ const StyledTopBar = styled.div`
     margin-bottom: 0;
     padding-top: 72px;
 
-    // For the background
-    background: #5f6474 url(${HomeBannerBg});
-    background-position-x: 0%, 0%;
-    background-position-y: 0%, 0%;
-    background-size: auto, auto;
-    background-size: cover;
+    &.home-page {
+        // For the background
+        background: #5f6474 url(${HomeBannerBg});
+        background-position-x: 0%, 0%;
+        background-position-y: 0%, 0%;
+        background-size: auto, auto;
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center 10%;
+        background-repeat: no-repeat;
+    }
     position: relative;
-    background-attachment: fixed;
-    background-position: center 10%;
-    background-repeat: no-repeat;
 `;
 
 const StyledAuthTooltip = styled(Tooltip)`
