@@ -1,26 +1,23 @@
 import { useState, useEffect } from 'react';
-import { Container, Table, Button } from 'reactstrap';
+import { Container, Button } from 'reactstrap';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getClassById } from 'services/backend/classes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faFileCsv, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
-import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
-import ClassInstances from 'components/ClassInstances/ClassInstances';
 import ImportCSVInstances from 'components/ClassInstances/ImportCSVInstances';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import InternalServerError from 'pages/InternalServerError';
 import NotFound from 'pages/NotFound';
 import { Link, useParams, useLocation } from 'react-router-dom';
-import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
-import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import TitleBar from 'components/TitleBar/TitleBar';
+import TabsContainer from 'components/Class/TabsContainer';
 
-function ClassDetails(props) {
+function ClassDetails() {
     const location = useLocation();
     const [error, setError] = useState(null);
     const [label, setLabel] = useState('');
-    const [keyInstances, setKeyInstances] = useState(1);
     const [template, setTemplate] = useState(null);
     const [uri, setURI] = useState('');
     const [isLoading, setIsLoading] = useState(true);
@@ -82,6 +79,28 @@ function ClassDetails(props) {
                                 >
                                     <Icon icon={faPlus} /> Add resource
                                 </RequireAuthentication>
+                                {!editMode ? (
+                                    <RequireAuthentication
+                                        component={Button}
+                                        className="flex-shrink-0"
+                                        color="secondary"
+                                        size="sm"
+                                        onClick={() => setEditMode(v => !v)}
+                                        style={{ marginRight: 2 }}
+                                    >
+                                        <Icon icon={faPen} /> Edit
+                                    </RequireAuthentication>
+                                ) : (
+                                    <Button
+                                        style={{ marginRight: 2 }}
+                                        className="flex-shrink-0"
+                                        color="secondary-darker"
+                                        size="sm"
+                                        onClick={() => setEditMode(v => !v)}
+                                    >
+                                        <Icon icon={faTimes} /> Stop editing
+                                    </Button>
+                                )}
                                 <RequireAuthentication component={Button} size="sm" color="secondary" onClick={() => setModalImportIsOpen(true)}>
                                     <Icon icon={faFileCsv} /> Import Instances
                                 </RequireAuthentication>
@@ -95,85 +114,8 @@ function ClassDetails(props) {
                             </i>
                         )}
                     </TitleBar>
-                    <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                        <Table bordered>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">ID</th>
-                                    <td> {params.id}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Label</th>
-                                    <td>
-                                        {label || (
-                                            <i>
-                                                <small>No label</small>
-                                            </i>
-                                        )}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">URI</th>
-                                    <td>
-                                        <i>{uri && uri !== 'null' ? <a href={uri}>{uri}</a> : 'Not Defined'}</i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Template</th>
-                                    <td>
-                                        {template ? (
-                                            <Link to={reverse(ROUTES.TEMPLATE, { id: template.id })}>{template.label}</Link>
-                                        ) : (
-                                            <i>
-                                                Not Defined <Link to={`${reverse(ROUTES.ADD_TEMPLATE)}?classID=${params.id}`}>Create a template</Link>
-                                            </i>
-                                        )}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                        <hr />
-
-                        <div className="d-flex align-items-center">
-                            <h1 className="h5 mt-4 mb-4 flex-grow-1">Statements</h1>
-                            {!editMode ? (
-                                <RequireAuthentication
-                                    component={Button}
-                                    className="flex-shrink-0"
-                                    color="secondary"
-                                    size="sm"
-                                    onClick={() => setEditMode(v => !v)}
-                                >
-                                    <Icon icon={faPen} /> Edit
-                                </RequireAuthentication>
-                            ) : (
-                                <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
-                                    <Icon icon={faTimes} /> Stop editing
-                                </Button>
-                            )}
-                        </div>
-                        <div className="clearfix">
-                            <StatementBrowser
-                                rootNodeType={ENTITIES.CLASS}
-                                enableEdit={editMode}
-                                syncBackend={editMode}
-                                openExistingResourcesInDialog={false}
-                                initialSubjectId={params.id}
-                                initialSubjectLabel={label}
-                                newStore={true}
-                                propertiesAsLinks={true}
-                                resourcesAsLinks={true}
-                            />
-                        </div>
-
-                        <ClassInstances classId={params.id} key={keyInstances} />
-                        <ImportCSVInstances
-                            classId={params.id}
-                            showDialog={modalImportIsOpen}
-                            toggle={() => setModalImportIsOpen(v => !v)}
-                            callBack={() => setKeyInstances(Math.random())}
-                        />
-                    </Container>
+                    <TabsContainer id={params.id} editMode={editMode} uri={uri} template={template} label={label} />
+                    <ImportCSVInstances classId={params.id} showDialog={modalImportIsOpen} toggle={() => setModalImportIsOpen(v => !v)} />
                 </>
             )}
         </>

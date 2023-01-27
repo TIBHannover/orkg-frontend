@@ -11,6 +11,7 @@ const routes = {
     ADD_PROPERTY: '/addProperty',
     CLASSES: '/classes',
     CLASS: '/class/:id',
+    CLASS_TABS: '/class/:id/:activeTab',
     ADD_CLASS: '/addClass',
     TEMPLATES: '/templates',
     TEMPLATE: '/template/:id',

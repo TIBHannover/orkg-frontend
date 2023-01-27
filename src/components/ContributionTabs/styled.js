@@ -71,14 +71,14 @@ export const StyledContributionTabs = styled.div`
     .rc-tabs-tabpane {
         width: 100%;
         flex: none;
-
+        background-color: #fff;
         border-radius: ${props => props.theme.borderRadius};
         border-width: ${props => props.theme.borderWidth};
         border-color: ${props => props.theme.lightDarker};
         border-style: solid;
         border-top-left-radius: 0;
         border-top-right-radius: 0;
-        padding: 10px 30px 25px;
+        padding: ${props => (props.disablePadding ? '0' : '10px 30px 25px')};
     }
     .rc-tabs {
         display: flex;
