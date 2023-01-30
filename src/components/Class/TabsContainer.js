@@ -8,6 +8,7 @@ import { reverse } from 'named-urls';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes.js';
+import TreeView from './TreeView';
 
 function TabsContainer({ id, label, uri, template, editMode }) {
     const { activeTab } = useParams();
@@ -86,6 +87,11 @@ function TabsContainer({ id, label, uri, template, editMode }) {
                                     />
                                 </div>
                             ),
+                        },
+                        {
+                            label: 'Tree view',
+                            key: 'tree',
+                            children: <TreeView id={id} label={label} />,
                         },
                         {
                             label: 'Instances',
