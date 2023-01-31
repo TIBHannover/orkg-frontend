@@ -71,7 +71,6 @@ function ClassDetails() {
                     <TitleBar
                         buttonGroup={
                             <>
-                                {' '}
                                 <RequireAuthentication
                                     component={Link}
                                     to={`${ROUTES.ADD_RESOURCE}?classes=${params.id}`}
@@ -107,8 +106,8 @@ function ClassDetails() {
                                 </RequireAuthentication>
                             </>
                         }
+                        titleAddition="Class"
                     >
-                        Class:{' '}
                         {label || (
                             <i>
                                 <small>No label</small>
