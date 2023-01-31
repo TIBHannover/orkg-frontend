@@ -21,6 +21,7 @@ function ClassDetails() {
     const [template, setTemplate] = useState(null);
     const [uri, setURI] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [keyInstances, setKeyInstances] = useState(1);
     const [modalImportIsOpen, setModalImportIsOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const params = useParams();
@@ -114,8 +115,13 @@ function ClassDetails() {
                             </i>
                         )}
                     </TitleBar>
-                    <TabsContainer id={params.id} editMode={editMode} uri={uri} template={template} label={label} />
-                    <ImportCSVInstances classId={params.id} showDialog={modalImportIsOpen} toggle={() => setModalImportIsOpen(v => !v)} />
+                    <TabsContainer id={params.id} editMode={editMode} uri={uri} template={template} label={label} key={keyInstances} />
+                    <ImportCSVInstances
+                        classId={params.id}
+                        showDialog={modalImportIsOpen}
+                        toggle={() => setModalImportIsOpen(v => !v)}
+                        callBack={() => setKeyInstances(Math.random())}
+                    />
                 </>
             )}
         </>

@@ -80,7 +80,7 @@ const ClassInstances = props => {
 
     return (
         <div className="py-2 px-4">
-            <Form inline className="mt-3">
+            <Form className="mt-3">
                 <FormGroup>
                     <Label for="searchInputField">Search</Label>
                     <Input
