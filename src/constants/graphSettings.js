@@ -70,6 +70,7 @@ export const PREDICATES = {
     SOLUTION: 'Solution',
     HAS_VIDEO: 'HasVideo',
     IS_ANONYMIZED: 'IsAnonymized',
+    REVIEW: 'Review',
 };
 
 export const CLASSES = {
