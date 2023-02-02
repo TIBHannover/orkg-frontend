@@ -118,7 +118,7 @@ const TemplateDetailsTooltip = ({ addMode, template, isTemplateLoading, source }
                     <div>
                         <b>
                             {template.predicate && template.predicate?.id !== PREDICATES.HAS_CONTRIBUTION ? 'With' : addMode ? 'Add' : 'Remove'}{' '}
-                            properties {!addMode ? '(with no values)' : ''}:{' '}
+                            properties{!addMode ? ' (with no values)' : ''}:{' '}
                         </b>
                         <ul className={`ps-3 ${template?.components?.length > 7 && 'mb-0'}`}>
                             {template.components &&

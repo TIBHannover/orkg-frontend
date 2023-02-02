@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { useDeepCompareEffect } from 'react-use';
 
 const useUsedTemplates = ({ resourceId }) => {
     const [usedTemplates, setUsedTemplates] = useState([]);
@@ -38,7 +39,7 @@ const useUsedTemplates = ({ resourceId }) => {
         [],
     );
 
-    useEffect(() => {
+    useDeepCompareEffect(() => {
         setIsLoadingUsedTemplates(true);
         const apiCalls = resource?.classes?.map(c => getTemplatesOfResourceId(c, PREDICATES.TEMPLATE_OF_CLASS, 0));
         Promise.all(apiCalls)
@@ -55,8 +56,7 @@ const useUsedTemplates = ({ resourceId }) => {
                 setUsedTemplates([]);
                 setIsLoadingUsedTemplates(false);
             });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [getTemplatesOfResourceId, JSON.stringify(resource?.classes)]);
+    }, [getTemplatesOfResourceId, resource?.classes]);
 
     return {
         usedTemplates,

@@ -71,25 +71,21 @@ const MAX_PROPERTIES_ITEMS = 8;
 
 const EntityRecognition = ({ isComputerScienceField }) => {
     const { title, abstract, nerProperties } = useSelector(state => state.addPaper);
-    const [isLoadingNER, setIsLoadingNER] = useState(false);
     const dispatch = useDispatch();
     const { handleInsertData } = useInsertData();
     const { suggestions } = useEntityRecognition({ isComputerScienceField });
-    const { recommendedPredicates, isLoadingRP } = usePredicatesRecommendation();
-    const { recommendedTemplates, isLoadingRT } = useTemplatesRecommendation();
-
+    const { recommendedPredicates } = usePredicatesRecommendation();
+    const { recommendedTemplates } = useTemplatesRecommendation();
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const [showMorePredicates, setShowMorePredicates] = useState(false);
 
     useDebounce(
         () => {
             const processNlpData = async () => {
-                setIsLoadingNER(true);
                 const data = await getNerResults({ title, abstract });
                 dispatch(setNerResources(data.resources));
                 dispatch(setNerProperties(data.properties));
                 dispatch(setNerRawResponse(data.response));
-                setIsLoadingNER(false);
             };
             if (isComputerScienceField) {
                 processNlpData();
@@ -112,13 +108,7 @@ const EntityRecognition = ({ isComputerScienceField }) => {
 
     const _recommendedPredicates = showMorePredicates ? recommendedPredicates : recommendedPredicates.slice(0, MAX_PROPERTIES_ITEMS);
 
-    const showSuggestionHeader =
-        isLoadingNER ||
-        Object.keys(suggestions).length > 0 ||
-        recommendedPredicates?.length > 0 ||
-        isLoadingRP ||
-        recommendedTemplates?.length > 0 ||
-        isLoadingRT;
+    const showSuggestionHeader = Object.keys(suggestions).length > 0 || recommendedPredicates?.length > 0 || recommendedTemplates?.length > 0;
 
     const [source, target] = useSingleton();
 
@@ -132,16 +122,7 @@ const EntityRecognition = ({ isComputerScienceField }) => {
                     </Tooltip>
                 </h3>
             )}
-            {(isLoadingRT || recommendedTemplates?.length > 0) && (
-                <h6 className="h6 mt-2">
-                    Templates{' '}
-                    {isLoadingRT && (
-                        <>
-                            <Icon icon={faSpinner} spin />
-                        </>
-                    )}
-                </h6>
-            )}
+            {recommendedTemplates?.length > 0 && <h6 className="mt-2">Templates</h6>}
             <ListGroup>
                 <TransitionGroup component={null} height="30px">
                     {recommendedTemplates.map(template => (
@@ -166,16 +147,7 @@ const EntityRecognition = ({ isComputerScienceField }) => {
                     ))}
                 </TransitionGroup>
             </ListGroup>
-            {(isLoadingNER || Object.keys(suggestions).length > 0) && (
-                <h6 className="h6 mt-2">
-                    Statements{' '}
-                    {isLoadingNER && (
-                        <>
-                            <Icon icon={faSpinner} spin />
-                        </>
-                    )}
-                </h6>
-            )}
+            {Object.keys(suggestions).length > 0 && <h6 className="mt-2">Statements</h6>}
             <ListGroup>
                 {Object.keys(suggestions).map(key => (
                     <Fragment key={key}>
@@ -211,16 +183,7 @@ const EntityRecognition = ({ isComputerScienceField }) => {
                     </Fragment>
                 ))}
             </ListGroup>
-            {(isLoadingRP || recommendedPredicates.length > 0) && (
-                <h6 className="h6 mt-1">
-                    Properties{' '}
-                    {isLoadingRP && (
-                        <>
-                            <Icon icon={faSpinner} spin />
-                        </>
-                    )}
-                </h6>
-            )}
+            {recommendedPredicates.length > 0 && <h6 className="mt-1">Properties</h6>}
             <ListGroup>
                 <TransitionGroup component={null} height="30px">
                     {_recommendedPredicates.map((p, index) => (
