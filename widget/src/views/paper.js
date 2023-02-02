@@ -5,16 +5,16 @@ import img from './logo.png';
 const dictionary = {
     add: {
         de: 'Artikel zu ORKG hinzufügen',
-        en: 'Add paper to ORKG'
+        en: 'Add paper to ORKG',
     },
     open: {
         de: 'In ORKG öffnen',
-        en: 'Open in ORKG'
+        en: 'Open in ORKG',
     },
     numStatements: {
         de: 'Anzahl der Aussagen',
-        en: 'Number of statements'
-    }
+        en: 'Number of statements',
+    },
 };
 
 export const getPaperByDoi = doi => {
@@ -27,7 +27,7 @@ export const getPaperByDoi = doi => {
                     reject({
                         error: new Error(`Error response. (${response.status}) ${response.statusText}`),
                         statusCode: response.status,
-                        statusText: response.statusText
+                        statusText: response.statusText,
                     });
                 } else {
                     const json = response.json();
@@ -44,6 +44,10 @@ export const getPaperByDoi = doi => {
 
 export function show(params) {
     const locations = document.getElementsByClassName('orkg-widget');
+    let language = params.language;
+    if (!['en', 'de'].includes(params.language)) {
+        language = 'en';
+    }
     for (let i = 0; i < locations.length; i++) {
         // convert plain HTML string into DOM elements
         const temporary = document.createElement('div');
@@ -57,8 +61,8 @@ export function show(params) {
         const doi = ORKGWidget.getAttribute('data-doi');
         getPaperByDoi(doi)
             .then(result => {
-                temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary['open'][params.language];
-                temporary.getElementsByClassName('orkg-widget-text-statements')[0].textContent = dictionary['numStatements'][params.language];
+                temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary['open'][language];
+                temporary.getElementsByClassName('orkg-widget-text-statements')[0].textContent = dictionary['numStatements'][language];
                 temporary.getElementsByClassName('orkg-widget-statements')[0].textContent = result.num_statements;
                 temporary.getElementsByClassName('orkg-widget-link')[0].href = process.env.FRONTEND_SERVER_URL + 'paper/' + result.id;
                 while (temporary.children.length > 0) {
@@ -66,7 +70,7 @@ export function show(params) {
                 }
             })
             .catch(error => {
-                temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary['add'][params.language];
+                temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary['add'][language];
                 temporary.getElementsByClassName('orkg-widget-link')[0].href = process.env.FRONTEND_SERVER_URL + 'add-paper?entry=' + doi;
                 const elem = temporary.getElementsByClassName('orkg-widget-description')[0];
                 elem.parentNode.removeChild(elem);
