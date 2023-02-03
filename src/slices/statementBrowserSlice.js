@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { LOCATION_CHANGE, guid, filterStatementsBySubjectId } from 'utils';
 import { ENTITIES, PREDICATES, CLASSES } from 'constants/graphSettings';
 import { match } from 'path-to-regexp';
-import { last, flatten, uniqBy, orderBy, uniq } from 'lodash';
+import { last, flatten, uniqBy, orderBy, uniq, has } from 'lodash';
 import ROUTES from 'constants/routes';
 import { Cookies } from 'react-cookie';
 import { getEntity } from 'services/backend/misc';
