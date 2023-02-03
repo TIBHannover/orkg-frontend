@@ -86,8 +86,8 @@ function AuthorCard({ author, paperAmount = null, papers = null, isVisibleGoogle
                     papers.map((paper, index) => (
                         <Link key={index} to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.paper_id })} target="_blank">
                             <Badge color="light" size="sm" className="ms-1">
-                                <Icon icon={faFile} className="text-primary" /> {moment.localeData().ordinal(paper.author_index + 1)} author -{' '}
-                                {paper.paper_year}
+                                <Icon icon={faFile} className="text-primary" /> {moment.localeData().ordinal(paper.author_index + 1)} author
+                                {paper.paper_year ? ` - ${paper.paper_year}` : ''}
                             </Badge>
                         </Link>
                     ))}
