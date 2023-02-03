@@ -3,6 +3,18 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.91.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.90.0...v0.91.0) - 2023-02-03
+
+### Changes
+
+- feat(AddPaper): Templates recommendation service [`#1001`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1001)
+- fix(StatementBrowser): do not apply the changes on update classes if the api request fails [`#1006`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1006)
+- fix(Widget): use English as default language [`#1010`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1010)
+- fix: prevent showing home page banner with rubber band scrolling [`#1009`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1009)
+- feat(Comparison): show tooltip for collapsed long literals [`#1008`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1008)
+- fix(Observatories): logos moving after loading [`#1007`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1007)
+
+---
 ## [v0.90.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.89.0...v0.90.0) - 2023-01-24
 
 ### Changes
