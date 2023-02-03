@@ -53,7 +53,7 @@ export const getResources = ({
 
 export const getContributorsByResourceId = id =>
     submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/contributors`).then(contributors => {
-        const c = contributors.map(contributor => {
+        const c = contributors.content.map(contributor => {
             if (contributor.created_by === MISC.UNKNOWN_ID) {
                 return { ...contributor, created_by: { id: MISC.UNKNOWN_ID, display_name: 'Unknown' } };
             }

@@ -14,7 +14,7 @@ const Timeline = ({ versions, paperResource, isLoadingContributors }) => (
                 versions?.length > 0 &&
                 versions.map((version, index) => (
                     <StyledActivity key={`prov-${index}`} className="ps-3 pb-3">
-                        <div className="time">{moment(version.created_at).format('DD MMM YYYY')}</div>
+                        <div className="time">{moment(version.created_at).format('DD MMM YYYY HH:mm')}</div>
                         <div>
                             {paperResource.created_by &&
                                 version.created_by.id === paperResource.created_by &&

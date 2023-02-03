@@ -20,15 +20,17 @@ function useProvenance() {
 
     useEffect(() => {
         const loadContributors = () => {
-            setIsLoadingContributors(true);
-            getContributorsByResourceId(paperResource.id)
-                .then(result => {
-                    setContributors(result ? result.reverse() : []);
-                    setIsLoadingContributors(false);
-                })
-                .catch(() => {
-                    setIsLoadingContributors(false);
-                });
+            if (paperResource.id) {
+                setIsLoadingContributors(true);
+                getContributorsByResourceId(paperResource.id)
+                    .then(result => {
+                        setContributors(result ? result.reverse() : []);
+                        setIsLoadingContributors(false);
+                    })
+                    .catch(() => {
+                        setIsLoadingContributors(false);
+                    });
+            }
         };
         const loadProvenance = () => {
             setIsLoadingProvenance(true);
