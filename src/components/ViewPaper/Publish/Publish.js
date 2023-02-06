@@ -34,9 +34,9 @@ function Publish(props) {
     useEffect(() => {
         const loadContributors = () => {
             if (viewPaper.paperResource.id) {
-                getContributorsByResourceId(viewPaper.paperResource.id)
+                getContributorsByResourceId({ id: viewPaper.paperResource.id, page: 0, size: 999 })
                     .then(result => {
-                        const contributorsList = result.filter(c => c.created_by.id !== MISC.UNKNOWN_ID);
+                        const contributorsList = result.content.filter(c => c.created_by.id !== MISC.UNKNOWN_ID);
                         setContributors(contributorsList ? uniqBy(contributorsList, 'created_by.id') : []);
                     })
                     .catch(() => {});
