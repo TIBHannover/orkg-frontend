@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { Alert } from 'reactstrap';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
@@ -9,6 +10,11 @@ import { StyledActivity } from './styled';
 
 const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, hasNextPageContributors, handleLoadMoreContributors }) => (
     <div>
+        <small>
+            <Alert className="rounded-0 mb-1" color="info">
+                The timeline is built based on the creation time of each resource and statement linked to the paper.
+            </Alert>
+        </small>
         <div className="pt-3 pb-3 ps-3 pe-3">
             {versions?.length > 0 &&
                 versions.map((version, index) => (
@@ -22,7 +28,7 @@ const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, h
                                         <>
                                             <Link
                                                 to={reverse(ROUTES.USER_PROFILE, {
-                                                    userId: version.created_by,
+                                                    userId: version.created_by.id,
                                                 })}
                                             >
                                                 <b>{version.created_by.display_name}</b>
