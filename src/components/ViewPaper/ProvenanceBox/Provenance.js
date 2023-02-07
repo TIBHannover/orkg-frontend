@@ -105,7 +105,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                     {!isLoadingContributors &&
                         contributors?.length > 0 &&
                         contributors
-                            .filter(c => c.created_by !== MISC.UNKNOWN_ID)
+                            .filter(c => c.created_by.id !== MISC.UNKNOWN_ID)
                             .map((contributor, index) => (
                                 <div key={`cntbrs-${contributor.id}${index}`}>
                                     <Link
