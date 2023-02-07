@@ -6,6 +6,7 @@ import { getVisualizationData } from 'utils';
 import { useSelector, useDispatch } from 'react-redux';
 import { setIsOpenVisualizationModal, setUseReconstructedDataInVisualization } from 'slices/comparisonSlice';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
 import { find } from 'lodash';
 import PreviewCarouselComponent from './PreviewCarouselComponent';
 import SingleVisualizationComponent from './SingleVisualizationComponent';
@@ -20,8 +21,8 @@ function PreviewVisualizationComparison() {
     const data = useSelector(state => state.comparison.data);
     const isLoadingMetadata = useSelector(state => state.comparison.isLoadingMetadata);
     const isFailedLoadingMetadata = useSelector(state => state.comparison.isFailedLoadingMetadata);
-    const contributions = useSelector(state => state.comparison.contributions.filter(c => c.active));
-    const properties = useSelector(state => state.comparison.properties.filter(c => c.active));
+    const contributions = useSelector(state => state.comparison.contributions);
+    const properties = useSelector(state => state.comparison.properties);
     const contributionsList = useSelector(state => state.comparison.configuration.contributionsList);
     const predicatesList = useSelector(state => state.comparison.configuration.predicatesList);
 
@@ -71,12 +72,9 @@ function PreviewVisualizationComparison() {
                 });
                 Promise.all([visObjectCalls, reconstructionModelsCalls]).then(([visObjects, reconstructionModels]) => {
                     // zip the result
-                    visObjects.forEach(v => {
-                        // eslint-disable-next-line no-param-reassign
-                        v.reconstructionModel = reconstructionModels.find(r => r.orkgOrigin === v.id);
-                    });
+                    const _visObjects = visObjects.map(v => ({ ...v, reconstructionModel: reconstructionModels.find(r => r.orkgOrigin === v.id) }));
                     // filter out the visualization that doesn't exist;
-                    const visDataObjects = visObjects.filter(v => v.reconstructionModel);
+                    const visDataObjects = _visObjects.filter(v => v.reconstructionModel);
                     setIsLoadingVisualizationData(false);
                     setVisData(visDataObjects);
                 });
@@ -90,36 +88,38 @@ function PreviewVisualizationComparison() {
 
     return (
         <div id="visualizations">
-            {!isLoadingMetadata && !isFailedLoadingMetadata && (
-                <>
-                    {!isLoadingVisualizationData && visData?.length > 0 && (
-                        <PreviewCarouselComponent>
-                            {visData.map((d, index) => (
-                                <SingleVisualizationComponent
-                                    key={`singleVisComp_${index}`}
-                                    input={d}
-                                    itemIndex={index}
-                                    expandVisualization={val => expandVisualization(val)}
-                                />
-                            ))}
-                        </PreviewCarouselComponent>
-                    )}
-                    {isLoadingVisualizationData && (
-                        <>
-                            <ContentLoader
-                                height={4}
-                                width={50}
-                                speed={2}
-                                foregroundColor="#f3f3f3"
-                                backgroundColor="#ecebeb"
-                                style={{ borderRadius: '11px', margin: '10px 0' }}
-                            >
-                                <rect x="0" y="0" rx="0" ry="0" width="50" height="100" />
-                            </ContentLoader>
-                        </>
-                    )}
-                </>
-            )}
+            <ErrorBoundary fallback="Something went wrong while loading the visualization!">
+                {!isLoadingMetadata && !isFailedLoadingMetadata && (
+                    <>
+                        {!isLoadingVisualizationData && visData?.length > 0 && (
+                            <PreviewCarouselComponent>
+                                {visData.map((d, index) => (
+                                    <SingleVisualizationComponent
+                                        key={`singleVisComp_${index}`}
+                                        input={d}
+                                        itemIndex={index}
+                                        expandVisualization={val => expandVisualization(val)}
+                                    />
+                                ))}
+                            </PreviewCarouselComponent>
+                        )}
+                        {isLoadingVisualizationData && (
+                            <>
+                                <ContentLoader
+                                    height={4}
+                                    width={50}
+                                    speed={2}
+                                    foregroundColor="#f3f3f3"
+                                    backgroundColor="#ecebeb"
+                                    style={{ borderRadius: '11px', margin: '10px 0' }}
+                                >
+                                    <rect x="0" y="0" rx="0" ry="0" width="50" height="100" />
+                                </ContentLoader>
+                            </>
+                        )}
+                    </>
+                )}
+            </ErrorBoundary>
         </div>
     );
 }
