@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.91.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.91.0...v0.91.1) - 2023-02-10
+
+### Changes
+
+- internal(SEO): Activate Search Console [`#1021`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1021)
+- docs(Readme): add missing force flag [`#1019`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1019)
+- fix(Visualization): fix broken comparisons and add error boundary [`#1018`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1018)
+
+---
 ## [v0.91.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.90.0...v0.91.0) - 2023-02-03
 
 ### Changes
