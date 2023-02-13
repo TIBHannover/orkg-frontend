@@ -2,6 +2,7 @@ import { useContext, useCallback } from 'react';
 import Select, { components } from 'react-select';
 // import { useSelector } from 'react-redux';
 import DATA_TYPES, { getConfigByType } from 'constants/DataTypes';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { ThemeContext } from 'styled-components';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import Tippy from '@tippyjs/react';
@@ -79,19 +80,29 @@ const DatatypeSelector = props => {
 
     return (
         <>
-            <Select
-                styles={customStyles}
-                classNamePrefix="react-select-dark"
-                value={getConfigByType(props.valueType)}
-                components={{ Option: CustomOption }}
-                options={!props.entity ? DATA_TYPES : DATA_TYPES.filter(dt => dt._class === props.entity)}
-                onChange={v => props.setValueType(v.type)}
-                getOptionValue={({ type }) => type}
-                getOptionLabel={({ name }) => name}
-                isClearable={false}
-                menuPortalTarget={props.menuPortalTarget}
-                inputId="datatypeSelector"
-            />
+            <ConditionalWrapper
+                condition={props.isDisabled}
+                wrapper={children => (
+                    <Tippy content="Type is determined by the template">
+                        <span>{children}</span>
+                    </Tippy>
+                )}
+            >
+                <Select
+                    styles={customStyles}
+                    classNamePrefix="react-select-dark"
+                    value={getConfigByType(props.valueType)}
+                    components={{ Option: CustomOption }}
+                    options={!props.entity ? DATA_TYPES : DATA_TYPES.filter(dt => dt._class === props.entity)}
+                    onChange={v => props.setValueType(v.type)}
+                    getOptionValue={({ type }) => type}
+                    getOptionLabel={({ name }) => name}
+                    isClearable={false}
+                    menuPortalTarget={props.menuPortalTarget}
+                    inputId="datatypeSelector"
+                    isDisabled={props.isDisabled}
+                />
+            </ConditionalWrapper>
             <SelectGlobalStyle />
         </>
     );
@@ -104,12 +115,14 @@ DatatypeSelector.propTypes = {
     disableBorderRadiusLeft: PropTypes.bool,
     disableBorderRadiusRight: PropTypes.bool,
     menuPortalTarget: PropTypes.object,
+    isDisabled: PropTypes.bool,
 };
 
 DatatypeSelector.defaultProps = {
     disableBorderRadiusLeft: false,
     disableBorderRadiusRight: true,
     menuPortalTarget: null,
+    isDisabled: false,
 };
 
 export default DatatypeSelector;
