@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import capitalize from 'capitalize';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import { useSelector } from 'react-redux';
+import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
 const OrganizationBannerStyled = styled.div`
     float: right;
@@ -42,14 +43,13 @@ const OrganizationBanner = () => {
     return (
         <OrganizationBannerStyled>
             <Link to={link} className="text-center">
-                {observatory.organization.logo && (
+
                     <img
                         className="p-2"
-                        src={observatory.organization.logo}
+                        src={getOrganizationLogoUrl(observatory.organization?.id)}
                         alt={`${observatory.organization.name} logo`}
                         style={{ maxWidth: 200, maxHeight: 60 }}
                     />
-                )}
 
                 {observatory?.name && <div>{observatory.name}</div>}
             </Link>

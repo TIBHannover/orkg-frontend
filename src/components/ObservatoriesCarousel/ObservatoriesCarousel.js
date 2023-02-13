@@ -12,6 +12,7 @@ import Gravatar from 'react-gravatar';
 import { reverse } from 'named-urls';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
+import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
 const CarouselContainer = styled.div`
     width: 100%;
@@ -83,7 +84,7 @@ function ObservatoriesCarousel(props) {
         props.observatories.map(observatory => (
             <CarouselItem onExiting={() => setAnimating(true)} onExited={() => setAnimating(false)} className="pb-1 mb-4" key={`fp${observatory.id}`}>
                 <ObservatoryCardStyled className="">
-                    {!observatory.logo && (
+
                         <Card style={{ border: 0 }}>
                             <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })} style={{ textDecoration: 'none' }}>
                                 <CardBody className="pt-0 mb-0">
@@ -104,7 +105,7 @@ function ObservatoriesCarousel(props) {
                                             o, // show only two logos
                                         ) => (
                                             <div key={`imageLogo${o.id}`} className="flex-grow-1">
-                                                <img className="orgLogo" height="60px" src={o.logo} alt={`${o.name} logo`} />
+                                                <img className="orgLogo" height="60px" src={getOrganizationLogoUrl(o?.id)} alt={`${o.name} logo`} />
                                             </div>
                                         ),
                                     )}
@@ -127,7 +128,7 @@ function ObservatoriesCarousel(props) {
                                 </div>
                             </CardFooterStyled>
                         </Card>
-                    )}
+
                 </ObservatoryCardStyled>
             </CarouselItem>
         ));

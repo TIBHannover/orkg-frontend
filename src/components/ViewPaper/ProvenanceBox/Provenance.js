@@ -14,6 +14,7 @@ import { Button } from 'reactstrap';
 import { MISC } from 'constants/graphSettings';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import capitalize from 'capitalize';
+import { getOrganizationLogoUrl } from 'services/backend/organizations';
 import { StyledItemProvenanceBox } from './styled';
 
 const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contributors, createdBy, isLoadingProvenance, isLoadingContributors }) => {
@@ -65,7 +66,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                                             height: 'auto',
                                         }}
                                         className="mx-auto d-block"
-                                        src={organizationInfo.logo}
+                                        src={getOrganizationLogoUrl(organizationInfo.id)}
                                         alt=""
                                     />
                                 </Link>

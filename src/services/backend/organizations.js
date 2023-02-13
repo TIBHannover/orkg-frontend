@@ -6,7 +6,7 @@ export const organizationsUrl = `${url}organizations/`;
 export const getAllOrganizations = () => submitGetRequest(`${organizationsUrl}`);
 
 export const getOrganization = id => submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/`);
-
+export const getOrganizationLogoUrl = id => `${organizationsUrl}${encodeURIComponent(id)}/logo`;
 export const createOrganization = (organization_name, organization_logo, created_by, url, display_id, type) =>
     submitPostRequest(
         organizationsUrl,
