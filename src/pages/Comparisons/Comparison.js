@@ -50,8 +50,6 @@ const Comparison = () => {
             <Container id="description" className="box rounded clearfix position-relative mb-4 px-5">
                 <ComparisonMetaData />
 
-                {!isLoadingResult && contributionsList.length > 1 && <PreviewVisualizationComparison />}
-
                 <AppliedFilters />
             </Container>
 
@@ -76,8 +74,11 @@ const Comparison = () => {
             </ContainerAnimated>
 
             <Container className="box rounded px-5 clearfix position-relative mt-4">
+
                 <RelatedResources />
                 <RelatedFigures />
+
+                {!isLoadingResult && contributionsList.length > 1 && <PreviewVisualizationComparison />}
                 <DataSources />
             </Container>
             {isPublished && <ProvenanceBox />}
