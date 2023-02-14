@@ -96,10 +96,7 @@ function PreviewVisualizationComparison() {
                     <>
                         {!isLoadingVisualizationData && visData?.length > 0 && (
                             <PreviewCarouselComponent>
-                                <Container >
-
-                                <Row lg={12} >
-                                <Col xs={4} sm={4} md={4} style={{ display: 'flex' }}>
+                                <Container className="d-flex">
 
                                         {visData.map((d, index) => (
                                             <SingleVisualizationComponent
@@ -109,17 +106,11 @@ function PreviewVisualizationComparison() {
                                                 expandVisualization={val => expandVisualization(val)}
                                             />
                                         ))}
-                                </Col>
 
-                                    <Col xs={12} sm={12} md={3} style={{ width: '25%', marginLeft: '4%' }}>
                                         <RelatedFigures />
-                                    </Col>
 
-                                    <Col xs={12} sm={12} md={4} style={{ width: '30%' }}>
                                         <RelatedResources />
-                                    </Col>
 
-                                </Row>
                                 </Container>
                             </PreviewCarouselComponent>
                         )}
