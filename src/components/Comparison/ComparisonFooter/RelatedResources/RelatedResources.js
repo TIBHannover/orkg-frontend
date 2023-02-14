@@ -43,13 +43,13 @@ function RelatedResources() {
     return (
         <>
             {!isLoadingMetadata && !isFailedLoadingMetadata && resources?.length > 0 && (
-                <div className="py-3">
-                    <h5 id="relatedResources">Related resources</h5>
-                    <CardColumns className="d-flex row">
+                <div className="" >
+                    {/* <h5 id="relatedResources">Related resources</h5> */}
+                    <CardColumns className="d-flex row" style={{ margin: '0px' }}>
                         {relatedResources.map((resource, index) => {
                             const isLink = new RegExp(REGEX.URL).test(resource.url);
                             return (
-                                <div className="col-sm-3" key={`rr${index}`}>
+                                <div className="col-sm-6" key={`rr${index}`}>
                                     <Card>
                                         {resource.image && <CardImg top width="100%" src={resource.image ?? ''} alt="Related resource image" />}
                                         <CardBody>

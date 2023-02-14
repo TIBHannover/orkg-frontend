@@ -8,8 +8,11 @@ import { setIsOpenVisualizationModal, setUseReconstructedDataInVisualization } f
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
 import { find } from 'lodash';
-import PreviewCarouselComponent from './PreviewCarouselComponent';
+import RelatedResources from 'components/Comparison/ComparisonFooter/RelatedResources/RelatedResources';
+import RelatedFigures from 'components/Comparison/ComparisonFooter/RelatedResources/RelatedFigures';
+import { Container, Row, Col } from 'reactstrap';
 import SingleVisualizationComponent from './SingleVisualizationComponent';
+import PreviewCarouselComponent from './PreviewCarouselComponent';
 
 function PreviewVisualizationComparison() {
     const dispatch = useDispatch();
@@ -93,14 +96,31 @@ function PreviewVisualizationComparison() {
                     <>
                         {!isLoadingVisualizationData && visData?.length > 0 && (
                             <PreviewCarouselComponent>
-                                {visData.map((d, index) => (
-                                    <SingleVisualizationComponent
-                                        key={`singleVisComp_${index}`}
-                                        input={d}
-                                        itemIndex={index}
-                                        expandVisualization={val => expandVisualization(val)}
-                                    />
-                                ))}
+                                <Container >
+
+                                <Row lg={12} >
+                                <Col xs={4} sm={4} md={4} style={{ display: 'flex' }}>
+
+                                        {visData.map((d, index) => (
+                                            <SingleVisualizationComponent
+                                                key={`singleVisComp_${index}`}
+                                                input={d}
+                                                itemIndex={index}
+                                                expandVisualization={val => expandVisualization(val)}
+                                            />
+                                        ))}
+                                </Col>
+
+                                    <Col xs={12} sm={12} md={3} style={{ width: '25%', marginLeft: '4%' }}>
+                                        <RelatedFigures />
+                                    </Col>
+
+                                    <Col xs={12} sm={12} md={4} style={{ width: '30%' }}>
+                                        <RelatedResources />
+                                    </Col>
+
+                                </Row>
+                                </Container>
                             </PreviewCarouselComponent>
                         )}
                         {isLoadingVisualizationData && (

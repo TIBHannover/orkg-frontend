@@ -12,6 +12,7 @@ import { useLocation } from 'react-router-dom';
 const CardStyled = styled(Card)`
     cursor: pointer;
     overflow: hidden;
+   
     .blink-figure {
         color: #fff;
         padding: 5px;
@@ -89,17 +90,18 @@ const RelatedFigures = () => {
 
     if (!isLoadingMetadata && !isFailedLoadingMetadata && figures?.length > 0) {
         return (
-            <div className="py-3">
+            <div className="">
                 <GlobalStyle />
-                <h5 id="relatedFigures">Related figures</h5>
-                <CardColumns className="d-flex row">
+                {/* <h5 id="relatedFigures">Related figures</h5> */}
+                <CardColumns className="d-flex row" >
                     {relatedFigures.map((figure, index) => (
-                        <div className="col-sm-3" key={`figure${figure.figureId}`} ref={scrollTo} id={figure.figureId}>
+                        <div className="col-sm-6" key={`figure${figure.figureId}`} ref={scrollTo} id={figure.figureId} >
                             <CardStyled onClick={() => openLightBox(index)}>
                                 <CardImg
                                     id={figure.figureId}
                                     top
                                     width="100%"
+                                    height="120px"
                                     src={figure.src}
                                     alt={`figure #${figure.figureId}`}
                                     className={hash === `#${figure.figureId}` ? 'blink-figure' : ''}

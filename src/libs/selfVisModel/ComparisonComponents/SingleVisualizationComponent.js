@@ -87,7 +87,7 @@ const SingleVisualizationComponent = props => {
                 maxWidth={windowWidth}
                 content={
                     <div
-                        index={props.itemIndex}
+                        // index={props.itemIndex}
                         style={{
                             overflow: 'hidden',
                             borderRadius: '4px',

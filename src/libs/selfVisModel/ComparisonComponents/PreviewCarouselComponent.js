@@ -96,15 +96,17 @@ const PreviewCarouselComponent = props => {
     }, [scrollContainerBodyWidth]);
 
     return (
-        <div style={{ height: '170px' }}>
+        <div style={{ height: '270px' }}>
             <h5 className="mb-2 mt-2">Visualizations</h5>
             <div
                 onScroll={() => executeUpdates()}
                 ref={carouselRef}
                 id="PreviewCarouselContainer"
-                style={{ display: 'flex', width: '100%', overflowX: 'hidden' }}
+
             >
+
                 {props.children}
+
             </div>
             <div style={{ display: 'block', height: '35px' }}>
                 {showArrowLeft && (
