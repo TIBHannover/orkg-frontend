@@ -131,6 +131,7 @@ const ValueForm = props => {
         <div>
             <InputGroup size="sm">
                 <DatatypeSelector
+                    valueClass={valueClass}
                     isDisabled={!((!editMode && !valueClass) || (editMode && !valueClass && value._class === ENTITIES.LITERAL))}
                     entity={editMode ? value._class : null}
                     valueType={inputDataType}

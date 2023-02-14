@@ -1,12 +1,35 @@
 import { useContext, useCallback } from 'react';
 import Select, { components } from 'react-select';
-// import { useSelector } from 'react-redux';
 import DATA_TYPES, { getConfigByType } from 'constants/DataTypes';
+import { ENTITIES } from 'constants/graphSettings';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { ThemeContext } from 'styled-components';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes.js';
+
+const TypeTooltipContent = ({ valueClass, entity, switchEntityType }) => (
+    <>
+        {valueClass || !switchEntityType ? 'Type is determined by the template.' : 'Changing the type is not possible'}
+        {valueClass && entity === ENTITIES.RESOURCE && (
+            <div>
+                Accepts instances of{' '}
+                <Link target="_blank" to={reverse(ROUTES.CLASS, { id: valueClass.id })}>
+                    {valueClass.label}
+                </Link>
+            </div>
+        )}
+    </>
+);
+
+TypeTooltipContent.propTypes = {
+    entity: PropTypes.string,
+    valueClass: PropTypes.object,
+    switchEntityType: PropTypes.bool,
+};
 
 const DatatypeSelector = props => {
     // const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
@@ -83,7 +106,16 @@ const DatatypeSelector = props => {
             <ConditionalWrapper
                 condition={props.isDisabled}
                 wrapper={children => (
-                    <Tippy content="Type is determined by the template">
+                    <Tippy
+                        interactive
+                        content={
+                            <TypeTooltipContent
+                                switchEntityType={props.entity && DATA_TYPES.filter(dt => dt._class === props.entity).length <= 1}
+                                entity={getConfigByType(props.valueType)._class}
+                                valueClass={props.valueClass}
+                            />
+                        }
+                    >
                         <span>{children}</span>
                     </Tippy>
                 )}
@@ -116,6 +148,7 @@ DatatypeSelector.propTypes = {
     disableBorderRadiusRight: PropTypes.bool,
     menuPortalTarget: PropTypes.object,
     isDisabled: PropTypes.bool,
+    valueClass: PropTypes.object,
 };
 
 DatatypeSelector.defaultProps = {
@@ -123,6 +156,7 @@ DatatypeSelector.defaultProps = {
     disableBorderRadiusRight: true,
     menuPortalTarget: null,
     isDisabled: false,
+    valueClass: null,
 };
 
 export default DatatypeSelector;
