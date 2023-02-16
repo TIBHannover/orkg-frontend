@@ -93,7 +93,7 @@ const RelatedFigures = () => {
             <div className="">
                 <GlobalStyle />
                 {/* <h5 id="relatedFigures">Related figures</h5> */}
-                <CardColumns className="d-sm-flex row" style={{ paddingLeft: '60px', paddingRight: '60px' }} >
+                <CardColumns className="d-sm-flex row" style={{ paddingLeft: '120px', paddingRight: '60px' }} >
                     {relatedFigures.map((figure, index) => (
                         <div className="col-sm-6" key={`figure${figure.figureId}`} ref={scrollTo} id={figure.figureId} >
                             <CardStyled onClick={() => openLightBox(index)}>

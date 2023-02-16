@@ -108,10 +108,10 @@ function PreviewVisualizationComparison() {
     }, [visualizations]);
     const settings = {
         dots: false,
-        centerMode: true,
+        centerMode: false,
         infinite: true,
         speed: 500,
-        slidesToShow: 2,
+        slidesToShow: 1,
         slidesToScroll: 1,
         arrows: true,
         className: 'myCustomCarousel',
@@ -137,7 +137,7 @@ function PreviewVisualizationComparison() {
                                             <PreviewCarouselComponent>
                                                 <div className="d-sm-flex"
                                                     style={{
-                                                        paddingLeft: '60px',
+                                                        paddingLeft: '40px',
                                                         paddingRight: '60px',
 
                                                     }}

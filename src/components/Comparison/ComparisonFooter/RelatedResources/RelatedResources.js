@@ -45,7 +45,7 @@ function RelatedResources() {
             {!isLoadingMetadata && !isFailedLoadingMetadata && resources?.length > 0 && (
                 <div className="" >
                     {/* <h5 id="relatedResources">Related resources</h5> */}
-                    <CardColumns className="d-flex row" style={{ paddingLeft: '60px', paddingRight: '60px' }}>
+                    <CardColumns className="d-flex row" style={{ paddingLeft: '40px', paddingRight: '40px' }}>
                         {relatedResources.map((resource, index) => {
                             const isLink = new RegExp(REGEX.URL).test(resource.url);
                             return (
