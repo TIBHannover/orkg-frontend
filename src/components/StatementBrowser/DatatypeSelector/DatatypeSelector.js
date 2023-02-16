@@ -16,10 +16,11 @@ const TypeTooltipContent = ({ valueClass, entity, switchEntityType }) => (
         {valueClass || !switchEntityType ? 'Type is determined by the template.' : 'Changing the type is not possible'}
         {valueClass && entity === ENTITIES.RESOURCE && (
             <div>
-                Accepts instances of{' '}
+                Only instances of{' '}
                 <Link target="_blank" to={reverse(ROUTES.CLASS, { id: valueClass.id })}>
                     {valueClass.label}
-                </Link>
+                </Link>{' '}
+                are valid.
             </div>
         )}
     </>
