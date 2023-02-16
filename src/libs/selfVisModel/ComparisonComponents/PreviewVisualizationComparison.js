@@ -8,12 +8,29 @@ import { setIsOpenVisualizationModal, setUseReconstructedDataInVisualization } f
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
 import { find } from 'lodash';
+import { Container, Row, Col } from 'reactstrap';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Slider from 'react-slick';
 import RelatedResources from 'components/Comparison/ComparisonFooter/RelatedResources/RelatedResources';
 import RelatedFigures from 'components/Comparison/ComparisonFooter/RelatedResources/RelatedFigures';
-import { Container, Row, Col } from 'reactstrap';
 import SingleVisualizationComponent from './SingleVisualizationComponent';
 import PreviewCarouselComponent from './PreviewCarouselComponent';
+import './Style.css';
+// import styled from 'styled-components';
 
+// export const ChartContainer=styled.div`
+// display:flex;
+// flex-direction:row;
+// flex-wrap: wrap;
+// height:125px !important;
+// padding-left:25px;
+// margin-right:25px;
+// border:1px solid black
+// @media (max-width: 768px) {
+
+// }
+// `;
 function PreviewVisualizationComparison() {
     const dispatch = useDispatch();
     const [isLoadingVisualizationData, setIsLoadingVisualizationData] = useState(false);
@@ -30,6 +47,7 @@ function PreviewVisualizationComparison() {
     const predicatesList = useSelector(state => state.comparison.configuration.predicatesList);
 
     const model = useMemo(() => new SelfVisDataModel(), []);
+    // style={{paddingLeft:"25px",marginRight:"25px",border:"1px solid black",display:"flex",flexFlow:"row wrap"}}
 
     useEffect(() => {
         const integrateData = () => {
@@ -88,31 +106,57 @@ function PreviewVisualizationComparison() {
         };
         fetchVisualizationData();
     }, [visualizations]);
-
+    const settings = {
+        dots: false,
+        centerMode: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 2,
+        slidesToScroll: 1,
+        arrows: true,
+        className: 'myCustomCarousel',
+    };
     return (
         <div id="visualizations">
             <ErrorBoundary fallback="Something went wrong while loading the visualization!">
                 {!isLoadingMetadata && !isFailedLoadingMetadata && (
                     <>
                         {!isLoadingVisualizationData && visData?.length > 0 && (
-                            <PreviewCarouselComponent>
-                                <Container className="d-flex">
+                            <Container>
+                                <h5 className="mb-2  pt-3 pb-4">Visualizations</h5>
+                                <Row style={{ textAlign: 'center' }}>
+                                    <Slider {...settings}>
+                                    <Col md={4}>
+                                            <RelatedFigures />
+                                    </Col>
+                                        <Col md={4}>
+                                            <RelatedResources />
+                                        </Col>
+                                        <Col md={4}>
+                                            {' '}
+                                            <PreviewCarouselComponent>
+                                                <div className="d-sm-flex"
+                                                    style={{
+                                                        paddingLeft: '60px',
+                                                        paddingRight: '60px',
 
-                                        {visData.map((d, index) => (
-                                            <SingleVisualizationComponent
-                                                key={`singleVisComp_${index}`}
-                                                input={d}
-                                                itemIndex={index}
-                                                expandVisualization={val => expandVisualization(val)}
-                                            />
-                                        ))}
+                                                    }}
+                                                >
+                                                    {visData.map((d, index) => (
+                                                        <SingleVisualizationComponent
+                                                            key={`singleVisComp_${index}`}
+                                                            input={d}
+                                                            itemIndex={index}
+                                                            expandVisualization={val => expandVisualization(val)}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            </PreviewCarouselComponent>
+                                        </Col>
 
-                                        <RelatedFigures />
-
-                                        <RelatedResources />
-
-                                </Container>
-                            </PreviewCarouselComponent>
+                                    </Slider>
+                                </Row>
+                            </Container>
                         )}
                         {isLoadingVisualizationData && (
                             <>

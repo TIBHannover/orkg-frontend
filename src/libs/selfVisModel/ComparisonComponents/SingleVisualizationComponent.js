@@ -16,12 +16,17 @@ import { ENTITIES } from 'constants/graphSettings';
 import ViewVisualizationModal from 'components/ViewVisualizationModal/ViewVisualizationModal';
 import { TippyVisualization } from 'libs/selfVisModel/styled';
 
-const VisualizationCard = styled.div`
+export const VisualizationCard = styled.div`
+  
     margin: 0 2px;
     cursor: pointer;
     border: ${props => (!props.isHovered ? '1px solid rgb(219,221,229)' : '1px solid #e8616169')};
     border-radius: 5px;
     width: 220px;
+    height:122px;
+    margin-right:23px;
+    padding: 5px;
+    
 `;
 
 const DescriptionHeader = styled.div`
@@ -57,7 +62,7 @@ const SingleVisualizationComponent = props => {
         // get window dimensions to set the fullWidget into the center of the screen.
         const width = getAvailableWidth();
         setIsHovering(true);
-        setWindowHeight(0.4 * window.innerHeight);
+        setWindowHeight(0.2 * window.innerHeight);
         setWindowWidth(0.8 * width);
     };
     const handleMouseLeave = () => {
@@ -77,6 +82,7 @@ const SingleVisualizationComponent = props => {
         selfVisModel.applyReconstructionModel(props.input.reconstructionModel);
         props.expandVisualization(true);
     };
+
     return (
         <>
             <TippyVisualization
@@ -182,13 +188,14 @@ const SingleVisualizationComponent = props => {
                     isHovered={isHovering}
                     id={`#Vis${props.input.reconstructionModel.orkgOrigin}`}
                 >
-                    <div style={{ padding: '5px', pointerEvents: 'none', minWidth: '200px', minHeight: '100px' }}>
+                    <div style={{ pointerEvents: 'none' }}>
                         {renderingData && (
                             <Chart
                                 chartType={visMethod}
                                 data={renderingData}
                                 width="200px"
                                 height="100px"
+
                                 options={{
                                     width: '100%',
                                     chartArea: { height: '50%' },

@@ -96,8 +96,8 @@ const PreviewCarouselComponent = props => {
     }, [scrollContainerBodyWidth]);
 
     return (
-        <div style={{ height: '270px' }}>
-            <h5 className="mb-2 mt-2">Visualizations</h5>
+        <div style={{ height: '350px' }}>
+            {/* <h5 className="mb-2 mt-2">Visualizations</h5> */}
             <div
                 onScroll={() => executeUpdates()}
                 ref={carouselRef}

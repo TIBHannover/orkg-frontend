@@ -45,27 +45,32 @@ function RelatedResources() {
             {!isLoadingMetadata && !isFailedLoadingMetadata && resources?.length > 0 && (
                 <div className="" >
                     {/* <h5 id="relatedResources">Related resources</h5> */}
-                    <CardColumns className="d-flex row" style={{ margin: '0px' }}>
+                    <CardColumns className="d-flex row" style={{ paddingLeft: '60px', paddingRight: '60px' }}>
                         {relatedResources.map((resource, index) => {
                             const isLink = new RegExp(REGEX.URL).test(resource.url);
                             return (
                                 <div className="col-sm-6" key={`rr${index}`}>
+                                     {isLink ? (
+                                         <a href={resource.url} target="_blank" rel="noopener noreferrer">
                                     <Card>
-                                        {resource.image && <CardImg top width="100%" src={resource.image ?? ''} alt="Related resource image" />}
-                                        <CardBody>
+                                        {/* {resource.image && <CardImg top width="100%" src={resource.image ?? ''} alt="Related resource image" />} */}
+
+                                        <CardBody style={{ height: '120px' }}>
                                             {resource.title && <CardTitle>{resource.title}</CardTitle>}
                                             {resource.description && <CardText>{resource.description}</CardText>}
-                                            {isLink ? (
+
                                                 <a href={resource.url} target="_blank" rel="noopener noreferrer">
-                                                    <Button size="sm" color="secondary">
+                                                    {/* <Button size="sm" color="secondary">
                                                         Visit resource
-                                                    </Button>
+                                                    </Button> */}
                                                 </a>
-                                            ) : (
-                                                resource.url
-                                            )}
+
                                         </CardBody>
                                     </Card>
+                                         </a>
+                                     ) : (
+                                        resource.url
+                                    )}
                                 </div>
                             );
                         })}

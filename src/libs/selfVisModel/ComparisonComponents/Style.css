@@ -1,0 +1,17 @@
+.myCustomCarousel .slick-arrow {
+    color: #fff !important;
+    border: none;
+    outline: none;
+    background:rgb(232 97 97) !important;
+  }
+  .slick-prev {
+    margin-top: 3%;
+    left: 3% !important;
+    z-index: 1;
+  }
+  .slick-next {
+    margin-top: 3%;
+    right: 3% !important;
+    z-index: 1;
+  }
+ 
