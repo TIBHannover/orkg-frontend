@@ -1,5 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Container, Row } from 'reactstrap';
+import { useState, useEffect, useRef } from 'react';
+import { Container, Row, Col } from 'reactstrap';
+import { TabContent, TabPane, Nav, NavItem, NavLink, ListGroup, ListGroupItem } from 'reactstrap';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getContributorInformationById } from 'services/backend/contributors';
 import Items from 'components/UserProfile/Items';
 import { getObservatoryById } from 'services/backend/observatories';
@@ -11,13 +14,19 @@ import { useSelector } from 'react-redux';
 import Gravatar from 'react-gravatar';
 import styled from 'styled-components';
 import { CLASSES, MISC } from 'constants/graphSettings';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link, useParams } from 'react-router-dom';
-import TitleBar from 'components/TitleBar/TitleBar';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import capitalize from 'capitalize';
+import classnames from 'classnames';
+import { debounce, groupBy } from 'lodash';
+import { getResourcesByClass } from 'services/backend/resources';
+import TemplateCard from 'components/Templates/TemplateCard';
+import ListPage from 'components/ListPage/ListPage';
+import ReviewCard from 'components/ReviewCard/ReviewCard';
+import { getReviewData } from 'utils';
+import { getStatementsBySubjects } from 'services/backend/statements';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.dark};
@@ -92,6 +101,27 @@ const UserProfile = props => {
     const params = useParams();
     const { userId } = params;
     const currentUserId = useSelector(state => state.auth.user?.id);
+    const [isActiveTab, setIsActiveTab] = useState('1');
+    // code for templates
+    const pageSize = 25;
+    const [templates, setTemplates] = useState([]);
+    const [isNextPageLoading, setIsNextPageLoading] = useState(false);
+    const [hasNextPage, setHasNextPage] = useState(false);
+    const [page, setPage] = useState(0);
+    const [isLastPageReached, setIsLastPageReached] = useState(false);
+    const [totalElements, setTotalElements] = useState(0);
+
+    const [filterResearchField, setFilterResearchField] = useState(null);
+    const [filterResearchProblem, setFilterResearchProblem] = useState(null);
+    const [filterClass, setFilterClass] = useState(null);
+    const [filterLabel, setFilterLabel] = useState('');
+
+// function is written to toggle between tabs
+    const toggle = tab => {
+        if (isActiveTab !== tab) {
+            setIsActiveTab(tab);
+        }
+    };
 
     useEffect(() => {
         const getUserInformation = async () => {
@@ -184,10 +214,21 @@ const UserProfile = props => {
                                 <div className="col-md-4 mt-4 mt-md-0">
                                     {organizationData && (
                                         <StyledOrganizationCard>
-                                            <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { type: capitalize(ORGANIZATIONS_MISC.GENERAL), id: organizationData.display_id })}>
+                                            <Link
+                                                className="logoContainer"
+                                                to={reverse(ROUTES.ORGANIZATION, {
+                                                    type: capitalize(ORGANIZATIONS_MISC.GENERAL),
+                                                    id: organizationData.display_id,
+                                                })}
+                                            >
                                                 <img className="mx-auto p-2" src={organizationData.logo} alt={`${organizationData.name} logo`} />
                                             </Link>
-                                            <Link to={reverse(ROUTES.ORGANIZATION, { type: capitalize(ORGANIZATIONS_MISC.GENERAL), id: organizationData.display_id })}>
+                                            <Link
+                                                to={reverse(ROUTES.ORGANIZATION, {
+                                                    type: capitalize(ORGANIZATIONS_MISC.GENERAL),
+                                                    id: organizationData.display_id,
+                                                })}
+                                            >
                                                 {organizationData?.name}
                                             </Link>
                                         </StyledOrganizationCard>
@@ -216,7 +257,70 @@ const UserProfile = props => {
                 )}
             </Container>
 
-            <TitleBar>Published comparisons</TitleBar>
+            <Container className="mt-5">
+                <Nav tabs style={{ cursor: 'pointer' }}>
+                    <NavItem>
+                        <NavLink className={classnames({ active: isActiveTab === '1' })} onClick={() => toggle('1')}>
+                            Published comparisons
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink className={classnames({ active: isActiveTab === '2' })} onClick={() => toggle('2')}>
+                            Added papers
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink className={classnames({ active: isActiveTab === '3' })} onClick={() => toggle('3')}>
+                            Show Templates
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink className={classnames({ active: isActiveTab === '4' })} onClick={() => toggle('4')}>
+                            Show Reviews
+                        </NavLink>
+                    </NavItem>
+                </Nav>
+                <TabContent activeTab={isActiveTab}>
+                    <TabPane tabId="1">
+                        <Row>
+                            <Col sm="12">
+                                <Container className="p-0">
+                                    <Items filterLabel="comparisons" filterClass={CLASSES.COMPARISON} userId={userId} />
+                                </Container>
+                            </Col>
+                        </Row>
+                    </TabPane>
+                    <TabPane tabId="2">
+                        <Row>
+                            <Col sm="12">
+                                <Container className="p-0">
+                                    <Items filterLabel="papers" filterClass={CLASSES.PAPER} userId={userId} showDelete={userId === currentUserId} />
+                                </Container>
+                            </Col>
+                        </Row>
+                    </TabPane>
+                    <TabPane tabId="3">
+                        <Row>
+                            <Col sm="12">
+                            <Container className="p-0 mt-4">
+                                <Items filterLabel="templates" filterClass={CLASSES.TEMPLATE} userId={userId} showDelete={false} />
+                            </Container>
+                            </Col>
+                        </Row>
+                    </TabPane>
+
+                    <TabPane tabId="4">
+                        <Row>
+                            <Col sm="12">
+                            <Container className="p-0 mt-4">
+                                <Items filterLabel="reviews" filterClass={CLASSES.SMART_REVIEW_PUBLISHED} userId={userId} showDelete={false} />
+                            </Container>
+                            </Col>
+                        </Row>
+                    </TabPane>
+                </TabContent>
+            </Container>
+            {/* <TitleBar>Published comparisons</TitleBar>
             <Container className="p-0">
                 <Items filterLabel="comparisons" filterClass={CLASSES.COMPARISON} userId={userId} />
             </Container>
@@ -225,7 +329,7 @@ const UserProfile = props => {
             <Container className="p-0">
                 <Items filterLabel="papers" filterClass={CLASSES.PAPER} userId={userId} showDelete={userId === currentUserId} />
             </Container>
-            <ComparisonPopup />
+            <ComparisonPopup /> */}
             {/*
             TODO: support for activity feed
             <Container className="box mt-4 pt-4 pb-3 ps-5 pe-5">

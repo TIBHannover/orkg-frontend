@@ -65,14 +65,16 @@ const ReviewCard = ({ versions, showCurationFlags, showBadge }) => {
                         <small>
                             {!isLoadingMetaData && <Authors authors={authors} />}
                             {isLoadingMetaData && 'Loading...'}
-                            {versions[0].created_at && (
+                            {versions[0]?.created_at && (
                                 <>
-                                    <Icon size="sm" icon={faCalendar} className="ms-2 me-1" /> {moment(versions[0].created_at).format('DD-MM-YYYY')}
+                                    <Icon size="sm" icon={faCalendar} className="ms-2 me-1" /> {moment(versions[0]?.created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
                         </small>
                     </div>
+
                     {versions.length > 1 && (
+
                         <small>
                             All versions:{' '}
                             {versions.map((version, index) => (
@@ -85,6 +87,7 @@ const ReviewCard = ({ versions, showCurationFlags, showBadge }) => {
                             ))}
                         </small>
                     )}
+
                 </div>
             </div>
 
