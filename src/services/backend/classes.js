@@ -33,7 +33,16 @@ export const getClasses = ({
 /**
  * Lists all direct child classes.
  */
-export const getChildrenByID = id => submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/children`);
+export const getChildrenByID = ({ id, page = 0, size = 9999 }) => {
+    const params = queryString.stringify(
+        { page, size },
+        {
+            skipNull: true,
+            skipEmptyString: true,
+        },
+    );
+    return submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/children?${params}`);
+};
 
 /**
  * Create a class-subclass relation
@@ -72,3 +81,17 @@ export const getRootByID = id => submitGetRequest(`${classesUrl}${encodeURICompo
  * Get all root classes
  */
 export const getAllRootClasses = () => submitGetRequest(`${classesUrl}roots`);
+
+/**
+ * Get hierarchy by class ID
+ */
+export const getHierarchyByID = ({ id, page = 0, size = 9999 }) => {
+    const params = queryString.stringify(
+        { page, size },
+        {
+            skipNull: true,
+            skipEmptyString: true,
+        },
+    );
+    return submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/hierarchy?${params}`);
+};
