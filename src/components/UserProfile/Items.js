@@ -171,27 +171,9 @@ const Items = props => {
                         }
 
                        if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
-                        if (resources.length) {
-                            let items = [];
-                            // items =  getStatementsBySubjects({ ids: resources.map(item => item.id) }).then(statements =>
-                            //     statements.map(statementsForSubject =>
-                            //         getReviewData(
-                            //             resources.find(resource => resource.id === statementsForSubject.id),
-                            //             statementsForSubject.statements,
-                            //         ),
-                            //     ),
-                            // );
-
-                       const groupedByPaper = groupBy(resources, 'paperId');
-                        // const groupedByPaper=_.chain(resources).groupBy("label").map((value, key) => ({ label: key, reviews: value }))
-                        // .value();
-                        // console.log("show groupby resources",groupedByPaper);
-
-                        items = Object.keys(groupedByPaper).map(paperId => [...groupedByPaper[paperId]]);
-                      console.log('show groupby items', items[0]);
-                             return (<ReviewCard versions={items[0]} showBadge={true} />);
+                             return (<ReviewCard versions={resource} showBadge={true} />);
                                     }
-                        }
+
                         return null;
                     })}
                     {!isLoading && hasNextPage && (
