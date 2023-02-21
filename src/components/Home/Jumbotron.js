@@ -1,15 +1,29 @@
 import { Component } from 'react';
 import { Container } from 'reactstrap';
-
+import HomeBannerBg from 'assets/img/graph-background.svg';
 import styled from 'styled-components';
 import Typed from 'typed.js';
+import { color } from 'd3';
 import Video from './Video';
+
+const BackgroundBaseImage = styled.div`
+    background: #5f6474 url(${HomeBannerBg});
+    background-position-x: 0%, 0%;
+    background-position-y: 0%, 0%;
+    background-size: auto, auto;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center 10%;
+    background-repeat: no-repeat;
+    margin-bottom: 0;
+    padding-top: 72px;
+   `;
 
 const JumbotronStyled = styled.div`
     color: hsla(0, 0%, 100%, 0.6);
-
+   
     .marketing-text {
-        font-size: larger;
+        // font-size: medium;
         color:#fff;
     }
     .marketing-text-description {
@@ -59,9 +73,9 @@ export default class Jumbotron extends Component {
 
     render() {
         return (
-            <div>
-                <JumbotronStyled className="pt-4 pb-5">
-                    <Container className="position-relative text-center pb-2 pt-2">
+            <BackgroundBaseImage >
+                <JumbotronStyled className="pt-4 pb-5 background-base-image" >
+                    <Container className="position-relative text-center pb-2 pt-2 ">
                         <HeaderStyled className="text-white">
                             <div className="row">
                                 <div className="col-md-7 definition">Scholarly Knowledge.</div>
@@ -83,7 +97,7 @@ export default class Jumbotron extends Component {
                         </div>
                     </Container>
                 </JumbotronStyled>
-            </div>
+            </BackgroundBaseImage>
         );
     }
 }

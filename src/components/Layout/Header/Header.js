@@ -118,7 +118,8 @@ const StyledTopBar = styled.div`
 
     &.home-page {
         // For the background
-        background: #5f6474 url(${HomeBannerBg});
+         background: #5f6474;
+      
         background-position-x: 0%, 0%;
         background-position-y: 0%, 0%;
         background-size: auto, auto;
