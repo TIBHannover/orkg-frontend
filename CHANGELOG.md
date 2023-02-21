@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.91.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.91.1...v0.91.2) - 2023-02-21
+
+### Changes
+
+- chore: support Strapi V4 API [`#1000`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1000)
+
+---
 ## [v0.91.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.91.0...v0.91.1) - 2023-02-10
 
 ### Changes
