@@ -21,12 +21,7 @@ import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import capitalize from 'capitalize';
 import classnames from 'classnames';
 import { debounce, groupBy } from 'lodash';
-import { getResourcesByClass } from 'services/backend/resources';
-import TemplateCard from 'components/Templates/TemplateCard';
-import ListPage from 'components/ListPage/ListPage';
-import ReviewCard from 'components/ReviewCard/ReviewCard';
-import { getReviewData } from 'utils';
-import { getStatementsBySubjects } from 'services/backend/statements';
+import Reviews from './Reviews/Reviews';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.dark};

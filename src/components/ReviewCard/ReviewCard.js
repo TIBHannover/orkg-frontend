@@ -54,6 +54,7 @@ const ReviewCard = ({ versions, showCurationFlags, showBadge }) => {
                 )}
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
+
                         <Link to={reverse(ROUTES.REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
                         {showBadge && (
                             <div className="d-inline-block ms-2">
@@ -63,7 +64,7 @@ const ReviewCard = ({ versions, showCurationFlags, showBadge }) => {
                     </div>
                     <div className="mb-1">
                         <small>
-                            {!isLoadingMetaData && <Authors authors={authors} />}
+                            {!isLoadingMetaData && <Authors authors={authors || ''} />}
                             {isLoadingMetaData && 'Loading...'}
                             {versions[0]?.created_at && (
                                 <>
@@ -74,20 +75,19 @@ const ReviewCard = ({ versions, showCurationFlags, showBadge }) => {
                     </div>
 
                     {versions.length > 1 && (
-
                         <small>
                             All versions:{' '}
                             {versions.map((version, index) => (
-                                <span key={version.id}>
-                                    <Tippy content={version.description}>
-                                        <Link to={reverse(ROUTES.REVIEW, { id: version.id })}>Version {versions.length - index}</Link>
+
+                                <span key={version?.id}>
+                                    <Tippy content={version?.description || 'no description'}>
+                                        <Link to={reverse(ROUTES.REVIEW, { id: version?.id })}>Version {versions?.length - index}</Link>
                                     </Tippy>{' '}
                                     {index < versions.length - 1 && ' • '}
                                 </span>
                             ))}
                         </small>
                     )}
-
                 </div>
             </div>
 

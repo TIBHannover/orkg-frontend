@@ -70,7 +70,7 @@ const Items = props => {
                     ids: result.content.map(p => p.id),
                 })
                     .then(resourcesStatements => {
-                        const new_resources = resourcesStatements.map(resourceStatements => {
+                        let new_resources = resourcesStatements.map(resourceStatements => {
                             const resourceSubject = find(result.content, { id: resourceStatements.id });
                             if (props.filterClass === CLASSES.PAPER) {
                                 return getPaperData(resourceSubject, resourceStatements.statements);
@@ -78,12 +78,19 @@ const Items = props => {
                             if (props.filterClass === CLASSES.COMPARISON) {
                                 return getComparisonData(resourceSubject, resourceStatements.statements);
                             }
+                            if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
+                                return getReviewData(resourceSubject, resourceStatements.statements);
+                            }
                             return resourceSubject;
                         });
                         if (props.filterClass === CLASSES.COMPARISON) {
                             setResources(prevResources =>
                                 groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...new_resources]),
                             );
+                        } else if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
+                            const groupedByPaper = groupBy(new_resources, 'paperId');
+                            new_resources = Object.keys(groupedByPaper).map(paperId => [...groupedByPaper[paperId]]);
+                            setResources(prevResources => [...prevResources, ...new_resources]);
                         } else {
                             setResources(prevResources => [...prevResources, ...new_resources]);
                         }
@@ -144,9 +151,7 @@ const Items = props => {
 
     return (
         <div>
-            {console.log('show all resourcses', resources)}
             {resources.length > 0 && (
-
                 <ListGroup className="box">
                     {resources.map(resource => {
                         if (props.filterClass === CLASSES.PAPER) {
@@ -170,9 +175,9 @@ const Items = props => {
                             return <TemplateCard template={resource} />;
                         }
 
-                       if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
-                             return (<ReviewCard versions={resource} showBadge={true} />);
-                                    }
+                        if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
+                            return <ReviewCard key={resource[0]?.id} versions={resource} showBadge={true} showCurationFlags={true} />;
+                        }
 
                         return null;
                     })}
