@@ -20,7 +20,7 @@ import { groupBy } from 'lodash';
 import { getReviewData } from 'utils';
 
 const Items = props => {
-    const pageSize = props.filterClass === CLASSES.COMPARISON ? 10 : 5;
+    const pageSize = props.filterClass === CLASSES.COMPARISON ? 10 : 25;
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [page, setPage] = useState(0);
