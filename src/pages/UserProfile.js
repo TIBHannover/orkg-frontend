@@ -97,19 +97,6 @@ const UserProfile = props => {
     const { userId } = params;
     const currentUserId = useSelector(state => state.auth.user?.id);
     const [isActiveTab, setIsActiveTab] = useState('1');
-    // code for templates
-    const pageSize = 25;
-    const [templates, setTemplates] = useState([]);
-    const [isNextPageLoading, setIsNextPageLoading] = useState(false);
-    const [hasNextPage, setHasNextPage] = useState(false);
-    const [page, setPage] = useState(0);
-    const [isLastPageReached, setIsLastPageReached] = useState(false);
-    const [totalElements, setTotalElements] = useState(0);
-
-    const [filterResearchField, setFilterResearchField] = useState(null);
-    const [filterResearchProblem, setFilterResearchProblem] = useState(null);
-    const [filterClass, setFilterClass] = useState(null);
-    const [filterLabel, setFilterLabel] = useState('');
 
 // function is written to toggle between tabs
     const toggle = tab => {
