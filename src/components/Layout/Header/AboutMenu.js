@@ -29,7 +29,7 @@ const AboutMenu = ({ closeMenu }) => {
     useEffect(() => {
         const getItems = async () => {
             setIsLoading(true);
-            setItems(groupBy(await getAboutPagesMenu(), item => get(item, 'category.label', 'main')));
+            setItems(groupBy((await getAboutPagesMenu()).data, item => get(item, 'attributes.category.data.attributes.label', 'main')));
             setIsLoading(false);
         };
         getItems();
@@ -74,7 +74,7 @@ const AboutMenu = ({ closeMenu }) => {
                             </DropdownToggle>
                             {subItems.length > 0 && (
                                 <DropdownMenu>
-                                    {subItems.map(({ id, title }) => (
+                                    {subItems.map(({ id, attributes: { title } }) => (
                                         <DropdownItem
                                             key={id}
                                             tag={RouterNavLink}

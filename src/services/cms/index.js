@@ -1,32 +1,33 @@
 /**
  * Services file for CMS service
  */
-
 import env from '@beam-australia/react-env';
 import { submitGetRequest } from 'network';
 
 export const url = env('CMS_URL');
 
-export const getCategory = id => submitGetRequest(`${url}categories/${id}`);
+export const getPageByUrl = _url => submitGetRequest(`${url}pages?filters[url]=${_url}`);
 
-export const getPage = id => submitGetRequest(`${url}pages/${id}`);
-
-export const getPageByUrl = _url => submitGetRequest(`${url}pages?url=${_url}`).then(pages => pages[0] ?? null);
-
-export const getAboutPage = id => submitGetRequest(`${url}about-pages/${id}`);
+export const getAboutPage = id => submitGetRequest(`${url}about-pages/${id}?populate[category][fields][0]=id`);
 
 export const getAboutPagesMenu = (categoryId = null) =>
-    submitGetRequest(`${url}about-pages/menu?_sort=order${categoryId ? `&_category.id=${categoryId}` : ''}`).catch(() => []);
+    submitGetRequest(
+        `${url}about-pages?fields[0]=title&populate[category][fields][0]=label,order&populate[category][sort][0]=order${
+            categoryId ? `&filters[category][id][$eq]=${categoryId}` : ''
+        }`,
+    ).catch(() => []);
 
-export const getHelpArticle = id => submitGetRequest(`${url}help-articles/${id}`);
+export const getHelpArticle = id => submitGetRequest(`${url}help-articles/${id}?populate[help_category][fields][0]=id,title`);
 
 export const getHelpArticles = ({ where = '' }) => submitGetRequest(`${url}help-articles?${where}`);
 
-export const getHelpCategories = () => submitGetRequest(`${url}help-categories?_sort=order`);
+export const getHelpCategories = () =>
+    submitGetRequest(`${url}help-categories?sort=order&populate[help_articles][fields][0]=title,order&populate[help_articles][sort][0]=order`);
 
-export const getHelpCategory = id => submitGetRequest(`${url}help-categories/${id}`);
+export const getHelpCategory = id =>
+    submitGetRequest(`${url}help-categories/${id}?populate[help_articles][fields][0]=title,order&populate[help_articles][sort][0]=order`);
 
-export const getHomeAlerts = () => submitGetRequest(`${url}home-alerts`).catch(() => []);
+export const getHomeAlerts = () => submitGetRequest(`${url}home-alerts?sort=order`).catch(() => []);
 
 export const getNewsCards = ({ limit = 10, sort = 'created_at' }) =>
-    submitGetRequest(`${url}news-cards?_limit=${limit}&_sort=${sort}`).catch(() => []);
+    submitGetRequest(`${url}news-cards?pagination[pageSize]=${limit}&sort=${sort}`).catch(() => []);
