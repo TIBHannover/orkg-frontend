@@ -3,15 +3,19 @@
     border: none;
     outline: none;
     background:rgb(232 97 97) !important;
+    width:30px;
+    height:30px;
+    border-radius: 5px;
   }
   .slick-prev {
-    margin-top: 3%;
-    left: 3% !important;
+    margin-top: 2%;
+    left: 20% !important;
     z-index: 1;
+  
   }
   .slick-next {
-    margin-top: 3%;
-    right: 3% !important;
+    margin-top: 2%;
+    right: 20% !important;
     z-index: 1;
   }
  
