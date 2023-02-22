@@ -2,11 +2,12 @@ import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
+import { sortBy } from 'lodash';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Button } from 'reactstrap';
+import { Button, Table } from 'reactstrap';
 import { getChildrenByID, getParentByID } from 'services/backend/classes';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 
@@ -41,7 +42,12 @@ function InformationTab({ id, label, uri, editMode }) {
         };
         const findChildren = async () => {
             getChildrenByID({ id }).then(p => {
-                setChildren(p.content.map(c => c.class));
+                setChildren(
+                    sortBy(
+                        p.content.map(c => c.class),
+                        'label',
+                    ),
+                );
             });
         };
         findTemplate();
