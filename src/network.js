@@ -26,6 +26,10 @@ export const submitGetRequest = (url, headers, send_token = false) => {
                         statusText: response.statusText,
                     });
                 } else {
+                    if (response.status === 204) {
+                        // 204 No Content
+                        return resolve(null);
+                    }
                     const json = response.json();
                     if (json.then) {
                         json.then(resolve).catch(reject);

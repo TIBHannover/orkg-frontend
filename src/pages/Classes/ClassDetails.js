@@ -1,24 +1,21 @@
-import { useState, useEffect } from 'react';
-import { Container, Button } from 'reactstrap';
-import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
-import { getClassById } from 'services/backend/classes';
+import { faFileCsv, faPen, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPlus, faFileCsv, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
+import TabsContainer from 'components/Class/TabsContainer';
 import ImportCSVInstances from 'components/ClassInstances/ImportCSVInstances';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import TitleBar from 'components/TitleBar/TitleBar';
+import ROUTES from 'constants/routes.js';
 import InternalServerError from 'pages/InternalServerError';
 import NotFound from 'pages/NotFound';
-import { Link, useParams, useLocation } from 'react-router-dom';
-import ROUTES from 'constants/routes.js';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import TitleBar from 'components/TitleBar/TitleBar';
-import TabsContainer from 'components/Class/TabsContainer';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import { Button, Container } from 'reactstrap';
+import { getClassById } from 'services/backend/classes';
 
 function ClassDetails() {
     const location = useLocation();
     const [error, setError] = useState(null);
     const [label, setLabel] = useState('');
-    const [template, setTemplate] = useState(null);
     const [uri, setURI] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [keyInstances, setKeyInstances] = useState(1);
@@ -32,21 +29,6 @@ function ClassDetails() {
             try {
                 const responseJson = await getClassById(params.id);
                 document.title = `${responseJson.label} - Class - ORKG`;
-                // Get the template of the class
-                getStatementsByObjectAndPredicate({
-                    objectId: params.id,
-                    predicateId: PREDICATES.TEMPLATE_OF_CLASS,
-                })
-                    .then(statements =>
-                        Promise.all(statements.filter(statement => statement.subject.classes?.includes(CLASSES.TEMPLATE)).map(st => st.subject)),
-                    )
-                    .then(templates => {
-                        if (templates.length > 0) {
-                            setTemplate(templates[0]);
-                        } else {
-                            setTemplate(null);
-                        }
-                    });
                 setLabel(responseJson.label);
                 setURI(responseJson.uri);
                 setIsLoading(false);
@@ -54,7 +36,6 @@ function ClassDetails() {
             } catch (err) {
                 console.error(err);
                 setLabel(null);
-                setTemplate(null);
                 setError(err);
                 setIsLoading(false);
             }
@@ -114,7 +95,7 @@ function ClassDetails() {
                             </i>
                         )}
                     </TitleBar>
-                    <TabsContainer id={params.id} editMode={editMode} uri={uri} template={template} label={label} key={keyInstances} />
+                    <TabsContainer id={params.id} editMode={editMode} uri={uri} label={label} key={keyInstances} />
                     <ImportCSVInstances
                         classId={params.id}
                         showDialog={modalImportIsOpen}

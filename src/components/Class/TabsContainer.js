@@ -1,16 +1,15 @@
-import Tabs from 'rc-tabs';
-import { GlobalStyle, StyledContributionTabs } from 'components/ContributionTabs/styled';
-import { Container, Table } from 'reactstrap';
-import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import ClassInstances from 'components/ClassInstances/ClassInstances';
-import { ENTITIES } from 'constants/graphSettings';
-import { reverse } from 'named-urls';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { GlobalStyle, StyledContributionTabs } from 'components/ContributionTabs/styled';
 import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
+import Tabs from 'rc-tabs';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Container } from 'reactstrap';
+import InformationTab from './InformationTab';
 import TreeView from './TreeView';
 
-function TabsContainer({ id, label, uri, template, editMode }) {
+function TabsContainer({ id, label, uri, editMode }) {
     const { activeTab } = useParams();
 
     const navigate = useNavigate();
@@ -36,57 +35,7 @@ function TabsContainer({ id, label, uri, template, editMode }) {
                         {
                             label: 'Class information',
                             key: 'information',
-                            children: (
-                                <div className="p-4" style={{ backgroundColor: '#fff' }}>
-                                    <Table bordered>
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row">ID</th>
-                                                <td> {id}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Label</th>
-                                                <td>
-                                                    {label || (
-                                                        <i>
-                                                            <small>No label</small>
-                                                        </i>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">URI</th>
-                                                <td>
-                                                    <i>{uri && uri !== 'null' ? <a href={uri}>{uri}</a> : 'Not Defined'}</i>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Template</th>
-                                                <td>
-                                                    {template ? (
-                                                        <Link to={reverse(ROUTES.TEMPLATE, { id: template.id })}>{template.label}</Link>
-                                                    ) : (
-                                                        <i>
-                                                            Not Defined{' '}
-                                                            <Link to={`${reverse(ROUTES.ADD_TEMPLATE)}?classID=${id}`}>Create a template</Link>
-                                                        </i>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </Table>
-                                    <StatementBrowser
-                                        rootNodeType={ENTITIES.CLASS}
-                                        enableEdit={editMode}
-                                        syncBackend={editMode}
-                                        openExistingResourcesInDialog={false}
-                                        initialSubjectId={id}
-                                        newStore={true}
-                                        propertiesAsLinks={true}
-                                        resourcesAsLinks={true}
-                                    />
-                                </div>
-                            ),
+                            children: <InformationTab uri={uri} id={id} label={label} editMode={editMode} />,
                         },
                         {
                             label: 'Tree view',
@@ -109,9 +58,7 @@ TabsContainer.propTypes = {
     id: PropTypes.string.isRequired,
     label: PropTypes.string,
     uri: PropTypes.string,
-    template: PropTypes.object,
     editMode: PropTypes.bool.isRequired,
-    classes: PropTypes.array,
 };
 
 export default TabsContainer;
