@@ -195,7 +195,7 @@ const EntityRecognition = ({ isComputerScienceField }) => {
                                     )
                                 }
                             >
-                                <DescriptionTooltip id={p.id} typeId={ENTITIES.PREDICATE}>
+                                <DescriptionTooltip id={p.id} _class={ENTITIES.PREDICATE}>
                                     <Icon icon={faAngleDoubleLeft} className="text-smart me-2" /> {p.label}
                                 </DescriptionTooltip>
                             </ValueItem>
