@@ -160,7 +160,9 @@ const DescriptionTooltip = props => {
             interactive={true}
             arrow={true}
         >
-            <span tabIndex="0">{props.children}</span>
+            <span tabIndex="0" title="">
+                {props.children}
+            </span>
         </TippyStyle>
     );
 };
