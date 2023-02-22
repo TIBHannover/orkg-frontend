@@ -6,6 +6,7 @@ import { getResearchProblems, getResearchFields, getCommonClasses } from 'slices
 import { uniqBy, differenceBy, debounce } from 'lodash';
 import { getResourcesByClass } from 'services/backend/resources';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import useUsedTemplates from './useUsedTemplates';
 
 const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => {
     const filterOptions = [
@@ -39,8 +40,6 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
     const [page, setPage] = useState(0);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     const [totalElements, setTotalElements] = useState(0);
-    const [isLoadingUsedTemplates, setIsLoadingUsedTemplates] = useState(false);
-    const [usedTemplates, setUsedTemplates] = useState([]);
 
     const selectedResource = useSelector(state => (!isContributionEditor ? state.statementBrowser.selectedResource : null));
 
@@ -60,6 +59,7 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
             : getResearchProblems(state),
     );
 
+    const { usedTemplates, isLoadingUsedTemplates } = useUsedTemplates({ resourceId: selectedResource });
     /**
      * Fetch the templates of a resource
      *
@@ -166,26 +166,6 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
         setIsNextPageLoading(true);
         debouncedGetLoadMoreResults.current(selectedFilter, targetFilter, labelFilter);
     }, [labelFilter, onlyFeatured, selectedFilter, targetFilter]);
-
-    useEffect(() => {
-        setIsLoadingUsedTemplates(true);
-        const apiCalls = resource?.classes?.map(c => getTemplatesOfResourceId(c, PREDICATES.TEMPLATE_OF_CLASS, 0));
-        Promise.all(apiCalls)
-            .then(tmpl => {
-                setUsedTemplates(
-                    tmpl
-                        .map((c, index) => c.content.map(t => ({ ...t, classId: resource?.classes[index] })))
-                        .filter(r => r.length)
-                        .flat(),
-                );
-                setIsLoadingUsedTemplates(false);
-            })
-            .catch(() => {
-                setUsedTemplates([]);
-                setIsLoadingUsedTemplates(false);
-            });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [getTemplatesOfResourceId, JSON.stringify(resource?.classes)]);
 
     const handleSelectedFilterChange = selected => {
         setTemplates([]);
