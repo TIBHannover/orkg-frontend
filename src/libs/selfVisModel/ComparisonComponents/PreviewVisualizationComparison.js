@@ -34,11 +34,11 @@ function PreviewVisualizationComparison() {
     const model = useMemo(() => new SelfVisDataModel(), []);
     const settings = {
         dots: false,
-        infinite: false,
+        infinite: true,
         speed: 500,
         slidesToShow: 2,
         centerMode: false,
-        slidesToScroll: 1,
+        slidesToScroll: 2,
         nextArrow: <Icon icon={faArrowCircleRight} />,
         prevArrow: <Icon icon={faArrowCircleLeft} />,
         rows: 1,
@@ -46,8 +46,8 @@ function PreviewVisualizationComparison() {
             {
                 breakpoint: 1024,
                 settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3,
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
                 },
             },
             {

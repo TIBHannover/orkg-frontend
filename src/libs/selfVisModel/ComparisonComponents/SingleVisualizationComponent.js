@@ -17,16 +17,14 @@ import ViewVisualizationModal from 'components/ViewVisualizationModal/ViewVisual
 import { TippyVisualization } from 'libs/selfVisModel/styled';
 
 export const VisualizationCard = styled.div`
-  
     margin: 0 2px;
     cursor: pointer;
     border: ${props => (!props.isHovered ? '1px solid rgb(219,221,229)' : '1px solid #e8616169')};
     border-radius: 5px;
     width: 220px;
-    height:122px;
-    margin-right:23px;
+    height: 122px;
+    margin-right: 23px;
     padding: 5px;
-    
 `;
 
 const DescriptionHeader = styled.div`
@@ -113,6 +111,7 @@ const SingleVisualizationComponent = props => {
                                 </Link>
                             </Tippy>
                         </DescriptionHeader>
+
                         {isHovering && (
                             <Chart
                                 chartType={visMethod}
@@ -185,7 +184,7 @@ const SingleVisualizationComponent = props => {
             >
                 <VisualizationCard
                     onClick={() => setIsOpenViewModal(true)}
-                    isHovered={isHovering}
+                    // isHovered={isHovering} //commented because no need to display the chart on mouse hover
                     id={`#Vis${props.input.reconstructionModel.orkgOrigin}`}
                 >
                     <div style={{ pointerEvents: 'none' }}>
@@ -195,7 +194,6 @@ const SingleVisualizationComponent = props => {
                                 data={renderingData}
                                 width="200px"
                                 height="100px"
-
                                 options={{
                                     width: '100%',
                                     chartArea: { height: '50%' },
