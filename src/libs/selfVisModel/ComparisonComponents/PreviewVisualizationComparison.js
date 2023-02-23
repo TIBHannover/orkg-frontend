@@ -9,28 +9,13 @@ import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
 import { find } from 'lodash';
 import { Container, Row, Col } from 'reactstrap';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import Slider from 'react-slick';
+import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import RelatedResources from 'components/Comparison/ComparisonFooter/RelatedResources/RelatedResources';
 import RelatedFigures from 'components/Comparison/ComparisonFooter/RelatedResources/RelatedFigures';
 import SingleVisualizationComponent from './SingleVisualizationComponent';
-import PreviewCarouselComponent from './PreviewCarouselComponent';
-import './Style.css';
-// import styled from 'styled-components';
+import { StyledSlider } from './styled';
 
-// export const ChartContainer=styled.div`
-// display:flex;
-// flex-direction:row;
-// flex-wrap: wrap;
-// height:125px !important;
-// padding-left:25px;
-// margin-right:25px;
-// border:1px solid black
-// @media (max-width: 768px) {
-
-// }
-// `;
 function PreviewVisualizationComparison() {
     const dispatch = useDispatch();
     const [isLoadingVisualizationData, setIsLoadingVisualizationData] = useState(false);
@@ -47,8 +32,40 @@ function PreviewVisualizationComparison() {
     const predicatesList = useSelector(state => state.comparison.configuration.predicatesList);
 
     const model = useMemo(() => new SelfVisDataModel(), []);
-    // style={{paddingLeft:"25px",marginRight:"25px",border:"1px solid black",display:"flex",flexFlow:"row wrap"}}
-
+    const settings = {
+        dots: false,
+        infinite: false,
+        speed: 500,
+        slidesToShow: 2,
+        centerMode: false,
+        slidesToScroll: 1,
+        nextArrow: <Icon icon={faArrowCircleRight} />,
+        prevArrow: <Icon icon={faArrowCircleLeft} />,
+        rows: 1,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                },
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2,
+                },
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                },
+            },
+        ],
+    };
     useEffect(() => {
         const integrateData = () => {
             model.integrateInputData({
@@ -106,55 +123,36 @@ function PreviewVisualizationComparison() {
         };
         fetchVisualizationData();
     }, [visualizations]);
-    const settings = {
-        dots: false,
-        centerMode: false,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 2,
-        slidesToScroll: 1,
-        arrows: true,
-        className: 'myCustomCarousel',
-    };
+
     return (
-        <div id="visualizations">
+        <div id="visualizations" className="pb-3">
             <ErrorBoundary fallback="Something went wrong while loading the visualization!">
                 {!isLoadingMetadata && !isFailedLoadingMetadata && (
                     <>
                         {!isLoadingVisualizationData && visData?.length > 0 && (
                             <Container>
-                                <h5 className="mb-2  pt-3 pb-4">Visualizations</h5>
-                                <Row style={{ textAlign: 'center' }}>
-                                    <Slider {...settings}>
-                                    <Col md={4}>
+                                <h5>Visualizations</h5>
+                                <Row>
+                                    <StyledSlider {...settings}>
+                                        <Col md={4}>
                                             <RelatedFigures />
-                                    </Col>
+                                        </Col>
                                         <Col md={4}>
                                             <RelatedResources />
                                         </Col>
                                         <Col md={4}>
-                                            {' '}
-                                            <PreviewCarouselComponent>
-                                                <div className="d-sm-flex"
-                                                    style={{
-                                                        paddingLeft: '40px',
-                                                        paddingRight: '60px',
-
-                                                    }}
-                                                >
-                                                    {visData.map((d, index) => (
-                                                        <SingleVisualizationComponent
-                                                            key={`singleVisComp_${index}`}
-                                                            input={d}
-                                                            itemIndex={index}
-                                                            expandVisualization={val => expandVisualization(val)}
-                                                        />
-                                                    ))}
-                                                </div>
-                                            </PreviewCarouselComponent>
+                                            <div className="d-sm-flex">
+                                                {visData.map((d, index) => (
+                                                    <SingleVisualizationComponent
+                                                        key={`singleVisComp_${index}`}
+                                                        input={d}
+                                                        itemIndex={index}
+                                                        expandVisualization={val => expandVisualization(val)}
+                                                    />
+                                                ))}
+                                            </div>
                                         </Col>
-
-                                    </Slider>
+                                    </StyledSlider>
                                 </Row>
                             </Container>
                         )}

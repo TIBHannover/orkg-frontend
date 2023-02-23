@@ -3,8 +3,7 @@ import { Alert, Container } from 'reactstrap';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/Comparison';
 import ProvenanceBox from 'components/Comparison/ComparisonFooter/ProvenanceBox/ProvenanceBox';
-
- import ComparisonMetaData from 'components/Comparison/ComparisonHeader/ComparisonMetaData';
+import ComparisonMetaData from 'components/Comparison/ComparisonHeader/ComparisonMetaData';
 import DataSources from 'components/Comparison/ComparisonFooter/DataSources';
 import { ContainerAnimated } from 'components/Comparison/styled';
 import useComparison from 'components/Comparison/hooks/useComparison';
@@ -47,8 +46,7 @@ const Comparison = () => {
             <ComparisonHeaderMenu navigateToNewURL={navigateToNewURL} />
 
             <Container id="description" className="box rounded clearfix position-relative mb-4 px-5">
-
-                 <ComparisonMetaData />
+                <ComparisonMetaData />
 
                 {!isLoadingResult && contributionsList.length > 1 && <PreviewVisualizationComparison />}
                 <AppliedFilters />
@@ -75,7 +73,6 @@ const Comparison = () => {
             </ContainerAnimated>
 
             <Container className="box rounded px-5 clearfix position-relative mt-4">
-
                 <DataSources />
             </Container>
             {isPublished && <ProvenanceBox />}
