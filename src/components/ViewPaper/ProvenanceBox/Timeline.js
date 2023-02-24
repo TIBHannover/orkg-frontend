@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Alert } from 'reactstrap';
+import { Alert, Button } from 'reactstrap';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
@@ -59,13 +59,10 @@ const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, h
                 ))}
             {!isLoadingContributors && hasNextPageContributors && (
                 <StyledActivity className="ps-3 pb-3">
-                    <div
-                        style={{ cursor: 'pointer' }}
-                        className="time"
-                        onKeyPress={!isLoadingContributors ? handleLoadMoreContributors : undefined}
-                        onClick={!isLoadingContributors ? handleLoadMoreContributors : undefined}
-                    >
-                        Load more contributors
+                    <div className="time">
+                        <Button color="light-darker" size="sm" onClick={!isLoadingContributors ? handleLoadMoreContributors : undefined}>
+                            Load more
+                        </Button>
                     </div>
                 </StyledActivity>
             )}

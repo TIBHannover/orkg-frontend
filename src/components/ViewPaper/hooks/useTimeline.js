@@ -7,7 +7,7 @@ function useTimeline(id) {
     const [page, setPage] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
-    const pageSize = 30;
+    const pageSize = 10;
     const [contributors, setContributors] = useState([]);
 
     const loadMore = useCallback(
