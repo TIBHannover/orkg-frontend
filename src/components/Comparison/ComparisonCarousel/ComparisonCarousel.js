@@ -8,15 +8,15 @@ import { setIsOpenVisualizationModal, setUseReconstructedDataInVisualization } f
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
 import { find } from 'lodash';
-import { Container, Row, Col } from 'reactstrap';
 import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import RelatedResources from 'components/Comparison/ComparisonFooter/RelatedResources/RelatedResources';
-import RelatedFigures from 'components/Comparison/ComparisonFooter/RelatedResources/RelatedFigures';
+import useRelatedResources from 'components/Comparison/ComparisonCarousel/RelatedResources/useRelatedResources';
+import RelatedResource from 'components/Comparison/ComparisonCarousel/RelatedResources/RelatedResource';
+import RelatedFigure from 'components/Comparison/ComparisonCarousel/RelatedResources/RelatedFigure';
+import { StyledSlider } from 'components/ResearchProblem/Benchmarks/styled';
 import SingleVisualizationComponent from './SingleVisualizationComponent';
-import { StyledSlider } from './styled';
 
-function PreviewVisualizationComparison() {
+function ComparisonCarousel() {
     const dispatch = useDispatch();
     const [isLoadingVisualizationData, setIsLoadingVisualizationData] = useState(false);
     const [visData, setVisData] = useState([]);
@@ -34,11 +34,11 @@ function PreviewVisualizationComparison() {
     const model = useMemo(() => new SelfVisDataModel(), []);
     const settings = {
         dots: false,
-        infinite: true,
+        infinite: false,
         speed: 500,
-        slidesToShow: 2,
+        slidesToShow: 5,
         centerMode: false,
-        slidesToScroll: 2,
+        slidesToScroll: 5,
         nextArrow: <Icon icon={faArrowCircleRight} />,
         prevArrow: <Icon icon={faArrowCircleLeft} />,
         rows: 1,
@@ -46,8 +46,8 @@ function PreviewVisualizationComparison() {
             {
                 breakpoint: 1024,
                 settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1,
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
                 },
             },
             {
@@ -124,37 +124,30 @@ function PreviewVisualizationComparison() {
         fetchVisualizationData();
     }, [visualizations]);
 
+    const { relatedResources, relatedFigures } = useRelatedResources();
+
     return (
-        <div id="visualizations" className="pb-3">
+        <div className="py-3">
             <ErrorBoundary fallback="Something went wrong while loading the visualization!">
                 {!isLoadingMetadata && !isFailedLoadingMetadata && (
                     <>
                         {!isLoadingVisualizationData && visData?.length > 0 && (
-                            <Container>
-                                <h5>Visualizations</h5>
-                                <Row>
-                                    <StyledSlider {...settings}>
-                                        <Col md={4}>
-                                            <RelatedFigures />
-                                        </Col>
-                                        <Col md={4}>
-                                            <RelatedResources />
-                                        </Col>
-                                        <Col md={4}>
-                                            <div className="d-sm-flex">
-                                                {visData.map((d, index) => (
-                                                    <SingleVisualizationComponent
-                                                        key={`singleVisComp_${index}`}
-                                                        input={d}
-                                                        itemIndex={index}
-                                                        expandVisualization={val => expandVisualization(val)}
-                                                    />
-                                                ))}
-                                            </div>
-                                        </Col>
-                                    </StyledSlider>
-                                </Row>
-                            </Container>
+                            <StyledSlider {...settings}>
+                                {visData.map((d, index) => (
+                                    <SingleVisualizationComponent
+                                        key={d.id}
+                                        input={d}
+                                        itemIndex={index}
+                                        expandVisualization={val => expandVisualization(val)}
+                                    />
+                                ))}
+                                {relatedFigures.map(({ figureId, src, title, description }) => (
+                                    <RelatedFigure key={figureId} src={src} title={title} description={description} />
+                                ))}
+                                {relatedResources.map(({ id, url, title, description }) => (
+                                    <RelatedResource key={id} url={url} title={title} description={description} />
+                                ))}
+                            </StyledSlider>
                         )}
                         {isLoadingVisualizationData && (
                             <>
@@ -177,4 +170,4 @@ function PreviewVisualizationComparison() {
     );
 }
 
-export default PreviewVisualizationComparison;
+export default ComparisonCarousel;

@@ -7,7 +7,7 @@ import ComparisonMetaData from 'components/Comparison/ComparisonHeader/Compariso
 import DataSources from 'components/Comparison/ComparisonFooter/DataSources';
 import { ContainerAnimated } from 'components/Comparison/styled';
 import useComparison from 'components/Comparison/hooks/useComparison';
-import PreviewVisualizationComparison from 'libs/selfVisModel/ComparisonComponents/PreviewVisualizationComparison';
+import PreviewVisualizationComparison from 'components/Comparison/ComparisonCarousel/ComparisonCarousel';
 import ComparisonHeaderMenu from 'components/Comparison/ComparisonHeader/ComparisonHeaderMenu';
 import AppliedFilters from 'components/Comparison/ComparisonHeader/AppliedFilters';
 import { useParams } from 'react-router-dom';
