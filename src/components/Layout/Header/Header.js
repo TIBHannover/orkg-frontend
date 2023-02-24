@@ -177,11 +177,6 @@ const StyledAuthTooltip = styled(Tooltip)`
 
 const StyledNavbar = styled(Navbar)`
     &&& {
-        &:not(.home-page) {
-            box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.13);
-            background: white;
-        }
-
         background: transparent;
         border: 0;
 
@@ -209,7 +204,12 @@ const StyledNavbar = styled(Navbar)`
             }
         }
 
-        &.home-page {
+        &:not(.transparent-navbar) {
+            box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.13);
+            background: white;
+        }
+
+        &.transparent-navbar {
             & .nav-link {
                 color: white;
                 &:hover {
@@ -245,15 +245,18 @@ const Header = () => {
     const [logoutTimeoutId, setLogoutTimeoutId] = useState(null);
 
     const location = useLocation();
-    const [isHomePageStyle, setIsHomePageStyle] = useState(location.pathname === ROUTES.HOME);
+    const isHomePath = location.pathname === ROUTES.HOME;
+    const [isTransparentNavbar, setIsTransparentNavbar] = useState(isHomePath);
+    const [isHomePage, setIsHomePage] = useState(isHomePath);
     const user = useSelector(state => state.auth.user);
     const userPopup = useRef(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
-        setIsHomePageStyle(location.pathname === ROUTES.HOME);
-    }, [location.pathname]);
+        setIsHomePage(isHomePath);
+        setIsTransparentNavbar(isHomePath);
+    }, [isHomePath]);
 
     const toggleUserTooltip = useCallback(() => {
         setUserTooltipOpen(v => !userTooltipOpen);
@@ -290,11 +293,11 @@ const Header = () => {
 
         const handleScroll = () => {
             if (window.pageYOffset > 0) {
-                if (isHomePageStyle) {
-                    setIsHomePageStyle(false);
+                if (isTransparentNavbar) {
+                    setIsTransparentNavbar(false);
                 }
-            } else if (!isHomePageStyle && location.pathname === ROUTES.HOME) {
-                setIsHomePageStyle(true);
+            } else if (!isTransparentNavbar && location.pathname === ROUTES.HOME) {
+                setIsTransparentNavbar(true);
             }
         };
 
@@ -315,7 +318,7 @@ const Header = () => {
                 setLogoutTimeoutId(null);
             }
         };
-    }, [dispatch, isHomePageStyle, location.pathname, logoutTimeoutId, toggleUserTooltip, user, userTooltipOpen]);
+    }, [dispatch, isTransparentNavbar, location.pathname, logoutTimeoutId, toggleUserTooltip, user, userTooltipOpen]);
 
     useEffect(() => {
         const tokenExpired = () => {
@@ -377,27 +380,27 @@ const Header = () => {
     const cookieInfoDismissed = cookies.get('cookieInfoDismissed') ? cookies.get('cookieInfoDismissed') : null;
 
     const navbarClasses = `
-            ${isHomePageStyle ? 'home-page' : ''}
-            ${isHomePageStyle && isOpenNavBar ? 'shadow' : ''}
+            ${isTransparentNavbar ? 'transparent-navbar' : ''}
+            ${isTransparentNavbar && isOpenNavBar ? 'shadow' : ''}
         `;
 
     return (
-        <StyledTopBar className={isHomePageStyle ? 'home-page' : ''}>
+        <StyledTopBar className={isHomePage ? 'home-page' : ''}>
             <StyledNavbar
-                light={!isHomePageStyle}
-                dark={isHomePageStyle}
+                light={!isTransparentNavbar}
+                dark={isTransparentNavbar}
                 className={navbarClasses}
                 expand="md"
                 fixed="top"
                 id="main-navbar"
-                container={!isHomePageStyle ? true : 'sm'}
+                container={!isTransparentNavbar ? true : 'sm'}
                 style={{ display: 'flex', width: '100%', transition: 'width 1s ease-in-out' }}
             >
                 <GlobalStyle scrollbarWidth={scrollbarWidth(true)} cookieInfoDismissed={cookieInfoDismissed} />
 
                 <StyledLink to={ROUTES.HOME} className="me-4 p-0" onClick={closeMenu}>
-                    {!isHomePageStyle && <Logo />}
-                    {isHomePageStyle && <LogoWhite />}
+                    {!isTransparentNavbar && <Logo />}
+                    {isTransparentNavbar && <LogoWhite />}
                 </StyledLink>
 
                 <NavbarToggler onClick={toggleNavBar} />
@@ -580,7 +583,7 @@ const Header = () => {
 
                     <SearchForm placeholder="Search..." onSearch={closeMenu} />
 
-                    <AddNew isHomePageStyle={isHomePageStyle} onAdd={closeMenu} />
+                    <AddNew isHomePageStyle={isTransparentNavbar} onAdd={closeMenu} />
 
                     {!!user && (
                         <div className="ms-2">
