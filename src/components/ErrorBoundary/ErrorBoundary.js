@@ -28,7 +28,7 @@ class ErrorBoundary extends Component {
     render() {
         if (this.state.hasError) {
             // render any custom fallback UI
-            return <ErrorFallback error={this.state.error} />;
+            return this.props.fallback ? this.props.fallback : <ErrorFallback error={this.state.error} />;
         }
         return this.props.children;
     }
@@ -37,6 +37,7 @@ class ErrorBoundary extends Component {
 ErrorBoundary.propTypes = {
     children: PropTypes.node,
     trackEvent: PropTypes.func.isRequired,
+    fallback: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 };
 
 export default withMatomo(ErrorBoundary);

@@ -1,3 +1,4 @@
+import { isArray } from 'lodash';
 import { useCallback, useState } from 'react';
 import * as Showdown from 'showdown';
 import styled from 'styled-components';
@@ -37,10 +38,11 @@ const usePage = () => {
 
         try {
             const _page = await pagePromise;
+            const data = isArray(_page.data) ? _page.data[0] : _page.data;
 
             setPage({
-                ..._page,
-                content: <Article dangerouslySetInnerHTML={{ __html: converter.makeHtml(_page.content) }} />,
+                ...data,
+                content: <Article dangerouslySetInnerHTML={{ __html: converter.makeHtml(data.attributes.content) }} />,
             });
         } catch (e) {
             console.log(e);

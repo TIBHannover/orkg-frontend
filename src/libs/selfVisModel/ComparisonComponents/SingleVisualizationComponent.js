@@ -68,8 +68,8 @@ const SingleVisualizationComponent = props => {
     const { customizationState } = props.input.reconstructionModel.data.reconstructionData;
     useEffect(() => {
         // we need to check if the data input for this component has changed iff then apply reconstructionModel)
-        const renderingData = selfVisModel.applyReconstructionModel(props.input.reconstructionModel);
-        setRenderingData(renderingData);
+        const _renderingData = selfVisModel.applyReconstructionModel(props.input.reconstructionModel);
+        setRenderingData(_renderingData);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.input.reconstructionModel.orkgOrigin]);
 
