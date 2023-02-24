@@ -18,9 +18,10 @@ import TemplateCard from 'components/Templates/TemplateCard';
 import ReviewCard from 'components/ReviewCard/ReviewCard';
 import { groupBy } from 'lodash';
 import { getReviewData } from 'utils';
+import VisualizationCard from 'components/VisualizationCard/VisualizationCard';
 
 const Items = props => {
-    const pageSize = props.filterClass === CLASSES.COMPARISON ? 10 : 25;
+    const pageSize = 25;
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [page, setPage] = useState(0);
@@ -152,7 +153,7 @@ const Items = props => {
     return (
         <div>
             {resources.length > 0 && (
-                <ListGroup className="box">
+                <ListGroup>
                     {resources.map(resource => {
                         if (props.filterClass === CLASSES.PAPER) {
                             const paperId = resource.id;
@@ -177,6 +178,9 @@ const Items = props => {
 
                         if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
                             return <ReviewCard key={resource[0]?.id} versions={resource} showBadge={true} showCurationFlags={true} />;
+                        }
+                        if (props.filterClass === CLASSES.VISUALIZATION) {
+                            return <VisualizationCard visualization={resource} showBadge={true} showCurationFlags={true} />;
                         }
 
                         return null;

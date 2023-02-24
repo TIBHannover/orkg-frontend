@@ -17,13 +17,11 @@ import { reverse } from 'named-urls';
 const Reviews = () => {
     const user = useSelector(state => state.auth.user);
 
-console.log('show user auth', user);
-
     useEffect(() => {
         document.title = 'Reviews - ORKG';
     });
 
-   const renderListItem = versions => (<ReviewCard key={versions[0]?.id} versions={versions} showBadge={false} />);
+    const renderListItem = versions => <ReviewCard key={versions[0]?.id} versions={versions} showBadge={false} />;
 
     const fetchItems = async ({ resourceClass, page, pageSize }) => {
         let items = [];
@@ -95,7 +93,7 @@ console.log('show user auth', user);
             label="reviews"
             resourceClass={CLASSES.SMART_REVIEW_PUBLISHED}
             renderListItem={renderListItem}
-             fetchItems={fetchItems}
+            fetchItems={fetchItems}
             buttons={buttons}
             infoContainerText={infoContainerText}
         />

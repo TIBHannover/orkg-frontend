@@ -1,27 +1,23 @@
-import { useState, useEffect, useRef } from 'react';
-import { Container, Row, Col } from 'reactstrap';
-import { TabContent, TabPane, Nav, NavItem, NavLink, ListGroup, ListGroupItem } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { getContributorInformationById } from 'services/backend/contributors';
-import Items from 'components/UserProfile/Items';
-import { getObservatoryById } from 'services/backend/observatories';
-import { getOrganization } from 'services/backend/organizations';
-import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
-import NotFound from 'pages/NotFound';
-import ContentLoader from 'react-content-loader';
-import { useSelector } from 'react-redux';
-import Gravatar from 'react-gravatar';
-import styled from 'styled-components';
-import { CLASSES, MISC } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
-import { Link, useParams } from 'react-router-dom';
-import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import capitalize from 'capitalize';
 import classnames from 'classnames';
-import { debounce, groupBy } from 'lodash';
-import Reviews from './Reviews/Reviews';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
+import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
+import Items from 'components/UserProfile/Items';
+import { CLASSES, MISC } from 'constants/graphSettings';
+import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import NotFound from 'pages/NotFound';
+import { useEffect, useState } from 'react';
+import ContentLoader from 'react-content-loader';
+import Gravatar from 'react-gravatar';
+import { useSelector } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
+import { Col, Container, Nav, NavItem, NavLink, Row, TabContent, TabPane } from 'reactstrap';
+import { getContributorInformationById } from 'services/backend/contributors';
+import { getObservatoryById } from 'services/backend/observatories';
+import { getOrganization } from 'services/backend/organizations';
+import styled from 'styled-components';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.dark};
@@ -98,7 +94,7 @@ const UserProfile = props => {
     const currentUserId = useSelector(state => state.auth.user?.id);
     const [isActiveTab, setIsActiveTab] = useState('1');
 
-// function is written to toggle between tabs
+    // function is written to toggle between tabs
     const toggle = tab => {
         if (isActiveTab !== tab) {
             setIsActiveTab(tab);
@@ -243,22 +239,27 @@ const UserProfile = props => {
                 <Nav tabs style={{ cursor: 'pointer' }}>
                     <NavItem>
                         <NavLink className={classnames({ active: isActiveTab === '1' })} onClick={() => toggle('1')}>
-                            Published comparisons
+                            Comparisons
                         </NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink className={classnames({ active: isActiveTab === '2' })} onClick={() => toggle('2')}>
-                            Added papers
+                            Papers
                         </NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink className={classnames({ active: isActiveTab === '3' })} onClick={() => toggle('3')}>
-                            Show Templates
+                            Templates
                         </NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink className={classnames({ active: isActiveTab === '4' })} onClick={() => toggle('4')}>
-                            Show Reviews
+                            Reviews
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink className={classnames({ active: isActiveTab === '5' })} onClick={() => toggle('5')}>
+                            Visualizations
                         </NavLink>
                     </NavItem>
                 </Nav>
@@ -284,9 +285,9 @@ const UserProfile = props => {
                     <TabPane tabId="3">
                         <Row>
                             <Col sm="12">
-                            <Container className="p-0 mt-4">
-                                <Items filterLabel="templates" filterClass={CLASSES.TEMPLATE} userId={userId} showDelete={false} />
-                            </Container>
+                                <Container className="p-0">
+                                    <Items filterLabel="templates" filterClass={CLASSES.TEMPLATE} userId={userId} showDelete={false} />
+                                </Container>
                             </Col>
                         </Row>
                     </TabPane>
@@ -294,24 +295,28 @@ const UserProfile = props => {
                     <TabPane tabId="4">
                         <Row>
                             <Col sm="12">
-                            <Container className="p-0 mt-4">
-                                <Items filterLabel="reviews" filterClass={CLASSES.SMART_REVIEW_PUBLISHED} userId={userId} showDelete={false} />
-                            </Container>
+                                <Container className="p-0 mt-4">
+                                    <Items filterLabel="reviews" filterClass={CLASSES.SMART_REVIEW_PUBLISHED} userId={userId} showDelete={false} />
+                                </Container>
+                            </Col>
+                        </Row>
+                    </TabPane>
+                    <TabPane tabId="5">
+                        <Row>
+                            <Col sm="12">
+                                <Container className="p-0 mt-4">
+                                    <Items filterLabel="visualizations" filterClass={CLASSES.VISUALIZATION} userId={userId} showDelete={false} />
+                                </Container>
                             </Col>
                         </Row>
                     </TabPane>
                 </TabContent>
             </Container>
-            {/* <TitleBar>Published comparisons</TitleBar>
-            <Container className="p-0">
-                <Items filterLabel="comparisons" filterClass={CLASSES.COMPARISON} userId={userId} />
+
+            <Container>
+                <ComparisonPopup />
             </Container>
 
-            <TitleBar>Added papers</TitleBar>
-            <Container className="p-0">
-                <Items filterLabel="papers" filterClass={CLASSES.PAPER} userId={userId} showDelete={userId === currentUserId} />
-            </Container>
-            <ComparisonPopup /> */}
             {/*
             TODO: support for activity feed
             <Container className="box mt-4 pt-4 pb-3 ps-5 pe-5">
