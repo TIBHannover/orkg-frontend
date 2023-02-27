@@ -60,7 +60,7 @@ class StatementBrowserDialog extends Component {
                             style={{ right: 45, position: 'absolute', top: 12 }}
                             title={`Go to ${this.props.type} page`}
                             className="ms-2"
-                            to={reverse(route, { id: this.props.id })}
+                            to={`${reverse(route, { id: this.props.id })}?noRedirect`}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
@@ -128,7 +128,4 @@ const mapDispatchToProps = dispatch => ({
     updateSettings: data => dispatch(updateSettings(data)),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(StatementBrowserDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(StatementBrowserDialog);

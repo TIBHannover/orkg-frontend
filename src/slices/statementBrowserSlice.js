@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { LOCATION_CHANGE, guid, filterStatementsBySubjectId } from 'utils';
 import { ENTITIES, PREDICATES, CLASSES } from 'constants/graphSettings';
 import { match } from 'path-to-regexp';
-import { last, flatten, uniqBy, orderBy, uniq } from 'lodash';
+import { last, flatten, uniqBy, orderBy, uniq, has } from 'lodash';
 import ROUTES from 'constants/routes';
 import { Cookies } from 'react-cookie';
 import { getEntity } from 'services/backend/misc';
@@ -43,9 +43,8 @@ const initialState = {
     isPreferencesOpen: false,
     preferences: {
         showClasses: getPreferenceFromCookies('showClasses') ?? false,
-        showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
-        showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
-        showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? true,
+        showDescriptionTooltips: getPreferenceFromCookies('showDescriptionTooltips') ?? true,
+        showInlineDataTypes: getPreferenceFromCookies('showInlineDataTypes') ?? false,
     },
     resources: {
         byId: {},
@@ -87,10 +86,12 @@ export const statementBrowserSlice = createSlice({
         updatePreferences: (state, { payload }) => {
             state.preferences = {
                 showClasses: typeof payload.showClasses === 'boolean' ? payload.showClasses : state.preferences.showClasses,
-                showStatementInfo: typeof payload.showStatementInfo === 'boolean' ? payload.showStatementInfo : state.preferences.showStatementInfo,
-                showValueInfo: typeof payload.showValueInfo === 'boolean' ? payload.showValueInfo : state.preferences.showValueInfo,
-                showLiteralDataTypes:
-                    typeof payload.showLiteralDataTypes === 'boolean' ? payload.showLiteralDataTypes : state.preferences.showLiteralDataTypes,
+                showDescriptionTooltips:
+                    typeof payload.showDescriptionTooltips === 'boolean'
+                        ? payload.showDescriptionTooltips
+                        : state.preferences.showDescriptionTooltips,
+                showInlineDataTypes:
+                    typeof payload.showInlineDataTypes === 'boolean' ? payload.showInlineDataTypes : state.preferences.showInlineDataTypes,
             };
         },
         createResource: (state, { payload }) => {
@@ -370,9 +371,8 @@ export const statementBrowserSlice = createSlice({
             ...initialState,
             preferences: {
                 showClasses: getPreferenceFromCookies('showClasses') ?? false,
-                showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
-                showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
-                showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? false,
+                showDescriptionTooltips: getPreferenceFromCookies('showDescriptionTooltips') ?? true,
+                showInlineDataTypes: getPreferenceFromCookies('showInlineDataTypes') ?? false,
             },
         }),
         /** -- Handling for creation of contribution objects* */
@@ -427,14 +427,14 @@ export const statementBrowserSlice = createSlice({
             state.templates[templateID].isFetching = status;
         },
     },
-    extraReducers: {
-        [LOCATION_CHANGE]: (state, { payload }) => {
+    extraReducers: builder => {
+        builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
             // prevent reset location for content type page (location change is trigger on edit mode)
             if (
                 state.keyToKeepStateOnLocationChange === match(ROUTES.CONTENT_TYPE)(payload.location.pathname)?.params?.id ||
                 state.keyToKeepStateOnLocationChange === match(ROUTES.CONTENT_TYPE_NO_MODE)(payload.location.pathname)?.params?.id
             ) {
-                return;
+                return state;
             }
 
             // from redux-first-history, reset the wizard when the page is changed
@@ -459,12 +459,11 @@ export const statementBrowserSlice = createSlice({
                 ...initialState,
                 preferences: {
                     showClasses: getPreferenceFromCookies('showClasses') ?? false,
-                    showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
-                    showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
-                    showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? false,
+                    showDescriptionTooltips: getPreferenceFromCookies('showDescriptionTooltips') ?? true,
+                    showInlineDataTypes: getPreferenceFromCookies('showInlineDataTypes') ?? false,
                 },
             };
-        },
+        });
     },
 });
 
@@ -651,76 +650,78 @@ export function getExistingPredicatesByResource(state, resourceId) {
  * @param {string} resourceId - The target resource ID
  * @param {boolean} syncBackend - Sync the fill with the backend
  */
-export const fillStatements = ({ statements, resourceId, syncBackend = false }) => async (dispatch, getState) => {
-    // properties
-    for (const property of statements.properties) {
-        dispatch(
-            createProperty({
-                propertyId: property.propertyId ? property.propertyId : guid(),
-                existingPredicateId: property.existingPredicateId,
-                resourceId,
-                label: property.label,
-                isAnimated: property.isAnimated !== undefined ? property.isAnimated : false,
-                canDuplicate: !!property.canDuplicate,
-            }),
-        );
-    }
-
-    // values
-    for (const value of statements.values) {
-        /**
-         * The resource ID of the value
-         * @type {string}
-         */
-        let newObject = null;
-        /**
-         * The statement of the value
-         * @type {string}
-         */
-        let newStatement = null;
-        /**
-         * The value ID in the statement browser
-         * @type {string}
-         */
-        const valueId = guid();
-
-        if (syncBackend) {
-            const predicate = getState().statementBrowser.properties.byId[value.propertyId];
-            if (value.existingResourceId) {
-                // The value exist in the database
-                newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, value.existingResourceId);
-            } else {
-                // The value doesn't exist in the database
-                switch (value._class) {
-                    case ENTITIES.RESOURCE:
-                        newObject = await createResourceApi(value.label, value.classes ? value.classes : []);
-                        newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
-                        break;
-                    case ENTITIES.PREDICATE:
-                        newObject = await createPredicate(value.label);
-                        newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
-                        break;
-                    default:
-                        newObject = await createLiteral(value.label, value.datatype);
-                        newStatement = await createLiteralStatement(resourceId, predicate.existingPredicateId, newObject.id);
-                }
-            }
+export const fillStatements =
+    ({ statements, resourceId, syncBackend = false }) =>
+    async (dispatch, getState) => {
+        // properties
+        for (const property of statements.properties) {
+            dispatch(
+                createProperty({
+                    propertyId: property.propertyId ? property.propertyId : guid(),
+                    existingPredicateId: property.existingPredicateId,
+                    resourceId,
+                    label: property.label,
+                    isAnimated: property.isAnimated !== undefined ? property.isAnimated : false,
+                    canDuplicate: !!property.canDuplicate,
+                }),
+            );
         }
 
-        dispatch(
-            createValueAction({
-                valueId: value.valueId ? value.valueId : valueId,
-                ...value,
-                propertyId: value.propertyId,
-                existingResourceId: syncBackend && newObject ? newObject.id : value.existingResourceId ? value.existingResourceId : null,
-                isExistingValue: syncBackend ? true : value.isExistingValue ? value.isExistingValue : false,
-                statementId: newStatement ? newStatement.id : null,
-            }),
-        );
-    }
+        // values
+        for (const value of statements.values) {
+            /**
+             * The resource ID of the value
+             * @type {string}
+             */
+            let newObject = null;
+            /**
+             * The statement of the value
+             * @type {string}
+             */
+            let newStatement = null;
+            /**
+             * The value ID in the statement browser
+             * @type {string}
+             */
+            const valueId = guid();
 
-    return Promise.resolve();
-};
+            if (syncBackend) {
+                const predicate = getState().statementBrowser.properties.byId[value.propertyId];
+                if (value.existingResourceId) {
+                    // The value exist in the database
+                    newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, value.existingResourceId);
+                } else {
+                    // The value doesn't exist in the database
+                    switch (value._class) {
+                        case ENTITIES.RESOURCE:
+                            newObject = await createResourceApi(value.label, value.classes ? value.classes : []);
+                            newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
+                            break;
+                        case ENTITIES.PREDICATE:
+                            newObject = await createPredicate(value.label);
+                            newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
+                            break;
+                        default:
+                            newObject = await createLiteral(value.label, value.datatype);
+                            newStatement = await createLiteralStatement(resourceId, predicate.existingPredicateId, newObject.id);
+                    }
+                }
+            }
+
+            dispatch(
+                createValueAction({
+                    valueId: value.valueId ? value.valueId : valueId,
+                    ...value,
+                    propertyId: value.propertyId,
+                    existingResourceId: syncBackend && newObject ? newObject.id : value.existingResourceId ? value.existingResourceId : null,
+                    isExistingValue: syncBackend ? true : value.isExistingValue ? value.isExistingValue : false,
+                    statementId: newStatement ? newStatement.id : null,
+                }),
+            );
+        }
+
+        return Promise.resolve();
+    };
 
 /**
  * Get the list of property id of a resource by existing predicate id
@@ -1070,20 +1071,27 @@ export function getSuggestedProperties(state, resourceId) {
  * @param {String=} data.resourceId - resource ID
  * @param {Array=} data.classes - Classes of value
  */
-export const updateResourceClassesAction = ({ resourceId, classes, syncBackend = false }) => (dispatch, getState) => {
-    const resource = getState().statementBrowser.resources.byId[resourceId];
-    if (resource) {
-        dispatch(updateResourceClasses({ resourceId, classes: uniq(classes?.filter(c => c) ?? []) }));
-        // Fetch templates
-        const templatesOfClassesLoading = classes && classes?.filter(c => c).map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
-        // Add required properties
-        Promise.all(templatesOfClassesLoading).then(() => dispatch(createRequiredPropertiesInResource(resourceId)));
-        if (syncBackend) {
-            return updateResourceClassesApi(resourceId, uniq(classes?.filter(c => c) ?? []));
+export const updateResourceClassesAction =
+    ({ resourceId, classes, syncBackend = false }) =>
+    async (dispatch, getState) => {
+        const resource = getState().statementBrowser.resources.byId[resourceId];
+        let apiResponse = Promise.resolve();
+        if (resource) {
+            try {
+                if (syncBackend) {
+                    apiResponse = await updateResourceClassesApi(resourceId, uniq(classes?.filter(c => c) ?? []));
+                }
+                dispatch(updateResourceClasses({ resourceId, classes: uniq(classes?.filter(c => c) ?? []) }));
+                // Fetch templates
+                const templatesOfClassesLoading = classes && classes?.filter(c => c).map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+                // Add required properties
+                Promise.all(templatesOfClassesLoading).then(() => dispatch(createRequiredPropertiesInResource(resourceId)));
+            } catch (e) {
+                return Promise.reject();
+            }
         }
-    }
-    return Promise.resolve();
-};
+        return syncBackend ? apiResponse : Promise.resolve();
+    };
 
 /**
  * Create Value then fetch templates
@@ -1482,70 +1490,72 @@ export function addStatements(statements, resourceId, depth) {
  * @param {Number} depth - The required depth
  * @return {Promise} Promise object
  */
-export const fetchStatementsForResource = ({ resourceId, rootNodeType = ENTITIES.RESOURCE, depth = 1 }) => (dispatch, getState) => {
-    if (shouldFetchStatementsForResource(getState(), resourceId, depth, rootNodeType)) {
-        dispatch(setIsFetchingStatements({ resourceId }));
-        // Get the resource classes
-        return getEntity(rootNodeType, resourceId)
-            .then(root => {
-                // We have custom templates for predicates and classes
-                // so add the corresponding classes on the root node
-                const mapEntitiesClasses = {
-                    [ENTITIES.PREDICATE]: [CLASSES.PREDICATE],
-                    [ENTITIES.CLASS]: [CLASSES.CLASS],
-                    [ENTITIES.RESOURCE]: root.classes ?? [],
-                };
-                let allClasses = mapEntitiesClasses[rootNodeType];
-                // set the resource classes (initialize doesn't set the classes)
-                dispatch(updateResourceClasses({ resourceId, classes: allClasses, syncBackend: false }));
-                // update shared counter
+export const fetchStatementsForResource =
+    ({ resourceId, rootNodeType = ENTITIES.RESOURCE, depth = 1 }) =>
+    (dispatch, getState) => {
+        if (shouldFetchStatementsForResource(getState(), resourceId, depth, rootNodeType)) {
+            dispatch(setIsFetchingStatements({ resourceId }));
+            // Get the resource classes
+            return getEntity(rootNodeType, resourceId)
+                .then(root => {
+                    // We have custom templates for predicates and classes
+                    // so add the corresponding classes on the root node
+                    const mapEntitiesClasses = {
+                        [ENTITIES.PREDICATE]: [CLASSES.PREDICATE],
+                        [ENTITIES.CLASS]: [CLASSES.CLASS],
+                        [ENTITIES.RESOURCE]: root.classes ?? [],
+                    };
+                    let allClasses = mapEntitiesClasses[rootNodeType];
+                    // set the resource classes (initialize doesn't set the classes)
+                    dispatch(updateResourceClasses({ resourceId, classes: allClasses, syncBackend: false }));
+                    // update shared counter
 
-                dispatch(
-                    updateResourceShared({
-                        resourceId,
-                        shared: root.shared ?? 1,
-                    }),
-                );
-                // fetch the statements
-                return getStatementsBundleBySubject({ id: resourceId, maxLevel: depth }).then(response => {
-                    // 1 - collect all classes Ids
-                    allClasses = uniq([
-                        ...allClasses,
-                        ...flatten(
-                            response.statements
-                                .map(s => s.object)
-                                .filter(o => o.classes)
-                                .map(o => o.classes),
-                        ),
-                    ]);
-                    // 3 - load templates
-                    const templatesOfClassesLoading = allClasses && allClasses?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
-                    return Promise.all(templatesOfClassesLoading)
-                        .then(() => dispatch(createRequiredPropertiesInResource(resourceId))) // Add required properties
-                        .then(() => dispatch(addStatements(response.statements, resourceId, depth))) // Add statements
-                        .then(() => {
-                            // Set fetching is done
-                            dispatch(doneFetchingStatements({ resourceId }));
-                            dispatch(
-                                setIsFetchedStatements({
-                                    resourceId,
-                                    depth,
-                                }),
-                            );
-                        });
+                    dispatch(
+                        updateResourceShared({
+                            resourceId,
+                            shared: root.shared ?? 1,
+                        }),
+                    );
+                    // fetch the statements
+                    return getStatementsBundleBySubject({ id: resourceId, maxLevel: depth }).then(response => {
+                        // 1 - collect all classes Ids
+                        allClasses = uniq([
+                            ...allClasses,
+                            ...flatten(
+                                response.statements
+                                    .map(s => s.object)
+                                    .filter(o => o.classes)
+                                    .map(o => o.classes),
+                            ),
+                        ]);
+                        // 3 - load templates
+                        const templatesOfClassesLoading = allClasses && allClasses?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+                        return Promise.all(templatesOfClassesLoading)
+                            .then(() => dispatch(createRequiredPropertiesInResource(resourceId))) // Add required properties
+                            .then(() => dispatch(addStatements(response.statements, resourceId, depth))) // Add statements
+                            .then(() => {
+                                // Set fetching is done
+                                dispatch(doneFetchingStatements({ resourceId }));
+                                dispatch(
+                                    setIsFetchedStatements({
+                                        resourceId,
+                                        depth,
+                                    }),
+                                );
+                            });
+                    });
+                })
+                .catch(e => {
+                    console.log(e);
+                    dispatch(
+                        setFailedFetchingStatements({
+                            resourceId,
+                        }),
+                    );
                 });
-            })
-            .catch(e => {
-                console.log(e);
-                dispatch(
-                    setFailedFetchingStatements({
-                        resourceId,
-                    }),
-                );
-            });
-    }
-    return Promise.resolve();
-};
+        }
+        return Promise.resolve();
+    };
 
 /**
  * Check if the input filed is Literal
@@ -1554,18 +1564,18 @@ export const fetchStatementsForResource = ({ resourceId, rootNodeType = ENTITIES
  * @return {Boolean} if this input field is Literal
  */
 export const isLiteral = components => {
-    let isLiteral = false;
+    let _isLiteral = false;
     for (const typeId of components.map(tc => tc.value?.id)) {
         if (
             DATA_TYPES.filter(dt => dt._class === ENTITIES.LITERAL)
                 .map(t => t.classId)
                 .includes(typeId)
         ) {
-            isLiteral = true;
+            _isLiteral = true;
             break;
         }
     }
-    return isLiteral;
+    return _isLiteral;
 };
 
 /**

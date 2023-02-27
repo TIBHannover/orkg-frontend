@@ -4,7 +4,12 @@ import selectEvent from 'react-select-event';
 import StatementBrowser from '../StatementBrowser';
 import { statementBrowser1P7V } from '../ValueItem/__mocks__/StatementBrowserDataValueItem';
 
-jest.mock('react-flip-move', () => ({ children }) => children);
+jest.mock(
+    'react-flip-move',
+    () =>
+        ({ children }) =>
+            children,
+);
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
 
 const setup = (
@@ -232,10 +237,10 @@ describe('ValueItem', () => {
 });
 
 describe('ValueItem', () => {
-    it('should not show datatype selector on resource edit', async () => {
+    it('should show datatype selector disabled on resource edit', async () => {
         setup();
         await clickOnEditValueButton(screen, VALUE_IDS.Resource);
-        expect(screen.queryByText(/Resource/i)).toBeNull();
+        expect(screen.queryByText(/Resource/i).className.includes('--is-disabled')).toBe(true);
     });
 });
 

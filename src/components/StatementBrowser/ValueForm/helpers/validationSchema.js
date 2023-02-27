@@ -22,9 +22,7 @@ export default function validationSchema(component) {
                 schema = Joi.boolean();
                 break;
             case CLASSES.URI:
-                schema = Joi.string()
-                    .regex(REGEX.URL)
-                    .message('"value" must be a valid URL');
+                schema = Joi.string().regex(REGEX.URL).message('"value" must be a valid URL');
                 break;
             default:
                 break;

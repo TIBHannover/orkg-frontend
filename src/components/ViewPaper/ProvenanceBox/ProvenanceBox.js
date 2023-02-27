@@ -3,22 +3,24 @@ import { TransitionGroup } from 'react-transition-group';
 import env from '@beam-australia/react-env';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
 import useProvenance from 'components/ViewPaper/hooks/useProvenance';
-import { uniqBy } from 'lodash';
+import useTimeline from 'components/ViewPaper/hooks/useTimeline';
+import { uniqBy, orderBy } from 'lodash';
 import Provenance from './Provenance';
 import Timeline from './Timeline';
 import { AnimationContainer, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
 
 const ProvenanceBox = () => {
+    const { paperResource, isLoadingProvenance, observatoryInfo, organizationInfo, createdBy, versions } = useProvenance();
+
     const {
-        paperResource,
-        isLoadingProvenance,
-        isLoadingContributors,
-        observatoryInfo,
-        organizationInfo,
-        createdBy,
-        versions,
+        isNextPageLoading: isNextPageLoadingContributors,
+        hasNextPage: hasNextPageContributors,
         contributors,
-    } = useProvenance();
+        handleLoadMore: handleLoadMoreContributors,
+    } = useTimeline(paperResource.id);
+
+    const _versions = orderBy([...contributors, ...versions], ['created_at'], ['desc']); // combining contributors and version with DOI information
+
     const [activeTab, setActiveTab] = useState(1);
 
     return (
@@ -64,7 +66,7 @@ const ProvenanceBox = () => {
                                 contributors={uniqBy(contributors, 'created_by.id')}
                                 createdBy={createdBy}
                                 isLoadingProvenance={isLoadingProvenance}
-                                isLoadingContributors={isLoadingContributors}
+                                isLoadingContributors={isNextPageLoadingContributors}
                             />
                         </AnimationContainer>
                     ) : (
@@ -73,9 +75,11 @@ const ProvenanceBox = () => {
                                 observatoryInfo={observatoryInfo}
                                 organizationInfo={organizationInfo}
                                 paperResource={paperResource}
-                                versions={versions}
+                                versions={_versions}
                                 createdBy={createdBy}
-                                isLoadingContributors={isLoadingContributors}
+                                isLoadingContributors={isNextPageLoadingContributors}
+                                hasNextPageContributors={hasNextPageContributors}
+                                handleLoadMoreContributors={handleLoadMoreContributors}
                             />
                         </AnimationContainer>
                     )}

@@ -27,6 +27,8 @@ const ResearchFieldHeader = ({ id }) => {
     const [showMoreFields, setShowMoreFields] = useState(false);
     const [researchFieldData, subResearchFields, isLoading, isFailedLoading, loadResearchFieldData] = useResearchField();
 
+    const _subResearchFields = !showMoreFields && subResearchFields?.length > 0 ? subResearchFields.slice(0, 9) : subResearchFields;
+
     return (
         <>
             {!isLoading && !isFailedLoading && <CheckSlug label={researchFieldData.label} route={ROUTES.RESEARCH_FIELD} />}
@@ -100,7 +102,7 @@ const ResearchFieldHeader = ({ id }) => {
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu end>
-                                        <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id })}>
+                                        <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>
@@ -126,15 +128,14 @@ const ResearchFieldHeader = ({ id }) => {
                                         query={researchFieldData.sameAs ? researchFieldData.sameAs.label : researchFieldData.label}
                                     />
                                 )}
-
-                                <hr className="my-3" />
+                                {researchFieldData.description && <hr className="my-3" />}
                             </>
                         )}
                         {subResearchFields && subResearchFields.length > 0 && (
                             <>
                                 <h2 className="h5">Subfields</h2>
                                 <div>
-                                    {subResearchFields.slice(0, 9).map(subfield => (
+                                    {_subResearchFields.map(subfield => (
                                         <Link
                                             key={`index${subfield.id}`}
                                             to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
@@ -147,21 +148,6 @@ const ResearchFieldHeader = ({ id }) => {
                                             </Badge>
                                         </Link>
                                     ))}
-                                    {subResearchFields.length > 9 &&
-                                        showMoreFields &&
-                                        subResearchFields.slice(9).map(subfield => (
-                                            <Link
-                                                key={`index${subfield.id}`}
-                                                to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                                                    researchFieldId: subfield.id,
-                                                    slug: subfield.label,
-                                                })}
-                                            >
-                                                <Badge color="light" className="me-2 mb-2">
-                                                    {subfield.label}
-                                                </Badge>
-                                            </Link>
-                                        ))}
                                     {subResearchFields.length > 9 && (
                                         <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm" className="p-0 ms-2">
                                             {showMoreFields ? 'Show less subfields' : 'Show more subfields'}

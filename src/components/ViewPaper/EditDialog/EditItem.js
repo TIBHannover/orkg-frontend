@@ -1,6 +1,6 @@
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
-import AuthorsInput from 'components/Utils/AuthorsInput';
+import AuthorsInput from 'components/AuthorsInput/AuthorsInput';
 import ListItem from 'components/ViewPaper/EditDialog/ListItem';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { truncate } from 'lodash';

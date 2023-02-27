@@ -84,7 +84,10 @@ function useObservatoryContent({ observatoryId, slug, initialSort, initialClassF
                                     ...dataObjects,
                                 ]);
                                 if (sort === 'combined') {
-                                    newItems = mergeAlternate(newItems.filter(i => i.featured), newItems.filter(i => !i.featured));
+                                    newItems = mergeAlternate(
+                                        newItems.filter(i => i.featured),
+                                        newItems.filter(i => !i.featured),
+                                    );
                                 }
                                 return flatten([...prevResources, newItems.filter(t => t && !prevResources.map(p => p.id).includes(t.id))]);
                             });

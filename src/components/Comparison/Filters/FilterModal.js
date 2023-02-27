@@ -15,9 +15,7 @@ function FilterModal(props) {
     const isDate = () =>
         Object.keys(values).length ===
         Object.keys(values).filter(value => {
-            const { error } = Joi.date()
-                .required()
-                .validate(value);
+            const { error } = Joi.date().required().validate(value);
             return !error;
         }).length;
     const isText = () =>

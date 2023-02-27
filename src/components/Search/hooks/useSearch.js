@@ -10,7 +10,7 @@ import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
 
-const IGNORED_CLASSES = [CLASSES.CONTRIBUTION, CLASSES.CONTRIBUTION_DELETED, CLASSES.PAPER_DELETED];
+const IGNORED_CLASSES = [CLASSES.CONTRIBUTION, CLASSES.CONTRIBUTION_DELETED, CLASSES.PAPER_DELETED, CLASSES.COMPARISON_DRAFT];
 
 const itemsPerFilter = 10;
 
@@ -85,7 +85,7 @@ export const useSearch = () => {
 
             // for papers, try to find a DOI
             const doi = searchQuery.startsWith('http') ? searchQuery.trim().substring(searchQuery.trim().indexOf('10.')) : searchQuery;
-            if (filterType === CLASSES.PAPER && REGEX.DOI.test(doi)) {
+            if (filterType === CLASSES.PAPER && REGEX.DOI_ID.test(doi)) {
                 try {
                     const paper = await getPaperByDOI(doi);
                     resultsResponse.push({ label: paper.title, id: paper.id, class: CLASSES.PAPER });

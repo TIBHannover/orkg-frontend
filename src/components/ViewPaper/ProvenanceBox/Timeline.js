@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { Alert, Button } from 'reactstrap';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
@@ -7,68 +8,24 @@ import { MISC } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 import { StyledActivity } from './styled';
 
-const Timeline = ({ versions, paperResource, isLoadingContributors }) => (
+const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, hasNextPageContributors, handleLoadMoreContributors }) => (
     <div>
+        <small>
+            <Alert className="rounded-0 mb-1" color="info">
+                The timeline is built based on the creation time of each resource and statement linked to the paper.
+            </Alert>
+        </small>
         <div className="pt-3 pb-3 ps-3 pe-3">
-            {!isLoadingContributors &&
-                versions?.length > 0 &&
+            {versions?.length > 0 &&
                 versions.map((version, index) => (
                     <StyledActivity key={`prov-${index}`} className="ps-3 pb-3">
-                        <div className="time">{moment(version.created_at).format('DD MMM YYYY')}</div>
+                        <div className="time">{moment(version.created_at).format('DD MMM YYYY HH:mm')}</div>
                         <div>
-                            {paperResource.created_by &&
-                                version.created_by.id === paperResource.created_by &&
-                                moment(paperResource.created_at).format('DD MMM YYYY') === moment(version.created_at).format('DD MMM YYYY') &&
-                                !version.publishedResource && (
-                                    <>
-                                        Added by{' '}
-                                        <Link
-                                            to={reverse(ROUTES.USER_PROFILE, {
-                                                userId: version.created_by,
-                                            })}
-                                        >
-                                            <b>{version.created_by.display_name}</b>
-                                        </Link>
-                                    </>
-                                )}
-
-                            {paperResource.created_by && version.publishedResource && (
+                            {paperResource.created_by && (
                                 <>
-                                    Published by{' '}
+                                    {version.publishedResource ? 'Published by ' : 'Updated by '}
                                     {version.created_by !== MISC.UNKNOWN_ID ? (
                                         <>
-                                            <Link
-                                                to={reverse(ROUTES.USER_PROFILE, {
-                                                    userId: version.created_by,
-                                                })}
-                                            >
-                                                <b>{version.created_by.display_name}</b>
-                                            </Link>
-                                            <br />
-                                            <small>
-                                                DOI:{' '}
-                                                <a
-                                                    href={`https://doi.org/${env('DATACITE_DOI_PREFIX')}/${version.publishedResource.id}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    https://doi.org/{env('DATACITE_DOI_PREFIX')}/{version.publishedResource.id}
-                                                </a>
-                                            </small>
-                                        </>
-                                    ) : (
-                                        <b>{version.created_by.display_name}</b>
-                                    )}
-                                </>
-                            )}
-
-                            {paperResource.created_by &&
-                                (moment(paperResource.created_at).format('DD MMM YYYY') !== moment(version.created_at).format('DD MMM YYYY') ||
-                                    version.created_by.id !== paperResource.created_by) &&
-                                !version.publishedResource && (
-                                    <>
-                                        Updated by{' '}
-                                        {version.created_by !== MISC.UNKNOWN_ID ? (
                                             <Link
                                                 to={reverse(ROUTES.USER_PROFILE, {
                                                     userId: version.created_by.id,
@@ -76,16 +33,63 @@ const Timeline = ({ versions, paperResource, isLoadingContributors }) => (
                                             >
                                                 <b>{version.created_by.display_name}</b>
                                             </Link>
-                                        ) : (
-                                            <b>{version.created_by.display_name}</b>
-                                        )}
-                                    </>
-                                )}
+                                            {version.publishedResource && (
+                                                <>
+                                                    <br />
+                                                    <small>
+                                                        DOI:{' '}
+                                                        <a
+                                                            href={`https://doi.org/${env('DATACITE_DOI_PREFIX')}/${version.publishedResource.id}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                        >
+                                                            https://doi.org/{env('DATACITE_DOI_PREFIX')}/{version.publishedResource.id}
+                                                        </a>
+                                                    </small>
+                                                </>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <b>{version.created_by.display_name}</b>
+                                    )}
+                                </>
+                            )}
                         </div>
                     </StyledActivity>
                 ))}
+            {!isLoadingContributors && hasNextPageContributors && (
+                <StyledActivity className="ps-3 pb-3">
+                    <div className="time">
+                        <Button color="light-darker" size="sm" onClick={!isLoadingContributors ? handleLoadMoreContributors : undefined}>
+                            Load more
+                        </Button>
+                    </div>
+                </StyledActivity>
+            )}
+            <StyledActivity className="ps-3 pb-3">
+                <div className="time">{moment(paperResource.created_at).format('DD MMM YYYY HH:mm')}</div>
+                <>
+                    Added by{' '}
+                    {createdBy ? (
+                        <Link
+                            to={reverse(ROUTES.USER_PROFILE, {
+                                userId: createdBy.created_by,
+                            })}
+                        >
+                            <b>{createdBy.display_name}</b>
+                        </Link>
+                    ) : (
+                        'Unknown'
+                    )}
+                </>
+            </StyledActivity>
             {!isLoadingContributors && versions?.length === 0 && 'No contributors'}
-            {isLoadingContributors && 'Loading ...'}
+
+            {isLoadingContributors && (
+                <StyledActivity>
+                    <div className="time">Loading ...</div>
+                </StyledActivity>
+            )}
         </div>
     </div>
 );
@@ -93,7 +97,10 @@ const Timeline = ({ versions, paperResource, isLoadingContributors }) => (
 Timeline.propTypes = {
     versions: PropTypes.array,
     paperResource: PropTypes.object,
+    createdBy: PropTypes.object,
     isLoadingContributors: PropTypes.bool,
+    hasNextPageContributors: PropTypes.bool,
+    handleLoadMoreContributors: PropTypes.func,
 };
 
 export default Timeline;

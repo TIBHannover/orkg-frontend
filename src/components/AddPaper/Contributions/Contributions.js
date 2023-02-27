@@ -6,14 +6,15 @@ import AbstractModal from 'components/AddPaper/AbstractModal/AbstractModal';
 import EntityRecognition from 'components/AddPaper/EntityRecognition/EntityRecognition';
 import useDetermineResearchField from 'components/AddPaper/EntityRecognition/useDetermineResearchField';
 import useEntityRecognition from 'components/AddPaper/hooks/useEntityRecognition';
+import useFeedbacks from 'components/AddPaper/hooks/useFeedbacks';
 import useBioassays from 'components/AddPaper/hooks/useBioassays';
 import Confirm from 'components/Confirmation/Confirmation';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
-import { StyledContributionTabs } from 'components/ContributionTabs/styled';
+import { StyledContributionTabs, GlobalStyle } from 'components/ContributionTabs/styled';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tooltip from 'components/Utils/Tooltip';
-import Tabs, { TabPane } from 'rc-tabs';
+import Tabs from 'rc-tabs';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import BIOASSAYS_FIELDS_LIST from 'constants/bioassayFieldList';
@@ -31,6 +32,7 @@ import {
     updateContributionLabelAction as updateContributionLabel,
 } from 'slices/addPaperSlice';
 import { updateSettings } from 'slices/statementBrowserSlice';
+import env from '@beam-australia/react-env';
 import ContributionsHelpTour from './ContributionsHelpTour';
 
 const Contributions = () => {
@@ -54,8 +56,9 @@ const Contributions = () => {
 
     const isBioassayField = BIOASSAYS_FIELDS_LIST.includes(selectedResearchField);
 
-    const { handleSaveFeedback } = useEntityRecognition();
+    const { handleSaveFeedback } = useEntityRecognition({ isComputerScienceField });
     const { handleSaveBioassaysFeedback } = useBioassays();
+    const { handleSavePredicatesRecommendationFeedback } = useFeedbacks();
 
     const [isOpenBioassays, setIsOpenBioassays] = useState(false);
 
@@ -89,6 +92,10 @@ const Contributions = () => {
         }
         if (isBioassayField) {
             handleSaveBioassaysFeedback();
+        }
+        if (env('IS_TESTING_SERVER') === 'true') {
+            // because this feature is disabled in production
+            handleSavePredicatesRecommendationFeedback(properties);
         }
         // save add paper
         dispatch(
@@ -155,6 +162,7 @@ const Contributions = () => {
 
     return (
         <div>
+            <GlobalStyle />
             <div className="d-flex align-items-center mt-4 mb-4">
                 <h2 className="h4 flex-shrink-0">
                     <Tooltip
@@ -227,24 +235,22 @@ const Contributions = () => {
                             activeKey={selectedContribution}
                             onChange={onTabChange}
                             destroyInactiveTabPane={true}
-                        >
-                            {contributions.allIds.map(contributionId => {
+                            items={contributions.allIds.map(contributionId => {
                                 const contribution = contributions.byId[contributionId];
-                                return (
-                                    <TabPane
-                                        tab={
-                                            <ContributionTab
-                                                handleChangeContributionLabel={handleChange}
-                                                isSelected={contribution.id === selectedContribution}
-                                                canDelete={contributions.allIds.length !== 1}
-                                                contribution={contribution}
-                                                key={contribution.id}
-                                                toggleDeleteContribution={toggleDeleteContribution}
-                                                enableEdit={true}
-                                            />
-                                        }
-                                        key={contribution.id}
-                                    >
+                                return {
+                                    label: (
+                                        <ContributionTab
+                                            handleChangeContributionLabel={handleChange}
+                                            isSelected={contribution.id === selectedContribution}
+                                            canDelete={contributions.allIds.length !== 1}
+                                            contribution={contribution}
+                                            key={contribution.id}
+                                            toggleDeleteContribution={toggleDeleteContribution}
+                                            enableEdit={true}
+                                        />
+                                    ),
+                                    key: contribution.id,
+                                    children: (
                                         <div className="contributionData">
                                             <StatementBrowser
                                                 enableEdit={true}
@@ -255,15 +261,15 @@ const Contributions = () => {
                                                 renderTemplateBox={true}
                                             />
                                         </div>
-                                    </TabPane>
-                                );
+                                    ),
+                                };
                             })}
-                        </Tabs>
+                        />
                     </StyledContributionTabs>
                 </Col>
 
-                <Col lg="3" className="ps-lg-3 mt-5">
-                    {isComputerScienceField && <EntityRecognition />}
+                <Col lg="3" className="ps-lg-3 mt-2">
+                    <EntityRecognition isComputerScienceField={isComputerScienceField} />
                 </Col>
             </Row>
 

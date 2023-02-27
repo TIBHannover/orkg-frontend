@@ -24,9 +24,14 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
 
     const canAddValue = useSelector(state => canAddValueAction(state, contributionId, propertyId));
 
-    const isLiteralField = useSelector(state =>
-        editMode ? value._class === ENTITIES.LITERAL : isLiteral(getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId)),
-    );
+    const isLiteralField = useSelector(state => {
+        if (editMode) {
+            return value._class === ENTITIES.LITERAL;
+        }
+        return getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId)?.length === 0
+            ? true
+            : isLiteral(getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId));
+    });
 
     const isUniqLabel = !!(valueClass && valueClass.id === CLASSES.PROBLEM);
 
@@ -49,6 +54,29 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
             ? getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE).inputFormType
             : getConfigByClassId(valueClass.id).inputFormType,
     );
+    const [isModelOpen, setIsModalOpen] = useState(false);
+    const [dialogResourceId, setDialogResourceId] = useState(null);
+    const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
+
+    const isBlankNode = useSelector(state => {
+        if (valueClass && !isLiteralField) {
+            if (state.contributionEditor.classes[valueClass.id]?.templateIds) {
+                const { templateIds } = state.contributionEditor.classes[valueClass.id];
+                // check if it's an inline resource
+                for (const templateId of templateIds) {
+                    const template = state.contributionEditor.templates[templateId];
+                    if (template && template.hasLabelFormat) {
+                        return template.label;
+                    }
+                }
+                if (!state.contributionEditor.classes[valueClass.id].isFetching) {
+                    // in case there is no templates for the class
+                    return false;
+                }
+            }
+        }
+        return false;
+    });
 
     const createBlankNode = () => {
         // 1 - create a resource
@@ -70,9 +98,6 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
             })
             .catch(error => {});
     };
-    const [isModelOpen, setIsModalOpen] = useState(false);
-    const [dialogResourceId, setDialogResourceId] = useState(null);
-    const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
 
     useEffect(() => {
         if (valueClass) {
@@ -94,32 +119,11 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
                     validationRules: property.validationRules,
                 };
             }
-            const schema = validationSchema(component);
-            return schema;
+            const _schema = validationSchema(component);
+            return _schema;
         }
         const config = getConfigByType(inputDataType);
         return config.schema;
-    });
-
-    const isBlankNode = useSelector(state => {
-        if (valueClass && !isLiteralField) {
-            if (state.contributionEditor.classes[valueClass.id]?.templateIds) {
-                const { templateIds } = state.contributionEditor.classes[valueClass.id];
-                // check if it's an inline resource
-                for (const templateId of templateIds) {
-                    const template = state.contributionEditor.templates[templateId];
-                    if (template && template.hasLabelFormat) {
-                        return template.label;
-                    }
-                }
-                if (!state.contributionEditor.classes[valueClass.id].isFetching) {
-                    // in case there is no templates for the class
-                    return false;
-                }
-            }
-        } else {
-            return false;
-        }
     });
 
     /**

@@ -21,7 +21,11 @@ const Lists = () => {
     const fetchItems = async ({ resourceClass, page, pageSize }) => {
         let items = [];
 
-        const { content: resources, last, totalElements } = await getResourcesByClass({
+        const {
+            content: resources,
+            last,
+            totalElements,
+        } = await getResourcesByClass({
             id: resourceClass,
             page,
             items: pageSize,
@@ -32,7 +36,10 @@ const Lists = () => {
         if (resources.length) {
             items = await getStatementsBySubjects({ ids: resources.map(item => item.id) }).then(statements =>
                 statements.map(statementsForSubject =>
-                    getListData(resources.find(_resource => _resource.id === statementsForSubject.id), statementsForSubject.statements),
+                    getListData(
+                        resources.find(_resource => _resource.id === statementsForSubject.id),
+                        statementsForSubject.statements,
+                    ),
                 ),
             );
             const groupedByPaper = groupBy(items, 'listId');
@@ -66,6 +73,16 @@ const Lists = () => {
         </>
     );
 
+    const infoContainerText = (
+        <>
+            ORKG lists provide a way to organize state-of-the-art literature for a specific research domain.{' '}
+            <a href="https://orkg.org/about/17/Lists" rel="noreferrer" target="_blank">
+                Learn more in the help center
+            </a>
+            .
+        </>
+    );
+
     return (
         <ListPage
             label="lists"
@@ -73,6 +90,7 @@ const Lists = () => {
             renderListItem={renderListItem}
             fetchItems={fetchItems}
             buttons={buttons}
+            infoContainerText={infoContainerText}
         />
     );
 };

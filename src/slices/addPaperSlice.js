@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LOCATION_CHANGE, guid } from 'utils';
+import { LOCATION_CHANGE, guid, getErrorMessage } from 'utils';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 import { mergeWith, isArray, uniqBy, merge } from 'lodash';
@@ -45,6 +45,7 @@ const initialState = {
     nerResources: [],
     nerProperties: [],
     nerRawResponse: {},
+    predicatesRawResponse: {},
     bioassayText: '',
     bioassayRawResponse: [],
 };
@@ -204,6 +205,9 @@ export const addPaperSlice = createSlice({
         setNerRawResponse: (state, { payload }) => {
             state.nerRawResponse = payload;
         },
+        setPredicatesRawResponse: (state, { payload }) => {
+            state.predicatesRawResponse = payload;
+        },
         setBioassayText: (state, { payload }) => {
             state.bioassayText = payload;
         },
@@ -211,8 +215,8 @@ export const addPaperSlice = createSlice({
             state.bioassayRawResponse = payload;
         },
     },
-    extraReducers: {
-        [LOCATION_CHANGE]: () => initialState,
+    extraReducers: builder => {
+        builder.addCase(LOCATION_CHANGE, () => initialState);
     },
 });
 
@@ -242,6 +246,7 @@ export const {
     setNerResources,
     setNerProperties,
     setNerRawResponse,
+    setPredicatesRawResponse,
     setBioassayText,
     setBioassayRawResponse,
 } = addPaperSlice.actions;
@@ -254,46 +259,45 @@ export const loadPaperDataAction = data => dispatch => {
     dispatch(loadStatementBrowserData(data.statementBrowser));
 };
 
-export const createContributionAction = ({ selectAfterCreation = false, fillStatements: performPrefill = false, statements = null }) => (
-    dispatch,
-    getState,
-) => {
-    const newResourceId = guid();
-    const newContributionId = guid();
-    const newContributionLabel = `Contribution ${getState().addPaper.contributions.allIds.length + 1}`;
+export const createContributionAction =
+    ({ selectAfterCreation = false, fillStatements: performPrefill = false, statements = null }) =>
+    (dispatch, getState) => {
+        const newResourceId = guid();
+        const newContributionId = guid();
+        const newContributionLabel = `Contribution ${getState().addPaper.contributions.allIds.length + 1}`;
 
-    dispatch(
-        createContribution({
-            id: newContributionId,
-            resourceId: newResourceId,
-            label: newContributionLabel,
-        }),
-    );
-
-    dispatch(
-        createResource({
-            resourceId: newResourceId,
-            label: newContributionLabel,
-            classes: [CLASSES.CONTRIBUTION],
-        }),
-    );
-
-    if (selectAfterCreation) {
-        dispatch(selectContribution(newContributionId));
-    }
-
-    // Dispatch loading template of classes
-    dispatch(fetchTemplatesOfClassIfNeeded(CLASSES.CONTRIBUTION));
-
-    if (performPrefill && statements) {
         dispatch(
-            fillStatements({
-                statements,
+            createContribution({
+                id: newContributionId,
                 resourceId: newResourceId,
+                label: newContributionLabel,
             }),
         );
-    }
-};
+
+        dispatch(
+            createResource({
+                resourceId: newResourceId,
+                label: newContributionLabel,
+                classes: [CLASSES.CONTRIBUTION],
+            }),
+        );
+
+        if (selectAfterCreation) {
+            dispatch(selectContribution(newContributionId));
+        }
+
+        // Dispatch loading template of classes
+        dispatch(fetchTemplatesOfClassIfNeeded(CLASSES.CONTRIBUTION));
+
+        if (performPrefill && statements) {
+            dispatch(
+                fillStatements({
+                    statements,
+                    resourceId: newResourceId,
+                }),
+            );
+        }
+    };
 
 export const deleteContributionAction = data => dispatch => {
     dispatch(deleteContribution(data.id));
@@ -340,31 +344,30 @@ export const getResourceObject = (data, resourceId, newProperties) => {
             return {
                 // Map properties of resource
                 /* Use the temp id from unique list of new properties */
-                [property.existingPredicateId
-                    ? property.existingPredicateId
-                    : newProperties.find(p => p[property.label])[property.label]]: property.valueIds.map(valueId => {
-                    const value = data.values.byId[valueId];
-                    if (value._class === ENTITIES.LITERAL && !value.isExistingValue) {
+                [property.existingPredicateId ? property.existingPredicateId : newProperties.find(p => p[property.label])[property.label]]:
+                    property.valueIds.map(valueId => {
+                        const value = data.values.byId[valueId];
+                        if (value._class === ENTITIES.LITERAL && !value.isExistingValue) {
+                            return {
+                                text: value.label,
+                                datatype: value.datatype,
+                            };
+                        }
+                        if (!value.isExistingValue) {
+                            const newResources = {};
+                            newResources[value.resourceId] = value.resourceId;
+                            return {
+                                '@temp': `_${value.resourceId}`,
+                                label: value.label,
+                                classes: value.classes && value.classes.length > 0 ? value.classes : null,
+                                values: { ...getResourceObject(data, value.resourceId, newProperties) },
+                            };
+                        }
                         return {
-                            text: value.label,
-                            datatype: value.datatype,
+                            '@id': newResources.includes(value.resourceId) ? `_${value.resourceId}` : value.resourceId,
+                            '@type': value._class,
                         };
-                    }
-                    if (!value.isExistingValue) {
-                        const newResources = {};
-                        newResources[value.resourceId] = value.resourceId;
-                        return {
-                            '@temp': `_${value.resourceId}`,
-                            label: value.label,
-                            classes: value.classes && value.classes.length > 0 ? value.classes : null,
-                            values: { ...getResourceObject(data, value.resourceId, newProperties) },
-                        };
-                    }
-                    return {
-                        '@id': newResources.includes(value.resourceId) ? `_${value.resourceId}` : value.resourceId,
-                        '@type': value._class,
-                    };
-                }),
+                    }),
             };
         }),
         customizer,
@@ -417,7 +420,7 @@ export const saveAddPaperAction = data => async dispatch => {
         dispatch(blockNavigation({ status: false }));
     } catch (e) {
         console.log(e);
-        toast.error('Something went wrong while saving this paper.');
+        toast.error(`Something went wrong while saving this paper: ${getErrorMessage(e)}`);
         dispatch(previousStep());
     }
 };

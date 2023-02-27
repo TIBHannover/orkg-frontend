@@ -36,7 +36,7 @@ const ViewArticle = () => {
     const latestVersionId = versions?.[0]?.id;
     const newVersionAvailable = isPublished && latestVersionId !== id;
     const toggleHistoryModal = () => dispatch(toggleHistoryModalAction());
-    const url = env('URL') + reverse(ROUTES.REVIEW, { id }).replace('/', '', 1);
+    const url = env('URL') + reverse(ROUTES.REVIEW, { id });
 
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: id,
@@ -115,14 +115,15 @@ const ViewArticle = () => {
                                                             <>
                                                                 <div className="mt-3 mb-2">
                                                                     <Link
-                                                                        to={reverse(
+                                                                        to={
                                                                             section.type.id === CLASSES.RESOURCE_SECTION
-                                                                                ? ROUTES.RESOURCE
-                                                                                : ROUTES.PREDICATE,
-                                                                            {
-                                                                                id: section.contentLink.objectId,
-                                                                            },
-                                                                        )}
+                                                                                ? `${reverse(ROUTES.RESOURCE, {
+                                                                                      id: section.contentLink.objectId,
+                                                                                  })}?noRedirect`
+                                                                                : reverse(ROUTES.PREDICATE, {
+                                                                                      id: section.contentLink.objectId,
+                                                                                  })
+                                                                        }
                                                                         target="_blank"
                                                                     >
                                                                         {section.contentLink.label}

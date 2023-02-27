@@ -211,10 +211,7 @@ function renderHalo(group, cfg, pNode) {
     renderingShapeForHalo.style('stroke-width', '2');
 
     function animationEnd() {
-        group
-            .classed('searchResultA', false)
-            .classed('searchResultB', true)
-            .attr('animationRunning', false);
+        group.classed('searchResultA', false).classed('searchResultB', true).attr('animationRunning', false);
 
         // remove eventListener to prevent memory leaks
         group.node().removeEventListener('webkitAnimationEnd', animationEnd);

@@ -19,7 +19,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const AddResource = () => {
-    const isDOI = new RegExp(REGEX.DOI);
+    const isDOI = new RegExp(REGEX.DOI_ID);
     const classesAutocompleteRef = useRef(null);
     const [label, setLabel] = useState('');
     const [classes, setClasses] = useState([]);
@@ -62,7 +62,7 @@ const AddResource = () => {
                     const newResource = await createResource(label.trim(), classes ? classes.map(c => c.id) : []);
                     toast.success('Resource created successfully');
                     setIsLoading(false);
-                    navigate(reverse(ROUTES.RESOURCE, { id: newResource.id }));
+                    navigate(`${reverse(ROUTES.RESOURCE, { id: newResource.id })}?noRedirect`);
                 } catch (error) {
                     console.error(error);
                     setIsLoading(false);
@@ -79,7 +79,7 @@ const AddResource = () => {
                         await createLiteralStatement(newResource.id, PREDICATES.HAS_DOI, responseJsonDoi.id);
                         toast.success('Resource created successfully');
                         setIsLoading(false);
-                        navigate(reverse(ROUTES.RESOURCE, { id: newResource.id }));
+                        navigate(`${reverse(ROUTES.RESOURCE, { id: newResource.id })}?noRedirect`);
                     } catch (error) {
                         console.error(error);
                         toast.error(`Error finding DOI : ${error.message}`);

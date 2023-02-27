@@ -35,7 +35,11 @@ const Papers = () => {
     };
 
     const fetchItems = async ({ page, pageSize }) => {
-        const { content: items, last, totalElements } = await getResourcesByClass({
+        const {
+            content: items,
+            last,
+            totalElements,
+        } = await getResourcesByClass({
             id: CLASSES.PAPER,
             page,
             items: pageSize,
@@ -91,6 +95,16 @@ const Papers = () => {
         </>
     );
 
+    const infoContainerText = (
+        <>
+            ORKG papers describe scholarly articles in a structured and semantic manner.{' '}
+            <a href="https://orkg.org/about/20/Papers" rel="noreferrer" target="_blank">
+                Learn more in the help center
+            </a>
+            .
+        </>
+    );
+
     return (
         <>
             <ListPage
@@ -102,6 +116,7 @@ const Papers = () => {
                 disableSearch={verified !== null}
                 reset={reset}
                 setReset={setReset}
+                infoContainerText={infoContainerText}
             />
             <ComparisonPopup />
         </>

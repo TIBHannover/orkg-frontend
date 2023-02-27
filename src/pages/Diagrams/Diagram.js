@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
-import { Controls, MarkerType, MiniMap } from 'react-flow-renderer';
+import { Controls, MarkerType, MiniMap } from 'reactflow';
 import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Alert } from 'reactstrap';
 import ContextMenu from 'components/DiagramEditor/ContextMenu';
 import EditNode from 'components/DiagramEditor/EditNode';
@@ -133,7 +133,7 @@ function Diagram() {
                                 </DropdownToggle>
                                 <DropdownMenu end>
                                     <DropdownItem onClick={() => setIsExportDiagramModalOpen(true)}>Export diagram</DropdownItem>
-                                    <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id })}>
+                                    <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                                         View resource
                                     </DropdownItem>
                                 </DropdownMenu>

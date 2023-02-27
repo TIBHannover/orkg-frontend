@@ -36,9 +36,9 @@ function OrganizationCard(props) {
     return (
         <div className="col-4 mb-3">
             {props.organization.logo && (
-                <Link to={reverse(ROUTES.ORGANIZATION, { id: props.organization.display_id })}>
+                <Link to={reverse(ROUTES.ORGANIZATION, { type: props.type, id: props.organization.display_id })}>
                     <StyledOrganizationCard className="card h-100">
-                        <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: props.organization.display_id })}>
+                        <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { type: props.type, id: props.organization.display_id })}>
                             <img className="mx-auto p-2" src={props.organization.logo} alt={`${props.organization.name} logo`} />
                         </Link>
                         <CardBody>
@@ -48,7 +48,7 @@ function OrganizationCard(props) {
                 </Link>
             )}
             {!props.organization.logo && (
-                <Link to={reverse(ROUTES.ORGANIZATION, { id: props.organization.display_id })}>
+                <Link to={reverse(ROUTES.ORGANIZATION, { type: props.type, id: props.organization.display_id })}>
                     <Card className="h-100">
                         <CardBody className="d-flex">
                             <CardTitle className="align-self-center text-center flex-grow-1">{props.organization.name}</CardTitle>
@@ -62,6 +62,8 @@ function OrganizationCard(props) {
 
 OrganizationCard.propTypes = {
     organization: PropTypes.object.isRequired,
+    route: PropTypes.string,
+    type: PropTypes.string,
 };
 
 export default OrganizationCard;

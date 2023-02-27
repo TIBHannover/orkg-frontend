@@ -4,7 +4,12 @@ import userEvent from '@testing-library/user-event';
 import AddProperty from '../AddProperty';
 import { statementBrowserStrictTemplate } from '../__mocks__/StatementBrowserDataAddProperty';
 
-jest.mock('react-flip-move', () => ({ children }) => children);
+jest.mock(
+    'react-flip-move',
+    () =>
+        ({ children }) =>
+            children,
+);
 
 const setup = (
     initialState = {},

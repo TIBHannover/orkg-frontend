@@ -115,7 +115,10 @@ const ComponentsTab = () => {
             dispatch(
                 updateComponents(
                     update(components, {
-                        $splice: [[dragIndex, 1], [hoverIndex, 0, dragCard]],
+                        $splice: [
+                            [dragIndex, 1],
+                            [hoverIndex, 0, dragCard],
+                        ],
                     }),
                 ),
             );

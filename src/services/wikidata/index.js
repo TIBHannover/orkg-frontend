@@ -2,6 +2,7 @@ import env from '@beam-australia/react-env';
 import { submitGetRequest } from 'network';
 
 export const wikidataUrl = env('WIKIDATA_URL');
+export const wikidataSparql = env('WIKIDATA_SPARQL');
 
 export const searchEntity = async ({ value, page, pageSize, type }) => {
     if (!type) {
@@ -39,4 +40,16 @@ export const searchEntity = async ({ value, page, pageSize, type }) => {
     }
 
     return { options: newOptions, hasMore: results ? !!results['search-continue'] : false };
+};
+
+export const searchAuthorOnWikidataByORCID = orcid => {
+    const query = `SELECT ?item ?itemLabel ?dblpId WHERE {
+                    ?item wdt:P496 "${orcid}" ;
+                        wdt:P2456 ?dblpId .
+                    SERVICE wikibase:label {
+                        bd:serviceParam wikibase:language "en" .
+                    }
+        }`;
+
+    return submitGetRequest(`${wikidataSparql}?query=${encodeURIComponent(query)}&format=json`);
 };

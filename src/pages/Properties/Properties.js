@@ -17,7 +17,11 @@ const Properties = () => {
     );
 
     const fetchItems = async ({ page, pageSize }) => {
-        const { content: items, last, totalElements } = await getPredicates({
+        const {
+            content: items,
+            last,
+            totalElements,
+        } = await getPredicates({
             page,
             items: pageSize,
             sortBy: 'created_at',

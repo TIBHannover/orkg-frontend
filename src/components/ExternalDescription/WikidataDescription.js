@@ -1,6 +1,7 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import WIKIDATA_LOGO from 'assets/img/sameas/wikidatawiki.png';
+import { wikidataSparql } from 'services/wikidata/index';
 import { PropertyStyle, StatementsGroupStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import { groupBy } from 'lodash';
 import PropTypes from 'prop-types';
@@ -17,7 +18,6 @@ const WikidataDescription = ({ externalResource }) => {
             try {
                 setIsLoading(true);
                 const wikidataID = externalResource.substr(externalResource.indexOf('Q'));
-                const endpoint = 'https://query.wikidata.org/sparql';
                 const query = `
                 SELECT ?property ?propertyLabel ?object ?objectLabel
                 WHERE
@@ -31,7 +31,7 @@ const WikidataDescription = ({ externalResource }) => {
                 LIMIT 500
                 `;
 
-                const url = `${endpoint}?query=${encodeURIComponent(query)}&format=json`;
+                const url = `${wikidataSparql}?query=${encodeURIComponent(query)}&format=json`;
                 const response = await fetch(url);
                 const statements = await response.json();
                 setStatementsByProperty(groupBy(statements.results.bindings, 'property.value'));

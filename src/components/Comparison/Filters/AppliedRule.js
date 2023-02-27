@@ -1,6 +1,6 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { stringifyType } from 'utils';
+import { stringifyType } from 'components/Comparison/Filters/helpers';
 import { Badge, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';

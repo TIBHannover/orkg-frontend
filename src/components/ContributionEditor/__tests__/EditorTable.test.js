@@ -1,9 +1,14 @@
-import TableScrollContainer from 'components/Comparison/TableScrollContainer';
+import TableScrollContainer from 'components/Comparison/Table/TableScrollContainer';
 import { fireEvent, render, screen, waitFor, within, waitForElementToBeRemoved } from 'testUtils';
 import EditTable from '../EditorTable';
 import { contribution, contributionLiteralOnly } from '../__mocks__/ContributionEditorData';
 
-jest.mock('react-flip-move', () => ({ children }) => children);
+jest.mock(
+    'react-flip-move',
+    () =>
+        ({ children }) =>
+            children,
+);
 
 // mock the ResizeObserver
 class ResizeObserver {

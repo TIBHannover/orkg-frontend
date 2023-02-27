@@ -1,7 +1,7 @@
 import { createReference, setUsedReferences as setUsedReferencesAction } from 'slices/reviewSlice';
 import { sanitize } from 'dompurify';
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Showdown from 'showdown';
 import footnotes from 'showdown-footnotes';
@@ -23,6 +23,10 @@ const MarkdownRenderer = ({ text, id }) => {
     const referenceRegex = useMemo(() => /\[@(.*?)\]/gi, []);
     const dispatch = useDispatch();
 
+    const formatReferenceKey = useCallback(key => key.slice(0, -1).slice(2, key.length), []);
+
+    const getReferenceByKey = useCallback(key => references.find(reference => reference?.parsedReference?.id === key), [references]);
+
     const inlineReferences = {
         type: 'lang',
         regex: referenceRegex,
@@ -30,17 +34,13 @@ const MarkdownRenderer = ({ text, id }) => {
             const keyFormatted = formatReferenceKey(reference);
             const matchingReference = getReferenceByKey(keyFormatted);
             if (matchingReference) {
-                return `([${matchingReference?.parsedReference?.author?.[0]?.family ?? 'Unknown'}, ${matchingReference?.parsedReference?.issued?.[
-                    'date-parts'
-                ]?.[0]?.[0] ?? ''}](#reference${keyFormatted}))`;
+                return `([${matchingReference?.parsedReference?.author?.[0]?.family ?? 'Unknown'}, ${
+                    matchingReference?.parsedReference?.issued?.['date-parts']?.[0]?.[0] ?? ''
+                }](#reference${keyFormatted}))`;
             }
             return '<strong>[?]</strong>';
         },
     };
-
-    const formatReferenceKey = useCallback(key => key.slice(0, -1).slice(2, key.length), []);
-
-    const getReferenceByKey = useCallback(key => references.find(reference => reference?.parsedReference?.id === key), [references]);
 
     useEffect(() => {
         if (!text) {
@@ -49,15 +49,14 @@ const MarkdownRenderer = ({ text, id }) => {
         const _usedReferences = {};
         const matches = text.match(referenceRegex);
 
-        matches &&
-            matches.length &&
+        if (matches && matches.length) {
             matches.map(async key => {
                 const keyFormatted = formatReferenceKey(key);
                 const reference = getReferenceByKey(keyFormatted);
 
                 if (reference) {
                     _usedReferences[reference.parsedReference.id] = reference;
-                } else if (REGEX.DOI.test(keyFormatted) && !fetchedDois.includes(keyFormatted)) {
+                } else if (REGEX.DOI_ID.test(keyFormatted) && !fetchedDois.includes(keyFormatted)) {
                     setFetchedDois(v => [...v, keyFormatted]);
                     try {
                         const data = await Cite.async(keyFormatted);
@@ -79,6 +78,7 @@ const MarkdownRenderer = ({ text, id }) => {
                 }
                 return null;
             });
+        }
         dispatch(setUsedReferencesAction({ references: _usedReferences, sectionId: id }));
     }, [text, references, referenceRegex, getReferenceByKey, dispatch, id, formatReferenceKey, fetchedDois, contributionId]);
 

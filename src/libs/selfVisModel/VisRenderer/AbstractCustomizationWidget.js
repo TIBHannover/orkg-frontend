@@ -6,6 +6,7 @@ import CustomizationColumnChart from './ChartRenderers/CustomizationColumnChart'
 import CustomizationBarChart from './ChartRenderers/CustomizationBarChart';
 import CustomizationScatterChart from './ChartRenderers/CustomizationScatterChart';
 import CustomizationLineChart from './ChartRenderers/CustomizationLineChart';
+import CustomizationPieChart from './ChartRenderers/CustomizationPieChart';
 
 export default class AbstractCustomizationWidget extends Component {
     constructor(props) {
@@ -60,6 +61,15 @@ export default class AbstractCustomizationWidget extends Component {
             case 'LineChart': {
                 return (
                     <CustomizationLineChart
+                        propagateUpdates={this.props.propagateUpdates}
+                        createChartVisualization={this.props.createChartVisualization}
+                        restoreCustomizationState={keepCustomizationWidgetWhenChanged}
+                    />
+                );
+            }
+            case 'PieChart': {
+                return (
+                    <CustomizationPieChart
                         propagateUpdates={this.props.propagateUpdates}
                         createChartVisualization={this.props.createChartVisualization}
                         restoreCustomizationState={keepCustomizationWidgetWhenChanged}

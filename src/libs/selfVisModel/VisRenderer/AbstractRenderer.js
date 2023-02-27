@@ -52,7 +52,8 @@ export default class AbstractRenderer extends Component {
             renderingMethod === 'Table' ||
             renderingMethod === 'BarChart' ||
             renderingMethod === 'ScatterChart' ||
-            renderingMethod === 'LineChart'
+            renderingMethod === 'LineChart' ||
+            renderingMethod === 'PieChart'
         ) {
             return (
                 <AbstractChartRenderer

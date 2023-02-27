@@ -17,7 +17,11 @@ const Classes = () => {
     );
 
     const fetchItems = async ({ page, pageSize }) => {
-        const { content: items, last, totalElements } = await getClasses({
+        const {
+            content: items,
+            last,
+            totalElements,
+        } = await getClasses({
             page,
             items: pageSize,
             sortBy: 'created_at',

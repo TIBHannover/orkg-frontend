@@ -34,12 +34,7 @@ const ListStatements = ({ property, idToLabel, values, validationErrors = [] }) 
                             <div className="d-inline">
                                 {'@id' in value && idToLabel[value['@id']] && (
                                     <>
-                                        <Link
-                                            to={reverse(ROUTES.RESOURCE, {
-                                                id: value['@id'],
-                                            })}
-                                            target="_blank"
-                                        >
+                                        <Link to={`${reverse(ROUTES.RESOURCE, { id: value['@id'] })}?noRedirect`} target="_blank">
                                             {idToLabel[value['@id']]}
                                         </Link>
                                         <Badge color="light" className="ms-2">

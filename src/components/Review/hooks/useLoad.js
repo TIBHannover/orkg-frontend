@@ -11,7 +11,18 @@ import { Cite } from '@citation-js/core';
 const useLoad = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isNotFound, setIsNotFound] = useState(false);
+    const [hasFailed, setHasFailed] = useState(false);
     const dispatch = useDispatch();
+
+    const notFound = () => {
+        setIsNotFound(true);
+        setIsLoading(false);
+    };
+
+    const failed = () => {
+        setHasFailed(true);
+        setIsLoading(false);
+    };
 
     const getArticleById = useCallback(async id => {
         let paperResource = await getResource(id).catch(e => {});
@@ -42,10 +53,16 @@ const useLoad = () => {
             paperResource = statements.find(statement => statement.subject.id === id).subject;
             isPublished = true;
         } else {
-            const { statements } = await getStatementsBundleBySubject({
-                id,
-            });
-            paperStatements = statements;
+            try {
+                const { statements } = await getStatementsBundleBySubject({
+                    id,
+                });
+                paperStatements = statements;
+            } catch (e) {
+                console.log('error while bundle fetching statements', e);
+                failed();
+                return;
+            }
         }
 
         // get all published versions for this article
@@ -255,11 +272,6 @@ const useLoad = () => {
             }));
     };
 
-    const notFound = () => {
-        setIsNotFound(true);
-        setIsLoading(false);
-    };
-
     const getObjectsByPredicateAndSubject = (statements, predicateId, subjectId) =>
         statements
             .filter(statement => statement.predicate.id === predicateId && statement.subject.id === subjectId)
@@ -270,7 +282,7 @@ const useLoad = () => {
     const getStatementsByPredicateAndSubject = (statements, predicateId, subjectId) =>
         statements.filter(statement => statement.subject.id === subjectId && statement.predicate.id === predicateId);
 
-    return { load, isLoading, isNotFound, getArticleById, getVersions };
+    return { load, isLoading, isNotFound, getArticleById, getVersions, hasFailed };
 };
 
 export default useLoad;

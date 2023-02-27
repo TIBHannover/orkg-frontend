@@ -1,14 +1,51 @@
-import { useState } from 'react';
-import { Button } from 'reactstrap';
+import { useState, Fragment } from 'react';
+import { Button, Table } from 'reactstrap';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
 import { truncate } from 'lodash';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faClipboard } from '@fortawesome/free-solid-svg-icons';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
+import { PREDICATES, ENTITIES } from 'constants/graphSettings';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { getResourceLink } from 'utils';
 import { toast } from 'react-toastify';
+import styled from 'styled-components';
+
+const TippyStyle = styled(Tippy)`
+    &.tippy-box[data-theme~='descriptionTooltip'] .tippy-content {
+        padding: 0 !important;
+        table {
+            border-collapse: collapse;
+            color: #fff;
+            overflow-wrap: break-word;
+            table-layout: fixed;
+            width: 100%;
+        }
+        table td,
+        table th {
+            border: 1px solid black;
+        }
+        table td:first-child {
+            width: 100px;
+        }
+        table tr:first-child td {
+            border-top: 0;
+        }
+        table tr:last-child td {
+            border-bottom: 0;
+        }
+        table tr td:first-child,
+        table tr th:first-child {
+            border-left: 0;
+        }
+        table tr td:last-child,
+        table tr th:last-child {
+            border-right: 0;
+        }
+    }
+`;
 
 const DescriptionTooltip = props => {
     const [description, setDescription] = useState('');
@@ -16,7 +53,7 @@ const DescriptionTooltip = props => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     const onTrigger = () => {
-        if (!isLoaded) {
+        if (!isLoaded && props._class !== ENTITIES.LITERAL) {
             setIsLoading(true);
             getStatementsBySubjectAndPredicate({ subjectId: props.id, predicateId: PREDICATES.DESCRIPTION })
                 .then(descriptionStatement => {
@@ -34,72 +71,111 @@ const DescriptionTooltip = props => {
     };
 
     const renderTypeLabel = () => {
-        switch (props.typeId) {
+        switch (props._class) {
             case ENTITIES.PREDICATE:
                 return 'Property';
             case ENTITIES.RESOURCE:
                 return 'Resource';
             case ENTITIES.CLASS:
                 return 'Class';
-            case CLASSES.PROBLEM:
-                return 'Research problem';
+            case ENTITIES.LITERAL:
+                return 'Literal';
             default:
                 return 'Resource';
         }
     };
 
     return (
-        <Tippy
+        <TippyStyle
+            theme="descriptionTooltip"
             onTrigger={onTrigger}
             content={
-                <div>
-                    <div>
-                        <span style={{ verticalAlign: 'middle' }}>
-                            {renderTypeLabel()} id: {props.id}
-                        </span>
-                        <CopyToClipboard
-                            text={props.id}
-                            onCopy={() => {
-                                toast.dismiss();
-                                toast.success('ID copied to clipboard');
-                            }}
-                        >
-                            <Button title="Click to copy id" onClick={e => e.stopPropagation()} className="py-0 px-0 ms-1" size="sm" color="link">
-                                <Icon icon={faClipboard} size="xs" />
-                            </Button>
-                        </CopyToClipboard>
-                    </div>
-                    <div>
-                        Description:
-                        {!isLoading ? (
-                            <>
-                                {description ? (
-                                    <> {truncate(description, { length: 300 })}</>
-                                ) : (
-                                    <small className="font-italic"> No description yet</small>
-                                )}
-                            </>
-                        ) : (
-                            <Icon icon={faSpinner} spin />
+                <Table className="rounded mb-0">
+                    <tbody>
+                        <tr>
+                            <td>{renderTypeLabel()} id</td>
+                            <td>
+                                <span>{props.id}</span>
+                                <CopyToClipboard
+                                    text={props.id}
+                                    onCopy={() => {
+                                        toast.dismiss();
+                                        toast.success('ID copied to clipboard');
+                                    }}
+                                >
+                                    <Button
+                                        title="Click to copy id"
+                                        onClick={e => e.stopPropagation()}
+                                        className="py-0 px-0 ms-1"
+                                        size="sm"
+                                        color="link"
+                                        style={{ verticalAlign: 'middle' }}
+                                    >
+                                        <Icon icon={faClipboard} size="xs" />
+                                    </Button>
+                                </CopyToClipboard>
+                            </td>
+                        </tr>
+                        {props.classes?.length > 0 && (
+                            <tr>
+                                <td>Instance of</td>
+                                <td>
+                                    {props.classes.map((c, index) => (
+                                        <Fragment key={index}>
+                                            <Link to={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
+                                                {c}
+                                            </Link>
+                                            {index + 1 < props.classes.length && ','}
+                                        </Fragment>
+                                    ))}
+                                </td>
+                            </tr>
                         )}
-                    </div>
-                    {props.extraContent && <div>{props.extraContent}</div>}
-                </div>
+                        {props._class !== ENTITIES.LITERAL && (
+                            <tr>
+                                <td>Description</td>
+                                <td>
+                                    {' '}
+                                    {!isLoading ? (
+                                        <>
+                                            {description ? (
+                                                <> {truncate(description, { length: 300 })}</>
+                                            ) : (
+                                                <small className="font-italic"> No description yet</small>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <Icon icon={faSpinner} spin />
+                                    )}
+                                </td>
+                            </tr>
+                        )}
+                        {props.extraContent && props.extraContent}
+                    </tbody>
+                </Table>
             }
+            delay={[500, 0]}
             appendTo={document.body}
+            disabled={props.disabled}
             interactive={true}
             arrow={true}
         >
             <span tabIndex="0">{props.children}</span>
-        </Tippy>
+        </TippyStyle>
     );
 };
 
 DescriptionTooltip.propTypes = {
     children: PropTypes.node.isRequired,
     id: PropTypes.string.isRequired,
-    extraContent: PropTypes.string,
-    typeId: PropTypes.string.isRequired,
+    _class: PropTypes.string.isRequired,
+    classes: PropTypes.array,
+    extraContent: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    disabled: PropTypes.bool.isRequired,
+};
+
+DescriptionTooltip.defaultProps = {
+    disabled: false,
 };
 
 export default DescriptionTooltip;

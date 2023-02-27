@@ -72,9 +72,7 @@ const DATA_TYPES = [
         type: 'xsd:anyURI',
         _class: ENTITIES.LITERAL,
         classId: CLASSES.URI,
-        schema: Joi.string()
-            .regex(REGEX.URL)
-            .message('"value" must be a valid URL'),
+        schema: Joi.string().regex(REGEX.URL).message('"value" must be a valid URL'),
         inputFormType: 'text',
         weight: 1,
     },

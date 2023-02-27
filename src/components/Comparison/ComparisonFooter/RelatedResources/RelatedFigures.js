@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { Card, CardImg, CardColumns } from 'reactstrap';
+import { useSelector } from 'react-redux';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import styled, { createGlobalStyle } from 'styled-components';
@@ -38,11 +38,15 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
-const RelatedFigures = props => {
+const RelatedFigures = () => {
+    const isLoadingMetadata = useSelector(state => state.comparison.isLoadingMetadata);
+    const isFailedLoadingMetadata = useSelector(state => state.comparison.isFailedLoadingMetadata);
+    const figures = useSelector(state => state.comparison.comparisonResource.figures);
+
     const [isOpen, setIsOpen] = useState(false);
     const [photoIndex, setPhotoIndex] = useState(0);
-    const [figures, setFigures] = useState([]);
-    const location = useLocation();
+    const [relatedFigures, setRelatedFigures] = useState([]);
+    const { hash } = useLocation();
 
     const openLightBox = (index = 0) => {
         setIsOpen(!isOpen);
@@ -50,29 +54,27 @@ const RelatedFigures = props => {
     };
 
     useEffect(() => {
-        const loadResources = () => {
-            if (props.figureStatements.length === 0) {
+        const loadFigures = () => {
+            if (figures.length === 0) {
                 return;
             }
             // Fetch the data of each figure
             getStatementsBySubjects({
-                ids: props.figureStatements.map(resource => resource.id),
+                ids: figures.map(r => r.id),
             })
                 .then(figuresStatements => {
-                    setFigures(getRelatedFiguresData(figuresStatements));
+                    setRelatedFigures(getRelatedFiguresData(figuresStatements));
                 })
-                .catch(err => {
-                    console.log(err);
-                    setFigures([]);
+                .catch(() => {
+                    setRelatedFigures([]);
                 });
         };
 
-        loadResources();
-    }, [props.figureStatements]);
+        loadFigures();
+    }, [figures]);
 
     const scrollTo = useCallback(
         header => {
-            const { hash } = location;
             const id = isString(hash) ? hash.replace('#', '') : null;
             if (!header || header.id !== id) {
                 return;
@@ -82,16 +84,16 @@ const RelatedFigures = props => {
                 top: header.offsetTop - 90,
             });
         },
-        [location.hash],
+        [hash],
     );
 
-    if (props.figureStatements.length > 0) {
+    if (!isLoadingMetadata && !isFailedLoadingMetadata && figures?.length > 0) {
         return (
-            <>
+            <div className="py-3">
                 <GlobalStyle />
-                <h3 className="mt-5 h5">Related figures</h3>{' '}
+                <h5 id="relatedFigures">Related figures</h5>
                 <CardColumns className="d-flex row">
-                    {figures.map((figure, index) => (
+                    {relatedFigures.map((figure, index) => (
                         <div className="col-sm-3" key={`figure${figure.figureId}`} ref={scrollTo} id={figure.figureId}>
                             <CardStyled onClick={() => openLightBox(index)}>
                                 <CardImg
@@ -100,7 +102,7 @@ const RelatedFigures = props => {
                                     width="100%"
                                     src={figure.src}
                                     alt={`figure #${figure.figureId}`}
-                                    className={location.hash === `#${figure.figureId}` ? 'blink-figure' : ''}
+                                    className={hash === `#${figure.figureId}` ? 'blink-figure' : ''}
                                 />
                             </CardStyled>
                         </div>
@@ -108,30 +110,22 @@ const RelatedFigures = props => {
                 </CardColumns>
                 {isOpen && (
                     <Lightbox
-                        mainSrc={figures[photoIndex].src}
-                        imageTitle={figures[photoIndex].title}
-                        imageCaption={figures[photoIndex].description}
-                        nextSrc={figures[(photoIndex + 1) % figures.length].src}
-                        prevSrc={figures[(photoIndex + figures.length - 1) % figures.length].src}
+                        mainSrc={relatedFigures[photoIndex].src}
+                        imageTitle={relatedFigures[photoIndex].title}
+                        imageCaption={relatedFigures[photoIndex].description}
+                        nextSrc={relatedFigures[(photoIndex + 1) % relatedFigures.length].src}
+                        prevSrc={relatedFigures[(photoIndex + relatedFigures.length - 1) % relatedFigures.length].src}
                         onCloseRequest={() => setIsOpen(false)}
-                        onMovePrevRequest={() => setPhotoIndex((photoIndex + figures.length - 1) % figures.length)}
-                        onMoveNextRequest={() => setPhotoIndex((photoIndex + 1) % figures.length)}
+                        onMovePrevRequest={() => setPhotoIndex((photoIndex + relatedFigures.length - 1) % relatedFigures.length)}
+                        onMoveNextRequest={() => setPhotoIndex((photoIndex + 1) % relatedFigures.length)}
                         reactModalStyle={{ overlay: { zIndex: 1050 } }}
                     />
                 )}
-            </>
+            </div>
         );
     }
 
     return null;
-};
-
-RelatedFigures.propTypes = {
-    figureStatements: PropTypes.array.isRequired,
-};
-
-RelatedFigures.defaultProps = {
-    figureStatements: [],
 };
 
 export default RelatedFigures;

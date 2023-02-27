@@ -12,6 +12,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { Button, ButtonDropdown, Col, Container, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'reactstrap';
 import { reverseWithSlug } from 'utils';
 import TitleBar from 'components/TitleBar/TitleBar';
+import CopyId from 'components/CopyId/CopyId';
 
 const ResearchFields = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -54,7 +55,7 @@ const ResearchFields = () => {
                             <Icon icon={faEllipsisV} />
                         </DropdownToggle>
                         <DropdownMenu end>
-                            <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: RESOURCES.RESEARCH_FIELD_MAIN })}>
+                            <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id: RESOURCES.RESEARCH_FIELD_MAIN })}?noRedirect`}>
                                 View resource
                             </DropdownItem>
                         </DropdownMenu>
@@ -63,27 +64,15 @@ const ResearchFields = () => {
             >
                 Research fields taxonomy
             </TitleBar>
+            <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
+                The ORKG research fields taxonomy facilitates browsing and exploring the research knowledge graph.{' '}
+                <a href="https://www.orkg.org/help-center/article/20/ORKG_Research_fields_taxonomy" target="_blank" rel="noreferrer">
+                    Learn more in the help center
+                </a>
+                .
+            </Container>
             <Container className="p-0">
                 <div className="box rounded-3 p-4">
-                    <div className="d-flex">
-                        <div>
-                            <p>
-                                The <i>ORKG Research fields taxonomy</i> is used to organize and facilitate browsing and exploring the research
-                                knowledge graph.
-                            </p>
-                            <div>
-                                Further information about the taxonomy can be found in the{' '}
-                                <a
-                                    href="https://www.orkg.org/help-center/article/20/ORKG_Research_fields_taxonomy"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    ORKG help center
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <hr />
                     <Row>
                         <Col md="5" className="border-right">
                             <ResearchFieldSelector
@@ -98,23 +87,29 @@ const ResearchFields = () => {
                         <Col md="7">
                             {selectedResearchField && (
                                 <>
-                                    <div className="d-flex justify-content-between align-items-start mb-3">
-                                        <h2 className="h5">{researchFieldLabel} papers</h2>
-                                        {selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN && (
-                                            <Button
-                                                tag={Link}
-                                                to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                                                    researchFieldId: selectedResearchField,
-                                                    slug: researchFieldLabel,
-                                                })}
-                                                color="light"
-                                                size="sm"
-                                                className="flex-shrink-0 ms-2"
-                                            >
-                                                Visit field page
-                                            </Button>
-                                        )}
+                                    <div className="d-flex justify-content-between align-items-center mb-3">
+                                        <h2 className="h5">{researchFieldLabel}</h2>
+                                        <div className="d-flex align-items-center justify-content-end flex-wrap">
+                                            <div className="flex-shrink-0 my-1">
+                                                <CopyId id={selectedResearchField} />
+                                            </div>
+                                            {selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN && (
+                                                <Button
+                                                    tag={Link}
+                                                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                                        researchFieldId: selectedResearchField,
+                                                        slug: researchFieldLabel,
+                                                    })}
+                                                    color="light"
+                                                    size="sm"
+                                                    className="flex-shrink-0 ms-2 my-1"
+                                                >
+                                                    Visit field page
+                                                </Button>
+                                            )}
+                                        </div>
                                     </div>
+                                    <hr />
                                     <Papers id={selectedResearchField} boxShadow={false} showBreadcrumbs={false} />
                                 </>
                             )}

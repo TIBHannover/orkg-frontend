@@ -13,6 +13,8 @@ import SearchFieldSelector from 'components/StatementBrowser/TemplatesModal/Sear
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import useTemplatesRecommendation from 'components/AddPaper/hooks/useTemplatesRecommendation';
+import Tooltip from 'components/Utils/Tooltip';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import useTemplates from './hooks/useTemplates';
@@ -43,6 +45,8 @@ const TemplatesModal = props => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
+    const { recommendedTemplates, isLoadingRT } = useTemplatesRecommendation();
+
     const onlyFeatured = true;
     const {
         filterOptions,
@@ -179,6 +183,47 @@ const TemplatesModal = props => {
                                 <br />
                                 <small>You can search by label or filter by research field, research problem or class.</small>
                             </Alert>
+                        )}
+
+                        {!labelFilter && !targetFilter && recommendedTemplates.length > 0 && (
+                            <FormGroup>
+                                <p>
+                                    <Tooltip message="The suggestions listed below are automatically generated based on the title and abstract from the paper. Using these suggestions is optional.">
+                                        Suggestions
+                                    </Tooltip>
+                                </p>
+                                <div>
+                                    {recommendedTemplates.map(template => (
+                                        <TemplateButton
+                                            tippyTarget={target}
+                                            key={`t${template.id}`}
+                                            id={template.id}
+                                            label={template.label}
+                                            source={template.source}
+                                            resourceId={selectedResource}
+                                            syncBackend={props.syncBackend}
+                                            isSmart={true}
+                                        />
+                                    ))}
+                                </div>
+                            </FormGroup>
+                        )}
+
+                        {isLoadingRT && !labelFilter && !targetFilter && (
+                            <ContentLoader
+                                height="100%"
+                                width="100%"
+                                viewBox="0 0 100 5"
+                                style={{ width: '100% !important' }}
+                                speed={2}
+                                backgroundColor="#f3f3f3"
+                                foregroundColor="#ecebeb"
+                            >
+                                <rect x="0" y="0" rx="1" ry="1" width="10" height="3" />
+                                <rect x="12" y="0" rx="1" ry="1" width="10" height="3" />
+                                <rect x="24" y="0" rx="1" ry="1" width="10" height="3" />
+                                <rect x="36" y="0" rx="1" ry="1" width="10" height="3" />
+                            </ContentLoader>
                         )}
 
                         {!labelFilter && !targetFilter && featuredTemplates.length > 0 && (

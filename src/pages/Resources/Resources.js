@@ -11,13 +11,17 @@ import { getResources } from 'services/backend/resources';
 
 const Resources = () => {
     const renderListItem = resource => (
-        <ShortRecord key={resource.id} header={resource.label} href={reverse(ROUTES.RESOURCE, { id: resource.id })}>
+        <ShortRecord key={resource.id} header={resource.label} href={`${reverse(ROUTES.RESOURCE, { id: resource.id })}?noRedirect`}>
             {resource.id}
         </ShortRecord>
     );
 
     const fetchItems = async ({ page, pageSize }) => {
-        const { content: items, last, totalElements } = await getResources({
+        const {
+            content: items,
+            last,
+            totalElements,
+        } = await getResources({
             page,
             items: pageSize,
             sortBy: 'created_at',

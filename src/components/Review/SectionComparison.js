@@ -1,10 +1,9 @@
 import { setComparisonData, setUsedReferences } from 'slices/reviewSlice';
-import Comparison from 'components/Comparison/Comparison';
-import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
-import useComparison from 'components/Comparison/hooks/useComparison';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import EmbeddedComparison from 'components/Comparison/EmbeddedComparison/EmbeddedComparison';
+import { useState, useEffect } from 'react';
+import configureStore from 'store';
+import { Provider, useSelector, useDispatch } from 'react-redux';
 import { isEqual } from 'lodash';
 import { Alert } from 'reactstrap';
 import ROUTES from 'constants/routes';
@@ -15,39 +14,21 @@ const SectionComparison = ({ id, sectionId }) => {
     const references = useSelector(state => state.review.references);
     const usedReferences = useSelector(state => state.review.usedReferences);
     const dispatch = useDispatch();
-    const comparisonData = useComparison({
-        id,
-    });
+    const [store, setStore] = useState(null);
 
-    const {
-        contributions,
-        properties,
-        data,
-        isLoadingComparisonResult,
-        filterControlData,
-        updateRulesOfProperty,
-        comparisonType,
-        handleToggleGroupVisibility,
-        hiddenGroups,
-    } = comparisonData;
-
-    useEffect(() => {
-        if (Object.keys(comparisonData.data).length === 0) {
+    const setComparisonDataCallBack = data => {
+        if (Object.keys(data).length === 0) {
             return;
         }
         dispatch(
             setComparisonData({
                 id,
-                data: {
-                    data,
-                    properties,
-                    metaData: comparisonData.metaData,
-                },
+                data,
             }),
         );
-    }, [comparisonData, data, dispatch, id, properties]);
+    };
 
-    useEffect(() => {
+    const updateReferences = contributions => {
         const paperIds = contributions.map(contribution => contribution.paperId);
         if (paperIds.length === 0) {
             return;
@@ -56,9 +37,14 @@ const SectionComparison = ({ id, sectionId }) => {
         if (!isEqual(_usedReferences, usedReferences[sectionId])) {
             dispatch(setUsedReferences({ references: _usedReferences, sectionId }));
         }
-    }, [contributions, dispatch, references, sectionId, usedReferences]);
+    };
 
-    const url = env('URL') + reverse(ROUTES.COMPARISON, { comparisonId: id }).replace('/', '', 1);
+    useEffect(() => {
+        const { store } = configureStore();
+        setStore(store);
+    }, []);
+
+    const url = env('URL') + reverse(ROUTES.COMPARISON, { comparisonId: id });
 
     return (
         <>
@@ -66,23 +52,11 @@ const SectionComparison = ({ id, sectionId }) => {
                 Comparison available via <a href={url}>{url}</a>
             </Alert>
             <div className="d-print-none">
-                {id && contributions.length > 0 && (
-                    <Comparison
-                        data={data}
-                        properties={properties}
-                        contributions={contributions}
-                        removeContribution={() => {}}
-                        transpose={false}
-                        viewDensity="compact"
-                        comparisonType={comparisonType}
-                        filterControlData={filterControlData}
-                        updateRulesOfProperty={updateRulesOfProperty}
-                        embeddedMode={true}
-                        handleToggleGroupVisibility={handleToggleGroupVisibility}
-                        hiddenGroups={hiddenGroups}
-                    />
+                {store && id && (
+                    <Provider store={store}>
+                        <EmbeddedComparison id={id} updateReferences={updateReferences} setComparisonDataCallBack={setComparisonDataCallBack} />
+                    </Provider>
                 )}
-                {id && isLoadingComparisonResult && <ComparisonLoadingComponent />}
             </div>
         </>
     );

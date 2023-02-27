@@ -8,7 +8,7 @@ import { Navigate } from 'react-router-dom';
  */
 const ClassRedirect = ({ classes = [], targetClass, resourceId }) => {
     if (classes && !classes.includes(targetClass) && targetClass) {
-        return <Navigate to={{ pathname: reverse(ROUTES.RESOURCE, { id: resourceId }), state: { status: 301 } }} />;
+        return <Navigate to={{ pathname: `${reverse(ROUTES.RESOURCE, { id: resourceId })}?noRedirect`, state: { status: 301 } }} />;
     }
 
     return null;

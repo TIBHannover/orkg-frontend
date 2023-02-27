@@ -21,6 +21,7 @@ class ForgotPassword extends Component {
     }
 
     resetPasswordPassword = () => {
+        document.body.style.overflow = 'auto scroll';
         this.props.toggleAuthDialog();
     };
 
@@ -64,7 +65,4 @@ const mapDispatchToProps = dispatch => ({
     toggleAuthDialog: () => dispatch(toggleAuthDialog()),
 });
 
-export default connect(
-    null,
-    mapDispatchToProps,
-)(ForgotPassword);
+export default connect(null, mapDispatchToProps)(ForgotPassword);

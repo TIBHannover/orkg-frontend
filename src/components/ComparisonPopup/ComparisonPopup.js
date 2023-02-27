@@ -278,7 +278,4 @@ const mapDispatchToProps = dispatch => ({
     loadComparisonFromLocalStorage: data => dispatch(loadComparisonFromLocalStorage(data)),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(ComparisonPopup);
+export default connect(mapStateToProps, mapDispatchToProps)(ComparisonPopup);

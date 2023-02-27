@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import TemplateDetailsTooltip from './TemplateDetailsTooltip';
 
 const IconWrapper = styled.span`
-    background-color: ${props => (props.addMode ? '#d1d5e4' : '#dc3545')};
+    background-color: ${props => (props.addMode ? (props.isSmart ? props.theme.smart : '#d1d5e4') : '#dc3545')};
     position: absolute;
     left: 0;
     height: 100%;
@@ -28,7 +28,7 @@ const IconWrapper = styled.span`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: ${props => (props.addMode ? props.theme.secondary : 'white')};
+    color: ${props => (props.addMode && !props.isSmart ? props.theme.secondary : 'white')};
     padding-left: 3px;
 `;
 
@@ -121,10 +121,12 @@ const TemplateButton = props => {
                         !props.addMode && deleteTemplate();
                     }}
                     size="sm"
-                    color={props.addMode ? 'light' : 'danger'}
-                    className="me-2 mb-2 position-relative px-3 rounded-pill border-0"
+                    outline={props.isSmart}
+                    // eslint-disable-next-line no-nested-ternary
+                    color={props.addMode ? (props.isSmart ? 'smart' : 'light') : 'danger'}
+                    className={`me-2 mb-2 position-relative px-3 rounded-pill ${!props.isSmart && 'border-0'}`}
                 >
-                    <IconWrapper addMode={props.addMode}>
+                    <IconWrapper addMode={props.addMode} isSmart={props.isSmart}>
                         {!isSaving && props.addMode && <Icon size="sm" icon={faPlus} />}
                         {!isSaving && !props.addMode && <Icon size="sm" icon={faTimes} />}
                         {isSaving && <Icon icon={faSpinner} spin />}
@@ -144,12 +146,14 @@ TemplateButton.propTypes = {
     classId: PropTypes.string,
     source: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     syncBackend: PropTypes.bool.isRequired,
+    isSmart: PropTypes.bool,
     tippyTarget: PropTypes.object,
 };
 
 TemplateButton.defaultProps = {
     addMode: true,
     label: '',
+    isSmart: false,
     syncBackend: false,
 };
 

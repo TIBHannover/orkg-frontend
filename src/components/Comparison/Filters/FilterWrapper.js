@@ -1,6 +1,6 @@
 import Tippy from '@tippyjs/react';
 import { useState, useEffect } from 'react';
-import { stringifyType } from 'utils';
+import { stringifyType } from 'components/Comparison/Filters/helpers';
 import PropTypes from 'prop-types';
 
 const FilterWrapper = props => {

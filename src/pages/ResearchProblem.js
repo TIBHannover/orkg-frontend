@@ -2,6 +2,7 @@ import IntegratedList from 'components/ResearchProblem/IntegratedList';
 import { useParams } from 'react-router-dom';
 import Benchmarks from 'components/ResearchProblem/Benchmarks/Benchmarks';
 import ResearchProblemHeader from 'components/ResearchProblem/ResearchProblemHeader';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 
 function ResearchProblem() {
     const { researchProblemId, slug } = useParams();
@@ -12,6 +13,7 @@ function ResearchProblem() {
             <Benchmarks id={researchProblemId} />
 
             <IntegratedList id={researchProblemId} slug={slug} boxShadow />
+            <ComparisonPopup />
         </div>
     );
 }

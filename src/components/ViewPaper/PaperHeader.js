@@ -99,8 +99,7 @@ const PaperHeader = props => {
 
             {(viewPaper.publicationMonth?.label || viewPaper.publicationYear?.label) && (
                 <span className="badge bg-light me-2">
-                    <Icon icon={faCalendar} className="text-secondary" />{' '}
-                    {viewPaper.publicationMonth?.label ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''}{' '}
+                    <Icon icon={faCalendar} /> {viewPaper.publicationMonth?.label ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''}{' '}
                     {viewPaper.publicationYear?.label ? viewPaper.publicationYear.label : ''}
                 </span>
             )}

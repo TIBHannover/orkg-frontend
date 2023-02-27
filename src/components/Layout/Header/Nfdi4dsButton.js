@@ -23,11 +23,11 @@ const NavItemStyled = styled(NavItem)`
 
 const Nfdi4dsButton = () => {
     useEffect(() => {
-        (function(w, d, s, o, f, js, fjs) {
+        (function (w, d, s, o, f, js, fjs) {
             w.nfdi4dsWidget = o;
             w[o] =
                 w[o] ||
-                function() {
+                function () {
                     (w[o].q = w[o].q || []).push(arguments);
                 };
             // eslint-disable-next-line no-unused-expressions, no-sequences

@@ -35,7 +35,7 @@ function ObservatoryCard(props) {
                 <Card className="h-100">
                     <Link to={reverse(ROUTES.OBSERVATORY, { id: props.observatory.display_id })} style={{ textDecoration: 'none' }}>
                         <CardBody>
-                            {props.observatory.organization_ids.map(o => (
+                            {props.observatory.organizations.map(o => (
                                 <span key={o.id} style={{ marginLeft: '10px' }}>
                                     <img
                                         className="justify-content-center orgLogo"

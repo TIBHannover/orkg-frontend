@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 import { classesUrl } from 'services/backend/classes';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { DClocationResources, QBDatasetClasses } from 'services/mocks/backend/__mocks__/Classes';
 
 const resources = [

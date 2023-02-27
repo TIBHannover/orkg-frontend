@@ -167,7 +167,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
             output: item =>
                 `[${item.resource.label}](${env('URL')}${reverse(ROUTES.RESOURCE, {
                     id: item.resource.id,
-                }).replace('/', '', 1)})`,
+                })})`,
         },
         '[@': {
             dataProvider: token =>

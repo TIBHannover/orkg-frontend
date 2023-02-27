@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import { ENTITIES } from 'constants/graphSettings';
 import Boolean from './Boolean/Boolean';
 import Link from './Link/Link';
 import Latex from './Latex/Latex';
@@ -31,7 +32,7 @@ class ValuePlugins extends Component {
 
 ValuePlugins.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.node]).isRequired,
-    type: PropTypes.oneOf(['resource', 'literal']),
+    type: PropTypes.oneOf([ENTITIES.RESOURCE, ENTITIES.LITERAL]),
     options: PropTypes.object.isRequired,
 };
 

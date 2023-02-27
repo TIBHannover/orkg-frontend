@@ -4,7 +4,7 @@ import { Chart } from 'react-google-charts';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar, faUser, faLink } from '@fortawesome/free-solid-svg-icons';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import MarkFeaturedUnlistedContainer from 'components/Comparison/MarkFeaturedUnlistedContainer';
+import MarkFeaturedUnlistedContainer from 'components/Comparison/ComparisonHeader/MarkFeaturedUnlistedContainer';
 import moment from 'moment';
 import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes.js';
@@ -68,8 +68,8 @@ const SingleVisualizationComponent = props => {
     const { customizationState } = props.input.reconstructionModel.data.reconstructionData;
     useEffect(() => {
         // we need to check if the data input for this component has changed iff then apply reconstructionModel)
-        const renderingData = selfVisModel.applyReconstructionModel(props.input.reconstructionModel);
-        setRenderingData(renderingData);
+        const _renderingData = selfVisModel.applyReconstructionModel(props.input.reconstructionModel);
+        setRenderingData(_renderingData);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.input.reconstructionModel.orkgOrigin]);
 
@@ -98,7 +98,11 @@ const SingleVisualizationComponent = props => {
                         <DescriptionHeader>
                             {props.input.label.length > 0 ? `Title: ${props.input.label}` : 'No Title'}
                             <Tippy content="Go to resource page">
-                                <Link target="_blank" className="ms-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: props.input.id })}>
+                                <Link
+                                    target="_blank"
+                                    className="ms-2 resourceLink"
+                                    to={`${reverse(ROUTES.RESOURCE, { id: props.input.id })}?noRedirect`}
+                                >
                                     <Icon icon={faLink} color="#fff" />
                                 </Link>
                             </Tippy>

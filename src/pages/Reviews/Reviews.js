@@ -26,7 +26,11 @@ const Reviews = () => {
     const fetchItems = async ({ resourceClass, page, pageSize }) => {
         let items = [];
 
-        const { content: resources, last, totalElements } = await getResourcesByClass({
+        const {
+            content: resources,
+            last,
+            totalElements,
+        } = await getResourcesByClass({
             id: resourceClass,
             page,
             items: pageSize,
@@ -37,7 +41,10 @@ const Reviews = () => {
         if (resources.length) {
             items = await getStatementsBySubjects({ ids: resources.map(item => item.id) }).then(statements =>
                 statements.map(statementsForSubject =>
-                    getReviewData(resources.find(resource => resource.id === statementsForSubject.id), statementsForSubject.statements),
+                    getReviewData(
+                        resources.find(resource => resource.id === statementsForSubject.id),
+                        statementsForSubject.statements,
+                    ),
                 ),
             );
             const groupedByPaper = groupBy(items, 'paperId');
@@ -71,6 +78,16 @@ const Reviews = () => {
         </>
     );
 
+    const infoContainerText = (
+        <>
+            ORKG reviews are dynamic, community maintained scholarly articles and are especially suitable for survey papers.{' '}
+            <a href="https://orkg.org/about/16/Reviews" rel="noreferrer" target="_blank">
+                Learn more in the help center
+            </a>
+            .
+        </>
+    );
+
     return (
         <ListPage
             label="reviews"
@@ -78,6 +95,7 @@ const Reviews = () => {
             renderListItem={renderListItem}
             fetchItems={fetchItems}
             buttons={buttons}
+            infoContainerText={infoContainerText}
         />
     );
 };

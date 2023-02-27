@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Container, Button, Alert } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
@@ -8,7 +8,7 @@ import EditableHeader from 'components/EditableHeader';
 import ObjectStatements from 'components/ObjectStatements/ObjectStatements';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import NotFound from 'pages/NotFound';
-import { useLocation, Link, useParams } from 'react-router-dom';
+import { useLocation, Link, useParams, useNavigate } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes.js';
 import { useSelector } from 'react-redux';
@@ -99,10 +99,21 @@ const DEDICATED_PAGE_LINKS = {
         routeParams: 'id',
     },
 };
+
+// A custom hook that builds on useLocation to parse the query string
+function useQuery() {
+    const { search } = useLocation();
+
+    return useMemo(() => new URLSearchParams(search), [search]);
+}
+
 function Resource() {
     const params = useParams();
     const resourceId = params.id;
     const location = useLocation();
+    const navigate = useNavigate();
+    const query = useQuery();
+    const noRedirect = query.get('noRedirect');
     const [error, setError] = useState(null);
     const [resource, setResource] = useState('');
     const [isLoading, setIsLoading] = useState(true);
@@ -126,6 +137,17 @@ function Resource() {
         featured: resource?.featured,
     });
 
+    const getDedicatedLink = useCallback(_classes => {
+        for (const _class of _classes ?? []) {
+            if (_class in DEDICATED_PAGE_LINKS) {
+                // only for a link for the first class occurrence (to prevent problems when a
+                // resource has multiple classes form the list), so return
+                return DEDICATED_PAGE_LINKS[_class];
+            }
+        }
+        return null;
+    }, []);
+
     useEffect(() => {
         const findResource = async () => {
             setIsLoading(true);
@@ -134,6 +156,16 @@ function Resource() {
                     document.title = `${responseJson.label} - Resource - ORKG`;
                     setCreatedBy(responseJson.created_by);
                     setResource(responseJson);
+                    const link = getDedicatedLink(responseJson.classes);
+                    if (noRedirect === null && link) {
+                        navigate(
+                            reverseWithSlug(link.route, {
+                                [link.routeParams]: params.id,
+                                slug: link.hasSlug ? responseJson.label : undefined,
+                            }),
+                            { replace: true },
+                        );
+                    }
                     if (responseJson.classes.includes(CLASSES.VISUALIZATION)) {
                         getVisualization(resourceId)
                             .then(model => {
@@ -180,7 +212,7 @@ function Resource() {
                 });
         };
         findResource();
-    }, [location, params.id, resourceId, isCurationAllowed]);
+    }, [location, params.id, resourceId, isCurationAllowed, getDedicatedLink, noRedirect, navigate]);
 
     useEffect(() => {
         setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && !hasObjectStatement);
@@ -190,18 +222,7 @@ function Resource() {
         setResource(prev => ({ ...prev, label: val }));
     };
 
-    const getDedicatedLink = useCallback(() => {
-        for (const _class of resource?.classes ?? []) {
-            if (_class in DEDICATED_PAGE_LINKS) {
-                // only for a link for the first class occurrence (to prevent problems when a
-                // resource has multiple classes form the list), so return
-                return DEDICATED_PAGE_LINKS[_class];
-            }
-        }
-        return null;
-    }, [resource?.classes]);
-
-    const dedicatedLink = getDedicatedLink();
+    const dedicatedLink = getDedicatedLink(resource?.classes);
 
     return (
         <>
@@ -236,44 +257,47 @@ function Resource() {
                                         <Icon icon={faExternalLinkAlt} className="me-1" /> {dedicatedLink.label} view
                                     </Button>
                                 )}
-                                {canEdit ? (
-                                    !editMode ? (
-                                        <RequireAuthentication
-                                            component={Button}
-                                            className="float-end"
-                                            color="secondary"
-                                            size="sm"
-                                            onClick={() => (env('PWC_USER_ID') === createdBy ? setIsOpenPWCModal(true) : setEditMode(v => !v))}
-                                        >
-                                            <Icon icon={faPen} /> Edit
-                                        </RequireAuthentication>
-                                    ) : (
-                                        <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
-                                            <Icon icon={faTimes} /> Stop editing
-                                        </Button>
-                                    )
-                                ) : (
+                                {canEdit && !editMode && (
+                                    <RequireAuthentication
+                                        component={Button}
+                                        className="float-end"
+                                        color="secondary"
+                                        size="sm"
+                                        onClick={() => (env('PWC_USER_ID') === createdBy ? setIsOpenPWCModal(true) : setEditMode(v => !v))}
+                                    >
+                                        <Icon icon={faPen} /> Edit
+                                    </RequireAuthentication>
+                                )}
+                                {canEdit && editMode && (
+                                    <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
+                                        <Icon icon={faTimes} /> Stop editing
+                                    </Button>
+                                )}
+                                {!canEdit && !editMode && (
                                     <Tippy
                                         hideOnClick={false}
                                         interactive={!!resource.classes.find(c => c.id === CLASSES.RESEARCH_FIELD)}
                                         content={
-                                            env('PWC_USER_ID') === createdBy ? (
-                                                'This resource cannot be edited because it is from an external source. Our provenance feature is in active development.'
-                                            ) : resource.classes.find(c => c.id === CLASSES.RESEARCH_FIELD) ? (
-                                                <>
-                                                    This resource can not be edited. Please visit the{' '}
-                                                    <a
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        href="https://www.orkg.org/help-center/article/20/ORKG_Research_fields_taxonomy"
-                                                    >
-                                                        ORKG help center
-                                                    </a>{' '}
-                                                    if you have any suggestions to improve the research fields taxonomy.
-                                                </>
-                                            ) : (
-                                                'This resource can not be edited because it has a published DOI.'
-                                            )
+                                            <>
+                                                {env('PWC_USER_ID') === createdBy &&
+                                                    'This resource cannot be edited because it is from an external source. Our provenance feature is in active development.'}
+                                                {env('PWC_USER_ID') !== createdBy && resource.classes.find(c => c.id === CLASSES.RESEARCH_FIELD) && (
+                                                    <>
+                                                        This resource can not be edited. Please visit the{' '}
+                                                        <a
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            href="https://www.orkg.org/help-center/article/20/ORKG_Research_fields_taxonomy"
+                                                        >
+                                                            ORKG help center
+                                                        </a>{' '}
+                                                        if you have any suggestions to improve the research fields taxonomy.
+                                                    </>
+                                                )}
+                                                {env('PWC_USER_ID') !== createdBy &&
+                                                    !resource.classes.find(c => c.id === CLASSES.RESEARCH_FIELD) &&
+                                                    'This resource can not be edited because it has a published DOI.'}
+                                            </>
                                         }
                                     >
                                         <span className="btn btn-secondary btn-sm disabled">
@@ -332,7 +356,7 @@ function Resource() {
                             </>
                         )}
 
-                        <ItemMetadata item={resource} showCreatedAt={true} showCreatedBy={true} />
+                        <ItemMetadata item={resource} showCreatedAt={true} showCreatedBy={true} showProvenance={true} editMode={editMode} />
                         <hr />
                         {/* Adding Visualization Component here */}
                         {hasVisualizationModelForGDC && (

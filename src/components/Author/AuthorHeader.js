@@ -47,15 +47,16 @@ const AuthorHeader = ({ authorId }) => {
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu end>
-                                        <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: authorId })}>
+                                        <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id: authorId })}?noRedirect`}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </ButtonDropdown>
                             </>
                         }
+                        titleAddition="Author"
                     >
-                        Author: {author.label}
+                        {author.label}
                     </TitleBar>
 
                     {editMode && (
@@ -140,6 +141,16 @@ const AuthorHeader = ({ authorId }) => {
                                                 rel="noopener noreferrer"
                                             >
                                                 {author.linkedIn.label} <Icon icon={faExternalLinkAlt} />
+                                            </a>
+                                        </div>
+                                    </div>
+                                )}
+                                {author.dblp && (
+                                    <div className="col-md-3 col-sm-6">
+                                        <div>DBLP</div>
+                                        <div className="mb-3 text-wrap">
+                                            <a href={`https://dblp.org/pid/${author.dblp}`} target="_blank" rel="noopener noreferrer">
+                                                {author.dblp} <Icon icon={faExternalLinkAlt} />
                                             </a>
                                         </div>
                                     </div>

@@ -306,17 +306,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
         if (
             isUniqLabel &&
             inputValue &&
-            selectOptions
-                .map(s =>
-                    String(s.label)
-                        .trim()
-                        .toLowerCase(),
-                )
-                .includes(
-                    String(inputValue)
-                        .trim()
-                        .toLowerCase(),
-                )
+            selectOptions.map(s => String(s.label).trim().toLowerCase()).includes(String(inputValue).trim().toLowerCase())
         ) {
             setDisabledCreate(true);
         } else {

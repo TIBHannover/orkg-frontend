@@ -1,30 +1,16 @@
-import { Modal, ModalHeader, ModalBody, ListGroup, ListGroupItem, Badge, Input, Label, FormGroup } from 'reactstrap';
-import PropTypes from 'prop-types';
-import styled, { createGlobalStyle } from 'styled-components';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSort } from '@fortawesome/free-solid-svg-icons';
-import { SortableContainer, SortableElement, sortableHandle } from 'react-sortable-hoc';
-import capitalize from 'capitalize';
 import Tippy from '@tippyjs/react';
-
-const DragHandle = styled.span`
-    cursor: move;
-    color: #a5a5a5;
-    width: 30px;
-    text-align: center;
-    flex-shrink: 0;
-`;
-
-const DragHandlePlaceholder = styled.span`
-    width: 30px;
-    flex-shrink: 0;
-`;
+import capitalize from 'capitalize';
+import { activatedPropertiesToList } from 'components/Comparison/hooks/helpers';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { Alert, Badge, FormGroup, Input, Label, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { setConfigurationAttribute, setProperties } from 'slices/comparisonSlice';
+import styled, { createGlobalStyle } from 'styled-components';
 
 const ListGroupItemStyled = styled(ListGroupItem)`
-    padding: 10px 10px 9px 5px !important;
+    padding: 10px 10px 9px 15px !important;
     display: flex !important;
 `;
-
 const GlobalStyle = createGlobalStyle`
     .sortable-helper{
         z-index: 10000 !important;
@@ -32,55 +18,60 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
-function SelectProperties(props) {
-    const SortableHandle = sortableHandle(() => (
-        <DragHandle>
-            <Icon icon={faSort} />
-        </DragHandle>
-    ));
+const SelectProperties = props => {
+    const dispatch = useDispatch();
+    const properties = useSelector(state => state.comparison.properties);
 
-    const SortableItem = SortableElement(({ value: property }) => (
-        <ListGroupItemStyled>
-            {property.active ? <SortableHandle /> : <DragHandlePlaceholder />}
-            <FormGroup check className="flex-grow-1">
-                <Input type="checkbox" id={`checkbox-${property.id}`} onChange={() => props.toggleProperty(property.id)} checked={property.active} />{' '}
-                <Label check for={`checkbox-${property.id}`} className="mb-0">
-                    {capitalize(property.label)}
-                </Label>
-            </FormGroup>
-            <Tippy content="Amount of contributions">
-                <span>
-                    <Badge color="light">{property.contributionAmount}</Badge>
-                </span>
-            </Tippy>
-        </ListGroupItemStyled>
-    ));
-
-    const SortableList = SortableContainer(({ items }) => (
-        <ListGroup>
-            {items.map((value, index) => (
-                <SortableItem key={`item-${index}`} index={index} value={value} />
-            ))}
-        </ListGroup>
-    ));
+    /**
+     * Toggle a property from the table
+     *
+     * @param {String} id Property id to toggle
+     */
+    const toggleProperty = id => {
+        const newProperties = properties.map(property => (property.id === id ? { ...property, active: !property.active } : property));
+        dispatch(setProperties(newProperties));
+        dispatch(setConfigurationAttribute({ attribute: 'predicatesList', value: activatedPropertiesToList(newProperties) }));
+    };
 
     return (
         <Modal isOpen={props.showPropertiesDialog} toggle={props.togglePropertiesDialog}>
             <GlobalStyle />
             <ModalHeader toggle={props.togglePropertiesDialog}>Select properties</ModalHeader>
             <ModalBody>
-                <SortableList items={props.properties} onSortEnd={props.onSortEnd} lockAxis="y" helperClass="sortable-helper" useDragHandle />
+                <Alert color="info">
+                    Info: sorting properties has been moved to the table itself. Make sure you are in edit mode and drag to properties in the desired
+                    position from within the table.
+                </Alert>
+                <ListGroup>
+                    {properties.map((property, index) => (
+                        <ListGroupItemStyled key={index}>
+                            <FormGroup check className="flex-grow-1">
+                                <Input
+                                    type="checkbox"
+                                    id={`checkbox-${property.id}`}
+                                    onChange={() => toggleProperty(property.id)}
+                                    checked={property.active}
+                                />{' '}
+                                <Label check for={`checkbox-${property.id}`} className="mb-0">
+                                    {capitalize(property.label)}
+                                </Label>
+                            </FormGroup>
+                            <Tippy content="Amount of contributions">
+                                <span>
+                                    <Badge color="light">{property.contributionAmount}</Badge>
+                                </span>
+                            </Tippy>
+                        </ListGroupItemStyled>
+                    ))}
+                </ListGroup>
             </ModalBody>
         </Modal>
     );
-}
+};
 
 SelectProperties.propTypes = {
     showPropertiesDialog: PropTypes.bool.isRequired,
     togglePropertiesDialog: PropTypes.func.isRequired,
-    properties: PropTypes.array.isRequired,
-    onSortEnd: PropTypes.func.isRequired,
-    toggleProperty: PropTypes.func.isRequired,
 };
 
 export default SelectProperties;

@@ -4,10 +4,12 @@ import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowser
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import FilterWrapper from 'components/Comparison/Filters/FilterWrapper';
 import FilterModal from 'components/Comparison/Filters/FilterModal';
+import { updateRulesOfProperty, handleToggleGroupVisibility } from 'slices/comparisonSlice';
 import { faFilter, faLevelUpAlt, faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { getRuleByProperty, getValuesByProperty, getDataByProperty } from 'utils';
+import { getRuleByProperty, getDataByProperty, getValuesByProperty } from 'components/Comparison/Filters/helpers';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -50,24 +52,14 @@ const FilterButton = styled(Button)`
     }
 `;
 
-const PropertyValue = ({
-    id,
-    label,
-    property,
-    similar,
-    filterControlData,
-    updateRulesOfProperty,
-    embeddedMode,
-    group,
-    grouped = false,
-    handleToggleShow,
-    groupId,
-    hiddenGroups,
-}) => {
+const PropertyCell = ({ id, label, property, similar, group, grouped = false, groupId }) => {
     const [showStatementBrowser, setShowStatementBrowser] = useState(false);
     const [showFilterDialog, setShowFilterDialog] = useState(false);
-
-    const updateRulesFactory = newRules => updateRulesOfProperty(newRules, id);
+    const dispatch = useDispatch();
+    const updateRulesFactory = newRules => dispatch(updateRulesOfProperty(newRules, id));
+    const filterControlData = useSelector(state => state.comparison.filterControlData);
+    const isEmbeddedMode = useSelector(state => state.comparison.isEmbeddedMode);
+    const hiddenGroups = useSelector(state => state.comparison.hiddenGroups);
 
     const handleOpenStatementBrowser = () => {
         setShowStatementBrowser(true);
@@ -87,8 +79,16 @@ const PropertyValue = ({
                     <Button onClick={handleOpenStatementBrowser} color="link" className="text-start text-light m-0 p-0 text-break user-select-auto">
                         <DescriptionTooltip
                             id={property?.id}
-                            typeId={ENTITIES.PREDICATE}
-                            extraContent={similar && similar.length ? `This property is merged with: ${similar.join(', ')}` : ''}
+                            _class={ENTITIES.PREDICATE}
+                            extraContent={
+                                similar && similar.length ? (
+                                    <tr>
+                                        <td colSpan="2">This property is merged with: {similar.join(', ')}</td>
+                                    </tr>
+                                ) : (
+                                    ''
+                                )
+                            }
                         >
                             <div className={grouped ? 'ms-2' : ''}>
                                 {grouped && <Icon icon={faLevelUpAlt} rotation={90} className="me-2" />}
@@ -97,7 +97,7 @@ const PropertyValue = ({
                             </div>
                         </DescriptionTooltip>
                     </Button>
-                    {!embeddedMode && (
+                    {!isEmbeddedMode && (
                         <>
                             <FilterWrapper
                                 data={{
@@ -128,7 +128,14 @@ const PropertyValue = ({
             )}
             {group && label}
             {group && (
-                <Button color="link" className="px-1 py-0 m-0 text-light-darker" onClick={() => handleToggleShow(groupId)}>
+                <Button
+                    color="link"
+                    className="px-1 py-0 m-0 text-light-darker"
+                    onClick={e => {
+                        e.stopPropagation();
+                        dispatch(handleToggleGroupVisibility?.(groupId));
+                    }}
+                >
                     <Icon icon={hiddenGroups.includes(groupId) ? faPlusSquare : faMinusSquare} />
                 </Button>
             )}
@@ -145,27 +152,20 @@ const PropertyValue = ({
     );
 };
 
-PropertyValue.propTypes = {
+PropertyCell.propTypes = {
     label: PropTypes.string.isRequired,
     id: PropTypes.string,
     property: PropTypes.object.isRequired,
     similar: PropTypes.array,
     group: PropTypes.bool,
     grouped: PropTypes.bool,
-    filterControlData: PropTypes.array.isRequired,
-    updateRulesOfProperty: PropTypes.func.isRequired,
-    embeddedMode: PropTypes.bool.isRequired,
-    handleToggleShow: PropTypes.func.isRequired,
     groupId: PropTypes.string,
-    hiddenGroups: PropTypes.array,
 };
 
-PropertyValue.defaultProps = {
+PropertyCell.defaultProps = {
     label: PropTypes.string.isRequired,
     similar: PropTypes.array,
-    embeddedMode: false,
     groupId: null,
-    hiddenGroups: [],
 };
 
-export default PropertyValue;
+export default PropertyCell;
