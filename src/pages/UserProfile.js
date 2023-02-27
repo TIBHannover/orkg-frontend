@@ -1,9 +1,8 @@
 import capitalize from 'capitalize';
-import classnames from 'classnames';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
-import Items from 'components/UserProfile/Items';
-import { CLASSES, MISC } from 'constants/graphSettings';
+import TabsContainer from 'components/UserProfile/TabsContainer';
+import { MISC } from 'constants/graphSettings';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -13,7 +12,7 @@ import ContentLoader from 'react-content-loader';
 import Gravatar from 'react-gravatar';
 import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { Col, Container, Nav, NavItem, NavLink, Row, TabContent, TabPane } from 'reactstrap';
+import { Container, Row } from 'reactstrap';
 import { getContributorInformationById } from 'services/backend/contributors';
 import { getObservatoryById } from 'services/backend/observatories';
 import { getOrganization } from 'services/backend/organizations';
@@ -53,36 +52,6 @@ const StyledOrganizationCard = styled.div`
     }
 `;
 
-/*
-const StyledActivity = styled.div`
-    border-left: 3px solid #e9ebf2;
-    color: ${props => props.theme.bodyColor};
-    .time {
-        color: rgba(100, 100, 100, 0.57);
-        margin-top: -0.2rem;
-        margin-bottom: 0.2rem;
-        font-size: 15px;
-    }
-    .time::before {
-        width: 1rem;
-        height: 1rem;
-        margin-left: -1.6rem;
-        margin-right: 0.5rem;
-        border-radius: 15px;
-        content: '';
-        background-color: #c2c6d6;
-        display: inline-block;
-    }
-    a {
-        color: ${props => props.theme.primary};
-    }
-
-    &:last-child {
-        border-left: none;
-        padding-left: 1.2rem !important;
-    }
-`;
-*/
 const UserProfile = props => {
     const [userData, setUserData] = useState('');
     const [observatoryData, setObservatoryData] = useState(null);
@@ -92,14 +61,6 @@ const UserProfile = props => {
     const params = useParams();
     const { userId } = params;
     const currentUserId = useSelector(state => state.auth.user?.id);
-    const [isActiveTab, setIsActiveTab] = useState('1');
-
-    // function is written to toggle between tabs
-    const toggle = tab => {
-        if (isActiveTab !== tab) {
-            setIsActiveTab(tab);
-        }
-    };
 
     useEffect(() => {
         const getUserInformation = async () => {
@@ -234,113 +195,13 @@ const UserProfile = props => {
                     </div>
                 )}
             </Container>
-
-            <Container className="mt-5">
-                <Nav tabs style={{ cursor: 'pointer' }}>
-                    <NavItem>
-                        <NavLink className={classnames({ active: isActiveTab === '1' })} onClick={() => toggle('1')}>
-                            Comparisons
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink className={classnames({ active: isActiveTab === '2' })} onClick={() => toggle('2')}>
-                            Papers
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink className={classnames({ active: isActiveTab === '3' })} onClick={() => toggle('3')}>
-                            Templates
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink className={classnames({ active: isActiveTab === '4' })} onClick={() => toggle('4')}>
-                            Reviews
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink className={classnames({ active: isActiveTab === '5' })} onClick={() => toggle('5')}>
-                            Visualizations
-                        </NavLink>
-                    </NavItem>
-                </Nav>
-                <TabContent activeTab={isActiveTab}>
-                    <TabPane tabId="1">
-                        <Row>
-                            <Col sm="12">
-                                <Container className="p-0">
-                                    <Items filterLabel="comparisons" filterClass={CLASSES.COMPARISON} userId={userId} />
-                                </Container>
-                            </Col>
-                        </Row>
-                    </TabPane>
-                    <TabPane tabId="2">
-                        <Row>
-                            <Col sm="12">
-                                <Container className="p-0">
-                                    <Items filterLabel="papers" filterClass={CLASSES.PAPER} userId={userId} showDelete={userId === currentUserId} />
-                                </Container>
-                            </Col>
-                        </Row>
-                    </TabPane>
-                    <TabPane tabId="3">
-                        <Row>
-                            <Col sm="12">
-                                <Container className="p-0">
-                                    <Items filterLabel="templates" filterClass={CLASSES.TEMPLATE} userId={userId} showDelete={false} />
-                                </Container>
-                            </Col>
-                        </Row>
-                    </TabPane>
-
-                    <TabPane tabId="4">
-                        <Row>
-                            <Col sm="12">
-                                <Container className="p-0 mt-4">
-                                    <Items filterLabel="reviews" filterClass={CLASSES.SMART_REVIEW_PUBLISHED} userId={userId} showDelete={false} />
-                                </Container>
-                            </Col>
-                        </Row>
-                    </TabPane>
-                    <TabPane tabId="5">
-                        <Row>
-                            <Col sm="12">
-                                <Container className="p-0 mt-4">
-                                    <Items filterLabel="visualizations" filterClass={CLASSES.VISUALIZATION} userId={userId} showDelete={false} />
-                                </Container>
-                            </Col>
-                        </Row>
-                    </TabPane>
-                </TabContent>
+            <Container>
+                <TabsContainer currentUserId={currentUserId} />
             </Container>
 
             <Container>
                 <ComparisonPopup />
             </Container>
-
-            {/*
-            TODO: support for activity feed
-            <Container className="box mt-4 pt-4 pb-3 ps-5 pe-5">
-            <h5 className="mb-4">Activity feed</h5>
-            <StyledActivity className="ps-3 pb-3">
-                <div className={'time'}>16 JULY 2019</div>
-                <div>
-                    John Doe updated resource <Link to={'/'}>IoT research directions</Link>
-                </div>
-            </StyledActivity>
-            <StyledActivity className="ps-3 pb-3">
-                <div className={'time'}>10 JULY 2019</div>
-                <div>
-                    John Doe updated resource <Link to={'/'}>IoT research directions</Link>
-                </div>
-                <div>
-                    John Doe commented on predicate <Link to={'/'}>Has Problem</Link>
-                </div>
-            </StyledActivity>
-            <StyledActivity className="ps-3 pb-3">
-                <div className={'time'}>5 JULY 2019</div>
-                <div>John Doe joined ORKG, welcome!</div>
-            </StyledActivity>
-            </Container> */}
         </>
     );
 };

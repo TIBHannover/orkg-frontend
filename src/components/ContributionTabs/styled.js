@@ -78,7 +78,7 @@ export const StyledContributionTabs = styled.div`
         border-style: solid;
         border-top-left-radius: 0;
         border-top-right-radius: 0;
-        padding: 10px 30px 25px;
+        // padding: 10px 30px 25px;
     }
     .rc-tabs {
         display: flex;
