@@ -5,15 +5,13 @@ import { AddContribution } from 'components/ContributionTabs/styled';
 import Tippy from '@tippyjs/react';
 
 const AddContributionButton = ({ onClick, disabled }) => (
-    <div className="mt-2">
-        <AddContribution disabled={disabled} color="link" onClick={onClick}>
-            <Tippy content="Add contribution">
-                <span>
-                    <Icon size="xs" icon={!disabled ? faPlus : faSpinner} spin={disabled} />
-                </span>
-            </Tippy>
-        </AddContribution>
-    </div>
+    <AddContribution disabled={disabled} color="link" onClick={onClick}>
+        <Tippy content="Add contribution">
+            <span>
+                <Icon size="xs" icon={!disabled ? faPlus : faSpinner} spin={disabled} />
+            </span>
+        </Tippy>
+    </AddContribution>
 );
 
 AddContributionButton.propTypes = {

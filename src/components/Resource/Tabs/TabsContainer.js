@@ -1,5 +1,4 @@
-import Tabs from 'rc-tabs';
-import { GlobalStyle, StyledContributionTabs } from 'components/ContributionTabs/styled';
+import Tabs from 'components/Tabs/Tabs';
 import { Container } from 'reactstrap';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import ObjectStatements from 'components/Resource/Tabs/ObjectStatements';
@@ -27,41 +26,41 @@ function TabsContainer({ id, classes, editMode }) {
     };
 
     return (
-        <Container className="mt-2 p-0">
-            <GlobalStyle />
-            <StyledContributionTabs disablePadding={true}>
-                <Tabs
-                    destroyInactiveTabPane={true}
-                    onChange={onTabChange}
-                    activeKey={activeTab ?? 'information'}
-                    items={[
-                        {
-                            label: 'Resource information',
-                            key: 'information',
-                            children: (
-                                <div className="p-4">
-                                    <StatementBrowser
-                                        enableEdit={editMode}
-                                        syncBackend={editMode}
-                                        openExistingResourcesInDialog={false}
-                                        initialSubjectId={id}
-                                        newStore={true}
-                                        propertiesAsLinks={true}
-                                        resourcesAsLinks={true}
-                                    />
-                                </div>
-                            ),
-                        },
-                        ...(classes?.includes(CLASSES.VISUALIZATION)
-                            ? [
-                                  {
-                                      label: 'Preview',
-                                      key: 'preview',
-                                      children: <PreviewFactory id={id} classes={classes} />,
-                                  },
-                              ]
-                            : []),
-                        /*
+        <Container className="mt-3 p-0">
+            <Tabs
+                className="box rounded"
+                getPopupContainer={trigger => trigger.parentNode}
+                destroyInactiveTabPane={true}
+                onChange={onTabChange}
+                activeKey={activeTab ?? 'information'}
+                items={[
+                    {
+                        label: 'Resource information',
+                        key: 'information',
+                        children: (
+                            <div className="p-4">
+                                <StatementBrowser
+                                    enableEdit={editMode}
+                                    syncBackend={editMode}
+                                    openExistingResourcesInDialog={false}
+                                    initialSubjectId={id}
+                                    newStore={true}
+                                    propertiesAsLinks={true}
+                                    resourcesAsLinks={true}
+                                />
+                            </div>
+                        ),
+                    },
+                    ...(classes?.includes(CLASSES.VISUALIZATION)
+                        ? [
+                              {
+                                  label: 'Preview',
+                                  key: 'preview',
+                                  children: <PreviewFactory id={id} classes={classes} />,
+                              },
+                          ]
+                        : []),
+                    /*
                         {
                             label: 'Trend',
                             key: 'trend',
@@ -73,14 +72,13 @@ function TabsContainer({ id, classes, editMode }) {
                             children: <ResourceUsage id={id} />,
                         },
                          */
-                        {
-                            label: 'In statements',
-                            key: 'statements',
-                            children: <ObjectStatements id={id} />,
-                        },
-                    ]}
-                />
-            </StyledContributionTabs>
+                    {
+                        label: 'In statements',
+                        key: 'statements',
+                        children: <ObjectStatements id={id} />,
+                    },
+                ]}
+            />
         </Container>
     );
 }
