@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { NavLink as RouterNavLink } from 'react-router-dom';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
-import { getAboutPagesMenu } from 'services/cms';
+import { getAboutPageCategories, getAboutPages } from 'services/cms';
 import { reverseWithSlug } from 'utils';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
@@ -24,17 +24,18 @@ const StyledButtonDropdown = styled(UncontrolledButtonDropdown)`
 
 const AboutMenu = ({ closeMenu }) => {
     const [items, setItems] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const getItems = async () => {
             setIsLoading(true);
-            setItems(groupBy((await getAboutPagesMenu()).data, item => get(item, 'attributes.category.data.attributes.label', 'main')));
+            setItems(groupBy((await getAboutPages()).data, item => get(item, 'attributes.category.data.id', 'main')));
+            setCategories((await getAboutPageCategories()).data);
             setIsLoading(false);
         };
         getItems();
     }, []);
-
     return (
         <>
             {isLoading && (
@@ -47,9 +48,9 @@ const AboutMenu = ({ closeMenu }) => {
             )}
 
             {!isLoading &&
-                Object.keys(items).map(label => {
-                    const subItems = items[label];
-                    if (label === 'main') {
+                categories.map(category => {
+                    const subItems = items[category.id];
+                    if (category.attributes.label === 'main') {
                         return items.main.map(({ id, title }) => (
                             <DropdownItem
                                 key={id}
@@ -63,14 +64,15 @@ const AboutMenu = ({ closeMenu }) => {
                         ));
                     }
                     return (
-                        <StyledButtonDropdown key={label} direction="right" className="w-100 nav inNavbar">
+                        <StyledButtonDropdown key={category.attributes.label} direction="right" className="w-100 nav inNavbar">
                             <DropdownToggle
                                 onClick={() => (subItems.length > 0 ? null : closeMenu())}
                                 to={reverse(ROUTES.ABOUT_NO_SLUG_ID, {})}
                                 tag={subItems.length > 0 ? 'button' : RouterNavLink}
                                 className="dropdown-item w-100"
                             >
-                                {label} {subItems.length > 0 && <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />}
+                                {category.attributes.label}{' '}
+                                {subItems.length > 0 && <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />}
                             </DropdownToggle>
                             {subItems.length > 0 && (
                                 <DropdownMenu>
