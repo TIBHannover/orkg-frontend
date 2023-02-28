@@ -5,7 +5,7 @@ import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingC
 import PropTypes from 'prop-types';
 
 const EmbeddedComparison = props => {
-    const { isLoadingResult, data, contributions } = useComparison({
+    const { isLoadingResult, data, contributions, comparisonResource, properties } = useComparison({
         id: props.id,
         isEmbeddedMode: true,
     });
@@ -13,9 +13,9 @@ const EmbeddedComparison = props => {
     useEffect(() => {
         if (!isLoadingResult) {
             props.updateReferences(contributions);
-            props.setComparisonDataCallBack(data);
+            props.setComparisonDataCallBack({ data, properties, metaData: comparisonResource });
         }
-    }, [contributions, data, isLoadingResult, props]);
+    }, [comparisonResource, contributions, data, isLoadingResult, properties, props]);
     return (
         <>
             {props.id && !isLoadingResult && contributions.length > 0 && <Comparison />}
