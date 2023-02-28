@@ -10,9 +10,11 @@ export const getPageByUrl = _url => submitGetRequest(`${url}pages?filters[url]=$
 
 export const getAboutPage = id => submitGetRequest(`${url}about-pages/${id}?populate[category][fields][0]=id`);
 
-export const getAboutPagesMenu = (categoryId = null) =>
+export const getAboutPageCategories = () => submitGetRequest(`${url}about-page-categories?sort=order&fields[0]=label`).catch(() => []);
+
+export const getAboutPages = (categoryId = null) =>
     submitGetRequest(
-        `${url}about-pages?fields[0]=title&populate[category][fields][0]=label,order&populate[category][sort][0]=order${
+        `${url}about-pages?sort=order&fields[0]=title,order&populate[category][fields][0]=id${
             categoryId ? `&filters[category][id][$eq]=${categoryId}` : ''
         }`,
     ).catch(() => []);
