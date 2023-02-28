@@ -40,7 +40,7 @@ const SingleVisualizationComponent = props => {
                     <Chart
                         chartType={visMethod}
                         data={renderingData}
-                        width="200px"
+                        width="100%"
                         height="100px"
                         options={{
                             width: '100%',
