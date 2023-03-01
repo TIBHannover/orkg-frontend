@@ -7,7 +7,7 @@ export const AddContribution = styled(Button)`
         border: 1px solid ${props => props.theme.lightDarker};
         background-color: ${props => props.theme.lightLighter};
         border-radius: 60px;
-        margin: 0 5px;
+        margin: 0 10px;
         cursor: pointer;
         outline: 0;
         color: inherit;
