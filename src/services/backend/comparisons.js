@@ -1,8 +1,13 @@
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { url } from 'constants/misc';
 import { flatten, uniqBy } from 'lodash';
-import { filterObjectOfStatementsByPredicateAndClass, filterSubjectOfStatementsByPredicateAndClass } from 'utils';
-import { getStatementsByObjectAndPredicate, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { submitGetRequest } from 'network';
+import queryString from 'query-string';
 import { getResource } from 'services/backend/resources';
+import { getStatementsByObjectAndPredicate, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+import { filterObjectOfStatementsByPredicateAndClass, filterSubjectOfStatementsByPredicateAndClass } from 'utils';
+
+export const comparisonUrl = `${url}comparisons/`;
 
 /**
  * Get all versions related to a comparison
@@ -61,4 +66,9 @@ export const getComparisonVersionsById = comparisonId => {
         );
     }
     return Promise.resolve([]);
+};
+
+export const getAuthorsByComparisonId = ({ id, page = 0, items = 9999 }) => {
+    const params = queryString.stringify({ page, size: items });
+    return submitGetRequest(`${comparisonUrl}${encodeURIComponent(id)}/authors?${params}`);
 };
