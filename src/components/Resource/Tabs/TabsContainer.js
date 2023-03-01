@@ -65,13 +65,13 @@ function TabsContainer({ id, classes, editMode }) {
                             label: 'Trend',
                             key: 'trend',
                             children: <Trend id={id} />,
-                        },
-                        {
-                            label: 'In papers',
-                            key: 'papers',
-                            children: <ResourceUsage id={id} />,
-                        },
-                         */
+                        }, */
+                    {
+                        label: 'In papers',
+                        key: 'papers',
+                        children: <ResourceUsage id={id} />,
+                    },
+
                     {
                         label: 'In statements',
                         key: 'statements',
