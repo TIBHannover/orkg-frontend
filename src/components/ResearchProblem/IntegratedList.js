@@ -2,7 +2,7 @@ import { Container, ListGroup, FormGroup, Label, Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import useResearchProblemContent from 'components/ResearchProblem/hooks/useResearchProblemContent';
-import CardFactory from 'components/CardFactory/CardFactory';
+import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import { CLASSES } from 'constants/graphSettings';
 import { useSelector } from 'react-redux';

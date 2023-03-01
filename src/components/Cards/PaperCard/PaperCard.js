@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar, faFile } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
-import AddToComparison from 'components/PaperCard/AddToComparison';
+import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
@@ -17,6 +17,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import pluralize from 'pluralize';
 import Authors from './Authors';
+import Paths from './Paths';
 
 const PaperCardStyled = styled.div`
     &.selected {
@@ -143,6 +144,13 @@ const PaperCard = props => {
                 </div>
                 {props.showCreator && <UserAvatar userId={props.paper.created_by} />}
             </div>
+            {props.paths?.length > 0 && (
+                <div className={`${showActionButtons ? 'ps-4' : 'ps-5'} mb-1`}>
+                    <small>
+                        <Paths paths={props.paths} />
+                    </small>
+                </div>
+            )}
         </PaperCardStyled>
     );
 };
@@ -181,6 +189,7 @@ PaperCard.propTypes = {
     linkTarget: PropTypes.string,
     showContributionCount: PropTypes.bool.isRequired,
     route: PropTypes.string,
+    paths: PropTypes.array,
 };
 
 PaperCard.defaultProps = {

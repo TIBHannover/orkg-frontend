@@ -18,11 +18,6 @@ const useListPage = ({ label, resourceClass, renderListItem }) => {
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     const [totalElements, setTotalElements] = useState(0);
 
-    useEffect(() => {
-        loadMore();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     const startLoading = () => {
         setIsNextPageLoading(true);
     };
@@ -40,14 +35,13 @@ const useListPage = ({ label, resourceClass, renderListItem }) => {
         setIsNextPageLoading(false);
     };
 
-    const addResults = ({ results: _results, last, totalElements }) => {
-        console.log('_results', _results);
+    const addResults = ({ results: _results, last, totalElements: _totalElements }) => {
         setResults(prevResults => [...prevResults, ..._results]);
         setIsNextPageLoading(false);
         setHasNextPage(!last);
         setPage(prevPage => prevPage + 1);
         setIsLastPageReached(last);
-        setTotalElements(totalElements);
+        setTotalElements(_totalElements);
     };
 
     const loadMore = async () => {
@@ -77,14 +71,18 @@ const useListPage = ({ label, resourceClass, renderListItem }) => {
                         totalElements: result.totalElements,
                     });
                 })
-                .catch(error => {
+                .catch(() => {
                     errorOccurred();
-                    console.log(error);
                 });
         } else {
             noResults();
         }
     };
+
+    useEffect(() => {
+        loadMore();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const Page = () => (
         <>
@@ -114,7 +112,7 @@ const useListPage = ({ label, resourceClass, renderListItem }) => {
                             style={{ cursor: 'pointer' }}
                             className="list-group-item list-group-item-action text-center mt-2"
                             onClick={!isNextPageLoading ? loadMore : undefined}
-                            onKeyDown={e => (e.keyCode === 13 ? (!isNextPageLoading ? loadMore : undefined) : undefined)}
+                            onKeyDown={e => (e.key === 'Enter' && !isNextPageLoading ? loadMore : undefined)}
                             role="button"
                             tabIndex={0}
                         >

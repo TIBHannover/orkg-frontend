@@ -1,9 +1,8 @@
 import ClassInstances from 'components/ClassInstances/ClassInstances';
-import { GlobalStyle, StyledContributionTabs } from 'components/ContributionTabs/styled';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import Tabs from 'rc-tabs';
+import Tabs from 'components/Tabs/Tabs';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import InformationTab from './InformationTab';
@@ -25,31 +24,29 @@ function TabsContainer({ id, label, uri, editMode }) {
 
     return (
         <Container className="mt-2 p-0">
-            <GlobalStyle />
-            <StyledContributionTabs disablePadding={true}>
-                <Tabs
-                    destroyInactiveTabPane={true}
-                    onChange={onTabChange}
-                    activeKey={activeTab ?? 'information'}
-                    items={[
-                        {
-                            label: 'Class information',
-                            key: 'information',
-                            children: <InformationTab uri={uri} id={id} label={label} editMode={editMode} />,
-                        },
-                        {
-                            label: 'Tree view',
-                            key: 'tree',
-                            children: <TreeView id={id} label={label} />,
-                        },
-                        {
-                            label: 'Instances',
-                            key: 'instances',
-                            children: <ClassInstances classId={id} />,
-                        },
-                    ]}
-                />
-            </StyledContributionTabs>
+            <Tabs
+                className="box rounded"
+                destroyInactiveTabPane={true}
+                onChange={onTabChange}
+                activeKey={activeTab ?? 'information'}
+                items={[
+                    {
+                        label: 'Class information',
+                        key: 'information',
+                        children: <InformationTab uri={uri} id={id} label={label} editMode={editMode} />,
+                    },
+                    {
+                        label: 'Tree view',
+                        key: 'tree',
+                        children: <TreeView id={id} label={label} />,
+                    },
+                    {
+                        label: 'Instances',
+                        key: 'instances',
+                        children: <ClassInstances classId={id} />,
+                    },
+                ]}
+            />
         </Container>
     );
 }

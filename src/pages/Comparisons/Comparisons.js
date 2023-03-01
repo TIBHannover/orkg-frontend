@@ -1,6 +1,7 @@
+import { useEffect } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
+import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
 import ListPage from 'components/ListPage/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { CLASSES } from 'constants/graphSettings';
@@ -12,6 +13,10 @@ import { getStatementsBySubjects } from 'services/backend/statements';
 import { getComparisonData, groupVersionsOfComparisons } from 'utils';
 
 const Comparisons = () => {
+    useEffect(() => {
+        document.title = 'Comparisons list - ORKG';
+    });
+
     const renderListItem = comparison => <ComparisonCard comparison={comparison} key={`pc${comparison.id}`} />;
 
     const fetchItems = async ({ page, pageSize }) => {

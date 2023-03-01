@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Container } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faPlus } from '@fortawesome/free-solid-svg-icons';
-import OrganizationCard from 'components/OrganizationCard/OrganizationCard';
+import OrganizationCard from 'components/Cards/OrganizationCard/OrganizationCard';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { getAllOrganizations, getConferences } from 'services/backend/organizations';
 import { useParams, Link } from 'react-router-dom';
