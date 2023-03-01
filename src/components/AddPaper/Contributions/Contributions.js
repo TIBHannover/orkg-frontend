@@ -248,7 +248,7 @@ const Contributions = () => {
                                 ),
                                 key: contribution.id,
                                 children: (
-                                    <div className="contributionData">
+                                    <div className="contributionData p-4">
                                         <StatementBrowser
                                             enableEdit={true}
                                             syncBackend={false}
