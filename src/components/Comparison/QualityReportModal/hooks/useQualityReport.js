@@ -28,7 +28,7 @@ const useQualityReport = () => {
             setIsLoading(true);
             // get the reviews from all different comparison versions
             const reviewStatementsPromises = versions.map(version =>
-                getStatementsBySubjectAndPredicate({ subjectId: version.id, predicateId: PREDICATES.REVIEW }),
+                getStatementsBySubjectAndPredicate({ subjectId: version.id, predicateId: PREDICATES.HAS_QUALITY_REVIEW }),
             );
             const reviewDataPromises = (await Promise.all(reviewStatementsPromises)).reduce(
                 (acc, _reviews) => [...acc, ..._reviews.map(review => getResourceData(review.object.id))],

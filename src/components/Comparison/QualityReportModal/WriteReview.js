@@ -2,7 +2,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import InviteResearchersButton from 'components/Comparison/QualityReportModal/InviteResearchersButton';
 import reviewQuestions from 'components/Comparison/QualityReportModal/reviewQuestions';
-import { PREDICATES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -38,8 +38,8 @@ const WriteReview = ({ toggle }) => {
             answers,
         };
         try {
-            const reviewResource = await createResource('review');
-            createResourceStatement(comparisonId, PREDICATES.REVIEW, reviewResource.id);
+            const reviewResource = await createResource('review', [CLASSES.QUALITY_REVIEW]);
+            createResourceStatement(comparisonId, PREDICATES.HAS_QUALITY_REVIEW, reviewResource.id);
             createResourceData({ resourceId: reviewResource.id, data });
             setIsSubmitted(true);
         } catch (e) {
