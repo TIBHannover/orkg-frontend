@@ -1,4 +1,4 @@
-import AuthorCard from 'components/AuthorCard/AuthorCard';
+import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
 import AuthorsContentLoader from 'components/TopAuthors/AuthorsContentLoader';
 import PropTypes from 'prop-types';
 import { Alert, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
