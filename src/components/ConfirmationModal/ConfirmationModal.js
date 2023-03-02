@@ -1,4 +1,6 @@
 import { createRoot } from 'react-dom/client';
+import theme from 'assets/scss/ThemeVariables';
+import { ThemeProvider } from 'styled-components';
 import NewClassConfirmationModal from './NewClassConfirmationModal';
 
 const confirm = props =>
@@ -11,7 +13,11 @@ const confirm = props =>
             resolve(result);
         };
 
-        root.render(<NewClassConfirmationModal {...props} onClose={handleResolve} />);
+        root.render(
+            <ThemeProvider theme={theme}>
+                <NewClassConfirmationModal {...props} onClose={handleResolve} />
+            </ThemeProvider>,
+        );
     });
 
 export default confirm;

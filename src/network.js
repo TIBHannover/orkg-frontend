@@ -42,7 +42,7 @@ export const submitGetRequest = (url, headers, send_token = false) => {
     });
 };
 
-export const submitPostRequest = (url, headers, data, jsonStringify = true, send_token = true) => {
+export const submitPostRequest = (url, headers, data, jsonStringify = true, send_token = true, parseResponse = true) => {
     if (!url) {
         throw new Error('Cannot submit POST request. URL is null or undefined.');
     }
@@ -74,6 +74,10 @@ export const submitPostRequest = (url, headers, data, jsonStringify = true, send
                         statusCode: response.status,
                         statusText: response.statusText,
                     });
+                }
+                if (response.status === 204 || !parseResponse) {
+                    // 204 No Content
+                    return resolve(null);
                 }
                 const json = response.json();
                 if (json.then) {

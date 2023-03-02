@@ -64,8 +64,15 @@ export const getParentByID = id => submitGetRequest(`${classesUrl}${encodeURICom
 /**
  * Set parent class
  */
-export const setParentByID = (id, parentId) =>
-    submitPostRequest(`${classesUrl}${encodeURIComponent(id)}/parent`, { 'Content-Type': 'application/json' }, { parent_id: parentId });
+export const setParentClassByID = (id, parentId) =>
+    submitPostRequest(
+        `${classesUrl}${encodeURIComponent(id)}/parent`,
+        { 'Content-Type': 'application/json' },
+        { parent_id: parentId },
+        true,
+        true,
+        false,
+    );
 
 /**
  * Delete parent class
