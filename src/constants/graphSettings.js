@@ -70,6 +70,7 @@ export const PREDICATES = {
     SOLUTION: 'Solution',
     HAS_VIDEO: 'HasVideo',
     IS_ANONYMIZED: 'IsAnonymized',
+    HAS_QUALITY_REVIEW: 'hasQualityReview',
 };
 
 export const CLASSES = {
@@ -126,6 +127,7 @@ export const CLASSES = {
     SOFTWARE: 'Software',
     EXTERNAL: 'External',
     DIAGRAM: 'Diagram',
+    QUALITY_REVIEW: 'QualityReview',
 };
 
 export const RESOURCES = {

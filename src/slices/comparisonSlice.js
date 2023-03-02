@@ -55,6 +55,7 @@ const initialState = {
     data: {},
     filterControlData: [],
     errors: [],
+    versions: [],
     createdBy: null,
     observatory: null,
     shortLink: '',
@@ -64,6 +65,7 @@ const initialState = {
     isLoadingResult: true,
     isFailedLoadingResult: false,
     isOpenVisualizationModal: false,
+    isOpenReviewModal: false,
     useReconstructedDataInVisualization: false,
     hiddenGroups: [],
     isEditing: false,
@@ -140,6 +142,9 @@ export const comparisonSlice = createSlice({
         setIsOpenVisualizationModal: (state, { payload }) => {
             state.isOpenVisualizationModal = payload;
         },
+        setIsOpenReviewModal: (state, { payload }) => {
+            state.isOpenReviewModal = payload;
+        },
         setUseReconstructedDataInVisualization: (state, { payload }) => {
             state.useReconstructedDataInVisualization = payload;
         },
@@ -151,6 +156,9 @@ export const comparisonSlice = createSlice({
         },
         setIsEmbeddedMode: (state, { payload }) => {
             state.isEmbeddedMode = payload;
+        },
+        setVersions: (state, { payload }) => {
+            state.versions = payload;
         },
     },
     extraReducers: builder => {
@@ -189,10 +197,12 @@ export const {
     setResearchField,
     setConfiguration,
     setIsOpenVisualizationModal,
+    setIsOpenReviewModal,
     setUseReconstructedDataInVisualization,
     setHiddenGroups,
     setIsEditing,
     setIsEmbeddedMode,
+    setVersions,
 } = comparisonSlice.actions;
 
 /**
