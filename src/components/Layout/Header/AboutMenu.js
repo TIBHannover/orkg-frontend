@@ -30,8 +30,8 @@ const AboutMenu = ({ closeMenu }) => {
     useEffect(() => {
         const getItems = async () => {
             setIsLoading(true);
-            setItems(groupBy((await getAboutPages()).data, item => get(item, 'attributes.category.data.id', 'main')));
-            setCategories((await getAboutPageCategories()).data);
+            setItems(groupBy((await getAboutPages()).data, item => get(item, 'attributes.category.data.id', 'main')) ?? []);
+            setCategories((await getAboutPageCategories()).data ?? []);
             setIsLoading(false);
         };
         getItems();
