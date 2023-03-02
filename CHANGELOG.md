@@ -4,6 +4,16 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [v0.93.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.92.0...v0.93.0) - 2023-03-01
+
+### Changes
+
+-   feat(Comparison): quality report modal (i.e. maturity modal) [`#1012`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1012)
+-   feat(Comparison): show top authors for comparisons [`#995`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/995)
+-   fix(Header): solve issue with sorting of about pages and categories [`#1031`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1031)
+
+---
+
 ## [v0.92.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.91.2...v0.92.0) - 2023-02-27
 
 ### Changes
