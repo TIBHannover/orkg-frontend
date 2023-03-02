@@ -3,6 +3,33 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.93.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.92.0...v0.93.0) - 2023-03-01
+
+### Changes
+
+- feat(Comparison): quality report modal (i.e. maturity modal) [`#1012`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1012)
+- feat(Comparison): show top authors for comparisons [`#995`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/995)
+- fix(Header): solve issue with sorting of about pages and categories [`#1031`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1031)
+
+---
+## [v0.92.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.91.2...v0.92.0) - 2023-02-27
+
+### Changes
+
+- refactor(Timeline): sync with backend changes on the contributors endpoint [`#1013`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1013)
+- fix(Review): Ontology section [`#1029`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1029)
+- Resolved: Resolve "Text on homepage is not clearly visible" [`#1026`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1026)
+- fix: Broken edit mode in content type page [`#1023`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1023)
+- ux: Show disabled selector when templates are used [`#1025`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1025)
+
+---
+## [v0.91.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.91.1...v0.91.2) - 2023-02-21
+
+### Changes
+
+- chore: support Strapi V4 API [`#1000`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1000)
+
+---
 ## [v0.91.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.91.0...v0.91.1) - 2023-02-10
 
 ### Changes
