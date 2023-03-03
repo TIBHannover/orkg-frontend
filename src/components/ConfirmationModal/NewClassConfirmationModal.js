@@ -81,31 +81,32 @@ function CreateClassModal(props) {
                         </FormText>
                     </small>
                 </FormGroup>
-                <FormGroup>
-                    <Label for="URIInput">
-                        Subclass of <span className="text-muted fst-italic">(optional)</span>
-                    </Label>
-                    <AutoComplete
-                        entityType={ENTITIES.CLASS}
-                        placeholder="Select a class"
-                        onChange={handleParentClassSelect}
-                        value={parentClass}
-                        autoLoadOption={true}
-                        openMenuOnFocus={true}
-                        allowCreate={false}
-                        copyValueButton={true}
-                        isClearable
-                        autoFocus={false}
-                        inputId="target-class"
-                    />
-                    <small>
-                        <FormText color="muted">
-                            Enter the parent class for this new class. If you want to create a hierarchy of classes, we suggest that you use the
-                            import ontology tool
-                        </FormText>
-                    </small>
-                </FormGroup>
-
+                {props.showParentField && (
+                    <FormGroup>
+                        <Label for="URIInput">
+                            Subclass of <span className="text-muted fst-italic">(optional)</span>
+                        </Label>
+                        <AutoComplete
+                            entityType={ENTITIES.CLASS}
+                            placeholder="Select a class"
+                            onChange={handleParentClassSelect}
+                            value={parentClass}
+                            autoLoadOption={true}
+                            openMenuOnFocus={true}
+                            allowCreate={false}
+                            copyValueButton={true}
+                            isClearable
+                            autoFocus={false}
+                            inputId="target-class"
+                        />
+                        <small>
+                            <FormText color="muted">
+                                Enter the parent class for this new class. If you want to create a hierarchy of classes, we suggest that you use the
+                                import ontology tool
+                            </FormText>
+                        </small>
+                    </FormGroup>
+                )}
                 <FormGroup className="mt-4">
                     <Label for="property-description">Description</Label>
                     <Input
@@ -133,6 +134,11 @@ CreateClassModal.propTypes = {
     onClose: PropTypes.func.isRequired,
     label: PropTypes.string.isRequired,
     uri: PropTypes.string,
+    showParentField: PropTypes.bool,
+};
+
+CreateClassModal.defaultProps = {
+    showParentField: true,
 };
 
 export default CreateClassModal;

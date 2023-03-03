@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react';
+import { useState, Fragment, useEffect } from 'react';
 import { Button, Table } from 'reactstrap';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
@@ -69,6 +69,10 @@ const DescriptionTooltip = props => {
                 });
         }
     };
+
+    useEffect(() => {
+        setIsLoaded(false);
+    }, [props?.id]);
 
     const renderTypeLabel = () => {
         switch (props._class) {

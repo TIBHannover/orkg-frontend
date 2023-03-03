@@ -1,15 +1,17 @@
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import ClassInlineItem from 'components/Class/ClassInlineItem/ClassInlineItem';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
-import { sortBy } from 'lodash';
+import { orderBy } from 'lodash';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { Button, Table } from 'reactstrap';
-import { getChildrenByID, getParentByID } from 'services/backend/classes';
+import { deleteParentByID, getChildrenByID, getParentByID, setParentClassByID } from 'services/backend/classes';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { getErrorMessage } from 'utils';
 
 function InformationTab({ id, label, uri, editMode }) {
     const [template, setTemplate] = useState(null);
@@ -43,9 +45,10 @@ function InformationTab({ id, label, uri, editMode }) {
         const findChildren = async () => {
             getChildrenByID({ id }).then(p => {
                 setChildren(
-                    sortBy(
+                    orderBy(
                         p.content.map(c => c.class),
-                        'label',
+                        [c => c.label.toLowerCase()],
+                        ['asc'],
                     ),
                 );
             });
@@ -62,7 +65,9 @@ function InformationTab({ id, label, uri, editMode }) {
             <Table bordered>
                 <tbody>
                     <tr>
-                        <th scope="row">ID</th>
+                        <th className="col-3" scope="row">
+                            ID
+                        </th>
                         <td> {id}</td>
                     </tr>
                     <tr>
@@ -84,46 +89,78 @@ function InformationTab({ id, label, uri, editMode }) {
                     <tr>
                         <th scope="row">Subclass of</th>
                         <td>
-                            <i>
-                                {parent ? (
-                                    <Link to={reverse(ROUTES.CLASS, { id: parent.id })}>
-                                        <DescriptionTooltip id={parent.id} _class={ENTITIES.CLASS}>
-                                            {parent.label}
-                                        </DescriptionTooltip>
-                                    </Link>
-                                ) : (
-                                    'Not Defined'
-                                )}
-                            </i>
+                            <ClassInlineItem
+                                classObject={parent}
+                                editMode={editMode}
+                                displayButtonOnHover={false}
+                                onChange={async _parent => {
+                                    if (parent) {
+                                        await deleteParentByID(id);
+                                    }
+                                    try {
+                                        await setParentClassByID(id, _parent.id);
+                                        setParent(_parent);
+                                    } catch (e) {
+                                        toast.error(`Error adding parent class! ${getErrorMessage(e) ?? e?.message}`);
+                                    }
+                                }}
+                                onDelete={async () => {
+                                    await deleteParentByID(id);
+                                    setParent(null);
+                                }}
+                            />
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">Has subclasses</th>
                         <td>
-                            <i>
-                                {_children.length ? (
-                                    <>
-                                        <ul className="mb-0">
-                                            {_children.map(child => (
-                                                <li key={child.id}>
-                                                    <Link to={reverse(ROUTES.CLASS, { id: child.id })}>
-                                                        <DescriptionTooltip id={child.id} _class={ENTITIES.CLASS}>
-                                                            {child.label}
-                                                        </DescriptionTooltip>
-                                                    </Link>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                        {children.length > 9 && (
-                                            <Button className="p-0 ps-3" onClick={() => setShowMoreChildren(v => !v)} color="link" size="sm">
-                                                {showMoreChildren ? 'Show less subclasses' : 'Show more subclasses'}
-                                            </Button>
-                                        )}
-                                    </>
-                                ) : (
-                                    'Not Defined'
+                            {_children?.length > 0 && (
+                                <>
+                                    {_children.map(child => (
+                                        <div key={child.id}>
+                                            <ClassInlineItem
+                                                classObject={child}
+                                                editMode={editMode}
+                                                onDelete={async () => {
+                                                    try {
+                                                        await deleteParentByID(child.id);
+                                                        setChildren(prev => prev.filter(c => c.id !== child.id));
+                                                    } catch (e) {
+                                                        toast.error(`Error removing subclass! ${getErrorMessage(e) ?? e?.message}`);
+                                                    }
+                                                }}
+                                                noValueMessage={null}
+                                            />
+                                        </div>
+                                    ))}
+
+                                    {children.length > 9 && (
+                                        <Button className="p-0 ps-0 mb-1" onClick={() => setShowMoreChildren(v => !v)} color="link" size="sm">
+                                            {showMoreChildren ? 'Show less subclasses' : 'Show more subclasses'}
+                                        </Button>
+                                    )}
+                                </>
+                            )}
+                            <div>
+                                {editMode && (
+                                    <ClassInlineItem
+                                        classObject={null}
+                                        editMode={editMode}
+                                        displayButtonOnHover={false}
+                                        noValueMessage={null}
+                                        showParentFieldForCreate={false}
+                                        onChange={async chil => {
+                                            try {
+                                                await setParentClassByID(chil.id, id);
+                                                setChildren(prev => [...prev, chil]);
+                                            } catch (e) {
+                                                toast.error(`Error adding subclass! ${getErrorMessage(e) ?? e?.message}`);
+                                            }
+                                        }}
+                                    />
                                 )}
-                            </i>
+                                {!editMode && _children?.length === 0 && 'Not defined'}
+                            </div>
                         </td>
                     </tr>
                     <tr>

@@ -1,7 +1,7 @@
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
-import { sortBy } from 'lodash';
+import { orderBy } from 'lodash';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
@@ -57,9 +57,10 @@ function TreeView({ id, label }) {
         const sortChildrenByLabel = _value => {
             const result = _value;
             if (result.children?.length > 0) {
-                result.children = sortBy(
+                result.children = orderBy(
                     result.children.map(c => sortChildrenByLabel(c)),
-                    SORT_NODES_BY,
+                    [c => c[SORT_NODES_BY].toLowerCase()],
+                    ['asc'],
                 );
             }
             return result;
@@ -87,9 +88,10 @@ function TreeView({ id, label }) {
             });
             const _data = treeify(_hierarchy, list);
             setTreeData(
-                sortBy(
+                orderBy(
                     _data.map(c => sortChildrenByLabel(c)),
-                    SORT_NODES_BY,
+                    [c => c[SORT_NODES_BY].toLowerCase()],
+                    ['asc'],
                 ),
             );
             setIsLoadingTrue(false);
@@ -121,14 +123,15 @@ function TreeView({ id, label }) {
         if (!node.loaded) {
             return getChildrenByID({ id: node.id }).then(_children => {
                 // Sort children by label
-                const sChildren = sortBy(
+                const sChildren = orderBy(
                     _children.content.map(n => ({
                         ...n.class,
                         child_count: n.child_count,
                         isLeaf: n.child_count === 0,
                         loaded: false,
                     })),
-                    SORT_NODES_BY,
+                    [c => c[SORT_NODES_BY].toLowerCase()],
+                    ['asc'],
                 );
                 // Update the current tree by setting the children at right node
                 setTreeData(prevTreeData => prevTreeData.map(n => updatePropertyNodeById(node.id, n, 'children', sChildren)));
