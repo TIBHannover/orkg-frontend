@@ -43,13 +43,12 @@ const OrganizationBanner = () => {
     return (
         <OrganizationBannerStyled>
             <Link to={link} className="text-center">
-
-                    <img
-                        className="p-2"
-                        src={getOrganizationLogoUrl(observatory.organization?.id)}
-                        alt={`${observatory.organization.name} logo`}
-                        style={{ maxWidth: 200, maxHeight: 60 }}
-                    />
+                <img
+                    className="p-2"
+                    src={getOrganizationLogoUrl(observatory.organization?.id)}
+                    alt={`${observatory.organization.name} logo`}
+                    style={{ maxWidth: 200, maxHeight: 60 }}
+                />
 
                 {observatory?.name && <div>{observatory.name}</div>}
             </Link>
