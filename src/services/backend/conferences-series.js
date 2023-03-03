@@ -1,9 +1,9 @@
 import { url } from 'constants/misc';
 import { submitGetRequest, submitPostRequest } from 'network';
+import { getOrganizationLogoUrl } from 'services/backend/organizations';
 import { getOrganization } from './organizations';
 
 export const conferenceSeriesUrl = `${url}conference-series/`;
-
 export const createConference = (organization_id, name, url, display_id, metadata) =>
     submitPostRequest(`${conferenceSeriesUrl}`, { 'Content-Type': 'application/json' }, { organization_id, name, display_id, url, metadata });
 
@@ -25,7 +25,7 @@ export const getConferenceAndOrganizationInformation = organizationId =>
                     organization: {
                         id: confResponse.organizationId,
                         name: orgResponse.name,
-                        logo: orgResponse.logo,
+                        logo: getOrganizationLogoUrl(orgResponse.id),
                         display_id: orgResponse.display_id,
                         type: orgResponse.type,
                     },

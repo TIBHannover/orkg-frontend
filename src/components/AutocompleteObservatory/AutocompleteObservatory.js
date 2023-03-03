@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { Label, FormGroup } from 'reactstrap';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
 const LogoContainer = styled.div`
     overflow: hidden;
@@ -79,7 +80,7 @@ function AutocompleteObservatory(props) {
         <components.Option {...innerProps}>
             <div className="d-flex">
                 <LogoContainer className="me-2">
-                    <img alt={innerProps.data.name} src={innerProps.data.logo} />
+                    <img alt={innerProps.data.name} src={getOrganizationLogoUrl(innerProps.data?.id)} />
                 </LogoContainer>
 
                 {innerProps.data.name}

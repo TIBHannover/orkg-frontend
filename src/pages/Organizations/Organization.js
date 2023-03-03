@@ -18,6 +18,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import { ORGANIZATIONS_TYPES, ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import ConferenceEvents from 'pages/Conferences/ConferenceEvents';
 import { upperFirst } from 'lodash';
+import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
 const StyledOrganizationHeader = styled.div`
     .logoContainer {
@@ -68,7 +69,7 @@ const Organization = () => {
                     setOrganizationId(responseJson.id);
                     setLabel(responseJson.name);
                     setURL(responseJson.homepage);
-                    setLogo(responseJson.logo);
+                    setLogo(getOrganizationLogoUrl(responseJson?.id));
                     setIsLoading(false);
                     setCreatedBy(responseJson.created_by);
                 })
