@@ -1,3 +1,5 @@
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import TitleBar from 'components/TitleBar/TitleBar';
@@ -83,8 +85,16 @@ const AddClass = () => {
             <Container className="box rounded p-5">
                 <p>
                     This form allows you to create a new class. If you want to create a hierarchy of classes, we suggest that you first create the
-                    root class, which is the highest-level class in the hierarchy. Alternatively, you can also use the import ontology tool to import
-                    an existing ontology that already defines a class hierarchy.
+                    root class, which is the highest-level class in the hierarchy. Alternatively, you can also suggest to include a new ontology to
+                    the{' '}
+                    <a href="https://service.tib.eu/ts4tib/index" target="_blank" rel="noopener noreferrer">
+                        TIB Terminology Service <Icon size="sm" icon={faExternalLinkAlt} />
+                    </a>{' '}
+                    by creating an issue at the{' '}
+                    <a href="https://github.com/TIBHannover/OLS/issues" target="_blank" rel="noopener noreferrer">
+                        issue tracker <Icon size="sm" icon={faExternalLinkAlt} />
+                    </a>{' '}
+                    .
                 </p>
                 <div className="pt-2">
                     <FormGroup>

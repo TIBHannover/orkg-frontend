@@ -100,10 +100,7 @@ function CreateClassModal(props) {
                             inputId="target-class"
                         />
                         <small>
-                            <FormText color="muted">
-                                Enter the parent class for this new class. If you want to create a hierarchy of classes, we suggest that you use the
-                                import ontology tool
-                            </FormText>
+                            <FormText color="muted">Enter the parent class for this new class.</FormText>
                         </small>
                     </FormGroup>
                 )}
