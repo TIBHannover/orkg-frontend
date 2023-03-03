@@ -15,6 +15,7 @@ import { toast } from 'react-toastify';
 import { Alert, Button } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 import { getStatementsByObjectAndPredicate, getStatementsBySubjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
+import id from '@citation-js/plugin-doi/lib/id';
 
 const SectionContentLink = props => {
     const dispatch = useDispatch();
@@ -94,6 +95,7 @@ const SectionContentLink = props => {
             const paper = statements[0]?.subject;
             if (paper) {
                 const bibJson = {
+                    id: paper.id,
                     title: paper.label,
                     author: statements
                         .filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR)
