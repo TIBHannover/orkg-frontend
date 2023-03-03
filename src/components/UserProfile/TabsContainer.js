@@ -77,7 +77,7 @@ function TabsContainer({ currentUserId }) {
 }
 
 TabsContainer.propTypes = {
-    currentUserId: PropTypes.string.isRequired,
+    currentUserId: PropTypes.string,
 };
 
 export default TabsContainer;

@@ -5,7 +5,6 @@ const routes = {
     USER_PROFILE: '/u/:userId',
     RESOURCES: '/resources',
     RESOURCE: '/resource/:id',
-    RESOURCE_TABS: '/resource/:id/:activeTab',
     ADD_RESOURCE: '/addResource',
     PROPERTIES: '/properties',
     PROPERTY: '/property/:id',
