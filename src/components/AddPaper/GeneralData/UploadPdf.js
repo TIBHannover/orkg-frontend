@@ -20,6 +20,7 @@ const UploadPdf = () => {
             GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
             const reader = new FileReader();
+            let extractedResearchField;
             reader.onload = async () => {
                 const data = new Uint8Array(reader.result);
                 const loadingTask = getDocument({ data });
@@ -29,6 +30,7 @@ const UploadPdf = () => {
                     const processedPdf = new window.DOMParser().parseFromString(metadata.metadata._data, 'text/xml');
                     // you might want to replace 'querySelector' with 'querySelectorAll' to get all the values if there are multiple annotations of the same type
                     const researchField = processedPdf.querySelector('hasResearchField label')?.textContent;
+                    extractedResearchField = researchField;
                     const objective = processedPdf.querySelector('objective')?.textContent;
                     const result = processedPdf.querySelector('result')?.textContent;
                     const conclusion = processedPdf.querySelector('conclusion')?.textContent;
@@ -67,6 +69,7 @@ const UploadPdf = () => {
                     doi,
                     entry: doi,
                     abstract,
+                    extractedResearchField,
                 }),
             );
             toast.success('PDF parsed successfully');

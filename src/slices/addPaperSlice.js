@@ -34,6 +34,7 @@ const initialState = {
     publishedIn: '',
     researchFields: [],
     selectedResearchField: '',
+    extractedResearchField: '',
     selectedContribution: '',
     paperNewResourceId: null,
     url: '',

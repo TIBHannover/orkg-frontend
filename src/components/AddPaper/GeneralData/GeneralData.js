@@ -167,8 +167,6 @@ const GeneralData = () => {
             dispatch(updateGeneralData({ entry: entryParam }));
             handleLookupClick(entryParam);
         }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

@@ -1,4 +1,5 @@
-import { nextStep, previousStep, updateResearchField } from 'slices/addPaperSlice';
+/* eslint-disable no-nested-ternary */
+import { nextStep, previousStep, updateResearchField, updateGeneralData } from 'slices/addPaperSlice';
 import ResearchFieldSelector from 'components/ResearchFieldSelector/ResearchFieldSelector';
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,12 +9,16 @@ const ResearchField = () => {
     const [showError, setShowError] = useState(false);
     const selectedResearchField = useSelector(state => state.addPaper.selectedResearchField);
     const researchFields = useSelector(state => state.addPaper.researchFields);
+    const extractedResearchField = useSelector(state => state.addPaper.extractedResearchField || ' ');
+
     const dispatch = useDispatch();
 
     const handleNextClick = useCallback(() => {
         if (!selectedResearchField) {
             setShowError(true);
-            return;
+            // return;
+        } else {
+            setShowError(false);
         }
         dispatch(nextStep());
     }, [dispatch, selectedResearchField]);
@@ -40,6 +45,7 @@ const ResearchField = () => {
                 <ResearchFieldSelector
                     selectedResearchField={selectedResearchField}
                     researchFields={researchFields}
+                    extractedResearchField={extractedResearchField}
                     updateResearchField={handleUpdateResearchField}
                 />
             </div>
@@ -47,6 +53,10 @@ const ResearchField = () => {
             {researchFieldLabel && selectedResearchField ? (
                 <div className="mt-3 mb-3">
                     Selected research field: <b>{researchFieldLabel}</b>
+                </div>
+            ) : extractedResearchField ? (
+                <div className="mt-3 mb-3">
+                    Selected research field: <b>{extractedResearchField}</b>
                 </div>
             ) : (
                 <p className={`text-danger mt-2 ps-2 ${!showError ? ' d-none' : ''}`} style={{ borderLeft: '4px red solid' }}>

@@ -58,12 +58,14 @@ const ResearchFieldSelector = ({
     selectedResearchField,
     researchFields,
     updateResearchField,
+    extractedResearchField,
     researchFieldStats,
     insideModal,
     showPreviouslySelected,
 }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [loadingId, setLoadingId] = useState(null);
+    const [inputValue, setInputValue] = useState('');
 
     const handleFieldSelect = (selected, submit = false) => {
         setIsLoading(true);
@@ -75,6 +77,7 @@ const ResearchFieldSelector = ({
                 fields = await getChildFields(parent.id, fields);
             }
 
+            setInputValue(selected.label); // update input value with selected label
             updateResearchField(
                 {
                     researchFields: fields,
@@ -86,7 +89,9 @@ const ResearchFieldSelector = ({
             setIsLoading(false);
         });
     };
-
+    function handleInputChange(event) {
+        setInputValue(event.target.value); // update input value on change
+    }
     const handleFieldClick = async (e, fieldId, shouldSetActive = true) => {
         // prevent triggering outer handler when the icon is pressed
         e.stopPropagation();
@@ -237,7 +242,13 @@ const ResearchFieldSelector = ({
                     optionsClass={CLASSES.RESEARCH_FIELD}
                     placeholder="Search for fields..."
                     onItemSelected={handleFieldSelect}
-                    value={selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN ? { id: selectedResearchField, label: researchFieldLabel } : null}
+                    inputValue={inputValue} // pass input value as a prop
+                    onInputChange={handleInputChange} // pass input change event handler as a prop to handle changes to the input field
+                    value={
+                        selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN
+                            ? { id: selectedResearchField, label: researchFieldLabel || extractedResearchField }
+                            : null
+                    }
                     allowCreate={false}
                     ols={false}
                     autoLoadOption={true}
@@ -293,6 +304,7 @@ const ResearchFieldSelector = ({
 
 ResearchFieldSelector.propTypes = {
     selectedResearchField: PropTypes.string,
+    extractedResearchField: PropTypes.string,
     researchFields: PropTypes.array,
     updateResearchField: PropTypes.func,
     researchFieldStats: PropTypes.object,
