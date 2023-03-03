@@ -32,17 +32,26 @@ const treeify = (arr, arrChildren) => {
     return tree;
 };
 
-function TreeView({ id, label }) {
+function TreeView({ id, label, ...props }) {
     const [treeData, setTreeData] = useState([]);
     const [hierarchy, setHierarchy] = useState([]);
     const [isLoadingTrue, setIsLoadingTrue] = useState([]);
+    const [selectedNodeId, setSelectedNodeId] = useState(id);
+
+    useEffect(() => {
+        setSelectedNodeId(id);
+    }, [id]);
+
     const navigate = useNavigate();
     const SORT_NODES_BY = 'label';
 
     /** Navigate to the clicked class */
-    const onSelect = info => {
-        // The selected node doesn't have info so the user stays on the same page
-        if (info.length) {
+    const onSelect = (info, o) => {
+        setSelectedNodeId(info?.[0] ?? id);
+        if (props.onSelect) {
+            props.onSelect(info, o);
+        } else if (info.length) {
+            // The selected node doesn't have info so the user stays on the same page
             navigate(
                 `${reverse(ROUTES.CLASS_TABS, {
                     id: info[0],
@@ -155,7 +164,7 @@ function TreeView({ id, label }) {
                 <AnimatedTree
                     fieldNames={fieldNames}
                     defaultExpandedKeys={hierarchy.map(p => p.id)}
-                    selectedKeys={[id]}
+                    selectedKeys={[selectedNodeId]}
                     showLine={true}
                     titleRender={titleRender}
                     showIcon={false}
@@ -173,6 +182,7 @@ function TreeView({ id, label }) {
 TreeView.propTypes = {
     id: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
+    onSelect: PropTypes.func,
 };
 
 export default TreeView;

@@ -126,6 +126,7 @@ const AddClass = () => {
                             isClearable
                             autoFocus={false}
                             innerRef={parentClassAutocompleteRef}
+                            showTreeSelector={true}
                             linkButton={parentClass && parentClass.id ? reverse(ROUTES.CLASS, { id: parentClass.id }) : ''}
                             linkButtonTippy="Go to class page"
                             inputId="target-class"
