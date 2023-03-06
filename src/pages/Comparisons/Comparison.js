@@ -3,13 +3,11 @@ import { Alert, Container } from 'reactstrap';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/Comparison';
 import ProvenanceBox from 'components/Comparison/ComparisonFooter/ProvenanceBox/ProvenanceBox';
-import RelatedResources from 'components/Comparison/ComparisonFooter/RelatedResources/RelatedResources';
-import RelatedFigures from 'components/Comparison/ComparisonFooter/RelatedResources/RelatedFigures';
 import ComparisonMetaData from 'components/Comparison/ComparisonHeader/ComparisonMetaData';
 import DataSources from 'components/Comparison/ComparisonFooter/DataSources';
 import { ContainerAnimated } from 'components/Comparison/styled';
 import useComparison from 'components/Comparison/hooks/useComparison';
-import PreviewVisualizationComparison from 'libs/selfVisModel/ComparisonComponents/PreviewVisualizationComparison';
+import PreviewVisualizationComparison from 'components/Comparison/ComparisonCarousel/ComparisonCarousel';
 import ComparisonHeaderMenu from 'components/Comparison/ComparisonHeader/ComparisonHeaderMenu';
 import AppliedFilters from 'components/Comparison/ComparisonHeader/AppliedFilters';
 import { useParams } from 'react-router-dom';
@@ -51,7 +49,6 @@ const Comparison = () => {
                 <ComparisonMetaData />
 
                 {!isLoadingResult && contributionsList.length > 1 && <PreviewVisualizationComparison />}
-
                 <AppliedFilters />
             </Container>
 
@@ -76,8 +73,6 @@ const Comparison = () => {
             </ContainerAnimated>
 
             <Container className="box rounded px-5 clearfix position-relative mt-4">
-                <RelatedResources />
-                <RelatedFigures />
                 <DataSources />
             </Container>
             {isPublished && <ProvenanceBox />}
