@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import StatementActionButton from '../../StatementBrowser/StatementActionButton/StatementActionButton';
+import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.dark};

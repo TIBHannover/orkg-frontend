@@ -571,7 +571,6 @@ export const ORKGTabsStyle = styled.div`
     }
     .rc-tabs .rc-tabs-tab.rc-tabs-tab-active .rc-tabs-tab-btn {
         color: ${props => props.theme.primary};
-        text-shadow: 0 0 0.25px currentcolor;
     }
     .rc-tabs .rc-tabs-tab.rc-tabs-tab-disabled {
         color: rgba(0, 0, 0, 0.25);
