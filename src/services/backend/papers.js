@@ -58,7 +58,7 @@ export const getPapersLinkedToResource = async ({
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
-        { linkedTo: encodeURIComponent(id), page, size, sort, desc },
+        { linkedTo: id, page, size, sort, desc },
         {
             skipNull: true,
             skipEmptyString: true,
