@@ -9,13 +9,12 @@ import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { groupBy } from 'lodash';
 import uniq from 'lodash.uniq';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Alert, Button } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 import { getStatementsByObjectAndPredicate, getStatementsBySubjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
-import id from '@citation-js/plugin-doi/lib/id';
 
 const SectionContentLink = props => {
     const dispatch = useDispatch();
