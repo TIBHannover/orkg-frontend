@@ -10,6 +10,7 @@ import 'intro.js/introjs.css';
 import '@citation-js/plugin-bibtex';
 import '@citation-js/plugin-doi';
 import '@citation-js/plugin-csl';
+import { plugins } from '@citation-js/core';
 import { useRoutes } from 'react-router-dom';
 import { detect } from 'detect-browser';
 import ScrollToTop from 'components/ScrollToTop';
@@ -17,6 +18,10 @@ import { Alert } from 'reactstrap';
 import env from '@beam-australia/react-env';
 import { Helmet } from 'react-helmet';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
+
+// Configuration for citation-js bibtex plubin
+const config = plugins.config.get('@bibtex');
+config.format.useIdAsLabel = true;
 
 const alertStyle = { borderRadius: '0', marginTop: '-30px', marginBottom: '30px' };
 
