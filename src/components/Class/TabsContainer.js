@@ -1,16 +1,17 @@
 import ClassInstances from 'components/ClassInstances/ClassInstances';
+import Tabs from 'components/Tabs/Tabs';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import Tabs from 'components/Tabs/Tabs';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Container } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
 import InformationTab from './InformationTab';
 import TreeView from './TreeView';
 
 function TabsContainer({ id, label, uri, editMode }) {
     const { activeTab } = useParams();
-
+    const [reloadTree, setReloadTree] = useState(false);
     const navigate = useNavigate();
 
     const onTabChange = key => {
@@ -28,17 +29,27 @@ function TabsContainer({ id, label, uri, editMode }) {
                 className="box rounded"
                 destroyInactiveTabPane={true}
                 onChange={onTabChange}
-                activeKey={activeTab ?? 'information'}
+                activeKey={activeTab ?? 'tree'}
                 items={[
-                    {
-                        label: 'Class information',
-                        key: 'information',
-                        children: <InformationTab uri={uri} id={id} label={label} editMode={editMode} />,
-                    },
                     {
                         label: 'Tree view',
                         key: 'tree',
-                        children: <TreeView id={id} label={label} />,
+                        children: (
+                            <Row>
+                                <Col md={6}>
+                                    <TreeView id={id} label={label} reloadTree={reloadTree} />
+                                </Col>
+                                <Col md={6}>
+                                    <InformationTab
+                                        uri={uri}
+                                        id={id}
+                                        label={label}
+                                        editMode={editMode}
+                                        callBackToReloadTree={() => setReloadTree(v => !v)}
+                                    />
+                                </Col>
+                            </Row>
+                        ),
                     },
                     {
                         label: 'Instances',

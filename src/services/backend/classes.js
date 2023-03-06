@@ -31,6 +31,11 @@ export const getClasses = ({
 };
 
 /**
+ * Count instances including subclasses
+ */
+export const getCountInstances = id => submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/count`);
+
+/**
  * Lists all direct child classes.
  */
 export const getChildrenByID = ({ id, page = 0, size = 9999 }) => {

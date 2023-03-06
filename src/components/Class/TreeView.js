@@ -32,7 +32,7 @@ const treeify = (arr, arrChildren) => {
     return tree;
 };
 
-function TreeView({ id, label, ...props }) {
+function TreeView({ id, label, reloadTree, ...props }) {
     const [treeData, setTreeData] = useState([]);
     const [hierarchy, setHierarchy] = useState([]);
     const [isLoadingTrue, setIsLoadingTrue] = useState([]);
@@ -106,7 +106,7 @@ function TreeView({ id, label, ...props }) {
             setIsLoadingTrue(false);
         };
         loadTree();
-    }, [id, label]);
+    }, [id, label, reloadTree]);
 
     // Customize node title, key, children field name
     const fieldNames = {
@@ -183,6 +183,7 @@ TreeView.propTypes = {
     id: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     onSelect: PropTypes.func,
+    reloadTree: PropTypes.bool,
 };
 
 export default TreeView;
