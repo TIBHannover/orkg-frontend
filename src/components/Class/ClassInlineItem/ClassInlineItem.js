@@ -4,6 +4,7 @@ import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { StyledButton } from 'components/StatementBrowser/styled';
+import { useSelector } from 'react-redux';
 import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
@@ -26,7 +27,7 @@ const ButtonsContainer = styled.div`
 
 const ClassInlineItem = ({ classObject, editMode, noValueMessage, displayButtonOnHover, ...props }) => {
     const classAutocompleteRef = useRef(null);
-
+    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const [isChangingValue, setIsChangingValue] = useState(null);
     const [isSavingChange, setIsSavingChange] = useState(false);
     const [isSavingDelete, setIsSavingDelete] = useState(false);
@@ -79,7 +80,7 @@ const ClassInlineItem = ({ classObject, editMode, noValueMessage, displayButtonO
                     )}
                     {!isSavingChange && !classObject && noValueMessage}
                     <ButtonsContainer className="item-buttons" displayButtonOnHover={displayButtonOnHover}>
-                        {classObject && editMode && (
+                        {classObject && editMode && isCurationAllowed && (
                             <span className="ms-2">
                                 {props.onChange && (
                                     <StatementActionButton
@@ -119,7 +120,7 @@ const ClassInlineItem = ({ classObject, editMode, noValueMessage, displayButtonO
                                 )}
                             </span>
                         )}
-                        {!classObject && editMode && (
+                        {!classObject && editMode && isCurationAllowed && (
                             <span className={noValueMessage ? 'ms-2' : ''}>
                                 <StatementActionButton
                                     title="Add class"
@@ -134,7 +135,7 @@ const ClassInlineItem = ({ classObject, editMode, noValueMessage, displayButtonO
                     </ButtonsContainer>
                 </>
             )}
-            {isChangingValue && (
+            {isCurationAllowed && isChangingValue && (
                 <InputGroup size="sm">
                     <AutoComplete
                         entityType={ENTITIES.CLASS}

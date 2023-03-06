@@ -29,8 +29,13 @@ function TabsContainer({ id, label, uri, editMode }) {
                 className="box rounded"
                 destroyInactiveTabPane={true}
                 onChange={onTabChange}
-                activeKey={activeTab ?? 'tree'}
+                activeKey={activeTab ?? 'information'}
                 items={[
+                    {
+                        label: 'Class information',
+                        key: 'information',
+                        children: <InformationTab uri={uri} id={id} label={label} editMode={editMode} />,
+                    },
                     {
                         label: 'Tree view',
                         key: 'tree',
@@ -45,6 +50,7 @@ function TabsContainer({ id, label, uri, editMode }) {
                                         id={id}
                                         label={label}
                                         editMode={editMode}
+                                        showStatementsBrowser={false}
                                         callBackToReloadTree={() => setReloadTree(v => !v)}
                                     />
                                 </Col>
