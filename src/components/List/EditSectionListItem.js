@@ -2,7 +2,7 @@ import { faBars, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Confirm from 'components/Confirmation/Confirmation';
 import { supportedContentTypes } from 'components/ContentType/types';
-import PaperCard from 'components/PaperCard/PaperCard';
+import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import EditPaperDialog from 'components/ViewPaper/EditDialog/EditPaperDialog';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';

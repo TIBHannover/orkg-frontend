@@ -4,7 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { CLASSES } from 'constants/graphSettings';
-import DiagramCard from 'components/DiagramCard/DiagramCard';
+import DiagramCard from 'components/Cards/DiagramCard/DiagramCard';
 import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
 import { getVisualizationData } from 'utils';

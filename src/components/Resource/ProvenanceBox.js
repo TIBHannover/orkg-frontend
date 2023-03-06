@@ -39,7 +39,7 @@ function ProvenanceBox({ item, editMode }) {
                     </span>
                 </Badge>
             )}
-            {editMode && organizationId === MISC.UNKNOWN_ID && observatoryId === MISC.UNKNOWN_ID && (
+            {editMode && isCurationAllowed && organizationId === MISC.UNKNOWN_ID && observatoryId === MISC.UNKNOWN_ID && (
                 <Badge color="light" className="me-2 mt-2">
                     Not assigned to any observatory
                 </Badge>

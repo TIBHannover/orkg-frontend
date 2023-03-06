@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import AuthorCard from 'components/AuthorCard/AuthorCard';
+import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'react-content-loader';

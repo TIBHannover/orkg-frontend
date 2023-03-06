@@ -1,6 +1,6 @@
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import AuthorCard from 'components/AuthorCard/AuthorCard';
+import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
 import AuthorsContentLoader from 'components/TopAuthors/AuthorsContentLoader';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';

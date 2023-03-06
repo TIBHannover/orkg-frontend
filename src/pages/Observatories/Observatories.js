@@ -1,6 +1,6 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import ObservatoryCard from 'components/Cards/ObservatoryCard/ObservatoryCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import ObservatoryCard from 'components/ObservatoryCard/ObservatoryCard';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { groupBy } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';

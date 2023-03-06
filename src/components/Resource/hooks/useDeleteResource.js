@@ -25,8 +25,12 @@ function useDeleteResource({ resourceId, redirect = false }) {
                     navigate(ROUTES.RESOURCES);
                 }
             } catch (err) {
-                toast.error('An error occurred, resource not deleted');
-                console.error(err);
+                toast.error(
+                    <>
+                        An error occurred, resource not deleted <br />
+                        The resource cannot be deleted if it is used in statements (either as subject or object)
+                    </>,
+                );
             }
 
             setIsLoading(false);

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import PaperCard from 'components/PaperCard/PaperCard';
-import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
+import PaperCard from 'components/Cards/PaperCard/PaperCard';
+import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getPaperData, getComparisonData, groupVersionsOfComparisons } from 'utils';
 import { find, flatten } from 'lodash';

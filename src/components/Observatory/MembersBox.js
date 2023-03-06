@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { getUsersByObservatoryId } from 'services/backend/observatories';
 import { deleteUserFromObservatoryById } from 'services/backend/users';
-import ContributorCard from 'components/ContributorCard/ContributorCard';
+import ContributorCard from 'components/Cards/ContributorCard/ContributorCard';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';

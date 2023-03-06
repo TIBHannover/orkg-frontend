@@ -4,7 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { CLASSES } from 'constants/graphSettings';
-import ReviewCard from 'components/ReviewCard/ReviewCard';
+import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
 import ROUTES from 'constants/routes';
 import { useSelector } from 'react-redux';
 import { groupBy } from 'lodash';

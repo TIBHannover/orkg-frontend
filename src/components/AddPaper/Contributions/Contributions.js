@@ -12,11 +12,10 @@ import useFeedbacks from 'components/AddPaper/hooks/useFeedbacks';
 import Confirm from 'components/Confirmation/Confirmation';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
-import { GlobalStyle, StyledContributionTabs } from 'components/ContributionTabs/styled';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tooltip from 'components/Utils/Tooltip';
 import { BIOASSAYS_FIELDS_LIST } from 'constants/nlpFieldLists';
-import Tabs from 'rc-tabs';
+import Tabs from 'components/Tabs/Tabs';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Row, UncontrolledAlert } from 'reactstrap';
@@ -161,7 +160,6 @@ const Contributions = () => {
 
     return (
         <div>
-            <GlobalStyle />
             <div className="d-flex align-items-center mt-4 mb-4">
                 <h2 className="h4 flex-shrink-0">
                     <Tooltip
@@ -226,45 +224,43 @@ const Contributions = () => {
             )}
             <Row className="mt-2 g-0">
                 <Col md="9">
-                    <StyledContributionTabs>
-                        <Tabs
-                            renderTabBar={renderTabBar}
-                            tabBarExtraContent={<AddContributionButton onClick={() => dispatch(createContribution({ selectAfterCreation: true }))} />}
-                            moreIcon={<Icon size="lg" icon={faAngleDown} />}
-                            activeKey={selectedContribution}
-                            onChange={onTabChange}
-                            destroyInactiveTabPane={true}
-                            items={contributions.allIds.map(contributionId => {
-                                const contribution = contributions.byId[contributionId];
-                                return {
-                                    label: (
-                                        <ContributionTab
-                                            handleChangeContributionLabel={handleChange}
-                                            isSelected={contribution.id === selectedContribution}
-                                            canDelete={contributions.allIds.length !== 1}
-                                            contribution={contribution}
-                                            key={contribution.id}
-                                            toggleDeleteContribution={toggleDeleteContribution}
+                    <Tabs
+                        renderTabBar={renderTabBar}
+                        tabBarExtraContent={<AddContributionButton onClick={() => dispatch(createContribution({ selectAfterCreation: true }))} />}
+                        moreIcon={<Icon size="lg" icon={faAngleDown} />}
+                        activeKey={selectedContribution}
+                        onChange={onTabChange}
+                        destroyInactiveTabPane={true}
+                        items={contributions.allIds.map(contributionId => {
+                            const contribution = contributions.byId[contributionId];
+                            return {
+                                label: (
+                                    <ContributionTab
+                                        handleChangeContributionLabel={handleChange}
+                                        isSelected={contribution.id === selectedContribution}
+                                        canDelete={contributions.allIds.length !== 1}
+                                        contribution={contribution}
+                                        key={contribution.id}
+                                        toggleDeleteContribution={toggleDeleteContribution}
+                                        enableEdit={true}
+                                    />
+                                ),
+                                key: contribution.id,
+                                children: (
+                                    <div className="contributionData p-4">
+                                        <StatementBrowser
                                             enableEdit={true}
+                                            syncBackend={false}
+                                            openExistingResourcesInDialog={false}
+                                            initialSubjectId={contribution.resourceId}
+                                            initialSubjectLabel={contribution.label}
+                                            renderTemplateBox={true}
                                         />
-                                    ),
-                                    key: contribution.id,
-                                    children: (
-                                        <div className="contributionData">
-                                            <StatementBrowser
-                                                enableEdit={true}
-                                                syncBackend={false}
-                                                openExistingResourcesInDialog={false}
-                                                initialSubjectId={contribution.resourceId}
-                                                initialSubjectLabel={contribution.label}
-                                                renderTemplateBox={true}
-                                            />
-                                        </div>
-                                    ),
-                                };
-                            })}
-                        />
-                    </StyledContributionTabs>
+                                    </div>
+                                ),
+                            };
+                        })}
+                    />
                 </Col>
 
                 <Col lg="3" className="ps-lg-3 mt-2">

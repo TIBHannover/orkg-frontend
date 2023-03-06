@@ -2,7 +2,7 @@ import { useCallback, useState, useEffect } from 'react';
 import { Container, ListGroup } from 'reactstrap';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getComparisonsByOrganizationId } from 'services/backend/organizations';
-import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
+import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
 import ContentLoader from 'react-content-loader';
 import { getComparisonData, groupVersionsOfComparisons } from 'utils';
 import { find, flatten } from 'lodash';
