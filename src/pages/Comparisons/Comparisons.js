@@ -11,6 +11,8 @@ import { Link } from 'react-router-dom';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getComparisonData, groupVersionsOfComparisons } from 'utils';
+import comparisonsThumbnail from 'assets/img/video_thumbnails/comparisons.png';
+import VideoExplainer from 'components/ListPage/VideoExplainer';
 
 const Comparisons = () => {
     useEffect(() => {
@@ -62,13 +64,28 @@ const Comparisons = () => {
     );
 
     const infoContainerText = (
-        <>
-            ORKG comparisons provide condensed overviews of the state-of-the-art for a particular research question.{' '}
-            <a href="https://orkg.org/about/15/Comparisons" rel="noreferrer" target="_blank">
-                Learn more in the help center
-            </a>
-            .
-        </>
+        <div className="d-flex">
+            <VideoExplainer
+                previewStyle={{ width: 65, height: 35, background: `url(${comparisonsThumbnail})` }}
+                video={
+                    <iframe
+                        width="560"
+                        height="315"
+                        src="https://www.youtube.com/embed/j4lVfO6GBZ8"
+                        title="YouTube video player"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                    />
+                }
+            />
+            <span>
+                ORKG comparisons provide condensed overviews of the state-of-the-art for a particular research question.{' '}
+                <a href="https://orkg.org/about/15/Comparisons" rel="noreferrer" target="_blank">
+                    Learn more in the help center
+                </a>
+                .
+            </span>
+        </div>
     );
 
     return (
