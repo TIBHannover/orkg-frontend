@@ -14,7 +14,7 @@ export const getAboutPageCategories = () => submitGetRequest(`${url}about-page-c
 
 export const getAboutPages = (categoryId = null) =>
     submitGetRequest(
-        `${url}about-pages?sort=order&fields[0]=title,order&populate[category][fields][0]=id${
+        `${url}about-pages?sort=order&pagination[pageSize]=100&fields[0]=title,order&populate[category][fields][0]=id${
             categoryId ? `&filters[category][id][$eq]=${categoryId}` : ''
         }`,
     ).catch(() => []);
