@@ -1,33 +1,32 @@
-import { Container, UncontrolledAlert } from 'reactstrap';
-import NotFound from 'pages/NotFound';
-import ContentLoader from 'react-content-loader';
-import { useLocation, useParams } from 'react-router-dom';
-import Contributions from 'components/ViewPaper/Contributions/Contributions';
-import useViewPaper from 'components/ViewPaper/hooks/useViewPaper';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import PaperHeader from 'components/ViewPaper/PaperHeader';
-import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import GizmoGraphViewModal from 'components/ViewPaper/GraphView/GizmoGraphViewModal';
-import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
-import VisibilitySensor from 'react-visibility-sensor';
-import { useSelector } from 'react-redux';
-import queryString from 'query-string';
 import env from '@beam-australia/react-env';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
+import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
+import TitleBar from 'components/TitleBar/TitleBar';
+import Contributions from 'components/ViewPaper/Contributions/Contributions';
+import GizmoGraphViewModal from 'components/ViewPaper/GraphView/GizmoGraphViewModal';
+import useViewPaper from 'components/ViewPaper/hooks/useViewPaper';
+import PaperHeader from 'components/ViewPaper/PaperHeader';
 import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
 import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
-import { Helmet } from 'react-helmet';
 import moment from 'moment';
-import TitleBar from 'components/TitleBar/TitleBar';
-import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import useDetermineResearchField from 'components/AddPaper/EntityRecognition/useDetermineResearchField';
+import NotFound from 'pages/NotFound';
+import queryString from 'query-string';
 import { useEffect, useState } from 'react';
+import ContentLoader from 'react-content-loader';
+import { Helmet } from 'react-helmet';
+import { useSelector } from 'react-redux';
+import { useLocation, useParams } from 'react-router-dom';
+import VisibilitySensor from 'react-visibility-sensor';
+import { Container, UncontrolledAlert } from 'reactstrap';
+import { determineActiveNERService, SERVICE_MAPPING } from 'services/orkgNlp/index';
 
 const ViewPaper = () => {
     const { resourceId } = useParams();
     const location = useLocation();
     const viewPaper = useSelector(state => state.viewPaper);
     const [shouldShowNerSurvey, setShouldShowNerSurvey] = useState(false);
-    const { determineField } = useDetermineResearchField();
     const { isLoading, isLoadingFailed, showHeaderBar, editMode, showGraphModal, toggle, handleShowHeaderBar, setEditMode, setShowGraphModal } =
         useViewPaper({
             paperId: resourceId,
@@ -38,9 +37,9 @@ const ViewPaper = () => {
 
     useEffect(() => {
         if (comingFromWizard) {
-            (async () => setShouldShowNerSurvey(await determineField({ field: viewPaper.researchField?.id })))();
+            (async () => setShouldShowNerSurvey((await determineActiveNERService(viewPaper.researchField?.id)) === SERVICE_MAPPING.CS_NER))();
         }
-    }, [determineField, comingFromWizard, viewPaper.researchField?.id]);
+    }, [comingFromWizard, viewPaper.researchField?.id]);
 
     const getSEODescription = () =>
         `Published: ${viewPaper.publicationMonth ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''} ${

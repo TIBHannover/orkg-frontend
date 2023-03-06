@@ -1,25 +1,26 @@
-import { faAngleDown, faExclamationTriangle, faMagic, faFlask } from '@fortawesome/free-solid-svg-icons';
+import env from '@beam-australia/react-env';
+import { faAngleDown, faExclamationTriangle, faFlask, faMagic } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Abstract from 'components/AddPaper/Abstract/Abstract';
 import AbstractModal from 'components/AddPaper/AbstractModal/AbstractModal';
+import BioAssaysModal from 'components/AddPaper/BioAssaysModal/BioAssaysModal';
 import EntityRecognition from 'components/AddPaper/EntityRecognition/EntityRecognition';
-import useDetermineResearchField from 'components/AddPaper/EntityRecognition/useDetermineResearchField';
+import useBioassays from 'components/AddPaper/hooks/useBioassays';
 import useEntityRecognition from 'components/AddPaper/hooks/useEntityRecognition';
 import useFeedbacks from 'components/AddPaper/hooks/useFeedbacks';
-import useBioassays from 'components/AddPaper/hooks/useBioassays';
 import Confirm from 'components/Confirmation/Confirmation';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
-import { StyledContributionTabs, GlobalStyle } from 'components/ContributionTabs/styled';
+import { GlobalStyle, StyledContributionTabs } from 'components/ContributionTabs/styled';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tooltip from 'components/Utils/Tooltip';
+import { BIOASSAYS_FIELDS_LIST } from 'constants/nlpFieldLists';
 import Tabs from 'rc-tabs';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import BIOASSAYS_FIELDS_LIST from 'constants/bioassayFieldList';
-import BioAssaysModal from 'components/AddPaper/BioAssaysModal/BioAssaysModal';
 import { Button, Col, Row, UncontrolledAlert } from 'reactstrap';
+import { determineActiveNERService } from 'services/orkgNlp/index';
 import {
     createContributionAction as createContribution,
     deleteContributionAction as deleteContribution,
@@ -32,7 +33,6 @@ import {
     updateContributionLabelAction as updateContributionLabel,
 } from 'slices/addPaperSlice';
 import { updateSettings } from 'slices/statementBrowserSlice';
-import env from '@beam-australia/react-env';
 import ContributionsHelpTour from './ContributionsHelpTour';
 
 const Contributions = () => {
@@ -50,13 +50,12 @@ const Contributions = () => {
         abstract,
     } = useSelector(state => state.addPaper);
     const [isOpenAbstractModal, setIsOpenAbstractModal] = useState(false);
-    const [isComputerScienceField, setIsComputerScienceField] = useState(false);
+    const [activeNERService, setActiveNERService] = useState(null);
     const { resources, properties, values } = useSelector(state => state.statementBrowser);
-    const { determineField } = useDetermineResearchField();
 
     const isBioassayField = BIOASSAYS_FIELDS_LIST.includes(selectedResearchField);
 
-    const { handleSaveFeedback } = useEntityRecognition({ isComputerScienceField });
+    const { handleSaveFeedback } = useEntityRecognition({ activeNERService });
     const { handleSaveBioassaysFeedback } = useBioassays();
     const { handleSavePredicatesRecommendationFeedback } = useFeedbacks();
 
@@ -65,8 +64,8 @@ const Contributions = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        (async () => setIsComputerScienceField(await determineField({ field: selectedResearchField })))();
-    }, [determineField, selectedResearchField]);
+        (async () => setActiveNERService(await determineActiveNERService(selectedResearchField)))();
+    }, [selectedResearchField]);
 
     useEffect(() => {
         // if there is no contribution yet, create the first one
@@ -87,7 +86,7 @@ const Contributions = () => {
     }, [contributions.allIds.length, dispatch, selectedResearchField]);
 
     const handleNextClick = async () => {
-        if (isComputerScienceField) {
+        if (activeNERService) {
             handleSaveFeedback();
         }
         if (isBioassayField) {
@@ -149,7 +148,7 @@ const Contributions = () => {
         dispatch(openTour(step));
     };
 
-    const showAbstractWarning = isComputerScienceField && !abstract;
+    const showAbstractWarning = activeNERService && !abstract;
     const onTabChange = key => {
         handleSelectContribution(key);
     };
@@ -196,7 +195,7 @@ const Contributions = () => {
                             <Icon icon={faFlask} /> Add Bioassay
                         </Button>
                     )}
-                    {!isComputerScienceField ? (
+                    {!activeNERService ? (
                         <Button onClick={() => dispatch(toggleAbstractDialog())} outline size="sm" color="smart">
                             {!showAbstractWarning ? <Icon icon={faMagic} /> : <Icon icon={faExclamationTriangle} className="text-warning" />} Abstract
                             annotator
@@ -269,7 +268,7 @@ const Contributions = () => {
                 </Col>
 
                 <Col lg="3" className="ps-lg-3 mt-2">
-                    <EntityRecognition isComputerScienceField={isComputerScienceField} />
+                    <EntityRecognition activeNERService={activeNERService} />
                 </Col>
             </Row>
 
