@@ -57,6 +57,7 @@ function useComparison({ id, isEmbeddedMode = false }) {
     const contributions = useSelector(state => state.comparison.contributions);
     const isLoadingResult = useSelector(state => state.comparison.isLoadingResult);
     const data = useSelector(state => state.comparison.data);
+    const properties = useSelector(state => state.comparison.properties);
 
     /**
      * Load comparison meta data and comparison config
@@ -297,6 +298,7 @@ function useComparison({ id, isEmbeddedMode = false }) {
         isLoadingResult,
         data,
         contributions,
+        properties,
         navigateToNewURL,
     };
 }

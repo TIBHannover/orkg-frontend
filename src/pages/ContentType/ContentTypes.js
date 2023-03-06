@@ -28,6 +28,10 @@ function ContentTypes() {
         }
     }, [type]);
 
+    useEffect(() => {
+        document.title = `${pluralize(contentType?.label || '', 0, false)} list - ORKG`;
+    }, [contentType?.label]);
+
     const renderListItem = resource => (
         <ShortRecord key={resource.id} header={resource.label} href={reverse(ROUTES.CONTENT_TYPE_NO_MODE, { id: resource.id, type })}>
             {resource.id}

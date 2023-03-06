@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { RESOURCES } from 'constants/graphSettings';
 import ContentLoader from 'react-content-loader';
-import CardFactory from 'components/CardFactory/CardFactory';
+import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import useResearchFieldContent from 'components/ResearchField/hooks/useResearchFieldContent';
 import { reverseWithSlug } from 'utils';
 

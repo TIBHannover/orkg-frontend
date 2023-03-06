@@ -434,7 +434,7 @@ export const statementBrowserSlice = createSlice({
                 state.keyToKeepStateOnLocationChange === match(ROUTES.CONTENT_TYPE)(payload.location.pathname)?.params?.id ||
                 state.keyToKeepStateOnLocationChange === match(ROUTES.CONTENT_TYPE_NO_MODE)(payload.location.pathname)?.params?.id
             ) {
-                return null;
+                return state;
             }
 
             // from redux-first-history, reset the wizard when the page is changed

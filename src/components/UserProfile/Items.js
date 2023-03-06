@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import PaperCard from 'components/PaperCard/PaperCard';
-import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
+import PaperCard from 'components/Cards/PaperCard/PaperCard';
+import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getPaperData, getComparisonData, groupVersionsOfComparisons } from 'utils';
 import { find, flatten } from 'lodash';
@@ -15,10 +15,10 @@ import { getResourcesByClass } from 'services/backend/resources';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
 import { CLASSES } from 'constants/graphSettings';
 import TemplateCard from 'components/Templates/TemplateCard';
-import ReviewCard from 'components/ReviewCard/ReviewCard';
+import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
 import { groupBy } from 'lodash';
 import { getReviewData } from 'utils';
-import VisualizationCard from 'components/VisualizationCard/VisualizationCard';
+import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
 
 const Items = props => {
     const pageSize = 25;
@@ -153,7 +153,7 @@ const Items = props => {
     return (
         <div>
             {resources.length > 0 && (
-                <ListGroup>
+                <ListGroup style={{ borderTopLeftRadius: '0', borderTopRightRadius: '0' }}>
                     {resources.map(resource => {
                         if (props.filterClass === CLASSES.PAPER) {
                             const paperId = resource.id;

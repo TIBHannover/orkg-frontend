@@ -396,7 +396,7 @@ export const saveEntities =
             await createResourceStatement(sectionId, PREDICATES.HAS_ENTITY, entity.id);
         }
 
-        dispatch(updateDataTable({ sectionId, dataTable: entities }));
+        dispatch(updateDataTable({ sectionId, dataTable: { entities } }));
     };
 
 export const saveShowProperties =
@@ -414,7 +414,7 @@ export const saveShowProperties =
             await createResourceStatement(sectionId, PREDICATES.SHOW_PROPERTY, property.id);
         }
 
-        dispatch(updateDataTable({ sectionId, dataTable: properties }));
+        dispatch(updateDataTable({ sectionId, dataTable: { properties } }));
     };
 
 export const reloadDataTableStatements =

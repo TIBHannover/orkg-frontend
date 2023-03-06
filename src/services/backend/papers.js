@@ -4,6 +4,7 @@ import { getStatementsBySubjectAndPredicate, getStatementsByObjectAndPredicate }
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { indexContribution } from 'services/similarity';
 import { toast } from 'react-toastify';
+import queryString from 'query-string';
 
 export const papersUrl = `${url}papers/`;
 
@@ -45,4 +46,25 @@ export const getOriginalPaperId = paperId => {
     };
     const pId = getPaperId(paperId);
     return pId;
+};
+
+export const getPapersLinkedToResource = async ({
+    id,
+    page = 0,
+    items: size = 9999,
+    sortBy = 'paper.created_at',
+    desc = true,
+    returnContent = false,
+}) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify(
+        { linkedTo: encodeURIComponent(id), page, size, sort, desc },
+        {
+            skipNull: true,
+            skipEmptyString: true,
+        },
+    );
+
+    const resources = await submitGetRequest(`${papersUrl}?${params}`).then(res => (returnContent ? res.content : res));
+    return resources;
 };

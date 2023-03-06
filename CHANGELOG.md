@@ -3,6 +3,48 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.94.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.93.0...v0.94.0) - 2023-03-06
+
+### Changes
+
+- fix(Header): show all about menu items by increasing pageSize [`#1035`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1035)
+- feat(Resource): Add usage tab that list papers referring to a resource [`#1032`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1032)
+- refactor(Resource): use tabs ui pattern and move all components cards to its own directory [`#960`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/960)
+- sync(Benchmarks): list all benchmarks [`#805`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/805)
+- feat(Comparison): move related resources and figures to the virtualization carousel [`#1024`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1024)
+- feat(AddPaper): Integration of the Agri-NER service [`#1030`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1030)
+- fix(SmartReview): incorrect reference key for references [`#1034`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1034)
+- Resolve "Migrate to new organization logo endpoint" [`#1022`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1022)
+- fix(Header): prevent issue with wrong CMS env var [`#1033`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1033)
+
+---
+## [v0.93.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.92.0...v0.93.0) - 2023-03-01
+
+### Changes
+
+- feat(Comparison): quality report modal (i.e. maturity modal) [`#1012`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1012)
+- feat(Comparison): show top authors for comparisons [`#995`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/995)
+- fix(Header): solve issue with sorting of about pages and categories [`#1031`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1031)
+
+---
+## [v0.92.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.91.2...v0.92.0) - 2023-02-27
+
+### Changes
+
+- refactor(Timeline): sync with backend changes on the contributors endpoint [`#1013`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1013)
+- fix(Review): Ontology section [`#1029`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1029)
+- Resolved: Resolve "Text on homepage is not clearly visible" [`#1026`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1026)
+- fix: Broken edit mode in content type page [`#1023`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1023)
+- ux: Show disabled selector when templates are used [`#1025`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1025)
+
+---
+## [v0.91.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.91.1...v0.91.2) - 2023-02-21
+
+### Changes
+
+- chore: support Strapi V4 API [`#1000`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1000)
+
+---
 ## [v0.91.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.91.0...v0.91.1) - 2023-02-10
 
 ### Changes

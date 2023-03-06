@@ -7,7 +7,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { usePrevious } from 'react-use';
 import { Container, ListGroup } from 'reactstrap';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { upperFirst } from 'lodash';
 
 const ListPage = ({
     label,
@@ -30,10 +29,6 @@ const ListPage = ({
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     const [totalElements, setTotalElements] = useState(0);
     const prevPage = usePrevious(page);
-
-    useEffect(() => {
-        document.title = `${upperFirst(label)} list - ORKG`;
-    });
 
     const load = useCallback(async () => {
         startLoading();
@@ -138,7 +133,7 @@ const ListPage = ({
             )}
             <Container className="p-0">
                 {results.length > 0 && (
-                    <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
+                    <ListGroup flush className={`${boxShadow ? 'box' : ''} rounded`} style={{ overflow: 'hidden' }}>
                         {results.map(renderListItem)}
                         {!isLoading && hasNextPage && (
                             <div
@@ -192,7 +187,7 @@ const ListPage = ({
 
 ListPage.propTypes = {
     label: PropTypes.string.isRequired,
-    resourceClass: PropTypes.string.isRequired,
+    resourceClass: PropTypes.string,
     renderListItem: PropTypes.func.isRequired,
     fetchItems: PropTypes.func.isRequired,
     pageSize: PropTypes.number,

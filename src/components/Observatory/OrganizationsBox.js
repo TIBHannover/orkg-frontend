@@ -13,6 +13,7 @@ import StatementActionButton from 'components/StatementBrowser/StatementActionBu
 import { deleteOrganizationFromObservatory } from 'services/backend/observatories';
 import capitalize from 'capitalize';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
+import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
 const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observatoryId, toggleOrganizationItem }) => {
     const user = useSelector(state => state.auth.user);
@@ -52,11 +53,9 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
                             {organizations.map((organization, index) => (
                                 <div key={`c${index}`} className="mb-3 pl-2 py-2 rounded border text-center position-relative">
                                     <Link to={reverse(ROUTES.ORGANIZATION, { type: capitalize(ORGANIZATIONS_MISC.GENERAL), id: organization.display_id })}>
-                                        {organization.logo ? (
-                                            <img style={{ marginTop: 12 }} height="50" src={organization.logo} alt={`${organization.name} logo`} />
-                                        ) : (
-                                            organization.name
-                                        )}
+
+                                            <img style={{ marginTop: 12 }} height="50" src={getOrganizationLogoUrl(organization?.id)} alt={`${organization.name} logo`} />
+
                                     </Link>
                                     {!!user && user.isCurationAllowed && (
                                         <div className="position-absolute" style={{ top: 3, right: 0 }}>

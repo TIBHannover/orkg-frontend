@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faProjectDiagram, faPen, faTimes, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faProjectDiagram, faPen, faTimes, faEllipsisV, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeModal';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
@@ -12,6 +11,7 @@ import { useSelector } from 'react-redux';
 import Publish from 'components/ViewPaper/Publish/Publish';
 import ViewPaperButton from 'components/ViewPaper/PaperHeaderBar/ViewPaperButton';
 import { getPaperLink } from 'slices/viewPaperSlice';
+import PreventModal from 'components/Resource/PreventModal/PreventModal';
 
 function PaperMenuBar(props) {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -69,7 +69,27 @@ function PaperMenuBar(props) {
                 </DropdownMenu>
             </ButtonDropdown>
 
-            <PapersWithCodeModal isOpen={isOpenPWCModal} toggle={() => setIsOpenPWCModal(v => !v)} label={label} />
+            <PreventModal
+                isOpen={isOpenPWCModal}
+                toggle={() => setIsOpenPWCModal(v => !v)}
+                header="We are working on it!"
+                content={
+                    <>
+                        This resource was imported from an external source and our provenance feature is in active development, and due to that, this
+                        resource cannot be edited. <br />
+                        Meanwhile, you can visit{' '}
+                        <a
+                            href={label ? `https://paperswithcode.com/search?q_meta=&q_type=&q=${label}` : 'https://paperswithcode.com/'}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            paperswithcode <Icon icon={faExternalLinkAlt} className="me-1" />
+                        </a>{' '}
+                        website to suggest changes.
+                    </>
+                }
+            />
+
             <Publish showDialog={showPublishDialog} toggle={() => setShowPublishDialog(v => !v)} />
         </>
     );

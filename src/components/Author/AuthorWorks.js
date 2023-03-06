@@ -1,8 +1,8 @@
 import { Container, ListGroupItem, ListGroup } from 'reactstrap';
-import PaperCard from 'components/PaperCard/PaperCard';
-import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
-import VisualizationCard from 'components/VisualizationCard/VisualizationCard';
-import ReviewCard from 'components/ReviewCard/ReviewCard';
+import PaperCard from 'components/Cards/PaperCard/PaperCard';
+import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
+import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
+import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { CLASSES } from 'constants/graphSettings';
