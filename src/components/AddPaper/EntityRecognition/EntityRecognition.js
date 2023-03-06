@@ -1,4 +1,4 @@
-import { faAngleDoubleLeft, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import useEntityRecognition from 'components/AddPaper/hooks/useEntityRecognition';
 import usePredicatesRecommendation from 'components/AddPaper/hooks/usePredicatesRecommendation';
@@ -69,11 +69,11 @@ const ShowMoreButton = styled(Button)`
 
 const MAX_PROPERTIES_ITEMS = 8;
 
-const EntityRecognition = ({ isComputerScienceField }) => {
+const EntityRecognition = ({ activeNERService }) => {
     const { title, abstract, nerProperties } = useSelector(state => state.addPaper);
     const dispatch = useDispatch();
     const { handleInsertData } = useInsertData();
-    const { suggestions } = useEntityRecognition({ isComputerScienceField });
+    const { suggestions } = useEntityRecognition({ activeNERService });
     const { recommendedPredicates } = usePredicatesRecommendation();
     const { recommendedTemplates } = useTemplatesRecommendation();
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
@@ -82,12 +82,12 @@ const EntityRecognition = ({ isComputerScienceField }) => {
     useDebounce(
         () => {
             const processNlpData = async () => {
-                const data = await getNerResults({ title, abstract });
+                const data = await getNerResults({ title, abstract, service: activeNERService });
                 dispatch(setNerResources(data.resources));
                 dispatch(setNerProperties(data.properties));
                 dispatch(setNerRawResponse(data.response));
             };
-            if (isComputerScienceField) {
+            if (activeNERService) {
                 processNlpData();
             }
         },
@@ -228,7 +228,7 @@ const EntityRecognition = ({ isComputerScienceField }) => {
 };
 
 EntityRecognition.propTypes = {
-    isComputerScienceField: PropTypes.bool.isRequired,
+    activeNERService: PropTypes.string,
 };
 
 export default EntityRecognition;

@@ -15,6 +15,7 @@ import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
 import { useSelector } from 'react-redux';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
+import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
 const StyledOrganizationCard = styled.div`
     border: 0;
@@ -101,7 +102,7 @@ function ProvenanceBox() {
                 </div>
                 {observatory && observatory.organization && (
                     <div className="col-4">
-                        <div className={!observatory.organization.logo ? 'm-4' : ''}>
+                        <div className={!observatory.organization.id ? 'm-4' : ''}>
                             <StyledOrganizationCard className="card h-100 border-0">
                                 <Link
                                     className="logoContainer"
@@ -110,15 +111,13 @@ function ProvenanceBox() {
                                         id: observatory.organization.display_id,
                                     })}
                                 >
-                                    {observatory.organization.logo ? (
+
                                         <img
                                             className="mx-auto p-2"
-                                            src={observatory.organization.logo}
+                                            src={getOrganizationLogoUrl(observatory.organization?.id)}
                                             alt={`${observatory.organization.name} logo`}
                                         />
-                                    ) : (
-                                        observatory.organization.name
-                                    )}
+
                                 </Link>
                             </StyledOrganizationCard>
                         </div>

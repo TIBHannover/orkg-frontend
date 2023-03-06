@@ -4,6 +4,7 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
 const ObservatoryCardStyled = styled.div`
     cursor: initial;
@@ -31,7 +32,7 @@ const ObservatoryCardStyled = styled.div`
 function ObservatoryCard(props) {
     return (
         <ObservatoryCardStyled className="col-6 mb-4">
-            {!props.observatory.logo && (
+
                 <Card className="h-100">
                     <Link to={reverse(ROUTES.OBSERVATORY, { id: props.observatory.display_id })} style={{ textDecoration: 'none' }}>
                         <CardBody>
@@ -41,7 +42,7 @@ function ObservatoryCard(props) {
                                         className="justify-content-center orgLogo"
                                         key={`imageLogo${o.id}`}
                                         height="45px"
-                                        src={o.logo}
+                                        src={getOrganizationLogoUrl(o.id)}
                                         alt={`${o.name} logo`}
                                     />
                                 </span>
@@ -57,7 +58,7 @@ function ObservatoryCard(props) {
                         </CardBody>
                     </Link>
                 </Card>
-            )}
+
         </ObservatoryCardStyled>
     );
 }

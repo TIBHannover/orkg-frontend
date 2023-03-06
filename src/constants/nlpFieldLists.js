@@ -1,4 +1,4 @@
-const BIOASSAYS_FIELDS_LIST = [
+export const BIOASSAYS_FIELDS_LIST = [
     'R13', // Biochemistry, Biophysics, and Structural Biology
     'R14',
     'R15',
@@ -30,4 +30,13 @@ const BIOASSAYS_FIELDS_LIST = [
     'R57',
 ];
 
-export default BIOASSAYS_FIELDS_LIST;
+export const COMPUTER_SCIENCE_FIELDS_LIST = [
+    'R132', // Computer Sciences
+    'R322', // Computational Linguistics
+];
+
+export const AGRICULTURE_FIELDS_LIST = [
+    'R136172', // Agriculture_Forestry_and_Veterinary_Medicine
+    'R87', // Forestry and Forest Sciences
+    'R97', // Plant Sciences
+];

@@ -8,10 +8,15 @@ import { setIsOpenVisualizationModal, setUseReconstructedDataInVisualization } f
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
 import { find } from 'lodash';
-import PreviewCarouselComponent from './PreviewCarouselComponent';
+import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import useRelatedResources from 'components/Comparison/ComparisonCarousel/RelatedResources/useRelatedResources';
+import RelatedResource from 'components/Comparison/ComparisonCarousel/RelatedResources/RelatedResource';
+import RelatedFigure from 'components/Comparison/ComparisonCarousel/RelatedResources/RelatedFigure';
+import { StyledSlider } from 'components/ResearchProblem/Benchmarks/styled';
 import SingleVisualizationComponent from './SingleVisualizationComponent';
 
-function PreviewVisualizationComparison() {
+function ComparisonCarousel() {
     const dispatch = useDispatch();
     const [isLoadingVisualizationData, setIsLoadingVisualizationData] = useState(false);
     const [visData, setVisData] = useState([]);
@@ -27,7 +32,40 @@ function PreviewVisualizationComparison() {
     const predicatesList = useSelector(state => state.comparison.configuration.predicatesList);
 
     const model = useMemo(() => new SelfVisDataModel(), []);
-
+    const settings = {
+        dots: false,
+        infinite: false,
+        speed: 500,
+        slidesToShow: 5,
+        centerMode: false,
+        slidesToScroll: 5,
+        nextArrow: <Icon icon={faArrowCircleRight} />,
+        prevArrow: <Icon icon={faArrowCircleLeft} />,
+        rows: 1,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                },
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2,
+                },
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                },
+            },
+        ],
+    };
     useEffect(() => {
         const integrateData = () => {
             model.integrateInputData({
@@ -86,22 +124,30 @@ function PreviewVisualizationComparison() {
         fetchVisualizationData();
     }, [visualizations]);
 
+    const { relatedResources, relatedFigures } = useRelatedResources();
+
     return (
-        <div id="visualizations">
+        <div className="py-3">
             <ErrorBoundary fallback="Something went wrong while loading the visualization!">
                 {!isLoadingMetadata && !isFailedLoadingMetadata && (
                     <>
                         {!isLoadingVisualizationData && visData?.length > 0 && (
-                            <PreviewCarouselComponent>
+                            <StyledSlider {...settings}>
                                 {visData.map((d, index) => (
                                     <SingleVisualizationComponent
-                                        key={`singleVisComp_${index}`}
+                                        key={d.id}
                                         input={d}
                                         itemIndex={index}
                                         expandVisualization={val => expandVisualization(val)}
                                     />
                                 ))}
-                            </PreviewCarouselComponent>
+                                {relatedFigures.map(({ figureId, src, title, description }) => (
+                                    <RelatedFigure key={figureId} src={src} title={title} description={description} />
+                                ))}
+                                {relatedResources.map(({ id, url, title, description }) => (
+                                    <RelatedResource key={id} url={url} title={title} description={description} />
+                                ))}
+                            </StyledSlider>
                         )}
                         {isLoadingVisualizationData && (
                             <>
@@ -124,4 +170,4 @@ function PreviewVisualizationComparison() {
     );
 }
 
-export default PreviewVisualizationComparison;
+export default ComparisonCarousel;
