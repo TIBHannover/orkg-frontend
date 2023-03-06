@@ -4,6 +4,7 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
 const StyledOrganizationCard = styled.div`
     .logoContainer {
@@ -35,27 +36,18 @@ const StyledOrganizationCard = styled.div`
 function OrganizationCard(props) {
     return (
         <div className="col-4 mb-3">
-            {props.organization.logo && (
+
                 <Link to={reverse(ROUTES.ORGANIZATION, { type: props.type, id: props.organization.display_id })}>
                     <StyledOrganizationCard className="card h-100">
                         <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { type: props.type, id: props.organization.display_id })}>
-                            <img className="mx-auto p-2" src={props.organization.logo} alt={`${props.organization.name} logo`} />
+                            <img className="mx-auto p-2" src={getOrganizationLogoUrl(props.organization?.id)} alt={`${props.organization.name} logo`} />
                         </Link>
                         <CardBody>
                             <CardTitle className="text-center">{props.organization.name}</CardTitle>
                         </CardBody>
                     </StyledOrganizationCard>
                 </Link>
-            )}
-            {!props.organization.logo && (
-                <Link to={reverse(ROUTES.ORGANIZATION, { type: props.type, id: props.organization.display_id })}>
-                    <Card className="h-100">
-                        <CardBody className="d-flex">
-                            <CardTitle className="align-self-center text-center flex-grow-1">{props.organization.name}</CardTitle>
-                        </CardBody>
-                    </Card>
-                </Link>
-            )}
+
         </div>
     );
 }
