@@ -65,7 +65,7 @@ function InformationTab({ id, label, uri, editMode, callBackToReloadTree, showSt
     const _children = !showMoreChildren && children?.length > 0 ? children.slice(0, 9) : children;
 
     return (
-        <div className="p-4" style={{ position: 'sticky', top: '70px' }}>
+        <div className="p-4">
             <Table bordered>
                 <tbody>
                     <tr>

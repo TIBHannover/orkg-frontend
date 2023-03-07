@@ -4,7 +4,7 @@ import ROUTES from 'constants/routes';
 import { orderBy } from 'lodash';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getChildrenByID, getHierarchyByID } from 'services/backend/classes';
 import AnimatedTree, { motion } from './styled';
@@ -55,7 +55,7 @@ function TreeView({ id, label, reloadTree, ...props }) {
             navigate(
                 `${reverse(ROUTES.CLASS_TABS, {
                     id: info[0],
-                    activeTab: 'tree',
+                    activeTab: 'information',
                 })}?noRedirect`,
             );
         }

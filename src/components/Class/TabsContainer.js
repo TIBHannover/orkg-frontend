@@ -1,4 +1,5 @@
 import ClassInstances from 'components/ClassInstances/ClassInstances';
+import { TabHeaderStyle } from 'components/Tabs/styled';
 import Tabs from 'components/Tabs/Tabs';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
@@ -25,45 +26,40 @@ function TabsContainer({ id, label, uri, editMode }) {
 
     return (
         <Container className="mt-2 p-0">
-            <Tabs
-                className="box rounded"
-                destroyInactiveTabPane={true}
-                onChange={onTabChange}
-                activeKey={activeTab ?? 'information'}
-                items={[
-                    {
-                        label: 'Class information',
-                        key: 'information',
-                        children: <InformationTab uri={uri} id={id} label={label} editMode={editMode} />,
-                    },
-                    {
-                        label: 'Tree view',
-                        key: 'tree',
-                        children: (
-                            <Row>
-                                <Col md={6}>
-                                    <TreeView id={id} label={label} reloadTree={reloadTree} />
-                                </Col>
-                                <Col md={6}>
+            <Row>
+                <Col md={6} className="box rounded p-0" style={{ background: '#fff' }}>
+                    <TabHeaderStyle className="rc-tabs-nav-wrap">Tree view</TabHeaderStyle>
+                    <TreeView id={id} label={label} reloadTree={reloadTree} />
+                </Col>
+                <Col md={6}>
+                    <Tabs
+                        style={{ position: 'sticky', top: '70px' }}
+                        destroyInactiveTabPane={true}
+                        onChange={onTabChange}
+                        activeKey={activeTab ?? 'information'}
+                        items={[
+                            {
+                                label: 'Class information',
+                                key: 'information',
+                                children: (
                                     <InformationTab
                                         uri={uri}
                                         id={id}
                                         label={label}
                                         editMode={editMode}
-                                        showStatementsBrowser={false}
                                         callBackToReloadTree={() => setReloadTree(v => !v)}
                                     />
-                                </Col>
-                            </Row>
-                        ),
-                    },
-                    {
-                        label: 'Instances',
-                        key: 'instances',
-                        children: <ClassInstances classId={id} />,
-                    },
-                ]}
-            />
+                                ),
+                            },
+                            {
+                                label: 'Instances',
+                                key: 'instances',
+                                children: <ClassInstances classId={id} />,
+                            },
+                        ]}
+                    />
+                </Col>
+            </Row>
         </Container>
     );
 }

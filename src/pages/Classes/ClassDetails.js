@@ -8,12 +8,11 @@ import ROUTES from 'constants/routes.js';
 import InternalServerError from 'pages/InternalServerError';
 import NotFound from 'pages/NotFound';
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Button, Container } from 'reactstrap';
 import { getClassById } from 'services/backend/classes';
 
 function ClassDetails() {
-    const location = useLocation();
     const [error, setError] = useState(null);
     const [label, setLabel] = useState('');
     const [uri, setURI] = useState('');
@@ -21,13 +20,13 @@ function ClassDetails() {
     const [keyInstances, setKeyInstances] = useState(1);
     const [modalImportIsOpen, setModalImportIsOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const params = useParams();
+    const { id } = useParams();
 
     useEffect(() => {
         const findClass = async () => {
             setIsLoading(true);
             try {
-                const responseJson = await getClassById(params.id);
+                const responseJson = await getClassById(id);
                 document.title = `${responseJson.label} - Class - ORKG`;
                 setLabel(responseJson.label);
                 setURI(responseJson.uri);
@@ -41,7 +40,7 @@ function ClassDetails() {
             }
         };
         findClass();
-    }, [location, params.id]);
+    }, [id]);
 
     return (
         <>
@@ -54,7 +53,7 @@ function ClassDetails() {
                             <>
                                 <RequireAuthentication
                                     component={Link}
-                                    to={`${ROUTES.ADD_RESOURCE}?classes=${params.id}`}
+                                    to={`${ROUTES.ADD_RESOURCE}?classes=${id}`}
                                     className="float-end btn btn-secondary flex-shrink-0 btn-sm"
                                     style={{ marginRight: 2 }}
                                 >
@@ -95,9 +94,9 @@ function ClassDetails() {
                             </i>
                         )}
                     </TitleBar>
-                    <TabsContainer id={params.id} editMode={editMode} uri={uri} label={label} key={keyInstances} />
+                    <TabsContainer id={id} editMode={editMode} uri={uri} label={label} key={keyInstances} />
                     <ImportCSVInstances
-                        classId={params.id}
+                        classId={id}
                         showDialog={modalImportIsOpen}
                         toggle={() => setModalImportIsOpen(v => !v)}
                         callBack={() => setKeyInstances(Math.random())}

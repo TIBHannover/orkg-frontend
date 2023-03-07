@@ -1,6 +1,17 @@
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
 
+export const TabHeaderStyle = styled.div`
+    align-items: center;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 0;
+    border-radius: 0;
+    border-bottom-width: 2px;
+    border-color: ${props => props.theme.lightDarker};
+    border-style: solid;
+`;
+
 export const ORKGTabsStyle = styled.div`
     .rc-tabs-small > .rc-tabs-nav .rc-tabs-tab {
         padding: 8px 0;
