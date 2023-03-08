@@ -195,13 +195,11 @@ const UserProfile = props => {
                     </div>
                 )}
             </Container>
-            <Container>
+            <Container className="mt-4 p-0">
                 <TabsContainer currentUserId={currentUserId} />
             </Container>
 
-            <Container>
-                <ComparisonPopup />
-            </Container>
+            <ComparisonPopup />
         </>
     );
 };
