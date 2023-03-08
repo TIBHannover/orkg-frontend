@@ -9,8 +9,10 @@ const useRelatedResources = () => {
     const resources = useSelector(state => state.comparison.comparisonResource.resources);
     const [relatedResources, setRelatedResources] = useState([]);
     const [relatedFigures, setRelatedFigures] = useState([]);
+    const [isLoadingResources, setIsLoadingResources] = useState(false);
+    const [isLoadingFigures, setIsLoadingFigures] = useState(false);
 
-    const loadResources = useCallback(() => {
+    const loadResources = useCallback(async () => {
         if (resources.length > 0) {
             const literalRelatedResources = resources
                 .filter(r => r._class === ENTITIES.LITERAL)
@@ -18,31 +20,33 @@ const useRelatedResources = () => {
                     url: resource.label,
                 }));
             if (literalRelatedResources.length !== resources.length) {
-                getStatementsBySubjects({
+                setIsLoadingResources(true);
+                const resourcesStatements = await getStatementsBySubjects({
                     ids: resources.filter(r => r._class !== ENTITIES.LITERAL).map(r => r.id),
-                }).then(resourcesStatements => {
-                    setRelatedResources([...literalRelatedResources, ...getRelatedResourcesData(resourcesStatements)]);
                 });
+                setRelatedResources([...literalRelatedResources, ...getRelatedResourcesData(resourcesStatements)]);
+                setIsLoadingResources(false);
             } else {
                 setRelatedResources(literalRelatedResources);
             }
         }
     }, [resources]);
 
-    const loadFigures = useCallback(() => {
+    const loadFigures = useCallback(async () => {
         if (figures.length === 0) {
             return;
         }
-        // Fetch the data of each figure
-        getStatementsBySubjects({
-            ids: figures.map(r => r.id),
-        })
-            .then(figuresStatements => {
-                setRelatedFigures(getRelatedFiguresData(figuresStatements));
-            })
-            .catch(() => {
-                setRelatedFigures([]);
+        try {
+            setIsLoadingFigures(true);
+            const figuresStatements = await getStatementsBySubjects({
+                ids: figures.map(r => r.id),
             });
+            setRelatedFigures(getRelatedFiguresData(figuresStatements));
+        } catch (e) {
+            setRelatedFigures([]);
+        } finally {
+            setIsLoadingFigures(false);
+        }
     }, [figures]);
 
     useEffect(() => {
@@ -50,7 +54,7 @@ const useRelatedResources = () => {
         loadFigures();
     }, [loadFigures, loadResources]);
 
-    return { relatedResources, relatedFigures };
+    return { relatedResources, relatedFigures, isLoadingResources, isLoadingFigures };
 };
 
 export default useRelatedResources;
