@@ -20,6 +20,7 @@ function TabsContainer({ currentUserId }) {
 
     return (
         <Tabs
+            className="box rounded"
             destroyInactiveTabPane={true}
             onChange={onTabChange}
             activeKey={isActiveTab ?? '1'}
@@ -36,16 +37,14 @@ function TabsContainer({ currentUserId }) {
                     children: <Items filterLabel="papers" filterClass={CLASSES.PAPER} userId={userId} showDelete={userId === currentUserId} />,
                 },
                 {
-                    label: 'Templates',
-                    key: '3',
-                    children: <Items filterLabel="templates" filterClass={CLASSES.TEMPLATE} userId={userId} showDelete={false} />,
-                },
-
-                {
                     label: 'Reviews',
-                    key: '4',
-
+                    key: '3',
                     children: <Items filterLabel="reviews" filterClass={CLASSES.SMART_REVIEW_PUBLISHED} userId={userId} showDelete={false} />,
+                },
+                {
+                    label: 'Templates',
+                    key: '4',
+                    children: <Items filterLabel="templates" filterClass={CLASSES.TEMPLATE} userId={userId} showDelete={false} />,
                 },
             ]}
         />

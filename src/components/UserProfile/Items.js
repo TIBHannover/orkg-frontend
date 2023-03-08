@@ -1,24 +1,36 @@
-import { useState, useEffect, useCallback } from 'react';
-import PropTypes from 'prop-types';
-import PaperCard from 'components/Cards/PaperCard/PaperCard';
-import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
-import { getStatementsBySubjects } from 'services/backend/statements';
-import { getPaperData, getComparisonData, groupVersionsOfComparisons } from 'utils';
-import { find, flatten } from 'lodash';
-import { Button, ListGroup } from 'reactstrap';
-import { useNavigate } from 'react-router-dom';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { getResourcesByClass } from 'services/backend/resources';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
+import PaperCard from 'components/Cards/PaperCard/PaperCard';
+import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
+import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
+import TemplateCard from 'components/Templates/TemplateCard';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
 import { CLASSES } from 'constants/graphSettings';
-import TemplateCard from 'components/Templates/TemplateCard';
-import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
-import { groupBy } from 'lodash';
-import { getReviewData } from 'utils';
-import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
+import ROUTES from 'constants/routes.js';
+import { find, flatten, groupBy } from 'lodash';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, ListGroup } from 'reactstrap';
+import { getResourcesByClass } from 'services/backend/resources';
+import { getStatementsBySubjects } from 'services/backend/statements';
+import styled from 'styled-components';
+import { getComparisonData, getPaperData, getReviewData, groupVersionsOfComparisons } from 'utils';
+
+const ListGroupStyled = styled(ListGroup)`
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+    .list-group-item {
+        border-left: 0;
+        border-right: 0;
+    }
+    .list-group-item:last-child {
+        border-bottom: 0;
+    }
+`;
 
 const Items = props => {
     const pageSize = 25;
@@ -28,6 +40,69 @@ const Items = props => {
     const [resources, setResources] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const navigate = useNavigate();
+
+    const loadItems = useCallback(
+        p => {
+            setIsLoading(true);
+
+            getResourcesByClass({
+                id: props.filterClass,
+                page: p,
+                items: pageSize,
+                sortBy: 'created_at',
+                desc: true,
+                creator: props.userId,
+            }).then(result => {
+                // Resources
+                if (result.totalElements === 0) {
+                    setIsLoading(false);
+                    setHasNextPage(false);
+                    return;
+                }
+                // Fetch the data of each resource
+                getStatementsBySubjects({
+                    ids: result.content.map(c => c.id),
+                })
+                    .then(resourcesStatements => {
+                        let newResources = resourcesStatements.map(resourceStatements => {
+                            const resourceSubject = find(result.content, { id: resourceStatements.id });
+                            if (props.filterClass === CLASSES.PAPER) {
+                                return getPaperData(resourceSubject, resourceStatements.statements);
+                            }
+                            if (props.filterClass === CLASSES.COMPARISON) {
+                                return getComparisonData(resourceSubject, resourceStatements.statements);
+                            }
+                            if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
+                                return getReviewData(resourceSubject, resourceStatements.statements);
+                            }
+                            return resourceSubject;
+                        });
+                        if (props.filterClass === CLASSES.COMPARISON) {
+                            setResources(prevResources =>
+                                groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...newResources]),
+                            );
+                        } else if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
+                            const groupedByPaper = groupBy(newResources, 'paperId');
+                            newResources = Object.keys(groupedByPaper).map(paperId => [...groupedByPaper[paperId]]);
+                            setResources(prevResources => [...prevResources, ...newResources]);
+                        } else {
+                            setResources(prevResources => [...prevResources, ...newResources]);
+                        }
+
+                        setIsLoading(false);
+                        setHasNextPage(!result.last);
+                        setPage(prevPage => prevPage + 1);
+                    })
+                    .catch(error => {
+                        setIsLoading(false);
+                        setHasNextPage(false);
+
+                        console.log(error);
+                    });
+            });
+        },
+        [props.filterClass, props.userId],
+    );
 
     const finishLoadingCallback = () => {
         // reload the papers, in case page is already 0, manually call loadItems()
@@ -47,69 +122,6 @@ const Items = props => {
         const contributionIds = flatten(resources.filter(r => selectedItems.includes(r.id))?.map(c => c.contributions?.map(c => c.id)));
         navigate(`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionIds.join(',')}`);
     };
-
-    const loadItems = useCallback(
-        page => {
-            setIsLoading(true);
-
-            getResourcesByClass({
-                id: props.filterClass,
-                page,
-                items: pageSize,
-                sortBy: 'created_at',
-                desc: true,
-                creator: props.userId,
-            }).then(result => {
-                // Resources
-                if (result.totalElements === 0) {
-                    setIsLoading(false);
-                    setHasNextPage(false);
-                    return;
-                }
-                // Fetch the data of each resource
-                getStatementsBySubjects({
-                    ids: result.content.map(p => p.id),
-                })
-                    .then(resourcesStatements => {
-                        let new_resources = resourcesStatements.map(resourceStatements => {
-                            const resourceSubject = find(result.content, { id: resourceStatements.id });
-                            if (props.filterClass === CLASSES.PAPER) {
-                                return getPaperData(resourceSubject, resourceStatements.statements);
-                            }
-                            if (props.filterClass === CLASSES.COMPARISON) {
-                                return getComparisonData(resourceSubject, resourceStatements.statements);
-                            }
-                            if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
-                                return getReviewData(resourceSubject, resourceStatements.statements);
-                            }
-                            return resourceSubject;
-                        });
-                        if (props.filterClass === CLASSES.COMPARISON) {
-                            setResources(prevResources =>
-                                groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...new_resources]),
-                            );
-                        } else if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
-                            const groupedByPaper = groupBy(new_resources, 'paperId');
-                            new_resources = Object.keys(groupedByPaper).map(paperId => [...groupedByPaper[paperId]]);
-                            setResources(prevResources => [...prevResources, ...new_resources]);
-                        } else {
-                            setResources(prevResources => [...prevResources, ...new_resources]);
-                        }
-
-                        setIsLoading(false);
-                        setHasNextPage(!result.last);
-                        setPage(page + 1);
-                    })
-                    .catch(error => {
-                        setIsLoading(false);
-                        setHasNextPage(false);
-
-                        console.log(error);
-                    });
-            });
-        },
-        [pageSize, props.filterClass, props.userId],
-    );
 
     useEffect(() => {
         if (loadingDeletePapers) {
@@ -153,7 +165,7 @@ const Items = props => {
     return (
         <div>
             {resources.length > 0 && (
-                <ListGroup style={{ borderTopLeftRadius: '0', borderTopRightRadius: '0' }}>
+                <ListGroupStyled>
                     {resources.map(resource => {
                         if (props.filterClass === CLASSES.PAPER) {
                             const paperId = resource.id;
@@ -177,10 +189,10 @@ const Items = props => {
                         }
 
                         if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
-                            return <ReviewCard key={resource[0]?.id} versions={resource} showBadge={true} showCurationFlags={true} />;
+                            return <ReviewCard key={resource[0]?.id} versions={resource} showBadge={false} showCurationFlags={true} />;
                         }
                         if (props.filterClass === CLASSES.VISUALIZATION) {
-                            return <VisualizationCard visualization={resource} showBadge={true} showCurationFlags={true} />;
+                            return <VisualizationCard visualization={resource} showBadge={false} showCurationFlags={true} />;
                         }
 
                         return null;
@@ -197,7 +209,7 @@ const Items = props => {
                             View more {props.filterLabel}
                         </div>
                     )}
-                </ListGroup>
+                </ListGroupStyled>
             )}
 
             {isLoading && loadingIndicator}
