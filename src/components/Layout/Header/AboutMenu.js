@@ -74,6 +74,7 @@ const AboutMenu = ({ closeMenu }) => {
                                 {category.attributes.label}{' '}
                                 {subItems.length > 0 && <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />}
                             </DropdownToggle>
+
                             {subItems.length > 0 && (
                                 <DropdownMenu>
                                     {subItems.map(({ id, attributes: { title } }) => (
