@@ -3,33 +3,111 @@
  */
 import env from '@beam-australia/react-env';
 import { submitGetRequest } from 'network';
+import qs from 'qs';
 
 export const url = env('CMS_URL');
 
 export const getPageByUrl = _url => submitGetRequest(`${url}pages?filters[url]=${_url}`);
 
-export const getAboutPage = id => submitGetRequest(`${url}about-pages/${id}?populate[category][fields][0]=id`);
+export const getAboutPage = id => {
+    const query = qs.stringify(
+        {
+            populate: { category: { fields: ['id'] } },
+        },
+        {
+            encodeValuesOnly: true,
+        },
+    );
+    return submitGetRequest(`${url}about-pages/${id}?${query}`);
+};
 
-export const getAboutPageCategories = () => submitGetRequest(`${url}about-page-categories?sort=order&fields[0]=label`).catch(() => []);
+export const getAboutPageCategories = () => {
+    const query = qs.stringify(
+        {
+            sort: 'order',
+            fields: ['label'],
+        },
+        {
+            encodeValuesOnly: true,
+        },
+    );
+    return submitGetRequest(`${url}about-page-categories?${query}`).catch(() => []);
+};
 
-export const getAboutPages = (categoryId = null) =>
-    submitGetRequest(
-        `${url}about-pages?sort=order&pagination[pageSize]=100&fields[0]=title,order&populate[category][fields][0]=id${
-            categoryId ? `&filters[category][id][$eq]=${categoryId}` : ''
-        }`,
-    ).catch(() => []);
+export const getAboutPages = (categoryId = null) => {
+    const query = qs.stringify(
+        {
+            sort: 'order',
+            pagination: {
+                pageSize: 100,
+            },
+            fields: ['title', 'order'],
+            populate: {
+                category: {
+                    fields: ['id'],
+                },
+            },
 
-export const getHelpArticle = id => submitGetRequest(`${url}help-articles/${id}?populate[help_category][fields][0]=id,title`);
+            ...(categoryId
+                ? {
+                      filters: {
+                          category: {
+                              id: {
+                                  $eq: categoryId,
+                              },
+                          },
+                      },
+                  }
+                : {}),
+        },
+        {
+            encodeValuesOnly: true,
+        },
+    );
+
+    return submitGetRequest(`${url}about-pages?${query}`).catch(() => []);
+};
+
+export const getHelpArticle = id => {
+    const query = qs.stringify(
+        { populate: { help_category: { fields: ['id', 'title'] } } },
+        {
+            encodeValuesOnly: true,
+        },
+    );
+    return submitGetRequest(`${url}help-articles/${id}?${query}`);
+};
 
 export const getHelpArticles = ({ where = '' }) => submitGetRequest(`${url}help-articles?${where}`);
 
-export const getHelpCategories = () =>
-    submitGetRequest(`${url}help-categories?sort=order&populate[help_articles][fields][0]=title,order&populate[help_articles][sort][0]=order`);
+export const getHelpCategories = () => {
+    const query = qs.stringify(
+        { sort: 'order', populate: { help_articles: { fields: ['title', 'order'], sort: ['order'] } } },
+        {
+            encodeValuesOnly: true,
+        },
+    );
+    return submitGetRequest(`${url}help-categories?${query}`);
+};
 
-export const getHelpCategory = id =>
-    submitGetRequest(`${url}help-categories/${id}?populate[help_articles][fields][0]=title,order&populate[help_articles][sort][0]=order`);
+export const getHelpCategory = id => {
+    const query = qs.stringify(
+        { populate: { help_articles: { fields: ['title', 'order'], sort: ['order'] } } },
+        {
+            encodeValuesOnly: true,
+        },
+    );
+    return submitGetRequest(`${url}help-categories/${id}?${query}`);
+};
 
 export const getHomeAlerts = () => submitGetRequest(`${url}home-alerts?sort=order`).catch(() => []);
 
-export const getNewsCards = ({ limit = 10, sort = 'created_at' }) =>
-    submitGetRequest(`${url}news-cards?pagination[pageSize]=${limit}&sort=${sort}`).catch(() => []);
+export const getNewsCards = ({ limit = 10, sort = 'created_at' }) => {
+    const query = qs.stringify(
+        { pagination: { pageSize: limit }, sort },
+        {
+            encodeValuesOnly: true,
+        },
+    );
+    return submitGetRequest(`${url}news-cards?${query}`).catch(() => []);
+};
