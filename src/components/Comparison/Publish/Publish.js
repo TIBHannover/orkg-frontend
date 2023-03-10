@@ -24,6 +24,7 @@ import env from '@beam-australia/react-env';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 import usePublish from 'components/Comparison/hooks/usePublish';
 import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const StyledCustomInput = styled(Input)`
     margin-right: 0;
@@ -386,16 +387,16 @@ function Publish(props) {
                 <ModalFooter>
                     {!comparisonResource.doi && !id && (
                         <div className="text-align-center mt-2">
-                            <Button color="primary" disabled={isLoading} onClick={handleSubmit}>
-                                {isLoading && <span className="fa fa-spinner fa-spin" />} Publish
-                            </Button>
+                            <ButtonWithLoading color="primary" isLoading={isLoading} onClick={handleSubmit}>
+                                Publish
+                            </ButtonWithLoading>
                         </div>
                     )}
                     {id && !comparisonResource.doi && assignDOI && (
                         <div className="text-align-center mt-2">
-                            <Button color="primary" disabled={isLoading} onClick={handleSubmit}>
-                                {isLoading && <span className="fa fa-spinner fa-spin" />} Publish DOI
-                            </Button>
+                            <ButtonWithLoading color="primary" isLoading={isLoading} onClick={handleSubmit}>
+                                Publish DOI
+                            </ButtonWithLoading>
                         </div>
                     )}
                 </ModalFooter>

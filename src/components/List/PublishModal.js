@@ -1,13 +1,12 @@
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import useList from 'components/List/hooks/useList';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Alert, Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const PublishModal = ({ id, show, toggle, listId }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -51,9 +50,9 @@ const PublishModal = ({ id, show, toggle, listId }) => {
             </ModalBody>
             {!publishedId && (
                 <ModalFooter>
-                    <Button disabled={isLoading} color="primary" onClick={handlePublish}>
-                        {!isLoading ? 'Publish' : <Icon icon={faSpinner} spin />}
-                    </Button>
+                    <ButtonWithLoading isLoading={isLoading} color="primary" onClick={handlePublish}>
+                        Publish
+                    </ButtonWithLoading>
                 </ModalFooter>
             )}
         </Modal>

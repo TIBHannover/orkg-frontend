@@ -1,15 +1,16 @@
-import { faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Button, Container, FormGroup, Input, Label } from 'reactstrap';
+import { Container, FormGroup, Input, Label } from 'reactstrap';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
 import { createLiteralStatement } from 'services/backend/statements';
@@ -62,15 +63,9 @@ const ListNew = () => {
                     <Input type="text" id="articleTitle" value={title} onChange={e => setTitle(e.target.value)} />
                 </FormGroup>
                 <div className="text-end">
-                    <Button color="primary" onClick={handleCreate} disabled={isLoading}>
-                        {!isLoading ? (
-                            'Create'
-                        ) : (
-                            <>
-                                <Icon icon={faSpinner} spin /> Loading
-                            </>
-                        )}
-                    </Button>
+                    <ButtonWithLoading color="primary" onClick={handleCreate} isLoading={isLoading}>
+                        Create
+                    </ButtonWithLoading>
                 </div>
             </Container>
         </>
