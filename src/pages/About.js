@@ -26,7 +26,7 @@ const About = () => {
             // if not page ID is specified, load the first page from the menu
             if (!id) {
                 const _menuItems = await getAboutPages();
-                aboutPageId = _menuItems[0].id;
+                aboutPageId = _menuItems?.data?.[0]?.id;
             }
             if (!aboutPageId || aboutPageId === page?.id) {
                 return;
@@ -60,7 +60,7 @@ const About = () => {
     }, [page]);
 
     useEffect(() => {
-        document.title = `${page?.title ?? ''} - ORKG`;
+        document.title = `${page?.attributes?.title ?? ''} - ORKG`;
     }, [page]);
 
     if (isNotFound) {
@@ -69,9 +69,9 @@ const About = () => {
 
     return (
         <div>
-            {!isLoading && params?.id && page?.title && <CheckSlug label={page.title} route={ROUTES.ABOUT} />}
+            {!isLoading && params?.id && page?.attributes?.title && <CheckSlug label={page.attributes.title} route={ROUTES.ABOUT} />}
 
-            {!isLoading && <TitleBar>{page?.category?.label ?? page?.title}</TitleBar>}
+            {!isLoading && <TitleBar>{page?.category?.label ?? page?.attributes?.title}</TitleBar>}
 
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 {!isLoadingMenu && menuItems.length > 1 && (
