@@ -479,7 +479,6 @@ export const {
     updatePropertyLabel,
     changeProperty,
     toggleEditPropertyLabel,
-    toggleEditPropertyLabelDescription,
     setIsSavingProperty,
     setIsDeletingProperty,
     setDoneAnimation,
