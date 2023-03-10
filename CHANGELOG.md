@@ -3,6 +3,18 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.95.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.94.0...v0.95.0) - 2023-03-10
+
+### Changes
+
+- refactor: Replace query-string with qs [`#1042`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1042)
+- fix(Resource): usage in papers doesn't support url encoding [`#1037`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1037)
+- fix(Comparison): Missing data when requesting a DOI for a published comparison [`#1038`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1038)
+- feat(UserProfile): Show the created reviews and templates [`#1028`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1028)
+- fix(Comparison): make carousel visible when only related figures/resources are available [`#1039`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1039)
+- doc: add explainer videos to comparison and review list [`#1036`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1036)
+
+---
 ## [v0.94.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.93.0...v0.94.0) - 2023-03-06
 
 ### Changes
