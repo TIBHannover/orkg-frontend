@@ -15,6 +15,7 @@ import Tooltip from 'components/Utils/Tooltip';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
 import { useSelector, useDispatch } from 'react-redux';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const AddOrganization = () => {
     const params = useParams();
@@ -160,9 +161,9 @@ const AddOrganization = () => {
                             <Input type="file" id="organizationLogo" onChange={handlePreview} />
                         </FormGroup>
 
-                        <Button color="primary" onClick={createNewOrganization} className="mb-2 mt-2" disabled={loading}>
-                            {!loading ? 'Create organization' : <span>Loading</span>}
-                        </Button>
+                        <ButtonWithLoading color="primary" onClick={createNewOrganization} className="mb-2 mt-2" isLoading={loading}>
+                            Create organization
+                        </ButtonWithLoading>
                     </Form>
                 )}
                 {(!user || !user.isCurationAllowed) && (

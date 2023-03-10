@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { FormGroup, Label, Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTimes, faSpinner, faSort, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faSort, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
@@ -11,6 +11,7 @@ import getPersonFullNameByORCID from 'services/ORCID/index';
 import arrayMove from 'array-move';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { AuthorTag, AuthorTags, AddAuthor, StyledDragHandle, GlobalStyle } from './styled';
 
 const SortableItem = sortableElement(({ author, index, authorIndex, editAuthor, removeAuthor, itemLabel }) => (
@@ -212,11 +213,10 @@ function AuthorsInput(props) {
                     <Button color="light" onClick={() => setShowAuthorForm(v => !v)}>
                         Cancel
                     </Button>
-                    <Button disabled={authorNameLoading} color="primary" onClick={() => saveAuthor(authorInput)}>
-                        {!authorNameLoading && editMode && 'Save'}
-                        {!authorNameLoading && !editMode && 'Add'}
-                        {authorNameLoading && <Icon icon={faSpinner} spin />}
-                    </Button>{' '}
+                    <ButtonWithLoading isLoading={authorNameLoading} color="primary" onClick={() => saveAuthor(authorInput)}>
+                        {editMode && 'Save'}
+                        {!editMode && 'Add'}
+                    </ButtonWithLoading>
                 </ModalFooter>
             </Modal>
         </div>

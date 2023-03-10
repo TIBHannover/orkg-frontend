@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup } from 'reactstrap';
 import { updateOrganizationName, updateOrganizationUrl, updateOrganizationLogo } from 'services/backend/organizations';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import capitalize from 'capitalize';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, updateOrganizationMetadata, typeName }) => {
     const [organizationLabel, setOrganizationLabel] = useState('');
@@ -166,9 +167,9 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
                 </ModalBody>
                 <ModalFooter>
                     <div className="text-align-center mt-2">
-                        <Button color="primary" disabled={isLoading} onClick={handleSubmit}>
-                            {isLoading && <span className="fa fa-spinner fa-spin" />} Save
-                        </Button>
+                        <ButtonWithLoading color="primary" isLoading={isLoading} onClick={handleSubmit}>
+                            Save
+                        </ButtonWithLoading>
                     </div>
                 </ModalFooter>
             </Modal>

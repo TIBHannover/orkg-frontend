@@ -4,12 +4,13 @@ import { createReference as createReferenceAction, deleteReference, updateRefere
 import { Cite } from '@citation-js/core';
 import ReferenceModal from 'components/Review/References/ReferenceModal';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { uniq } from 'lodash';
 import { Alert, Badge, Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import Confirm from 'components/Confirmation/Confirmation';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const ReferencesModal = ({ show, toggle }) => {
     const [isOpenReferenceModal, setIsOpenReferenceModal] = useState(false);
@@ -174,15 +175,9 @@ const ReferencesModal = ({ show, toggle }) => {
                     ))}
                     {referencesSorted.length === 0 && <div className="text-center mt-3">No references added yet</div>}
                 </ListGroup>
-                <Button size="sm" disabled={isParsingBibtex} onClick={handleAdd} className="mt-4">
-                    {isParsingBibtex ? (
-                        <>
-                            <Icon icon={faSpinner} spin /> Parsing BibTeX
-                        </>
-                    ) : (
-                        'Add BibTeX'
-                    )}
-                </Button>
+                <ButtonWithLoading size="sm" isLoading={isParsingBibtex} onClick={handleAdd} className="mt-4">
+                    Add BibTeX
+                </ButtonWithLoading>
             </ModalBody>
 
             {isOpenReferenceModal && (

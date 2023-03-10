@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { Button, Form, FormGroup, Input, Label, Alert, FormFeedback } from 'reactstrap';
+import { Form, FormGroup, Input, Label, Alert, FormFeedback } from 'reactstrap';
 import { toggleAuthDialog, updateAuth } from 'slices/authSlice';
 import { Link } from 'react-router-dom';
 import { registerWithEmailAndPassword, signInWithEmailAndPassword, getUserInformation } from 'services/backend/users';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch } from 'react-redux';
 import { getErrorMessage, checkCookie } from 'utils';
 import ROUTES_CMS from 'constants/routesCms';
@@ -14,6 +12,7 @@ import env from '@beam-australia/react-env';
 import InfoSheet from 'assets/pdf/infosheet-data-protection.pdf';
 import { reverse } from 'named-urls';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const cookies = new Cookies();
 
@@ -184,21 +183,16 @@ export default function SignUp() {
                         , the data is processed exclusively by TIB in order to provide services of our platform.
                     </Label>
                 </FormGroup>
-                <Button
+                <ButtonWithLoading
                     type="submit"
                     color="primary"
                     className="mt-4 mb-2"
                     block
                     disabled={isLoading || !dataProtectionIsChecked || !termsConditionIsChecked}
+                    isLoading={isLoading}
                 >
-                    {!isLoading ? (
-                        'Sign up'
-                    ) : (
-                        <span>
-                            <Icon icon={faSpinner} spin /> Loading
-                        </span>
-                    )}
-                </Button>
+                    Sign up
+                </ButtonWithLoading>
             </Form>
         </>
     );

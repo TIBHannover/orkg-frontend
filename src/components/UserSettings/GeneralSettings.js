@@ -1,15 +1,16 @@
-import { Form, FormGroup, Label, Input, Button, Alert, FormFeedback } from 'reactstrap';
+import { Form, FormGroup, Label, Input, Alert, FormFeedback } from 'reactstrap';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { getUserInformation, updateUserInformation } from 'services/backend/users';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { updateAuth } from 'slices/authSlice';
 import { getErrorMessage } from 'utils';
 import { toast } from 'react-toastify';
 import Gravatar from 'react-gravatar';
 import styled from 'styled-components';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.dark};
@@ -125,21 +126,16 @@ class GeneralSettings extends Component {
                         </p>
                     </Alert>
                 </FormGroup>
-                <Button
+                <ButtonWithLoading
                     color="primary"
                     onClick={() => {
                         this.handleSave();
                     }}
                     className="mt-4 mb-2"
+                    isLoading={this.state.loading}
                 >
-                    {!this.state.loading ? (
-                        'Save changes'
-                    ) : (
-                        <span>
-                            <Icon icon={faSpinner} spin /> Loading
-                        </span>
-                    )}
-                </Button>
+                    Save changes
+                </ButtonWithLoading>
             </Form>
         </>
     );

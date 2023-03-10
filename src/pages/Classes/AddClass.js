@@ -9,6 +9,7 @@ import { getErrorMessage } from 'utils';
 import ROUTES from 'constants/routes';
 import TitleBar from 'components/TitleBar/TitleBar';
 import requireAuthentication from 'requireAuthentication';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const AddClass = () => {
     const isURI = new RegExp(REGEX.URL);
@@ -23,12 +24,12 @@ const AddClass = () => {
     }, []);
 
     const handleAdd = async () => {
-        setIsLoading(true);
         if (label.trim() !== '') {
             if (uri && !isURI.test(uri.trim())) {
                 toast.error('Please enter a valid URI of the class');
             } else {
                 try {
+                    setIsLoading(true);
                     const newClass = await createClass(label, uri || null);
                     toast.success('Class created successfully');
                     setIsLoading(false);
@@ -63,9 +64,9 @@ const AddClass = () => {
                             Please provide the URI of the class if you are using a class defined in an external ontology
                         </FormText>
                     </FormGroup>
-                    <Button color="primary" onClick={handleAdd} className="mt-3 mb-2" disabled={isLoading}>
-                        {!isLoading ? 'Create class' : <span>Loading</span>}
-                    </Button>
+                    <ButtonWithLoading color="primary" onClick={handleAdd} className="mt-3 mb-2" isLoading={isLoading}>
+                        Create class
+                    </ButtonWithLoading>
                 </div>
             </Container>
         </>

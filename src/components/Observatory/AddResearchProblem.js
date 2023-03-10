@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, FormGroup } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Label, FormGroup } from 'reactstrap';
 import { addResourceToObservatory } from 'services/backend/resources';
 import { toast } from 'react-toastify';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import PropTypes from 'prop-types';
 import { CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const AddResearchProblem = props => {
     const [problem, setProblem] = useState(null);
@@ -56,9 +57,9 @@ const AddResearchProblem = props => {
             </ModalBody>
             <ModalFooter>
                 <div className="text-align-center mt-2">
-                    <Button color="primary" disabled={isSaving} onClick={handleSubmit}>
-                        {isSaving && <span className="fa fa-spinner fa-spin" />} Save
-                    </Button>
+                    <ButtonWithLoading color="primary" isLoading={isSaving} onClick={handleSubmit}>
+                        Save
+                    </ButtonWithLoading>
                 </div>
             </ModalFooter>
         </Modal>
