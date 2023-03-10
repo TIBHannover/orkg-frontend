@@ -28,7 +28,9 @@ function usePublish() {
     const [references, setReferences] = useState(
         comparisonResource?.references && comparisonResource.references.length > 0 ? comparisonResource.references : [''],
     );
-    const [subject, setSubject] = useState(comparisonResource && comparisonResource.subject ? comparisonResource.subject : undefined);
+    const [researchField, setResearchField] = useState(
+        comparisonResource && comparisonResource.researchField ? comparisonResource.researchField : undefined,
+    );
     const [comparisonCreators, setComparisonCreators] = useState(comparisonResource?.authors ?? []);
     const [conferencesList, setConferencesList] = useState([]);
     const [conference, setConference] = useState(null);
@@ -55,7 +57,7 @@ function usePublish() {
         setTitle(comparisonResource && comparisonResource.label ? comparisonResource.label : '');
         setDescription(comparisonResource && comparisonResource.description ? comparisonResource.description : '');
         setReferences(comparisonResource?.references && comparisonResource.references.length > 0 ? comparisonResource.references : ['']);
-        setSubject(comparisonResource && comparisonResource.subject ? comparisonResource.subject : undefined);
+        setResearchField(comparisonResource && comparisonResource.researchField ? comparisonResource.researchField : undefined);
         setComparisonCreators(
             comparisonResource.authors
                 ? comparisonResource.authors
@@ -109,11 +111,11 @@ function usePublish() {
                                                 text: reference,
                                             })),
                                     }),
-                                ...(subject &&
-                                    subject.id && {
+                                ...(researchField &&
+                                    researchField.id && {
                                         [PREDICATES.HAS_SUBJECT]: [
                                             {
-                                                '@id': subject.id,
+                                                '@id': researchField.id,
                                             },
                                         ],
                                     }),
@@ -194,7 +196,7 @@ function usePublish() {
                     resource_type: 'Dataset',
                     resource_id: comparisonId,
                     title,
-                    subject: subject ? subject.label : '',
+                    subject: researchField ? researchField.label : '',
                     description,
                     related_resources: contributionsList,
                     authors: comparisonCreatorsORCID.map(c => ({ creator: c.label, orcid: c.orcid })),
@@ -237,7 +239,7 @@ function usePublish() {
     };
 
     const handleSelectField = ({ _id, label }) =>
-        setSubject({
+        setResearchField({
             id: _id,
             label,
         });
@@ -250,7 +252,7 @@ function usePublish() {
         title,
         description,
         comparisonCreators,
-        subject,
+        researchField,
         inputValue,
         conference,
         references,
@@ -259,7 +261,7 @@ function usePublish() {
         isOpenResearchFieldModal,
         setTitle,
         setDescription,
-        setSubject,
+        setResearchField,
         setInputValue,
         setIsOpenResearchFieldModal,
         setAssignDOI,
