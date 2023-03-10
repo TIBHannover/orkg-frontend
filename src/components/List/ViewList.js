@@ -4,7 +4,7 @@ import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import Contributors from 'components/List/Contributors';
-import PaperCard from 'components/PaperCard/PaperCard';
+import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import MarkdownRenderer from 'components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';

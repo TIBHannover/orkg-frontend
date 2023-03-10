@@ -6,19 +6,12 @@ export const organizationsUrl = `${url}organizations/`;
 export const getAllOrganizations = () => submitGetRequest(`${organizationsUrl}`);
 
 export const getOrganization = id => submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/`);
-
+export const getOrganizationLogoUrl = id => `${organizationsUrl}${encodeURIComponent(id)}/logo`;
 export const createOrganization = (organization_name, organization_logo, created_by, url, display_id, type) =>
     submitPostRequest(
         organizationsUrl,
         { 'Content-Type': 'application/json' },
         { organization_name, organization_logo, created_by, url, display_id, type },
-    );
-
-export const createConference = (organization_name, organization_logo, created_by, url, display_id, type, metadata) =>
-    submitPostRequest(
-        `${organizationsUrl}conference`,
-        { 'Content-Type': 'application/json' },
-        { organization_name, organization_logo, created_by, url, display_id, type, metadata },
     );
 
 export const updateOrganizationName = (id, value) =>
@@ -43,4 +36,9 @@ export const getAllObservatoriesByOrganizationId = id => submitGetRequest(`${org
 
 export const getUsersByOrganizationId = id => submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/users`);
 
+export const getComparisonsByOrganizationId = (id, page, size = 10) =>
+    submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/comparisons/?page=${page}&size=${size}`);
+
 export const getConferences = () => submitGetRequest(`${organizationsUrl}conferences`);
+
+export const getProblemsByOrganizationId = id => submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/problems`);

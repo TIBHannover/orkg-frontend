@@ -92,8 +92,8 @@ export const templateEditorSlice = createSlice({
             state.templateID = payload;
         },
     },
-    extraReducers: {
-        [LOCATION_CHANGE]: () => initialState,
+    extraReducers: builder => {
+        builder.addCase(LOCATION_CHANGE, () => initialState);
     },
 });
 

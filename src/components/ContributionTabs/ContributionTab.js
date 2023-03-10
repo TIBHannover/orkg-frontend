@@ -16,7 +16,7 @@ export const StyledInput = styled(Input)`
     padding: 0 4px;
     display: block;
     min-width: 160px;
-    margin-bottom: 1px;
+    margin-bottom: 0;
 
     &:focus {
         background: #fff;

@@ -21,7 +21,7 @@ const Page = () => {
     }, [params, loadPage]);
 
     useEffect(() => {
-        document.title = `${page?.title ?? ''} - ORKG`;
+        document.title = `${page?.attributes?.title ?? ''} - ORKG`;
     }, [page]);
 
     if (isNotFound) {
@@ -30,7 +30,7 @@ const Page = () => {
 
     return (
         <div>
-            <TitleBar>{page?.title}</TitleBar>
+            <TitleBar>{page?.attributes.title}</TitleBar>
 
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 {isLoading && <PageContentLoader />}

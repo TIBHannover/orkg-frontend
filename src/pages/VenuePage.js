@@ -1,7 +1,7 @@
 import { faAngleDoubleDown, faEllipsisV, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import PaperCard from 'components/PaperCard/PaperCard';
+import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import { SubTitle } from 'components/styled';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useVenuePapers from 'components/Venue/useVenuePapers';

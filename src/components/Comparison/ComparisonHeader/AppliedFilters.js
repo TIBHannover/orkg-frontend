@@ -1,8 +1,6 @@
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import AppliedRule from 'components/Comparison/Filters/AppliedRule';
 import { areAllRulesEmpty } from 'components/Comparison/Filters/helpers';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { removeRule } from 'slices/comparisonSlice';
 
 export default function AppliedFilters() {
@@ -26,11 +24,8 @@ export default function AppliedFilters() {
     return (
         <div>
             {areAllRulesEmpty(filterControlData) && (
-                <div className="mt-3 d-flex" style={{ flexDirection: 'column' }}>
-                    <h6 className="text-secondary">
-                        <Icon className="mr-1" size="sm" icon={faFilter} />
-                        <b>Applied Filters:</b>
-                    </h6>
+                <div className="py-3 d-flex flex-column">
+                    <h5 className="m-0">Applied Filters</h5>
                     <div className="d-flex flex-wrap">{displayRules()}</div>
                 </div>
             )}

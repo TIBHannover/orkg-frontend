@@ -170,8 +170,8 @@ export const reviewSlice = createSlice({
             state.usedReferences[sectionId] = references;
         },
     },
-    extraReducers: {
-        [LOCATION_CHANGE]: (state, { payload }) => {
+    extraReducers: builder => {
+        builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
             const matchReview = match(ROUTES.REVIEW);
             const parsed_payload = matchReview(payload.location.pathname);
             if (parsed_payload && parsed_payload.params?.id === state.articleId) {
@@ -179,7 +179,7 @@ export const reviewSlice = createSlice({
                 return state;
             }
             return initialState;
-        },
+        });
     },
 });
 
@@ -396,7 +396,7 @@ export const saveEntities =
             await createResourceStatement(sectionId, PREDICATES.HAS_ENTITY, entity.id);
         }
 
-        dispatch(updateDataTable({ sectionId, dataTable: entities }));
+        dispatch(updateDataTable({ sectionId, dataTable: { entities } }));
     };
 
 export const saveShowProperties =
@@ -414,7 +414,7 @@ export const saveShowProperties =
             await createResourceStatement(sectionId, PREDICATES.SHOW_PROPERTY, property.id);
         }
 
-        dispatch(updateDataTable({ sectionId, dataTable: properties }));
+        dispatch(updateDataTable({ sectionId, dataTable: { properties } }));
     };
 
 export const reloadDataTableStatements =

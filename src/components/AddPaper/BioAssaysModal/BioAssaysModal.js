@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, FormGroup, FormFeedback, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, FormGroup, FormFeedback, Input, InputGroup } from 'reactstrap';
 import { semantifyBioassays } from 'services/orkgNlp/index';
-import CsvReader from 'react-csv-reader';
+import { useCSVReader } from 'react-papaparse';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -16,7 +16,7 @@ const BioAssaysModal = props => {
     const resourceId = useSelector(state =>
         state.addPaper.contributions.byId[props.selectedResource] ? state.addPaper.contributions.byId[props.selectedResource].resourceId : null,
     );
-
+    const { CSVReader } = useCSVReader();
     const [bioassaysTest, setBioassaysTest] = useState('');
     const [isLoadingData, setIsLoadingData] = useState(false);
     const [isLoadingDataFailed, setIsLoadingDataFailed] = useState(false);
@@ -50,7 +50,7 @@ const BioAssaysModal = props => {
                         setIsLoadingDataFailed(false);
                     }
                 })
-                .catch(e => {
+                .catch(() => {
                     setIsSubmitted(false);
                     setIsLoadingData(false);
                     setIsLoadingDataFailed(true);
@@ -109,6 +109,10 @@ const BioAssaysModal = props => {
         props.toggle();
     };
 
+    const PARSER_OPTIONS = {
+        skipEmptyLines: true,
+    };
+
     return (
         <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>Semantification of Bioassays</ModalHeader>
@@ -126,19 +130,32 @@ const BioAssaysModal = props => {
                     <div>
                         <FormGroup>
                             <div className="custom-file mb-3">
-                                <CsvReader
-                                    cssClass="csv-reader-input"
-                                    cssInputClass="form-control"
+                                <CSVReader
                                     accept=".txt"
-                                    onFileLoaded={(data, fileInfo) => setBioassaysTest(data.join('\n'))}
-                                    parserOptions={{
-                                        skipEmptyLines: true,
-                                    }}
-                                    inputStyle={{ cursor: 'pointer' }}
-                                />
-                                <label className="custom-file-label" htmlFor="exampleCustomFileBrowser">
-                                    Click to upload bioassay .txt file
-                                </label>
+                                    config={PARSER_OPTIONS}
+                                    onUploadAccepted={result => setBioassaysTest(result.data.join('\n'))}
+                                >
+                                    {({ getRootProps, acceptedFile, ProgressBar }) => (
+                                        <>
+                                            <InputGroup>
+                                                <Button {...getRootProps()}>Browse file</Button>
+                                                <div
+                                                    {...getRootProps()}
+                                                    style={{
+                                                        border: '1px solid #ccc',
+                                                        lineHeight: 2.2,
+                                                        paddingLeft: 10,
+                                                        flexGrow: '1',
+                                                    }}
+                                                >
+                                                    {acceptedFile && acceptedFile.name}
+                                                    {!acceptedFile && 'Click to upload bioassay .txt file'}
+                                                </div>
+                                            </InputGroup>
+                                            <ProgressBar style={{ backgroundColor: '#dbdde5' }} />
+                                        </>
+                                    )}
+                                </CSVReader>
                             </div>
                             <Label for="bioassaysText">Enter the Bioassays</Label>
                             <Input

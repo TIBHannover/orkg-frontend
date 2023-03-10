@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, useRef, useMemo } from 'react';
 import { useContextMenu } from 'react-contexify';
 import { DIAGRAM_CONTEXT_MENU_ID } from 'constants/misc';
-import { applyEdgeChanges, applyNodeChanges, addEdge } from 'react-flow-renderer';
+import { applyEdgeChanges, applyNodeChanges, addEdge } from 'reactflow';
 import { guid, asyncLocalStorage } from 'utils';
 import Confirm from 'components/Confirmation/Confirmation';
 import { getResourceData } from 'services/similarity/index';
@@ -49,7 +49,8 @@ function useDiagramEditor({ id }) {
     const handlePaneContextMenu = event => {
         event.preventDefault();
         setCurrentMenu('pane');
-        show(event, {
+        show({
+            event,
             props: {
                 key: 'pane',
                 event,
@@ -61,7 +62,8 @@ function useDiagramEditor({ id }) {
         event.preventDefault();
         setCurrentMenu(node.type ?? 'node');
 
-        show(event, {
+        show({
+            event,
             props: {
                 key: 'node',
                 event,
@@ -73,7 +75,8 @@ function useDiagramEditor({ id }) {
     const handleEdgeContextMenu = (event, edge) => {
         event.preventDefault();
         setCurrentMenu('edge');
-        show(event, {
+        show({
+            event,
             props: {
                 key: 'edge',
                 event,
@@ -87,7 +90,8 @@ function useDiagramEditor({ id }) {
             if (nodes.length > 1) {
                 event.preventDefault();
                 setCurrentMenu('selection');
-                show(event, {
+                show({
+                    event,
                     props: {
                         key: 'selection',
                         event,

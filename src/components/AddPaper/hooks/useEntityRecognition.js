@@ -2,9 +2,9 @@ import useInsertData from 'components/AddPaper/hooks/useInsertData';
 import { cloneDeep } from 'lodash';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { saveFeedback, PROPERTY_MAPPING, SERVICE_MAPPING } from 'services/orkgNlp';
+import { PROPERTY_MAPPING, saveFeedback, SERVICE_MAPPING } from 'services/orkgNlp';
 
-const useEntityRecognition = () => {
+const useEntityRecognition = ({ activeNERService }) => {
     const { nerResources, nerProperties, nerRawResponse, title, abstract } = useSelector(state => state.addPaper);
     const { properties, values } = useSelector(state => state.statementBrowser);
     const { getExistingStatement } = useInsertData();
@@ -12,22 +12,25 @@ const useEntityRecognition = () => {
     const getSuggestions = useCallback(
         ({ onlyUsedSuggestions = false }) => {
             const _nerEntities = {};
-            for (const key of Object.keys(nerResources)) {
-                _nerEntities[key] = nerResources[key].filter(item => {
-                    const isExistingStatement = getExistingStatement({
-                        object: {
-                            label: item.label,
-                        },
-                        property: {
-                            label: nerProperties?.[key]?.label,
-                        },
+            if (activeNERService) {
+                for (const key of Object.keys(nerResources)) {
+                    _nerEntities[key] = nerResources[key].filter(item => {
+                        const isExistingStatement = getExistingStatement({
+                            object: {
+                                label: item.label,
+                            },
+                            property: {
+                                label: nerProperties?.[key]?.label,
+                            },
+                        });
+                        return (isExistingStatement && onlyUsedSuggestions) || (!isExistingStatement && !onlyUsedSuggestions);
                     });
-                    return (isExistingStatement && onlyUsedSuggestions) || (!isExistingStatement && !onlyUsedSuggestions);
-                });
+                }
             }
+
             return _nerEntities;
         },
-        [getExistingStatement, nerProperties, nerResources],
+        [getExistingStatement, nerProperties, nerResources, activeNERService],
     );
 
     const suggestions = getSuggestions({ onlyUsedSuggestions: false });
@@ -35,12 +38,33 @@ const useEntityRecognition = () => {
 
     const handleSaveFeedback = () => {
         // create the response object in the require format for the feedback endpoint
-
         // for resources coming from the NER service, feedback either ACCEPT or REJECT
         const response = cloneDeep(nerRawResponse);
-        for (const type of Object.keys(nerRawResponse)) {
-            const concepts = nerRawResponse[type];
-            for (const [index, concept] of concepts.entries()) {
+        if (activeNERService === SERVICE_MAPPING.CS_NER) {
+            for (const type of Object.keys(nerRawResponse)) {
+                const concepts = nerRawResponse[type];
+                for (const [index, concept] of concepts.entries()) {
+                    for (const [index2, entity] of concept.entities.entries()) {
+                        const propertyId = Object.keys(nerProperties).find(_propertyId => nerProperties[_propertyId].concept === concept.concept);
+                        const isExistingStatement = getExistingStatement({
+                            object: {
+                                label: entity,
+                            },
+                            property: {
+                                label: nerProperties[propertyId].label,
+                            },
+                        });
+                        response[type][index].entities.splice(index2);
+                        response[type][index].entities.push({
+                            entity,
+                            feedback: isExistingStatement ? 'ACCEPT' : 'REJECT',
+                        });
+                    }
+                }
+            }
+        } else {
+            // Agri NER doesn't have title and abstract concepts
+            for (const [index, concept] of nerRawResponse.entries()) {
                 for (const [index2, entity] of concept.entities.entries()) {
                     const propertyId = Object.keys(nerProperties).find(_propertyId => nerProperties[_propertyId].concept === concept.concept);
                     const isExistingStatement = getExistingStatement({
@@ -51,8 +75,8 @@ const useEntityRecognition = () => {
                             label: nerProperties[propertyId].label,
                         },
                     });
-                    response[type][index].entities.splice(index2);
-                    response[type][index].entities.push({
+                    response[index].entities.splice(index2);
+                    response[index].entities.push({
                         entity,
                         feedback: isExistingStatement ? 'ACCEPT' : 'REJECT',
                     });
@@ -97,7 +121,7 @@ const useEntityRecognition = () => {
                     abstract,
                 },
                 response,
-                serviceName: SERVICE_MAPPING.CS_NER,
+                serviceName: activeNERService,
             });
         } catch (e) {
             console.log(e);

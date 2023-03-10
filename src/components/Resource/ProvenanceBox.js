@@ -24,7 +24,7 @@ function ProvenanceBox({ item, editMode }) {
     return (
         <>
             {provenance?.organization?.id && organizationId !== MISC.UNKNOWN_ID && (
-                <Badge color="light" className="me-2">
+                <Badge color="light" className="me-2 mt-2">
                     <Icon icon={faUsers} /> Organization
                     <span className="ms-1">
                         <Link to={reverse(ROUTES.ORGANIZATION, { id: provenance.organization.display_id })}>{provenance.organization.name}</Link>
@@ -32,15 +32,15 @@ function ProvenanceBox({ item, editMode }) {
                 </Badge>
             )}
             {provenance?.id && observatoryId !== MISC.UNKNOWN_ID && (
-                <Badge color="light" className="me-2">
+                <Badge color="light" className="me-2 mt-2">
                     <Icon icon={faBinoculars} /> Observatory
                     <span className="ms-1">
                         <Link to={reverse(ROUTES.OBSERVATORY, { id: provenance.display_id })}>{provenance.name}</Link>
                     </span>
                 </Badge>
             )}
-            {editMode && organizationId === MISC.UNKNOWN_ID && observatoryId === MISC.UNKNOWN_ID && (
-                <Badge color="light" className="me-2">
+            {editMode && isCurationAllowed && organizationId === MISC.UNKNOWN_ID && observatoryId === MISC.UNKNOWN_ID && (
+                <Badge color="light" className="me-2 mt-2">
                     Not assigned to any observatory
                 </Badge>
             )}

@@ -2,7 +2,7 @@ import { useState, forwardRef } from 'react';
 import { Container, Button, ListGroup, FormGroup, Label, Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import PaperCard from 'components/PaperCard/PaperCard';
+import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
 import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';

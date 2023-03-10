@@ -4,7 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { CLASSES } from 'constants/graphSettings';
-import ReviewCard from 'components/ReviewCard/ReviewCard';
+import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
 import ROUTES from 'constants/routes';
 import { useSelector } from 'react-redux';
 import { groupBy } from 'lodash';
@@ -13,6 +13,8 @@ import { getReviewData } from 'utils';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { reverse } from 'named-urls';
+import VideoExplainer from 'components/ListPage/VideoExplainer';
+import reviewsThumbnail from 'assets/img/video_thumbnails/reviews.png';
 
 const Reviews = () => {
     const user = useSelector(state => state.auth.user);
@@ -79,13 +81,28 @@ const Reviews = () => {
     );
 
     const infoContainerText = (
-        <>
-            ORKG reviews are dynamic, community maintained scholarly articles and are especially suitable for survey papers.{' '}
-            <a href="https://orkg.org/about/16/Reviews" rel="noreferrer" target="_blank">
-                Learn more in the help center
-            </a>
-            .
-        </>
+        <div className="d-flex">
+            <VideoExplainer
+                previewStyle={{ width: 65, height: 35, background: `url(${reviewsThumbnail})` }}
+                video={
+                    <iframe
+                        width="560"
+                        height="315"
+                        src="https://www.youtube.com/embed/FIFQKx-0Bqg"
+                        title="YouTube video player"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                    />
+                }
+            />
+            <span>
+                ORKG reviews are dynamic, community maintained scholarly articles and are especially suitable for survey papers.{' '}
+                <a href="https://orkg.org/about/16/Reviews" rel="noreferrer" target="_blank">
+                    Learn more in the help center
+                </a>
+                .
+            </span>
+        </div>
     );
 
     return (

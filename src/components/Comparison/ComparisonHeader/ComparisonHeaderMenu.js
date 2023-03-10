@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button } from 'reactstrap';
+import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, Alert } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faHistory, faPlus, faChartBar, faExternalLinkAlt, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faPlus, faChartBar, faExternalLinkAlt, faChevronRight, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import ExportToLatex from 'components/Comparison/Export/ExportToLatex';
 import GeneratePdf from 'components/Comparison/Export/GeneratePdf';
 import SelectProperties from 'components/Comparison/SelectProperties';
@@ -15,7 +15,7 @@ import Publish from 'components/Comparison/Publish/Publish';
 import { ComparisonTypeButton } from 'components/Comparison/styled';
 import { uniq, without } from 'lodash';
 import ROUTES from 'constants/routes.js';
-import { useNavigate, NavLink } from 'react-router-dom';
+import { useNavigate, NavLink, useSearchParams } from 'react-router-dom';
 import { openAuthDialog } from 'slices/authSlice';
 import { CSVLink } from 'react-csv';
 import PropTypes from 'prop-types';
@@ -33,6 +33,8 @@ import {
     setIsOpenVisualizationModal,
     setUseReconstructedDataInVisualization,
     getMatrixOfComparison,
+    setIsEditing,
+    setIsOpenReviewModal,
 } from 'slices/comparisonSlice';
 import Confirm from 'components/Confirmation/Confirmation';
 import SaveDraft from 'components/Comparison/SaveDraft/SaveDraft';
@@ -40,6 +42,10 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import Share from 'components/Comparison/Share';
 import pluralize from 'pluralize';
 import { SubTitle } from 'components/styled';
+import ComparisonAuthorsModel from 'components/TopAuthors/ComparisonAuthorsModel';
+import QualityReportModal from 'components/Comparison/QualityReportModal/QualityReportModal';
+import WriteReview from 'components/Comparison/QualityReportModal/WriteReview';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 
 const ComparisonHeaderMenu = props => {
     const dispatch = useDispatch();
@@ -52,15 +58,18 @@ const ComparisonHeaderMenu = props => {
     const isLoadingResult = useSelector(state => state.comparison.isLoadingResult);
     const isFailedLoadingResult = useSelector(state => state.comparison.isFailedLoadingResult);
     const isOpenVisualizationModal = useSelector(state => state.comparison.isOpenVisualizationModal);
+    const isOpenReviewModal = useSelector(state => state.comparison.isOpenReviewModal);
     const fullWidth = useSelector(state => state.comparison.configuration.fullWidth);
     const viewDensity = useSelector(state => state.comparison.configuration.viewDensity);
     const comparisonType = useSelector(state => state.comparison.configuration.comparisonType);
     const responseHash = useSelector(state => state.comparison.configuration.responseHash);
     const transpose = useSelector(state => state.comparison.configuration.transpose);
+    const isEditing = useSelector(state => state.comparison.isEditing);
     const contributionsList = useSelector(state => activatedContributionsToList(state.comparison.contributions));
 
     const [, setCookie] = useCookies();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [dropdownDensityOpen, setDropdownDensityOpen] = useState(false);
@@ -74,6 +83,8 @@ const ComparisonHeaderMenu = props => {
     const [showAddContribution, setShowAddContribution] = useState(false);
     const [showComparisonVersions, setShowComparisonVersions] = useState(false);
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
+    const [isOpenTopAuthorsModal, setIsOpenTopAuthorsModal] = useState(false);
+    const [isOpenQualityReportModal, setIsOpenQualityReportModal] = useState(false);
 
     const user = useSelector(state => state.auth.user);
 
@@ -95,35 +106,30 @@ const ComparisonHeaderMenu = props => {
         dispatch(setConfigurationAttribute({ attribute: 'viewDensity', value: density }));
     };
 
+    const showConfirmDialog = () =>
+        Confirm({
+            title: 'This is a published comparison',
+            message:
+                'The comparison you are viewing is published, which means it cannot be modified. To make changes, fetch the live comparison data and try this action again',
+            cancelColor: 'light',
+            confirmText: 'Fetch live data',
+        });
+
     const handleEditContributions = async () => {
-        if (comparisonResource?.id || responseHash) {
-            const isConfirmed = await Confirm({
-                title: 'This is a published comparison',
-                message:
-                    'The comparison you are viewing is published, which means it cannot be modified. To make changes, fetch the live comparison data and try this action again',
-                cancelColor: 'light',
-                confirmText: 'Fetch live data',
-            });
+        const isConfirmed = await Confirm({
+            title: 'Edit contribution data',
+            message:
+                'You are about the edit the contributions displayed in the comparison. Changing this data does not only affect this comparison, but also other parts of the ORKG',
+            cancelColor: 'light',
+            confirmText: 'Continue',
+        });
 
-            if (isConfirmed) {
-                props.navigateToNewURL({});
-            }
-        } else {
-            const isConfirmed = await Confirm({
-                title: 'Edit contribution data',
-                message:
-                    'You are about the edit the contributions displayed in the comparison. Changing this data does not only affect this comparison, but also other parts of the ORKG',
-                cancelColor: 'light',
-                confirmText: 'Continue',
-            });
-
-            if (isConfirmed) {
-                navigate(
-                    `${reverse(ROUTES.CONTRIBUTION_EDITOR)}?contributions=${contributionsList.join(',')}${
-                        comparisonResource?.hasPreviousVersion ? `&hasPreviousVersion=${comparisonResource?.hasPreviousVersion.id}` : ''
-                    }`,
-                );
-            }
+        if (isConfirmed) {
+            navigate(
+                `${reverse(ROUTES.CONTRIBUTION_EDITOR)}?contributions=${contributionsList.join(',')}${
+                    comparisonResource?.hasPreviousVersion ? `&hasPreviousVersion=${comparisonResource?.hasPreviousVersion.id}` : ''
+                }`,
+            );
         }
     };
 
@@ -155,20 +161,22 @@ const ComparisonHeaderMenu = props => {
 
     const handleAddContribution = async () => {
         if (isPublished) {
-            const isConfirmed = await Confirm({
-                title: 'This is a published comparison',
-                message:
-                    'The comparison you are viewing is published, which means it cannot be modified. To make changes, fetch the live comparison data and try this action again',
-                cancelColor: 'light',
-                proceedLabel: 'Fetch live data',
-            });
-
-            if (isConfirmed) {
+            if (await showConfirmDialog()) {
                 props.navigateToNewURL({});
             }
             return;
         }
         setShowAddContribution(v => !v);
+    };
+
+    const handleEdit = async shouldEdit => {
+        if (shouldEdit && isPublished) {
+            if (await showConfirmDialog()) {
+                props.navigateToNewURL({});
+            }
+            return;
+        }
+        dispatch(setIsEditing(shouldEdit));
     };
 
     return (
@@ -181,6 +189,15 @@ const ComparisonHeaderMenu = props => {
                     !isLoadingResult &&
                     !isFailedLoadingResult && (
                         <>
+                            {!isEditing ? (
+                                <Button color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => handleEdit(true)}>
+                                    <Icon icon={faPen} className="me-1" /> Edit
+                                </Button>
+                            ) : (
+                                <Button active color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => handleEdit(false)}>
+                                    <Icon icon={faTimes} /> Stop editing
+                                </Button>
+                            )}
                             <Button color="secondary" size="sm" style={{ marginRight: 2 }} onClick={handleAddContribution}>
                                 <Icon icon={faPlus} className="me-1" /> Add contribution
                             </Button>
@@ -344,18 +361,24 @@ const ComparisonHeaderMenu = props => {
                                         </DropdownItem>
                                     )}
                                     <DropdownItem divider />
+                                    <DropdownItem header>Tools</DropdownItem>
+                                    <Tippy disabled={versions?.length > 1} content="There is no history available for this comparison">
+                                        <span>
+                                            <DropdownItem onClick={() => setShowComparisonVersions(v => !v)} disabled={versions?.length < 2}>
+                                                <span className="me-2">History</span>
+                                            </DropdownItem>
+                                        </span>
+                                    </Tippy>
+                                    <DropdownItem onClick={() => setIsOpenQualityReportModal(true)}>Quality report</DropdownItem>
+                                    <Tippy disabled={isPublished} content="This feature only works for published comparisons">
+                                        <span>
+                                            <DropdownItem onClick={() => setIsOpenTopAuthorsModal(true)} disabled={!isPublished}>
+                                                Top authors
+                                            </DropdownItem>
+                                        </span>
+                                    </Tippy>
                                     <DropdownItem onClick={() => setShowShareDialog(v => !v)}>Share link</DropdownItem>
-                                    <DropdownItem
-                                        onClick={() => {
-                                            if (!user) {
-                                                dispatch(openAuthDialog({ action: 'signin', signInRequired: true }));
-                                            } else {
-                                                setShowPublishDialog(v => !v);
-                                            }
-                                        }}
-                                    >
-                                        Publish
-                                    </DropdownItem>
+                                    <DropdownItem divider />
                                     <Tippy disabled={!isPublished} content="A published comparison cannot be saved as draft">
                                         <span>
                                             <DropdownItem
@@ -372,14 +395,17 @@ const ComparisonHeaderMenu = props => {
                                             </DropdownItem>
                                         </span>
                                     </Tippy>
-                                    {!isLoadingVersions && versions?.length > 1 && (
-                                        <>
-                                            <DropdownItem divider />
-                                            <DropdownItem onClick={() => setShowComparisonVersions(v => !v)}>
-                                                <Icon icon={faHistory} /> <span className="me-2">History</span>
-                                            </DropdownItem>
-                                        </>
-                                    )}
+                                    <DropdownItem
+                                        onClick={() => {
+                                            if (!user) {
+                                                dispatch(openAuthDialog({ action: 'signin', signInRequired: true }));
+                                            } else {
+                                                setShowPublishDialog(v => !v);
+                                            }
+                                        }}
+                                    >
+                                        Publish
+                                    </DropdownItem>
                                     {comparisonResource?.id && (
                                         <>
                                             <DropdownItem divider />
@@ -408,6 +434,22 @@ const ComparisonHeaderMenu = props => {
             {!isLoadingVersions && hasNextVersion && (
                 <NewerVersionWarning versions={versions} comparisonId={comparisonResource?.id || comparisonResource?.hasPreviousVersion?.id} />
             )}
+            {searchParams.get('requestReview') && (
+                <Alert color="info" className="container d-flex box align-items-center">
+                    <span>
+                        You are requested to write a review about this comparison. Please have a look at the comparison and submit the review.
+                    </span>
+                    <RequireAuthentication
+                        component={Button}
+                        size="sm"
+                        color="primary"
+                        className="ms-2"
+                        onClick={() => dispatch(setIsOpenReviewModal(true))}
+                    >
+                        Submit review
+                    </RequireAuthentication>
+                </Alert>
+            )}
             {!isLoadingVersions && versions?.length > 1 && showComparisonVersions && (
                 <HistoryModal
                     comparisonId={comparisonResource?.id || comparisonResource?.hasPreviousVersion?.id}
@@ -434,6 +476,13 @@ const ComparisonHeaderMenu = props => {
             <AddVisualizationModal />
             <SelectProperties showPropertiesDialog={showPropertiesDialog} togglePropertiesDialog={() => setShowPropertiesDialog(v => !v)} />
             <Share showDialog={showShareDialog} toggle={() => setShowShareDialog(v => !v)} />
+            {isOpenTopAuthorsModal && (
+                <ComparisonAuthorsModel comparisonId={comparisonResource?.id} toggle={() => setIsOpenTopAuthorsModal(v => !v)} />
+            )}
+            {isOpenQualityReportModal && <QualityReportModal toggle={() => setIsOpenQualityReportModal(v => !v)} />}
+            {isOpenReviewModal && (
+                <WriteReview comparisonId={comparisonResource?.id} toggle={() => dispatch(setIsOpenReviewModal(!isOpenReviewModal))} />
+            )}
         </>
     );
 };

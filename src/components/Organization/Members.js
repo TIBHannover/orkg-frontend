@@ -21,11 +21,11 @@ const Members = ({ organizationsId }) => {
         const loadMembers = () => {
             setIsLoadingMembers(true);
             getUsersByOrganizationId(organizationsId)
-                .then(members => {
-                    setMembers(members);
+                .then(_members => {
+                    setMembers(_members);
                     setIsLoadingMembers(false);
                 })
-                .catch(error => {
+                .catch(() => {
                     setIsLoadingMembers(false);
                 });
         };

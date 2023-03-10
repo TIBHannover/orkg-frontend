@@ -9,7 +9,7 @@ import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { groupBy } from 'lodash';
 import uniq from 'lodash.uniq';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Alert, Button } from 'reactstrap';
@@ -94,6 +94,7 @@ const SectionContentLink = props => {
             const paper = statements[0]?.subject;
             if (paper) {
                 const bibJson = {
+                    id: paper.id,
                     title: paper.label,
                     author: statements
                         .filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR)

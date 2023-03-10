@@ -19,6 +19,7 @@ import {
     setErrors,
     extendAndSortProperties,
     setHiddenGroups,
+    setIsEmbeddedMode,
 } from 'slices/comparisonSlice';
 import {
     filterObjectOfStatementsByPredicateAndClass,
@@ -39,7 +40,7 @@ import { getComparisonConfiguration, generateFilterControlData } from './helpers
 
 const DEFAULT_COMPARISON_METHOD = 'path';
 
-function useComparison({ id }) {
+function useComparison({ id, isEmbeddedMode = false }) {
     const { search } = useLocation();
     const navigate = useNavigate();
     const params = useParams();
@@ -56,6 +57,7 @@ function useComparison({ id }) {
     const contributions = useSelector(state => state.comparison.contributions);
     const isLoadingResult = useSelector(state => state.comparison.isLoadingResult);
     const data = useSelector(state => state.comparison.data);
+    const properties = useSelector(state => state.comparison.properties);
 
     /**
      * Load comparison meta data and comparison config
@@ -287,11 +289,16 @@ function useComparison({ id }) {
         }
     }, [contributionsList?.length, getComparisonResult]);
 
+    useEffect(() => {
+        dispatch(setIsEmbeddedMode(isEmbeddedMode));
+    }, [isEmbeddedMode, dispatch]);
+
     return {
         comparisonResource,
         isLoadingResult,
         data,
         contributions,
+        properties,
         navigateToNewURL,
     };
 }

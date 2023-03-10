@@ -8,11 +8,13 @@ import {
     similarPropertiesByLabel,
     generateFilterControlData,
     activatedContributionsToList,
+    activatedPropertiesToList,
 } from 'components/Comparison/hooks/helpers';
 import { applyRule, getRuleByProperty } from 'components/Comparison/Filters/helpers';
-import { flatten, findIndex, cloneDeep, isEmpty, intersection } from 'lodash';
+import { flatten, findIndex, cloneDeep, isEmpty, intersection, isEqual } from 'lodash';
 import { DEFAULT_COMPARISON_METHOD } from 'constants/misc';
 import { Cookies } from 'react-cookie';
+import arrayMove from 'array-move';
 
 const cookies = new Cookies();
 
@@ -53,6 +55,7 @@ const initialState = {
     data: {},
     filterControlData: [],
     errors: [],
+    versions: [],
     createdBy: null,
     observatory: null,
     shortLink: '',
@@ -62,8 +65,11 @@ const initialState = {
     isLoadingResult: true,
     isFailedLoadingResult: false,
     isOpenVisualizationModal: false,
+    isOpenReviewModal: false,
     useReconstructedDataInVisualization: false,
     hiddenGroups: [],
+    isEditing: false,
+    isEmbeddedMode: false,
 };
 
 export const comparisonSlice = createSlice({
@@ -136,15 +142,27 @@ export const comparisonSlice = createSlice({
         setIsOpenVisualizationModal: (state, { payload }) => {
             state.isOpenVisualizationModal = payload;
         },
+        setIsOpenReviewModal: (state, { payload }) => {
+            state.isOpenReviewModal = payload;
+        },
         setUseReconstructedDataInVisualization: (state, { payload }) => {
             state.useReconstructedDataInVisualization = payload;
         },
         setHiddenGroups: (state, { payload }) => {
             state.hiddenGroups = payload;
         },
+        setIsEditing: (state, { payload }) => {
+            state.isEditing = payload;
+        },
+        setIsEmbeddedMode: (state, { payload }) => {
+            state.isEmbeddedMode = payload;
+        },
+        setVersions: (state, { payload }) => {
+            state.versions = payload;
+        },
     },
-    extraReducers: {
-        [LOCATION_CHANGE]: (state, { payload }) => {
+    extraReducers: builder => {
+        builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
             const matchComparison = match(ROUTES.COMPARISON);
             const parsedPayload = matchComparison(payload.location.pathname);
             if (parsedPayload && parsedPayload.params?.comparisonId === state.comparisonResource.id) {
@@ -152,7 +170,7 @@ export const comparisonSlice = createSlice({
                 return state;
             }
             return initialState;
-        },
+        });
     },
 });
 
@@ -179,8 +197,12 @@ export const {
     setResearchField,
     setConfiguration,
     setIsOpenVisualizationModal,
+    setIsOpenReviewModal,
     setUseReconstructedDataInVisualization,
     setHiddenGroups,
+    setIsEditing,
+    setIsEmbeddedMode,
+    setVersions,
 } = comparisonSlice.actions;
 
 /**
@@ -308,6 +330,43 @@ export const removeContribution = contributionId => async (dispatch, getState) =
     dispatch(setFilterControlData(newFilterControlData));
 };
 
+export const updatePropertyOrder =
+    ({ from, to }) =>
+    (dispatch, getState) => {
+        if (to === undefined) {
+            return;
+        }
+        const { properties } = getState().comparison;
+
+        const newProperties = arrayMove(properties, from, to);
+        if (isEqual(properties, newProperties)) {
+            return;
+        }
+        dispatch(setProperties(newProperties));
+        dispatch(setConfigurationAttribute({ attribute: 'predicatesList', value: activatedPropertiesToList(newProperties) }));
+    };
+
+export const updateContributionOrder =
+    ({ from, to }) =>
+    (dispatch, getState) => {
+        if (to === undefined) {
+            return;
+        }
+        const { contributions, data } = getState().comparison;
+        const newContributions = arrayMove(contributions, from, to);
+
+        if (isEqual(contributions, newContributions)) {
+            return;
+        }
+
+        const newData = cloneDeep(data);
+        for (const property of Object.keys(newData)) {
+            newData[property] = arrayMove(data[property], from, to);
+        }
+        dispatch(setData(newData));
+        dispatch(setContributions(newContributions));
+    };
+
 /**
  * display certain contributionIds
  *
@@ -390,6 +449,16 @@ export const handleToggleGroupVisibility = property => (dispatch, getState) => {
             asyncLocalStorage.removeItem(hiddenGroupsStorageName);
         }
     }
+};
+
+export const getCellPadding = state => {
+    let cellPadding = 10;
+    if (state.comparison.configuration.viewDensity === 'normal') {
+        cellPadding = 5;
+    } else if (state.comparison.configuration.viewDensity === 'compact') {
+        cellPadding = 1;
+    }
+    return cellPadding;
 };
 
 export default comparisonSlice.reducer;

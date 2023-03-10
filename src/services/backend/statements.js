@@ -117,7 +117,7 @@ export const getStatementsBySubjects = ({ ids, page = 0, items: size = 9999, sor
     );
 };
 
-export const getStatementsByObject = async ({ id, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
+export const getStatementsByObject = async ({ id, page = 0, items: size = 9999, sortBy = 'created_at', desc = true, returnContent = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
         { page, size, sort },
@@ -127,7 +127,9 @@ export const getStatementsByObject = async ({ id, page = 0, items: size = 9999, 
         },
     );
 
-    const statements = await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/?${params}`).then(res => res.content);
+    const statements = await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/?${params}`).then(res =>
+        returnContent ? res.content : res,
+    );
 
     return statements;
 };

@@ -145,15 +145,15 @@ export const listSlice = createSlice({
             state.sections[sectionIndex].entries = entries;
         },
     },
-    extraReducers: {
-        [LOCATION_CHANGE]: (state, { payload }) => {
+    extraReducers: builder => {
+        builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
             const matchList = match(ROUTES.LIST);
             const parsed_payload = matchList(payload.location.pathname);
             if (parsed_payload && parsed_payload.params?.id === state.id) {
                 return state;
             }
             return initialState;
-        },
+        });
     },
 });
 

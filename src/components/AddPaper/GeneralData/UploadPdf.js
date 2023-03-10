@@ -21,24 +21,31 @@ const UploadPdf = () => {
 
             const reader = new FileReader();
             let extractedResearchField;
+            let objective;
+            let result;
+            let conclusion;
+            let researchProblem;
+            let method;
             reader.onload = async () => {
-                const data = new Uint8Array(reader.result);
+                const data = new Uint8Array(reader?.result);
+
                 const loadingTask = getDocument({ data });
+
                 const pdf = await loadingTask.promise;
                 const metadata = await pdf.getMetadata();
+
                 if (metadata?.metadata?._data) {
                     const processedPdf = new window.DOMParser().parseFromString(metadata.metadata._data, 'text/xml');
                     // you might want to replace 'querySelector' with 'querySelectorAll' to get all the values if there are multiple annotations of the same type
-                    const researchField = processedPdf.querySelector('hasResearchField label')?.textContent;
-                    extractedResearchField = researchField;
-                    const objective = processedPdf.querySelector('objective')?.textContent;
-                    const result = processedPdf.querySelector('result')?.textContent;
-                    const conclusion = processedPdf.querySelector('conclusion')?.textContent;
-                    const researchProblem = processedPdf.querySelector('researchproblem')?.textContent;
-                    const method = processedPdf.querySelector('method')?.textContent;
+                    extractedResearchField = processedPdf.querySelector('hasResearchField label')?.textContent;
+                    objective = processedPdf.querySelector('objective')?.textContent;
+                    result = processedPdf.querySelector('result')?.textContent;
+                    conclusion = processedPdf.querySelector('conclusion')?.textContent;
+                    researchProblem = processedPdf.querySelector('researchproblem')?.textContent;
+                    method = processedPdf.querySelector('method')?.textContent;
 
                     console.log({
-                        researchField,
+                        extractedResearchField,
                         objective,
                         result,
                         conclusion,
@@ -70,6 +77,11 @@ const UploadPdf = () => {
                     entry: doi,
                     abstract,
                     extractedResearchField,
+                    objective,
+                    result,
+                    conclusion,
+                    researchProblem,
+                    method,
                 }),
             );
             toast.success('PDF parsed successfully');

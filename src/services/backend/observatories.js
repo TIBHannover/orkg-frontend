@@ -3,6 +3,7 @@ import { url } from 'constants/misc';
 import queryString from 'query-string';
 import { submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import { getOrganization } from 'services/backend/organizations';
+import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
 export const observatoriesUrl = `${url}observatories/`;
 
@@ -77,9 +78,9 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
                             organization: {
                                 id: organizationId,
                                 name: orgResponse.name,
-                                logo: orgResponse.logo,
+                                logo: getOrganizationLogoUrl(orgResponse.id),
                                 display_id: orgResponse.display_id,
-                                metadata: orgResponse.metadata,
+                                type: orgResponse.type,
                             },
                         }))
                         .catch(() => ({
@@ -107,9 +108,9 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
                 organization: {
                     id: organizationId,
                     name: orgResponse.name,
-                    logo: orgResponse.logo,
+                    logo: getOrganizationLogoUrl(orgResponse.id),
                     display_id: orgResponse.display_id,
-                    metadata: orgResponse.metadata,
+                    type: orgResponse.type,
                 },
             }))
             .catch(() => Promise.resolve(null));
