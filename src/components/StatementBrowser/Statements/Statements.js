@@ -1,28 +1,30 @@
-import { useEffect } from 'react';
-import { Col, ListGroup, Row } from 'reactstrap';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import SameAsStatements from 'components/ExternalDescription/SameAsStatements';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
 import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/Breadcrumbs';
-import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions/PropertySuggestions';
-import StatementItemWrapper from 'components/StatementBrowser/StatementItem/StatementItemWrapper';
+import ClassesItem from 'components/StatementBrowser/ClassesItem/ClassesItem';
 import NoData from 'components/StatementBrowser/NoData/NoData';
 import NotFound from 'components/StatementBrowser/NotFound/NotFound';
+import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions/PropertySuggestions';
+import StatementItemWrapper from 'components/StatementBrowser/StatementItem/StatementItemWrapper';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
-import SameAsStatements from 'components/ExternalDescription/SameAsStatements';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import { ENTITIES } from 'constants/graphSettings';
 import { isArray } from 'lodash';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import FlipMove from 'react-flip-move';
+import { useDispatch, useSelector } from 'react-redux';
+import { Col, ListGroup, Row } from 'reactstrap';
 import {
-    updateSettings,
     getSuggestedProperties,
     initializeWithoutContribution,
     initializeWithResource,
     setInitialPath,
+    updateSettings,
 } from 'slices/statementBrowserSlice';
-import { ENTITIES } from 'constants/graphSettings';
-import ClassesItem from 'components/StatementBrowser/ClassesItem/ClassesItem';
+import ItemPreviewFactory from '../ValueItem/ItemPreviewFactory/ItemPreviewFactory';
 import StatementMenuHeader from './StatementMenuHeader/StatementMenuHeader';
 
 const Statements = props => {
@@ -93,6 +95,10 @@ const Statements = props => {
         if (resource && selectedResource) {
             propertyIds = resource && isArray(resource.propertyIds) ? resource.propertyIds : [];
             shared = resource?.shared ?? 0;
+        }
+
+        if (!props.resourcesAsLinks && resource?.valueId) {
+            return <ItemPreviewFactory id={resource.valueId} classes={resource?.classes} />;
         }
 
         return (
