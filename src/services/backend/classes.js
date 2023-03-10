@@ -1,6 +1,6 @@
 import { url } from 'constants/misc';
 import { submitPostRequest, submitGetRequest } from 'network';
-import queryString from 'query-string';
+import qs from 'qs';
 
 export const classesUrl = `${url}classes/`;
 
@@ -19,11 +19,10 @@ export const getClasses = ({
     returnContent = false,
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort, exact, ...(q ? { q } : {}), uri },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
 

@@ -3,16 +3,16 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { ContainerAnimated } from 'components/Comparison/styled';
 import DiffTitle from 'components/DiffView/DiffTitle';
 import useDiff from 'components/DiffView/useDiff';
+import TitleBar from 'components/TitleBar/TitleBar';
 import { reverse } from 'named-urls';
-import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import qs from 'qs';
+import { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import ReactDiffViewer from 'react-diff-viewer';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useLocation } from 'react-use';
 import { Alert, Button } from 'reactstrap';
-import queryString from 'query-string';
-import TitleBar from 'components/TitleBar/TitleBar';
-import PropTypes from 'prop-types';
 
 const DiffView = ({ type, diffRoute, getData }) => {
     const { oldId, newId } = useParams();
@@ -26,7 +26,7 @@ const DiffView = ({ type, diffRoute, getData }) => {
     const { isOldIdHigherThanNewId } = useDiff();
     const navigate = useNavigate();
     const location = useLocation();
-    const { switchedVersions } = queryString.parse(location.search);
+    const { switchedVersions } = qs.parse(location.search, { ignoreQueryPrefix: true });
 
     useEffect(() => {
         document.title = `Compare ${type} versions - ORKG`;

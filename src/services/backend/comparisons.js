@@ -2,7 +2,7 @@ import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { url } from 'constants/misc';
 import { flatten, uniqBy } from 'lodash';
 import { submitGetRequest } from 'network';
-import queryString from 'query-string';
+import qs from 'qs';
 import { getResource } from 'services/backend/resources';
 import { getStatementsByObjectAndPredicate, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { filterObjectOfStatementsByPredicateAndClass, filterSubjectOfStatementsByPredicateAndClass } from 'utils';
@@ -69,6 +69,6 @@ export const getComparisonVersionsById = comparisonId => {
 };
 
 export const getAuthorsByComparisonId = ({ id, page = 0, items = 9999 }) => {
-    const params = queryString.stringify({ page, size: items });
+    const params = qs.stringify({ page, size: items });
     return submitGetRequest(`${comparisonUrl}${encodeURIComponent(id)}/authors?${params}`);
 };

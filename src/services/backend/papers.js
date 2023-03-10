@@ -4,7 +4,7 @@ import { getStatementsBySubjectAndPredicate, getStatementsByObjectAndPredicate }
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { indexContribution } from 'services/similarity';
 import { toast } from 'react-toastify';
-import queryString from 'query-string';
+import qs from 'qs';
 
 export const papersUrl = `${url}papers/`;
 
@@ -57,11 +57,10 @@ export const getPapersLinkedToResource = async ({
     returnContent = false,
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { linkedTo: id, page, size, sort, desc },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
 

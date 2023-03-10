@@ -34,7 +34,7 @@ import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import { uniq, without } from 'lodash';
 import ROUTES from 'constants/routes.js';
-import queryString from 'query-string';
+import qs from 'qs';
 import { useSelector, useDispatch } from 'react-redux';
 import { getComparisonConfiguration, generateFilterControlData } from './helpers';
 
@@ -195,7 +195,7 @@ function useComparison({ id, isEmbeddedMode = false }) {
         _transpose = transpose,
         hasPreviousVersion = comparisonResource?.id || comparisonResource?.hasPreviousVersion?.id,
     }) => {
-        const qParams = queryString.stringify(
+        const qParams = qs.stringify(
             {
                 contributions: _contributionsList.join(','),
                 properties: _predicatesList.map(predicate => encodeURIComponent(predicate)).join(','),
@@ -204,8 +204,8 @@ function useComparison({ id, isEmbeddedMode = false }) {
                 hasPreviousVersion,
             },
             {
-                skipNull: true,
-                skipEmptyString: true,
+                skipNulls: true,
+                arrayFormat: 'comma',
                 encode: false,
             },
         );
@@ -231,8 +231,10 @@ function useComparison({ id, isEmbeddedMode = false }) {
      * Parse previous version from query param
      */
     useEffect(() => {
-        if (!comparisonId && queryString.parse(search)?.hasPreviousVersion) {
-            getResource(queryString.parse(search).hasPreviousVersion).then(prevVersion => dispatch(setHasPreviousVersion(prevVersion)));
+        if (!comparisonId && qs.parse(search, { ignoreQueryPrefix: true })?.hasPreviousVersion) {
+            getResource(qs.parse(search, { ignoreQueryPrefix: true }).hasPreviousVersion).then(prevVersion =>
+                dispatch(setHasPreviousVersion(prevVersion)),
+            );
         }
     }, [comparisonId, dispatch, search]);
 

@@ -1,4 +1,4 @@
-import queryString from 'query-string';
+import qs from 'qs';
 import { getArrayParamFromQueryString, getParamFromQueryString } from 'utils';
 import { isEmpty, uniq, without, flattenDepth, groupBy, flatten, last, find } from 'lodash';
 import { DEFAULT_COMPARISON_METHOD } from 'constants/misc';
@@ -164,7 +164,7 @@ export const activatedContributionsToList = contributionsData => {
 };
 
 export function getComparisonURLConfig(comparisonState) {
-    const params = queryString.stringify(
+    const params = qs.stringify(
         {
             contributions: activatedContributionsToList(comparisonState.contributions).join(','),
             properties: comparisonState.configuration.predicatesList.map(predicate => encodeURIComponent(predicate)).join(','),
@@ -173,8 +173,7 @@ export function getComparisonURLConfig(comparisonState) {
             response_hash: comparisonState.configuration.responseHash,
         },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
             encode: false,
         },
     );

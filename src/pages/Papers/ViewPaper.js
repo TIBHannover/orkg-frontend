@@ -12,7 +12,7 @@ import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
 import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import moment from 'moment';
 import NotFound from 'pages/NotFound';
-import queryString from 'query-string';
+import qs from 'qs';
 import { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import { Helmet } from 'react-helmet';
@@ -32,7 +32,7 @@ const ViewPaper = () => {
             paperId: resourceId,
         });
 
-    let comingFromWizard = queryString.parse(location.search);
+    let comingFromWizard = qs.parse(location.search, { ignoreQueryPrefix: true });
     comingFromWizard = comingFromWizard ? comingFromWizard.comingFromWizard === 'true' : false;
 
     useEffect(() => {
