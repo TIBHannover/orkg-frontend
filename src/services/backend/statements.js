@@ -1,6 +1,6 @@
 import { url } from 'constants/misc';
 import { submitGetRequest, submitPostRequest, submitDeleteRequest, submitPutRequest } from 'network';
-import queryString from 'query-string';
+import qs from 'qs';
 import { PREDICATES, MISC, CLASSES, RESOURCES } from 'constants/graphSettings';
 import { filterStatementsBySubjectId, getTemplateComponentData, filterObjectOfStatementsByPredicateAndClass, sortMethod } from 'utils';
 
@@ -52,7 +52,7 @@ export const updateStatements = (statementIds, { subject_id = null, predicate_id
 
 export const getAllStatements = ({ page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort },
         {
             skipNull: true,
@@ -69,11 +69,10 @@ export const deleteStatementsByIds = ids => submitDeleteRequest(`${statementsUrl
 
 export const getStatementsBySubject = ({ id, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
 
@@ -90,11 +89,10 @@ export const getStatementsBySubject = ({ id, page = 0, items: size = 9999, sortB
  * @return {Promise} Promise object
  */
 export const getStatementsBundleBySubject = ({ id, maxLevel = 10, blacklist = [] }) => {
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { maxLevel, blacklist: blacklist?.join(',') },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
     return submitGetRequest(`${statementsUrl}${encodeURIComponent(id)}/bundle/?${params}`);
@@ -102,11 +100,10 @@ export const getStatementsBundleBySubject = ({ id, maxLevel = 10, blacklist = []
 
 export const getStatementsBySubjects = ({ ids, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { ids: ids.join(), page, size, sort },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
     return submitGetRequest(`${statementsUrl}subjects/?${params}`).then(res =>
@@ -117,28 +114,28 @@ export const getStatementsBySubjects = ({ ids, page = 0, items: size = 9999, sor
     );
 };
 
-export const getStatementsByObject = async ({ id, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
+export const getStatementsByObject = async ({ id, page = 0, items: size = 9999, sortBy = 'created_at', desc = true, returnContent = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
 
-    const statements = await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/?${params}`).then(res => res.content);
+    const statements = await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/?${params}`).then(res =>
+        returnContent ? res.content : res,
+    );
 
     return statements;
 };
 
 export const getStatementsByPredicate = ({ id, page = 0, items: size = 9999, sortBy = 'created_at', desc = true, returnContent = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
 
@@ -147,11 +144,10 @@ export const getStatementsByPredicate = ({ id, page = 0, items: size = 9999, sor
 
 export const getStatementsBySubjectAndPredicate = ({ subjectId, predicateId, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
 
@@ -168,11 +164,10 @@ export const getStatementsByObjectAndPredicate = ({
     returnContent = true,
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
 
@@ -182,11 +177,10 @@ export const getStatementsByObjectAndPredicate = ({
 };
 
 export const getStatementsByPredicateAndLiteral = ({ predicateId, literal, subjectClass = null, items: size = 9999 }) => {
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { size, subjectClass },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
     return submitGetRequest(`${statementsUrl}predicate/${predicateId}/literal/${literal}/?${params}`).then(res => res.content);

@@ -1,14 +1,15 @@
-import { faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import useSave from 'components/Review/hooks/useSave';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, Container, FormGroup, Input, Label } from 'reactstrap';
+import { Container, FormGroup, Input, Label } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const ReviewNew = () => {
     const [title, setTitle] = useState('');
@@ -57,15 +58,9 @@ const ReviewNew = () => {
                     <Input type="text" id="articleTitle" value={title} onChange={e => setTitle(e.target.value)} />
                 </FormGroup>
                 <div className="text-end">
-                    <Button color="primary" onClick={handleCreate} disabled={isLoading}>
-                        {!isLoading ? (
-                            'Create'
-                        ) : (
-                            <>
-                                <Icon icon={faSpinner} spin /> Loading
-                            </>
-                        )}
-                    </Button>
+                    <ButtonWithLoading color="primary" onClick={handleCreate} isLoading={isLoading}>
+                        Create
+                    </ButtonWithLoading>
                 </div>
             </Container>
         </>

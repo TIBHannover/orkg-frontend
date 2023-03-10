@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react';
-import { Button, ListGroup, Alert } from 'reactstrap';
+import { Button, ListGroup, Alert, Badge } from 'reactstrap';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import moment from 'moment';
@@ -9,6 +9,7 @@ import { faUser, faCalendar, faArrowsAltV, faExclamationTriangle } from '@fortaw
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import StatementList from 'components/ConfirmBulkImport/StatementList';
+import Tippy from '@tippyjs/react';
 
 const PaperCardStyled = styled.div`
     & .options {
@@ -79,15 +80,24 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
                                 <span className="flex-grow-1">
                                     {hasValidationErrorsForPaper(i) && <Icon icon={faExclamationTriangle} className="text-warning me-2" />}
 
-                                    {existingPaperIds[i] ? (
+                                    {existingPaperIds[i] && (
                                         <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: existingPaperIds[i] })} target="_blank">
                                             {paper.title ? paper.title : <i>No title</i>}
                                         </Link>
-                                    ) : paper.title ? (
-                                        paper.title
-                                    ) : (
-                                        'No title'
                                     )}
+                                    {!existingPaperIds[i] && paper.title && (
+                                        <>
+                                            <Tippy content="A new ORKG paper will be created">
+                                                <span>
+                                                    <Badge color="info" className="me-1 py-1 px-2">
+                                                        New
+                                                    </Badge>
+                                                </span>
+                                            </Tippy>
+                                            {paper.title}
+                                        </>
+                                    )}
+                                    {!existingPaperIds[i] && !paper.title && <span>No title</span>}
                                 </span>
                                 <div className="flex-shrink-1 text-muted ps-3" style={{ fontSize: '140%', opacity: 0.7 }}>
                                     #{i + 1}

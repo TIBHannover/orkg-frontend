@@ -1,11 +1,11 @@
 import { submitGetRequest } from 'network';
-import queryString from 'query-string';
+import qs from 'qs';
 import env from '@beam-australia/react-env';
 
 export const olsBaseUrl = env('OLS_BASE_URL');
 
 export const selectTerms = ({ page = 0, pageSize = 10, type = 'ontology', q = null, ontology = null }) => {
-    const params = queryString.stringify(
+    const params = qs.stringify(
         {
             rows: pageSize,
             start: page * pageSize,
@@ -15,8 +15,7 @@ export const selectTerms = ({ page = 0, pageSize = 10, type = 'ontology', q = nu
             fieldList: 'label,ontology_prefix,id,iri,description,short_form',
         },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
     const options = [];
@@ -46,11 +45,10 @@ export const selectTerms = ({ page = 0, pageSize = 10, type = 'ontology', q = nu
 };
 
 export const getAllOntologies = ({ page = 0, pageSize = 10 }) => {
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size: pageSize },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
     const options = [];
@@ -74,11 +72,10 @@ export const getAllOntologies = ({ page = 0, pageSize = 10 }) => {
 };
 
 export const getOntologyTerms = ({ ontology_id, page = 0, pageSize = 10 }) => {
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size: pageSize },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
     const options = [];
@@ -105,11 +102,10 @@ export const getOntologyTerms = ({ ontology_id, page = 0, pageSize = 10 }) => {
 };
 
 export const getTermMatchingAcrossOntologies = ({ page = 0, pageSize = 10 }) => {
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size: pageSize },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
     const options = [];

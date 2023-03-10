@@ -22,15 +22,15 @@ const HelpCenterSearch = () => {
                     // can be made more readable by using an object and converting it with 'qs' package to a string
                     where: words
                         .map(word => {
-                            const where = `_where[_or][${whereCount}][title_contains]=${word}&_where[_or][${
+                            const where = `filters[$or][${whereCount}][title][$contains]=${word}&filters[$or][${
                                 whereCount + 1
-                            }][content_contains]=${word}`;
+                            }][content][$contains]=${word}`;
                             whereCount += 2;
                             return where;
                         })
                         .join('&'),
                 });
-                setArticles(_articles);
+                setArticles(_articles.data);
             } catch (e) {
                 console.log(e);
             } finally {
@@ -64,10 +64,10 @@ const HelpCenterSearch = () => {
                                 <Link
                                     to={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                         id: article.id,
-                                        slug: article.title,
+                                        slug: article.attributes?.title,
                                     })}
                                 >
-                                    {article.title}
+                                    {article.attributes?.title}
                                 </Link>
                             </li>
                         ))}

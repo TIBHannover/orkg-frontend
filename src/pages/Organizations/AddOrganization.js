@@ -1,283 +1,181 @@
-import { Component } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
-import { createOrganization, createConference } from 'services/backend/organizations';
+import { createOrganization } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { openAuthDialog } from 'slices/authSlice';
-import PropTypes from 'prop-types';
 import REGEX from 'constants/regex';
-import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
 import { getPublicUrl } from 'utils';
 import slugify from 'slugify';
 import ROUTES from 'constants/routes';
 import Tooltip from 'components/Utils/Tooltip';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { ORGANIZATIONS_TYPES, ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
+import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
+import { useSelector, useDispatch } from 'react-redux';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
-class AddOrganization extends Component {
-    constructor(props) {
-        super(props);
+const AddOrganization = () => {
+    const params = useParams();
+    const [name, setName] = useState('');
+    const [website, setWebsite] = useState('');
+    const [permalink, setPermalink] = useState('');
+    const [logo, setLogo] = useState('');
+    const [editorState, setEditorState] = useState('edit');
+    const organizationType = ORGANIZATIONS_TYPES.find(t => t.label === params.type);
+    const publicOrganizationRoute = `${getPublicUrl()}${reverse(ROUTES.ORGANIZATION, { type: organizationType?.label, id: ' ' })}`;
+    const user = useSelector(state => state.auth.user);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-        this.state = {
-            redirect: false,
-            name: '',
-            website: '',
-            display_id: '',
-            permalink: '',
-            logo: '',
-            editorState: 'edit',
-            organizationType: ORGANIZATIONS_TYPES.find(t => ORGANIZATIONS_MISC.GENERAL === t.id)?.id,
-            date: '',
-            isDoubleBlind: false,
-        };
+    useEffect(() => {
+        document.title = `Create ${organizationType?.alternateLabel} - ORKG`;
+    }, [organizationType]);
 
-        this.publicOrganizationRoute = `${getPublicUrl()}${reverse(ROUTES.ORGANIZATION, { id: ' ' })}`;
-    }
+    const navigateToOrganization = display_id => {
+        setEditorState('edit');
+        setName('');
+        setWebsite('');
+        setPermalink('');
+        navigate(reverse(ROUTES.ORGANIZATION, { type: organizationType?.label, id: display_id }));
+    };
 
-    componentDidMount() {
-        document.title = 'Create organization - ORKG';
-    }
-
-    createNewOrganization = async () => {
-        this.setState({ editorState: 'loading' });
-        const { name, logo, website, permalink, organizationType, date, isDoubleBlind } = this.state;
+    const createNewOrganization = async () => {
+        setEditorState('loading');
 
         if (!name || name.length === 0) {
             toast.error('Please enter an organization name');
-            this.setState({ editorState: 'edit' });
+            setEditorState('edit');
             return;
         }
         if (!new RegExp(REGEX.PERMALINK).test(permalink)) {
             toast.error('Only underscores ( _ ), numbers, and letters are allowed in the permalink field');
-            this.setState({ editorState: 'edit' });
+            setEditorState('edit');
             return;
         }
         if (!new RegExp(REGEX.URL).test(website)) {
             toast.error('Please enter a valid website URL');
-            this.setState({ editorState: 'edit' });
+            setEditorState('edit');
             return;
         }
         if (logo.length === 0) {
             toast.error('Please upload an organization logo');
-            this.setState({ editorState: 'edit' });
-            return;
-        }
-
-        if (organizationType.length === 0) {
-            toast.error('Please select an organization type');
-            this.setState({ editorState: 'edit' });
-            return;
-        }
-
-        if (ORGANIZATIONS_TYPES.find(t => t.id === organizationType)?.requireDate && date.length === 0) {
-            toast.error('Please select conference date');
-            this.setState({ editorState: 'edit' });
+            setEditorState('edit');
             return;
         }
 
         try {
-            let responseJson = '';
-            if (organizationType === ORGANIZATIONS_MISC.CONFERENCE) {
-                responseJson = await createConference(name, logo[0], this.props.user.id, website, permalink, organizationType, {
-                    date,
-                    is_double_blind: isDoubleBlind,
-                });
-            } else {
-                responseJson = await createOrganization(name, logo[0], this.props.user.id, website, permalink, organizationType);
-            }
-            this.navigateToOrganization(responseJson.display_id);
+            const responseJson = await createOrganization(name, logo[0], user.id, website, permalink, organizationType?.id);
+            navigateToOrganization(responseJson.display_id);
         } catch (error) {
-            this.setState({ editorState: 'edit' });
-            console.error(error);
-            toast.error(`Error creating organization ${error.message}`);
+            setEditorState('edit');
+            console.log(error);
+            toast.error(`Error creating ${organizationType?.alternateLabel}: ${error.errors[0].message}`);
         }
     };
 
-    handleChange = event => {
-        this.setState({ [event.target.name]: event.target.value });
-        if (event.target.name === 'name') {
-            this.setState({
-                // eslint-disable-next-line no-useless-escape
-                permalink: slugify(event.target.value.trim(), { replacement: '_', remove: /[*+~%\\<>/;.(){}?,'"!:@\#\-^|]/g, lower: false }),
-            });
-        }
-    };
-
-    navigateToOrganization = display_id => {
-        this.setState({ editorState: 'edit', display_id }, () => {
-            this.setState({ redirect: true });
-        });
-    };
-
-    handlePreview = async e => {
+    const handlePreview = async e => {
         e.preventDefault();
         const file = e.target.files[0];
         const reader = new FileReader();
         if (e.target.files.length === 0) {
             return;
         }
-        reader.onloadend = e => {
-            this.setState({
-                logo: [reader.result],
-            });
+        reader.onloadend = () => {
+            setLogo([reader.result]);
         };
         reader.readAsDataURL(file);
     };
 
-    render() {
-        const loading = this.state.editorState === 'loading';
-        if (this.state.redirect) {
-            this.setState({
-                redirect: false,
-                name: '',
-                display_id: '',
-                website: '',
-                permalink: '',
-            });
+    const loading = editorState === 'loading';
 
-            return <Navigate to={reverse(ROUTES.ORGANIZATION, { id: this.state.display_id })} />;
-        }
+    return (
+        <>
+            <TitleBar>Create {organizationType?.alternateLabel}</TitleBar>
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
+                {!!user && user.isCurationAllowed && (
+                    <Form className="ps-3 pe-3 pt-2">
+                        <FormGroup>
+                            <Label for="organizationName">Name</Label>
+                            <Input
+                                onChange={e => {
+                                    setName(e.target.value);
+                                    setPermalink(
+                                        slugify(e.target.value.trim(), {
+                                            replacement: '_',
+                                            remove: /[*+~%\\<>/;.(){}?,'"!:@#\-^|]/g,
+                                            lower: false,
+                                        }),
+                                    );
+                                }}
+                                type="text"
+                                name="name"
+                                id="organizationName"
+                                disabled={loading}
+                                value={name}
+                            />
+                        </FormGroup>
 
-        return (
-            <>
-                <TitleBar>Create organization</TitleBar>
-                <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                    {!!this.props.user && this.props.user.isCurationAllowed && (
-                        <Form className="ps-3 pe-3 pt-2">
-                            <FormGroup>
-                                <Label for="organizationName">Name</Label>
-                                <Input
-                                    onChange={this.handleChange}
-                                    type="text"
-                                    name="name"
-                                    id="organizationName"
-                                    disabled={loading}
-                                    value={this.state.name}
-                                />
-                            </FormGroup>
-
-                            <FormGroup>
-                                <div>
-                                    <Label for="organizationPermalink">
-                                        Permalink
-                                        <Tooltip message="Permalink field allows to identify the organization page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
-                                    </Label>
-                                    <InputGroup>
-                                        <span className="input-group-text">{this.publicOrganizationRoute}</span>
-                                        <Input
-                                            onChange={this.handleChange}
-                                            type="text"
-                                            name="permalink"
-                                            id="organizationPermalink"
-                                            disabled={loading}
-                                            placeholder="name"
-                                            value={this.state.permalink}
-                                        />
-                                    </InputGroup>
+                        <FormGroup>
+                            <div>
+                                <Label for="organizationPermalink">
+                                    Permalink
+                                    <Tooltip message="Permalink field allows to identify the organization page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
+                                </Label>
+                                <InputGroup>
+                                    <span className="input-group-text">{publicOrganizationRoute}</span>
+                                    <Input
+                                        onChange={e => setPermalink(e.target.value)}
+                                        type="text"
+                                        name="permalink"
+                                        id="organizationPermalink"
+                                        disabled={loading}
+                                        placeholder="name"
+                                        value={permalink}
+                                    />
+                                </InputGroup>
+                            </div>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="organizationWebsite">Website</Label>
+                            <Input
+                                onChange={e => setWebsite(e.target.value)}
+                                type="text"
+                                name="website"
+                                id="organizationWebsite"
+                                disabled={loading}
+                                value={website}
+                                placeholder="https://www.example.com"
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="organizationLogo">Logo</Label>
+                            <br />
+                            {logo && logo.length > 0 && (
+                                <div className="mb-2">
+                                    <img src={logo} style={{ width: '20%', height: '20%' }} alt="organization logo" />
                                 </div>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="organizationWebsite">Website</Label>
-                                <Input
-                                    onChange={this.handleChange}
-                                    type="text"
-                                    name="website"
-                                    id="organizationWebsite"
-                                    disabled={loading}
-                                    value={this.state.website}
-                                    placeholder="https://www.example.com"
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="organizationType">Type</Label>
-                                <Input
-                                    onChange={e => {
-                                        this.setState({ organizationType: ORGANIZATIONS_TYPES.find(t => t.id === e.target.value)?.id });
-                                    }}
-                                    value={this.state.organizationType}
-                                    name="organizationType"
-                                    type="select"
-                                    id="organizationType"
-                                >
-                                    {ORGANIZATIONS_TYPES.map(option => (
-                                        <option key={option.id} value={option.id}>
-                                            {option.label}
-                                        </option>
-                                    ))}
-                                </Input>
-                            </FormGroup>
-                            {ORGANIZATIONS_TYPES.find(t => t.id === this.state.organizationType)?.requireDate && (
-                                <>
-                                    <FormGroup>
-                                        <Label for="conferenceDate">Conference date</Label>
-                                        <Input
-                                            onChange={this.handleChange}
-                                            type="date"
-                                            name="date"
-                                            id="conferenceDate"
-                                            value={this.state.date}
-                                            placeholder="yyyy-mm-dd"
-                                        />
-                                    </FormGroup>
-                                    <FormGroup check>
-                                        <Input
-                                            onChange={e => this.setState({ isDoubleBlind: e.target.checked })}
-                                            type="checkbox"
-                                            name="isDoubleBlind"
-                                            id="doubleBlind"
-                                            checked={this.state.isDoubleBlind}
-                                        />
-                                        <Label for="doubleBlind" check>
-                                            Double blind
-                                            <Tooltip message="By default the conference is considered single-blind." />
-                                        </Label>
-                                    </FormGroup>
-                                </>
                             )}
-                            <FormGroup>
-                                <Label for="organizationLogo">Logo</Label>
-                                <br />
-                                {this.state.logo.length > 0 && (
-                                    <div className="mb-2">
-                                        <img src={this.state.logo} style={{ width: '20%', height: '20%' }} alt="organization logo" />
-                                    </div>
-                                )}
-                                <Input type="file" id="organizationLogo" onChange={this.handlePreview} />
-                            </FormGroup>
+                            <Input type="file" id="organizationLogo" onChange={handlePreview} />
+                        </FormGroup>
 
-                            <Button color="primary" onClick={this.createNewOrganization} className="mb-2 mt-2" disabled={loading}>
-                                {!loading ? 'Create organization' : <span>Loading</span>}
-                            </Button>
-                        </Form>
-                    )}
-
-                    {(!this.props.user || !this.props.user.isCurationAllowed) && (
-                        <>
-                            <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog({ action: 'signin' })}>
-                                <Icon className="me-1" icon={faUser} /> Sign in to create organization
-                            </Button>
-                        </>
-                    )}
-                </Container>
-            </>
-        );
-    }
-}
-
-const mapStateToProps = state => ({
-    user: state.auth.user,
-});
-
-const mapDispatchToProps = dispatch => ({
-    openAuthDialog: payload => dispatch(openAuthDialog(payload)),
-});
-
-AddOrganization.propTypes = {
-    openAuthDialog: PropTypes.func.isRequired,
-    user: PropTypes.object,
+                        <ButtonWithLoading color="primary" onClick={createNewOrganization} className="mb-2 mt-2" isLoading={loading}>
+                            Create organization
+                        </ButtonWithLoading>
+                    </Form>
+                )}
+                {(!user || !user.isCurationAllowed) && (
+                    <>
+                        <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => dispatch(openAuthDialog({ action: 'signin' }))}>
+                            <Icon className="me-1" icon={faUser} /> Sign in to create organization
+                        </Button>
+                    </>
+                )}
+            </Container>
+        </>
+    );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddOrganization);
+export default AddOrganization;

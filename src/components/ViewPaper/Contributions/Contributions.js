@@ -7,15 +7,14 @@ import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import ContributionComparisons from 'components/ViewPaper/ContributionComparisons/ContributionComparisons';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import { reverse } from 'named-urls';
-import AddToComparison from 'components/PaperCard/AddToComparison';
+import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import { useSelector } from 'react-redux';
-import { StyledContributionTabs, GlobalStyle } from 'components/ContributionTabs/styled';
+import Tabs from 'components/Tabs/Tabs';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
-import Tabs from 'rc-tabs';
-import SimilarContributions from '../SimilarContributions';
+import SimilarContributions from 'components/ViewPaper/SimilarContributions/SimilarContributions';
 import useContributions from './hooks/useContributions';
 
 const Contributions = props => {
@@ -24,9 +23,6 @@ const Contributions = props => {
     const {
         isLoading,
         isLoadingContributionFailed,
-        isSimilarContributionsLoading,
-        isSimilarContributionsFailedLoading,
-        similarContributions,
         selectedContribution,
         contributions,
         paperTitle,
@@ -51,113 +47,105 @@ const Contributions = props => {
 
     return (
         <div>
-            <GlobalStyle />
-            <Container>
-                <Row>
-                    <Col md="9">
-                        {isLoading && (
-                            <div>
-                                <ContentLoader
-                                    height="100%"
-                                    width="100%"
-                                    viewBox="0 0 100 6"
-                                    style={{ width: '100% !important' }}
-                                    speed={2}
-                                    backgroundColor="#f3f3f3"
-                                    foregroundColor="#ecebeb"
-                                >
-                                    <rect x="0" y="0" rx="1" ry="1" width={20} height="5" />
-                                    <rect x="21" y="0" rx="1" ry="1" width={20} height="5" />
-                                    <rect x="42" y="0" rx="1" ry="1" width={20} height="5" />
-                                </ContentLoader>
-                            </div>
-                        )}
-                        <StyledContributionTabs>
-                            <Tabs
-                                tabBarExtraContent={
-                                    props.enableEdit ? (
-                                        <AddContributionButton disabled={isAddingContribution} onClick={() => handleCreateContribution()} />
-                                    ) : null
-                                }
-                                moreIcon={<Icon size="lg" icon={faAngleDown} />}
-                                activeKey={selectedContribution}
-                                destroyInactiveTabPane={true}
-                                onChange={onTabChange}
-                                items={contributions.map(contribution => ({
-                                    label: (
-                                        <ContributionTab
-                                            handleChangeContributionLabel={handleChangeContributionLabel}
-                                            isSelected={contribution.id === selectedContribution}
-                                            canDelete={contributions.length !== 1}
-                                            contribution={contribution}
-                                            key={contribution.id}
-                                            toggleDeleteContribution={toggleDeleteContribution}
-                                            enableEdit={props.enableEdit}
-                                        />
-                                    ),
-                                    key: contribution.id,
-                                    children: (
+            <Row>
+                <Col md="9">
+                    {isLoading && (
+                        <div>
+                            <ContentLoader
+                                height="100%"
+                                width="100%"
+                                viewBox="0 0 100 6"
+                                style={{ width: '100% !important' }}
+                                speed={2}
+                                backgroundColor="#f3f3f3"
+                                foregroundColor="#ecebeb"
+                            >
+                                <rect x="0" y="0" rx="1" ry="1" width={20} height="5" />
+                                <rect x="21" y="0" rx="1" ry="1" width={20} height="5" />
+                                <rect x="42" y="0" rx="1" ry="1" width={20} height="5" />
+                            </ContentLoader>
+                        </div>
+                    )}
+
+                    <Tabs
+                        tabBarExtraContent={
+                            props.enableEdit ? (
+                                <AddContributionButton disabled={isAddingContribution} onClick={() => handleCreateContribution()} />
+                            ) : null
+                        }
+                        moreIcon={<Icon size="lg" icon={faAngleDown} />}
+                        activeKey={selectedContribution}
+                        destroyInactiveTabPane={true}
+                        onChange={onTabChange}
+                        items={contributions.map(contribution => ({
+                            label: (
+                                <ContributionTab
+                                    handleChangeContributionLabel={handleChangeContributionLabel}
+                                    isSelected={contribution.id === selectedContribution}
+                                    canDelete={contributions.length !== 1}
+                                    contribution={contribution}
+                                    key={contribution.id}
+                                    toggleDeleteContribution={toggleDeleteContribution}
+                                    enableEdit={props.enableEdit}
+                                />
+                            ),
+                            key: contribution.id,
+                            children: (
+                                <div className="p-4">
+                                    {!isLoadingContributionFailed && (
+                                        <div>
+                                            <FormGroup>
+                                                <StatementBrowser
+                                                    enableEdit={props.enableEdit}
+                                                    syncBackend={props.enableEdit}
+                                                    openExistingResourcesInDialog={false}
+                                                    initOnLocationChange={false}
+                                                    keyToKeepStateOnLocationChange={resourceId}
+                                                    renderTemplateBox={true}
+                                                />
+                                            </FormGroup>
+
+                                            {/* selectedContribution && <SimilarContributions contributionId={selectedContribution} /> */}
+
+                                            {contribution.id && <ContributionComparisons contributionId={contribution.id} />}
+                                        </div>
+                                    )}
+                                    {isLoadingContributionFailed && (
                                         <>
-                                            {!isLoadingContributionFailed && (
-                                                <div>
-                                                    <FormGroup>
-                                                        <StatementBrowser
-                                                            enableEdit={props.enableEdit}
-                                                            syncBackend={props.enableEdit}
-                                                            openExistingResourcesInDialog={false}
-                                                            initOnLocationChange={false}
-                                                            keyToKeepStateOnLocationChange={resourceId}
-                                                            renderTemplateBox={true}
-                                                        />
-                                                    </FormGroup>
-
-                                                    <SimilarContributions
-                                                        similarContributions={similarContributions.slice(0, 3)}
-                                                        isLoading={isSimilarContributionsLoading}
-                                                        isFailed={isSimilarContributionsFailedLoading}
-                                                        contributionId={contribution.id}
-                                                    />
-
-                                                    {contribution.id && <ContributionComparisons contributionId={contribution.id} />}
-                                                </div>
-                                            )}
-                                            {isLoadingContributionFailed && (
-                                                <>
-                                                    <Alert className="mt-4 mb-5" color="danger">
-                                                        {contributions.length === 0 && 'This paper has no contributions yet'}
-                                                        {contributions.length !== 0 && "Contribution doesn't exist"}
-                                                    </Alert>
-                                                </>
-                                            )}
+                                            <Alert className="mt-4 mb-5" color="danger">
+                                                {contributions.length === 0 && 'This paper has no contributions yet'}
+                                                {contributions.length !== 0 && "Contribution doesn't exist"}
+                                            </Alert>
                                         </>
-                                    ),
-                                }))}
-                            />
-                        </StyledContributionTabs>
-                        {!isLoading && contributions?.length === 0 && (
-                            <Alert className="mt-1 mb-0 rounded" color="warning">
-                                This paper has no contributions yet
-                                <br />
-                                {props.enableEdit ? (
-                                    <span style={{ fontSize: '0.875rem' }}>Start by adding a contribution using the top right (+) button</span>
-                                ) : (
-                                    <span style={{ fontSize: '0.875rem' }}>Please contribute by editing</span>
-                                )}
-                                <br />
-                            </Alert>
-                        )}
-                    </Col>
+                                    )}
+                                </div>
+                            ),
+                        }))}
+                    />
 
-                    <div className="col-md-3">
-                        {contributions?.length > 0 && (
-                            <div className="d-flex mb-3 rounded px-3 py-2" style={{ border: '1px solid rgb(219,221,229)' }}>
-                                <AddToComparison showLabel={true} paper={{ id: resourceId, label: paperTitle, contributions }} />
-                            </div>
-                        )}
-                        <ProvenanceBox />
-                    </div>
-                </Row>
-            </Container>
+                    {!isLoading && contributions?.length === 0 && (
+                        <Alert className="mt-1 mb-0 rounded" color="warning">
+                            This paper has no contributions yet
+                            <br />
+                            {props.enableEdit ? (
+                                <span style={{ fontSize: '0.875rem' }}>Start by adding a contribution using the top right (+) button</span>
+                            ) : (
+                                <span style={{ fontSize: '0.875rem' }}>Please contribute by editing</span>
+                            )}
+                            <br />
+                        </Alert>
+                    )}
+                </Col>
+
+                <div className="col-md-3">
+                    {contributions?.length > 0 && (
+                        <div className="d-flex mb-3 rounded px-3 py-2" style={{ border: '1px solid rgb(219,221,229)' }}>
+                            <AddToComparison showLabel={true} paper={{ id: resourceId, label: paperTitle, contributions }} />
+                        </div>
+                    )}
+                    <ProvenanceBox />
+                </div>
+            </Row>
         </div>
     );
 };

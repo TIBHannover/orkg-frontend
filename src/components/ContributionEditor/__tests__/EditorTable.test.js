@@ -1,4 +1,4 @@
-import TableScrollContainer from 'components/Comparison/TableScrollContainer';
+import TableScrollContainer from 'components/Comparison/Table/TableScrollContainer';
 import { fireEvent, render, screen, waitFor, within, waitForElementToBeRemoved } from 'testUtils';
 import EditTable from '../EditorTable';
 import { contribution, contributionLiteralOnly } from '../__mocks__/ContributionEditorData';

@@ -246,16 +246,16 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                 )}
                             </>
                         )}
-                        {((!editMode && !valueClass) || (editMode && !valueClass && value._class === ENTITIES.LITERAL)) && (
-                            <DatatypeSelector
-                                entity={editMode ? value._class : null}
-                                disableBorderRadiusLeft={true}
-                                disableBorderRadiusRight={false}
-                                valueType={inputDataType}
-                                setValueType={handleSetValueType}
-                                menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
-                            />
-                        )}
+                        <DatatypeSelector
+                            valueClass={valueClass}
+                            isDisabled={!((!editMode && !valueClass) || (editMode && !valueClass && value._class === ENTITIES.LITERAL))}
+                            entity={editMode ? value._class : null}
+                            disableBorderRadiusLeft={true}
+                            disableBorderRadiusRight={false}
+                            valueType={inputDataType}
+                            setValueType={handleSetValueType}
+                            menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
+                        />
                     </InputGroup>
                 </span>
             </Tippy>

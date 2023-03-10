@@ -2,8 +2,8 @@ import { submitPostRequest, submitPutRequest, submitGetRequest, submitDeleteRequ
 import { getContributorInformationById } from 'services/backend/contributors';
 import { classesUrl } from 'services/backend/classes';
 import { MISC } from 'constants/graphSettings';
-import queryString from 'query-string';
-import { orderBy } from 'lodash';
+import qs from 'qs';
+import { uniqBy } from 'lodash';
 import { url } from 'constants/misc';
 
 export const resourcesUrl = `${url}resources/`;
@@ -32,7 +32,7 @@ export const getResources = ({
     returnContent = false,
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         {
             page,
             size,
@@ -43,27 +43,34 @@ export const getResources = ({
             ...(exclude ? { exclude } : {}),
         },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
 
     return submitGetRequest(`${resourcesUrl}?${params}`).then(res => (returnContent ? res.content : res));
 };
 
-export const getContributorsByResourceId = id =>
-    submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/contributors`).then(contributors => {
-        const c = contributors.map(contributor => {
-            if (contributor.created_by === MISC.UNKNOWN_ID) {
-                return { ...contributor, created_by: { id: MISC.UNKNOWN_ID, display_name: 'Unknown' } };
-            }
-            return getContributorInformationById(contributor.created_by)
-                .then(user => ({ ...contributor, created_by: user }))
-                .catch(() => ({ ...contributor, created_by: { id: MISC.UNKNOWN_ID, display_name: 'Unknown' } }));
-        });
-        // Order the contribution timeline because it's not ordered in the result
-        return Promise.all(c).then(rc => orderBy(rc, ['created_at'], ['desc']));
+export const getContributorsByResourceId = ({ id, page = 0, size = 9999 }) => {
+    const params = qs.stringify(
+        { page, size },
+        {
+            skipNulls: true,
+        },
+    );
+    return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/contributors?${params}`).then(async contributors => {
+        const uniqContributors = uniqBy(contributors.content, 'created_by');
+        const uniqContributorsInfosRequests = uniqContributors.map(contributor =>
+            contributor.created_by === MISC.UNKNOWN_ID
+                ? { id: MISC.UNKNOWN_ID, display_name: 'Unknown' }
+                : getContributorInformationById(contributor.created_by).catch(() => ({ id: MISC.UNKNOWN_ID, display_name: 'Unknown' })),
+        );
+        const uniqContributorsInfos = await Promise.all(uniqContributorsInfosRequests);
+        return {
+            ...contributors,
+            content: contributors.content.map(u => ({ ...u, created_by: uniqContributorsInfos.find(i => u.created_by === i.id) })),
+        };
     });
+};
 
 export const addResourceToObservatory = ({ observatory_id, organization_id, id }) =>
     submitPutRequest(`${resourcesUrl}${id}/observatory`, { 'Content-Type': 'application/json' }, { observatory_id, organization_id });
@@ -83,11 +90,10 @@ export const getResourcesByClass = async ({
     unlisted = null,
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort, desc, creator, exact, ...(q ? { q } : {}), verified, featured, unlisted },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
 

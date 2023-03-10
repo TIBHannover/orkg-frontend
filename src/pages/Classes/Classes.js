@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
@@ -10,6 +11,10 @@ import { Link } from 'react-router-dom';
 import { getClasses } from 'services/backend/classes';
 
 const Classes = () => {
+    useEffect(() => {
+        document.title = 'Classes list - ORKG';
+    });
+
     const renderListItem = classItem => (
         <ShortRecord key={classItem.id} header={classItem.label} href={reverse(ROUTES.CLASS, { id: classItem.id })}>
             {classItem.id}

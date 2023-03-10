@@ -1,7 +1,5 @@
-import { Alert, Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { useState } from 'react';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -12,6 +10,7 @@ import { createResource } from 'services/backend/resources';
 import { createResourceData } from 'services/similarity/index';
 import { getComparisonURLConfig } from 'components/Comparison/hooks/helpers';
 import { useSelector } from 'react-redux';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const SaveDraft = ({ isOpen, toggle }) => {
     const [title, setTitle] = useState('');
@@ -59,9 +58,9 @@ const SaveDraft = ({ isOpen, toggle }) => {
             </ModalBody>
             {!savedDraftId && (
                 <ModalFooter>
-                    <Button color="primary" disabled={isLoading} onClick={saveDraft}>
-                        {isLoading && <Icon icon={faSpinner} spin />} Save
-                    </Button>
+                    <ButtonWithLoading color="primary" isLoading={isLoading} onClick={saveDraft}>
+                        Save
+                    </ButtonWithLoading>
                 </ModalFooter>
             )}
         </Modal>

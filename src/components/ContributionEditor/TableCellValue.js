@@ -1,5 +1,5 @@
 import { deleteStatement } from 'slices/contributionEditorSlice';
-import { ItemInnerSeparator } from 'components/Comparison/TableCell';
+import { ItemInnerSeparator } from 'components/Comparison/Table/Cells/TableCell';
 import TableCellButtons from 'components/ContributionEditor/TableCellButtons';
 import TableCellValueResource from 'components/ContributionEditor/TableCellValueResource';
 import TableCellForm from 'components/ContributionEditor/TableCellForm/TableCellForm';

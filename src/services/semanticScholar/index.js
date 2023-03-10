@@ -24,3 +24,8 @@ export const getAbstractByDoi = doi => {
     });
     return result;
 };
+
+export const getAuthorsByLabel = ({ label, limit }) =>
+    submitGetRequest(
+        `${semanticScholarUrl}graph/v1/author/search?query=${encodeURIComponent(label)}&fields=name,aliases,url,citationCount,hIndex&limit=${limit}`,
+    );

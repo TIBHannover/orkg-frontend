@@ -1,32 +1,113 @@
 /**
  * Services file for CMS service
  */
-
 import env from '@beam-australia/react-env';
 import { submitGetRequest } from 'network';
+import qs from 'qs';
 
 export const url = env('CMS_URL');
 
-export const getCategory = id => submitGetRequest(`${url}categories/${id}`);
+export const getPageByUrl = _url => submitGetRequest(`${url}pages?filters[url]=${_url}`);
 
-export const getPage = id => submitGetRequest(`${url}pages/${id}`);
+export const getAboutPage = id => {
+    const query = qs.stringify(
+        {
+            populate: { category: { fields: ['id'] } },
+        },
+        {
+            encodeValuesOnly: true,
+        },
+    );
+    return submitGetRequest(`${url}about-pages/${id}?${query}`);
+};
 
-export const getPageByUrl = _url => submitGetRequest(`${url}pages?url=${_url}`).then(pages => pages[0] ?? null);
+export const getAboutPageCategories = () => {
+    const query = qs.stringify(
+        {
+            sort: 'order',
+            fields: ['label'],
+        },
+        {
+            encodeValuesOnly: true,
+        },
+    );
+    return submitGetRequest(`${url}about-page-categories?${query}`).catch(() => []);
+};
 
-export const getAboutPage = id => submitGetRequest(`${url}about-pages/${id}`);
+export const getAboutPages = (categoryId = null) => {
+    const query = qs.stringify(
+        {
+            sort: 'order',
+            pagination: {
+                pageSize: 100,
+            },
+            fields: ['title', 'order'],
+            populate: {
+                category: {
+                    fields: ['id'],
+                },
+            },
 
-export const getAboutPagesMenu = (categoryId = null) =>
-    submitGetRequest(`${url}about-pages/menu?_sort=order${categoryId ? `&_category.id=${categoryId}` : ''}`).catch(() => []);
+            ...(categoryId
+                ? {
+                      filters: {
+                          category: {
+                              id: {
+                                  $eq: categoryId,
+                              },
+                          },
+                      },
+                  }
+                : {}),
+        },
+        {
+            encodeValuesOnly: true,
+        },
+    );
 
-export const getHelpArticle = id => submitGetRequest(`${url}help-articles/${id}`);
+    return submitGetRequest(`${url}about-pages?${query}`).catch(() => []);
+};
+
+export const getHelpArticle = id => {
+    const query = qs.stringify(
+        { populate: { help_category: { fields: ['id', 'title'] } } },
+        {
+            encodeValuesOnly: true,
+        },
+    );
+    return submitGetRequest(`${url}help-articles/${id}?${query}`);
+};
 
 export const getHelpArticles = ({ where = '' }) => submitGetRequest(`${url}help-articles?${where}`);
 
-export const getHelpCategories = () => submitGetRequest(`${url}help-categories?_sort=order`);
+export const getHelpCategories = () => {
+    const query = qs.stringify(
+        { sort: 'order', populate: { help_articles: { fields: ['title', 'order'], sort: ['order'] } } },
+        {
+            encodeValuesOnly: true,
+        },
+    );
+    return submitGetRequest(`${url}help-categories?${query}`);
+};
 
-export const getHelpCategory = id => submitGetRequest(`${url}help-categories/${id}`);
+export const getHelpCategory = id => {
+    const query = qs.stringify(
+        { populate: { help_articles: { fields: ['title', 'order'], sort: ['order'] } } },
+        {
+            encodeValuesOnly: true,
+        },
+    );
+    return submitGetRequest(`${url}help-categories/${id}?${query}`);
+};
 
-export const getHomeAlerts = () => submitGetRequest(`${url}home-alerts`).catch(() => []);
+export const getHomeAlerts = () => submitGetRequest(`${url}home-alerts?sort=order`).catch(() => []);
 
-export const getNewsCards = ({ limit = 10, sort = 'created_at' }) =>
-    submitGetRequest(`${url}news-cards?_limit=${limit}&_sort=${sort}`).catch(() => []);
+export const getNewsCards = ({ limit = 10, sort = 'created_at' }) => {
+    const query = qs.stringify(
+        { pagination: { pageSize: limit }, sort },
+        {
+            encodeValuesOnly: true,
+        },
+    );
+    return submitGetRequest(`${url}news-cards?${query}`).catch(() => []);
+};

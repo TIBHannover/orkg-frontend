@@ -12,6 +12,9 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { Button } from 'reactstrap';
 import { MISC } from 'constants/graphSettings';
+import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
+import capitalize from 'capitalize';
+import { getOrganizationLogoUrl } from 'services/backend/organizations';
 import { StyledItemProvenanceBox } from './styled';
 
 const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contributors, createdBy, isLoadingProvenance, isLoadingContributors }) => {
@@ -51,6 +54,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                                 )}
                                 <Link
                                     to={reverse(ROUTES.ORGANIZATION, {
+                                        type: capitalize(ORGANIZATIONS_MISC.GENERAL),
                                         id: organizationInfo.display_id,
                                     })}
                                 >
@@ -62,7 +66,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                                             height: 'auto',
                                         }}
                                         className="mx-auto d-block"
-                                        src={organizationInfo.logo}
+                                        src={getOrganizationLogoUrl(organizationInfo.id)}
                                         alt=""
                                     />
                                 </Link>
@@ -102,7 +106,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                     {!isLoadingContributors &&
                         contributors?.length > 0 &&
                         contributors
-                            .filter(c => c.created_by !== MISC.UNKNOWN_ID)
+                            .filter(c => c.created_by.id !== MISC.UNKNOWN_ID)
                             .map((contributor, index) => (
                                 <div key={`cntbrs-${contributor.id}${index}`}>
                                     <Link

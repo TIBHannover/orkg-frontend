@@ -10,7 +10,7 @@ import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
 import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import { getContributorsByResourceId } from 'services/backend/resources';
-import { getPublicUrl, filterObjectOfStatementsByPredicateAndClass } from 'utils';
+import { getPublicUrl, filterObjectOfStatementsByPredicateAndClass, getErrorMessage } from 'utils';
 import { getStatementsBySubject, createResourceStatement, deleteStatementById, getStatementsBundleBySubject } from 'services/backend/statements';
 import { createResourceData } from 'services/similarity/index';
 import { useSelector } from 'react-redux';
@@ -20,6 +20,7 @@ import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { uniqBy, flatten } from 'lodash';
 import { AuthorTag } from 'components/AuthorsInput/styled';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 function Publish(props) {
     const [isLoading, setIsLoading] = useState(false);
@@ -33,12 +34,14 @@ function Publish(props) {
 
     useEffect(() => {
         const loadContributors = () => {
-            getContributorsByResourceId(viewPaper.paperResource.id)
-                .then(result => {
-                    const contributorsList = result.filter(c => c.created_by.id !== MISC.UNKNOWN_ID);
-                    setContributors(contributorsList ? uniqBy(contributorsList, 'created_by.id') : []);
-                })
-                .catch(() => {});
+            if (viewPaper.paperResource.id) {
+                getContributorsByResourceId({ id: viewPaper.paperResource.id, page: 0, size: 999 })
+                    .then(result => {
+                        const contributorsList = result.content.filter(c => c.created_by.id !== MISC.UNKNOWN_ID);
+                        setContributors(contributorsList ? uniqBy(contributorsList, 'created_by.id') : []);
+                    })
+                    .catch(() => {});
+            }
         };
 
         loadContributors();
@@ -159,7 +162,7 @@ function Publish(props) {
         try {
             publishDOI(viewPaper.paperResource.id);
         } catch (error) {
-            toast.error(`Error publishing a paper : ${error.message}`);
+            toast.error(`Error publishing a paper : ${getErrorMessage(error)}`);
             setIsLoading(false);
         }
     };
@@ -262,9 +265,9 @@ function Publish(props) {
                 <ModalFooter>
                     {!dataCiteDoi && (
                         <div className="text-align-center mt-2">
-                            <Button color="primary" disabled={isLoading} onClick={handleSubmit}>
-                                {isLoading && <span className="fa fa-spinner fa-spin" />} Publish DOI
-                            </Button>
+                            <ButtonWithLoading color="primary" isLoading={isLoading} onClick={handleSubmit}>
+                                Publish DOI
+                            </ButtonWithLoading>
                         </div>
                     )}
                 </ModalFooter>

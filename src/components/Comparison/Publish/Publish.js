@@ -23,6 +23,8 @@ import { CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 import usePublish from 'components/Comparison/hooks/usePublish';
+import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const StyledCustomInput = styled(Input)`
     margin-right: 0;
@@ -69,7 +71,7 @@ function Publish(props) {
         title,
         description,
         comparisonCreators,
-        subject,
+        researchField,
         inputValue,
         conference,
         references,
@@ -78,7 +80,7 @@ function Publish(props) {
         isOpenResearchFieldModal,
         setTitle,
         setDescription,
-        setSubject,
+        setResearchField,
         setInputValue,
         setIsOpenResearchFieldModal,
         setAssignDOI,
@@ -197,7 +199,9 @@ function Publish(props) {
                 {id && (
                     <ShareCreatedContent
                         typeOfLink="comparison"
-                        title={`An @orkg_org comparison on '${title}' in the area of ${subject?.label ? `%23${slugify(subject.label)}` : ''}`}
+                        title={`An @orkg_org comparison on '${title}' in the area of ${
+                            researchField?.label ? `%23${slugify(researchField.label)}` : ''
+                        }`}
                     />
                 )}
                 {!comparisonResource.doi && (!id || (id && assignDOI)) && (
@@ -239,12 +243,12 @@ function Publish(props) {
                                     entityType={ENTITIES.RESOURCE}
                                     optionsClass={CLASSES.RESEARCH_FIELD}
                                     onItemSelected={i => {
-                                        setSubject({ ...i, label: i.value });
+                                        setResearchField({ ...i, label: i.value });
                                     }}
                                     placeholder="Search or choose a research field"
                                     autoFocus
                                     cacheOptions
-                                    value={subject || null}
+                                    value={researchField || null}
                                     isClearable={false}
                                     onBlur={() => setInputValue('')}
                                     onChangeInputValue={e => setInputValue(e)}
@@ -288,7 +292,7 @@ function Publish(props) {
                                     </AuthorTag>
                                 ))}
                         </FormGroup>
-                        {!id && (!conference || !conference.metadata.is_double_blind) && (
+                        {!id && (!conference || conference.metadata.review_process !== CONFERENCE_REVIEW_MISC.DOUBLE_BLIND) && (
                             <FormGroup>
                                 <div>
                                     <Tooltip message="A DOI will be assigned to published comparison and it cannot be changed in future.">
@@ -309,69 +313,73 @@ function Publish(props) {
                                 </div>
                             </FormGroup>
                         )}
-                        <FormGroup>
-                            <Label>
-                                <Tooltip message="Enter a reference to the data sources from which the comparison is generated">
-                                    Reference (optional)
-                                </Tooltip>
-                            </Label>
-                            {references &&
-                                references.map((x, i) => (
-                                    <InputGroup className="mb-1" key={`ref${i}`}>
-                                        <Input
-                                            disabled={Boolean(id)}
-                                            type="text"
-                                            name="reference"
-                                            value={x}
-                                            onChange={e => handleReferenceChange(e, i)}
-                                            id="publish-reference"
-                                        />
-                                        {!id && (
-                                            <>
-                                                {references.length !== 1 && (
-                                                    <Button
-                                                        color="light"
-                                                        onClick={() => handleRemoveReferenceClick(i)}
-                                                        className="ps-3 pe-3"
-                                                        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                                                    >
-                                                        <Icon icon={faTrash} />
-                                                    </Button>
+                        {!id /* Hide those fields because they are not part of the DOI metadata */ && (
+                            <>
+                                <FormGroup>
+                                    <Label>
+                                        <Tooltip message="Enter a reference to the data sources from which the comparison is generated">
+                                            Reference (optional)
+                                        </Tooltip>
+                                    </Label>
+                                    {references &&
+                                        references.map((reference, i) => (
+                                            <InputGroup className="mb-1" key={`ref${i}`}>
+                                                <Input
+                                                    disabled={Boolean(id)}
+                                                    type="text"
+                                                    name="reference"
+                                                    value={reference.label}
+                                                    onChange={e => handleReferenceChange(e, i)}
+                                                    id="publish-reference"
+                                                />
+                                                {!id && (
+                                                    <>
+                                                        {references.length !== 1 && (
+                                                            <Button
+                                                                color="light"
+                                                                onClick={() => handleRemoveReferenceClick(i)}
+                                                                className="ps-3 pe-3"
+                                                                style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                                                            >
+                                                                <Icon icon={faTrash} />
+                                                            </Button>
+                                                        )}
+                                                        {references.length - 1 === i && (
+                                                            <Button
+                                                                color="secondary"
+                                                                onClick={() => setReferences([...references, ''])}
+                                                                style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                                                            >
+                                                                <Icon icon={faPlus} /> Add
+                                                            </Button>
+                                                        )}
+                                                    </>
                                                 )}
-                                                {references.length - 1 === i && (
-                                                    <Button
-                                                        color="secondary"
-                                                        onClick={() => setReferences([...references, ''])}
-                                                        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                                                    >
-                                                        <Icon icon={faPlus} /> Add
-                                                    </Button>
-                                                )}
-                                            </>
-                                        )}
-                                    </InputGroup>
-                                ))}
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="conference">
-                                <Tooltip message="Select a conference">
-                                    Conference <span className="text-muted fst-italic">(optional)</span>
-                                </Tooltip>
-                            </Label>
-                            <Select
-                                options={conferencesList}
-                                onChange={e => {
-                                    setConference(e);
-                                }}
-                                getOptionValue={({ id }) => id}
-                                isSearchable={true}
-                                getOptionLabel={({ name }) => name}
-                                isClearable={true}
-                                classNamePrefix="react-select"
-                                inputId="conference"
-                            />
-                            <SelectGlobalStyle />
-                        </FormGroup>
+                                            </InputGroup>
+                                        ))}
+                                </FormGroup>
+                                <FormGroup>
+                                    <Label for="conference">
+                                        <Tooltip message="Select a conference">
+                                            Conference <span className="text-muted fst-italic">(optional)</span>
+                                        </Tooltip>
+                                    </Label>
+                                    <Select
+                                        options={conferencesList}
+                                        onChange={e => {
+                                            setConference(e);
+                                        }}
+                                        getOptionValue={({ id }) => id}
+                                        isSearchable={true}
+                                        getOptionLabel={({ name }) => name}
+                                        isClearable={true}
+                                        classNamePrefix="react-select"
+                                        inputId="conference"
+                                    />
+                                    <SelectGlobalStyle />
+                                </FormGroup>
+                            </>
+                        )}
                     </>
                 )}
             </ModalBody>
@@ -379,16 +387,16 @@ function Publish(props) {
                 <ModalFooter>
                     {!comparisonResource.doi && !id && (
                         <div className="text-align-center mt-2">
-                            <Button color="primary" disabled={isLoading} onClick={handleSubmit}>
-                                {isLoading && <span className="fa fa-spinner fa-spin" />} Publish
-                            </Button>
+                            <ButtonWithLoading color="primary" isLoading={isLoading} onClick={handleSubmit}>
+                                Publish
+                            </ButtonWithLoading>
                         </div>
                     )}
                     {id && !comparisonResource.doi && assignDOI && (
                         <div className="text-align-center mt-2">
-                            <Button color="primary" disabled={isLoading} onClick={handleSubmit}>
-                                {isLoading && <span className="fa fa-spinner fa-spin" />} Publish DOI
-                            </Button>
+                            <ButtonWithLoading color="primary" isLoading={isLoading} onClick={handleSubmit}>
+                                Publish DOI
+                            </ButtonWithLoading>
                         </div>
                     )}
                 </ModalFooter>

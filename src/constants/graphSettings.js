@@ -77,6 +77,7 @@ export const PREDICATES = {
     CSVW_VALUE: 'CSVW_Value',
     CSVW_NAME: 'CSVW_Name',
     CSVW_TITLES: 'CSVW_Titles',
+    HAS_QUALITY_REVIEW: 'hasQualityReview',
 };
 
 export const CLASSES = {
@@ -134,12 +135,11 @@ export const CLASSES = {
     SOFTWARE: 'Software',
     EXTERNAL: 'External',
     DIAGRAM: 'Diagram',
+    QUALITY_REVIEW: 'QualityReview',
 };
 
 export const RESOURCES = {
     RESEARCH_FIELD_MAIN: 'R11',
-    RESEARCH_FIELD_COMPUTER_SCIENCE: 'R132',
-    RESEARCH_FIELD_COMPUTATIONAL_LINGUISTICS: 'R322',
     EMPTY_RESOURCE: 'empty',
 };
 

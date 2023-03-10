@@ -11,6 +11,7 @@ import { reverse } from 'named-urls';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { asyncLocalStorage } from 'utils';
 import { createResourceStatement } from 'services/backend/statements';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagram, diagramResource }) {
     const [value, setValue] = useState(diagramResource?.label ?? '');
@@ -69,9 +70,9 @@ function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagra
                 </>
             </ModalBody>
             <ModalFooter>
-                <Button color="primary" onClick={save} disabled={isSaving}>
-                    {!isSaving ? 'Save' : 'Saving'}
-                </Button>
+                <ButtonWithLoading color="primary" onClick={save} isLoading={isSaving}>
+                    Save
+                </ButtonWithLoading>
                 <Button color="secondary" onClick={setIsSaveDiagramModalOpen}>
                     Cancel
                 </Button>

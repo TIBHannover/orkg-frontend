@@ -1,6 +1,6 @@
 import { url } from 'constants/misc';
 import { submitGetRequest } from 'network';
-import queryString from 'query-string';
+import qs from 'qs';
 
 export const statsUrl = `${url}stats/`;
 
@@ -32,11 +32,10 @@ export const getTopContributors = ({
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     if (researchFieldId) {
-        const params = queryString.stringify(
+        const params = qs.stringify(
             { days, sort },
             {
-                skipNull: true,
-                skipEmptyString: true,
+                skipNulls: true,
             },
         );
         return submitGetRequest(`${statsUrl}research-field/${researchFieldId}/${subfields ? 'subfields/' : ''}top/contributors?${params}`).then(
@@ -50,11 +49,10 @@ export const getTopContributors = ({
             },
         );
     }
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort, days },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
     return submitGetRequest(`${statsUrl}top/contributors?${params}`).then(result => ({
@@ -68,11 +66,10 @@ export const getTopContributors = ({
 
 export const getChangelogs = ({ researchFieldId = null, page = 0, items = 9999, sortBy = 'createdAt', desc = true }) => {
     const sort = sortBy ? `${sortBy},${desc ? 'desc' : 'asc'}` : null;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size: items, sort },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
     return submitGetRequest(`${statsUrl}${researchFieldId ? `research-field/${researchFieldId}/` : ''}top/changelog?${params}`);
@@ -80,11 +77,10 @@ export const getChangelogs = ({ researchFieldId = null, page = 0, items = 9999, 
 
 export const getTopResearchProblems = ({ page = 0, items = 9999, sortBy = 'created_at', desc = true, subfields = true }) => {
     // const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size: items /* , sort, desc */ },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
     return submitGetRequest(`${statsUrl}top/research-problems?${params}`);

@@ -1,4 +1,4 @@
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { getAllOrganizations } from 'services/backend/organizations';
@@ -7,6 +7,7 @@ import { addOrganizationToObservatory } from 'services/backend/observatories';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import Select from 'react-select';
 import { differenceBy } from 'lodash';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 function AddOrganization(props) {
     const [organizations, setOrganizations] = useState([]);
@@ -65,9 +66,9 @@ function AddOrganization(props) {
                 </ModalBody>
                 <ModalFooter>
                     <div className="text-align-center mt-2">
-                        <Button color="primary" disabled={isLoading} onClick={() => handleSubmit()}>
-                            {isLoading && <span className="fa fa-spinner fa-spin" />} Save
-                        </Button>
+                        <ButtonWithLoading color="primary" isLoading={isLoading} onClick={() => handleSubmit()}>
+                            Save
+                        </ButtonWithLoading>
                     </div>
                 </ModalFooter>
             </Modal>

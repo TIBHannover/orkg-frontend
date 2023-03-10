@@ -237,10 +237,10 @@ describe('ValueItem', () => {
 });
 
 describe('ValueItem', () => {
-    it('should not show datatype selector on resource edit', async () => {
+    it('should show datatype selector disabled on resource edit', async () => {
         setup();
         await clickOnEditValueButton(screen, VALUE_IDS.Resource);
-        expect(screen.queryByText(/Resource/i)).toBeNull();
+        expect(screen.queryByText(/Resource/i).className.includes('--is-disabled')).toBe(true);
     });
 });
 

@@ -97,12 +97,12 @@ const Statements = props => {
 
         return (
             <div>
-                <ClassesItem
-                    enableEdit={(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit}
-                    syncBackend={syncBackend}
-                />
                 <Row>
                     <Col lg={props.propertySuggestionsComponent ? 9 : 12}>
+                        <ClassesItem
+                            enableEdit={(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit}
+                            syncBackend={syncBackend}
+                        />
                         <ListGroup tag="div" className="listGroupEnlarge">
                             {selectedResource && !resource.isFetching ? (
                                 <>

@@ -2,7 +2,7 @@ import { Container, ListGroup, FormGroup, Label, Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import useResearchProblemContent from 'components/ResearchProblem/hooks/useResearchProblemContent';
-import CardFactory from 'components/CardFactory/CardFactory';
+import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import { CLASSES } from 'constants/graphSettings';
 import { useSelector } from 'react-redux';
@@ -10,7 +10,7 @@ import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
+import qs from 'qs';
 
 const DEFAULT_CLASSES_FILTER = [
     { id: CLASSES.PAPER, label: 'Paper' },
@@ -24,7 +24,7 @@ const DEFAULT_CLASSES_FILTER = [
 
 const IntegratedList = ({ id, slug, boxShadow }) => {
     const location = useLocation();
-    const params = queryString.parse(location.search);
+    const params = qs.parse(location.search, { ignoreQueryPrefix: true });
 
     const { items, sort, isLoading, hasNextPage, isLastPageReached, totalElements, page, classesFilter, handleLoadMore, setClassesFilter, setSort } =
         useResearchProblemContent({

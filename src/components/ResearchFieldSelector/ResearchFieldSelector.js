@@ -1,15 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Button, Badge } from 'reactstrap';
 import { faMinusSquare, faPlusSquare, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import PreviouslySelectedResearchField from 'components/PreviouslySelectedResearchField/PreviouslySelectedResearchField';
-import { CLASSES, RESOURCES, ENTITIES } from 'constants/graphSettings';
-import { sortBy, find, set, cloneDeep } from 'lodash';
+import { CLASSES, ENTITIES, RESOURCES } from 'constants/graphSettings';
+import { cloneDeep, find, set, sortBy } from 'lodash';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useState } from 'react';
+import ContentLoader from 'react-content-loader';
+import { Badge, Button } from 'reactstrap';
 import { getParentResearchFields, getStatementsBySubjects } from 'services/backend/statements';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import ContentLoader from 'react-content-loader';
 
 const FieldItem = styled(Button)`
     &&& {
@@ -199,11 +200,13 @@ const ResearchFieldSelector = ({
                             {find(parents, p => p.id === field.id) ? <b>{field.label}</b> : field.label}
                         </div>
                         {researchFieldStats && (
-                            <div className="justify-content-end">
-                                <Badge color="light" pill>
-                                    {researchFieldStats[field.id]}
-                                </Badge>
-                            </div>
+                            <Tippy content="Number of content items in this field">
+                                <div className="justify-content-end">
+                                    <Badge color="light" pill>
+                                        {researchFieldStats[field.id]}
+                                    </Badge>
+                                </div>
+                            </Tippy>
                         )}
                     </FieldItem>
                     {field.isExpanded && !isLoading && <SubList>{fieldList(field.id)}</SubList>}

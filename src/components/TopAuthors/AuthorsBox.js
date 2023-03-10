@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import AuthorCard from 'components/AuthorCard/AuthorCard';
+import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import pluralize from 'pluralize';
-import AuthorsModal from './AuthorsModal';
-import useResearchProblemAuthors from './hooks/useResearchProblemAuthors';
+import ResearchProblemAuthorsModal from './ResearchProblemAuthorsModal';
+import useResearchProblemAuthors from './hooks/useTopAuthors';
 
 const AuthorsBox = ({ researchProblemId }) => {
     const { authors, isLoading } = useResearchProblemAuthors({ researchProblemId, pageSize: 4 });
@@ -16,14 +16,14 @@ const AuthorsBox = ({ researchProblemId }) => {
     return (
         <div className="box rounded-3 p-3 flex-grow-1 d-flex flex-column">
             <h5>
-                <Icon icon={faAward} className="text-primary" /> Top Authors
+                <Icon icon={faAward} className="text-primary" /> Top authors
             </h5>
             <div className="flex-grow-1">
                 {!isLoading && authors && authors.length > 0 && (
                     <div className="mt-2">
                         {authors.slice(0, 3).map((author, index) => (
                             <div className="pt-1 ps-2 pe-2" key={`rp${index}`}>
-                                <AuthorCard author={author.author} subTitle={pluralize('paper', author.papers, true)} />
+                                <AuthorCard author={author.author.value} paperAmount={pluralize('paper', author.papers, true)} />
                                 {authors.slice(0, 3).length - 1 !== index && <hr className="mb-0 mt-1" />}
                             </div>
                         ))}
@@ -35,7 +35,9 @@ const AuthorsBox = ({ researchProblemId }) => {
                         <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
                             View more
                         </Button>
-                        {openModal && <AuthorsModal openModal={openModal} setOpenModal={setOpenModal} researchProblemId={researchProblemId} />}
+                        {openModal && (
+                            <ResearchProblemAuthorsModal openModal={openModal} setOpenModal={setOpenModal} researchProblemId={researchProblemId} />
+                        )}
                     </div>
                 )}
                 {isLoading && (

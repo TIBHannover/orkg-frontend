@@ -4,7 +4,7 @@ import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import EditAuthorsModal from 'components/List/EditAuthorsModal';
 import EditResearchField from 'components/List/EditResearchField';
 import { EditableTitle, SectionStyled } from 'components/ArticleBuilder/styled';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
 import { updateTitle } from 'slices/listSlice';

@@ -19,6 +19,7 @@ import {
     setErrors,
     extendAndSortProperties,
     setHiddenGroups,
+    setIsEmbeddedMode,
 } from 'slices/comparisonSlice';
 import {
     filterObjectOfStatementsByPredicateAndClass,
@@ -33,13 +34,13 @@ import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import { uniq, without } from 'lodash';
 import ROUTES from 'constants/routes.js';
-import queryString from 'query-string';
+import qs from 'qs';
 import { useSelector, useDispatch } from 'react-redux';
 import { getComparisonConfiguration, generateFilterControlData } from './helpers';
 
 const DEFAULT_COMPARISON_METHOD = 'path';
 
-function useComparison({ id }) {
+function useComparison({ id, isEmbeddedMode = false }) {
     const { search } = useLocation();
     const navigate = useNavigate();
     const params = useParams();
@@ -56,6 +57,7 @@ function useComparison({ id }) {
     const contributions = useSelector(state => state.comparison.contributions);
     const isLoadingResult = useSelector(state => state.comparison.isLoadingResult);
     const data = useSelector(state => state.comparison.data);
+    const properties = useSelector(state => state.comparison.properties);
 
     /**
      * Load comparison meta data and comparison config
@@ -193,7 +195,7 @@ function useComparison({ id }) {
         _transpose = transpose,
         hasPreviousVersion = comparisonResource?.id || comparisonResource?.hasPreviousVersion?.id,
     }) => {
-        const qParams = queryString.stringify(
+        const qParams = qs.stringify(
             {
                 contributions: _contributionsList.join(','),
                 properties: _predicatesList.map(predicate => encodeURIComponent(predicate)).join(','),
@@ -202,8 +204,8 @@ function useComparison({ id }) {
                 hasPreviousVersion,
             },
             {
-                skipNull: true,
-                skipEmptyString: true,
+                skipNulls: true,
+                arrayFormat: 'comma',
                 encode: false,
             },
         );
@@ -229,8 +231,10 @@ function useComparison({ id }) {
      * Parse previous version from query param
      */
     useEffect(() => {
-        if (!comparisonId && queryString.parse(search)?.hasPreviousVersion) {
-            getResource(queryString.parse(search).hasPreviousVersion).then(prevVersion => dispatch(setHasPreviousVersion(prevVersion)));
+        if (!comparisonId && qs.parse(search, { ignoreQueryPrefix: true })?.hasPreviousVersion) {
+            getResource(qs.parse(search, { ignoreQueryPrefix: true }).hasPreviousVersion).then(prevVersion =>
+                dispatch(setHasPreviousVersion(prevVersion)),
+            );
         }
     }, [comparisonId, dispatch, search]);
 
@@ -287,11 +291,16 @@ function useComparison({ id }) {
         }
     }, [contributionsList?.length, getComparisonResult]);
 
+    useEffect(() => {
+        dispatch(setIsEmbeddedMode(isEmbeddedMode));
+    }, [isEmbeddedMode, dispatch]);
+
     return {
         comparisonResource,
         isLoadingResult,
         data,
         contributions,
+        properties,
         navigateToNewURL,
     };
 }

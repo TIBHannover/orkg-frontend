@@ -21,12 +21,7 @@ const HelpCenter = () => {
             setHasFailed(false);
 
             try {
-                let categories = await getHelpCategories();
-                categories = categories.map(category => ({
-                    ...category,
-                    help_articles: category.help_articles.sort((a, b) => (parseInt(a.order) > parseInt(b.order) ? 1 : -1)),
-                }));
-                setCategories(categories);
+                setCategories((await getHelpCategories()).data);
             } catch (e) {
                 setHasFailed(true);
             } finally {
@@ -80,23 +75,22 @@ const HelpCenter = () => {
                                     })}
                                     className="text-body"
                                 >
-                                    {category.title}
+                                    {category.attributes.title}
                                 </Link>
                             </h2>
                             <ul className="ps-3 mb-0">
-                                {category.help_articles &&
-                                    category.help_articles.slice(0, 5).map(article => (
-                                        <li key={article.id}>
-                                            <Link
-                                                to={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
-                                                    id: article.id,
-                                                    slug: article.title,
-                                                })}
-                                            >
-                                                {article.title}
-                                            </Link>
-                                        </li>
-                                    ))}
+                                {category.attributes?.help_articles?.data?.slice(0, 5)?.map(article => (
+                                    <li key={article.id}>
+                                        <Link
+                                            to={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
+                                                id: article.id,
+                                                slug: article.attributes.title,
+                                            })}
+                                        >
+                                            {article.attributes.title}
+                                        </Link>
+                                    </li>
+                                ))}
                             </ul>
                             <div className="mt-2 mb-4">
                                 <Link
@@ -105,7 +99,7 @@ const HelpCenter = () => {
                                     })}
                                     className="text-muted"
                                 >
-                                    View all {category.help_articles.length} articles
+                                    View all {category.attributes?.help_articles?.data?.length} articles
                                 </Link>
                             </div>
                         </Col>

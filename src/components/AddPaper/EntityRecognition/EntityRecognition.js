@@ -1,8 +1,9 @@
-import { faAngleDoubleLeft, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import useEntityRecognition from 'components/AddPaper/hooks/useEntityRecognition';
 import usePredicatesRecommendation from 'components/AddPaper/hooks/usePredicatesRecommendation';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import TemplateButton from 'components/StatementBrowser/TemplatesModal/TemplateButton/TemplateButton';
 import useInsertData from 'components/AddPaper/hooks/useInsertData';
 import Tooltip from 'components/Utils/Tooltip';
 import { capitalize } from 'lodash';
@@ -17,6 +18,8 @@ import { createPropertyAction as createProperty } from 'slices/statementBrowserS
 import { setNerProperties, setNerResources, setNerRawResponse } from 'slices/addPaperSlice';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import Tippy, { useSingleton } from '@tippyjs/react';
+import useTemplatesRecommendation from '../hooks/useTemplatesRecommendation';
 
 const AnimationContainer = styled(CSSTransition)`
     &.slide-left-enter {
@@ -66,27 +69,25 @@ const ShowMoreButton = styled(Button)`
 
 const MAX_PROPERTIES_ITEMS = 8;
 
-const EntityRecognition = ({ isComputerScienceField }) => {
+const EntityRecognition = ({ activeNERService }) => {
     const { title, abstract, nerProperties } = useSelector(state => state.addPaper);
-    const [isLoadingNER, setIsLoadingNER] = useState(false);
     const dispatch = useDispatch();
     const { handleInsertData } = useInsertData();
-    const { suggestions } = useEntityRecognition({ isComputerScienceField });
-    const { recommendedPredicates, isLoadingRP } = usePredicatesRecommendation();
+    const { suggestions } = useEntityRecognition({ activeNERService });
+    const { recommendedPredicates } = usePredicatesRecommendation();
+    const { recommendedTemplates } = useTemplatesRecommendation();
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const [showMorePredicates, setShowMorePredicates] = useState(false);
 
     useDebounce(
         () => {
             const processNlpData = async () => {
-                setIsLoadingNER(true);
-                const data = await getNerResults({ title, abstract });
+                const data = await getNerResults({ title, abstract, service: activeNERService });
                 dispatch(setNerResources(data.resources));
                 dispatch(setNerProperties(data.properties));
                 dispatch(setNerRawResponse(data.response));
-                setIsLoadingNER(false);
             };
-            if (isComputerScienceField) {
+            if (activeNERService) {
                 processNlpData();
             }
         },
@@ -107,25 +108,46 @@ const EntityRecognition = ({ isComputerScienceField }) => {
 
     const _recommendedPredicates = showMorePredicates ? recommendedPredicates : recommendedPredicates.slice(0, MAX_PROPERTIES_ITEMS);
 
+    const showSuggestionHeader = Object.keys(suggestions).length > 0 || recommendedPredicates?.length > 0 || recommendedTemplates?.length > 0;
+
+    const [source, target] = useSingleton();
+
     return (
         <>
-            {(isLoadingNER || Object.keys(suggestions).length > 0 || recommendedPredicates?.length > 0 || isLoadingRP) && (
+            <Tippy singleton={source} delay={500} />
+            {showSuggestionHeader && (
                 <h3 className="h5 mb-3">
                     <Tooltip message="The suggestions listed below are automatically generated based on the title and abstract from the paper. Using these suggestions is optional.">
                         Suggestions
                     </Tooltip>
                 </h3>
             )}
-            {(isLoadingNER || Object.keys(suggestions).length > 0) && (
-                <h6 className="h6 mt-2">
-                    Statements{' '}
-                    {isLoadingNER && (
-                        <>
-                            <Icon icon={faSpinner} spin />
-                        </>
-                    )}
-                </h6>
-            )}
+            {recommendedTemplates?.length > 0 && <h6 className="mt-2">Templates</h6>}
+            <ListGroup>
+                <TransitionGroup component={null} height="30px">
+                    {recommendedTemplates.map(template => (
+                        <AnimationContainer
+                            key={`tr${template.id}`}
+                            classNames="slide-left"
+                            className="d-flex align-items-center"
+                            timeout={{ enter: 600, exit: 600 }}
+                        >
+                            <div>
+                                <TemplateButton
+                                    addMode={true}
+                                    tippyTarget={target}
+                                    id={template.id}
+                                    label={template.label}
+                                    resourceId={selectedResource}
+                                    syncBackend={false}
+                                    isSmart={true}
+                                />
+                            </div>
+                        </AnimationContainer>
+                    ))}
+                </TransitionGroup>
+            </ListGroup>
+            {Object.keys(suggestions).length > 0 && <h6 className="mt-2">Statements</h6>}
             <ListGroup>
                 {Object.keys(suggestions).map(key => (
                     <Fragment key={key}>
@@ -161,16 +183,7 @@ const EntityRecognition = ({ isComputerScienceField }) => {
                     </Fragment>
                 ))}
             </ListGroup>
-            {(isLoadingRP || recommendedPredicates.length > 0) && (
-                <h6 className="h6 mt-1">
-                    Properties{' '}
-                    {isLoadingRP && (
-                        <>
-                            <Icon icon={faSpinner} spin />
-                        </>
-                    )}
-                </h6>
-            )}
+            {recommendedPredicates.length > 0 && <h6 className="mt-1">Properties</h6>}
             <ListGroup>
                 <TransitionGroup component={null} height="30px">
                     {_recommendedPredicates.map((p, index) => (
@@ -215,7 +228,7 @@ const EntityRecognition = ({ isComputerScienceField }) => {
 };
 
 EntityRecognition.propTypes = {
-    isComputerScienceField: PropTypes.bool.isRequired,
+    activeNERService: PropTypes.string,
 };
 
 export default EntityRecognition;

@@ -1,116 +1,32 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Container, Button, Alert } from 'reactstrap';
+import { useState, useEffect, useCallback } from 'react';
+import { Container, Button } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import InternalServerError from 'pages/InternalServerError';
 import EditableHeader from 'components/EditableHeader';
-import ObjectStatements from 'components/ObjectStatements/ObjectStatements';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import NotFound from 'pages/NotFound';
-import { useLocation, Link, useParams, useNavigate } from 'react-router-dom';
-import Tippy from '@tippyjs/react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
-import { toast } from 'react-toastify';
+import { ENTITIES } from 'constants/graphSettings';
 import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import env from '@beam-australia/react-env';
-import { getVisualization } from 'services/similarity';
-import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import { reverseWithSlug } from 'utils';
-import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeModal';
 import TitleBar from 'components/TitleBar/TitleBar';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 import ItemMetadata from 'components/Search/ItemMetadata';
-
-const DEDICATED_PAGE_LINKS = {
-    [CLASSES.PAPER]: {
-        label: 'Paper',
-        route: ROUTES.VIEW_PAPER,
-        routeParams: 'resourceId',
-    },
-    [CLASSES.PAPER_VERSION]: {
-        label: 'Paper',
-        route: ROUTES.VIEW_PAPER,
-        routeParams: 'resourceId',
-    },
-    [CLASSES.PROBLEM]: {
-        label: 'Research problem',
-        route: ROUTES.RESEARCH_PROBLEM,
-        routeParams: 'researchProblemId',
-        hasSlug: true,
-    },
-    [CLASSES.COMPARISON]: {
-        label: 'Comparison',
-        route: ROUTES.COMPARISON,
-        routeParams: 'comparisonId',
-    },
-    [CLASSES.AUTHOR]: {
-        label: 'Author',
-        route: ROUTES.AUTHOR_PAGE,
-        routeParams: 'authorId',
-    },
-    [CLASSES.RESEARCH_FIELD]: {
-        label: 'Research field',
-        route: ROUTES.RESEARCH_FIELD,
-        routeParams: 'researchFieldId',
-        hasSlug: true,
-    },
-    [CLASSES.VENUE]: {
-        label: 'Venue',
-        route: ROUTES.VENUE_PAGE,
-        routeParams: 'venueId',
-    },
-    [CLASSES.TEMPLATE]: {
-        label: 'Template',
-        route: ROUTES.TEMPLATE,
-        routeParams: 'id',
-    },
-    [CLASSES.CONTRIBUTION]: {
-        label: 'Contribution',
-        route: ROUTES.CONTRIBUTION,
-        routeParams: 'id',
-    },
-    [CLASSES.SMART_REVIEW]: {
-        label: 'Review',
-        route: ROUTES.REVIEW,
-        routeParams: 'id',
-    },
-    [CLASSES.SMART_REVIEW_PUBLISHED]: {
-        label: 'Review',
-        route: ROUTES.REVIEW,
-        routeParams: 'id',
-    },
-    [CLASSES.LITERATURE_LIST]: {
-        label: 'List',
-        route: ROUTES.LIST,
-        routeParams: 'id',
-    },
-    [CLASSES.LITERATURE_LIST_PUBLISHED]: {
-        label: 'List',
-        route: ROUTES.LIST,
-        routeParams: 'id',
-    },
-};
-
-// A custom hook that builds on useLocation to parse the query string
-function useQuery() {
-    const { search } = useLocation();
-
-    return useMemo(() => new URLSearchParams(search), [search]);
-}
+import TabsContainer from 'components/Resource/Tabs/TabsContainer';
+import DEDICATED_PAGE_LINKS from 'components/Resource/hooks/redirectionSettings';
+import useQuery from 'components/Resource/hooks/useQuery';
+import getPreventEditCase from 'components/Resource/hooks/preventEditing';
+import PreventModal from 'components/Resource/PreventModal/PreventModal';
 
 function Resource() {
-    const params = useParams();
-    const resourceId = params.id;
-    const location = useLocation();
+    const { id } = useParams();
     const navigate = useNavigate();
     const query = useQuery();
     const noRedirect = query.get('noRedirect');
@@ -118,21 +34,12 @@ function Resource() {
     const [resource, setResource] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
-    const [canBeDeleted, setCanBeDeleted] = useState(false);
-    const [visualizationModelForGDC, setVisualizationModelForGDC] = useState(undefined);
-    const [hasVisualizationModelForGDC, setHasVisualizationModelForGDC] = useState(false);
-    const values = useSelector(state => state.statementBrowser.values);
-    const properties = useSelector(state => state.statementBrowser.properties);
+    const [preventEditCase, setPreventEditCase] = useState(null);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
-    const showDeleteButton = editMode && isCurationAllowed;
-    const [hasObjectStatement, setHasObjectStatement] = useState(false);
-    const [hasDOI, setHasDOI] = useState(false);
-    const { deleteResource } = useDeleteResource({ resourceId, redirect: true });
-    const [canEdit, setCanEdit] = useState(false);
-    const [createdBy, setCreatedBy] = useState(null);
-    const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
+    const { deleteResource } = useDeleteResource({ resourceId: id, redirect: true });
+    const [isOpenPreventModal, setIsOpenPreventModal] = useState(false);
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
-        resourceId: params.id,
+        resourceId: id,
         unlisted: resource?.unlisted,
         featured: resource?.featured,
     });
@@ -151,72 +58,33 @@ function Resource() {
     useEffect(() => {
         const findResource = async () => {
             setIsLoading(true);
-            getResource(resourceId)
-                .then(responseJson => {
+            getResource(id)
+                .then(async responseJson => {
                     document.title = `${responseJson.label} - Resource - ORKG`;
-                    setCreatedBy(responseJson.created_by);
                     setResource(responseJson);
                     const link = getDedicatedLink(responseJson.classes);
                     if (noRedirect === null && link) {
                         navigate(
                             reverseWithSlug(link.route, {
-                                [link.routeParams]: params.id,
+                                [link.routeParams]: id,
                                 slug: link.hasSlug ? responseJson.label : undefined,
                             }),
                             { replace: true },
                         );
                     }
-                    if (responseJson.classes.includes(CLASSES.VISUALIZATION)) {
-                        getVisualization(resourceId)
-                            .then(model => {
-                                setVisualizationModelForGDC(model);
-                                setHasVisualizationModelForGDC(true);
-                            })
-                            .catch(() => {
-                                setVisualizationModelForGDC(undefined);
-                                setHasVisualizationModelForGDC(false);
-                                toast.error('Error loading visualization preview');
-                            });
-                    } else {
-                        setVisualizationModelForGDC(undefined);
-                        setHasVisualizationModelForGDC(false);
-                    }
-                    if (responseJson.classes.includes(CLASSES.COMPARISON)) {
-                        getStatementsBySubjectAndPredicate({ subjectId: params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
-                            if (st.length > 0) {
-                                setIsLoading(false);
-                                setHasDOI(true);
-                                setCanEdit(isCurationAllowed);
-                            } else {
-                                setIsLoading(false);
-                                if (env('PWC_USER_ID') === responseJson.created_by) {
-                                    setCanEdit(false);
-                                } else {
-                                    setCanEdit(true);
-                                }
-                            }
-                        });
-                    } else if (responseJson.classes.includes(CLASSES.RESEARCH_FIELD)) {
-                        setIsLoading(false);
-                        setCanEdit(isCurationAllowed);
-                    } else {
-                        setIsLoading(false);
-                        setCanEdit(true);
-                    }
+                    const prevent = await getPreventEditCase(responseJson);
+                    setPreventEditCase(prevent);
+                    setIsLoading(false);
                 })
                 .catch(err => {
-                    console.error(err);
                     setResource(null);
                     setError(err);
                     setIsLoading(false);
                 });
         };
         findResource();
-    }, [location, params.id, resourceId, isCurationAllowed, getDedicatedLink, noRedirect, navigate]);
-
-    useEffect(() => {
-        setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && !hasObjectStatement);
-    }, [values, properties, hasObjectStatement]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id, isCurationAllowed, getDedicatedLink]);
 
     const handleHeaderChange = val => {
         setResource(prev => ({ ...prev, label: val }));
@@ -249,7 +117,7 @@ function Resource() {
                                         size="sm"
                                         tag={Link}
                                         to={reverseWithSlug(dedicatedLink.route, {
-                                            [dedicatedLink.routeParams]: params.id,
+                                            [dedicatedLink.routeParams]: id,
                                             slug: dedicatedLink.hasSlug ? resource.label : undefined,
                                         })}
                                         style={{ marginRight: 2 }}
@@ -257,67 +125,31 @@ function Resource() {
                                         <Icon icon={faExternalLinkAlt} className="me-1" /> {dedicatedLink.label} view
                                     </Button>
                                 )}
-                                {canEdit && !editMode && (
+                                {!editMode && (
                                     <RequireAuthentication
                                         component={Button}
                                         className="float-end"
                                         color="secondary"
                                         size="sm"
-                                        onClick={() => (env('PWC_USER_ID') === createdBy ? setIsOpenPWCModal(true) : setEditMode(v => !v))}
+                                        onClick={() => (!isCurationAllowed && preventEditCase ? setIsOpenPreventModal(true) : setEditMode(v => !v))}
                                     >
                                         <Icon icon={faPen} /> Edit
                                     </RequireAuthentication>
                                 )}
-                                {canEdit && editMode && (
+                                {editMode && (
                                     <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
                                         <Icon icon={faTimes} /> Stop editing
                                     </Button>
-                                )}
-                                {!canEdit && !editMode && (
-                                    <Tippy
-                                        hideOnClick={false}
-                                        interactive={!!resource.classes.find(c => c.id === CLASSES.RESEARCH_FIELD)}
-                                        content={
-                                            <>
-                                                {env('PWC_USER_ID') === createdBy &&
-                                                    'This resource cannot be edited because it is from an external source. Our provenance feature is in active development.'}
-                                                {env('PWC_USER_ID') !== createdBy && resource.classes.find(c => c.id === CLASSES.RESEARCH_FIELD) && (
-                                                    <>
-                                                        This resource can not be edited. Please visit the{' '}
-                                                        <a
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            href="https://www.orkg.org/help-center/article/20/ORKG_Research_fields_taxonomy"
-                                                        >
-                                                            ORKG help center
-                                                        </a>{' '}
-                                                        if you have any suggestions to improve the research fields taxonomy.
-                                                    </>
-                                                )}
-                                                {env('PWC_USER_ID') !== createdBy &&
-                                                    !resource.classes.find(c => c.id === CLASSES.RESEARCH_FIELD) &&
-                                                    'This resource can not be edited because it has a published DOI.'}
-                                            </>
-                                        }
-                                    >
-                                        <span className="btn btn-secondary btn-sm disabled">
-                                            <Icon icon={faPen} /> <span>Edit</span>
-                                        </span>
-                                    </Tippy>
                                 )}
                             </>
                         }
                     >
                         Resource view
                     </TitleBar>
-                    {editMode && hasDOI && (
-                        <Alert className="container" color="danger">
-                            This resource should not be edited because it has a published DOI, please make sure that you know what are you doing!
-                        </Alert>
-                    )}
-                    <EditModeHeader isVisible={editMode && canEdit} />
-                    <Container className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
-                        {!editMode || !canEdit ? (
+                    {editMode && preventEditCase?.warningOnEdit && preventEditCase.warningOnEdit}
+                    <EditModeHeader isVisible={editMode} />
+                    <Container className={`box clearfix pt-4 pb-4 ps-4 pe-4 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
+                        {!editMode ? (
                             <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                 {resource.label || (
                                     <i>
@@ -331,58 +163,27 @@ function Resource() {
                             </h3>
                         ) : (
                             <>
-                                <EditableHeader id={params.id} value={resource.label} onChange={handleHeaderChange} entityType={ENTITIES.RESOURCE} />
-                                {showDeleteButton && (
-                                    <ConditionalWrapper
-                                        condition={!canBeDeleted}
-                                        wrapper={children => (
-                                            <Tippy content="The resource cannot be deleted because it is used in statements (either as subject or object)">
-                                                <span>{children}</span>
-                                            </Tippy>
-                                        )}
-                                    >
-                                        <Button
-                                            color="danger"
-                                            size="sm"
-                                            className="mt-2 mb-3"
-                                            style={{ marginLeft: 'auto' }}
-                                            onClick={deleteResource}
-                                            disabled={!canBeDeleted}
-                                        >
-                                            <Icon icon={faTrash} /> Delete resource
-                                        </Button>
-                                    </ConditionalWrapper>
+                                <EditableHeader id={id} value={resource.label} onChange={handleHeaderChange} entityType={ENTITIES.RESOURCE} />
+                                {editMode && isCurationAllowed && (
+                                    <Button color="danger" size="sm" className="mt-2 mb-3" style={{ marginLeft: 'auto' }} onClick={deleteResource}>
+                                        <Icon icon={faTrash} /> Delete resource
+                                    </Button>
                                 )}
                             </>
                         )}
 
                         <ItemMetadata item={resource} showCreatedAt={true} showCreatedBy={true} showProvenance={true} editMode={editMode} />
-                        <hr />
-                        {/* Adding Visualization Component here */}
-                        {hasVisualizationModelForGDC && (
-                            <div className="mb-4">
-                                <GDCVisualizationRenderer model={visualizationModelForGDC} />
-                                <hr />
-                            </div>
-                        )}
-                        <h3 className="h5">Statements</h3>
-                        <div className="clearfix">
-                            <StatementBrowser
-                                key={`SB${resource.classes.map(c => c.id).join(',')}`}
-                                enableEdit={editMode && canEdit}
-                                syncBackend={editMode}
-                                openExistingResourcesInDialog={false}
-                                initialSubjectId={resourceId}
-                                newStore={true}
-                                propertiesAsLinks={true}
-                                resourcesAsLinks={true}
-                            />
-                        </div>
-                        <ObjectStatements resourceId={params.id} setHasObjectStatement={setHasObjectStatement} />
                     </Container>
+                    <TabsContainer classes={resource?.classes} id={id} editMode={editMode} />
+                    {preventEditCase && (
+                        <PreventModal
+                            {...preventEditCase.preventModalProps(resource)}
+                            isOpen={isOpenPreventModal}
+                            toggle={() => setIsOpenPreventModal(v => !v)}
+                        />
+                    )}
                 </>
             )}
-            <PapersWithCodeModal isOpen={isOpenPWCModal} toggle={() => setIsOpenPWCModal(v => !v)} />
         </>
     );
 }
