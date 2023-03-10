@@ -387,7 +387,8 @@ export const saveAddPaperAction = data => async dispatch => {
     let newProperties = data.properties.allIds.filter(propertyId => !data.properties.byId[propertyId].existingPredicateId);
     newProperties = newProperties.map(propertyId => ({ id: propertyId, label: data.properties.byId[propertyId].label }));
     newProperties = uniqBy(newProperties, 'label');
-    newProperties = newProperties.map(property => ({ [property.label]: `_${property.id}` }));
+    newProperties = newProperties.map(property => ({ [property.label]: `_${property.id}` })); // removed the underscore
+    console.log('data', data);
     const paperObj = {
         // Set new predicates label and temp ID
         predicates: newProperties,
@@ -404,7 +405,7 @@ export const saveAddPaperAction = data => async dispatch => {
             publicationYear: data.publicationYear,
             publishedIn: data.publishedIn ? data.publishedIn : undefined,
             url: data.url,
-            researchField: data.selectedResearchField,
+            researchField: data.selectedResearchField || data.extractedResearchField,
             // Set the contributions data
             contributions: data.contributions.allIds.map(c => {
                 const contribution = data.contributions.byId[c];
@@ -421,6 +422,7 @@ export const saveAddPaperAction = data => async dispatch => {
     };
 
     try {
+        console.log('show paper object', paperObj);
         const paper = await saveFullPaper(paperObj);
         dispatch(saveAddPaper(paper.id));
 

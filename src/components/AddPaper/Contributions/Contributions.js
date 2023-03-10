@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unneeded-ternary */
 /* eslint-disable no-undef */
 import env from '@beam-australia/react-env';
 import { faAngleDown, faExclamationTriangle, faFlask, faMagic } from '@fortawesome/free-solid-svg-icons';
@@ -14,9 +16,10 @@ import Confirm from 'components/Confirmation/Confirmation';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
-import Tooltip from 'components/Utils/Tooltip';
-import { BIOASSAYS_FIELDS_LIST } from 'constants/nlpFieldLists';
 import Tabs from 'components/Tabs/Tabs';
+import Tooltip from 'components/Utils/Tooltip';
+import { ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { BIOASSAYS_FIELDS_LIST } from 'constants/nlpFieldLists';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Row, UncontrolledAlert } from 'reactstrap';
@@ -32,7 +35,7 @@ import {
     toggleAbstractDialog,
     updateContributionLabelAction as updateContributionLabel,
 } from 'slices/addPaperSlice';
-import { updateSettings, fillStatements } from 'slices/statementBrowserSlice';
+import { updateSettings } from 'slices/statementBrowserSlice';
 import ContributionsHelpTour from './ContributionsHelpTour';
 
 const Contributions = () => {
@@ -66,33 +69,52 @@ const Contributions = () => {
     const result = useSelector(state => state.addPaper.result);
     const researchProblem = useSelector(state => state.addPaper.researchProblem);
     const conclusion = useSelector(state => state.addPaper.conclusion);
-    const objective = useSelector(state => state.addPaper.objective);
+    const extractedResearchField = useSelector(state => state.addPaper.extractedResearchField);
+
     useEffect(() => {
         (async () => setActiveNERService(await determineActiveNERService(selectedResearchField)))();
     }, [selectedResearchField]);
 
     useEffect(() => {
         // if there is no contribution yet, create the first one
+
         if (contributions.allIds.length === 0) {
+            console.log('extractedResearchField:', extractedResearchField);
+            console.log('selectedResearchField:', selectedResearchField);
+            const researchField = extractedResearchField ? extractedResearchField : selectedResearchField;
+            console.log('researchField:', researchField);
+
             dispatch(
                 createContribution({
                     selectAfterCreation: true,
                     fillStatements: true,
-                    researchField: selectedResearchField,
+                    // eslint-disable-next-line object-shorthand
+                    researchField: researchField,
                     statements: {
                         properties: [
-                            { propertyId: 'P32', label: 'Research problem' },
-                            { propertyId: 'P33', label: 'Method' },
-                            { propertyId: 'P34', label: 'Objective' },
-                            { propertyId: 'P35', label: 'Conclusion' },
-                            { propertyId: 'P36', label: 'Result' },
+                            {
+                                existingPredicateId: PREDICATES.HAS_RESEARCH_PROBLEM,
+                                propertyId: PREDICATES.HAS_RESEARCH_PROBLEM,
+                                label: 'Research problem',
+                            },
+
+                            // { existingPredicateId: PREDICATES.METHOD, propertyId: PREDICATES.METHOD, label: 'Method' },
+                            // { existingPredicateId: PREDICATES.OBJECTIVE, propertyId: PREDICATES.OBJECTIVE, label: 'Objective' },
+                            // { existingPredicateId: PREDICATES.CONCLUSION, propertyId: PREDICATES.CONCLUSION, label: 'Conclusion' },
+                            // { existingPredicateId: PREDICATES.RESULT, propertyId: PREDICATES.RESULT, label: 'Result' },
                         ],
                         values: [
-                            { _class: 'literal', label: researchProblem, propertyId: 'P32' },
-                            { _class: 'literal', label: method, propertyId: 'P33' },
-                            { _class: 'literal', label: objective, propertyId: 'P34' },
-                            { _class: 'literal', label: conclusion, propertyId: 'P35' },
-                            { _class: 'literal', label: result, propertyId: 'P36' },
+                            {
+                                _class: ENTITIES.LITERAL,
+                                label: researchProblem,
+                                propertyId: PREDICATES.HAS_RESEARCH_PROBLEM,
+                                existingPredicateId: PREDICATES.HAS_RESEARCH_PROBLEM,
+                            },
+
+                            //  { _class: 'literal', label: method, propertyId: PREDICATES.METHOD, existingPredicateId: PREDICATES.METHOD },
+                            // { _class: 'literal', label: objective, propertyId: PREDICATES.OBJECTIVE, existingPredicateId: PREDICATES.OBJECTIVE },
+                            // { _class: 'literal', label: conclusion, propertyId: PREDICATES.CONCLUSION, existingPredicateId: PREDICATES.CONCLUSION },
+                            // { _class: 'literal', label: result, propertyId: PREDICATES.RESULT, existingPredicateId: PREDICATES.RESULT },
                         ],
                     },
                 }),
@@ -103,7 +125,7 @@ const Contributions = () => {
                 }),
             );
         }
-    }, [contributions.allIds.length, dispatch, selectedResearchField]);
+    }, [contributions.allIds.length, dispatch, selectedResearchField, extractedResearchField]);
 
     const handleNextClick = async () => {
         if (activeNERService) {
@@ -127,6 +149,7 @@ const Contributions = () => {
                 publishedIn,
                 url,
                 selectedResearchField,
+                extractedResearchField,
                 contributions,
                 resources,
                 properties,
