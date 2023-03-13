@@ -25,7 +25,18 @@ const MarkdownRenderer = ({ text, id }) => {
 
     const formatReferenceKey = useCallback(key => key.slice(0, -1).slice(2, key.length), []);
 
-    const getReferenceByKey = useCallback(key => references.find(reference => reference?.parsedReference?.id === key), [references]);
+    const getReferenceByKey = useCallback(
+        key => {
+            // citation-js formats reference keys by formating punctuation and other 'unsafe' characters.
+            // copied the code from the repo
+            // https://github.com/citation-js/citation-js/blob/7f41e3080ba6b9b57158fd6a8ce3b5110e042a1e/packages/plugin-bibtex/src/mapping/shared.js#L11
+            const unsafeChars = /(?:<\/?.*?>|[\u0020-\u002F\u003A-\u0040\u005B-\u005E\u0060\u007B-\u007F])+/g;
+            return references.find(
+                reference => reference?.parsedReference?.id === key || reference?.parsedReference?.id === key.toString().replace(unsafeChars, ''),
+            );
+        },
+        [references],
+    );
 
     const inlineReferences = {
         type: 'lang',
@@ -66,11 +77,9 @@ const MarkdownRenderer = ({ text, id }) => {
                             return null;
                         }
 
-                        parsedReference['citation-label'] = 'KEY_PLACEHOLDER'; // citation-js doesn't accept citation keys with dots in them, so use a placeholder which is later replaced
                         parsedReference.id = keyFormatted;
-                        const bibtex = data.format('bibtex').replace('KEY_PLACEHOLDER', keyFormatted);
+                        const bibtex = data.format('bibtex');
                         parsedReference['citation-label'] = keyFormatted;
-
                         dispatch(createReference({ contributionId, bibtex, parsedReference }));
                     } catch (e) {
                         console.log(e);
