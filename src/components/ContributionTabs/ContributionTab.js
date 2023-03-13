@@ -5,7 +5,8 @@ import { faTrash, faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { ActionButton } from './styled';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import { ActionButton } from 'components/ContributionTabs/styled';
 
 export const StyledInput = styled(Input)`
     background: #fff;
@@ -74,7 +75,16 @@ const ContributionTab = props => {
                     } // Highlights the entire label when edit
                 />
             )}
-            {!isEditing && <span>{props.contribution.label}</span>}
+            {!isEditing && (
+                <ConditionalWrapper
+                    condition={props.contribution.label?.length > 40}
+                    wrapper={children => <Tippy content={props.contribution.label}>{children}</Tippy>}
+                >
+                    <div className="text-truncate d-inline-block" style={{ maxWidth: 300 }}>
+                        {props.contribution.label}
+                    </div>
+                </ConditionalWrapper>
+            )}
             {props.enableEdit && !isEditing && (
                 <>
                     {props.canDelete && props.isSelected && (
