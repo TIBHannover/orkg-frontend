@@ -7,7 +7,7 @@ const ItemPreviewFactory = ({ id, classes, children = null }) => {
     const findClass = useCallback(classId => classes?.includes(classId), [classes]);
 
     if (findClass(CLASSES.CSVW_TABLE)) {
-        return <CSVWTable id={id} embedMode={true} />;
+        return <CSVWTable id={id} />;
     }
 
     return children;

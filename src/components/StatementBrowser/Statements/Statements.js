@@ -97,58 +97,65 @@ const Statements = props => {
             shared = resource?.shared ?? 0;
         }
 
-        if (!props.resourcesAsLinks && resource?.valueId) {
-            return <ItemPreviewFactory id={resource.valueId} classes={resource?.classes} />;
-        }
-
         return (
-            <div>
-                <Row>
-                    <Col lg={props.propertySuggestionsComponent ? 9 : 12}>
-                        <ClassesItem
-                            enableEdit={(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit}
-                            syncBackend={syncBackend}
-                        />
-                        <ListGroup tag="div" className="listGroupEnlarge">
-                            {selectedResource && !resource.isFetching ? (
-                                <>
-                                    <FlipMove>
-                                        {propertyIds.length > 0 &&
-                                            propertyIds.map((propertyId, index) => (
-                                                <StatementItemWrapper
-                                                    key={`statement-p${propertyId}r${selectedResource}`}
-                                                    enableEdit={(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit}
-                                                    openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                                                    isLastItem={propertyIds.length === index + 1}
-                                                    isFirstItem={index === 0}
-                                                    resourceId={selectedResource}
-                                                    propertyId={propertyId}
-                                                    syncBackend={syncBackend}
-                                                    renderTemplateBox={props.renderTemplateBox}
-                                                />
-                                            ))}
-                                    </FlipMove>
+            <ConditionalWrapper
+                condition={!props.resourcesAsLinks && resource?.classes}
+                wrapper={children => (
+                    <ItemPreviewFactory id={selectedResource} classes={resource?.classes}>
+                        {children}
+                    </ItemPreviewFactory>
+                )}
+            >
+                <div>
+                    <Row>
+                        <Col lg={props.propertySuggestionsComponent ? 9 : 12}>
+                            <ClassesItem
+                                enableEdit={(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit}
+                                syncBackend={syncBackend}
+                            />
+                            <ListGroup tag="div" className="listGroupEnlarge">
+                                {selectedResource && !resource.isFetching ? (
+                                    <>
+                                        <FlipMove>
+                                            {propertyIds.length > 0 &&
+                                                propertyIds.map((propertyId, index) => (
+                                                    <StatementItemWrapper
+                                                        key={`statement-p${propertyId}r${selectedResource}`}
+                                                        enableEdit={
+                                                            (shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit
+                                                        }
+                                                        openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+                                                        isLastItem={propertyIds.length === index + 1}
+                                                        isFirstItem={index === 0}
+                                                        resourceId={selectedResource}
+                                                        propertyId={propertyId}
+                                                        syncBackend={syncBackend}
+                                                        renderTemplateBox={props.renderTemplateBox}
+                                                    />
+                                                ))}
+                                        </FlipMove>
 
-                                    {!resource.isFailedFetching && propertyIds.length === 0 && <NoData enableEdit={props.enableEdit} />}
-                                    {resource.isFailedFetching && propertyIds.length === 0 && <NotFound />}
-                                </>
-                            ) : (
-                                <StyledStatementItem>
-                                    <Icon icon={faSpinner} spin /> Loading
-                                </StyledStatementItem>
-                            )}
+                                        {!resource.isFailedFetching && propertyIds.length === 0 && <NoData enableEdit={props.enableEdit} />}
+                                        {resource.isFailedFetching && propertyIds.length === 0 && <NotFound />}
+                                    </>
+                                ) : (
+                                    <StyledStatementItem>
+                                        <Icon icon={faSpinner} spin /> Loading
+                                    </StyledStatementItem>
+                                )}
 
-                            {(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit && (
-                                <AddProperty resourceId={selectedResource} syncBackend={syncBackend} />
-                            )}
-                        </ListGroup>
-                    </Col>
-                    {(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) &&
-                        props.enableEdit &&
-                        suggestedProperties.length > 0 &&
-                        propertySuggestionsComponent}
-                </Row>
-            </div>
+                                {(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit && (
+                                    <AddProperty resourceId={selectedResource} syncBackend={syncBackend} />
+                                )}
+                            </ListGroup>
+                        </Col>
+                        {(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) &&
+                            props.enableEdit &&
+                            suggestedProperties.length > 0 &&
+                            propertySuggestionsComponent}
+                    </Row>
+                </div>
+            </ConditionalWrapper>
         );
     };
 

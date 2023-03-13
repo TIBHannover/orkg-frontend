@@ -1423,23 +1423,23 @@ export function addStatements(statements, resourceId, depth) {
 
         return Promise.all(
             resourceStatements.map(async statement => {
-                // Check whether there already exist a property for this, then combine
-                let propertyId = getPropertyIdByByResourceAndPredicateId(getState(), resourceId, statement.predicate.id);
-                if (!propertyId) {
-                    // Create the property
-                    propertyId = guid();
-                    dispatch(
-                        createProperty({
-                            propertyId,
-                            resourceId,
-                            existingPredicateId: statement.predicate.id,
-                            isExistingProperty: true,
-                            ...statement.predicate,
-                        }),
-                    );
-                }
                 let addStatement = Promise.resolve();
                 if (!statementExists(getState(), statement.id)) {
+                    // Check whether there already exist a property for this, then combine
+                    let propertyId = getPropertyIdByByResourceAndPredicateId(getState(), resourceId, statement.predicate.id);
+                    if (!propertyId) {
+                        // Create the property
+                        propertyId = guid();
+                        dispatch(
+                            createProperty({
+                                propertyId,
+                                resourceId,
+                                existingPredicateId: statement.predicate.id,
+                                isExistingProperty: true,
+                                ...statement.predicate,
+                            }),
+                        );
+                    }
                     // add the value if the statement doesn't exist
                     const valueId = guid();
                     addStatement = dispatch(
@@ -1468,7 +1468,15 @@ export function addStatements(statements, resourceId, depth) {
                     ) {
                         // Add required properties and add statements
                         return dispatch(createRequiredPropertiesInResource(statement.object.id))
-                            .then(() => dispatch(addStatements(statements, statement.object.id, depth - 1)))
+                            .then(() =>
+                                dispatch(
+                                    addStatements(
+                                        statements.filter(s => s.subject.id !== resourceId),
+                                        statement.object.id,
+                                        depth - 1,
+                                    ),
+                                ),
+                            )
                             .then(() => {
                                 // Set the resource as fetched
                                 dispatch(
