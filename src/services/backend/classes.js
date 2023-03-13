@@ -1,6 +1,6 @@
 import { url } from 'constants/misc';
 import { submitPostRequest, submitGetRequest, submitPatchRequest, submitDeleteRequest } from 'network';
-import queryString from 'query-string';
+import qs from 'qs';
 
 export const classesUrl = `${url}classes/`;
 
@@ -19,11 +19,10 @@ export const getClasses = ({
     returnContent = false,
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort, exact, ...(q ? { q } : {}), uri },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
 
@@ -39,11 +38,10 @@ export const getCountInstances = id => submitGetRequest(`${classesUrl}${encodeUR
  * Lists all direct child classes.
  */
 export const getChildrenByID = ({ id, page = 0, size = 9999 }) => {
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
     return submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/children?${params}`);
@@ -98,11 +96,10 @@ export const getAllRootClasses = () => submitGetRequest(`${classesUrl}roots`);
  * Get hierarchy by class ID
  */
 export const getHierarchyByID = ({ id, page = 0, size = 9999 }) => {
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
     return submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/hierarchy?${params}`);

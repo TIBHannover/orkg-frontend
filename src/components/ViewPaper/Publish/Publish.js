@@ -20,6 +20,7 @@ import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { uniqBy, flatten } from 'lodash';
 import { AuthorTag } from 'components/AuthorsInput/styled';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 function Publish(props) {
     const [isLoading, setIsLoading] = useState(false);
@@ -264,9 +265,9 @@ function Publish(props) {
                 <ModalFooter>
                     {!dataCiteDoi && (
                         <div className="text-align-center mt-2">
-                            <Button color="primary" disabled={isLoading} onClick={handleSubmit}>
-                                {isLoading && <span className="fa fa-spinner fa-spin" />} Publish DOI
-                            </Button>
+                            <ButtonWithLoading color="primary" isLoading={isLoading} onClick={handleSubmit}>
+                                Publish DOI
+                            </ButtonWithLoading>
                         </div>
                     )}
                 </ModalFooter>

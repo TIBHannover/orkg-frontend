@@ -1,6 +1,7 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { ENTITIES } from 'constants/graphSettings';
@@ -10,7 +11,7 @@ import { reverse } from 'named-urls';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Button, Container, FormGroup, FormText, Input, Label } from 'reactstrap';
+import { Container, FormGroup, FormText, Input, Label } from 'reactstrap';
 import requireAuthentication from 'requireAuthentication';
 import { createClass, setParentClassByID } from 'services/backend/classes';
 import { getErrorMessage } from 'utils';
@@ -30,7 +31,6 @@ const AddClass = () => {
     }, []);
 
     const handleAdd = async () => {
-        setIsLoading(true);
         if (label.trim() !== '') {
             if (uri && !isURI.test(uri.trim())) {
                 toast.error('Please enter a valid URI of the class');
@@ -135,9 +135,9 @@ const AddClass = () => {
                             Enter the parent class for this new class. Select an existing class, or create a new one by typing its name.
                         </FormText>
                     </FormGroup>
-                    <Button color="primary" onClick={handleAdd} className="mt-3 mb-2" disabled={isLoading}>
-                        {!isLoading ? 'Create class' : <span>Loading</span>}
-                    </Button>
+                    <ButtonWithLoading color="primary" onClick={handleAdd} className="mt-3 mb-2" isLoading={isLoading}>
+                        Create class
+                    </ButtonWithLoading>
                 </div>
             </Container>
         </>

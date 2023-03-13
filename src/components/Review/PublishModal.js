@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Alert, Button, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { createLiteralStatement, createResourceStatement, getStatementsBundleBySubject } from 'services/backend/statements';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faClipboard, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 import { createResource } from 'services/backend/resources';
 import { createLiteral } from 'services/backend/literals';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
@@ -19,6 +19,7 @@ import { generateDoi } from 'services/backend/misc';
 import ROUTES from 'constants/routes';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -185,9 +186,9 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
             </ModalBody>
             {!publishedId && (
                 <ModalFooter>
-                    <Button disabled={isLoading} color="primary" onClick={handlePublish}>
-                        {!isLoading ? 'Publish' : <Icon icon={faSpinner} spin />}
-                    </Button>
+                    <ButtonWithLoading isLoading={isLoading} color="primary" onClick={handlePublish}>
+                        Publish
+                    </ButtonWithLoading>
                 </ModalFooter>
             )}
         </Modal>

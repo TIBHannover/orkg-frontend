@@ -9,7 +9,7 @@ import Format from 'components/Templates/Tabs/Format/Format';
 import { StyledContainer } from 'components/Templates/styled';
 import { setEditMode, loadTemplate, saveTemplate, updateClass } from 'slices/templateEditorSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faSpinner, faQuestionCircle, faEllipsisV, faSave, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faQuestionCircle, faEllipsisV, faSave, faUser } from '@fortawesome/free-solid-svg-icons';
 import { getParamFromQueryString } from 'utils';
 import styled from 'styled-components';
 import VisibilitySensor from 'react-visibility-sensor';
@@ -25,6 +25,7 @@ import UserAvatar from 'components/UserAvatar/UserAvatar';
 import LoadingOverlay from 'react-loading-overlay';
 import { MISC } from 'constants/graphSettings';
 import { EditModeContainer, Title } from 'components/EditModeHeader/EditModeHeader';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const TabPaneStyled = styled(TabPane)`
     border: 1px solid #ced4da;
@@ -114,7 +115,7 @@ const Template = () => {
                                 <Icon icon={faPen} /> Edit
                             </RequireAuthentication>
                         ) : (
-                            <Button
+                            <ButtonWithLoading
                                 disabled={isSaving}
                                 style={{ marginLeft: 1 }}
                                 color="secondary-darker"
@@ -126,11 +127,11 @@ const Template = () => {
                                     });
                                     dispatch(saveTemplate());
                                 }}
+                                isLoading={isSaving}
+                                loadingMessage="Saving"
                             >
-                                {isSaving && <Icon icon={faSpinner} spin />}
-                                {editMode && <Icon icon={faSave} />}
-                                {!isSaving ? ' Save' : ' Saving'}
-                            </Button>
+                                <Icon icon={faSave} className="ms-1" /> Save
+                            </ButtonWithLoading>
                         )}
                         {id && (
                             <ButtonDropdown className="flex-shrink-0" isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>

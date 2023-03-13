@@ -4,7 +4,7 @@
  */
 
 import { submitPostRequest, submitGetRequest } from 'network';
-import queryString from 'query-string';
+import qs from 'qs';
 import env from '@beam-australia/react-env';
 
 export const similarityServiceUrl = env('SIMILARITY_SERVICE_URL');
@@ -27,7 +27,7 @@ export const getLongLink = shortCode => submitGetRequest(`${similarityServiceUrl
  * @param {Boolean} save_response To return a response hash and save a copy of the result
  */
 export const getComparison = ({ contributionIds = [], type = null, response_hash = null, save_response = false }) => {
-    const params = queryString.stringify(
+    const params = qs.stringify(
         {
             contributions: contributionIds.join(','),
             response_hash,
@@ -35,8 +35,7 @@ export const getComparison = ({ contributionIds = [], type = null, response_hash
             save_response,
         },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
     return submitGetRequest(`${comparisonUrl}?${params}`);

@@ -1,9 +1,8 @@
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { updateResource } from 'services/backend/resources';
 
 function EditTitleModal({ isOpen, toggle, editItem, onChange }) {
@@ -32,9 +31,9 @@ function EditTitleModal({ isOpen, toggle, editItem, onChange }) {
                 </FormGroup>
             </ModalBody>
             <ModalFooter>
-                <Button color="primary" disabled={isLoading} onClick={handleSave}>
-                    {isLoading && <Icon icon={faSpinner} spin />} Save
-                </Button>
+                <ButtonWithLoading color="primary" isLoading={isLoading} onClick={handleSave}>
+                    Save
+                </ButtonWithLoading>
             </ModalFooter>
         </Modal>
     );

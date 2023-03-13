@@ -7,7 +7,8 @@ import EditItem from 'components/ViewPaper/EditDialog/EditItem';
 import REGEX from 'constants/regex';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
-import { Button, ListGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { ListGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
     const { isLoading, createPaper } = useCreatePaper();
@@ -171,9 +172,9 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
                 </ListGroup>
             </ModalBody>
             <ModalFooter className="d-flex">
-                <Button disabled={isLoading} color="primary" className="float-end" onClick={handleCreate}>
-                    {!isLoading ? 'Create' : 'Loading...'}
-                </Button>
+                <ButtonWithLoading isLoading={isLoading} color="primary" className="float-end" onClick={handleCreate}>
+                    Create
+                </ButtonWithLoading>
             </ModalFooter>
             <ExistingPaperModels onContinue={finishCreate} />
         </Modal>

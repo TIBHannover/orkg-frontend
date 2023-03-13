@@ -1,6 +1,7 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import EditItem from 'components/ViewPaper/EditDialog/EditItem';
 import useEditPaper from 'components/ViewPaper/EditDialog/hooks/useEditPaper';
 import ROUTES from 'constants/routes';
@@ -211,9 +212,9 @@ const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink
                             </FormGroup>
                         )}
 
-                        <Button disabled={isLoading} color="primary" className=" mt-2 mb-2" onClick={handleSave}>
+                        <ButtonWithLoading isLoading={isLoading} color="primary" className=" mt-2 mb-2" onClick={handleSave}>
                             Save
-                        </Button>
+                        </ButtonWithLoading>
                     </div>
                 </ModalBody>
             </LoadingOverlay>

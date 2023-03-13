@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import requireAuthentication from 'requireAuthentication';
-import { Container, Button, FormGroup, Input, Label } from 'reactstrap';
+import { Container, FormGroup, Input, Label } from 'reactstrap';
 import { createLiteralStatement } from 'services/backend/statements';
 import { getClassById } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
@@ -17,6 +17,7 @@ import { PREDICATES, ENTITIES, CLASSES } from 'constants/graphSettings';
 import { getArrayParamFromQueryString } from 'utils';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { useNavigate, useLocation } from 'react-router-dom';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const AddResource = () => {
     const isDOI = new RegExp(REGEX.DOI_ID);
@@ -151,9 +152,9 @@ const AddResource = () => {
                         )}
                         {isLoadingDefaultClasses && <div>Loading default classes</div>}
                     </FormGroup>
-                    <Button color="primary" onClick={handleAdd} className="mt-3 mb-2" disabled={isLoading}>
-                        {!isLoading ? 'Create Resource' : <span>Loading</span>}
-                    </Button>
+                    <ButtonWithLoading color="primary" onClick={handleAdd} className="mt-3 mb-2" isLoading={isLoading}>
+                        Create Resource
+                    </ButtonWithLoading>
                 </div>
             </Container>
         </>

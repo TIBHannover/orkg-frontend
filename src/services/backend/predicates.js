@@ -1,5 +1,5 @@
 import { submitPostRequest, submitPutRequest, submitGetRequest } from 'network';
-import queryString from 'query-string';
+import qs from 'qs';
 import { url } from 'constants/misc';
 
 export const predicatesUrl = `${url}predicates/`;
@@ -20,11 +20,10 @@ export const getPredicates = ({
     returnContent = false,
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort, exact, ...(q ? { q } : {}) },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
 

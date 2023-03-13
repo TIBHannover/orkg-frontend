@@ -31,6 +31,8 @@ function ComparisonCarousel() {
     const contributionsList = useSelector(state => state.comparison.configuration.contributionsList);
     const predicatesList = useSelector(state => state.comparison.configuration.predicatesList);
 
+    const { relatedResources, relatedFigures, isLoadingResources, isLoadingFigures } = useRelatedResources();
+
     const model = useMemo(() => new SelfVisDataModel(), []);
     const settings = {
         dots: false,
@@ -124,32 +126,33 @@ function ComparisonCarousel() {
         fetchVisualizationData();
     }, [visualizations]);
 
-    const { relatedResources, relatedFigures } = useRelatedResources();
-
     return (
         <div className="py-3">
             <ErrorBoundary fallback="Something went wrong while loading the visualization!">
                 {!isLoadingMetadata && !isFailedLoadingMetadata && (
                     <>
-                        {!isLoadingVisualizationData && visData?.length > 0 && (
-                            <StyledSlider {...settings}>
-                                {visData.map((d, index) => (
-                                    <SingleVisualizationComponent
-                                        key={d.id}
-                                        input={d}
-                                        itemIndex={index}
-                                        expandVisualization={val => expandVisualization(val)}
-                                    />
-                                ))}
-                                {relatedFigures.map(({ figureId, src, title, description }) => (
-                                    <RelatedFigure key={figureId} src={src} title={title} description={description} />
-                                ))}
-                                {relatedResources.map(({ id, url, title, description }) => (
-                                    <RelatedResource key={id} url={url} title={title} description={description} />
-                                ))}
-                            </StyledSlider>
-                        )}
-                        {isLoadingVisualizationData && (
+                        {!isLoadingVisualizationData &&
+                            !isLoadingResources &&
+                            !isLoadingFigures &&
+                            (visData?.length > 0 || relatedFigures.length > 0 || relatedResources.length > 0) && (
+                                <StyledSlider {...settings}>
+                                    {visData.map((d, index) => (
+                                        <SingleVisualizationComponent
+                                            key={d.id}
+                                            input={d}
+                                            itemIndex={index}
+                                            expandVisualization={val => expandVisualization(val)}
+                                        />
+                                    ))}
+                                    {relatedFigures.map(({ figureId, src, title, description }) => (
+                                        <RelatedFigure key={figureId} src={src} title={title} description={description} />
+                                    ))}
+                                    {relatedResources.map(({ id, url, title, description }) => (
+                                        <RelatedResource key={id} url={url} title={title} description={description} />
+                                    ))}
+                                </StyledSlider>
+                            )}
+                        {(isLoadingVisualizationData || isLoadingResources || isLoadingFigures) && (
                             <>
                                 <ContentLoader
                                     height={4}

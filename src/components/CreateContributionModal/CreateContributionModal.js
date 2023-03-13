@@ -1,5 +1,6 @@
 import { faExternalLinkAlt, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import useCreateContribution from 'components/CreateContributionModal/hooks/useCreateContribution';
 import Tooltip from 'components/Utils/Tooltip';
 import ROUTES from 'constants/routes.js';
@@ -7,7 +8,7 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Alert, Button, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 // TODO: accepted paper data as props:
 // it is not really needed to fetch the contribution data, it could be passed as props as well
@@ -53,9 +54,15 @@ const CreateContributionModal = ({ isOpen, toggle, paperId, onCreateContribution
                 )}
             </ModalBody>
             <ModalFooter className="d-flex">
-                <Button disabled={title.length === 0 || isLoading} color="primary" className="float-end" onClick={handleCreate}>
-                    {!isLoading ? 'Create' : 'Loading...'}
-                </Button>
+                <ButtonWithLoading
+                    disabled={title.length === 0 || isLoading}
+                    color="primary"
+                    className="float-end"
+                    onClick={handleCreate}
+                    isLoading={isLoading}
+                >
+                    Create
+                </ButtonWithLoading>
             </ModalFooter>
         </Modal>
     );

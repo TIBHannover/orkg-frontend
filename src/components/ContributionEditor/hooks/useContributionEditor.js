@@ -4,7 +4,7 @@ import TableHeaderColumnFirst from 'components/ContributionEditor/TableHeaderCol
 import TableHeaderRow from 'components/ContributionEditor/TableHeaderRow';
 import ROUTES from 'constants/routes';
 import { sortBy, uniq, without } from 'lodash';
-import queryString from 'query-string';
+import qs from 'qs';
 import { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -12,12 +12,12 @@ const useContributionEditor = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const getContributionIds = useCallback(() => {
-        const { contributions } = queryString.parse(location.search, { arrayFormat: 'comma' });
+        const { contributions } = qs.parse(location.search, { comma: true, ignoreQueryPrefix: true });
         const contributionIds = contributions && !Array.isArray(contributions) ? [contributions] : contributions;
         return without(uniq(contributionIds), undefined, null, '') ?? [];
     }, [location.search]);
 
-    const { hasPreviousVersion } = queryString.parse(location.search);
+    const { hasPreviousVersion } = qs.parse(location.search, { ignoreQueryPrefix: true });
 
     const handleAddContributions = ids => {
         const idsQueryString = [...getContributionIds(), ...ids].join(',');

@@ -1,4 +1,4 @@
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input, InputGroup, Label } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input, InputGroup, Label } from 'reactstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
@@ -6,6 +6,7 @@ import { addUserToObservatory } from 'services/backend/users';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import { getErrorMessage } from 'utils';
 import Select from 'react-select';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 function AddMember(props) {
     const [isLoading, setIsLoading] = useState(false);
@@ -68,9 +69,9 @@ function AddMember(props) {
                 </ModalBody>
                 <ModalFooter>
                     <div className="text-align-center mt-2">
-                        <Button color="primary" disabled={isLoading} onClick={() => handleSubmit()}>
-                            {isLoading && <span className="fa fa-spinner fa-spin" />} Save
-                        </Button>
+                        <ButtonWithLoading color="primary" isLoading={isLoading} onClick={() => handleSubmit()}>
+                            Save
+                        </ButtonWithLoading>
                     </div>
                 </ModalFooter>
             </Modal>

@@ -182,8 +182,8 @@ const AddObservatory = () => {
                                         disabled={loading}
                                     />
                                 </FormGroup>
-                                <Button color="primary" onClick={createNewObservatory} className="mt-4 mb-2" disabled={loading}>
-                                    {!loading ? 'Create observatory' : <span>Loading</span>}
+                                <Button color="primary" onClick={createNewObservatory} className="mt-4 mb-2" isLoading={loading}>
+                                    Create observatory
                                 </Button>
                             </div>
                         )}
