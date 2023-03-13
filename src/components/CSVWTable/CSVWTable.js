@@ -39,6 +39,12 @@ function CSVWTable(props) {
     const dispatch = useDispatch();
     const columnsSortMethod = useCallback((rowA, rowB, id, desc) => sortMethod(rowA.original[id].value?.label, rowB.original[id].value?.label), []);
 
+    const [isCSVWModelOpen, setIsCSVWModelOpen] = useState(false);
+
+    const toggleModal = () => {
+        setIsCSVWModelOpen(v => !v);
+    };
+
     useEffect(() => {
         const handleViewTableClick = async e => {
             const { existingResourceId } = resource;
@@ -68,7 +74,9 @@ function CSVWTable(props) {
                     propertyLabel: PREDICATES.CSVW_ROWS === propertyId ? 'rows' : 'cells',
                 }),
             );
-            props.toggleModal();
+            if (isCSVWModelOpen) {
+                toggleModal();
+            }
         }
     };
 
@@ -151,12 +159,6 @@ function CSVWTable(props) {
         useSortBy,
         usePagination,
     );
-
-    const [isCSVWModelOpen, setIsCSVWModelOpen] = useState(false);
-
-    const toggleModal = () => {
-        setIsCSVWModelOpen(v => !v);
-    };
 
     return (
         <ConditionalWrapper
@@ -330,7 +332,6 @@ function CSVWTable(props) {
 CSVWTable.propTypes = {
     // resource id in the statement browser
     id: PropTypes.string.isRequired,
-    toggleModal: PropTypes.func,
 };
 
 export default CSVWTable;
