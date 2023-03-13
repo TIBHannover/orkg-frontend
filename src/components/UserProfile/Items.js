@@ -16,21 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, ListGroup } from 'reactstrap';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import styled from 'styled-components';
 import { getComparisonData, getPaperData, getReviewData, groupVersionsOfComparisons } from 'utils';
-
-const ListGroupStyled = styled(ListGroup)`
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-
-    .list-group-item {
-        border-left: 0;
-        border-right: 0;
-    }
-    .list-group-item:last-child {
-        border-bottom: 0;
-    }
-`;
 
 const Items = props => {
     const pageSize = 25;
@@ -165,7 +151,7 @@ const Items = props => {
     return (
         <div>
             {resources.length > 0 && (
-                <ListGroupStyled>
+                <ListGroup flush className="rounded">
                     {resources.map(resource => {
                         if (props.filterClass === CLASSES.PAPER) {
                             const paperId = resource.id;
@@ -209,7 +195,7 @@ const Items = props => {
                             View more {props.filterLabel}
                         </div>
                     )}
-                </ListGroupStyled>
+                </ListGroup>
             )}
 
             {isLoading && loadingIndicator}
