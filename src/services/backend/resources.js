@@ -62,7 +62,7 @@ export const getContributorsByResourceId = ({ id, page = 0, size = 9999 }) => {
         const uniqContributorsInfosRequests = uniqContributors.map(contributor =>
             contributor.created_by === MISC.UNKNOWN_ID
                 ? { id: MISC.UNKNOWN_ID, display_name: 'Unknown' }
-                : getContributorInformationById(contributor.created_by).catch(() => ({ id: MISC.UNKNOWN_ID, display_name: 'Unknown' })),
+                : getContributorInformationById(contributor.created_by).catch(() => ({ id: contributor.created_by, display_name: 'User not found' })),
         );
         const uniqContributorsInfos = await Promise.all(uniqContributorsInfosRequests);
         return {
