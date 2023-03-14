@@ -136,6 +136,9 @@ function ComparisonCarousel() {
                             !isLoadingFigures &&
                             (visData?.length > 0 || relatedFigures.length > 0 || relatedResources.length > 0) && (
                                 <StyledSlider {...settings}>
+                                    {relatedResources.map(({ id, url, title, description }) => (
+                                        <RelatedResource key={id} url={url} title={title} description={description} />
+                                    ))}
                                     {visData.map((d, index) => (
                                         <SingleVisualizationComponent
                                             key={d.id}
@@ -146,9 +149,6 @@ function ComparisonCarousel() {
                                     ))}
                                     {relatedFigures.map(({ figureId, src, title, description }) => (
                                         <RelatedFigure key={figureId} src={src} title={title} description={description} />
-                                    ))}
-                                    {relatedResources.map(({ id, url, title, description }) => (
-                                        <RelatedResource key={id} url={url} title={title} description={description} />
                                     ))}
                                 </StyledSlider>
                             )}
