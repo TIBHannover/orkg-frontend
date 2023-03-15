@@ -85,12 +85,10 @@ const ResearchFieldSelector = ({
                 fields = await getChildFields(parent.id, fields);
             }
 
-            //   setInputValue(selected?.label); // update input value with selected label
             updateResearchField(
                 {
                     researchFields: fields,
                     selectedResearchField: selected?.id,
-                    //   selectedResearchFieldLabel: selected?.label,
                 },
                 submit,
             );
@@ -181,7 +179,6 @@ const ResearchFieldSelector = ({
 
                 extractedResearchFieldId = field ? field?.id : selectedResearchField;
 
-                // setInputValue(field?.label);
                 dispatch(
                     updateGeneralData({
                         extractedResearchFieldId: field?.id,
@@ -191,7 +188,6 @@ const ResearchFieldSelector = ({
                     researchFields: fields,
                     extractedResearchFieldId: field?.id,
                     selectedResearchField: field?.label,
-                    //  selectedResearchFieldLabel: field?.label,
                 });
                 setIsLoading(false);
             };

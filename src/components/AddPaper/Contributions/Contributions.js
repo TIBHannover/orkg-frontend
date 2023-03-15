@@ -71,7 +71,7 @@ const Contributions = () => {
     const conclusion = useSelector(state => state.addPaper.conclusion);
     const extractedResearchField = useSelector(state => state.addPaper.extractedResearchField);
     const extractedResearchFieldId = useSelector(state => state.addPaper.extractedResearchFieldId);
-    console.log('show id of the field', extractedResearchFieldId);
+
     useEffect(() => {
         (async () => setActiveNERService(await determineActiveNERService(selectedResearchField)))();
     }, [selectedResearchField]);
