@@ -85,12 +85,12 @@ const ResearchFieldSelector = ({
                 fields = await getChildFields(parent.id, fields);
             }
 
-            setInputValue(selected?.label); // update input value with selected label
+            //   setInputValue(selected?.label); // update input value with selected label
             updateResearchField(
                 {
                     researchFields: fields,
                     selectedResearchField: selected?.id,
-                    selectedResearchFieldLabel: selected?.label,
+                    //   selectedResearchFieldLabel: selected?.label,
                 },
                 submit,
             );
@@ -176,14 +176,12 @@ const ResearchFieldSelector = ({
                 fields = await getChildFields(RESOURCES.RESEARCH_FIELD_MAIN, fields);
 
                 const newField = await getResourcesByClass({ id: CLASSES.RESEARCH_FIELD, q: extractedResearchField, exact: true });
-                console.log('qurat', newField.content);
+
                 const field = newField.content.find(rf => rf.label === extractedResearchField);
 
                 extractedResearchFieldId = field ? field?.id : selectedResearchField;
-                // save add paper
-                // dispatch(saveAddPaper({ extractedResearchFieldId }));
 
-                setInputValue(field?.id);
+                // setInputValue(field?.label);
                 dispatch(
                     updateGeneralData({
                         extractedResearchFieldId: field?.id,
@@ -192,8 +190,8 @@ const ResearchFieldSelector = ({
                 updateResearchField({
                     researchFields: fields,
                     extractedResearchFieldId: field?.id,
-                    selectedResearchField: field?.id,
-                    selectedResearchFieldLabel: field?.label,
+                    selectedResearchField: field?.label,
+                    //  selectedResearchFieldLabel: field?.label,
                 });
                 setIsLoading(false);
             };
@@ -258,7 +256,7 @@ const ResearchFieldSelector = ({
     let parents = [];
     if (researchFields && researchFields.length > 0) {
         const field = researchFields.find(rf => rf.id === selectedResearchField);
-        researchFieldLabel = field ? field?.id : selectedResearchField;
+        researchFieldLabel = field ? field?.label : selectedResearchField; // just changed id into label
         parents = getParents(field, []);
     }
 
