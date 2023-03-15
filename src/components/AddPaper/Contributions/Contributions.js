@@ -125,7 +125,7 @@ const Contributions = () => {
 
     const handleNextClick = async () => {
         if (activeNERService) {
-            //  handleSaveFeedback();
+            handleSaveFeedback(); // sometimes breaks, then comment this line
         }
         if (isBioassayField) {
             handleSaveBioassaysFeedback();

@@ -21,11 +21,14 @@ const UploadPdf = () => {
 
             const reader = new FileReader();
             let extractedResearchField;
+            let researchField;
             let objective;
             let result;
             let conclusion;
             let researchProblem;
             let method;
+            let author;
+            let title;
             reader.onload = async () => {
                 const data = new Uint8Array(reader?.result);
 
@@ -36,21 +39,27 @@ const UploadPdf = () => {
 
                 if (metadata?.metadata?._data) {
                     const processedPdf = new window.DOMParser().parseFromString(metadata.metadata._data, 'text/xml');
+
                     // you might want to replace 'querySelector' with 'querySelectorAll' to get all the values if there are multiple annotations of the same type
                     extractedResearchField = processedPdf.querySelector('hasResearchField label')?.textContent;
+                    researchField = processedPdf.querySelector('hasResearchField')?.textContent;
                     objective = processedPdf.querySelector('objective')?.textContent;
                     result = processedPdf.querySelector('result')?.textContent;
                     conclusion = processedPdf.querySelector('conclusion')?.textContent;
                     researchProblem = processedPdf.querySelector('researchproblem')?.textContent;
                     method = processedPdf.querySelector('method')?.textContent;
-
+                    title = processedPdf.querySelector('hasTitle')?.textContent;
+                    author = [...processedPdf.querySelectorAll('hasAuthor')].map(auth => auth.textContent);
                     console.log({
                         extractedResearchField,
+                        researchField,
                         objective,
                         result,
                         conclusion,
                         researchProblem,
                         method,
+                        title,
+                        author,
                     });
                 }
             };
@@ -59,8 +68,8 @@ const UploadPdf = () => {
 
             // metadata extraction via Grobid
             const processedPdf = await new window.DOMParser().parseFromString(await processPdf({ pdf: files[0] }), 'text/xml');
-            const title = processedPdf.querySelector('fileDesc titleStmt title')?.textContent;
-            const authors = [...processedPdf.querySelectorAll('fileDesc biblStruct author')].map(author => ({
+            const titleGrobid = processedPdf.querySelector('fileDesc titleStmt title')?.textContent;
+            const authorsGrobid = [...processedPdf.querySelectorAll('fileDesc biblStruct author')].map(author => ({
                 label: [...author.querySelectorAll('forename, surname')].map(name => name?.textContent).join(' '),
                 orcid: author.querySelector('idno[type="ORCID"]')?.textContent ?? undefined,
             }));
@@ -71,12 +80,12 @@ const UploadPdf = () => {
                 updateGeneralData({
                     pdfName: files?.[0]?.name,
                     showLookupTable: true,
-                    title,
-                    authors,
+                    title: title || titleGrobid,
+                    authors: author || authorsGrobid,
                     doi,
                     entry: doi,
                     abstract,
-                    extractedResearchField,
+                    extractedResearchField: extractedResearchField || researchField,
                     objective,
                     result,
                     conclusion,
