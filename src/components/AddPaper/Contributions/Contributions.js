@@ -70,7 +70,8 @@ const Contributions = () => {
     const researchProblem = useSelector(state => state.addPaper.researchProblem);
     const conclusion = useSelector(state => state.addPaper.conclusion);
     const extractedResearchField = useSelector(state => state.addPaper.extractedResearchField);
-
+    const extractedResearchFieldId = useSelector(state => state.addPaper.extractedResearchFieldId);
+    console.log('show id of the field', extractedResearchFieldId);
     useEffect(() => {
         (async () => setActiveNERService(await determineActiveNERService(selectedResearchField)))();
     }, [selectedResearchField]);
@@ -79,17 +80,11 @@ const Contributions = () => {
         // if there is no contribution yet, create the first one
 
         if (contributions.allIds.length === 0) {
-            console.log('extractedResearchField:', extractedResearchField);
-            console.log('selectedResearchField:', selectedResearchField);
-            const researchField = extractedResearchField ? extractedResearchField : selectedResearchField;
-            console.log('researchField:', researchField);
-
             dispatch(
                 createContribution({
                     selectAfterCreation: true,
                     fillStatements: true,
-                    // eslint-disable-next-line object-shorthand
-                    researchField: researchField,
+                    researchField: extractedResearchFieldId || selectedResearchField,
                     statements: {
                         properties: [
                             {
@@ -98,10 +93,10 @@ const Contributions = () => {
                                 label: 'Research problem',
                             },
 
-                            // { existingPredicateId: PREDICATES.METHOD, propertyId: PREDICATES.METHOD, label: 'Method' },
-                            // { existingPredicateId: PREDICATES.OBJECTIVE, propertyId: PREDICATES.OBJECTIVE, label: 'Objective' },
-                            // { existingPredicateId: PREDICATES.CONCLUSION, propertyId: PREDICATES.CONCLUSION, label: 'Conclusion' },
-                            // { existingPredicateId: PREDICATES.RESULT, propertyId: PREDICATES.RESULT, label: 'Result' },
+                            { existingPredicateId: PREDICATES.METHOD, propertyId: PREDICATES.METHOD, label: 'Method' },
+                            //   { existingPredicateId: PREDICATES.OBJECTIVE, propertyId: PREDICATES.OBJECTIVE, label: 'Objective' },
+                            //  { existingPredicateId: PREDICATES.CONCLUSION, propertyId: PREDICATES.CONCLUSION, label: 'Conclusion' },
+                            //  { existingPredicateId: PREDICATES.RESULT, propertyId: PREDICATES.RESULT, label: 'Result' },
                         ],
                         values: [
                             {
@@ -111,10 +106,10 @@ const Contributions = () => {
                                 existingPredicateId: PREDICATES.HAS_RESEARCH_PROBLEM,
                             },
 
-                            //  { _class: 'literal', label: method, propertyId: PREDICATES.METHOD, existingPredicateId: PREDICATES.METHOD },
-                            // { _class: 'literal', label: objective, propertyId: PREDICATES.OBJECTIVE, existingPredicateId: PREDICATES.OBJECTIVE },
-                            // { _class: 'literal', label: conclusion, propertyId: PREDICATES.CONCLUSION, existingPredicateId: PREDICATES.CONCLUSION },
-                            // { _class: 'literal', label: result, propertyId: PREDICATES.RESULT, existingPredicateId: PREDICATES.RESULT },
+                            { _class: 'literal', label: method, propertyId: PREDICATES.METHOD, existingPredicateId: PREDICATES.METHOD },
+                            //  { _class: 'literal', label: objective, propertyId: PREDICATES.OBJECTIVE, existingPredicateId: PREDICATES.OBJECTIVE },
+                            //  { _class: 'literal', label: conclusion, propertyId: PREDICATES.CONCLUSION, existingPredicateId: PREDICATES.CONCLUSION },
+                            //  { _class: 'literal', label: result, propertyId: PREDICATES.RESULT, existingPredicateId: PREDICATES.RESULT },
                         ],
                     },
                 }),
@@ -125,11 +120,11 @@ const Contributions = () => {
                 }),
             );
         }
-    }, [contributions.allIds.length, dispatch, selectedResearchField, extractedResearchField]);
+    }, [contributions.allIds.length, dispatch, selectedResearchField, extractedResearchFieldId]);
 
     const handleNextClick = async () => {
         if (activeNERService) {
-            handleSaveFeedback();
+            //  handleSaveFeedback();
         }
         if (isBioassayField) {
             handleSaveBioassaysFeedback();
@@ -138,6 +133,7 @@ const Contributions = () => {
             // because this feature is disabled in production
             handleSavePredicatesRecommendationFeedback(properties);
         }
+
         // save add paper
         dispatch(
             saveAddPaper({
@@ -150,6 +146,7 @@ const Contributions = () => {
                 url,
                 selectedResearchField,
                 extractedResearchField,
+                extractedResearchFieldId,
                 contributions,
                 resources,
                 properties,

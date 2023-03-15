@@ -1,3 +1,4 @@
+/* eslint-disable default-case-last */
 import { Component } from 'react';
 import { Container, Button } from 'reactstrap';
 import { compose } from 'redux';

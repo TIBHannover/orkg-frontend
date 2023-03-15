@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-debugger */
 import { faMinusSquare, faPlusSquare, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -9,8 +11,11 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import { Badge, Button } from 'reactstrap';
+import { getResourcesByClass } from 'services/backend/resources';
 import { getParentResearchFields, getStatementsBySubjects } from 'services/backend/statements';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { saveAddPaperAction as saveAddPaper, updateGeneralData } from 'slices/addPaperSlice';
 
 const FieldItem = styled(Button)`
     &&& {
@@ -67,7 +72,9 @@ const ResearchFieldSelector = ({
     const [isLoading, setIsLoading] = useState(false);
     const [loadingId, setLoadingId] = useState(null);
     const [inputValue, setInputValue] = useState('');
-
+    const dispatch = useDispatch();
+    console.log('in props selected research Fields', selectedResearchField);
+    let extractedResearchFieldId;
     const handleFieldSelect = (selected, submit = false) => {
         setIsLoading(true);
         getParentResearchFields(selected.id).then(async parents => {
@@ -78,12 +85,12 @@ const ResearchFieldSelector = ({
                 fields = await getChildFields(parent.id, fields);
             }
 
-            setInputValue(selected.label); // update input value with selected label
+            setInputValue(selected?.label); // update input value with selected label
             updateResearchField(
                 {
                     researchFields: fields,
-                    selectedResearchField: selected.id,
-                    selectedResearchFieldLabel: selected.label,
+                    selectedResearchField: selected?.id,
+                    selectedResearchFieldLabel: selected?.label,
                 },
                 submit,
             );
@@ -128,7 +135,7 @@ const ResearchFieldSelector = ({
                 );
             }
 
-            const fieldIndex = fields.findIndex(field => field.id === id);
+            const fieldIndex = fields.findIndex(field => field?.id === id);
             if (fieldIndex !== -1) {
                 fields[fieldIndex].hasChildren = hasChildren;
             }
@@ -139,7 +146,7 @@ const ResearchFieldSelector = ({
     const getChildFields = useCallback(
         async (fieldId, previousFields, toggleExpand = false) => {
             const fields = cloneDeep(previousFields);
-            const fieldIndex = fields.findIndex(field => field.id === fieldId);
+            const fieldIndex = fields.findIndex(field => field?.id === fieldId);
 
             if (fieldIndex !== -1) {
                 const field = fields[fieldIndex];
@@ -168,8 +175,25 @@ const ResearchFieldSelector = ({
                 let fields = await getFieldsByIds([RESOURCES.RESEARCH_FIELD_MAIN]);
                 fields = await getChildFields(RESOURCES.RESEARCH_FIELD_MAIN, fields);
 
+                const newField = await getResourcesByClass({ id: CLASSES.RESEARCH_FIELD, q: extractedResearchField, exact: true });
+                console.log('qurat', newField.content);
+                const field = newField.content.find(rf => rf.label === extractedResearchField);
+
+                extractedResearchFieldId = field ? field?.id : selectedResearchField;
+                // save add paper
+                // dispatch(saveAddPaper({ extractedResearchFieldId }));
+
+                setInputValue(field?.id);
+                dispatch(
+                    updateGeneralData({
+                        extractedResearchFieldId: field?.id,
+                    }),
+                );
                 updateResearchField({
                     researchFields: fields,
+                    extractedResearchFieldId: field?.id,
+                    selectedResearchField: field?.id,
+                    selectedResearchFieldLabel: field?.label,
                 });
                 setIsLoading(false);
             };
@@ -179,6 +203,7 @@ const ResearchFieldSelector = ({
 
     const fieldList = selectedField => {
         const subFields = researchFields.filter(field => field.parent === selectedField);
+
         if (subFields.length === 0) {
             return null;
         }
@@ -233,7 +258,7 @@ const ResearchFieldSelector = ({
     let parents = [];
     if (researchFields && researchFields.length > 0) {
         const field = researchFields.find(rf => rf.id === selectedResearchField);
-        researchFieldLabel = field ? field.label : selectedResearchField;
+        researchFieldLabel = field ? field?.id : selectedResearchField;
         parents = getParents(field, []);
     }
 
@@ -249,7 +274,7 @@ const ResearchFieldSelector = ({
                     onInputChange={handleInputChange} // pass input change event handler as a prop to handle changes to the input field
                     value={
                         selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN
-                            ? { id: selectedResearchField, label: researchFieldLabel || extractedResearchField }
+                            ? { id: selectedResearchField, label: researchFieldLabel || selectedResearchField }
                             : null
                     }
                     allowCreate={false}

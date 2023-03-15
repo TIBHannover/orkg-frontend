@@ -65,7 +65,7 @@ const UploadPdf = () => {
                 orcid: author.querySelector('idno[type="ORCID"]')?.textContent ?? undefined,
             }));
             const doi = processedPdf.querySelector('fileDesc biblStruct idno[type="DOI"]')?.textContent ?? '';
-            const abstract = processedPdf.querySelector('profileDesc abstract')?.textContent;
+            const abstract = processedPdf.querySelector('profileDesc abstract')?.textContent.trim();
 
             dispatch(
                 updateGeneralData({
