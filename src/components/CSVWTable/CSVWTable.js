@@ -1,6 +1,5 @@
-import { faArrowsAlt, faSortDown, faSortUp, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faExpand, faSortDown, faSortUp, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import CopyId from 'components/CopyId/CopyId';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
@@ -173,13 +172,10 @@ function CSVWTable(props) {
             <>
                 {!resource.isFetching && !resource.isFailedFetching && (
                     <>
-                        <div className="d-flex justify-content-between">
-                            <div className="flex-shrink-0 my-1">
-                                <CopyId id={resource.id} />
-                            </div>
+                        <div className="d-flex justify-content-end">
                             <ButtonGroup className="mb-3" size="sm">
                                 <Button style={{ marginRight: '2px' }} size="sm" onClick={toggleModal}>
-                                    <Icon icon={faArrowsAlt} className="me-1" /> {isCSVWModelOpen ? 'Close full width mode' : 'Full width'}
+                                    <Icon icon={faExpand} className="me-1" /> {isCSVWModelOpen ? 'Close full screen' : 'Full screen'}
                                 </Button>
                                 {rows?.length > 0 && (
                                     <CSVLink
@@ -281,7 +277,7 @@ function CSVWTable(props) {
                         </Pagination>
                         <div className="row">
                             <InputGroup size={!isCSVWModelOpen ? 'sm' : 'md'}>
-                                <span className="input-group-text">Go to page:</span>
+                                <span className="input-group-text">Page</span>
                                 <Input
                                     type="number"
                                     defaultValue={pageIndex + 1}
