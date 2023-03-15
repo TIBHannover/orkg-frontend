@@ -66,9 +66,10 @@ const Contributions = () => {
 
     const dispatch = useDispatch();
     const method = useSelector(state => state.addPaper.method);
-    const result = useSelector(state => state.addPaper.result);
+    const results = useSelector(state => state.addPaper.result);
     const researchProblem = useSelector(state => state.addPaper.researchProblem);
     const conclusion = useSelector(state => state.addPaper.conclusion);
+    const objective = useSelector(state => state.addPaper.objective);
     const extractedResearchField = useSelector(state => state.addPaper.extractedResearchField);
     const extractedResearchFieldId = useSelector(state => state.addPaper.extractedResearchFieldId);
 
@@ -94,9 +95,9 @@ const Contributions = () => {
                             },
 
                             { existingPredicateId: PREDICATES.METHOD, propertyId: PREDICATES.METHOD, label: 'Method' },
-                            //   { existingPredicateId: PREDICATES.OBJECTIVE, propertyId: PREDICATES.OBJECTIVE, label: 'Objective' },
-                            //  { existingPredicateId: PREDICATES.CONCLUSION, propertyId: PREDICATES.CONCLUSION, label: 'Conclusion' },
-                            //  { existingPredicateId: PREDICATES.RESULT, propertyId: PREDICATES.RESULT, label: 'Result' },
+                            { propertyId: PREDICATES.OBJECTIVE, label: 'Objective' },
+                            { propertyId: PREDICATES.CONCLUSION, label: 'Conclusion' },
+                            { propertyId: PREDICATES.HAS_RESULTS, label: 'Result' },
                         ],
                         values: [
                             {
@@ -107,9 +108,9 @@ const Contributions = () => {
                             },
 
                             { _class: 'literal', label: method, propertyId: PREDICATES.METHOD, existingPredicateId: PREDICATES.METHOD },
-                            //  { _class: 'literal', label: objective, propertyId: PREDICATES.OBJECTIVE, existingPredicateId: PREDICATES.OBJECTIVE },
-                            //  { _class: 'literal', label: conclusion, propertyId: PREDICATES.CONCLUSION, existingPredicateId: PREDICATES.CONCLUSION },
-                            //  { _class: 'literal', label: result, propertyId: PREDICATES.RESULT, existingPredicateId: PREDICATES.RESULT },
+                            { _class: 'literal', label: objective, propertyId: PREDICATES.OBJECTIVE },
+                            { _class: 'literal', label: conclusion, propertyId: PREDICATES.CONCLUSION },
+                            { _class: 'literal', label: results, propertyId: PREDICATES.HAS_RESULTS },
                         ],
                     },
                 }),
