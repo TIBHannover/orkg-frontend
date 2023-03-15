@@ -27,7 +27,7 @@ const UploadPdf = () => {
             let conclusion;
             let researchProblem;
             let method;
-            let author;
+            let authors;
             let title;
             reader.onload = async () => {
                 const data = new Uint8Array(reader?.result);
@@ -49,7 +49,7 @@ const UploadPdf = () => {
                     researchProblem = processedPdf.querySelector('researchproblem')?.textContent;
                     method = processedPdf.querySelector('method')?.textContent;
                     title = processedPdf.querySelector('hasTitle')?.textContent;
-                    author = [...processedPdf.querySelectorAll('hasAuthor')].map(auth => auth.textContent);
+                    authors = [...processedPdf.querySelectorAll('hasAuthor')].map(auth => auth.textContent);
                     console.log({
                         extractedResearchField,
                         researchField,
@@ -59,7 +59,7 @@ const UploadPdf = () => {
                         researchProblem,
                         method,
                         title,
-                        author,
+                        authors,
                     });
                 }
             };
@@ -81,7 +81,7 @@ const UploadPdf = () => {
                     pdfName: files?.[0]?.name,
                     showLookupTable: true,
                     title: title || titleGrobid,
-                    authors: author || authorsGrobid,
+                    authors: authorsGrobid || authors,
                     doi,
                     entry: doi,
                     abstract,

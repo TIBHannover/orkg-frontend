@@ -14,8 +14,8 @@ import { Badge, Button } from 'reactstrap';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getParentResearchFields, getStatementsBySubjects } from 'services/backend/statements';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
-import { saveAddPaperAction as saveAddPaper, updateGeneralData } from 'slices/addPaperSlice';
+import { useDispatch } from 'react-redux';
+import { updateGeneralData } from 'slices/addPaperSlice';
 
 const FieldItem = styled(Button)`
     &&& {
@@ -73,7 +73,6 @@ const ResearchFieldSelector = ({
     const [loadingId, setLoadingId] = useState(null);
     const [inputValue, setInputValue] = useState('');
     const dispatch = useDispatch();
-    console.log('in props selected research Fields', selectedResearchField);
     let extractedResearchFieldId;
     const handleFieldSelect = (selected, submit = false) => {
         setIsLoading(true);

@@ -79,7 +79,6 @@ const Contributions = () => {
 
     useEffect(() => {
         // if there is no contribution yet, create the first one
-
         if (contributions.allIds.length === 0) {
             dispatch(
                 createContribution({
@@ -87,31 +86,98 @@ const Contributions = () => {
                     fillStatements: true,
                     researchField: extractedResearchFieldId || selectedResearchField,
                     statements: {
-                        properties: [
-                            {
-                                existingPredicateId: PREDICATES.HAS_RESEARCH_PROBLEM,
-                                propertyId: PREDICATES.HAS_RESEARCH_PROBLEM,
-                                label: 'Research problem',
-                            },
+                        // properties: [
+                        //     {
+                        //         existingPredicateId: PREDICATES.HAS_RESEARCH_PROBLEM,
+                        //         propertyId: PREDICATES.HAS_RESEARCH_PROBLEM,
+                        //         label: 'Research problem',
+                        //     },
 
-                            { existingPredicateId: PREDICATES.METHOD, propertyId: PREDICATES.METHOD, label: 'Method' },
-                            { propertyId: PREDICATES.OBJECTIVE, label: 'Objective' },
-                            { propertyId: PREDICATES.CONCLUSION, label: 'Conclusion' },
-                            { propertyId: PREDICATES.HAS_RESULTS, label: 'Result' },
-                        ],
-                        values: [
-                            {
-                                _class: ENTITIES.LITERAL,
-                                label: researchProblem,
-                                propertyId: PREDICATES.HAS_RESEARCH_PROBLEM,
-                                existingPredicateId: PREDICATES.HAS_RESEARCH_PROBLEM,
-                            },
+                        // { existingPredicateId: PREDICATES.METHOD, propertyId: PREDICATES.METHOD, label: 'Method' },
+                        //   { propertyId: PREDICATES.OBJECTIVE, label: 'Objective' },
+                        //   { propertyId: PREDICATES.CONCLUSION, label: 'Conclusion' },
+                        //   { propertyId: PREDICATES.HAS_RESULTS, label: 'Result' },
+                        // ],
+                        properties: (() => {
+                            const property = [];
+                            if (researchProblem) {
+                                property.push({
+                                    existingPredicateId: PREDICATES.HAS_RESEARCH_PROBLEM,
+                                    propertyId: PREDICATES.HAS_RESEARCH_PROBLEM,
+                                    label: 'Research problem',
+                                });
+                            }
+                            if (method) {
+                                property.push({ existingPredicateId: PREDICATES.METHOD, propertyId: PREDICATES.METHOD, label: 'Method' });
+                            }
+                            if (conclusion) {
+                                property.push({ propertyId: PREDICATES.CONCLUSION, label: 'Conclusion' });
+                            }
+                            if (objective) {
+                                property.push({ propertyId: PREDICATES.OBJECTIVE, label: 'Objective' });
+                            }
+                            if (results) {
+                                property.push({
+                                    propertyId: PREDICATES.HAS_RESULTS,
+                                    label: 'Result',
+                                });
+                            }
+                            return property;
+                        })(),
+                        // values: [
+                        //     {
+                        //         _class: ENTITIES.LITERAL,
+                        //         label: researchProblem,
+                        //         propertyId: PREDICATES.HAS_RESEARCH_PROBLEM,
+                        //         existingPredicateId: PREDICATES.HAS_RESEARCH_PROBLEM,
+                        //     },
 
-                            { _class: 'literal', label: method, propertyId: PREDICATES.METHOD, existingPredicateId: PREDICATES.METHOD },
-                            { _class: 'literal', label: objective, propertyId: PREDICATES.OBJECTIVE },
-                            { _class: 'literal', label: conclusion, propertyId: PREDICATES.CONCLUSION },
-                            { _class: 'literal', label: results, propertyId: PREDICATES.HAS_RESULTS },
-                        ],
+                        //     { _class: 'literal', label: method, propertyId: PREDICATES.METHOD, existingPredicateId: PREDICATES.METHOD },
+                        // { _class: 'literal', label: objective, propertyId: PREDICATES.OBJECTIVE },
+                        //  { _class: 'literal', label: conclusion, propertyId: PREDICATES.CONCLUSION },
+                        //  { _class: 'literal', label: results, propertyId: PREDICATES.HAS_RESULTS },
+                        //  ],
+                        values: (() => {
+                            const valuesArray = [];
+                            if (researchProblem) {
+                                valuesArray.push({
+                                    _class: 'literal',
+                                    label: researchProblem,
+                                    propertyId: PREDICATES.HAS_RESEARCH_PROBLEM,
+                                    existingPredicateId: PREDICATES.HAS_RESEARCH_PROBLEM,
+                                });
+                            }
+                            if (method) {
+                                valuesArray.push({
+                                    _class: 'literal',
+                                    label: method,
+                                    propertyId: PREDICATES.METHOD,
+                                    existingPredicateId: PREDICATES.METHOD,
+                                });
+                            }
+                            if (conclusion) {
+                                valuesArray.push({
+                                    _class: 'literal',
+                                    label: conclusion,
+                                    propertyId: PREDICATES.CONCLUSION,
+                                });
+                            }
+                            if (objective) {
+                                valuesArray.push({
+                                    _class: 'literal',
+                                    label: objective,
+                                    propertyId: PREDICATES.OBJECTIVE,
+                                });
+                            }
+                            if (results) {
+                                valuesArray.push({
+                                    _class: 'literal',
+                                    label: results,
+                                    propertyId: PREDICATES.HAS_RESULTS,
+                                });
+                            }
+                            return valuesArray;
+                        })(),
                     },
                 }),
             );
@@ -125,7 +191,7 @@ const Contributions = () => {
 
     const handleNextClick = async () => {
         if (activeNERService) {
-            handleSaveFeedback(); // sometimes breaks, then comment this line
+            // handleSaveFeedback();
         }
         if (isBioassayField) {
             handleSaveBioassaysFeedback();
