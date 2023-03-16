@@ -109,7 +109,11 @@ const UploadPdf = () => {
     return (
         <div>
             <Alert color="info" className="mt-4" fade={false}>
-                The uploaded PDF file will not be stored on our servers and is only used to extract (meta)data
+                The uploaded PDF file will not be stored on our servers and is only used to extract (meta)data. If the paper was annotated with{' '}
+                <a href="https://orkg.org/about/33/SciKGTeX" target="_blank" rel="noopener noreferrer">
+                    SciKGTeX
+                </a>{' '}
+                the annotation will be imported automatically.
             </Alert>
             {pdfName && (
                 <div className="border rounded p-2 d-flex align-items-center">

@@ -86,18 +86,6 @@ const Contributions = () => {
                     fillStatements: true,
                     researchField: extractedResearchFieldId || selectedResearchField,
                     statements: {
-                        // properties: [
-                        //     {
-                        //         existingPredicateId: PREDICATES.HAS_RESEARCH_PROBLEM,
-                        //         propertyId: PREDICATES.HAS_RESEARCH_PROBLEM,
-                        //         label: 'Research problem',
-                        //     },
-
-                        // { existingPredicateId: PREDICATES.METHOD, propertyId: PREDICATES.METHOD, label: 'Method' },
-                        //   { propertyId: PREDICATES.OBJECTIVE, label: 'Objective' },
-                        //   { propertyId: PREDICATES.CONCLUSION, label: 'Conclusion' },
-                        //   { propertyId: PREDICATES.HAS_RESULTS, label: 'Result' },
-                        // ],
                         properties: (() => {
                             const property = [];
                             if (researchProblem) {
@@ -124,19 +112,7 @@ const Contributions = () => {
                             }
                             return property;
                         })(),
-                        // values: [
-                        //     {
-                        //         _class: ENTITIES.LITERAL,
-                        //         label: researchProblem,
-                        //         propertyId: PREDICATES.HAS_RESEARCH_PROBLEM,
-                        //         existingPredicateId: PREDICATES.HAS_RESEARCH_PROBLEM,
-                        //     },
 
-                        //     { _class: 'literal', label: method, propertyId: PREDICATES.METHOD, existingPredicateId: PREDICATES.METHOD },
-                        // { _class: 'literal', label: objective, propertyId: PREDICATES.OBJECTIVE },
-                        //  { _class: 'literal', label: conclusion, propertyId: PREDICATES.CONCLUSION },
-                        //  { _class: 'literal', label: results, propertyId: PREDICATES.HAS_RESULTS },
-                        //  ],
                         values: (() => {
                             const valuesArray = [];
                             if (researchProblem) {
