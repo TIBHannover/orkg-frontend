@@ -92,11 +92,11 @@ const Contributions = () => {
                                 property.push({
                                     existingPredicateId: PREDICATES.HAS_RESEARCH_PROBLEM,
                                     propertyId: PREDICATES.HAS_RESEARCH_PROBLEM,
-                                    label: 'Research problem',
+                                    label: 'Research Problem',
                                 });
                             }
                             if (method) {
-                                property.push({ existingPredicateId: PREDICATES.METHOD, propertyId: PREDICATES.METHOD, label: 'Method' });
+                                property.push({ existingPredicateId: PREDICATES.HAS_METHODS, propertyId: PREDICATES.HAS_METHODS, label: 'Method' });
                             }
                             if (conclusion) {
                                 property.push({ propertyId: PREDICATES.CONCLUSION, label: 'Conclusion' });
@@ -127,8 +127,8 @@ const Contributions = () => {
                                 valuesArray.push({
                                     _class: 'literal',
                                     label: method,
-                                    propertyId: PREDICATES.METHOD,
-                                    existingPredicateId: PREDICATES.METHOD,
+                                    propertyId: PREDICATES.HAS_METHODS,
+                                    existingPredicateId: PREDICATES.HAS_METHODS,
                                 });
                             }
                             if (conclusion) {
