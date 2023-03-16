@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
+import { getStatementsByObjectAndPredicate, getStatementsByPredicateAndLiteral, getStatementsBySubjects } from 'services/backend/statements';
 import { find, intersection } from 'lodash';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { getDataBasedOnType } from 'utils';
 
-function useAuthorWorks({ authorId }) {
+function useAuthorWorks({ authorId, authorString }) {
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [page, setPage] = useState(0);
@@ -14,56 +14,68 @@ function useAuthorWorks({ authorId }) {
     const pageSize = 10;
 
     const loadMoreWorks = useCallback(
-        p => {
+        async p => {
             setIsNextPageLoading(true);
             // Get the statements that contains the author as an object
-            getStatementsByObjectAndPredicate({
-                objectId: authorId,
-                predicateId: PREDICATES.HAS_AUTHOR,
-                page: p,
-                items: pageSize,
-                sortBy: 'created_at',
-                desc: true,
-                returnContent: false,
-            }).then(result => {
-                const filteredResult = result.content.filter(
-                    item =>
-                        intersection(item.subject.classes, [CLASSES.PAPER, CLASSES.COMPARISON, CLASSES.VISUALIZATION, CLASSES.SMART_REVIEW]).length >
-                        0,
-                );
-                // Fetch the data of each work
-                if (filteredResult?.length) {
-                    return getStatementsBySubjects({
-                        ids: filteredResult.map(s => s.subject.id),
-                    })
-                        .then(statements => {
-                            const items = statements.map(itemStatements => {
-                                const itemSubject = find(
-                                    result.content.map(p => p.subject),
-                                    { id: itemStatements.id },
-                                );
-                                return getDataBasedOnType(itemSubject, itemStatements.statements);
-                            });
-                            setWorks(prevResources => [...prevResources, ...items]);
-                            setIsNextPageLoading(false);
-                            setHasNextPage(!result.last);
-                            setIsLastPageReached(result.last);
-                            setTotalElements(result.totalElements);
-                            setPage(p + 1);
-                        })
-                        .catch(error => {
-                            setWorks([]);
-                            setIsNextPageLoading(false);
-                            setHasNextPage(false);
-                            setIsLastPageReached(p > 1);
+            let result = null;
+            if (authorId) {
+                result = await getStatementsByObjectAndPredicate({
+                    objectId: authorId,
+                    predicateId: PREDICATES.HAS_AUTHOR,
+                    page: p,
+                    items: pageSize,
+                    sortBy: 'created_at',
+                    desc: true,
+                    returnContent: false,
+                });
+            } else {
+                result = await getStatementsByPredicateAndLiteral({
+                    literal: authorString,
+                    predicateId: PREDICATES.HAS_AUTHOR,
+                    page: p,
+                    items: pageSize,
+                    sortBy: 'created_at',
+                    desc: true,
+                    returnContent: false,
+                });
+            }
+            const filteredResult = result.content.filter(
+                item =>
+                    intersection(item.subject.classes, [CLASSES.PAPER, CLASSES.COMPARISON, CLASSES.VISUALIZATION, CLASSES.SMART_REVIEW]).length > 0,
+            );
+
+            // Fetch the data of each work
+            if (filteredResult?.length) {
+                return getStatementsBySubjects({
+                    ids: filteredResult.map(s => s.subject.id),
+                })
+                    .then(statements => {
+                        const items = statements.map(itemStatements => {
+                            const itemSubject = find(
+                                result.content.map(p => p.subject),
+                                { id: itemStatements.id },
+                            );
+                            return getDataBasedOnType(itemSubject, itemStatements.statements);
                         });
-                }
-                setIsNextPageLoading(false);
-                setHasNextPage(false);
-                setIsLastPageReached(true);
-            });
+                        setWorks(prevResources => [...prevResources, ...items]);
+                        setIsNextPageLoading(false);
+                        setHasNextPage(!result.last);
+                        setIsLastPageReached(result.last);
+                        setTotalElements(result.totalElements);
+                        setPage(p + 1);
+                    })
+                    .catch(error => {
+                        setWorks([]);
+                        setIsNextPageLoading(false);
+                        setHasNextPage(false);
+                        setIsLastPageReached(p > 1);
+                    });
+            }
+            setIsNextPageLoading(false);
+            setHasNextPage(false);
+            setIsLastPageReached(true);
         },
-        [authorId],
+        [authorId, authorString],
     );
     // reset resources when the authorId has changed
     useEffect(() => {

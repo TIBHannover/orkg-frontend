@@ -30,9 +30,18 @@ const AuthorBadges = ({ authors }) => {
                         </Badge>
                     </Link>
                 ) : (
-                    <Badge color="light" className="me-2 mb-2" key={index} typeof="foaf:Person">
-                        <Icon icon={faUser} aria-label="Author name" /> {author.label}
-                    </Badge>
+                    <Link
+                        key={index}
+                        to={reverse(ROUTES.AUTHOR_LITERAL, { authorString: encodeURIComponent(author.label) })}
+                        target="_blank"
+                        rel="author"
+                        typeof="foaf:Person"
+                        aria-label={`Visit the author page of ${author.label}`}
+                    >
+                        <Badge color="light" className="me-2 mb-2" typeof="foaf:Person">
+                            <Icon icon={faUser} aria-label="Author name" /> {author.label}
+                        </Badge>
+                    </Link>
                 ),
             )}
             {authors.length > AUTHOR_LIMIT && (
