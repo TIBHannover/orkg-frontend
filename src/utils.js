@@ -456,11 +456,11 @@ export const sortMethod = (a, b) => {
     a = a === null || a === undefined ? -Infinity : a;
     b = b === null || b === undefined ? -Infinity : b;
     // check if a and b are numbers (contains only digits)
-    const aisnum = /^\d+$/.test(a);
-    const bisnum = /^\d+$/.test(b);
+    const aisnum = /^(\d|.)+$/.test(a);
+    const bisnum = /^(\d|.)+$/.test(b);
     if (aisnum && bisnum) {
-        a = parseInt(a);
-        b = parseInt(b);
+        a = parseFloat(a);
+        b = parseFloat(b);
     } else {
         // force any string values to lowercase
         a = typeof a === 'string' ? a.toLowerCase() : a;

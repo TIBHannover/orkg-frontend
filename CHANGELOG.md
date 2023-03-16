@@ -3,6 +3,28 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.96.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.95.1...v0.96.0) - 2023-03-15
+
+### Changes
+
+- feat: Support CSVW model for table view [`#970`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/970)
+
+---
+## [v0.95.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.95.0...v0.95.1) - 2023-03-14
+
+### Changes
+
+- enhancement(HomePage): Group versions after alternating the featured and no-featured comparisons [`#1049`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1049)
+- fix(ViewPaper): loading paper contributors if a user doesn't exist in the database [`#1047`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1047)
+- style: hide scroll-bars for visualization preview of tables [`#1045`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1045)
+- chore(Comaprison): Order of elements in the carousel [`#1050`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1050)
+- chore(Review): change content section to text section [`#1044`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1044)
+- ux: Truncate long contribution labels for better readability [`#1046`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1046)
+- fix(Review): prevent recreation of existing references [`#1048`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1048)
+- refactor: create separate component for button with loading state [`#1041`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1041)
+- fix(About): blank page for about, fix issue with missing title [`#1043`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1043)
+
+---
 ## [v0.95.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.94.0...v0.95.0) - 2023-03-10
 
 ### Changes

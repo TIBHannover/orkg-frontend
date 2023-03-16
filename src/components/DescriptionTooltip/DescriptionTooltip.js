@@ -53,7 +53,7 @@ const DescriptionTooltip = props => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     const onTrigger = () => {
-        if (!isLoaded && props._class !== ENTITIES.LITERAL) {
+        if (!isLoaded && props._class !== ENTITIES.LITERAL && props.id) {
             setIsLoading(true);
             getStatementsBySubjectAndPredicate({ subjectId: props.id, predicateId: PREDICATES.DESCRIPTION })
                 .then(descriptionStatement => {
@@ -173,7 +173,7 @@ const DescriptionTooltip = props => {
 
 DescriptionTooltip.propTypes = {
     children: PropTypes.node.isRequired,
-    id: PropTypes.string.isRequired,
+    id: PropTypes.string,
     _class: PropTypes.string.isRequired,
     classes: PropTypes.array,
     extraContent: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),

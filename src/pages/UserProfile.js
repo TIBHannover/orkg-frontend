@@ -1,10 +1,14 @@
+import { faCakeCandles } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import capitalize from 'capitalize';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 import TabsContainer from 'components/UserProfile/TabsContainer';
+import UserStatistics from 'components/UserProfile/UserStatistics';
 import { MISC } from 'constants/graphSettings';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import ROUTES from 'constants/routes';
+import moment from 'moment';
 import { reverse } from 'named-urls';
 import NotFound from 'pages/NotFound';
 import { useEffect, useState } from 'react';
@@ -133,49 +137,53 @@ const UserProfile = props => {
                 </Row>
 
                 {!isLoadingUserData && (
-                    <Row>
-                        <div className="col-md-2 text-center d-flex align-items-center justify-content-center mb-3 mb-md-0">
+                    <div className="box rounded p-4 row">
+                        <div className="col-md-2 text-center d-flex justify-content-center mb-3 mb-md-0">
                             <StyledGravatar className="rounded-circle" md5={userData?.gravatar_id ?? 'example@example.com'} size={100} />
                         </div>
-                        <div className="col-md-10 box rounded p-4">
-                            <div className="row">
-                                <div className="col-md-8 d-flex" style={{ flexDirection: 'column' }}>
-                                    <h2 className="h3 flex-grow-1">{userData.display_name}</h2>
-                                    {observatoryData && (
-                                        <div className="mt-3 align-items-end">
-                                            <b className="d-block">Member of the observatory</b>
-                                            <Link to={reverse(ROUTES.OBSERVATORY, { id: observatoryData?.display_id })} className="text-center">
-                                                {observatoryData?.name}
-                                            </Link>
-                                        </div>
-                                    )}
+                        <div className="col-md-10 row">
+                            <div className="col-md-8 d-flex" style={{ flexDirection: 'column' }}>
+                                <div>
+                                    <h2 className="h3 flex-grow-1 m-0">{userData.display_name}</h2>
+                                    <div className="text-muted" title={userData.joined_at}>
+                                        <Icon icon={faCakeCandles} /> Member for {moment(userData.joined_at).fromNow(true)}
+                                    </div>
                                 </div>
-                                <div className="col-md-4 mt-4 mt-md-0">
-                                    {organizationData && (
-                                        <StyledOrganizationCard>
-                                            <Link
-                                                className="logoContainer"
-                                                to={reverse(ROUTES.ORGANIZATION, {
-                                                    type: capitalize(ORGANIZATIONS_MISC.GENERAL),
-                                                    id: organizationData.display_id,
-                                                })}
-                                            >
-                                                <img className="mx-auto p-2" src={organizationData.logo} alt={`${organizationData.name} logo`} />
-                                            </Link>
-                                            <Link
-                                                to={reverse(ROUTES.ORGANIZATION, {
-                                                    type: capitalize(ORGANIZATIONS_MISC.GENERAL),
-                                                    id: organizationData.display_id,
-                                                })}
-                                            >
-                                                {organizationData?.name}
-                                            </Link>
-                                        </StyledOrganizationCard>
-                                    )}
-                                </div>
+                                {observatoryData && (
+                                    <div className="mt-3 align-items-end">
+                                        <b className="d-block">Member of the observatory</b>
+                                        <Link to={reverse(ROUTES.OBSERVATORY, { id: observatoryData?.display_id })} className="text-center">
+                                            {observatoryData?.name}
+                                        </Link>
+                                    </div>
+                                )}
+                                <UserStatistics userId={userId} />
+                            </div>
+                            <div className="col-md-4 mt-4 mt-md-0">
+                                {organizationData && (
+                                    <StyledOrganizationCard>
+                                        <Link
+                                            className="logoContainer"
+                                            to={reverse(ROUTES.ORGANIZATION, {
+                                                type: capitalize(ORGANIZATIONS_MISC.GENERAL),
+                                                id: organizationData.display_id,
+                                            })}
+                                        >
+                                            <img className="mx-auto p-2" src={organizationData.logo} alt={`${organizationData.name} logo`} />
+                                        </Link>
+                                        <Link
+                                            to={reverse(ROUTES.ORGANIZATION, {
+                                                type: capitalize(ORGANIZATIONS_MISC.GENERAL),
+                                                id: organizationData.display_id,
+                                            })}
+                                        >
+                                            {organizationData?.name}
+                                        </Link>
+                                    </StyledOrganizationCard>
+                                )}
                             </div>
                         </div>
-                    </Row>
+                    </div>
                 )}
                 {isLoadingUserData && (
                     <div className="mt-4 ms-3">
