@@ -12,7 +12,6 @@ export const PREDICATES = {
     CONCLUSION: 'Conclusion',
     OBJECTIVE: 'Objective',
     HAS_RESULTS: 'Result',
-    HAS_METHODS: 'Method',
     TYPE: 'type',
     ICON: 'icon',
     ORDER: 'order',
