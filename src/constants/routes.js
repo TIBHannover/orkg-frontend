@@ -47,6 +47,7 @@ const routes = {
     RESEARCH_FIELDS: '/fields',
     VENUE_PAGE: '/venue/:venueId',
     AUTHOR_PAGE: '/author/:authorId',
+    AUTHOR_LITERAL: '/author-literal/:authorString',
     SEARCH: '/search/:searchTerm',
     STATS: '/stats',
     DATA: '/data',

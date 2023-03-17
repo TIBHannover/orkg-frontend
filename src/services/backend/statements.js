@@ -176,14 +176,26 @@ export const getStatementsByObjectAndPredicate = ({
     );
 };
 
-export const getStatementsByPredicateAndLiteral = ({ predicateId, literal, subjectClass = null, items: size = 9999 }) => {
+export const getStatementsByPredicateAndLiteral = ({
+    literal,
+    predicateId,
+    subjectClass = null,
+    items: size = 9999,
+    page = 0,
+    sortBy = 'created_at',
+    desc = true,
+    returnContent = true,
+}) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
-        { size, subjectClass },
+        { size, subjectClass, page, sort },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${statementsUrl}predicate/${predicateId}/literal/${literal}/?${params}`).then(res => res.content);
+    return submitGetRequest(`${statementsUrl}predicate/${predicateId}/literal/${literal}/?${params}`).then(res =>
+        returnContent ? res.content : res,
+    );
 };
 
 /**
