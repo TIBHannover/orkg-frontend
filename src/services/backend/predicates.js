@@ -1,4 +1,4 @@
-import { submitPostRequest, submitPutRequest, submitGetRequest } from 'network';
+import { submitPostRequest, submitPutRequest, submitGetRequest, submitDeleteRequest } from 'network';
 import qs from 'qs';
 import { url } from 'constants/misc';
 
@@ -9,6 +9,8 @@ export const getPredicate = id => submitGetRequest(`${predicatesUrl}${encodeURIC
 export const createPredicate = (label, id = undefined) => submitPostRequest(predicatesUrl, { 'Content-Type': 'application/json' }, { label, id });
 
 export const updatePredicate = (id, label) => submitPutRequest(`${predicatesUrl}${id}`, { 'Content-Type': 'application/json' }, { label });
+
+export const deletePredicate = id => submitDeleteRequest(`${predicatesUrl}${id}`, { 'Content-Type': 'application/json' });
 
 export const getPredicates = ({
     page = 0,
