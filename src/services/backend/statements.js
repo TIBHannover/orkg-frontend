@@ -1,8 +1,9 @@
+import { CLASSES, MISC, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { url } from 'constants/misc';
-import { submitGetRequest, submitPostRequest, submitDeleteRequest, submitPutRequest } from 'network';
+import { flatten } from 'lodash';
+import { submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
-import { PREDICATES, MISC, CLASSES, RESOURCES } from 'constants/graphSettings';
-import { filterStatementsBySubjectId, getTemplateComponentData, filterObjectOfStatementsByPredicateAndClass, sortMethod } from 'utils';
+import { filterObjectOfStatementsByPredicateAndClass, filterStatementsBySubjectId, getTemplateComponentData, sortMethod } from 'utils';
 
 export const statementsUrl = `${url}statements/`;
 
@@ -255,11 +256,12 @@ export const getTemplateById = async templateId => {
     const components = templateComponents.map(component =>
         getTemplateComponentData(component, filterStatementsBySubjectId(response.statements, component.id)),
     );
+    const componentsStatements = templateComponents.map(component => filterStatementsBySubjectId(response.statements, component.id).map(s => s.id));
 
     return {
         id: templateId,
         ...subject,
-        statements: statements.map(s => s.id),
+        statements: [...statements.map(s => s.id), ...flatten(componentsStatements)],
         predicate: templatePredicate,
         labelFormat: templateFormatLabel ? templateFormatLabel.label : '',
         hasLabelFormat: !!templateFormatLabel,
