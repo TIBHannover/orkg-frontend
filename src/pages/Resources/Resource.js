@@ -175,6 +175,7 @@ function Resource() {
                         <ItemMetadata item={resource} showCreatedAt={true} showCreatedBy={true} showProvenance={true} editMode={editMode} />
                     </Container>
                     <TabsContainer classes={resource?.classes} id={id} editMode={editMode} />
+
                     {preventEditCase && (
                         <PreventModal
                             {...preventEditCase.preventModalProps(resource)}
