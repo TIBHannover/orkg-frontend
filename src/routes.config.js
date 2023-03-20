@@ -150,6 +150,10 @@ const routes = [
         element: UserProfile,
     },
     {
+        path: ROUTES.USER_PROFILE_TABS,
+        element: UserProfile,
+    },
+    {
         path: ROUTES.ADD_PAPER.GENERAL_DATA,
         element: AddPaper,
     },

@@ -3,6 +3,7 @@ const routes = {
     USER_SETTINGS: '/settings/:tab',
     USER_SETTINGS_DEFAULT: '/settings',
     USER_PROFILE: '/u/:userId',
+    USER_PROFILE_TABS: '/u/:userId/:activeTab',
     RESOURCES: '/resources',
     RESOURCE: '/resource/:id',
     RESOURCE_TABS: '/resource/:id/:activeTab',

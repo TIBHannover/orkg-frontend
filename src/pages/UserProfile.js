@@ -65,7 +65,6 @@ const UserProfile = props => {
     const params = useParams();
     const { userId } = params;
     const currentUserId = useSelector(state => state.auth.user?.id);
-
     useEffect(() => {
         const getUserInformation = async () => {
             setNotFound(false);
@@ -204,7 +203,7 @@ const UserProfile = props => {
                 )}
             </Container>
             <Container className="mt-4 p-0">
-                <TabsContainer currentUserId={currentUserId} />
+                <TabsContainer currentUserId={currentUserId} userId={userId} />
             </Container>
 
             <ComparisonPopup />
