@@ -72,7 +72,8 @@ const Contributions = () => {
     const objective = useSelector(state => state.addPaper.objective);
     const extractedResearchField = useSelector(state => state.addPaper.extractedResearchField);
     const extractedResearchFieldId = useSelector(state => state.addPaper.extractedResearchFieldId);
-
+    const error = useSelector(state => state.addPaper.predicateError);
+    const resourceUri = useSelector(state => state.addPaper.resourceUri);
     useEffect(() => {
         (async () => setActiveNERService(await determineActiveNERService(selectedResearchField)))();
     }, [selectedResearchField]);
@@ -110,6 +111,12 @@ const Contributions = () => {
                                     label: 'result',
                                 });
                             }
+                            if (error) {
+                                property.push({
+                                    propertyId: PREDICATES.HAS_ERROR,
+                                    label: 'error',
+                                });
+                            }
                             return property;
                         })(),
 
@@ -118,7 +125,7 @@ const Contributions = () => {
                             if (researchProblem) {
                                 valuesArray.push({
                                     _class: 'literal',
-                                    label: researchProblem,
+                                    label: `${researchProblem}\n${resourceUri}`,
                                     propertyId: PREDICATES.HAS_RESEARCH_PROBLEM,
                                     existingPredicateId: PREDICATES.HAS_RESEARCH_PROBLEM,
                                 });
@@ -150,6 +157,13 @@ const Contributions = () => {
                                     _class: 'literal',
                                     label: results,
                                     propertyId: PREDICATES.HAS_RESULTS,
+                                });
+                            }
+                            if (error) {
+                                valuesArray.push({
+                                    _class: 'literal',
+                                    label: error,
+                                    propertyId: PREDICATES.HAS_ERROR,
                                 });
                             }
                             return valuesArray;

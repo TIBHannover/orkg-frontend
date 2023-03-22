@@ -14,6 +14,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import FlipMove from 'react-flip-move';
+import { getPredicates } from 'services/backend/predicates';
 import {
     updateSettings,
     getSuggestedProperties,
@@ -26,65 +27,14 @@ import ClassesItem from 'components/StatementBrowser/ClassesItem/ClassesItem';
 import StatementMenuHeader from './StatementMenuHeader/StatementMenuHeader';
 
 const Statements = props => {
+    let predicateError;
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const level = useSelector(state => state.statementBrowser.level);
     const suggestedProperties = useSelector(state => getSuggestedProperties(state, selectedResource));
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const dispatch = useDispatch();
-
     // If the resource exist, all changes are synced to the backend automatically
     const syncBackend = !props.syncBackend ? !!resource.isExistingValue : props.syncBackend;
-
-    useEffect(() => {
-        if (props.initialSubjectId) {
-            if (props.newStore) {
-                dispatch(
-                    initializeWithoutContribution({
-                        resourceId: props.initialSubjectId,
-                        label: props.initialSubjectLabel,
-                        rootNodeType: props.rootNodeType,
-                    }),
-                );
-            } else {
-                dispatch(
-                    initializeWithResource({
-                        resourceId: props.initialSubjectId,
-                        label: props.initialSubjectLabel,
-                    }),
-                );
-            }
-            dispatch(
-                updateSettings({
-                    openExistingResourcesInDialog: props.openExistingResourcesInDialog,
-                    propertiesAsLinks: props.propertiesAsLinks,
-                    resourcesAsLinks: props.resourcesAsLinks,
-                    initOnLocationChange: props.initOnLocationChange,
-                    keyToKeepStateOnLocationChange: props.keyToKeepStateOnLocationChange,
-                }),
-            );
-
-            dispatch(setInitialPath(props.initialPath));
-        } else {
-            dispatch(
-                updateSettings({
-                    initOnLocationChange: props.initOnLocationChange,
-                    keyToKeepStateOnLocationChange: props.keyToKeepStateOnLocationChange,
-                }),
-            );
-        }
-    }, [
-        dispatch,
-        props.initOnLocationChange,
-        props.initialSubjectId,
-        props.initialSubjectLabel,
-        props.keyToKeepStateOnLocationChange,
-        props.newStore,
-        props.openExistingResourcesInDialog,
-        props.propertiesAsLinks,
-        props.resourcesAsLinks,
-        props.rootNodeType,
-        props.initialPath,
-    ]);
 
     const statements = () => {
         let propertyIds = [];
@@ -141,6 +91,7 @@ const Statements = props => {
                         props.enableEdit &&
                         suggestedProperties.length > 0 &&
                         propertySuggestionsComponent}
+                    {predicateError}
                 </Row>
             </div>
         );

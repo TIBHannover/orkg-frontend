@@ -41,6 +41,8 @@ const initialState = {
     result: '',
     objective: '',
     conclusion: '',
+    predicateError: '',
+    resourceUri: '',
     selectedContribution: '',
     paperNewResourceId: null,
     url: '',

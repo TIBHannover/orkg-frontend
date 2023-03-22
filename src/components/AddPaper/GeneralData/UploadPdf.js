@@ -8,6 +8,7 @@ import processPdf from 'services/grobid';
 import { updateGeneralData } from 'slices/addPaperSlice';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/build/pdf';
+import { getPredicates } from 'services/backend/predicates';
 
 const UploadPdf = () => {
     const { pdfName } = useSelector(state => state.addPaper);
@@ -29,17 +30,15 @@ const UploadPdf = () => {
             let method;
             let authors;
             let title;
+            let error;
+            let resourceUri;
             reader.onload = async () => {
                 const data = new Uint8Array(reader?.result);
-
                 const loadingTask = getDocument({ data });
-
                 const pdf = await loadingTask.promise;
                 const metadata = await pdf.getMetadata();
-
                 if (metadata?.metadata?._data) {
                     const processedPdf = new window.DOMParser().parseFromString(metadata.metadata._data, 'text/xml');
-
                     // you might want to replace 'querySelector' with 'querySelectorAll' to get all the values if there are multiple annotations of the same type
                     extractedResearchField = processedPdf.querySelector('hasResearchField label')?.textContent;
                     researchField = processedPdf.querySelector('hasResearchField')?.textContent;
@@ -50,6 +49,10 @@ const UploadPdf = () => {
                     method = processedPdf.querySelector('method')?.textContent;
                     title = processedPdf.querySelector('hasTitle')?.textContent;
                     authors = [...processedPdf.querySelectorAll('hasAuthor')].map(auth => auth.textContent);
+                    error = processedPdf.querySelector('error')?.textContent;
+                    const rdfDescription = processedPdf.querySelector('Description');
+                    resourceUri = rdfDescription?.getAttribute('rdf:about');
+                    console.log('show files', processedPdf);
                     console.log({
                         extractedResearchField,
                         researchField,
@@ -60,6 +63,8 @@ const UploadPdf = () => {
                         method,
                         title,
                         authors,
+                        error,
+                        resourceUri,
                     });
                 }
             };
@@ -68,6 +73,7 @@ const UploadPdf = () => {
 
             // metadata extraction via Grobid
             const processedPdf = await new window.DOMParser().parseFromString(await processPdf({ pdf: files[0] }), 'text/xml');
+
             const titleGrobid = processedPdf.querySelector('fileDesc titleStmt title')?.textContent;
             const authorsGrobid = [...processedPdf.querySelectorAll('fileDesc biblStruct author')].map(author => ({
                 label: [...author.querySelectorAll('forename, surname')].map(name => name?.textContent).join(' '),
@@ -91,6 +97,8 @@ const UploadPdf = () => {
                     conclusion,
                     researchProblem,
                     method,
+                    predicateError: error,
+                    resourceUri,
                 }),
             );
             toast.success('PDF parsed successfully');

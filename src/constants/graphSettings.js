@@ -12,6 +12,7 @@ export const PREDICATES = {
     CONCLUSION: 'conclusion',
     OBJECTIVE: 'objective',
     HAS_RESULTS: 'result',
+    HAS_ERROR: 'error',
     TYPE: 'type',
     ICON: 'icon',
     ORDER: 'order',
