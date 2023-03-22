@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { getPropertyObjectFromData } from 'components/Comparison/hooks/helpers';
 import REVIEW_QUESTIONS from 'components/Comparison/QualityReportModal/reviewQuestions';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
@@ -164,9 +165,7 @@ const useQualityReport = () => {
                     performEvaluation: () => {
                         const MAX_LENGTH = 100;
                         const resources = resourcesAndLiterals.filter(entity => entity.type === ENTITIES.RESOURCE);
-                        console.log('show reseources', resources);
                         const resourcesWithTooLongLabels = resources.filter(resource => resource.label.length > MAX_LENGTH);
-                        console.log('show resourcesWithTooLongLabels', resourcesWithTooLongLabels);
                         const passing = resourcesWithTooLongLabels.length === 0;
                         return {
                             passing,
@@ -201,8 +200,7 @@ const useQualityReport = () => {
 
                         return {
                             passing,
-                            evaluation:
-                                `The comparison has ${visualizationAmount}  visualizations.` || `The comparison has ${figuresAmount}  figures.`,
+                            evaluation: `The comparison has ${visualizationAmount + figuresAmount}  visualizations.`,
                         };
                     },
                 },
@@ -238,6 +236,7 @@ const useQualityReport = () => {
         comparisonResource?.created_at,
         comparisonResource?.description?.length,
         comparisonResource?.doi,
+        comparisonResource?.figures?.length,
         comparisonResource?.id,
         comparisonResource?.visualizations?.length,
         data,

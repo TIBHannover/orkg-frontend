@@ -3,6 +3,19 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.97.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.96.0...v0.97.0) - 2023-03-20
+
+### Changes
+
+- feat(QualityReport): count related figures in the quality modal [`#1058`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1058)
+- chore(Footer): add link to data protection info sheet [`#1059`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1059)
+- feat:change tabs with url [`#1057`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1057)
+- feat: Delete property [`#1055`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1055)
+- fix(TemplateEditor): Delete statements of orphan nodes while editing a template [`#1056`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1056)
+- feat(Author): support listing works and searching for authors without ORCID [`#1053`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1053)
+- feat(UserProfile): add user related statistics to profile [`#1052`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1052)
+
+---
 ## [v0.96.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.95.1...v0.96.0) - 2023-03-15
 
 ### Changes
