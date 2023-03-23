@@ -37,8 +37,8 @@ function Publish(props) {
             if (viewPaper.paperResource.id) {
                 getContributorsByResourceId({ id: viewPaper.paperResource.id, page: 0, size: 999 })
                     .then(result => {
-                        const contributorsList = result.content.filter(c => c.created_by.id !== MISC.UNKNOWN_ID);
-                        setContributors(contributorsList ? uniqBy(contributorsList, 'created_by.id') : []);
+                        const contributorsList = result.content.filter(c => c.id !== MISC.UNKNOWN_ID);
+                        setContributors(contributorsList ? uniqBy(contributorsList, 'id') : []);
                     })
                     .catch(() => {});
             }
@@ -121,7 +121,7 @@ function Publish(props) {
                 // we send only one contribution id because we want to create a DOI for the whole paper and not for each contribution.
                 // the backend will fetch the paper original DOI
                 related_sources: viewPaper.contributions?.[0] ? [viewPaper.contributions[0].id] : [''],
-                authors: contributors.map(creator => ({ creator: creator.created_by.display_name, orcid: '' })),
+                authors: contributors.map(creator => ({ ...creator.display_name, orcid: '' })),
                 url: `${getPublicUrl()}${reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaper.id })}`,
             })
                 .then(async doiResponse => {
@@ -252,7 +252,7 @@ function Publish(props) {
                                 viewPaper.paperResource.id &&
                                 contributors.map((creator, index) => (
                                     <AuthorTag key={`creator${index}`}>
-                                        <div className="name"> {creator.created_by.display_name} </div>
+                                        <div className="name"> {creator.display_name} </div>
                                     </AuthorTag>
                                 ))}
                         </FormGroup>

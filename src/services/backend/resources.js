@@ -3,7 +3,7 @@ import { getContributorInformationById } from 'services/backend/contributors';
 import { classesUrl } from 'services/backend/classes';
 import { MISC } from 'constants/graphSettings';
 import qs from 'qs';
-import { uniqBy } from 'lodash';
+import { uniqBy, uniq } from 'lodash';
 import { url } from 'constants/misc';
 
 export const resourcesUrl = `${url}resources/`;
@@ -58,6 +58,28 @@ export const getContributorsByResourceId = ({ id, page = 0, size = 9999 }) => {
         },
     );
     return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/contributors?${params}`).then(async contributors => {
+        const uniqContributors = uniq(contributors.content);
+        const uniqContributorsInfosRequests = uniqContributors.map(contributor =>
+            contributor === MISC.UNKNOWN_ID
+                ? { id: MISC.UNKNOWN_ID, display_name: 'Unknown' }
+                : getContributorInformationById(contributor).catch(() => ({ id: contributor, display_name: 'User not found' })),
+        );
+        const uniqContributorsInfos = await Promise.all(uniqContributorsInfosRequests);
+        return {
+            ...contributors,
+            content: contributors.content.map(u => uniqContributorsInfos.find(i => u === i.id)),
+        };
+    });
+};
+
+export const getTimelineByResourceId = ({ id, page = 0, size = 9999 }) => {
+    const params = qs.stringify(
+        { page, size },
+        {
+            skipNulls: true,
+        },
+    );
+    return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/timeline?${params}`).then(async contributors => {
         const uniqContributors = uniqBy(contributors.content, 'created_by');
         const uniqContributorsInfosRequests = uniqContributors.map(contributor =>
             contributor.created_by === MISC.UNKNOWN_ID
