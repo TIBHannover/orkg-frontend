@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getContributorsByResourceId } from 'services/backend/resources';
+import { getTimelineByResourceId } from 'services/backend/resources';
 
 function useTimeline(id) {
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
@@ -13,7 +13,7 @@ function useTimeline(id) {
     const loadMore = useCallback(
         p => {
             setIsNextPageLoading(true);
-            getContributorsByResourceId({ id, page: p, size: pageSize })
+            getTimelineByResourceId({ id, page: p, size: pageSize })
                 .then(result => {
                     setContributors(prevContributors => [...prevContributors, ...result.content]);
                     setIsNextPageLoading(false);
