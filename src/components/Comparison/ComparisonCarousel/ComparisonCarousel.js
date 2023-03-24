@@ -13,7 +13,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import useRelatedResources from 'components/Comparison/ComparisonCarousel/RelatedResources/useRelatedResources';
 import RelatedResource from 'components/Comparison/ComparisonCarousel/RelatedResources/RelatedResource';
 import RelatedFigure from 'components/Comparison/ComparisonCarousel/RelatedResources/RelatedFigure';
-import { StyledSlider } from 'components/ResearchProblem/Benchmarks/styled';
+import StyledSlider from 'components/ResearchProblem/Benchmarks/styled';
 import SingleVisualizationComponent from './SingleVisualizationComponent';
 
 function ComparisonCarousel() {

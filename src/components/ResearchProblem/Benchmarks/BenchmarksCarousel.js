@@ -1,12 +1,12 @@
-import { Link } from 'react-router-dom';
-import ROUTES from 'constants/routes';
-import styled from 'styled-components';
-import { reverse } from 'named-urls';
-import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowCircleLeft, faArrowCircleRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { StyledSlider } from './styled';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import StyledSlider from './styled';
 
 const BenchmarkCarouselCardStyled = styled.div`
     display: flex !important;
@@ -34,10 +34,19 @@ function BenchmarksCarousel(props) {
         speed: 500,
         slidesToShow: 5,
         centerMode: false,
-        slidesToScroll: 1,
-        nextArrow: <Icon icon={faArrowCircleRight} />,
+        slidesToScroll: 5,
+        nextArrow: !props.isLoading ? <Icon icon={faArrowCircleRight} /> : <Icon icon={faSpinner} spin />,
         prevArrow: <Icon icon={faArrowCircleLeft} />,
         rows: 1,
+        lazyLoad: true,
+        onLazyLoad: slidesLoaded => {
+            if (props.hasNextPage) {
+                props.loadNextPage();
+            }
+            if (props.page !== 0 && slidesLoaded && !props.hasNextPage) {
+                slidesLoaded();
+            }
+        },
         responsive: [
             {
                 breakpoint: 1024,
@@ -99,6 +108,12 @@ function BenchmarksCarousel(props) {
 BenchmarksCarousel.propTypes = {
     problemId: PropTypes.string.isRequired,
     benchmarks: PropTypes.array.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    isLastPageReached: PropTypes.bool.isRequired,
+    hasNextPage: PropTypes.bool.isRequired,
+    loadNextPage: PropTypes.func.isRequired,
+    handleKeyDown: PropTypes.func.isRequired,
+    page: PropTypes.number.isRequired,
 };
 
 export default BenchmarksCarousel;

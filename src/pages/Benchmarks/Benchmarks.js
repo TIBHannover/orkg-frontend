@@ -1,35 +1,43 @@
-import { useState } from 'react';
-import ContentLoader from 'react-content-loader';
-import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import BenchmarkCard from 'components/Benchmarks/BenchmarkCard/BenchmarkCard';
-import useBenchmarks from 'components/Benchmarks/hooks/useBenchmarks';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { Row, Container } from 'reactstrap';
-import { SearchStyled, InputStyled, SearchButtonStyled } from 'components/styled';
+import BenchmarkCard from 'components/Benchmarks/BenchmarkCard/BenchmarkCard';
+import usePaginate from 'components/hooks/usePaginate';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
 import TitleBar from 'components/TitleBar/TitleBar';
+import ContentLoader from 'react-content-loader';
+import { Button, Container, Row } from 'reactstrap';
+import { getAllBenchmarks } from 'services/backend/benchmarks';
 
-function Benchmarks() {
-    const { benchmarks, isLoadingBenchmarks } = useBenchmarks();
-    const [filter, setFilter] = useState('');
+const Benchmarks = () => {
+    const fetchItems = async ({ page, pageSize }) => {
+        const { content: items, last, totalElements } = await getAllBenchmarks({ page, size: pageSize });
+        return {
+            items,
+            last,
+            totalElements,
+        };
+    };
+
+    const {
+        results: benchmarks,
+        isLoading,
+        isLastPageReached,
+        totalElements,
+        hasNextPage,
+        page,
+        loadNextPage,
+    } = usePaginate({
+        fetchItems,
+        pageSize: 64,
+    });
 
     return (
         <>
             <TitleBar
                 titleAddition={
                     <div className="text-muted mt-1">
-                        on {benchmarks.length === 0 && isLoadingBenchmarks ? <Icon icon={faSpinner} spin /> : benchmarks.length} research problem{' '}
-                        {!!filter &&
-                            `(${benchmarks.filter(b => b.research_problem.label.toLowerCase().includes(filter.toLowerCase())).length} filtered)`}
+                        on {benchmarks.length === 0 && isLoading ? <Icon icon={faSpinner} spin /> : totalElements} research problem
                     </div>
-                }
-                buttonGroup={
-                    <SearchStyled className="btn btn-secondary btn-sm active">
-                        <InputStyled type="text" placeholder="Search benchmarks..." value={filter} onChange={e => setFilter(e.target.value)} />
-                        <SearchButtonStyled size="sm" className="px-3" color="link">
-                            <Icon icon={faSearch} />
-                        </SearchButtonStyled>
-                    </SearchStyled>
                 }
             >
                 View all benchmarks
@@ -56,16 +64,19 @@ function Benchmarks() {
                 <hr />
                 <Row className="mt-3 flex-grow-1 justify-content-center">
                     {benchmarks?.length > 0 &&
-                        benchmarks
-                            .filter(b => b.research_problem.label.toLowerCase().includes(filter.toLowerCase()) || filter === '')
-                            .map(benchmark => <BenchmarkCard key={`${benchmark.research_problem.id}`} benchmark={benchmark} />)}
+                        benchmarks.map(benchmark => <BenchmarkCard key={`${benchmark.research_problem.id}`} benchmark={benchmark} />)}
+                    {!isLoading && hasNextPage && (
+                        <div className="text-center">
+                            <Button onClick={loadNextPage} size="sm" color="light">
+                                Load more...
+                            </Button>
+                        </div>
+                    )}
+                    {!hasNextPage && isLastPageReached && page !== 0 && <div className="text-center my-3">You have reached the last page</div>}
                 </Row>
 
-                {benchmarks.length === 0 && !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">No benchmarks yet</div>}
-                {benchmarks.length !== 0 &&
-                    benchmarks.filter(b => b.research_problem.label.toLowerCase().includes(filter.toLowerCase())).length === 0 &&
-                    !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">Sorry, no benchmarks found - try a different search query</div>}
-                {isLoadingBenchmarks && (
+                {benchmarks.length === 0 && !isLoading && <div className="text-center mt-4 mb-4">No benchmarks yet</div>}
+                {isLoading && (
                     <div className="text-center mt-4 mb-4">
                         <div className="mt-3">
                             <div>
@@ -89,6 +100,6 @@ function Benchmarks() {
             </Container>
         </>
     );
-}
+};
 
 export default Benchmarks;
