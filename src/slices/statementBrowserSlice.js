@@ -1,25 +1,26 @@
 /* eslint-disable no-await-in-loop */
 import { createSlice } from '@reduxjs/toolkit';
-import { LOCATION_CHANGE, guid, filterStatementsBySubjectId } from 'utils';
-import { ENTITIES, PREDICATES, CLASSES } from 'constants/graphSettings';
-import { match } from 'path-to-regexp';
-import { last, flatten, uniqBy, orderBy, uniq, has } from 'lodash';
+import DATA_TYPES from 'constants/DataTypes.js';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import REGEX from 'constants/regex';
 import ROUTES from 'constants/routes';
+import { flatten, last, orderBy, sortBy, uniq, uniqBy } from 'lodash';
+import { match } from 'path-to-regexp';
 import { Cookies } from 'react-cookie';
-import { getEntity } from 'services/backend/misc';
+import { toast } from 'react-toastify';
 import { createLiteral } from 'services/backend/literals';
+import { getEntity } from 'services/backend/misc';
 import { createPredicate } from 'services/backend/predicates';
-import format from 'string-format';
+import { createResource as createResourceApi, updateResourceClasses as updateResourceClassesApi } from 'services/backend/resources';
 import {
+    createLiteralStatement,
+    createResourceStatement,
+    getStatementsBundleBySubject,
     getTemplateById,
     getTemplatesByClass,
-    getStatementsBundleBySubject,
-    createResourceStatement,
-    createLiteralStatement,
 } from 'services/backend/statements';
-import { createResource as createResourceApi, updateResourceClasses as updateResourceClassesApi } from 'services/backend/resources';
-import DATA_TYPES from 'constants/DataTypes.js';
-import { toast } from 'react-toastify';
+import format from 'string-format';
+import { filterStatementsBySubjectId, guid, LOCATION_CHANGE } from 'utils';
 
 const cookies = new Cookies();
 
@@ -1422,23 +1423,23 @@ export function addStatements(statements, resourceId, depth) {
 
         return Promise.all(
             resourceStatements.map(async statement => {
-                // Check whether there already exist a property for this, then combine
-                let propertyId = getPropertyIdByByResourceAndPredicateId(getState(), resourceId, statement.predicate.id);
-                if (!propertyId) {
-                    // Create the property
-                    propertyId = guid();
-                    dispatch(
-                        createProperty({
-                            propertyId,
-                            resourceId,
-                            existingPredicateId: statement.predicate.id,
-                            isExistingProperty: true,
-                            ...statement.predicate,
-                        }),
-                    );
-                }
                 let addStatement = Promise.resolve();
                 if (!statementExists(getState(), statement.id)) {
+                    // Check whether there already exist a property for this, then combine
+                    let propertyId = getPropertyIdByByResourceAndPredicateId(getState(), resourceId, statement.predicate.id);
+                    if (!propertyId) {
+                        // Create the property
+                        propertyId = guid();
+                        dispatch(
+                            createProperty({
+                                propertyId,
+                                resourceId,
+                                existingPredicateId: statement.predicate.id,
+                                isExistingProperty: true,
+                                ...statement.predicate,
+                            }),
+                        );
+                    }
                     // add the value if the statement doesn't exist
                     const valueId = guid();
                     addStatement = dispatch(
@@ -1461,10 +1462,21 @@ export function addStatements(statements, resourceId, depth) {
                     // check if statement.object.id is not already loaded (propertyIds.length===0)
                     const resource = getState().statementBrowser.resources.byId[statement.object.id];
                     // resource.propertyIds?.length === 0
-                    if (filterStatementsBySubjectId(statements, statement.object.id)?.length && resource?.propertyIds?.length === 0) {
+                    if (
+                        filterStatementsBySubjectId(statements, statement.object.id)?.length &&
+                        (resource?.propertyIds?.length === 0 || resource.fetchedDepth < depth)
+                    ) {
                         // Add required properties and add statements
                         return dispatch(createRequiredPropertiesInResource(statement.object.id))
-                            .then(() => dispatch(addStatements(statements, statement.object.id, depth - 1)))
+                            .then(() =>
+                                dispatch(
+                                    addStatements(
+                                        statements.filter(s => s.subject.id !== resourceId),
+                                        statement.object.id,
+                                        depth - 1,
+                                    ),
+                                ),
+                            )
                             .then(() => {
                                 // Set the resource as fetched
                                 dispatch(
@@ -1659,4 +1671,105 @@ export function getSubjectIdByValue(state, valueId) {
     const value = state.statementBrowser.values.byId[valueId];
     const predicate = state.statementBrowser.properties.byId[value.propertyId];
     return predicate?.resourceId;
+}
+
+/**
+ * Get CSV Table by value ID
+ * @param {Object} state Current state of the Store
+ * @param {String} valueId Value ID
+ * @return {Object} Table
+ */
+export function getTableByValueId(state, valueId) {
+    const value = state.statementBrowser.values.byId[valueId];
+    const columnsPropertyId = getPropertyIdByByResourceAndPredicateId(state, value.resourceId, PREDICATES.CSVW_COLUMNS);
+    const rowsPropertyId = getPropertyIdByByResourceAndPredicateId(state, value.resourceId, PREDICATES.CSVW_ROWS);
+    let cols = state.statementBrowser.properties.byId[columnsPropertyId];
+    cols =
+        cols?.valueIds?.map(v => {
+            const c = state.statementBrowser.values.byId[v];
+            const titlesPropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_TITLES);
+            const numberPropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_NUMBER);
+            let titles = state.statementBrowser.properties.byId[titlesPropertyId];
+            let number = state.statementBrowser.properties.byId[numberPropertyId];
+            titles = titles?.valueIds?.map(n => state.statementBrowser.values.byId[n])?.[0] ?? {};
+            number = number?.valueIds?.map(n => state.statementBrowser.values.byId[n])?.[0] ?? {};
+            return { ...c, titles, number };
+        }) ?? [];
+    let lines = state.statementBrowser.properties.byId[rowsPropertyId];
+    let isTitlesColumnsExist = false;
+    lines =
+        lines?.valueIds?.map(v => {
+            const r = state.statementBrowser.values.byId[v];
+            const cellsPropertyId = getPropertyIdByByResourceAndPredicateId(state, r.resourceId, PREDICATES.CSVW_CELLS);
+            const numberPropertyId = getPropertyIdByByResourceAndPredicateId(state, r.resourceId, PREDICATES.CSVW_NUMBER);
+            const titlesPropertyId = getPropertyIdByByResourceAndPredicateId(state, r.resourceId, PREDICATES.CSVW_TITLES);
+            if (titlesPropertyId) {
+                isTitlesColumnsExist = true;
+            }
+            let cells = state.statementBrowser.properties.byId[cellsPropertyId];
+            let number = state.statementBrowser.properties.byId[numberPropertyId];
+            number = number?.valueIds?.map(n => state.statementBrowser.values.byId[n])?.[0] ?? {};
+            let titles = state.statementBrowser.properties.byId[titlesPropertyId];
+            titles = titles?.valueIds?.map(n => state.statementBrowser.values.byId[n])?.[0] ?? {};
+            cells =
+                cells?.valueIds?.map(w => {
+                    const c = state.statementBrowser.values.byId[w];
+                    const valuePropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_VALUE);
+                    let _value = state.statementBrowser.properties.byId[valuePropertyId];
+                    _value = _value?.valueIds.map(l => state.statementBrowser.values.byId[l])?.[0] ?? {};
+                    return { ...c, value: _value, row: r };
+                }) ?? [];
+            return { ...r, cells, number, titles };
+        }) ?? [];
+    // Assumption : If the row title is Row X it essentially means that no row title was given by the user
+    // Row X is the "default" row title automatically assigned by the Python and R libs.
+    if (isTitlesColumnsExist) {
+        const findTitleNotRowX = lines.find(r => !REGEX.CSW_ROW_TITLES_VALUE.test(r.titles?.label?.toLowerCase?.() ?? ''));
+        if (!findTitleNotRowX) {
+            isTitlesColumnsExist = false;
+        }
+    }
+    // cols: sortBy(cols, obj => parseInt(obj.number.label ?? '0', 10))
+    return {
+        cols: isTitlesColumnsExist
+            ? [
+                  {
+                      existingResourceId: 'titles',
+                      id: '',
+                      label: '',
+                      classes: ['Column'],
+                      titles: {
+                          id: '',
+                          label: '',
+                      },
+                      number: {
+                          id: '',
+                          label: '',
+                      },
+                  },
+                  ...cols,
+              ]
+            : cols,
+        lines: sortBy(lines, obj => parseInt(obj.number.label ?? '0', 10)),
+        isTitlesColumnsExist,
+    };
+}
+
+/**
+ * Get Depth of value by id
+ * @param {Object} state Current state of the Store
+ * @param {String} valueId Value ID
+ * @return {Integer} Depth
+ */
+export function getDepthByValueId(state, valueId) {
+    const value = state.statementBrowser.values.byId[valueId];
+    const resource = state.statementBrowser.resources.byId[value.resourceId];
+    if (resource.propertyIds.length === 0) {
+        return 0;
+    }
+    const property = state.statementBrowser.properties.byId[resource.propertyIds[0]];
+    if (!property && property.valueIds === 0) {
+        return 1;
+    }
+    return 1 + getDepthByValueId(state, property.valueIds[0]);
 }

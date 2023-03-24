@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { Button } from 'reactstrap';
-import { deleteValue, setIsDeletingValue, setIsHelpModalOpen, toggleEditValue, isValueHasFormattedLabel } from 'slices/statementBrowserSlice';
+import { faCheck, faPen, faQuestionCircle, faSpinner, faTable, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPen, faTable, faCheck, faTimes, faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
-import { deleteStatementById } from 'services/backend/statements';
-import { useDispatch, useSelector } from 'react-redux';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import PropTypes from 'prop-types';
-import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import RDFDataCube from 'components/RDFDataCube/RDFDataCube';
+import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { Button } from 'reactstrap';
+import { deleteStatementById } from 'services/backend/statements';
+import { deleteValue, isValueHasFormattedLabel, setIsDeletingValue, setIsHelpModalOpen, toggleEditValue } from 'slices/statementBrowserSlice';
 import InfoTippy from './InfoTippy';
 
 const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {

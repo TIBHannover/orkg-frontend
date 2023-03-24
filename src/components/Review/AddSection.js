@@ -68,7 +68,7 @@ const AddSection = props => {
                 <Toolbar ref={refToolbar}>
                     <ButtonGroup size="sm">
                         <Button color="dark" onClick={() => handleAddSection('content')}>
-                            Content
+                            Text
                         </Button>
                         <Button color="dark" onClick={() => handleAddSection('comparison')}>
                             Comparison

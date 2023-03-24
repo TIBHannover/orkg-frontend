@@ -32,7 +32,7 @@ import moment from 'moment';
 import { Cite } from '@citation-js/core';
 import { Steps } from 'intro.js-react';
 import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
+import qs from 'qs';
 import env from '@beam-australia/react-env';
 import AutocompleteContentTypeTitle from 'components/AutocompleteContentTypeTitle/AutocompleteContentTypeTitle';
 import Confirm from 'components/Confirmation/Confirmation';
@@ -162,7 +162,7 @@ const GeneralData = () => {
     };
 
     useEffect(() => {
-        const entryParam = queryString.parse(location.search).entry;
+        const entryParam = qs.parse(location.search, { ignoreQueryPrefix: true }).entry;
         if (entryParam) {
             dispatch(updateGeneralData({ entry: entryParam }));
             handleLookupClick(entryParam);

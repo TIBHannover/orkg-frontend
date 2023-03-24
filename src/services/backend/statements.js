@@ -1,8 +1,9 @@
+import { CLASSES, MISC, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { url } from 'constants/misc';
-import { submitGetRequest, submitPostRequest, submitDeleteRequest, submitPutRequest } from 'network';
-import queryString from 'query-string';
-import { PREDICATES, MISC, CLASSES, RESOURCES } from 'constants/graphSettings';
-import { filterStatementsBySubjectId, getTemplateComponentData, filterObjectOfStatementsByPredicateAndClass, sortMethod } from 'utils';
+import { flatten } from 'lodash';
+import { submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
+import qs from 'qs';
+import { filterObjectOfStatementsByPredicateAndClass, filterStatementsBySubjectId, getTemplateComponentData, sortMethod } from 'utils';
 
 export const statementsUrl = `${url}statements/`;
 
@@ -52,7 +53,7 @@ export const updateStatements = (statementIds, { subject_id = null, predicate_id
 
 export const getAllStatements = ({ page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort },
         {
             skipNull: true,
@@ -69,11 +70,10 @@ export const deleteStatementsByIds = ids => submitDeleteRequest(`${statementsUrl
 
 export const getStatementsBySubject = ({ id, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
 
@@ -90,11 +90,10 @@ export const getStatementsBySubject = ({ id, page = 0, items: size = 9999, sortB
  * @return {Promise} Promise object
  */
 export const getStatementsBundleBySubject = ({ id, maxLevel = 10, blacklist = [] }) => {
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { maxLevel, blacklist: blacklist?.join(',') },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
     return submitGetRequest(`${statementsUrl}${encodeURIComponent(id)}/bundle/?${params}`);
@@ -102,11 +101,10 @@ export const getStatementsBundleBySubject = ({ id, maxLevel = 10, blacklist = []
 
 export const getStatementsBySubjects = ({ ids, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { ids: ids.join(), page, size, sort },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
     return submitGetRequest(`${statementsUrl}subjects/?${params}`).then(res =>
@@ -119,11 +117,10 @@ export const getStatementsBySubjects = ({ ids, page = 0, items: size = 9999, sor
 
 export const getStatementsByObject = async ({ id, page = 0, items: size = 9999, sortBy = 'created_at', desc = true, returnContent = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
 
@@ -136,11 +133,10 @@ export const getStatementsByObject = async ({ id, page = 0, items: size = 9999, 
 
 export const getStatementsByPredicate = ({ id, page = 0, items: size = 9999, sortBy = 'created_at', desc = true, returnContent = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
 
@@ -149,11 +145,10 @@ export const getStatementsByPredicate = ({ id, page = 0, items: size = 9999, sor
 
 export const getStatementsBySubjectAndPredicate = ({ subjectId, predicateId, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
 
@@ -170,11 +165,10 @@ export const getStatementsByObjectAndPredicate = ({
     returnContent = true,
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size, sort },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
 
@@ -183,15 +177,26 @@ export const getStatementsByObjectAndPredicate = ({
     );
 };
 
-export const getStatementsByPredicateAndLiteral = ({ predicateId, literal, subjectClass = null, items: size = 9999 }) => {
-    const params = queryString.stringify(
-        { size, subjectClass },
+export const getStatementsByPredicateAndLiteral = ({
+    literal,
+    predicateId,
+    subjectClass = null,
+    items: size = 9999,
+    page = 0,
+    sortBy = 'created_at',
+    desc = true,
+    returnContent = true,
+}) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = qs.stringify(
+        { size, subjectClass, page, sort },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
-    return submitGetRequest(`${statementsUrl}predicate/${predicateId}/literal/${literal}/?${params}`).then(res => res.content);
+    return submitGetRequest(`${statementsUrl}predicate/${predicateId}/literal/${literal}/?${params}`).then(res =>
+        returnContent ? res.content : res,
+    );
 };
 
 /**
@@ -251,11 +256,12 @@ export const getTemplateById = async templateId => {
     const components = templateComponents.map(component =>
         getTemplateComponentData(component, filterStatementsBySubjectId(response.statements, component.id)),
     );
+    const componentsStatements = templateComponents.map(component => filterStatementsBySubjectId(response.statements, component.id).map(s => s.id));
 
     return {
         id: templateId,
         ...subject,
-        statements: statements.map(s => s.id),
+        statements: [...statements.map(s => s.id), ...flatten(componentsStatements)],
         predicate: templatePredicate,
         labelFormat: templateFormatLabel ? templateFormatLabel.label : '',
         hasLabelFormat: !!templateFormatLabel,

@@ -10,7 +10,7 @@ import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useLocation } from 'react-router';
-import queryString from 'query-string';
+import qs from 'qs';
 
 const DEFAULT_CLASSES_FILTER = [
     { id: CLASSES.PAPER, label: 'Paper' },
@@ -24,7 +24,7 @@ const DEFAULT_CLASSES_FILTER = [
 
 const IntegratedList = ({ id, slug, boxShadow }) => {
     const location = useLocation();
-    const params = queryString.parse(location.search);
+    const params = qs.parse(location.search, { ignoreQueryPrefix: true });
 
     const { items, sort, isLoading, hasNextPage, isLastPageReached, totalElements, page, classesFilter, handleLoadMore, setClassesFilter, setSort } =
         useObservatoryContent({

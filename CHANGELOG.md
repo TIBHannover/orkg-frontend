@@ -3,6 +3,60 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.97.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.97.0...v0.97.1) - 2023-03-23
+
+### Changes
+
+- refactor: Sync with the backend changes and use the timline endpoint [`#1054`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1054)
+
+---
+## [v0.97.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.96.0...v0.97.0) - 2023-03-20
+
+### Changes
+
+- feat(QualityReport): count related figures in the quality modal [`#1058`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1058)
+- chore(Footer): add link to data protection info sheet [`#1059`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1059)
+- feat:change tabs with url [`#1057`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1057)
+- feat: Delete property [`#1055`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1055)
+- fix(TemplateEditor): Delete statements of orphan nodes while editing a template [`#1056`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1056)
+- feat(Author): support listing works and searching for authors without ORCID [`#1053`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1053)
+- feat(UserProfile): add user related statistics to profile [`#1052`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1052)
+
+---
+## [v0.96.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.95.1...v0.96.0) - 2023-03-15
+
+### Changes
+
+- feat: Support CSVW model for table view [`#970`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/970)
+
+---
+## [v0.95.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.95.0...v0.95.1) - 2023-03-14
+
+### Changes
+
+- enhancement(HomePage): Group versions after alternating the featured and no-featured comparisons [`#1049`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1049)
+- fix(ViewPaper): loading paper contributors if a user doesn't exist in the database [`#1047`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1047)
+- style: hide scroll-bars for visualization preview of tables [`#1045`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1045)
+- chore(Comaprison): Order of elements in the carousel [`#1050`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1050)
+- chore(Review): change content section to text section [`#1044`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1044)
+- ux: Truncate long contribution labels for better readability [`#1046`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1046)
+- fix(Review): prevent recreation of existing references [`#1048`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1048)
+- refactor: create separate component for button with loading state [`#1041`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1041)
+- fix(About): blank page for about, fix issue with missing title [`#1043`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1043)
+
+---
+## [v0.95.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.94.0...v0.95.0) - 2023-03-10
+
+### Changes
+
+- refactor: Replace query-string with qs [`#1042`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1042)
+- fix(Resource): usage in papers doesn't support url encoding [`#1037`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1037)
+- fix(Comparison): Missing data when requesting a DOI for a published comparison [`#1038`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1038)
+- feat(UserProfile): Show the created reviews and templates [`#1028`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1028)
+- fix(Comparison): make carousel visible when only related figures/resources are available [`#1039`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1039)
+- doc: add explainer videos to comparison and review list [`#1036`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1036)
+
+---
 ## [v0.94.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.93.0...v0.94.0) - 2023-03-06
 
 ### Changes

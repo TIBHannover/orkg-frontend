@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup, Alert } from 'reactstrap';
 import { createLiteralStatement, createResourceStatement } from 'services/backend/statements';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
@@ -12,6 +12,7 @@ import { saveAuthors } from 'components/AuthorsInput/helpers';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 function PublishVisualization(props) {
     const [isLoading, setIsLoading] = useState(false);
@@ -147,10 +148,9 @@ function PublishVisualization(props) {
             </ModalBody>
             <ModalFooter>
                 <div className="text-align-center mt-2">
-                    {/* <Button color="primary" disabled={isLoading} onClick={handleSubmit}> */}
-                    <Button color="primary" onClick={handleSubmit}>
-                        {isLoading && <span className="fa fa-spinner fa-spin" />} Publish
-                    </Button>
+                    <ButtonWithLoading isLoading={isLoading} color="primary" onClick={handleSubmit}>
+                        Publish
+                    </ButtonWithLoading>
                 </div>
             </ModalFooter>
         </Modal>

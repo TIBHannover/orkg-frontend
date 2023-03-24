@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Button, FormGroup, Input, Label } from 'reactstrap';
+import { Container, FormGroup, Input, Label } from 'reactstrap';
 import { createPredicate } from 'services/backend/predicates';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
@@ -7,6 +7,7 @@ import ROUTES from 'constants/routes';
 import TitleBar from 'components/TitleBar/TitleBar';
 import requireAuthentication from 'requireAuthentication';
 import { useNavigate } from 'react-router-dom';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const AddProperty = () => {
     const [label, setLabel] = useState('');
@@ -53,9 +54,9 @@ const AddProperty = () => {
                             disabled={isLoading}
                         />
                     </FormGroup>
-                    <Button color="primary" onClick={handleAdd} className="mt-3 mb-2" disabled={isLoading}>
-                        {!isLoading ? 'Create property' : <span>Loading</span>}
-                    </Button>
+                    <ButtonWithLoading color="primary" onClick={handleAdd} className="mt-3 mb-2" isLoading={isLoading}>
+                        Create property
+                    </ButtonWithLoading>
                 </div>
             </Container>
         </>

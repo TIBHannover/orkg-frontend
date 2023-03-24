@@ -15,6 +15,7 @@ import { parseCiteResult } from 'utils';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const Save = props => {
     const annotations = useSelector(state => state.pdfTextAnnotation.annotations);
@@ -202,9 +203,9 @@ const Save = props => {
             </ModalBody>
             {annotations.length && !paperId ? (
                 <ModalFooter>
-                    <Button color="primary" onClick={handleSave} disabled={isLoading}>
-                        {!isLoading ? 'Save' : <Icon icon={faSpinner} spin />}
-                    </Button>
+                    <ButtonWithLoading color="primary" onClick={handleSave} isLoading={isLoading}>
+                        Save
+                    </ButtonWithLoading>
                 </ModalFooter>
             ) : null}
         </Modal>

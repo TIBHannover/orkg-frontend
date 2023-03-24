@@ -1,5 +1,12 @@
 import PropTypes from 'prop-types';
 import { Chart } from 'react-google-charts';
+import styled from 'styled-components';
+
+export const StyledChart = styled(Chart)`
+    & .google-visualization-table > div {
+        overflow: hidden !important;
+    }
+`;
 
 const GDCVisualizationRenderer = props => {
     // adding pre-processing step to render date items correctly;
@@ -26,21 +33,19 @@ const GDCVisualizationRenderer = props => {
     ];
 
     return (
-        <>
-            <Chart
-                chartType={props.model.data.visMethod}
-                data={props.model.data.googleChartsData}
-                height={props.height ?? undefined}
-                width={props.width ?? '100%'}
-                options={{
-                    title: props.caption ?? undefined,
-                    showRowNumber: true,
-                    enableInteractivity: !props.disableInteractivity,
-                    ...(props.height ? { height: props.height } : {}),
-                }}
-                chartEvents={props.downloadChart ? chartEvents : undefined}
-            />
-        </>
+        <StyledChart
+            chartType={props.model.data.visMethod}
+            data={props.model.data.googleChartsData}
+            height={props.height ?? undefined}
+            width={props.width ?? '100%'}
+            options={{
+                title: props.caption ?? undefined,
+                showRowNumber: true,
+                enableInteractivity: !props.disableInteractivity,
+                ...(props.height ? { height: props.height } : {}),
+            }}
+            chartEvents={props.downloadChart ? chartEvents : undefined}
+        />
     );
 };
 

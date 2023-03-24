@@ -1,5 +1,4 @@
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import InviteResearchersButton from 'components/Comparison/QualityReportModal/InviteResearchersButton';
 import reviewQuestions from 'components/Comparison/QualityReportModal/reviewQuestions';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
@@ -7,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Alert, Button, Input, Modal, ModalBody, ModalFooter, ModalHeader, Table } from 'reactstrap';
+import { Alert, Input, Modal, ModalBody, ModalFooter, ModalHeader, Table } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 import { createResourceStatement } from 'services/backend/statements';
 import { createResourceData } from 'services/similarity/index';
@@ -168,15 +167,14 @@ const WriteReview = ({ toggle }) => {
             </ModalBody>
             {comparisonId && !isSubmitted && (
                 <ModalFooter className="d-flex">
-                    <Button color="primary" onClick={handleSubmit} disabled={isLoading || comparisonCreator === userId}>
-                        {!isLoading ? (
-                            'Submit'
-                        ) : (
-                            <>
-                                <Icon icon={faSpinner} spin /> Loading
-                            </>
-                        )}
-                    </Button>
+                    <ButtonWithLoading
+                        color="primary"
+                        onClick={handleSubmit}
+                        isLoading={isLoading}
+                        disabled={isLoading || comparisonCreator === userId}
+                    >
+                        Submit
+                    </ButtonWithLoading>
                 </ModalFooter>
             )}
         </Modal>

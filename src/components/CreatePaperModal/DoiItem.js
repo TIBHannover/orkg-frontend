@@ -1,5 +1,3 @@
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Cite } from '@citation-js/core';
 import useExistingPaper from 'components/ExistingPaperModal/useExistingPaper';
 import ListItem from 'components/ViewPaper/EditDialog/ListItem';
@@ -7,8 +5,9 @@ import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, Input, InputGroup } from 'reactstrap';
+import { Input, InputGroup } from 'reactstrap';
 import { parseCiteResult } from 'utils';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, lookupOnMount }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -78,9 +77,9 @@ const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, 
         <ListItem toggleItem={toggleItem} label="Paper DOI or BibTeX" open={isExpanded} value={truncate(value || '', { length: 60 })}>
             <InputGroup>
                 <Input value={value} onChange={e => onChange(e.target.value)} disabled={isLoading} valid={isValid} invalid={isValid === false} />
-                <Button color="secondary" onClick={handleLookup} disabled={isLoading}>
-                    {!isLoading ? 'Lookup' : <Icon icon={faSpinner} spin />}
-                </Button>
+                <ButtonWithLoading color="secondary" onClick={handleLookup} isLoading={isLoading}>
+                    Lookup
+                </ButtonWithLoading>
             </InputGroup>
             {/* TODO: improve modal to allow linking to the 'add contribution' modal */}
             <ExistingPaperModels />

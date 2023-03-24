@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { getPropertyObjectFromData } from 'components/Comparison/hooks/helpers';
 import REVIEW_QUESTIONS from 'components/Comparison/QualityReportModal/reviewQuestions';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
@@ -191,16 +192,19 @@ const useQualityReport = () => {
                     title: 'Visualizations are added to the comparison',
                     info: 'Visualizations are especially useful to visualize numeric data, for which tables are sometimes less suitable. Although visualizations can provide added value, they are not suitable for all types of data, and therefore not all comparison must have a visualization.',
                     solution:
-                        'If the comparison is suitable to be visualized, click the "Visualize" button on top of a comparison, and create a visualization.',
+                        'If the comparison is suitable to be visualized, click the "Visualize" button on top of a comparison, and create a visualization or related figures.',
                     performEvaluation: () => {
                         const visualizationAmount = comparisonResource?.visualizations?.length;
-                        const passing = visualizationAmount > 0;
+                        const figuresAmount = comparisonResource?.figures?.length;
+                        const passing = visualizationAmount > 0 || figuresAmount > 0;
+
                         return {
                             passing,
-                            evaluation: `The comparison has ${visualizationAmount} visualizations.`,
+                            evaluation: `The comparison has ${visualizationAmount + figuresAmount}  visualizations.`,
                         };
                     },
                 },
+
                 {
                     title: 'Other researchers provided reviews',
                     info: 'Other researcher can help evaluating the correctness and completeness of a comparison. Therefore, it makes sense to share the created comparison and ask other researchers for their opinions.',
@@ -232,6 +236,7 @@ const useQualityReport = () => {
         comparisonResource?.created_at,
         comparisonResource?.description?.length,
         comparisonResource?.doi,
+        comparisonResource?.figures?.length,
         comparisonResource?.id,
         comparisonResource?.visualizations?.length,
         data,

@@ -154,7 +154,7 @@ const ValueItem = props => {
                                 </span>
                             </DescriptionTooltip>
                         )}
-                        {preferences.showInlineDataTypes && <ValueDatatype value={value} />}
+                        {(preferences.showInlineDataTypes || value.classes?.includes(CLASSES.CSVW_TABLE)) && <ValueDatatype value={value} />}
                         {value.isSaving && 'Saving...'}
                         <ValueItemOptions id={props.id} enableEdit={props.enableEdit} syncBackend={props.syncBackend} handleOnClick={handleOnClick} />
                     </div>

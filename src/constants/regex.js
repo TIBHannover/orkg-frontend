@@ -16,5 +16,6 @@ const regex = {
     MINIMUM_LENGTH_PATTERN: 3,
     ORCID_URL: /^(?:(?:https?:\/\/)?orcid.org\/)?([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))\/*$/,
     ORCID: /([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))/g,
+    CSW_ROW_TITLES_VALUE: /^(row \d+)$/,
 };
 export default regex;

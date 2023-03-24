@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getStatementsBySubjects } from 'services/backend/statements';

@@ -1,6 +1,6 @@
 import { MISC } from 'constants/graphSettings';
 import { url } from 'constants/misc';
-import queryString from 'query-string';
+import qs from 'qs';
 import { submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import { getOrganization } from 'services/backend/organizations';
 import { getOrganizationLogoUrl } from 'services/backend/organizations';
@@ -44,11 +44,10 @@ export const getContentByObservatoryIdAndClasses = ({
 }) => {
     // Sort is not supported in this endpoint
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
+    const params = qs.stringify(
         { page, size: items, sort, featured, unlisted, classes: classes.join(',') },
         {
-            skipNull: true,
-            skipEmptyString: true,
+            skipNulls: true,
         },
     );
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/class?${params}`);

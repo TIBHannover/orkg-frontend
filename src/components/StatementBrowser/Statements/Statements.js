@@ -1,28 +1,30 @@
-import { useEffect } from 'react';
-import { Col, ListGroup, Row } from 'reactstrap';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import SameAsStatements from 'components/ExternalDescription/SameAsStatements';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
 import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/Breadcrumbs';
-import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions/PropertySuggestions';
-import StatementItemWrapper from 'components/StatementBrowser/StatementItem/StatementItemWrapper';
+import ClassesItem from 'components/StatementBrowser/ClassesItem/ClassesItem';
 import NoData from 'components/StatementBrowser/NoData/NoData';
 import NotFound from 'components/StatementBrowser/NotFound/NotFound';
+import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions/PropertySuggestions';
+import StatementItemWrapper from 'components/StatementBrowser/StatementItem/StatementItemWrapper';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
-import SameAsStatements from 'components/ExternalDescription/SameAsStatements';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import { ENTITIES } from 'constants/graphSettings';
 import { isArray } from 'lodash';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import FlipMove from 'react-flip-move';
+import { useDispatch, useSelector } from 'react-redux';
+import { Col, ListGroup, Row } from 'reactstrap';
 import {
-    updateSettings,
     getSuggestedProperties,
     initializeWithoutContribution,
     initializeWithResource,
     setInitialPath,
+    updateSettings,
 } from 'slices/statementBrowserSlice';
-import { ENTITIES } from 'constants/graphSettings';
-import ClassesItem from 'components/StatementBrowser/ClassesItem/ClassesItem';
+import ItemPreviewFactory from '../ValueItem/ItemPreviewFactory/ItemPreviewFactory';
 import StatementMenuHeader from './StatementMenuHeader/StatementMenuHeader';
 
 const Statements = props => {
@@ -96,53 +98,64 @@ const Statements = props => {
         }
 
         return (
-            <div>
-                <Row>
-                    <Col lg={props.propertySuggestionsComponent ? 9 : 12}>
-                        <ClassesItem
-                            enableEdit={(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit}
-                            syncBackend={syncBackend}
-                        />
-                        <ListGroup tag="div" className="listGroupEnlarge">
-                            {selectedResource && !resource.isFetching ? (
-                                <>
-                                    <FlipMove>
-                                        {propertyIds.length > 0 &&
-                                            propertyIds.map((propertyId, index) => (
-                                                <StatementItemWrapper
-                                                    key={`statement-p${propertyId}r${selectedResource}`}
-                                                    enableEdit={(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit}
-                                                    openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                                                    isLastItem={propertyIds.length === index + 1}
-                                                    isFirstItem={index === 0}
-                                                    resourceId={selectedResource}
-                                                    propertyId={propertyId}
-                                                    syncBackend={syncBackend}
-                                                    renderTemplateBox={props.renderTemplateBox}
-                                                />
-                                            ))}
-                                    </FlipMove>
+            <ConditionalWrapper
+                condition={!props.resourcesAsLinks && resource?.classes}
+                wrapper={children => (
+                    <ItemPreviewFactory id={selectedResource} classes={resource?.classes}>
+                        {children}
+                    </ItemPreviewFactory>
+                )}
+            >
+                <div>
+                    <Row>
+                        <Col lg={props.propertySuggestionsComponent ? 9 : 12}>
+                            <ClassesItem
+                                enableEdit={(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit}
+                                syncBackend={syncBackend}
+                            />
+                            <ListGroup tag="div" className="listGroupEnlarge">
+                                {selectedResource && !resource.isFetching ? (
+                                    <>
+                                        <FlipMove>
+                                            {propertyIds.length > 0 &&
+                                                propertyIds.map((propertyId, index) => (
+                                                    <StatementItemWrapper
+                                                        key={`statement-p${propertyId}r${selectedResource}`}
+                                                        enableEdit={
+                                                            (shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit
+                                                        }
+                                                        openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+                                                        isLastItem={propertyIds.length === index + 1}
+                                                        isFirstItem={index === 0}
+                                                        resourceId={selectedResource}
+                                                        propertyId={propertyId}
+                                                        syncBackend={syncBackend}
+                                                        renderTemplateBox={props.renderTemplateBox}
+                                                    />
+                                                ))}
+                                        </FlipMove>
 
-                                    {!resource.isFailedFetching && propertyIds.length === 0 && <NoData enableEdit={props.enableEdit} />}
-                                    {resource.isFailedFetching && propertyIds.length === 0 && <NotFound />}
-                                </>
-                            ) : (
-                                <StyledStatementItem>
-                                    <Icon icon={faSpinner} spin /> Loading
-                                </StyledStatementItem>
-                            )}
+                                        {!resource.isFailedFetching && propertyIds.length === 0 && <NoData enableEdit={props.enableEdit} />}
+                                        {resource.isFailedFetching && propertyIds.length === 0 && <NotFound />}
+                                    </>
+                                ) : (
+                                    <StyledStatementItem>
+                                        <Icon icon={faSpinner} spin /> Loading
+                                    </StyledStatementItem>
+                                )}
 
-                            {(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit && (
-                                <AddProperty resourceId={selectedResource} syncBackend={syncBackend} />
-                            )}
-                        </ListGroup>
-                    </Col>
-                    {(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) &&
-                        props.enableEdit &&
-                        suggestedProperties.length > 0 &&
-                        propertySuggestionsComponent}
-                </Row>
-            </div>
+                                {(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit && (
+                                    <AddProperty resourceId={selectedResource} syncBackend={syncBackend} />
+                                )}
+                            </ListGroup>
+                        </Col>
+                        {(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) &&
+                            props.enableEdit &&
+                            suggestedProperties.length > 0 &&
+                            propertySuggestionsComponent}
+                    </Row>
+                </div>
+            </ConditionalWrapper>
         );
     };
 

@@ -5,7 +5,7 @@ import ROUTES from 'constants/routes';
 import { isString, sortBy, uniqBy } from 'lodash';
 import { unescape } from 'he';
 import { reverse } from 'named-urls';
-import queryString from 'query-string';
+import qs from 'qs';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 import slugifyString from 'slugify';
@@ -20,9 +20,8 @@ const cookies = new Cookies();
  * @param {String} param parameter name
  * @return {Array} the list of values
  */
-
 export function getArrayParamFromQueryString(locationSearch, param) {
-    const values = queryString.parse(locationSearch, { arrayFormat: 'comma' })[param];
+    const values = qs.parse(locationSearch, { comma: true, ignoreQueryPrefix: true })[param];
     if (!values) {
         return [];
     }
@@ -40,9 +39,8 @@ export function getArrayParamFromQueryString(locationSearch, param) {
  * @param {Boolean} boolean return false instead of null
  * @return {String|Boolean} value
  */
-
 export function getParamFromQueryString(locationSearch, param, boolean = false) {
-    const value = queryString.parse(locationSearch)[param];
+    const value = qs.parse(locationSearch, { ignoreQueryPrefix: true })[param];
     if (!value) {
         return boolean ? false : null;
     }
@@ -458,11 +456,11 @@ export const sortMethod = (a, b) => {
     a = a === null || a === undefined ? -Infinity : a;
     b = b === null || b === undefined ? -Infinity : b;
     // check if a and b are numbers (contains only digits)
-    const aisnum = /^\d+$/.test(a);
-    const bisnum = /^\d+$/.test(b);
+    const aisnum = /^(\d|.)+$/.test(a);
+    const bisnum = /^(\d|.)+$/.test(b);
     if (aisnum && bisnum) {
-        a = parseInt(a);
-        b = parseInt(b);
+        a = parseFloat(a);
+        b = parseFloat(b);
     } else {
         // force any string values to lowercase
         a = typeof a === 'string' ? a.toLowerCase() : a;

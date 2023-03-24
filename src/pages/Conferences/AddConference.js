@@ -15,6 +15,7 @@ import Tooltip from 'components/Utils/Tooltip';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { useSelector, useDispatch } from 'react-redux';
 import { CONFERENCE_REVIEW_TYPE } from 'constants/organizationsTypes';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const AddConference = () => {
     const params = useParams();
@@ -177,9 +178,9 @@ const AddConference = () => {
                                 ))}
                             </Input>
                         </FormGroup>
-                        <Button color="primary" onClick={createNewConference} className="mb-2 mt-2" disabled={loading}>
-                            {!loading ? 'Create conference event' : <span>Loading</span>}
-                        </Button>
+                        <ButtonWithLoading color="primary" onClick={createNewConference} className="mb-2 mt-2" isLoading={loading}>
+                            Create conference event
+                        </ButtonWithLoading>
                     </Form>
                 )}
                 {(!user || !user.isCurationAllowed) && (

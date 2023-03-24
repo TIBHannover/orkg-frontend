@@ -12,7 +12,7 @@ import CreateContributionModal from 'components/CreateContributionModal/CreateCo
 import CreatePaperModal from 'components/CreatePaperModal/CreatePaperModal';
 import routes from 'constants/routes';
 import { reverse } from 'named-urls';
-import queryString from 'query-string';
+import qs from 'qs';
 import { useLocation, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,7 +39,7 @@ const ContributionEditor = () => {
                 statementId => state.contributionEditor?.statements[statementId]?.created_by === env('PWC_USER_ID'),
             )?.length ?? 0,
     );
-    const { hasPreviousVersion } = queryString.parse(location.search);
+    const { hasPreviousVersion } = qs.parse(location.search, { ignoreQueryPrefix: true });
 
     useEffect(() => {
         document.title = 'Contribution editor - ORKG';

@@ -8,6 +8,7 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import useEditResource from './hooks/useEditResource';
 
 const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate, showResourceLink, fixedClasses }) => {
@@ -73,9 +74,9 @@ const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate, showResourc
                     />
                 </FormGroup>
                 <div className="d-flex" style={{ justifyContent: 'flex-end' }}>
-                    <Button disabled={isLoading} color="primary" className=" mt-2 mb-2" onClick={handleSave}>
+                    <ButtonWithLoading isLoading={isLoading} color="primary" className=" mt-2 mb-2" onClick={handleSave}>
                         Save
-                    </Button>
+                    </ButtonWithLoading>
                 </div>
             </ModalBody>
         </Modal>
