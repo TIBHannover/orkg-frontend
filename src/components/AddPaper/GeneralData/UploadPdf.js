@@ -50,9 +50,13 @@ const UploadPdf = () => {
                     title = processedPdf.querySelector('hasTitle')?.textContent;
                     authors = [...processedPdf.querySelectorAll('hasAuthor')].map(auth => auth.textContent);
                     error = processedPdf.querySelector('error')?.textContent;
-                    const rdfDescription = processedPdf.querySelector('Description');
-                    resourceUri = rdfDescription?.getAttribute('rdf:about');
                     console.log('show files', processedPdf);
+                    const rdfDescriptions = processedPdf.querySelectorAll('rdf\\:Description[rdf\\:about]');
+                    const rdfDescription = rdfDescriptions[0];
+                    console.log(`rdfDescription: ${rdfDescription}`);
+                    const resourceUri = rdfDescription && rdfDescription?.getAttribute('rdf:about');
+                    console.log(`resourceUri: ${resourceUri}`);
+
                     console.log({
                         extractedResearchField,
                         researchField,
