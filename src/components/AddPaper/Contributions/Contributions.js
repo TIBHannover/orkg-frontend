@@ -18,12 +18,14 @@ import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tabs from 'components/Tabs/Tabs';
 import Tooltip from 'components/Utils/Tooltip';
-import { ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { BIOASSAYS_FIELDS_LIST } from 'constants/nlpFieldLists';
+import Classes from 'pages/Classes/Classes';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Row, UncontrolledAlert } from 'reactstrap';
 import { determineActiveNERService } from 'services/orkgNlp/index';
+
 import {
     createContributionAction as createContribution,
     deleteContributionAction as deleteContribution,
@@ -74,6 +76,9 @@ const Contributions = () => {
     const extractedResearchFieldId = useSelector(state => state.addPaper.extractedResearchFieldId);
     const error = useSelector(state => state.addPaper.predicateError);
     const resourceUri = useSelector(state => state.addPaper.resourceUri);
+    const resourceId = resourceUri.split('/').pop();
+    const researchProblemLink = useSelector(state => state.addPaper.researchProblemLink);
+
     useEffect(() => {
         (async () => setActiveNERService(await determineActiveNERService(selectedResearchField)))();
     }, [selectedResearchField]);
@@ -124,8 +129,12 @@ const Contributions = () => {
                             const valuesArray = [];
                             if (researchProblem) {
                                 valuesArray.push({
-                                    _class: 'literal',
-                                    label: `${researchProblem}\n${resourceUri}`,
+                                    isExistingValue: true,
+                                    valueId: resourceId,
+                                    _class: ENTITIES.RESOURCE,
+                                    classes: [CLASSES.PROBLEM],
+                                    label: researchProblemLink,
+                                    existingResourceId: resourceId,
                                     propertyId: PREDICATES.HAS_RESEARCH_PROBLEM,
                                     existingPredicateId: PREDICATES.HAS_RESEARCH_PROBLEM,
                                 });

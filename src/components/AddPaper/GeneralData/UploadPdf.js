@@ -32,6 +32,7 @@ const UploadPdf = () => {
             let title;
             let error;
             let resourceUri;
+            let researchProblemLink;
             reader.onload = async () => {
                 const data = new Uint8Array(reader?.result);
                 const loadingTask = getDocument({ data });
@@ -51,12 +52,22 @@ const UploadPdf = () => {
                     authors = [...processedPdf.querySelectorAll('hasAuthor')].map(auth => auth.textContent);
                     error = processedPdf.querySelector('error')?.textContent;
                     console.log('show files', processedPdf);
-                    const rdfDescriptions = processedPdf.querySelectorAll('rdf\\:Description[rdf\\:about]');
-                    const rdfDescription = rdfDescriptions[0];
-                    console.log(`rdfDescription: ${rdfDescription}`);
-                    const resourceUri = rdfDescription && rdfDescription?.getAttribute('rdf:about');
-                    console.log(`resourceUri: ${resourceUri}`);
-
+                    const xpath = '//orkg_property:researchproblem/rdf:Description[@rdf:about]';
+                    const nsResolver = prefix => {
+                        const ns = {
+                            orkg_property: 'http://orkg.org/property/',
+                            rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                        };
+                        return ns[prefix] || null;
+                    };
+                    const rdfDescriptionElement = processedPdf.evaluate(
+                        xpath,
+                        processedPdf,
+                        nsResolver,
+                        XPathResult.FIRST_ORDERED_NODE_TYPE,
+                    ).singleNodeValue;
+                    resourceUri = rdfDescriptionElement?.getAttribute('rdf:about');
+                    researchProblemLink = processedPdf.querySelector('Description label')?.textContent;
                     console.log({
                         extractedResearchField,
                         researchField,
@@ -69,6 +80,7 @@ const UploadPdf = () => {
                         authors,
                         error,
                         resourceUri,
+                        researchProblemLink,
                     });
                 }
             };
@@ -103,6 +115,7 @@ const UploadPdf = () => {
                     method,
                     predicateError: error,
                     resourceUri,
+                    researchProblemLink,
                 }),
             );
             toast.success('PDF parsed successfully');

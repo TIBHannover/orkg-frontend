@@ -43,6 +43,7 @@ const initialState = {
     conclusion: '',
     predicateError: '',
     resourceUri: '',
+    researchProblemLink: '',
     selectedContribution: '',
     paperNewResourceId: null,
     url: '',
