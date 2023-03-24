@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.97.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.97.0...v0.97.1) - 2023-03-23
+
+### Changes
+
+- refactor: Sync with the backend changes and use the timline endpoint [`#1054`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1054)
+
+---
 ## [v0.97.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.96.0...v0.97.0) - 2023-03-20
 
 ### Changes
