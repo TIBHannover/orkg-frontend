@@ -1,23 +1,24 @@
-import { useState, useEffect } from 'react';
-import { Container, Button, FormGroup, Input, Label, InputGroup } from 'reactstrap';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
+import { MAX_DESCRIPTION_LENGTH } from 'components/Observatory/EditObservatory';
+import Tooltip from 'components/Utils/Tooltip';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import REGEX from 'constants/regex';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import InternalServerError from 'pages/InternalServerError';
+import NotFound from 'pages/NotFound';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Button, Container, FormGroup, Input, InputGroup, Label } from 'reactstrap';
 import { createObservatory } from 'services/backend/observatories';
 import { getOrganization } from 'services/backend/organizations';
-import NotFound from 'pages/NotFound';
-import InternalServerError from 'pages/InternalServerError';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { ENTITIES, CLASSES } from 'constants/graphSettings';
-import { toast } from 'react-toastify';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { openAuthDialog } from 'slices/authSlice';
-import { useSelector, useDispatch } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
 import slugify from 'slugify';
 import { getPublicUrl } from 'utils';
-import Tooltip from 'components/Utils/Tooltip';
-import REGEX from 'constants/regex';
 
 const AddObservatory = () => {
     const params = useParams();
@@ -178,9 +179,14 @@ const AddObservatory = () => {
                                         onChange={e => setDescription(e.target.value)}
                                         type="textarea"
                                         name="description"
+                                        value={description}
                                         id="ObservatoryDescription"
                                         disabled={loading}
+                                        maxlength={MAX_DESCRIPTION_LENGTH}
                                     />
+                                    <div className="text-muted text-end">
+                                        {description?.length}/{MAX_DESCRIPTION_LENGTH}
+                                    </div>
                                 </FormGroup>
                                 <Button color="primary" onClick={createNewObservatory} className="mt-4 mb-2" isLoading={loading}>
                                     Create observatory
