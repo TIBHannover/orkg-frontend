@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.98.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.97.1...v0.98.0) - 2023-03-27
+
+### Changes
+
+- feat(Observatory): set maximum length for observatory description [`#1061`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1061)
+- enhancement(Benchmarks): paginate the list and refactor ListPage [`#1051`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1051)
+
+---
 ## [v0.97.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.97.0...v0.97.1) - 2023-03-23
 
 ### Changes
