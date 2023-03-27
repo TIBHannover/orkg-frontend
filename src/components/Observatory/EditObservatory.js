@@ -7,6 +7,8 @@ import PropTypes from 'prop-types';
 import { ENTITIES, CLASSES } from 'constants/graphSettings';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 
+export const MAX_DESCRIPTION_LENGTH = 750;
+
 class EditObservatory extends Component {
     constructor(props) {
         super(props);
@@ -173,9 +175,12 @@ class EditObservatory extends Component {
                                     id="observatory-description"
                                     value={this.state.description}
                                     rows={4}
-                                    placeholder="description"
                                     disabled={isLoading}
+                                    maxlength={MAX_DESCRIPTION_LENGTH}
                                 />
+                                <div className="text-muted text-end">
+                                    {this.state.description?.length}/{MAX_DESCRIPTION_LENGTH}
+                                </div>
                             </FormGroup>
                         </>
                     </ModalBody>
