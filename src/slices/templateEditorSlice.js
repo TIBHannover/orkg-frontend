@@ -284,15 +284,14 @@ export const saveTemplate = () => async (dispatch, getState) => {
             promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_LABEL_FORMAT, labelFormatLiteral.id));
         }
 
-        // delete all the statement old
-        if (data.templateID) {
-            if (data.statements.length > 0) {
-                promises.push(deleteStatementsByIds(data.statements));
-            }
-        }
-
         return Promise.all(promises)
-            .then(() => {
+            .then(async responses => {
+                // delete all the statement old
+                if (data.templateID) {
+                    if (data.statements.length > 0) {
+                        await deleteStatementsByIds(data.statements.filter(s => !responses.map(r => r.id).includes(s))); // filter on the newly created statements
+                    }
+                }
                 if (data.templateID) {
                     toast.success('Template updated successfully');
                 } else {
