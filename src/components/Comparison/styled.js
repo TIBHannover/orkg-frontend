@@ -184,8 +184,8 @@ export const PropertiesInner = styled.div`
     color: #fff;
     padding: ${props => props.cellPadding ?? 10}px 10px;
     border-bottom: ${props => (props.transpose ? 'thin solid #fff!important' : 'thin solid #8B91A5!important')};
-    word-wrap: break-word;
     overflow-wrap: break-word;
+    word-break: break-all;
     white-space: normal;
     a {
         color: #fff !important;
@@ -215,8 +215,8 @@ export const ItemHeaderInner = styled.div`
     border-radius: 0 0 0 0;
     color: #fff;
     height: 100%;
-    word-wrap: break-word;
     overflow-wrap: break-word;
+    word-break: break-all;
     white-space: normal;
     a {
         color: #fff !important;

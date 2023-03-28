@@ -36,7 +36,8 @@ const Card = styled.div`
     display: flex;
     flex-direction: column;
     min-width: 140px;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-all;
 
     &:hover {
         opacity: 0.8;

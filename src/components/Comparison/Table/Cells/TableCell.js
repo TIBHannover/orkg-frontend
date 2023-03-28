@@ -26,7 +26,8 @@ export const ItemInner = styled.div`
     border-bottom: thin solid #e7eaf1;
     text-align: center;
     height: 100%;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-all;
 
     &:hover .create-button {
         display: block;
