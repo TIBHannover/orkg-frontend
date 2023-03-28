@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const MarkdownContainer = styled.p`
+    overflow: auto;
     blockquote {
         color: rgba(0, 0, 0, 0.5);
         padding-left: 1.5em;
