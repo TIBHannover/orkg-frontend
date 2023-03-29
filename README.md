@@ -27,6 +27,8 @@ Copy the file `default.env` to `.env`:
 
     cp default.env .env
 
+By default, the `.env` file uses the [ORKG sandbox](https://sandbox.orkg.org) APIs. Read the wiki in case you want to [quickly switch between environments](https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Switch-between-environments).
+
 The **environment variables** descriptions:
 
 | Variable                           | Development | Production  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
