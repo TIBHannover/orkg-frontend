@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.99.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.98.1...v0.99.0) - 2023-03-29
+
+### Changes
+
+- fix(Style): Long URLs overflows into the provenance column [`#1064`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1064)
+- fix(style): Markdown table out of container [`#1066`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1066)
+- fix(ViewPaper): Verified Metadata Icon is only visible for curators [`#1065`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1065)
+- feat(Discussion): support discussions on papers [`#1040`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1040)
+
+---
 ## [v0.98.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.98.0...v0.98.1) - 2023-03-28
 
 ### Changes
