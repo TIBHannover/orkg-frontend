@@ -114,7 +114,7 @@
     },
     "scripts": {
         "analyze": "source-map-explorer 'build/static/js/*.js'",
-        "prestart": "react-env",
+        "prestart": "react-env --env APP_ENV",
         "start": "react-scripts start",
         "build": "react-env && DISABLE_ESLINT_PLUGIN=true react-scripts build",
         "test": "react-scripts test --env=jsdom",
