@@ -6,7 +6,7 @@ import { getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate, reverse
 import { useNavigate } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 
-function useObservatoryContent({ observatoryId, slug, initialSort, initialClassFilterOptions, initClassesFilter, pageSize = 10, updateURL = false }) {
+function useObservatoryContent({ observatoryId, slug, initialSort, initialClassFilterOptions, initClassesFilter, pageSize = 30, updateURL = false }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
