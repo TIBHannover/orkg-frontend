@@ -67,12 +67,7 @@ const Rows = ({ rows, scrollContainerBody, getTableBodyProps, prepareRow }) => {
                     )}
                 >
                     {providedDroppable => (
-                        <div
-                            ref={providedDroppable.innerRef}
-                            {...getTableBodyProps()}
-                            className="comparisonBody"
-                            {...providedDroppable.droppableProps}
-                        >
+                        <div ref={providedDroppable.innerRef} {...getTableBodyProps()} {...providedDroppable.droppableProps}>
                             {rows.map((row, index) => {
                                 prepareRow(row);
                                 return <Row row={row} index={index} key={row.getRowProps().key} />;

@@ -145,7 +145,7 @@ export const ReactTableWrapper = styled.div`
             }
         }
 
-        .comparisonBody .tr:last-child .td > div > div:first-child {
+        .comparisonRow .tr:last-child .td > div > div:first-child {
             // border-radius: 0 0 0 ${props => props.theme.borderRadius} !important;
         }
 
@@ -158,7 +158,7 @@ export const ReactTableWrapper = styled.div`
                 }
             }
 
-            .comparisonBody {
+            .comparisonRow {
                 position: relative;
                 z-index: 0;
             }

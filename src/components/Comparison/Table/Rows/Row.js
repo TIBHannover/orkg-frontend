@@ -11,7 +11,7 @@ const Row = ({ row, index }) => {
         <Draggable draggableId={row.id} key={row.getRowProps().key} index={index} isDragDisabled={!isEditing}>
             {providedDraggable => (
                 <div
-                    className="tr p-0"
+                    className="comparisonRow tr p-0"
                     ref={providedDraggable.innerRef}
                     {...providedDraggable.draggableProps}
                     style={{
