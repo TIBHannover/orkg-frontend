@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.100.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.99.0...v0.100.0) - 2023-04-04
+
+### Changes
+
+- fix(Comparison): fix export comparison as PDF [`#1072`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1072)
+- feat(Footer): add report content link [`#1069`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1069)
+- chore: make env switching easier [`#1068`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1068)
+
+---
 ## [v0.99.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.98.1...v0.99.0) - 2023-03-29
 
 ### Changes
