@@ -36,12 +36,13 @@ const initialState = {
     selectedResearchField: '',
     extractedResearchField: '',
     extractedResearchFieldId: '',
+    researchContributionURI: '',
     method: '',
     researchProblem: '',
     result: '',
     objective: '',
     conclusion: '',
-    predicateError: '',
+    error: '',
     resourceUri: '',
     researchProblemLink: '',
     selectedContribution: '',
@@ -392,7 +393,7 @@ export const saveAddPaperAction = data => async dispatch => {
     newProperties = newProperties.map(propertyId => ({ id: propertyId, label: data.properties.byId[propertyId].label }));
     newProperties = uniqBy(newProperties, 'label');
     newProperties = newProperties.map(property => ({ [property.label]: `_${property.id}` }));
-    console.log('show new data', data);
+
     const paperObj = {
         // Set new predicates label and temp ID
         predicates: newProperties,

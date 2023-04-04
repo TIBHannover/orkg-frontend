@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import Tabs from 'components/Tabs/Tabs';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
-import SimilarContributions from 'components/ViewPaper/SimilarContributions/SimilarContributions';
+// import SimilarContributions from 'components/ViewPaper/SimilarContributions/SimilarContributions';
 import useContributions from './hooks/useContributions';
 
 const Contributions = props => {
@@ -66,7 +66,6 @@ const Contributions = props => {
                             </ContentLoader>
                         </div>
                     )}
-
                     <Tabs
                         tabBarExtraContent={
                             props.enableEdit ? (
