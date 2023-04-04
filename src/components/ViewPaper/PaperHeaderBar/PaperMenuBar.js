@@ -9,7 +9,7 @@ import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import { useSelector } from 'react-redux';
 import Publish from 'components/ViewPaper/Publish/Publish';
-import ViewPaperButton from 'components/ViewPaper/PaperHeaderBar/ViewPaperButton';
+import AccessPaperButton from 'components/ViewPaper/PaperHeaderBar/AccessPaperButton';
 import { getPaperLink } from 'slices/viewPaperSlice';
 import PreventModal from 'components/Resource/PreventModal/PreventModal';
 import DiscussionModal from 'components/DiscussionModal/DiscussionModal';
@@ -28,7 +28,7 @@ function PaperMenuBar(props) {
 
     return (
         <>
-            <ViewPaperButton paperLink={paperLink} doi={doi} title={label} />
+            <AccessPaperButton paperLink={paperLink} doi={doi} title={label} />
             <Button className="flex-shrink-0" color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => setIsOpenDiscussionModal(true)}>
                 <Icon icon={faComments} style={{ margin: '2px 4px 0 0' }} /> Discussion{' '}
                 {!isLoading && discussionCount !== null && `(${discussionCount})`}
