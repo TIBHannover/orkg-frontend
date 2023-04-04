@@ -1,5 +1,6 @@
-import html2canvas from '@trainiac/html2canvas';
+import html2canvas from 'html2canvas';
 import { DropdownItem } from 'reactstrap';
+import { sumBy } from 'lodash';
 import PropTypes from 'prop-types';
 
 // FIXME: svg icons look ugly while exporting, so hide them before generating the PDF
@@ -10,8 +11,8 @@ const GeneratePdf = props => {
         const header = document.getElementById(props.id).getElementsByClassName('header')[0];
         const headerHeightMm = header.offsetHeight;
         const headerWidthMm = header.offsetWidth;
-        let body = document.getElementById(props.id).getElementsByClassName('comparisonBody')[0];
-        const bodyHeightMm = body.offsetHeight;
+        const allRows = Array.from(document.getElementById(props.id).getElementsByClassName('comparisonRow'));
+        const bodyHeightMm = sumBy(allRows, 'offsetHeight');
 
         // Header
         const canvasHeader = await html2canvas(header);
@@ -27,11 +28,13 @@ const GeneratePdf = props => {
         pdf.addImage(imgData, 'PNG', 5, 5);
 
         // Body
-        // There is issue (Unable to find element in cloned iframe) if we don't select the body again!
-        body = document.getElementById(props.id).getElementsByClassName('comparisonBody')[0];
-        const canvas = await html2canvas(body);
-        const imgData2 = canvas.toDataURL('image/png');
-        pdf.addImage(imgData2, 'PNG', 5, headerHeightMm + 5);
+        const promises = allRows.map(row => html2canvas(row));
+        const allCanvasRows = await Promise.all(promises);
+        allCanvasRows.map((can, i) => {
+            const imgData2 = can.toDataURL('image/png');
+            return pdf.addImage(imgData2, 'PNG', 5, headerHeightMm + sumBy(allRows.slice(0, i), 'offsetHeight'));
+        });
+
         pdf.save('ORKG Comparison exported.pdf');
     };
 
