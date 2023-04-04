@@ -33,6 +33,8 @@ const UploadPdf = () => {
             let error;
             let resourceUri;
             let researchProblemLink;
+
+            let researchContributionURI;
             reader.onload = async () => {
                 const data = new Uint8Array(reader?.result);
                 const loadingTask = getDocument({ data });
@@ -43,31 +45,40 @@ const UploadPdf = () => {
                     // you might want to replace 'querySelector' with 'querySelectorAll' to get all the values if there are multiple annotations of the same type
                     extractedResearchField = processedPdf.querySelector('hasResearchField label')?.textContent;
                     researchField = processedPdf.querySelector('hasResearchField')?.textContent;
-                    objective = processedPdf.querySelector('objective')?.textContent;
-                    result = processedPdf.querySelector('result')?.textContent;
-                    conclusion = processedPdf.querySelector('conclusion')?.textContent;
-                    researchProblem = processedPdf.querySelector('researchproblem')?.textContent;
-                    method = processedPdf.querySelector('method')?.textContent;
+
                     title = processedPdf.querySelector('hasTitle')?.textContent;
                     authors = [...processedPdf.querySelectorAll('hasAuthor')].map(auth => auth.textContent);
-                    error = processedPdf.querySelector('error')?.textContent;
-                    console.log('show files', processedPdf);
-                    const xpath = '//orkg_property:researchproblem/rdf:Description[@rdf:about]';
-                    const nsResolver = prefix => {
-                        const ns = {
-                            orkg_property: 'http://orkg.org/property/',
-                            rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-                        };
-                        return ns[prefix] || null;
-                    };
-                    const rdfDescriptionElement = processedPdf.evaluate(
-                        xpath,
-                        processedPdf,
-                        nsResolver,
-                        XPathResult.FIRST_ORDERED_NODE_TYPE,
-                    ).singleNodeValue;
-                    resourceUri = rdfDescriptionElement?.getAttribute('rdf:about');
+                    resourceUri = [...processedPdf.querySelectorAll('ResearchContribution researchproblem')]?.map(
+                        description => description.querySelector('Description')?.getAttribute('rdf:about') || null,
+                    );
+
                     researchProblemLink = processedPdf.querySelector('Description label')?.textContent;
+
+                    researchContributionURI = [...processedPdf.querySelectorAll('ResearchContribution')].map(contribution =>
+                        contribution.getAttribute('rdf:about'),
+                    );
+                    researchProblem = [...processedPdf.querySelectorAll('ResearchContribution')].map(
+                        researchProblems => researchProblems?.querySelector('researchproblem')?.textContent || null,
+                    );
+                    method = [...processedPdf.querySelectorAll('ResearchContribution')].map(
+                        methods => methods?.querySelector('method')?.textContent || null,
+                    );
+
+                    result = [...processedPdf.querySelectorAll('ResearchContribution')].map(
+                        results => results?.querySelector('result')?.textContent || null,
+                    );
+
+                    objective = [...processedPdf.querySelectorAll('ResearchContribution')].map(
+                        objectives => objectives?.querySelector('objective')?.textContent || null,
+                    );
+
+                    error = [...processedPdf.querySelectorAll('ResearchContribution')].map(
+                        errors => errors?.querySelector('error')?.textContent || null,
+                    );
+                    conclusion = [...processedPdf.querySelectorAll('ResearchContribution')].map(
+                        conclusions => conclusions?.querySelector('conclusion')?.textContent || null,
+                    );
+
                     console.log({
                         extractedResearchField,
                         researchField,
@@ -81,6 +92,7 @@ const UploadPdf = () => {
                         error,
                         resourceUri,
                         researchProblemLink,
+                        researchContributionURI,
                     });
                 }
             };
@@ -113,9 +125,10 @@ const UploadPdf = () => {
                     conclusion,
                     researchProblem,
                     method,
-                    predicateError: error,
+                    error,
                     resourceUri,
                     researchProblemLink,
+                    researchContributionURI,
                 }),
             );
             toast.success('PDF parsed successfully');
