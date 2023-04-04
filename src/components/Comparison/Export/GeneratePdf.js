@@ -2,12 +2,18 @@ import html2canvas from 'html2canvas';
 import { DropdownItem } from 'reactstrap';
 import { sumBy } from 'lodash';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 
 // FIXME: svg icons look ugly while exporting, so hide them before generating the PDF
 // TODO: currently the PDF file has dimensions based on the table, it is better to
 // have A4 landscape dimensions and fit the table by resizing it
 const GeneratePdf = props => {
+    const [isLoading, setIsLoading] = useState(false);
+
     const handleExport = async () => {
+        setIsLoading(true);
         const header = document.getElementById(props.id).getElementsByClassName('header')[0];
         const headerHeightMm = header.offsetHeight;
         const headerWidthMm = header.offsetWidth;
@@ -36,9 +42,14 @@ const GeneratePdf = props => {
         });
 
         pdf.save('ORKG Comparison exported.pdf');
+        setIsLoading(false);
     };
 
-    return <DropdownItem onClick={handleExport}>Export as PDF</DropdownItem>;
+    return (
+        <DropdownItem onClick={handleExport} disabled={isLoading} toggle={false}>
+            Export as PDF {isLoading && <Icon icon={faSpinner} spin />}
+        </DropdownItem>
+    );
 };
 
 GeneratePdf.propTypes = {
