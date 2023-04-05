@@ -243,7 +243,7 @@ function useComparison({ id, isEmbeddedMode = false }) {
      */
     useEffect(() => {
         // get Research field of the first contributions
-        if (!comparisonResource?.researchField) {
+        if (!comparisonResource?.researchField && contributions[0]?.paperId) {
             getStatementsBySubjectAndPredicate({
                 subjectId: contributions[0]?.paperId,
                 predicateId: PREDICATES.HAS_RESEARCH_FIELD,
