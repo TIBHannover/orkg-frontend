@@ -1,38 +1,32 @@
-import { Component } from 'react';
-import PropTypes from 'prop-types';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import { renderToString } from 'react-dom/server';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { ENTITIES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
+import PropTypes from 'prop-types';
+import { renderToString } from 'react-dom/server';
 
-class Doi extends Component {
-    constructor(props) {
-        super(props);
-        this.supportedValues = new RegExp(REGEX.DOI_ID);
+const Doi = props => {
+    const supportedValues = new RegExp(REGEX.DOI_ID);
+    const label = props.children;
+    const labelToText = renderToString(label);
+
+    if (!labelToText) {
+        return '';
     }
 
-    render() {
-        const label = this.props.children;
-        const labelToText = renderToString(label);
-
-        if (!labelToText) {
-            return '';
-        }
-
-        if (this.props.type === 'literal' && labelToText.trim().match(this.supportedValues)) {
-            return (
-                <a href={`https://doi.org/${labelToText}`} target="_blank" rel="noopener noreferrer">
-                    {labelToText} <Icon icon={faExternalLinkAlt} />
-                </a>
-            );
-        }
-        return label;
+    if (props.type === ENTITIES.LITERAL && labelToText.trim().match(supportedValues)) {
+        return (
+            <a href={`https://doi.org/${labelToText}`} target="_blank" rel="noopener noreferrer">
+                {labelToText} <Icon icon={faExternalLinkAlt} />
+            </a>
+        );
     }
-}
+    return label;
+};
 
 Doi.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-    type: PropTypes.oneOf(['resource', 'literal']),
+    type: PropTypes.oneOf([ENTITIES.RESOURCE, ENTITIES.LITERAL]),
 };
 
 export default Doi;
