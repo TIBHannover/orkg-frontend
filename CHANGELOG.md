@@ -3,6 +3,18 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.101.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.100.0...v0.101.0) - 2023-04-11
+
+### Changes
+
+- fix(UserProfile): ensure organization logo is displayed [`#1079`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1079)
+- feat(StatementBrowser): support syntax highlighting for Github URLs [`#1070`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1070)
+- ux(Observatory): Increase the page size of observatory items [`#1073`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1073)
+- fix(Comparison): Multiple API calls to invalid resource [`#1076`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1076)
+- chore(Paper): rename 'View paper' to 'Access paper' [`#1074`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1074)
+- feat(GeneratePdf): add loading indicator [`#1075`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1075)
+
+---
 ## [v0.100.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.99.0...v0.100.0) - 2023-04-04
 
 ### Changes
