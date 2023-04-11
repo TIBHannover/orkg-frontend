@@ -19,7 +19,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Container, Row } from 'reactstrap';
 import { getContributorInformationById } from 'services/backend/contributors';
 import { getObservatoryById } from 'services/backend/observatories';
-import { getOrganization } from 'services/backend/organizations';
+import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
 import styled from 'styled-components';
 
 const StyledGravatar = styled(Gravatar)`
@@ -168,7 +168,11 @@ const UserProfile = props => {
                                                 id: organizationData.display_id,
                                             })}
                                         >
-                                            <img className="mx-auto p-2" src={organizationData.logo} alt={`${organizationData.name} logo`} />
+                                            <img
+                                                className="mx-auto p-2"
+                                                src={getOrganizationLogoUrl(organizationData.id)}
+                                                alt={`${organizationData.name} logo`}
+                                            />
                                         </Link>
                                         <Link
                                             to={reverse(ROUTES.ORGANIZATION, {
