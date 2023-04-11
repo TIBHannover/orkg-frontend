@@ -4,10 +4,10 @@
     "private": true,
     "homepage": "/",
     "dependencies": {
-        "@citation-js/core": "^0.6.1",
-        "@citation-js/plugin-bibtex": "^0.6.1",
-        "@citation-js/plugin-csl": "^0.6.4",
-        "@citation-js/plugin-doi": "^0.6.1",
+        "@citation-js/core": "^0.6.5",
+        "@citation-js/plugin-bibtex": "^0.6.6",
+        "@citation-js/plugin-csl": "^0.6.7",
+        "@citation-js/plugin-doi": "^0.6.6",
         "@fortawesome/fontawesome-svg-core": "^6.2.0",
         "@fortawesome/free-brands-svg-icons": "^6.2.0",
         "@fortawesome/free-regular-svg-icons": "^6.2.0",
@@ -129,7 +129,7 @@
         "prepare": "husky install"
     },
     "devDependencies": {
-        "@babel/preset-env": "^7.20.2",
+        "@babel/preset-env": "^7.21.4",
         "@beam-australia/react-env": "^3.1.1",
         "@faker-js/faker": "^7.6.0",
         "@testing-library/jest-dom": "^5.16.5",
