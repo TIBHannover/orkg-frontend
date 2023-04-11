@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { renderToString } from 'react-dom/server';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
-import python from 'react-syntax-highlighter/dist/esm/languages/hljs/python';
-import r from 'react-syntax-highlighter/dist/esm/languages/hljs/r';
-import github from 'react-syntax-highlighter/dist/esm/styles/hljs/github';
+import python from 'react-syntax-highlighter/dist/cjs/languages/hljs/python';
+import r from 'react-syntax-highlighter/dist/cjs/languages/hljs/r';
+import github from 'react-syntax-highlighter/dist/cjs/styles/hljs/github';
 import { Button } from 'reactstrap';
 
 SyntaxHighlighter.registerLanguage('python', python);
