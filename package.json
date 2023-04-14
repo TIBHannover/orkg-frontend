@@ -105,11 +105,11 @@
         "sbd": "^1.0.19",
         "showdown": "^2.1.0",
         "showdown-footnotes": "^2.1.2",
-        "slugify": "^1.6.5",
+        "slugify": "^1.6.6",
         "stopwords-en": "^0.3.0",
         "strict-mode": "^1.1.5",
         "string-format": "^2.0.0",
-        "styled-components": "^5.3.6",
+        "styled-components": "^5.3.9",
         "typed.js": "^2.0.12",
         "use-resize-observer": "^9.0.2"
     },
