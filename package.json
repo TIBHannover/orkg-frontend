@@ -110,7 +110,7 @@
         "strict-mode": "^1.1.5",
         "string-format": "^2.0.0",
         "styled-components": "^5.3.9",
-        "typed.js": "^2.0.12",
+        "typed.js": "^2.0.15",
         "use-resize-observer": "^9.0.2"
     },
     "scripts": {
