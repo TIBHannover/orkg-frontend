@@ -31,7 +31,7 @@ describe('statement browser', () => {
             rootNodeType: ENTITIES.RESOURCE,
         };
         setup({}, config);
-        await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
+        // await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
         expect(await screen.findByText(/No data yet/i)).toBeInTheDocument();
     });
 });

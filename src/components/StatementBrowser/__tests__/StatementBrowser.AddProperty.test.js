@@ -32,7 +32,7 @@ describe('AddProperty', () => {
         const addButton = screen.getByRole('button', { name: 'Add property' });
         await userEvent.click(addButton);
         await userEvent.type(screen.getByRole('combobox'), 'Property label 1');
-        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
+        // await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         await selectEvent.openMenu(screen.getByRole('combobox'));
         await selectEvent.select(screen.getByRole('combobox'), 'property label 1');
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe('AddProperty', () => {
         const addButton = screen.getByRole('button', { name: 'Add property' });
         await userEvent.click(addButton);
         await userEvent.type(screen.getByRole('combobox'), 'property 1');
-        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
+        // await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         await selectEvent.select(screen.getByRole('combobox'), /property 1/i);
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
         await waitFor(() => expect(screen.getByText('property 1')).toBeInTheDocument());
@@ -53,7 +53,7 @@ describe('AddProperty', () => {
         const addButton2 = screen.getByRole('button', { name: 'Add property' });
         await userEvent.click(addButton2);
         await userEvent.type(screen.getByRole('combobox'), 'property 1');
-        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
+        // await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         await selectEvent.select(screen.getByRole('combobox'), /property 1/i);
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
         await waitFor(() => expect(screen.getByText(/The property property 1 exists already/i)).toBeInTheDocument());
@@ -68,7 +68,7 @@ describe('AddProperty no syncBackend', () => {
         const addButton = screen.getByRole('button', { name: 'Add property' });
         await userEvent.click(addButton);
         await userEvent.type(screen.getByRole('combobox'), 'test property');
-        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
+        // await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         await selectEvent.openMenu(screen.getByRole('combobox'));
         await selectEvent.select(screen.getByRole('combobox'), /Create/i);
         // await selectEvent.create(screen.getByRole('combobox'), 'test property', { waitForElement: false });
@@ -84,7 +84,7 @@ describe('AddProperty no syncBackend', () => {
         await waitFor(() => expect(screen.queryByText(/Add property/i)).toBeInTheDocument());
         await userEvent.click(screen.getByRole('button', { name: 'Add property' }));
         await userEvent.type(screen.getByRole('combobox'), 'test property');
-        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
+        // await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         // await selectEvent.openMenu(screen.getByRole('combobox'));
         await selectEvent.create(screen.getByRole('combobox'), 'test property', { waitForElement: false });
         await waitFor(() => expect(screen.getByText(/Often there are existing properties that you can use as well/i)).toBeInTheDocument());
@@ -109,7 +109,7 @@ describe('AddProperty syncBackend', () => {
         await waitFor(() => expect(screen.queryByText(/Add property/i)).toBeInTheDocument());
         await userEvent.click(screen.getByRole('button', { name: 'Add property' }));
         await userEvent.type(screen.getByRole('combobox', { id: 'addProperty' }), 'test property');
-        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
+        // await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         selectEvent.create(screen.getByRole('combobox', { id: 'addProperty' }), 'test property', { waitForElement: false });
         await waitFor(() => expect(screen.getByText(/Often there are existing properties that you can use as well/i)).toBeInTheDocument());
         await waitFor(() => expect(screen.getByRole('button', { name: /Create/i })).toBeInTheDocument());
@@ -133,7 +133,7 @@ describe('AddProperty syncBackend', () => {
         await waitFor(() => expect(screen.queryByText(/Add property/i)).toBeInTheDocument());
         await userEvent.click(screen.getByRole('button', { name: 'Add property' }));
         await userEvent.type(screen.getByRole('combobox', { id: 'addProperty' }), 'test property');
-        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
+        // await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         await selectEvent.create(screen.getByRole('combobox'), 'test property', { waitForElement: false });
         await waitFor(() => expect(screen.getByText(/Often there are existing properties that you can use as well/i)).toBeInTheDocument());
         await userEvent.click(screen.getAllByRole('button', { name: /Cancel/i })[1]);

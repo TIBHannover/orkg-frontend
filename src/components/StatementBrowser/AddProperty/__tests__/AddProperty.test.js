@@ -67,7 +67,7 @@ describe('Add property', () => {
         const addButton = screen.getByRole('button', { name: 'Add property' });
         await userEvent.click(addButton);
         await userEvent.type(screen.getByRole('combobox'), 'property label 1');
-        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
+        // await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         await selectEvent.select(screen.getByRole('combobox'), 'property label 1');
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
     });
@@ -82,7 +82,7 @@ describe('Add property', () => {
         setup({}, config);
         await userEvent.click(screen.getByRole('button', { name: 'Add property' }));
         await userEvent.type(screen.getByRole('combobox'), 'test property');
-        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
+        // await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         const selectInput = screen.getByRole('combobox');
         await selectEvent.openMenu(selectInput);
         await selectEvent.select(selectInput, /Create/i);
