@@ -111,7 +111,7 @@
         "string-format": "^2.0.0",
         "styled-components": "^5.3.9",
         "typed.js": "^2.0.15",
-        "use-resize-observer": "^9.0.2"
+        "use-resize-observer": "^9.1.0"
     },
     "scripts": {
         "analyze": "source-map-explorer 'build/static/js/*.js'",
