@@ -17,6 +17,7 @@ jest:
     script:
         - cp default.env .env
         - npm install --legacy-peer-deps
+        - NODE_OPTIONS='--no-experimental-fetch' # https://github.com/mswjs/msw/issues/1388#issuecomment-1344382071
         - npm run test:ci
     artifacts:
         when: always
