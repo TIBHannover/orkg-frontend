@@ -148,7 +148,7 @@
         "prettier": "^2.8.7",
         "react-scripts": "5.0.1",
         "react-select-event": "^5.5.1",
-        "sass": "^1.56.1",
+        "sass": "^1.62.0",
         "source-map-explorer": "^2.5.3"
     },
     "jest-junit": {
