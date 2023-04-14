@@ -52,7 +52,12 @@ const Stats = () => {
                 </Row>
                 <Row>
                     <ColoredStatsBox number={stats.users} label="Users" isLoading={isLoading} />
-                    <ColoredStatsBox link={reverse(ROUTES.ORGANIZATIONS, { type: capitalize(ORGANIZATIONS_MISC.GENERAL) })} number={stats.organizations} label="Organizations" isLoading={isLoading} />
+                    <ColoredStatsBox
+                        link={reverse(ROUTES.ORGANIZATIONS, { type: capitalize(ORGANIZATIONS_MISC.GENERAL) })}
+                        number={stats.organizations}
+                        label="Organizations"
+                        isLoading={isLoading}
+                    />
                     <ColoredStatsBox link={reverse(ROUTES.OBSERVATORIES)} number={stats.observatories} label="Observatories" isLoading={isLoading} />
                     <ColoredStatsBox
                         link={reverse(ROUTES.BENCHMARKS)}

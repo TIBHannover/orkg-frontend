@@ -11,10 +11,9 @@ import ROUTES from 'constants/routes';
 import styled from 'styled-components';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
-import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
+import { ORGANIZATIONS_TYPES, CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
 import { useSelector } from 'react-redux';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
 import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
 const StyledOrganizationCard = styled.div`
@@ -57,7 +56,9 @@ function ProvenanceBox() {
     if (isEmpty(observatory) && !createdBy && (!user || (!!user && !user.isCurationAllowed))) {
         return null;
     }
-    const isDoubleBlind = observatory?.metadata?.review_process === CONFERENCE_REVIEW_MISC.DOUBLE_BLIND && moment().format('YYYY-MM-DD') < observatory?.metadata?.start_date;
+    const isDoubleBlind =
+        observatory?.metadata?.review_process === CONFERENCE_REVIEW_MISC.DOUBLE_BLIND &&
+        moment().format('YYYY-MM-DD') < observatory?.metadata?.start_date;
 
     return (
         <div id="provenance" className="container box rounded-3 mt-4">
@@ -111,13 +112,11 @@ function ProvenanceBox() {
                                         id: observatory.organization.display_id,
                                     })}
                                 >
-
-                                        <img
-                                            className="mx-auto p-2"
-                                            src={getOrganizationLogoUrl(observatory.organization?.id)}
-                                            alt={`${observatory.organization.name} logo`}
-                                        />
-
+                                    <img
+                                        className="mx-auto p-2"
+                                        src={getOrganizationLogoUrl(observatory.organization?.id)}
+                                        alt={`${observatory.organization.name} logo`}
+                                    />
                                 </Link>
                             </StyledOrganizationCard>
                         </div>

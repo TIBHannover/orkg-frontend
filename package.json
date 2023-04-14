@@ -145,7 +145,7 @@
         "jest-junit": "^15.0.0",
         "lint-staged": "^13.2.1",
         "msw": "^1.2.1",
-        "prettier": "^2.7.1",
+        "prettier": "^2.8.7",
         "react-scripts": "5.0.1",
         "react-select-event": "^5.5.1",
         "sass": "^1.56.1",
