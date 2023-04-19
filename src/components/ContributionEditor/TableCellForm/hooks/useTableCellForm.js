@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
     createResource,
-    getComponentsByResourceIDAndPredicateID,
+    getPropertyShapesByResourceIDAndPredicateID,
     fetchTemplatesOfClassIfNeeded,
     canAddValueAction,
     updateResourceStatementsAction,
@@ -20,7 +20,7 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
 
     const property = useSelector(state => state.contributionEditor.properties[propertyId]);
     const { previousInputDataType } = useSelector(state => state.contributionEditor);
-    const valueClass = useSelector(state => getValueClass(getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId)));
+    const valueClass = useSelector(state => getValueClass(getPropertyShapesByResourceIDAndPredicateID(state, contributionId, propertyId)));
 
     const canAddValue = useSelector(state => canAddValueAction(state, contributionId, propertyId));
 
@@ -28,9 +28,9 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
         if (editMode) {
             return value._class === ENTITIES.LITERAL;
         }
-        return getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId)?.length === 0
+        return getPropertyShapesByResourceIDAndPredicateID(state, contributionId, propertyId)?.length === 0
             ? true
-            : isLiteral(getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId));
+            : isLiteral(getPropertyShapesByResourceIDAndPredicateID(state, contributionId, propertyId));
     });
 
     const isUniqLabel = !!(valueClass && valueClass.id === CLASSES.PROBLEM);
@@ -106,20 +106,22 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
     }, [dispatch, valueClass]);
 
     const schema = useSelector(state => {
-        const components = getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId);
+        const propertyShapes = getPropertyShapesByResourceIDAndPredicateID(state, contributionId, propertyId);
         if (valueClass && [CLASSES.DATE, CLASSES.DECIMAL, CLASSES.STRING, CLASSES.BOOLEAN, CLASSES.INTEGER, CLASSES.URI].includes(valueClass.id)) {
-            let component;
-            if (components && components.length > 0) {
-                component = components[0];
+            let propertyShape;
+            if (propertyShapes && propertyShapes.length > 0) {
+                propertyShape = propertyShapes[0];
             }
-            if (!component) {
-                component = {
+            if (!propertyShape) {
+                propertyShape = {
                     value: valueClass,
                     property: { id: property.id, label: property.label },
-                    validationRules: property.validationRules,
+                    minInclusive: property.minInclusive,
+                    maxInclusive: property.maxInclusive,
+                    pattern: property.pattern,
                 };
             }
-            const _schema = validationSchema(component);
+            const _schema = validationSchema(propertyShape);
             return _schema;
         }
         const config = getConfigByType(inputDataType);

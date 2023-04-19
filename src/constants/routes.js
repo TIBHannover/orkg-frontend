@@ -16,6 +16,7 @@ const routes = {
     ADD_CLASS: '/addClass',
     TEMPLATES: '/templates',
     TEMPLATE: '/template/:id',
+    TEMPLATE_TABS: '/template/:id/:activeTab',
     ADD_TEMPLATE: '/template/',
     ORGANIZATIONS: '/organizations/:type',
     OBSERVATORIES: '/observatories',

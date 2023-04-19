@@ -360,48 +360,40 @@ export const getComparisonData = (resource, comparisonStatements) => {
 };
 
 /**
- * Parse template component statements and return a component object
- * @param {Object} component
- * @param {Array} componentStatements
+ * Parse template propertyShape statements and return a propertyShape object
+ * @param {Object} propertyShape
+ * @param {Array} propertyShapeStatements
  */
-export const getTemplateComponentData = (component, componentStatements) => {
-    const property = filterObjectOfStatementsByPredicateAndClass(
-        componentStatements,
-        PREDICATES.TEMPLATE_COMPONENT_PROPERTY,
+export const getPropertyShapeData = (propertyShape, propertyShapeStatements) => {
+    const property = filterObjectOfStatementsByPredicateAndClass(propertyShapeStatements, PREDICATES.SHACL_PATH, true, null, propertyShape.id);
+    const datatype = filterObjectOfStatementsByPredicateAndClass(propertyShapeStatements, PREDICATES.SHACL_DATATYPE, true, null, propertyShape.id);
+    const shClass = filterObjectOfStatementsByPredicateAndClass(propertyShapeStatements, PREDICATES.SHACL_CLASS, true, null, propertyShape.id);
+    const value = shClass || datatype;
+
+    const minInclusive = filterObjectOfStatementsByPredicateAndClass(
+        propertyShapeStatements,
+        PREDICATES.SHACL_MIN_INCLUSIVE,
         true,
         null,
-        component.id,
+        propertyShape.id,
     );
-    const value = filterObjectOfStatementsByPredicateAndClass(componentStatements, PREDICATES.TEMPLATE_COMPONENT_VALUE, true, null, component.id);
-
-    const validationRules = filterObjectOfStatementsByPredicateAndClass(
-        componentStatements,
-        PREDICATES.TEMPLATE_COMPONENT_VALIDATION_RULE,
-        false,
-        null,
-        component.id,
-    );
-
-    const minOccurs = filterObjectOfStatementsByPredicateAndClass(
-        componentStatements,
-        PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MIN,
+    const maxInclusive = filterObjectOfStatementsByPredicateAndClass(
+        propertyShapeStatements,
+        PREDICATES.SHACL_MAX_INCLUSIVE,
         true,
         null,
-        component.id,
+        propertyShape.id,
     );
+    const pattern = filterObjectOfStatementsByPredicateAndClass(propertyShapeStatements, PREDICATES.SHACL_PATTERN, true, null, propertyShape.id);
 
-    const maxOccurs = filterObjectOfStatementsByPredicateAndClass(
-        componentStatements,
-        PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MAX,
-        true,
-        null,
-        component.id,
-    );
+    const minCount = filterObjectOfStatementsByPredicateAndClass(propertyShapeStatements, PREDICATES.SHACL_MIN_COUNT, true, null, propertyShape.id);
 
-    const order = filterObjectOfStatementsByPredicateAndClass(componentStatements, PREDICATES.TEMPLATE_COMPONENT_ORDER, true, null, component.id);
+    const maxCount = filterObjectOfStatementsByPredicateAndClass(propertyShapeStatements, PREDICATES.SHACL_MAX_COUNT, true, null, propertyShape.id);
+
+    const order = filterObjectOfStatementsByPredicateAndClass(propertyShapeStatements, PREDICATES.SHACL_ORDER, true, null, propertyShape.id);
 
     return {
-        id: component.id,
+        id: propertyShape.id,
         property: property
             ? {
                   id: property.id,
@@ -414,17 +406,12 @@ export const getTemplateComponentData = (component, componentStatements) => {
                   label: value.label,
               }
             : null,
-        minOccurs: minOccurs ? minOccurs.label : 0,
-        maxOccurs: maxOccurs ? maxOccurs.label : null,
+        minCount: minCount ? minCount.label : 0,
+        maxCount: maxCount ? maxCount.label : null,
         order: order ? order.label : null,
-        validationRules:
-            validationRules && Object.keys(validationRules).length > 0
-                ? validationRules.reduce((obj, item) => {
-                      const rule = item.label.split(/#(.+)/)[0];
-                      const _value = item.label.split(/#(.+)/)[1];
-                      return Object.assign(obj, { [rule]: _value });
-                  }, {})
-                : {},
+        minInclusive: minInclusive?.label ?? null,
+        maxInclusive: maxInclusive?.label ?? null,
+        pattern: pattern?.label ?? null,
     };
 };
 
@@ -710,7 +697,7 @@ export const getResourceLink = (classId, id) => {
         [CLASSES.AUTHOR]: [ROUTES.AUTHOR_PAGE, 'authorId'],
         [CLASSES.COMPARISON]: [ROUTES.COMPARISON, 'comparisonId'],
         [CLASSES.VENUE]: [ROUTES.VENUE_PAGE, 'venueId'],
-        [CLASSES.TEMPLATE]: [ROUTES.TEMPLATE, 'id'],
+        [CLASSES.NODE_SHAPE]: [ROUTES.TEMPLATE, 'id'],
         [CLASSES.VISUALIZATION]: [ROUTES.VISUALIZATION, 'id'],
         [CLASSES.CONTRIBUTION]: [ROUTES.CONTRIBUTION, 'id'],
         [CLASSES.SMART_REVIEW_PUBLISHED]: [ROUTES.REVIEW, 'id'],
@@ -790,7 +777,7 @@ export const getResourceTypeLabel = classId => {
             label = 'venue';
             break;
         }
-        case CLASSES.TEMPLATE: {
+        case CLASSES.NODE_SHAPE: {
             label = 'template';
             break;
         }

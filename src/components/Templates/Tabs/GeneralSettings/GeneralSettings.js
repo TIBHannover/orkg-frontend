@@ -17,7 +17,7 @@ const GeneralSettings = () => {
     const [propertyLabel, setPropertyLabel] = useState('');
 
     const dispatch = useDispatch();
-    const { templateID, label, predicate, class: clasS, editMode, researchProblems, researchFields } = useSelector(state => state.templateEditor);
+    const { label, predicate, class: clasS, editMode, researchProblems, researchFields } = useSelector(state => state.templateEditor);
 
     const handleChangeLabel = event => {
         dispatch(updateLabel(event.target.value));
@@ -64,13 +64,6 @@ const GeneralSettings = () => {
     const handleResearchProblemSelect = selected => {
         dispatch(updateResearchProblems(!selected ? [] : selected));
     };
-
-    /*
-    const handleSwitchIsDescription = event => {
-        dispatch(setIsClassDescription(event.target.checked));
-    };
-    */
-
     return (
         <div className="p-4">
             {isOpenConfirmModal && (
@@ -98,7 +91,7 @@ const GeneralSettings = () => {
                     autoLoadOption={true}
                     openMenuOnFocus={true}
                     allowCreate={true}
-                    isDisabled={!editMode || (Boolean(templateID) && Boolean(clasS))}
+                    isDisabled={!editMode}
                     copyValueButton={true}
                     isClearable
                     innerRef={classAutocompleteRef}

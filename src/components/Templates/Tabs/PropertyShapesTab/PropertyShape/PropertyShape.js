@@ -7,11 +7,11 @@ import ItemTypes from 'constants/dndTypes';
 import TemplateComponentValue from './Value/TemplateComponentValue';
 import TemplateComponentProperty from './Property/TemplateComponentProperty';
 
-function TemplateComponent(props) {
+function PropertyShape(props) {
     const editMode = useSelector(state => state.templateEditor.editMode);
     const ref = useRef(null);
     const [, drop] = useDrop({
-        accept: ItemTypes.TEMPLATE_COMPONENT,
+        accept: ItemTypes.PROPERTY_SHAPE,
         hover(item, monitor) {
             if (!ref.current) {
                 return;
@@ -51,7 +51,7 @@ function TemplateComponent(props) {
         },
     });
     const [{ isDragging }, drag, preview] = useDrag({
-        type: ItemTypes.TEMPLATE_COMPONENT,
+        type: ItemTypes.PROPERTY_SHAPE,
         item: { index: props.id },
         collect: monitor => ({
             isDragging: monitor.isDragging(),
@@ -66,7 +66,7 @@ function TemplateComponent(props) {
         <StatementsGroupStyle className="noTemplate list-group-item" style={{ opacity }}>
             <div ref={ref} className="row gx-0">
                 <TemplateComponentProperty
-                    handleDeleteTemplateComponent={props.handleDeleteTemplateComponent}
+                    handleDeletePropertyShape={props.handleDeletePropertyShape}
                     id={props.id}
                     property={props.property}
                     handlePropertiesSelect={props.handlePropertiesSelect}
@@ -75,9 +75,11 @@ function TemplateComponent(props) {
                 <TemplateComponentValue
                     id={props.id}
                     value={props.value}
-                    minOccurs={props.minOccurs}
-                    maxOccurs={props.maxOccurs}
-                    validationRules={props.validationRules}
+                    minCount={props.minCount}
+                    maxCount={props.maxCount}
+                    minInclusive={props.minInclusive}
+                    maxInclusive={props.maxInclusive}
+                    pattern={props.pattern}
                     handleClassOfPropertySelect={props.handleClassOfPropertySelect}
                 />
             </div>
@@ -85,17 +87,19 @@ function TemplateComponent(props) {
     );
 }
 
-TemplateComponent.propTypes = {
+PropertyShape.propTypes = {
     id: PropTypes.number.isRequired,
     property: PropTypes.object.isRequired,
     value: PropTypes.object,
-    minOccurs: PropTypes.string.isRequired,
-    maxOccurs: PropTypes.string,
-    validationRules: PropTypes.object,
+    minCount: PropTypes.string.isRequired,
+    maxCount: PropTypes.string,
+    minInclusive: PropTypes.string,
+    maxInclusive: PropTypes.string,
+    pattern: PropTypes.string,
     moveCard: PropTypes.func.isRequired,
-    handleDeleteTemplateComponent: PropTypes.func.isRequired,
+    handleDeletePropertyShape: PropTypes.func.isRequired,
     handlePropertiesSelect: PropTypes.func.isRequired,
     handleClassOfPropertySelect: PropTypes.func.isRequired,
 };
 
-export default TemplateComponent;
+export default PropertyShape;

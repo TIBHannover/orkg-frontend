@@ -32,7 +32,7 @@ const useUsedTemplates = ({ resourceId }) => {
                     ({
                         ...statements,
                         content: statements.content
-                            .filter(statement => statement.subject.classes.includes(CLASSES.TEMPLATE))
+                            .filter(statement => statement.subject.classes.includes(CLASSES.NODE_SHAPE))
                             .map(st => ({ id: st.subject.id, label: st.subject.label })),
                     }), // return the template Object
             ),
@@ -41,7 +41,7 @@ const useUsedTemplates = ({ resourceId }) => {
 
     useDeepCompareEffect(() => {
         setIsLoadingUsedTemplates(true);
-        const apiCalls = resource?.classes?.map(c => getTemplatesOfResourceId(c, PREDICATES.TEMPLATE_OF_CLASS, 0));
+        const apiCalls = resource?.classes?.map(c => getTemplatesOfResourceId(c, PREDICATES.SHACL_TARGET_CLASS, 0));
         Promise.all(apiCalls)
             .then(tmpl => {
                 setUsedTemplates(

@@ -149,7 +149,7 @@ const SectionContentLink = props => {
             <Autocomplete
                 excludeClasses={
                     props.type === 'resource'
-                        ? `${CLASSES.PAPER},${CLASSES.CONTRIBUTION},${CLASSES.TEMPLATE},${CLASSES.RESEARCH_FIELD},${CLASSES.TEMPLATE_COMPONENT},${CLASSES.PAPER_DELETED},${CLASSES.CONTRIBUTION_DELETED}`
+                        ? `${CLASSES.PAPER},${CLASSES.CONTRIBUTION},${CLASSES.NODE_SHAPE},${CLASSES.RESEARCH_FIELD},${CLASSES.PROPERTY_SHAPE},${CLASSES.PAPER_DELETED},${CLASSES.CONTRIBUTION_DELETED}`
                         : undefined
                 }
                 entityType={entityType}

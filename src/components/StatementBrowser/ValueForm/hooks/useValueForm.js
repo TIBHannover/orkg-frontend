@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import {
     createValueAction as createValue,
-    getComponentsByResourceIDAndPredicateID,
+    getPropertyShapesByResourceIDAndPredicateID,
     fetchTemplatesOfClassIfNeeded,
     getValueClass,
     isLiteral,
@@ -30,11 +30,13 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     const property = useSelector(state => state.statementBrowser.properties.byId[editMode ? value.propertyId : propertyId]);
     const subjectId = useSelector(state => (editMode ? getSubjectIdByValue(state, valueId) : resourceId));
     // refactoring: Can be replaced with the id class
-    const valueClass = useSelector(state => getValueClass(getComponentsByResourceIDAndPredicateID(state, subjectId, property?.existingPredicateId)));
+    const valueClass = useSelector(state =>
+        getValueClass(getPropertyShapesByResourceIDAndPredicateID(state, subjectId, property?.existingPredicateId)),
+    );
     const isLiteralField = useSelector(state =>
         editMode
             ? value._class === ENTITIES.LITERAL
-            : isLiteral(getComponentsByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)),
+            : isLiteral(getPropertyShapesByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)),
     );
     const isUniqLabel = !!(valueClass && valueClass.id === CLASSES.PROBLEM);
 
@@ -92,20 +94,22 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     };
 
     const schema = useSelector(state => {
-        const components = getComponentsByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId);
+        const propertyShapes = getPropertyShapesByResourceIDAndPredicateID(state, subjectId, property?.existingPredicateId);
         if (valueClass && [CLASSES.DATE, CLASSES.DECIMAL, CLASSES.STRING, CLASSES.BOOLEAN, CLASSES.INTEGER, CLASSES.URI].includes(valueClass.id)) {
-            let component;
-            if (components && components.length > 0) {
-                component = components[0];
+            let propertyShape;
+            if (propertyShapes && propertyShapes.length > 0) {
+                propertyShape = propertyShapes[0];
             }
-            if (!component) {
-                component = {
+            if (!propertyShape) {
+                propertyShape = {
                     value: valueClass,
                     property: { id: property.id, label: property.label },
-                    validationRules: property.validationRules,
+                    minInclusive: property.minInclusive,
+                    maxInclusive: property.maxInclusive,
+                    pattern: property.pattern,
                 };
             }
-            const schema = validationSchema(component);
+            const schema = validationSchema(propertyShape);
             return schema;
         }
         const config = getConfigByType(inputDataType);

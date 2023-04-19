@@ -5,45 +5,45 @@ import DATA_TYPES from 'constants/DataTypes.js';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
-import { updateComponents } from 'slices/templateEditorSlice';
+import { updatePropertyShapes } from 'slices/templateEditorSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import ValidationRules from '../ValidationRules/ValidationRules';
 
 const TemplateComponentValue = props => {
-    const [cardinality, setCardinality] = useState(!props.minOccurs && !props.maxOccurs ? '0,*' : 'range');
+    const [cardinality, setCardinality] = useState(!props.minCount && !props.maxCount ? '0,*' : 'range');
     const classAutocompleteRef = useRef(null);
 
     const dispatch = useDispatch();
-    const components = useSelector(state => state.templateEditor.components);
+    const propertyShapes = useSelector(state => state.templateEditor.propertyShapes);
     const editMode = useSelector(state => state.templateEditor.editMode);
 
     const onChange = event => {
-        const templateComponents = components.map((item, j) => {
+        const templatePropertyShapes = propertyShapes.map((item, j) => {
             const _item = { ...item };
             if (j === props.id) {
                 _item[event.target.name] = event.target.value.toString();
             }
             return _item;
         });
-        dispatch(updateComponents(templateComponents));
+        dispatch(updatePropertyShapes(templatePropertyShapes));
     };
 
     const onChangeCardinality = event => {
         setCardinality(event.target.value);
 
         if (event.target.value !== 'range') {
-            const [minOccurs, maxOccurs] = event.target.value.split(',');
-            const templateComponents = components.map((item, j) => {
+            const [minCount, maxCount] = event.target.value.split(',');
+            const templatePropertyShapes = propertyShapes.map((item, j) => {
                 const _item = { ...item };
                 if (j === props.id) {
-                    _item.minOccurs = minOccurs;
-                    _item.maxOccurs = maxOccurs !== '*' ? maxOccurs : '';
+                    _item.minCount = minCount;
+                    _item.maxCount = maxCount !== '*' ? maxCount : '';
                 }
                 return _item;
             });
-            dispatch(updateComponents(templateComponents));
+            dispatch(updatePropertyShapes(templatePropertyShapes));
         }
     };
 
@@ -102,7 +102,7 @@ const TemplateComponentValue = props => {
                     <>
                         <div className="mt-2">
                             <FormGroup row>
-                                <Label className="text-end text-muted" for="minOccursValueInput" sm={3}>
+                                <Label className="text-end text-muted" for="minCountValueInput" sm={3}>
                                     <small>Minimum Occurence</small>
                                 </Label>
                                 <Col sm={9}>
@@ -110,18 +110,18 @@ const TemplateComponentValue = props => {
                                         disabled={!editMode}
                                         onChange={onChange}
                                         bsSize="sm"
-                                        value={props.minOccurs}
+                                        value={props.minCount}
                                         type="number"
                                         min="0"
                                         step="1"
-                                        name="minOccurs"
-                                        id="minOccursValueInput"
+                                        name="minCount"
+                                        id="minCountValueInput"
                                         placeholder="Minimum number of occurrences in the resource"
                                     />
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
-                                <Label className="text-end text-muted" for="maxOccursValueInput" sm={3}>
+                                <Label className="text-end text-muted" for="maxCountValueInput" sm={3}>
                                     <small>Maximum Occurence</small>
                                 </Label>
                                 <Col sm={9}>
@@ -129,12 +129,12 @@ const TemplateComponentValue = props => {
                                         disabled={!editMode}
                                         onChange={onChange}
                                         bsSize="sm"
-                                        value={props.maxOccurs !== null ? props.maxOccurs : ''}
+                                        value={props.maxCount !== null ? props.maxCount : ''}
                                         type="number"
                                         min="0"
                                         step="1"
-                                        name="maxOccurs"
-                                        id="maxOccursValueInput"
+                                        name="maxCount"
+                                        id="maxCountValueInput"
                                         placeholder="Maximum number of occurrences in the resource"
                                     />
                                     {editMode && (
@@ -146,8 +146,14 @@ const TemplateComponentValue = props => {
                     </>
                 )}
 
-                {props.value && ['Number', 'Integer', 'String'].includes(props.value.id) && (
-                    <ValidationRules validationRules={props.validationRules} id={props.id} value={props.value} />
+                {props.value && ['Decimal', 'Integer', 'String'].includes(props.value.id) && (
+                    <ValidationRules
+                        minInclusive={props.minInclusive}
+                        maxInclusive={props.maxInclusive}
+                        pattern={props.pattern}
+                        id={props.id}
+                        value={props.value}
+                    />
                 )}
             </div>
         </ValuesStyle>
@@ -157,9 +163,11 @@ const TemplateComponentValue = props => {
 TemplateComponentValue.propTypes = {
     id: PropTypes.number.isRequired,
     value: PropTypes.object,
-    minOccurs: PropTypes.string.isRequired,
-    maxOccurs: PropTypes.string,
-    validationRules: PropTypes.object.isRequired,
+    minCount: PropTypes.string.isRequired,
+    maxCount: PropTypes.string,
+    minInclusive: PropTypes.string,
+    maxInclusive: PropTypes.string,
+    pattern: PropTypes.string,
     handleClassOfPropertySelect: PropTypes.func.isRequired,
 };
 
