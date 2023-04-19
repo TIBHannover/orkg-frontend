@@ -761,8 +761,8 @@ export function getPropertyIdByByResourceAndPredicateId(state, resourceId, exist
  */
 export function removeEmptyPropertiesOfClass({ resourceId, classId }) {
     return (dispatch, getState) => {
-        const components = getComponentsByResourceID(getState(), resourceId, classId);
-        const existingPropertyIdsToRemove = components.map(mp => mp.property?.id).filter(p => p);
+        const propertyShapes = getPropertyShapesByResourceID(getState(), resourceId, classId);
+        const existingPropertyIdsToRemove = propertyShapes.map(mp => mp.property?.id).filter(p => p);
         const resource = getState().statementBrowser.resources.byId[resourceId];
         if (!resource) {
             return [];
@@ -796,14 +796,14 @@ export function removeEmptyPropertiesOfClass({ resourceId, classId }) {
 export function createRequiredPropertiesInResource(resourceId) {
     return (dispatch, getState) => {
         const createdProperties = [];
-        const components = getComponentsByResourceID(getState(), resourceId);
+        const propertyShapes = getPropertyShapesByResourceID(getState(), resourceId);
         const existingPropertyIds = getExistingPredicatesByResource(getState(), resourceId);
 
-        // Add required properties (minOccurs >= 1)
-        components
+        // Add required properties (minCount >= 1)
+        propertyShapes
             .filter(x => !existingPropertyIds.includes(x.property.id))
             .map(mp => {
-                if (mp.minOccurs >= 1) {
+                if (mp.minCount >= 1) {
                     const propertyId = guid();
                     dispatch(
                         createProperty({
@@ -884,20 +884,22 @@ export function getTemplateIDsByResourceID(state, resourceId) {
 }
 
 /**
- * Get components by resource ID
+ * Get propertyShapes by resource ID
  *
  * @param {Object} state Current state of the Store
  * @param {String} resourceId Resource ID
  * @return {{
  * id: String,
- * minOccurs: Number,
- * maxOccurs: Number,
+ * minCount: Number,
+ * maxCount: Number,
  * property: Object,
  * value: Object=,
- * validationRules: Array
- * }[]} list of components
+ * minInclusive:Number,
+ * maxInclusive:Number ,
+ * pattern:String
+ * }[]} list of propertyShapes
  */
-export function getComponentsByResourceID(state, resourceId, classId = null) {
+export function getPropertyShapesByResourceID(state, resourceId, classId = null) {
     if (!resourceId) {
         return [];
     }
@@ -909,38 +911,40 @@ export function getComponentsByResourceID(state, resourceId, classId = null) {
     // 1 - Get all template ids of this resource
     const templateIds = getTemplateIDsByResourceID(state, resourceId);
 
-    // 2 - Collect the components
-    let components = [];
+    // 2 - Collect the propertyShapes
+    let propertyShapes = [];
     for (const templateId of templateIds) {
         const template = state.statementBrowser.templates[templateId];
-        if (template && template.components && (!classId || classId === template.class?.id)) {
-            components = components.concat(template.components);
+        if (template && template.propertyShapes && (!classId || classId === template.class?.id)) {
+            propertyShapes = propertyShapes.concat(template.propertyShapes);
         }
     }
-    return components;
+    return propertyShapes;
 }
 
 /**
- * Get components by resource ID and PredicateID
+ * Get propertyShapes by resource ID and PredicateID
  *
  * @param {Object} state Current state of the Store
  * @param {String} resourceId Resource ID
  * @param {String} predicateId Existing Predicate ID
  * @return {{
  * id: String,
- * minOccurs: Number,
- * maxOccurs: Number,
+ * minCount: Number,
+ * maxCount: Number,
  * property: Object,
  * value: Object=,
- * validationRules: Array
- * }[]} list of components
+ * minInclusive:Number,
+ * maxInclusive:Number ,
+ * pattern:String
+ * }[]} list of propertyShapes
  */
-export function getComponentsByResourceIDAndPredicateID(state, resourceId, predicateId) {
-    const resourceComponents = getComponentsByResourceID(state, resourceId);
-    if (resourceComponents.length === 0) {
+export function getPropertyShapesByResourceIDAndPredicateID(state, resourceId, predicateId) {
+    const resourcePropertyShapes = getPropertyShapesByResourceID(state, resourceId);
+    if (resourcePropertyShapes.length === 0) {
         return [];
     }
-    return resourceComponents.filter(c => c.property.id === predicateId);
+    return resourcePropertyShapes.filter(c => c.property.id === predicateId);
 }
 
 export const loadStatementBrowserData = data => dispatch => {
@@ -998,7 +1002,7 @@ export function canAddProperty(state, resourceId) {
     // Check if one of the template is strict
     for (const templateId of templateIds) {
         const template = state.statementBrowser.templates[templateId];
-        if (template && template.isStrict) {
+        if (template && template.isClosed) {
             return false;
         }
     }
@@ -1007,7 +1011,7 @@ export function canAddProperty(state, resourceId) {
 
 /**
  * Can add value in property resource
- * (compare the number of values with maxOccurs)
+ * (compare the number of values with maxCount)
  * @param {Object} state Current state of the Store
  * @param {String} resourceId Resource ID
  * @param {String} propertyId Property ID
@@ -1016,9 +1020,9 @@ export function canAddProperty(state, resourceId) {
 export function canAddValue(state, resourceId, propertyId) {
     const property = state.statementBrowser.properties.byId[propertyId];
     if (property) {
-        const typeComponents = getComponentsByResourceIDAndPredicateID(state, resourceId, property.existingPredicateId);
-        if (typeComponents && typeComponents.length > 0) {
-            if (typeComponents[0].maxOccurs && property.valueIds.length >= parseInt(typeComponents[0].maxOccurs)) {
+        const typePropertyShapes = getPropertyShapesByResourceIDAndPredicateID(state, resourceId, property.existingPredicateId);
+        if (typePropertyShapes && typePropertyShapes.length > 0) {
+            if (typePropertyShapes[0].maxCount && property.valueIds.length >= parseInt(typePropertyShapes[0].maxCount)) {
                 return false;
             }
             return true;
@@ -1030,7 +1034,7 @@ export function canAddValue(state, resourceId, propertyId) {
 
 /**
  * Can delete property in resource
- * (check if minOccurs>=1)
+ * (check if minCount>=1)
  * @param {Object} state Current state of the Store
  * @param {String} resourceId Resource ID
  * @param {String} propertyId Property ID
@@ -1039,9 +1043,9 @@ export function canAddValue(state, resourceId, propertyId) {
 export function canDeleteProperty(state, resourceId, propertyId) {
     const property = state.statementBrowser.properties.byId[propertyId];
     if (property) {
-        const typeComponents = getComponentsByResourceIDAndPredicateID(state, resourceId, property.existingPredicateId);
-        if (typeComponents && typeComponents.length > 0) {
-            if (typeComponents[0].minOccurs >= 1) {
+        const typePropertyShapes = getPropertyShapesByResourceIDAndPredicateID(state, resourceId, property.existingPredicateId);
+        if (typePropertyShapes && typePropertyShapes.length > 0) {
+            if (typePropertyShapes[0].minCount >= 1) {
                 return false;
             }
             return true;
@@ -1056,13 +1060,13 @@ export function canDeleteProperty(state, resourceId, propertyId) {
  *
  * @param {Object} state Current state of the Store
  * @param {String} resourceId Resource ID
- * @return {Object[]} list of suggested components
+ * @return {Object[]} list of suggested propertyShapes
  */
 export function getSuggestedProperties(state, resourceId) {
-    const components = getComponentsByResourceID(state, resourceId);
+    const propertyShapes = getPropertyShapesByResourceID(state, resourceId);
     const existingPropertyIds = getExistingPredicatesByResource(state, resourceId);
 
-    return components.filter(x => !existingPropertyIds.includes(x.property.id));
+    return propertyShapes.filter(x => !existingPropertyIds.includes(x.property.id));
 }
 
 /**
@@ -1222,7 +1226,7 @@ export function fillResourceWithTemplate({ templateID, resourceId, syncBackend =
         dispatch(fetchTemplateIfNeeded(templateID)).then(async templateDate => {
             const template = templateDate;
             // Check if it's a template
-            if (template && template?.components?.length > 0) {
+            if (template && template?.propertyShapes?.length > 0) {
                 // TODO : handle the case where the template isFetching
                 if (!template.predicate || template?.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
                     // update the class of the current resource
@@ -1235,10 +1239,10 @@ export function fillResourceWithTemplate({ templateID, resourceId, syncBackend =
                     );
                     // Add properties
                     const statements = { properties: [], values: [] };
-                    for (const component of template?.components) {
+                    for (const propertyShape of template?.propertyShapes) {
                         statements.properties.push({
-                            existingPredicateId: component.property.id,
-                            label: component.property.label,
+                            existingPredicateId: propertyShape.property.id,
+                            label: propertyShape.property.label,
                         });
                     }
                     dispatch(fillStatements({ statements, resourceId, syncBackend }));
@@ -1270,10 +1274,10 @@ export function fillResourceWithTemplate({ templateID, resourceId, syncBackend =
                     await dispatch(fillStatements({ statements, resourceId, syncBackend }));
                     // Add properties
                     const instanceStatements = { properties: [], values: [] };
-                    for (const component of template?.components) {
+                    for (const propertyShape of template?.propertyShapes) {
                         instanceStatements.properties.push({
-                            existingPredicateId: component.property.id,
-                            label: component.property.label,
+                            existingPredicateId: propertyShape.property.id,
+                            label: propertyShape.property.label,
                         });
                     }
                     await dispatch(
@@ -1572,12 +1576,12 @@ export const fetchStatementsForResource =
 /**
  * Check if the input filed is Literal
  *  (if one of the default data type: Date, String, Number)
- * @param {Object[]} components Array of components
+ * @param {Object[]} propertyShapes Array of propertyShapes
  * @return {Boolean} if this input field is Literal
  */
-export const isLiteral = components => {
+export const isLiteral = propertyShapes => {
     let _isLiteral = false;
-    for (const typeId of components.map(tc => tc.value?.id)) {
+    for (const typeId of propertyShapes.map(tc => tc.value?.id)) {
         if (
             DATA_TYPES.filter(dt => dt._class === ENTITIES.LITERAL)
                 .map(t => t.classId)
@@ -1592,11 +1596,11 @@ export const isLiteral = components => {
 
 /**
  * Get the type of value
- * @param {Object[]} components Array of components
+ * @param {Object[]} propertyShapes Array of propertyShapes
  * @return {Object=} the class of value or null
  */
-export const getValueClass = components =>
-    components && components.length > 0 && components[0].value && components[0].value.id ? components[0].value : null;
+export const getValueClass = propertyShapes =>
+    propertyShapes && propertyShapes.length > 0 && propertyShapes[0].value && propertyShapes[0].value.id ? propertyShapes[0].value : null;
 
 /**
  * Check if the class has an inline format

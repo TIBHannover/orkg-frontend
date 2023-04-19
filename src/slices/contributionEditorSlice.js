@@ -686,20 +686,22 @@ export function getTemplateIDsByContributionID(state, contributionId) {
 }
 
 /**
- * Get components by contribution ID
+ * Get propertyShapes by contribution ID
  *
  * @param {Object} state Current state of the Store
  * @param {String} contributionId Resource ID
  * @return {{
  * id: String,
- * minOccurs: Number,
- * maxOccurs: Number,
+ * minCount: Number,
+ * maxCount: Number,
  * property: Object,
  * value: Object=,
- * validationRules: Array
- * }[]} list of components
+ * minInclusive:Number,
+ * maxInclusive:Number ,
+ * pattern:String
+ * }[]} list of propertyShapes
  */
-export function getComponentsByContributionID(state, contributionId, classId = null) {
+export function getPropertyShapesByContributionID(state, contributionId, classId = null) {
     if (!contributionId) {
         return [];
     }
@@ -711,15 +713,15 @@ export function getComponentsByContributionID(state, contributionId, classId = n
     // 1 - Get all template ids of this resource
     const templateIds = getTemplateIDsByContributionID(state, contributionId);
 
-    // 2 - Collect the components
-    let components = [];
+    // 2 - Collect the propertyShapes
+    let propertyShapes = [];
     for (const templateId of templateIds) {
         const template = state.contributionEditor.templates[templateId];
-        if (template && template.components && (!classId || classId === template.class?.id)) {
-            components = components.concat(template.components);
+        if (template && template.propertyShapes && (!classId || classId === template.class?.id)) {
+            propertyShapes = propertyShapes.concat(template.propertyShapes);
         }
     }
-    return components;
+    return propertyShapes;
 }
 
 /**
@@ -730,15 +732,15 @@ export function getComponentsByContributionID(state, contributionId, classId = n
  */
 export function createRequiredPropertiesInContribution(contributionId) {
     return (dispatch, getState) => {
-        const components = getComponentsByContributionID(getState(), contributionId);
+        const propertyShapes = getPropertyShapesByContributionID(getState(), contributionId);
         // Get the list of existing predicate ids
         const existingPropertyIds = Object.keys(getState().contributionEditor.properties);
 
-        // Add required properties (minOccurs >= 1)
-        components
+        // Add required properties (minCount >= 1)
+        propertyShapes
             .filter(x => !existingPropertyIds.includes(x.property.id))
             .map(mp => {
-                if (mp.minOccurs >= 1) {
+                if (mp.minCount >= 1) {
                     dispatch(propertyAdded(mp.property));
                 }
                 return null;
@@ -790,7 +792,7 @@ export function fillContributionsWithTemplate({ templateID }) {
             const contributionsIds = Object.keys(getState().contributionEditor.contributions);
             const template = templateDate;
             // Check if it's a template
-            if (template && template?.components?.length > 0) {
+            if (template && template?.propertyShapes?.length > 0) {
                 // TODO : handle the case where the template isFetching
                 if (!template.predicate || template?.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
                     // update the class of the current resource
@@ -803,8 +805,8 @@ export function fillContributionsWithTemplate({ templateID }) {
                         ),
                     );
                     // Add properties
-                    for (const component of template?.components.filter(mp => mp.minOccurs >= 1)) {
-                        dispatch(propertyAdded(component.property));
+                    for (const propertyShape of template?.propertyShapes.filter(mp => mp.minCount >= 1)) {
+                        dispatch(propertyAdded(propertyShape.property));
                     }
                 } else if (template.predicate) {
                     // Add template to the contribution
@@ -827,26 +829,28 @@ export function fillContributionsWithTemplate({ templateID }) {
 }
 
 /**
- * Get components by resource ID and PredicateID
+ * Get propertyShapes by resource ID and PredicateID
  *
  * @param {Object} state Current state of the Store
  * @param {String} resourceId Resource ID
  * @param {String} predicateId Existing Predicate ID
  * @return {{
  * id: String,
- * minOccurs: Number,
- * maxOccurs: Number,
+ * minCount: Number,
+ * maxCount: Number,
  * property: Object,
  * value: Object=,
- * validationRules: Array
- * }[]} list of components
+ * minInclusive:Number,
+ * maxInclusive:Number ,
+ * pattern:String
+ * }[]} list of propertyShapes
  */
-export function getComponentsByResourceIDAndPredicateID(state, resourceId, predicateId) {
-    const resourceComponents = getComponentsByContributionID(state, resourceId);
-    if (resourceComponents.length === 0) {
+export function getPropertyShapesByResourceIDAndPredicateID(state, resourceId, predicateId) {
+    const resourcePropertyShapes = getPropertyShapesByContributionID(state, resourceId);
+    if (resourcePropertyShapes.length === 0) {
         return [];
     }
-    return resourceComponents.filter(c => c.property.id === predicateId);
+    return resourcePropertyShapes.filter(c => c.property.id === predicateId);
 }
 
 /**
@@ -854,13 +858,13 @@ export function getComponentsByResourceIDAndPredicateID(state, resourceId, predi
  *
  * @param {Object} state Current state of the Store
  * @param {String} resourceId Resource ID
- * @return {Object[]} list of suggested components
+ * @return {Object[]} list of suggested propertyShapes
  */
 export function getSuggestedProperties(state) {
     const existingPropertyIds = Object.keys(state.contributionEditor.properties);
     const comp = Object.keys(state.contributionEditor.contributions).map(contributionId => {
-        const components = getComponentsByContributionID(state, contributionId);
-        return components.filter(x => !existingPropertyIds.includes(x.property.id));
+        const propertyShapes = getPropertyShapesByContributionID(state, contributionId);
+        return propertyShapes.filter(x => !existingPropertyIds.includes(x.property.id));
     });
     return uniqBy(flatten(comp), 'property.id');
 }
@@ -912,12 +916,12 @@ export function getCommonClasses(state) {
  */
 export function removeEmptyPropertiesOfClass({ classId }) {
     return (dispatch, getState) => {
-        const components = flatten(
+        const propertyShapes = flatten(
             Object.keys(getState().contributionEditor.contributions).map(contributionId =>
-                getComponentsByContributionID(getState(), contributionId, classId),
+                getPropertyShapesByContributionID(getState(), contributionId, classId),
             ),
         );
-        const existingPropertyIdsToRemove = components.map(mp => mp.property?.id).filter(p => p);
+        const existingPropertyIdsToRemove = propertyShapes.map(mp => mp.property?.id).filter(p => p);
 
         return existingPropertyIdsToRemove.map(propertyId => {
             // count statements and delete if number of statements == 0
@@ -962,19 +966,19 @@ export function removeClassFromContributionResource({ classId }) {
 
 /**
  * Can add value to a property in a contribution
- * (compare the number of values with maxOccurs)
+ * (compare the number of values with maxCount)
  * @param {Object} state Current state of the Store
  * @param {String} contributionId Resource ID
  * @param {String} propertyId Property ID
  * @return {Boolean} Whether it's possible to add a value
  */
 export function canAddValueAction(state, contributionId, propertyId) {
-    const typeComponents = getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId);
-    if (typeComponents?.length > 0) {
+    const typePropertyShapes = getPropertyShapesByResourceIDAndPredicateID(state, contributionId, propertyId);
+    if (typePropertyShapes?.length > 0) {
         const countStatements = Object.values(state.contributionEditor.statements).filter(
             s => s.propertyId === propertyId && s.contributionId === contributionId,
         ).length;
-        if (typeComponents[0].maxOccurs && countStatements >= parseInt(typeComponents[0].maxOccurs)) {
+        if (typePropertyShapes[0].maxCount && countStatements >= parseInt(typePropertyShapes[0].maxCount)) {
             return false;
         }
         return true;
@@ -984,7 +988,7 @@ export function canAddValueAction(state, contributionId, propertyId) {
 
 /**
  * Can delete property
- * (check all templates do not have minOccurs>=1 for the property)
+ * (check all templates do not have minCount>=1 for the property)
  * @param {Object} state Current state of the Store
  * @param {String} propertyId Property ID
  * @return {Boolean} Whether it's possible to delete the property
@@ -994,9 +998,9 @@ export function canDeletePropertyAction(state, propertyId) {
     return (
         contributionsIds
             .map(contributionId => {
-                const typeComponents = getComponentsByResourceIDAndPredicateID(state, contributionId, propertyId);
-                if (typeComponents?.length > 0) {
-                    if (typeComponents[0].minOccurs >= 1) {
+                const typePropertyShapes = getPropertyShapesByResourceIDAndPredicateID(state, contributionId, propertyId);
+                if (typePropertyShapes?.length > 0) {
+                    if (typePropertyShapes[0].minCount >= 1) {
                         return false;
                     }
                     return true;

@@ -49,7 +49,7 @@ function TemplateComponentProperty(props) {
                             <StatementActionButton
                                 title="Delete property"
                                 icon={faTrash}
-                                action={() => props.handleDeleteTemplateComponent(props.id)}
+                                action={() => props.handleDeletePropertyShape(props.id)}
                                 requireConfirmation={true}
                                 confirmationMessage="Are you sure to delete?"
                                 confirmationButtons={[
@@ -57,7 +57,7 @@ function TemplateComponentProperty(props) {
                                         title: 'Delete',
                                         color: 'danger',
                                         icon: faCheck,
-                                        action: () => props.handleDeleteTemplateComponent(props.id),
+                                        action: () => props.handleDeletePropertyShape(props.id),
                                     },
                                     {
                                         title: 'Cancel',
@@ -98,7 +98,7 @@ function TemplateComponentProperty(props) {
 TemplateComponentProperty.propTypes = {
     id: PropTypes.number.isRequired,
     property: PropTypes.object.isRequired,
-    handleDeleteTemplateComponent: PropTypes.func.isRequired,
+    handleDeletePropertyShape: PropTypes.func.isRequired,
     handlePropertiesSelect: PropTypes.func.isRequired,
     dragRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })]),
 };

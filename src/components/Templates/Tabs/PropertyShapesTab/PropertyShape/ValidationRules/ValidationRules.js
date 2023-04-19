@@ -1,27 +1,27 @@
 import { FormGroup, Label, Col, Input, FormText } from 'reactstrap';
-import { updateComponents } from 'slices/templateEditorSlice';
+import { updatePropertyShapes } from 'slices/templateEditorSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
-const ValidationRules = props => {
+const ValidationRules = ({ id, value, minInclusive, maxInclusive, pattern }) => {
     const dispatch = useDispatch();
-    const components = useSelector(state => state.templateEditor.components);
+    const propertyShapes = useSelector(state => state.templateEditor.propertyShapes);
     const editMode = useSelector(state => state.templateEditor.editMode);
 
     const onChange = event => {
-        const newValidationRules = { ...props.validationRules, [event.target.name]: event.target.value };
-        const templateComponents = components.map((item, j) => {
-            if (j === props.id) {
-                item.validationRules = newValidationRules;
+        const newValidationRules = { minInclusive, maxInclusive, pattern, [event.target.name]: event.target.value };
+        const templatePropertyShapes = propertyShapes.map((item, j) => {
+            if (j === id) {
+                item = { ...item, ...newValidationRules };
             }
             return item;
         });
-        dispatch(updateComponents(templateComponents));
+        dispatch(updatePropertyShapes(templatePropertyShapes));
     };
 
     return (
         <div className="mt-2">
-            {props.value && props.value.id === 'String' && (
+            {value && value.id === 'String' && (
                 <>
                     <FormGroup row>
                         <Label className="text-end text-muted" for="patternInput" sm={3}>
@@ -34,7 +34,7 @@ const ValidationRules = props => {
                                 type="text"
                                 name="pattern"
                                 id="patternInput"
-                                value={props.validationRules.pattern}
+                                value={pattern}
                                 placeholder="Enter a regular expression"
                                 onChange={onChange}
                             />
@@ -43,10 +43,10 @@ const ValidationRules = props => {
                     </FormGroup>
                 </>
             )}
-            {props.value && (props.value.id === 'Number' || props.value.id === 'Integer') && (
+            {value && (value.id === 'Decimal' || value.id === 'Integer') && (
                 <>
                     <FormGroup row>
-                        <Label className="text-end text-muted" for="minimumValueInput" sm={3}>
+                        <Label className="text-end text-muted" for="minInclusiveInput" sm={3}>
                             <small>Minimum value</small>
                         </Label>
                         <Col sm={9}>
@@ -55,15 +55,15 @@ const ValidationRules = props => {
                                 onChange={onChange}
                                 bsSize="sm"
                                 type="text"
-                                value={props.validationRules.min}
-                                name="min"
-                                id="minimumValueInput"
+                                value={minInclusive}
+                                name="minInclusive"
+                                id="minInclusiveInput"
                                 placeholder="Specify the minimum value"
                             />
                         </Col>
                     </FormGroup>
                     <FormGroup row>
-                        <Label className="text-end text-muted" for="maximumValueInput" sm={3}>
+                        <Label className="text-end text-muted" for="maxInclusiveInput" sm={3}>
                             <small>Maximum value</small>
                         </Label>
                         <Col sm={9}>
@@ -71,10 +71,10 @@ const ValidationRules = props => {
                                 disabled={!editMode}
                                 onChange={onChange}
                                 bsSize="sm"
-                                value={props.validationRules.max}
+                                value={maxInclusive}
                                 type="text"
-                                name="max"
-                                id="maximumValueInput"
+                                name="maxInclusive"
+                                id="maxInclusiveInput"
                                 placeholder="Specify the maximum value"
                             />
                         </Col>
@@ -88,7 +88,9 @@ const ValidationRules = props => {
 ValidationRules.propTypes = {
     id: PropTypes.number.isRequired,
     value: PropTypes.object.isRequired,
-    validationRules: PropTypes.object,
+    minInclusive: PropTypes.string,
+    maxInclusive: PropTypes.string,
+    pattern: PropTypes.string,
 };
 
 export default ValidationRules;
