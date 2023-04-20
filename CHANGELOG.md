@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.102.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.101.1...v0.102.0) - 2023-04-20
+
+### Changes
+
+- feat(suggestions):added Recommendations  in view paper-edit mode [`#1062`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1062)
+- feat(Template): use SHACL vocab [`#1060`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1060)
+- ux: Show unlisted badge for authored resources for non-curators [`#1077`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1077)
+
+---
 ## [v0.101.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.101.0...v0.101.1) - 2023-04-11
 
 ### Changes
