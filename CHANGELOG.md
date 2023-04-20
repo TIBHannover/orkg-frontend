@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.102.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.102.0...v0.102.1) - 2023-04-20
+
+### Changes
+
+- fix(StatementBrowser): Load templates recommendation [`#1082`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1082)
+
+---
 ## [v0.102.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.101.1...v0.102.0) - 2023-04-20
 
 ### Changes
