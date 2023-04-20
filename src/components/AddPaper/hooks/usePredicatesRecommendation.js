@@ -4,10 +4,8 @@ import { uniqBy } from 'lodash';
 import { getRecommendedPredicates } from 'services/orkgNlp';
 import { getExistingPredicatesByResource } from 'slices/statementBrowserSlice';
 import { setPredicatesRawResponse } from 'slices/addPaperSlice';
-import env from '@beam-australia/react-env';
 
-const usePredicatesRecommendation = () => {
-    const { title, abstract } = useSelector(state => state.addPaper);
+const usePredicatesRecommendation = ({ title, abstract }) => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const existingPropertyIds = useSelector(state => getExistingPredicatesByResource(state, selectedResource));
     const dispatch = useDispatch();
@@ -16,10 +14,6 @@ const usePredicatesRecommendation = () => {
 
     useEffect(() => {
         const fetchRecommendation = () => {
-            // disable this feature in production
-            if (env('IS_TESTING_SERVER') !== 'true') {
-                return;
-            }
             setIsLoadingRP(true);
             getRecommendedPredicates({ title, abstract })
                 .then(result => {
