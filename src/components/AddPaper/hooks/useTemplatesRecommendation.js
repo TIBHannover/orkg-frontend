@@ -23,7 +23,9 @@ const useTemplatesRecommendation = ({ title, abstract }) => {
                     setIsLoadingRT(false);
                 });
         };
-        fetchRecommendation();
+        if (title || abstract) {
+            fetchRecommendation();
+        }
     }, [abstract, title]);
 
     return {
