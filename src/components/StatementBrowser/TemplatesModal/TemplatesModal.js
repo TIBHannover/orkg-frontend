@@ -45,7 +45,10 @@ const TemplatesModal = props => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
-    const { recommendedTemplates, isLoadingRT } = useTemplatesRecommendation();
+    const { title, abstract } = useSelector(state =>
+        state.addPaper.title ? state.addPaper : { title: state.viewPaper.paperResource.label, abstract: '' },
+    );
+    const { recommendedTemplates, isLoadingRT } = useTemplatesRecommendation({ title, abstract });
 
     const onlyFeatured = true;
     const {
