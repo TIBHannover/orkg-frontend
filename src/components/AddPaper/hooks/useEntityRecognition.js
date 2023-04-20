@@ -4,8 +4,8 @@ import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { PROPERTY_MAPPING, saveFeedback, SERVICE_MAPPING } from 'services/orkgNlp';
 
-const useEntityRecognition = ({ activeNERService }) => {
-    const { nerResources, nerProperties, nerRawResponse, title, abstract } = useSelector(state => state.addPaper);
+const useEntityRecognition = ({ activeNERService, title, abstract }) => {
+    const { nerResources, nerProperties, nerRawResponse } = useSelector(state => state.addPaper);
     const { properties, values } = useSelector(state => state.statementBrowser);
     const { getExistingStatement } = useInsertData();
 
