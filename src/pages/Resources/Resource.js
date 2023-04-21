@@ -7,6 +7,7 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import NotFound from 'pages/NotFound';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
+import CONTENT_TYPES from 'constants/contentTypes';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -155,11 +156,15 @@ function Resource() {
                                     <i>
                                         <small>No label</small>
                                     </i>
-                                )}{' '}
-                                <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
-                                <div className="d-inline-block ms-1">
-                                    <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
-                                </div>
+                                )}
+                                {resource?.classes?.some(c => CONTENT_TYPES.includes(c)) && (
+                                    <span className="ms-2">
+                                        <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                                        <div className="d-inline-block ms-1">
+                                            <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                                        </div>
+                                    </span>
+                                )}
                             </h3>
                         ) : (
                             <>
