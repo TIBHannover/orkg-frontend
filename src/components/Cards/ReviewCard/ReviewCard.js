@@ -54,7 +54,6 @@ const ReviewCard = ({ versions, showCurationFlags, showBadge }) => {
                 )}
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
-
                         <Link to={reverse(ROUTES.REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
                         {showBadge && (
                             <div className="d-inline-block ms-2">
@@ -78,7 +77,6 @@ const ReviewCard = ({ versions, showCurationFlags, showBadge }) => {
                         <small>
                             All versions:{' '}
                             {versions.map((version, index) => (
-
                                 <span key={version?.id}>
                                     <Tippy content={version?.description || 'no description'}>
                                         <Link to={reverse(ROUTES.REVIEW, { id: version?.id })}>Version {versions?.length - index}</Link>

@@ -328,7 +328,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
 MarkdownEditor.propTypes = {
     label: PropTypes.string.isRequired,
     handleUpdate: PropTypes.func.isRequired,
-    references: PropTypes.object,
+    references: PropTypes.array,
     literalId: PropTypes.string,
 };
 
