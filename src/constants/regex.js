@@ -7,7 +7,7 @@ const regex = {
     PERMALINK: /^[a-zA-Z0-9_]+$/, // used to validate the observatory and organization slug
     TIB_URL: /^(https?:)?\/\/av\.tib\.eu(\/(media|player)?(\?.*)?)\//,
     YOUTUBE_URL: /^(https?:)?\/\/(www.)?youtube\.com\/watch\?v=/,
-    GITHUB_CODE_URL: /^(https):(\/\/(www.)?raw\.githubusercontent\.com)/i,
+    GITHUB_CODE_URL: /^(https):(\/\/(www.)?raw\.githubusercontent\.com[^"']*\.(?:r|py))$/i,
     DAILYMOTION_URL: /^(https?:)?\/\/(www.)?dailymotion\.com\/video\//,
     VIMEO_URL: /^(https?:)?\/\/(www.)?vimeo\.com\//,
     IMAGE_URL: /^(https):(\/\/[^"']*\.(?:png|jpg|jpeg|gif|svg))/i,
