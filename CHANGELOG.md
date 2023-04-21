@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.102.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.102.1...v0.102.2) - 2023-04-21
+
+### Changes
+
+- fix: Do not allow setting unlisted and featured flag for non-content type resources [`#1085`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1085)
+- fix(Template): make templates publicly accessible [`#1084`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1084)
+- fix(CodeValuePlugin): show non-code links as anchors [`#1083`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1083)
+- internal: Update dependencies [`#1081`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1081)
+
+---
 ## [v0.102.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.102.0...v0.102.1) - 2023-04-20
 
 ### Changes
