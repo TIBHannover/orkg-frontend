@@ -10,7 +10,6 @@ import TemplateEditorHeaderBar from 'components/Templates/TemplateEditorHeaderBa
 import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
-import Unauthorized from 'pages/Unauthorized';
 import { useEffect, useState } from 'react';
 import LoadingOverlay from 'react-loading-overlay';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,7 +21,7 @@ import { loadTemplate, saveTemplate, setEditMode } from 'slices/templateEditorSl
 const Template = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
-    const user = useSelector(state => state.auth.user);
+
     const {
         editMode,
         isSaving,
@@ -49,10 +48,6 @@ const Template = () => {
     useEffect(() => {
         document.title = `${label ? `${label} - ` : ''}Contribution Template - ORKG`;
     }, [label]);
-
-    if (!user) {
-        return <Unauthorized />;
-    }
 
     return (
         <>

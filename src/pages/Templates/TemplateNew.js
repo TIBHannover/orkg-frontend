@@ -6,7 +6,9 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Unauthorized from 'pages/Unauthorized';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Container, FormGroup, Input, Label } from 'reactstrap';
@@ -21,6 +23,7 @@ const TemplateNew = () => {
     const [isLoading, setIsLoading] = useState(false);
     const { search } = useLocation();
     const navigate = useNavigate();
+    const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
         document.title = 'Create new template - ORKG';
@@ -66,6 +69,10 @@ const TemplateNew = () => {
             navigate(reverse(ROUTES.TEMPLATE, { id: templateResource.id }));
         }
     };
+
+    if (!user) {
+        return <Unauthorized />;
+    }
 
     return (
         <>
