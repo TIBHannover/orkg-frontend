@@ -13,9 +13,10 @@ import { Button } from 'reactstrap';
 SyntaxHighlighter.registerLanguage('python', python);
 SyntaxHighlighter.registerLanguage('r', r);
 
+// when adding a language, make sure to also update REGEX.GITHUB_CODE_URL
 const SUPPORTED_LANGUAGES = [
     { extension: 'py', language: 'python' },
-    { extension: 'R', language: 'r' },
+    { extension: 'r', language: 'r' },
 ];
 
 const Code = ({ children, type }) => {
@@ -25,7 +26,9 @@ const Code = ({ children, type }) => {
     const labelToText = renderToString(label);
     const isGithubUrl = labelToText && type === ENTITIES.LITERAL ? labelToText.match(new RegExp(REGEX.GITHUB_CODE_URL)) : false;
     const isSupportedLanguage =
-        labelToText && type === ENTITIES.LITERAL ? SUPPORTED_LANGUAGES.find(language => labelToText.endsWith(`.${language.extension}`)) : false;
+        labelToText && type === ENTITIES.LITERAL
+            ? SUPPORTED_LANGUAGES.find(language => labelToText.toLowerCase().endsWith(`.${language.extension}`))
+            : false;
     const isCodeBlock = isGithubUrl && isSupportedLanguage;
 
     useEffect(() => {
