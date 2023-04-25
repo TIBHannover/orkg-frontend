@@ -2,7 +2,7 @@ import AsciiMath from 'components/ValuePlugins/AsciiMath/AsciiMath';
 import Boolean from 'components/ValuePlugins/Boolean/Boolean';
 import Code from 'components/ValuePlugins/Code/Code';
 import Doi from 'components/ValuePlugins/Doi/Doi';
-import ImageAsFigure from 'components/ValuePlugins/Images/ImagesAsFiguers';
+import ImageAsFigure from 'components/ValuePlugins/Images/ImagesAsFigures';
 import Latex from 'components/ValuePlugins/Latex/Latex';
 import Link from 'components/ValuePlugins/Link/Link';
 import Video from 'components/ValuePlugins/Video/Video';

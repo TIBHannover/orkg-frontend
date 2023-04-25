@@ -20,6 +20,7 @@ const ResearchFieldBadge = ({ researchField = null }) =>
     ) : null;
 
 ResearchFieldBadge.propTypes = {
+    /** The research field that should be displayed */
     researchField: PropTypes.object,
 };
 

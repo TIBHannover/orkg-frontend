@@ -29,6 +29,11 @@ const ShareCreatedContent = ({ typeOfLink, title }) => {
     );
 };
 
-ShareCreatedContent.propTypes = { typeOfLink: PropTypes.string.isRequired, title: PropTypes.string };
+ShareCreatedContent.propTypes = {
+    /** What is the type of the content being shared? (e.g. resource, paper, review) */
+    typeOfLink: PropTypes.string.isRequired,
+    /** The title of the content being share (e.g. the paper title) */
+    title: PropTypes.string,
+};
 
 export default ShareCreatedContent;

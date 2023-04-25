@@ -1,8 +1,10 @@
 stages:
+    - install
     - test
     - containerize
     - verify
     - release
+    - pages
 
 include:
     - remote: https://gitlab.com/TIBHannover/gitlab-ci-templates/raw/master/templates/Docker.gitlab-ci.yml
@@ -10,13 +12,20 @@ include:
     - template: Security/Container-Scanning.gitlab-ci.yml
     - template: Dependency-Scanning.gitlab-ci.yml
 
+install:
+  image: node:lts-buster
+  stage: install
+  script:
+    - npm install --force
+  artifacts:
+    paths:
+      - node_modules/
+
 jest:
     image: node:lts-buster
     stage: test
-    needs: [] # speed up, doesn't depend on other jobs
     script:
         - cp default.env .env
-        - npm install --force
         - npm run test:ci
     artifacts:
         when: always
@@ -49,3 +58,17 @@ deploy:release:
     - curl --fail -X POST -F "token=$PIPELINE_TRIGGER_TOKEN" -F "ref=master" -F "variables[ORKG_COMPONENT_NAME]=orkg-frontend" -F "variables[ORKG_COMPONENT_REF_NAME]=$CI_COMMIT_REF_NAME" -F "variables[ORKG_COMPONENT_REF_NAME]=release" -F "variables[ORKG_COMPONENT_RELEASE_VERSION]=$CI_COMMIT_TAG" https://git.tib.eu/api/v4/projects/1317/trigger/pipeline
   rules:
     - if: $CI_COMMIT_TAG
+
+# deploy storybook to Gitlab pages
+pages:
+  image: node:lts-buster
+  stage: pages
+  script:
+    - rm -rf public # remove the currently existing 'public' folder that contains static files for running the frontend
+    - mkdir -p public/storybook
+    - npm run build-storybook
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH

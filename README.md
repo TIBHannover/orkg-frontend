@@ -7,7 +7,7 @@ Detailed user documentation can be found in the Wiki at: https://gitlab.com/TIBH
 
 ### Prerequisites
 
-In order to run the frontend, ensure that Node.js is installed (version ^14.13.1 || >=16.0.0). Check whether you have the right version installed using your command prompt or terminal, run: `node --version`. For more information about installing or upgrading Node.js, see: https://nodejs.org/en/download/.
+In order to run the frontend, ensure that Node.js is installed (version >=16.0.0). Check whether you have the right version installed using your command prompt or terminal, run: `node --version`. For more information about installing or upgrading Node.js, see: https://nodejs.org/en/download/.
 
 ### Installation
 
@@ -112,6 +112,10 @@ We use [React](https://reactjs.org/) as frontend framework. Additionally, we use
 -   We are transitioning to fully adhere to the [Airbnb JavaScript style guide](https://github.com/airbnb/javascript). Currently, some rules are displayed to warnings instead of errors because of the transition period. Please ensure your code does not contain any warnings before commiting.
 
 Happy coding! 😁☕️
+
+## Storybook component libary
+
+Please have a look at the [Storybook component libary](https://tibhannover.gitlab.io/orkg/orkg-frontend/storybook/) for React components that can be easily reused throughout the code base.
 
 ## Value plugins
 

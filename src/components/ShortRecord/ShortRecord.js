@@ -36,8 +36,11 @@ class ShortRecord extends Component {
 }
 
 ShortRecord.propTypes = {
+    /** Link of the header label */
     href: PropTypes.string.isRequired,
+    /** Content displayed under header label */
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.node]),
+    /** Header label */
     header: PropTypes.string.isRequired,
 };
 
