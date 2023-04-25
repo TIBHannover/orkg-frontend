@@ -128,12 +128,24 @@
         "lint:fix": "eslint src --fix",
         "lint:quiet": "eslint src --quiet",
         "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\"",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "storybook": "storybook dev -p 6006",
+        "build-storybook": "storybook build --output-dir public/storybook"
     },
     "devDependencies": {
         "@babel/preset-env": "^7.21.4",
         "@beam-australia/react-env": "^3.1.1",
         "@faker-js/faker": "^7.6.0",
+        "@storybook/addon-actions": "^7.0.7",
+        "@storybook/addon-essentials": "^7.0.7",
+        "@storybook/addon-interactions": "^7.0.7",
+        "@storybook/addon-links": "^7.0.7",
+        "@storybook/addon-mdx-gfm": "^7.0.7",
+        "@storybook/node-logger": "^7.0.7",
+        "@storybook/preset-create-react-app": "^7.0.7",
+        "@storybook/react": "^7.0.7",
+        "@storybook/react-webpack5": "^7.0.7",
+        "@storybook/testing-library": "^0.1.0",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^14.0.0",
         "@testing-library/user-event": "^14.4.3",
@@ -151,7 +163,8 @@
         "react-scripts": "5.0.1",
         "react-select-event": "^5.5.1",
         "sass": "^1.62.0",
-        "source-map-explorer": "^2.5.3"
+        "source-map-explorer": "^2.5.3",
+        "storybook": "^7.0.7"
     },
     "jest-junit": {
         "classNameTemplate": "{classname}",
@@ -300,6 +313,16 @@
             "wrap-iife": 1,
             "no-constructor-return": 1,
             "react/display-name": 1
-        }
+        },
+        "overrides": [
+            {
+                "files": [
+                    "**/*.stories.*"
+                ],
+                "rules": {
+                    "import/no-anonymous-default-export": "off"
+                }
+            }
+        ]
     }
 }
