@@ -29,6 +29,7 @@
         "dompurify": "^3.0.1",
         "dot-prop-immutable": "^2.1.1",
         "fast-text-encoding": "^1.0.6",
+        "framer-motion": "^10.12.4",
         "greeting-time": "^1.0.0",
         "handsontable": "^11.0.1",
         "he": "^1.2.0",
