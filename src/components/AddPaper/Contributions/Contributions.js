@@ -41,6 +41,7 @@ import {
     updateContributionLabelAction as updateContributionLabel,
 } from 'slices/addPaperSlice';
 import { updateSettings } from 'slices/statementBrowserSlice';
+import { getResource } from 'services/backend/resources';
 import ContributionsHelpTour from './ContributionsHelpTour';
 
 const Contributions = () => {
@@ -58,6 +59,7 @@ const Contributions = () => {
         abstract,
         researchProblem,
         method,
+        methodResource,
         conclusion,
         objective,
         result,
@@ -106,7 +108,7 @@ const Contributions = () => {
             //   creates a new array with a length of 4 using the Array.from() method, which takes a callback function that will be called for each element in the array. will create a new array of unique IDs.
             const [problems, methods, conclusions, results, objectives, errors] = Array.from({ length: 6 }, () => researchContributionURI.map(guid));
             const resourceIds = resourceUri.map(id => id?.split('/').pop() || null);
-
+            const resourceMethodIds = methodResource.map(id => id?.split('/').pop() || null);
             researchContributionURI.map((c, index) => {
                 dispatch(
                     createContribution({
@@ -170,10 +172,18 @@ const Contributions = () => {
                                     });
                                 }
                                 if (method[index]) {
+                                    // let label = method[index];
+                                    // if (resourceMethodIds[index]) {
+                                    //     label = await getResource(resourceMethodIds[index]).label;
+                                    // }
+
                                     valuesArray.push({
-                                        _class: 'literal',
+                                        isExistingValue: resourceMethodIds[index] ? true : false,
+                                        _class: resourceMethodIds[index] ? ENTITIES.RESOURCE : ENTITIES.LITERAL,
+                                        // label: resourceMethodIds[index] ? resourceMethodIds[index] : method[index],
                                         label: method[index],
                                         propertyId: methods[index],
+                                        existingResourceId: resourceMethodIds[index],
                                         existingPredicateId: PREDICATES.METHOD,
                                     });
                                 }

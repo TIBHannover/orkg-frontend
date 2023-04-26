@@ -32,6 +32,7 @@ const UploadPdf = () => {
             let error;
             let resourceUri;
             let researchProblemLink;
+            let methodResource;
 
             let researchContributionURI;
             reader.onload = async () => {
@@ -39,6 +40,7 @@ const UploadPdf = () => {
                 const loadingTask = getDocument({ data });
                 const pdf = await loadingTask.promise;
                 const metadata = await pdf.getMetadata();
+                console.log('metadat', metadata?.metadata?._data);
                 if (metadata?.metadata?._data) {
                     const processedPdf = new window.DOMParser().parseFromString(metadata.metadata._data, 'text/xml');
                     // you might want to replace 'querySelector' with 'querySelectorAll' to get all the values if there are multiple annotations of the same type
@@ -63,6 +65,9 @@ const UploadPdf = () => {
                         methods => methods?.querySelector('method')?.textContent || null,
                     );
 
+                    methodResource = [...processedPdf.querySelectorAll('ResearchContribution method')]?.map(
+                        description => description.querySelector('Description')?.getAttribute('rdf:about') || null,
+                    );
                     result = [...processedPdf.querySelectorAll('ResearchContribution')].map(
                         results => results?.querySelector('result')?.textContent || null,
                     );
@@ -92,6 +97,7 @@ const UploadPdf = () => {
                         resourceUri,
                         researchProblemLink,
                         researchContributionURI,
+                        methodResource,
                     });
                 }
             };
@@ -124,6 +130,7 @@ const UploadPdf = () => {
                     conclusion,
                     researchProblem,
                     method,
+                    methodResource,
                     error,
                     resourceUri,
                     researchProblemLink,

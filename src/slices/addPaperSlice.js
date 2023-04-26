@@ -45,6 +45,7 @@ const initialState = {
     error: '',
     resourceUri: '',
     researchProblemLink: '',
+    methodResource: '',
     selectedContribution: '',
     paperNewResourceId: null,
     url: '',
