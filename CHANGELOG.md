@@ -3,6 +3,17 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.103.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.102.2...v0.103.0) - 2023-04-26
+
+### Changes
+
+- chore: Sync with the backend refactoring of top contributor endpoints [`#1067`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1067)
+- fix(ComparisonCard): Small discrepancy in count of contributions for a comparison [`#1086`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1086)
+- docs: implement Storybook for frequently used components [`#1071`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1071)
+- feat(UserTooltip): improve animation [`#1088`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1088)
+- fix(ResearchFieldsCards): fix word wrap, feat: change limit max displayed items [`#1087`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1087)
+
+---
 ## [v0.102.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.102.1...v0.102.2) - 2023-04-21
 
 ### Changes
