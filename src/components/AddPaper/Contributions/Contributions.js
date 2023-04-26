@@ -23,7 +23,6 @@ import Tabs from 'components/Tabs/Tabs';
 import Tooltip from 'components/Utils/Tooltip';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { BIOASSAYS_FIELDS_LIST } from 'constants/nlpFieldLists';
-import Classes from 'pages/Classes/Classes';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Row, UncontrolledAlert } from 'reactstrap';
@@ -83,6 +82,7 @@ const Contributions = () => {
     const [isOpenBioassays, setIsOpenBioassays] = useState(false);
 
     const dispatch = useDispatch();
+    const [resource, setResource] = useState(null);
 
     useEffect(() => {
         (async () => setActiveNERService(await determineActiveNERService(selectedResearchField)))();
@@ -106,10 +106,65 @@ const Contributions = () => {
         }
         if (contributions.allIds.length === 0 && researchContributionURI?.length > 0) {
             //   creates a new array with a length of 4 using the Array.from() method, which takes a callback function that will be called for each element in the array. will create a new array of unique IDs.
+
             const [problems, methods, conclusions, results, objectives, errors] = Array.from({ length: 6 }, () => researchContributionURI.map(guid));
             const resourceIds = resourceUri.map(id => id?.split('/').pop() || null);
-            const resourceMethodIds = methodResource.map(id => id?.split('/').pop() || null);
-            researchContributionURI.map((c, index) => {
+
+            researchContributionURI.map(async (c, index) => {
+                const valuesArray = [];
+                const resourceMethodIds = methodResource.map(id => id?.split('/').pop() || null);
+                const apicalls = await Promise.all(resourceMethodIds.filter(p => p).map(id => getResource(id)));
+
+                if (researchProblem[index]) {
+                    valuesArray.push({
+                        isExistingValue: resourceIds[index] ? true : false,
+                        _class: ENTITIES.RESOURCE,
+                        classes: [CLASSES.PROBLEM],
+                        label: researchProblem[index],
+                        existingResourceId: resourceIds[index],
+                        propertyId: problems[index],
+                    });
+                }
+                if (method[index]) {
+                    const loadedResourceLabel = apicalls[0];
+                    valuesArray.push({
+                        isExistingValue: resourceMethodIds[index] ? true : false,
+                        _class: resourceMethodIds[index] ? ENTITIES.RESOURCE : ENTITIES.LITERAL,
+                        label: resourceMethodIds[index] ? loadedResourceLabel.label : method[index],
+                        propertyId: methods[index],
+                        existingResourceId: resourceMethodIds[index],
+                        existingPredicateId: PREDICATES.METHOD,
+                    });
+                }
+                if (conclusion[index]) {
+                    valuesArray.push({
+                        _class: 'literal',
+                        label: conclusion[index],
+                        propertyId: conclusions[index] || PREDICATES.CONCLUSION,
+                    });
+                }
+                if (objective[index]) {
+                    valuesArray.push({
+                        _class: 'literal',
+                        label: objective[index],
+                        propertyId: objectives[index] || PREDICATES.OBJECTIVE,
+                    });
+                }
+                if (result[index]) {
+                    valuesArray.push({
+                        _class: 'literal',
+                        label: result[index],
+                        propertyId: results[index] || PREDICATES.HAS_RESULTS,
+                    });
+                }
+                if (error[index]) {
+                    valuesArray.push({
+                        _class: 'literal',
+                        label: error[index],
+                        propertyId: errors[index] || PREDICATES.HAS_ERROR,
+                    });
+                }
+
                 dispatch(
                     createContribution({
                         selectAfterCreation: true,
@@ -159,64 +214,7 @@ const Contributions = () => {
                                 return property;
                             })(),
 
-                            values: (() => {
-                                const valuesArray = [];
-                                if (researchProblem[index]) {
-                                    valuesArray.push({
-                                        isExistingValue: resourceIds[index] ? true : false,
-                                        _class: ENTITIES.RESOURCE,
-                                        classes: [CLASSES.PROBLEM],
-                                        label: researchProblem[index],
-                                        existingResourceId: resourceIds[index],
-                                        propertyId: problems[index],
-                                    });
-                                }
-                                if (method[index]) {
-                                    // let label = method[index];
-                                    // if (resourceMethodIds[index]) {
-                                    //     label = await getResource(resourceMethodIds[index]).label;
-                                    // }
-
-                                    valuesArray.push({
-                                        isExistingValue: resourceMethodIds[index] ? true : false,
-                                        _class: resourceMethodIds[index] ? ENTITIES.RESOURCE : ENTITIES.LITERAL,
-                                        // label: resourceMethodIds[index] ? resourceMethodIds[index] : method[index],
-                                        label: method[index],
-                                        propertyId: methods[index],
-                                        existingResourceId: resourceMethodIds[index],
-                                        existingPredicateId: PREDICATES.METHOD,
-                                    });
-                                }
-                                if (conclusion[index]) {
-                                    valuesArray.push({
-                                        _class: 'literal',
-                                        label: conclusion[index],
-                                        propertyId: conclusions[index] || PREDICATES.CONCLUSION,
-                                    });
-                                }
-                                if (objective[index]) {
-                                    valuesArray.push({
-                                        _class: 'literal',
-                                        label: objective[index],
-                                        propertyId: objectives[index] || PREDICATES.OBJECTIVE,
-                                    });
-                                }
-                                if (result[index]) {
-                                    valuesArray.push({
-                                        _class: 'literal',
-                                        label: result[index],
-                                        propertyId: results[index] || PREDICATES.HAS_RESULTS,
-                                    });
-                                }
-                                if (error[index]) {
-                                    valuesArray.push({
-                                        _class: 'literal',
-                                        label: error[index],
-                                        propertyId: errors[index] || PREDICATES.HAS_ERROR,
-                                    });
-                                }
-                                return valuesArray;
-                            })(),
+                            values: valuesArray,
                         },
                     }),
                 );
