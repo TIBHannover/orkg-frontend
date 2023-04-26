@@ -89,7 +89,7 @@ const usePaginate = ({ fetchItems, fetchItemsExtraParams = {}, pageSize = 25, re
         }
     };
 
-    return { results, isLoading, isLastPageReached, totalElements, hasNextPage, page, loadNextPage, handleKeyDown };
+    return { results, isLoading, isLastPageReached, totalElements, hasNextPage, page, loadNextPage, handleKeyDown, setResults };
 };
 
 export default usePaginate;

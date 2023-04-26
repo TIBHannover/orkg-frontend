@@ -1,13 +1,14 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import ObservatoryCard from 'components/Cards/ObservatoryCard/ObservatoryCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import ObservatoryCard from 'components/Cards/ObservatoryCard/ObservatoryCard';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { groupBy } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Col, Container, NavLink, Row, TabContent, TabPane } from 'reactstrap';
-import { getAllObservatories, getObservatoriesStats } from 'services/backend/observatories';
+import { getAllObservatories } from 'services/backend/observatories';
 import { getAllOrganizations } from 'services/backend/organizations';
+import { getObservatoriesStats } from 'services/backend/stats';
 import styled from 'styled-components';
 
 const TabPaneStyled = styled(TabPane)`
@@ -77,8 +78,8 @@ const Observatories = () => {
         setIsNextPageLoading(true);
 
         try {
-            const observatoriesPromise = getAllObservatories();
-            const observatoryStatsPromise = getObservatoriesStats();
+            const observatoriesPromise = getAllObservatories({}).then(res => res.content);
+            const observatoryStatsPromise = getObservatoriesStats({}).then(res => res.content);
             const organizationsPromise = getAllOrganizations();
             const data = await Promise.all([observatoriesPromise, observatoryStatsPromise, organizationsPromise]);
 
@@ -86,8 +87,9 @@ const Observatories = () => {
                 const observatoryResource = data[1].find(el => el.observatory_id === observatory.id);
                 return {
                     ...observatory,
-                    numPapers: observatoryResource?.resources ?? 0,
-                    numComparisons: observatoryResource?.comparisons ?? 0,
+                    papers: observatoryResource?.papers ?? 0,
+                    comparisons: observatoryResource?.comparisons ?? 0,
+                    total: observatoryResource?.total ?? 0,
                     organizations: observatory.organization_ids
                         .map(organizationId => data[2].find(o1 => o1.id === organizationId))
                         .sort((a, b) => a.name?.toLowerCase().localeCompare(b.name?.toLowerCase())),

@@ -1,13 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
-import {
-    getAllObservatories,
-    getObservatoriesByResearchFieldId,
-    getObservatoriesStats,
-    getUsersByObservatoryId,
-} from 'services/backend/observatories';
-import { getAllOrganizations } from 'services/backend/organizations';
 import { RESOURCES } from 'constants/graphSettings';
-import { set, orderBy } from 'lodash';
+import { orderBy } from 'lodash';
+import { useCallback, useEffect, useState } from 'react';
+import { getAllObservatories, getObservatoriesByResearchFieldId } from 'services/backend/observatories';
+import { getAllOrganizations } from 'services/backend/organizations';
+import { getObservatoriesStats } from 'services/backend/stats';
 
 function useResearchFieldObservatories({ researchFieldId }) {
     const [data, setData] = useState([]);
@@ -20,49 +16,41 @@ function useResearchFieldObservatories({ researchFieldId }) {
                 setIsLoading(true);
                 let obsCalls;
                 if (researchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN) {
-                    const observatories = getObservatoriesByResearchFieldId(rfId);
-                    const obsStats = getObservatoriesStats();
+                    const observatories = getObservatoriesByResearchFieldId({ id: rfId }).then(res => res.content);
+                    const obsStats = getObservatoriesStats({}).then(res => res.content);
                     const organizations = getAllOrganizations();
 
                     obsCalls = Promise.all([observatories, obsStats, organizations]);
                 } else {
-                    const observatories = getAllObservatories();
-                    const obsStats = getObservatoriesStats();
+                    const observatories = getAllObservatories({}).then(res => res.content);
+                    const obsStats = getObservatoriesStats({}).then(res => res.content);
                     const organizations = getAllOrganizations();
 
                     obsCalls = Promise.all([observatories, obsStats, organizations]);
                 }
 
                 obsCalls
-                    .then(data => {
+                    .then(_data => {
                         let observatoriesData;
                         if (researchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN) {
-                            observatoriesData = data[0].map(ob => {
-                                const obsStat = data[1].find(el => el.observatory_id === ob.id);
-                                return { ...ob, ...obsStat, orgs: data[2].filter(o => ob.organization_ids.includes(o.id)) };
+                            observatoriesData = _data[0].map(ob => {
+                                const obsStat = _data[1].find(el => el.observatory_id === ob.id);
+                                return { ...ob, ...obsStat, orgs: _data[2].filter(o => ob.organization_ids.includes(o.id)) };
                             });
                         } else {
-                            observatoriesData = data[0]
+                            observatoriesData = _data[0]
                                 .filter(ob => {
-                                    const obsStat = data[1].find(el => el.observatory_id === ob.id);
-                                    return obsStat && (obsStat.comparisons > 0 || obsStat.resources > 0);
+                                    const obsStat = _data[1].find(el => el.observatory_id === ob.id);
+                                    return obsStat && (obsStat.comparisons > 0 || obsStat.papers > 0);
                                 })
                                 .map(ob => {
-                                    const obsStat = data[1].find(el => el.observatory_id === ob.id);
-                                    return { ...ob, ...obsStat, orgs: data[2].filter(o => ob.organization_ids.includes(o.id)) };
+                                    const obsStat = _data[1].find(el => el.observatory_id === ob.id);
+                                    return { ...ob, ...obsStat, orgs: _data[2].filter(o => ob.organization_ids.includes(o.id)) };
                                 });
                         }
-                        const cont = observatoriesData.map(o => getUsersByObservatoryId(o.id));
-                        Promise.all(cont).then(c => {
-                            observatoriesData = orderBy(
-                                observatoriesData.map((o, index) => set(o, 'contributors', c[index])),
-                                ['comparisons', 'resources'],
-                                ['desc', 'desc'],
-                            );
-                            setData(observatoriesData);
-                            setIsLoading(false);
-                            setIsFailedLoading(false);
-                        });
+                        setData(orderBy(observatoriesData, ['comparisons', 'papers'], ['desc', 'desc']));
+                        setIsLoading(false);
+                        setIsFailedLoading(false);
                     })
                     .catch(e => {
                         setIsLoading(false);

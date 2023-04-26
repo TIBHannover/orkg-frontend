@@ -1,21 +1,26 @@
-import { useState } from 'react';
-import { Carousel, CarouselItem, Card, CardBody, CardFooter, CardTitle, CardSubtitle } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import ROUTES from 'constants/routes';
-import Dotdotdot from 'react-dotdotdot';
+import { faCubes, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faFile, faCubes } from '@fortawesome/free-solid-svg-icons';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CarouselIndicatorsStyled } from 'components/styled';
-import Tippy from '@tippyjs/react';
-import styled from 'styled-components';
-import Gravatar from 'react-gravatar';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import ContentLoader from 'react-content-loader';
+import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import ContentLoader from 'react-content-loader';
+import Dotdotdot from 'react-dotdotdot';
+import { Link } from 'react-router-dom';
+import { Card, CardBody, CardFooter, CardSubtitle, CardTitle, Carousel, CarouselItem } from 'reactstrap';
 import { getOrganizationLogoUrl } from 'services/backend/organizations';
+import styled from 'styled-components';
 
 const CarouselContainer = styled.div`
     width: 100%;
+    & .carousel-item.active {
+        display: flex;
+        flex-wrap: wrap;
+        min-height: 100%;
+    }
 
     & li {
         width: 10px !important;
@@ -25,7 +30,7 @@ const CarouselContainer = styled.div`
     }
 `;
 
-const ObservatoryCardStyled = styled.div`
+const ObservatoryCardStyled = styled(Card)`
     cursor: initial;
     .orgLogo {
         border: 1px;
@@ -39,14 +44,6 @@ const ObservatoryCardStyled = styled.div`
         .observatoryName {
             text-decoration: underline;
         }
-    }
-`;
-
-const StyledGravatar = styled(Gravatar)`
-    border: 2px solid ${props => props.theme.secondary};
-    cursor: pointer;
-    &:hover {
-        border: 2px solid ${props => props.theme.primaryColor};
     }
 `;
 
@@ -82,16 +79,19 @@ function ObservatoriesCarousel(props) {
 
     const slides = () =>
         props.observatories.map(observatory => (
-            <CarouselItem onExiting={() => setAnimating(true)} onExited={() => setAnimating(false)} className="pb-1 mb-4" key={`fp${observatory.id}`}>
-                <ObservatoryCardStyled className="">
-                    <Card style={{ border: 0 }}>
+            <CarouselItem
+                onExiting={() => setAnimating(true)}
+                onExited={() => setAnimating(false)}
+                className="pb-1 pb-4 flex-grow-1"
+                key={`fp${observatory.id}`}
+            >
+                <ObservatoryCardStyled className=" d-flex flex-grow-1" style={{ border: 0 }}>
+                    <CardBody className="pt-0 mb-0">
                         <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })} style={{ textDecoration: 'none' }}>
-                            <CardBody className="pt-0 mb-0">
-                                <CardTitle tag="h5">{observatory.name}</CardTitle>
-                                <CardSubtitle tag="h6" style={{ height: '20px' }} className="mb-1 text-muted">
-                                    <Dotdotdot clamp={2}>{observatory.description}</Dotdotdot>
-                                </CardSubtitle>
-                            </CardBody>
+                            <CardTitle tag="h5">{observatory.name}</CardTitle>
+                            <CardSubtitle tag="h6" style={{ height: '20px' }} className="mb-1 text-muted">
+                                <Dotdotdot clamp={2}>{observatory.description}</Dotdotdot>
+                            </CardSubtitle>
                         </Link>
                         <div className="mt-3 mb-3 ps-2 pe-2">
                             <Link
@@ -110,38 +110,34 @@ function ObservatoriesCarousel(props) {
                                 )}
                             </Link>
                         </div>
-                        <CardFooterStyled className="text-muted">
-                            <small>
-                                <Icon icon={faCubes} className="me-1" /> {observatory.comparisons ?? 0} comparisons
-                                <Icon icon={faFile} className="me-1 ms-2" />
-                                {observatory.resources ?? 0} papers
-                            </small>
-                            <div className="float-end" style={{ height: '25px' }}>
-                                {observatory.contributors.slice(0, 5).map(contributor => (
-                                    <Tippy key={`contributor${contributor.id}`} content={contributor.display_name}>
-                                        <Link className="ms-1" to={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
-                                            <StyledGravatar className="rounded-circle" md5={contributor.gravatar_id} size={24} />
-                                        </Link>
-                                    </Tippy>
-                                ))}
-                            </div>
-                        </CardFooterStyled>
-                    </Card>
+                    </CardBody>
+                    <CardFooterStyled className="text-muted">
+                        <small>
+                            <Icon icon={faCubes} className="me-1" /> {pluralize('comparison', observatory.comparisons, true)}
+                            <Icon icon={faFile} className="me-1 ms-2" />
+                            {pluralize('paper', observatory.papers, true)}
+                        </small>
+                        <div className="float-end" style={{ height: '25px' }}>
+                            {observatory.members.slice(0, 5).map(contributor => (
+                                <UserAvatar key={contributor} userId={contributor} size={24} />
+                            ))}
+                        </div>
+                    </CardFooterStyled>
                 </ObservatoryCardStyled>
             </CarouselItem>
         ));
 
     return (
-        <CarouselContainer>
-            {!props.isLoading ? (
-                props.observatories.length ? (
-                    <Carousel activeIndex={activeIndex} next={next} previous={previous}>
+        <CarouselContainer className="flex-grow-1 d-flex">
+            {!props.isLoading &&
+                (props.observatories.length ? (
+                    <Carousel className="flex-grow-1 d-flex" activeIndex={activeIndex} next={next} previous={previous}>
                         {slides()}
 
                         <CarouselIndicatorsStyled items={props.observatories} activeIndex={activeIndex} onClickHandler={goToIndex} />
                     </Carousel>
                 ) : (
-                    <div className="pt-4 pb-4 ps-4 pe-4 text-center">
+                    <div className="flex-grow-1 mt-4 text-center">
                         No observatories yet
                         <br />
                         <small>
@@ -150,8 +146,8 @@ function ObservatoriesCarousel(props) {
                             </a>
                         </small>
                     </div>
-                )
-            ) : (
+                ))}
+            {props.isLoading && (
                 <div style={{ height: '130px' }} className="pt-4 pb-1 ps-4 pe-4">
                     <ContentLoader
                         width={300}

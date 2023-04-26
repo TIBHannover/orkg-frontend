@@ -12,6 +12,25 @@ export const getResearchFieldsStats = () => submitGetRequest(`${statsUrl}fields`
 export const getComparisonsCountByObservatoryId = id => submitGetRequest(`${statsUrl}${encodeURIComponent(id)}/observatoryComparisonsCount`);
 
 /**
+ * Get statistics of observatories
+ * @param {Number} page Page number
+ * @param {Number} size Number of items per page
+ * @param {String} sortBy Sort field (total | papers | comparisons)
+ * @param {Boolean} desc  ascending order and descending order.
+ * @return {Object} List of observatories
+ */
+export const getObservatoriesStats = ({ page = 0, size = 9999, sortBy = 'total', desc = true }) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = qs.stringify(
+        { page, size, sort },
+        {
+            skipNulls: true,
+        },
+    );
+    return submitGetRequest(`${statsUrl}observatories?${params}`);
+};
+
+/**
  * Get top contributors
  * @param {String} researchFieldId Research field id
  * @param {Number} days Number of last days (by default it counts all time, from 2010-01-01)
