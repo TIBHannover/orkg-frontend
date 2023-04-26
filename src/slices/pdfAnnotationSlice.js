@@ -177,24 +177,4 @@ export const parsePdf =
             toast.error('The references from the uploaded PDF could not be extracted');
             dispatch(fetchPDFParseFailure());
         }
-
-        // fetch(`${env('GROBID_URL')}api/processFulltextDocument`, {
-        //     method: 'POST',
-        //     body: form,
-        // })
-        //     .then(response => {
-        //         if (!response.ok) {
-        //             throw new Error('Error fetching Grobid parse');
-        //         } else {
-        //             return response.text();
-        //         }
-        //     })
-        //     .then(data => {
-        //         dispatch(setParsedPdfData(data));
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //         toast.error('The references from the uploaded PDF could not be extracted');
-        //         dispatch(fetchPDFParseFailure());
-        //     });
     };

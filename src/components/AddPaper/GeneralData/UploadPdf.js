@@ -40,7 +40,6 @@ const UploadPdf = () => {
                 const loadingTask = getDocument({ data });
                 const pdf = await loadingTask.promise;
                 const metadata = await pdf.getMetadata();
-                console.log('metadat', metadata?.metadata?._data);
                 if (metadata?.metadata?._data) {
                     const processedPdf = new window.DOMParser().parseFromString(metadata.metadata._data, 'text/xml');
                     // you might want to replace 'querySelector' with 'querySelectorAll' to get all the values if there are multiple annotations of the same type
@@ -82,23 +81,6 @@ const UploadPdf = () => {
                     conclusion = [...processedPdf.querySelectorAll('ResearchContribution')].map(
                         conclusions => conclusions?.querySelector('conclusion')?.textContent || null,
                     );
-
-                    console.log({
-                        extractedResearchField,
-                        researchField,
-                        objective,
-                        result,
-                        conclusion,
-                        researchProblem,
-                        method,
-                        title,
-                        authors,
-                        error,
-                        resourceUri,
-                        researchProblemLink,
-                        researchContributionURI,
-                        methodResource,
-                    });
                 }
             };
 
@@ -130,11 +112,11 @@ const UploadPdf = () => {
                     conclusion,
                     researchProblem,
                     method,
-                    methodResource,
                     error,
                     resourceUri,
                     researchProblemLink,
                     researchContributionURI,
+                    methodResource,
                 }),
             );
             toast.success('PDF parsed successfully');

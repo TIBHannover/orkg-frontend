@@ -1,4 +1,3 @@
-/* eslint-disable no-continue */
 import { useState, useCallback } from 'react';
 import { CLASSES, MISC, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { omit, isString } from 'lodash';
@@ -120,7 +119,6 @@ const useImportBulkData = ({ data, onFinish }) => {
                 researchField = cleanLabel(researchField);
             }
 
-            // eslint-disable-next-line guard-for-in
             for (const property in rowObject) {
                 let propertyId;
                 if (property !== 'contribution:research_problem') {

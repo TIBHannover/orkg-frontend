@@ -17,23 +17,15 @@ import {
 } from 'slices/statementBrowserSlice';
 
 const initialState = {
-    isTourOpen: false,
-    showAbstractDialog: false,
-    abstractDialogView: 'annotator', // annotator | input | list
-    currentStep: 1,
-    shouldBlockNavigation: false,
-    tourStartAt: 0,
+    // extractedData: {
     title: '',
     authors: [],
     abstract: '',
     publicationMonth: '',
     publicationYear: '',
-    entry: '',
-    showLookupTable: false,
     doi: '',
     publishedIn: '',
     researchFields: [],
-    selectedResearchField: '',
     extractedResearchField: '',
     extractedResearchFieldId: '',
     researchContributionURI: '',
@@ -46,6 +38,17 @@ const initialState = {
     resourceUri: '',
     researchProblemLink: '',
     methodResource: '',
+    // },
+
+    isTourOpen: false,
+    showAbstractDialog: false,
+    abstractDialogView: 'annotator', // annotator | input | list
+    currentStep: 1,
+    shouldBlockNavigation: false,
+    tourStartAt: 0,
+    entry: '',
+    showLookupTable: false,
+    selectedResearchField: '',
     selectedContribution: '',
     paperNewResourceId: null,
     url: '',

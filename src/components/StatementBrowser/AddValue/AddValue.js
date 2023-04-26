@@ -62,7 +62,6 @@ const AddValue = props => {
                         setShowAddValue={setShowAddValue}
                         showAddValue={showAddValue}
                         propertyId={props.propertyId}
-                        property={property}
                         resourceId={props.resourceId}
                         syncBackend={props.syncBackend}
                     />

@@ -1,9 +1,3 @@
-/* eslint-disable no-debugger */
-/* eslint-disable default-case */
-/* eslint-disable no-plusplus */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unneeded-ternary */
-/* eslint-disable no-undef */
 import env from '@beam-australia/react-env';
 import { faAngleDown, faExclamationTriangle, faFlask, faMagic } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -13,7 +7,6 @@ import AbstractModal from 'components/AddPaper/AbstractModal/AbstractModal';
 import BioAssaysModal from 'components/AddPaper/BioAssaysModal/BioAssaysModal';
 import EntityRecognition from 'components/AddPaper/EntityRecognition/EntityRecognition';
 import useBioassays from 'components/AddPaper/hooks/useBioassays';
-import useEntityRecognition from 'components/AddPaper/hooks/useEntityRecognition';
 import useFeedbacks from 'components/AddPaper/hooks/useFeedbacks';
 import Confirm from 'components/Confirmation/Confirmation';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
@@ -75,14 +68,12 @@ const Contributions = () => {
 
     const isBioassayField = BIOASSAYS_FIELDS_LIST.includes(selectedResearchField);
 
-    const { handleSaveFeedback } = useEntityRecognition({ activeNERService });
     const { handleSaveBioassaysFeedback } = useBioassays();
     const { handleSavePredicatesRecommendationFeedback } = useFeedbacks();
 
     const [isOpenBioassays, setIsOpenBioassays] = useState(false);
 
     const dispatch = useDispatch();
-    const [resource, setResource] = useState(null);
 
     useEffect(() => {
         (async () => setActiveNERService(await determineActiveNERService(selectedResearchField)))();
@@ -117,7 +108,7 @@ const Contributions = () => {
 
                 if (researchProblem[index]) {
                     valuesArray.push({
-                        isExistingValue: resourceIds[index] ? true : false,
+                        isExistingValue: !!resourceIds[index],
                         _class: ENTITIES.RESOURCE,
                         classes: [CLASSES.PROBLEM],
                         label: researchProblem[index],
@@ -128,7 +119,7 @@ const Contributions = () => {
                 if (method[index]) {
                     const loadedResourceLabel = apicalls[0];
                     valuesArray.push({
-                        isExistingValue: resourceMethodIds[index] ? true : false,
+                        isExistingValue: !!resourceMethodIds[index],
                         _class: resourceMethodIds[index] ? ENTITIES.RESOURCE : ENTITIES.LITERAL,
                         label: resourceMethodIds[index] ? loadedResourceLabel.label : method[index],
                         propertyId: methods[index],
@@ -227,7 +218,21 @@ const Contributions = () => {
                 }),
             );
         }
-    }, [contributions.allIds.length, dispatch, selectedResearchField]);
+    }, [
+        conclusion,
+        contributions.allIds.length,
+        dispatch,
+        error,
+        extractedResearchFieldId,
+        method,
+        methodResource,
+        objective,
+        researchContributionURI,
+        researchProblem,
+        resourceUri,
+        result,
+        selectedResearchField,
+    ]);
 
     const handleNextClick = async () => {
         if (activeNERService) {
