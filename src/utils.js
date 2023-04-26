@@ -292,12 +292,7 @@ export const getAuthorData = (resource, statements) => {
  */
 export const getComparisonData = (resource, comparisonStatements) => {
     const description = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.DESCRIPTION, true);
-    const contributions = filterObjectOfStatementsByPredicateAndClass(
-        comparisonStatements,
-        PREDICATES.COMPARE_CONTRIBUTION,
-        false,
-        CLASSES.CONTRIBUTION,
-    );
+    const contributions = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.COMPARE_CONTRIBUTION, false);
     const references = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.REFERENCE, false);
     const doi = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_DOI, true);
     const hasPreviousVersion = filterObjectOfStatementsByPredicateAndClass(
