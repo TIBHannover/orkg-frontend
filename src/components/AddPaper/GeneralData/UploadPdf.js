@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import DragUploadPdf from 'components/DragUploadPdf/DragUploadPdf';
@@ -8,6 +9,7 @@ import processPdf from 'services/grobid';
 import { updateGeneralData } from 'slices/addPaperSlice';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/build/pdf';
+import { getResearchProblemsByResearchFieldIdCountingPapers } from 'services/backend/researchFields';
 
 const UploadPdf = () => {
     const { pdfName } = useSelector(state => state.addPaper);
@@ -33,13 +35,17 @@ const UploadPdf = () => {
             let resourceUri;
             let researchProblemLink;
             let methodResource;
-
+            let properties;
+            let propertyData;
             let researchContributionURI;
+            const collectProperties = [];
+            let propertiesDictionary = {};
             reader.onload = async () => {
                 const data = new Uint8Array(reader?.result);
                 const loadingTask = getDocument({ data });
                 const pdf = await loadingTask.promise;
                 const metadata = await pdf.getMetadata();
+                // console.log('metadat', metadata?.metadata?._data);
                 if (metadata?.metadata?._data) {
                     const processedPdf = new window.DOMParser().parseFromString(metadata.metadata._data, 'text/xml');
                     // you might want to replace 'querySelector' with 'querySelectorAll' to get all the values if there are multiple annotations of the same type
@@ -81,6 +87,27 @@ const UploadPdf = () => {
                     conclusion = [...processedPdf.querySelectorAll('ResearchContribution')].map(
                         conclusions => conclusions?.querySelector('conclusion')?.textContent || null,
                     );
+                    // eslint-disable-next-line array-callback-return
+
+                    // eslint-disable-next-line array-callback-return
+                    [...processedPdf.querySelectorAll('ResearchContribution')].map(contribution => {
+                        properties = contribution.querySelectorAll(':scope > *');
+                        console.log('show properties', properties);
+
+                        // eslint-disable-next-line array-callback-return
+                        propertyData = [...properties]?.map((property, index) => {
+                            const textContent = property?.textContent;
+                            // console.log(`${property.localName} ${index + 1}: ${textContent}`);
+                            return {
+                                localName: property.localName,
+                                index: index + 1,
+                                textContent,
+                            };
+                        });
+
+                        collectProperties.push({ contribution: [...propertyData] });
+                        console.log('show all properties in', collectProperties);
+                    });
                 }
             };
 
@@ -100,6 +127,7 @@ const UploadPdf = () => {
             dispatch(
                 updateGeneralData({
                     pdfName: files?.[0]?.name,
+                    propertyData: collectProperties,
                     showLookupTable: true,
                     title: title || titleGrobid,
                     authors: authorsGrobid || authors,

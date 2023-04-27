@@ -17,6 +17,7 @@ import {
 } from 'slices/statementBrowserSlice';
 
 const initialState = {
+    propertyData: {},
     // extractedData: {
     title: '',
     authors: [],

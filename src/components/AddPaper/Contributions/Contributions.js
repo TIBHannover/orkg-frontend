@@ -60,8 +60,12 @@ const Contributions = () => {
         extractedResearchFieldId,
         resourceUri,
         researchContributionURI,
+        propertyData,
     } = useSelector(state => state.addPaper);
-
+    console.log('show propertyData data in contributionpage', propertyData);
+    const contributionsList = propertyData?.map(c => c.contribution);
+    const itemsList = contributionsList.map(c => c[0]);
+    console.log('show nw', itemsList);
     const [isOpenAbstractModal, setIsOpenAbstractModal] = useState(false);
     const [activeNERService, setActiveNERService] = useState(null);
     const { resources, properties, values } = useSelector(state => state.statementBrowser);
@@ -98,7 +102,7 @@ const Contributions = () => {
         if (contributions.allIds.length === 0 && researchContributionURI?.length > 0) {
             //   creates a new array with a length of 4 using the Array.from() method, which takes a callback function that will be called for each element in the array. will create a new array of unique IDs.
 
-            const [problems, methods, conclusions, results, objectives, errors] = Array.from({ length: 6 }, () => researchContributionURI.map(guid));
+            const [problems, methods] = Array.from({ length: 2 }, () => researchContributionURI.map(guid));
             const resourceIds = resourceUri.map(id => id?.split('/').pop() || null);
 
             researchContributionURI.map(async (c, index) => {
@@ -127,34 +131,6 @@ const Contributions = () => {
                         existingPredicateId: PREDICATES.METHOD,
                     });
                 }
-                if (conclusion[index]) {
-                    valuesArray.push({
-                        _class: 'literal',
-                        label: conclusion[index],
-                        propertyId: conclusions[index] || PREDICATES.CONCLUSION,
-                    });
-                }
-                if (objective[index]) {
-                    valuesArray.push({
-                        _class: 'literal',
-                        label: objective[index],
-                        propertyId: objectives[index] || PREDICATES.OBJECTIVE,
-                    });
-                }
-                if (result[index]) {
-                    valuesArray.push({
-                        _class: 'literal',
-                        label: result[index],
-                        propertyId: results[index] || PREDICATES.HAS_RESULTS,
-                    });
-                }
-                if (error[index]) {
-                    valuesArray.push({
-                        _class: 'literal',
-                        label: error[index],
-                        propertyId: errors[index] || PREDICATES.HAS_ERROR,
-                    });
-                }
 
                 dispatch(
                     createContribution({
@@ -178,30 +154,7 @@ const Contributions = () => {
                                         label: 'method',
                                     });
                                 }
-                                if (conclusion[index]) {
-                                    property.push({
-                                        propertyId: conclusions[index] || PREDICATES.CONCLUSION,
-                                        label: 'conclusion',
-                                    });
-                                }
-                                if (objective[index]) {
-                                    property.push({
-                                        propertyId: objectives[index] || PREDICATES.OBJECTIVE,
-                                        label: 'objective',
-                                    });
-                                }
-                                if (result[index]) {
-                                    property.push({
-                                        propertyId: results[index] || PREDICATES.HAS_RESULTS,
-                                        label: 'result',
-                                    });
-                                }
-                                if (error[index]) {
-                                    property.push({
-                                        propertyId: errors[index] || PREDICATES.HAS_ERROR,
-                                        label: 'error',
-                                    });
-                                }
+
                                 return property;
                             })(),
 
