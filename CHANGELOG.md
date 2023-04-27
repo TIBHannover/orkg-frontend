@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.103.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.103.0...v0.103.1) - 2023-04-27
+
+### Changes
+
+- fix(Storybook): list docs for components [`#1091`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1091)
+
+---
 ## [v0.103.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.102.2...v0.103.0) - 2023-04-26
 
 ### Changes
