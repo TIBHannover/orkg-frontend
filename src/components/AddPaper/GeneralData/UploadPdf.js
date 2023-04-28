@@ -92,7 +92,7 @@ const UploadPdf = () => {
                     // eslint-disable-next-line array-callback-return
                     [...processedPdf.querySelectorAll('ResearchContribution')].map(contribution => {
                         properties = contribution.querySelectorAll(':scope > *');
-                        console.log('show properties', properties);
+                        //   console.log('show properties', properties);
 
                         // eslint-disable-next-line array-callback-return
                         propertyData = [...properties]?.map((property, index) => {
@@ -106,7 +106,7 @@ const UploadPdf = () => {
                         });
 
                         collectProperties.push({ contribution: [...propertyData] });
-                        console.log('show all properties in', collectProperties);
+                        //   console.log('show all properties in', collectProperties);
                     });
                 }
             };

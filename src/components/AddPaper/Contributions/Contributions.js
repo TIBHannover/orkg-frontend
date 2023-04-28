@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import env from '@beam-australia/react-env';
 import { faAngleDown, faExclamationTriangle, faFlask, faMagic } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -21,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Row, UncontrolledAlert } from 'reactstrap';
 import { determineActiveNERService } from 'services/orkgNlp/index';
 import { guid } from 'utils';
+import { getPredicates } from 'services/backend/predicates';
 import {
     createContributionAction as createContribution,
     deleteContributionAction as deleteContribution,
@@ -62,10 +64,17 @@ const Contributions = () => {
         researchContributionURI,
         propertyData,
     } = useSelector(state => state.addPaper);
-    console.log('show propertyData data in contributionpage', propertyData);
-    const contributionsList = propertyData?.map(c => c.contribution);
-    const itemsList = contributionsList.map(c => c[0]);
-    console.log('show nw', itemsList);
+    // console.log('show propertyData data in contributionpage', propertyData);
+    // const contributionsList = propertyData?.map(c => c.contribution);
+
+    // contributionsList.forEach(innerArr => {
+    //     innerArr.forEach(obj => {
+    //         console.log(obj.localName);
+    //         console.log(obj.textContent); // outputting the value of localName
+    //     });
+    // });
+
+    // console.log('show item', contributionsList);
     const [isOpenAbstractModal, setIsOpenAbstractModal] = useState(false);
     const [activeNERService, setActiveNERService] = useState(null);
     const { resources, properties, values } = useSelector(state => state.statementBrowser);
@@ -82,7 +91,6 @@ const Contributions = () => {
     useEffect(() => {
         (async () => setActiveNERService(await determineActiveNERService(selectedResearchField)))();
     }, [selectedResearchField]);
-
     useEffect(() => {
         // if there is no contribution yet, create the first one
         if (contributions.allIds.length === 0 && researchContributionURI?.length === 0) {
@@ -100,91 +108,67 @@ const Contributions = () => {
             );
         }
         if (contributions.allIds.length === 0 && researchContributionURI?.length > 0) {
-            //   creates a new array with a length of 4 using the Array.from() method, which takes a callback function that will be called for each element in the array. will create a new array of unique IDs.
+            const propertiesList = [];
+            const valuesList = [];
+            (async () => {
+                await Promise.all(
+                    propertyData?.map(async cont => {
+                        let pred = [];
+                        cont?.contribution?.forEach((a, i) => {
+                            pred.push(getPredicates({ q: cont.contribution[i].localName, items: 2 }));
+                        });
+                        const apiCalls = await Promise.all(pred);
 
-            const [problems, methods] = Array.from({ length: 2 }, () => researchContributionURI.map(guid));
-            const resourceIds = resourceUri.map(id => id?.split('/').pop() || null);
-
-            researchContributionURI.map(async (c, index) => {
-                const valuesArray = [];
-                const resourceMethodIds = methodResource.map(id => id?.split('/').pop() || null);
-                const apicalls = await Promise.all(resourceMethodIds.filter(p => p).map(id => getResource(id)));
-
-                if (researchProblem[index]) {
-                    valuesArray.push({
-                        isExistingValue: !!resourceIds[index],
-                        _class: ENTITIES.RESOURCE,
-                        classes: [CLASSES.PROBLEM],
-                        label: researchProblem[index],
-                        existingResourceId: resourceIds[index],
-                        propertyId: problems[index],
-                    });
-                }
-                if (method[index]) {
-                    const loadedResourceLabel = apicalls[0];
-                    valuesArray.push({
-                        isExistingValue: !!resourceMethodIds[index],
-                        _class: resourceMethodIds[index] ? ENTITIES.RESOURCE : ENTITIES.LITERAL,
-                        label: resourceMethodIds[index] ? loadedResourceLabel.label : method[index],
-                        propertyId: methods[index],
-                        existingResourceId: resourceMethodIds[index],
-                        existingPredicateId: PREDICATES.METHOD,
-                    });
-                }
-
-                dispatch(
-                    createContribution({
-                        selectAfterCreation: true,
-                        fillStatements: true,
-                        researchField: extractedResearchFieldId || selectedResearchField,
-                        statements: {
-                            properties: (() => {
-                                const property = [];
-                                if (researchProblem[index]) {
-                                    property.push({
-                                        existingPredicateId: PREDICATES.HAS_RESEARCH_PROBLEM,
-                                        propertyId: problems[index],
-                                        label: 'research problem',
-                                    });
-                                }
-                                if (method[index]) {
-                                    property.push({
-                                        existingPredicateId: PREDICATES.METHOD,
-                                        propertyId: methods[index],
-                                        label: 'method',
-                                    });
-                                }
-
-                                return property;
-                            })(),
-
-                            values: valuesArray,
-                        },
+                        propertiesList.push(
+                            cont?.contribution?.map((p, i = 1) => ({
+                                existingPredicateId: apiCalls[i]?.content[0]?.id,
+                                propertyId: apiCalls[i]?.content[0]?.id + i,
+                                label: p?.localName,
+                            })),
+                        );
+                        valuesList.push(
+                            cont?.contribution?.map((v, i = 1) => ({
+                                label: v?.textContent,
+                                propertyId: apiCalls[i].content[0]?.id + i,
+                            })),
+                        );
+                        console.log('apiCalls', apiCalls);
+                        console.log('propertiesList', propertiesList);
+                        console.log('valuesList', valuesList);
+                        return apiCalls;
                     }),
                 );
-                return null;
-            });
-
-            dispatch(
-                updateSettings({
-                    openExistingResourcesInDialog: true,
-                }),
-            );
+                researchContributionURI.map((c, index) => {
+                    dispatch(
+                        createContribution({
+                            selectAfterCreation: true,
+                            fillStatements: true,
+                            researchField: extractedResearchFieldId || selectedResearchField,
+                            statements: {
+                                properties: propertiesList[index],
+                                values: valuesList[index],
+                            },
+                        }),
+                    );
+                    dispatch(
+                        updateSettings({
+                            openExistingResourcesInDialog: true,
+                        }),
+                    );
+                });
+            })();
         }
     }, [
-        conclusion,
         contributions.allIds.length,
         dispatch,
         error,
         extractedResearchFieldId,
-        method,
-        methodResource,
-        objective,
+        properties,
+        propertyData,
         researchContributionURI,
         researchProblem,
-        resourceUri,
-        result,
         selectedResearchField,
+        values,
     ]);
 
     const handleNextClick = async () => {
