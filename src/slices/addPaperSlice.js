@@ -36,7 +36,7 @@ const initialState = {
     objective: '',
     conclusion: '',
     error: '',
-    resourceUri: '',
+    resourceURI: '',
     researchProblemLink: '',
     methodResource: '',
     // },

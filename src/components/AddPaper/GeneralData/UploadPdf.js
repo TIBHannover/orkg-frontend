@@ -24,28 +24,28 @@ const UploadPdf = () => {
             const reader = new FileReader();
             let extractedResearchField;
             let researchField;
-            let objective;
-            let result;
-            let conclusion;
-            let researchProblem;
-            let method;
+            // let objective;
+            // let result;
+            // let conclusion;
+            // let researchProblem;
+            // let method;
             let authors;
             let title;
-            let error;
-            let resourceUri;
-            let researchProblemLink;
-            let methodResource;
+            // let error;
+            const resourceURI = [];
+            // let researchProblemLink;
+            // let methodResource;
             let properties;
             let propertyData;
-            let researchContributionURI;
+            //  let researchContributionURI;
             const collectProperties = [];
-            let propertiesDictionary = {};
+
             reader.onload = async () => {
                 const data = new Uint8Array(reader?.result);
                 const loadingTask = getDocument({ data });
                 const pdf = await loadingTask.promise;
                 const metadata = await pdf.getMetadata();
-                // console.log('metadat', metadata?.metadata?._data);
+                console.log('metadat', metadata?.metadata?._data);
                 if (metadata?.metadata?._data) {
                     const processedPdf = new window.DOMParser().parseFromString(metadata.metadata._data, 'text/xml');
                     // you might want to replace 'querySelector' with 'querySelectorAll' to get all the values if there are multiple annotations of the same type
@@ -54,39 +54,39 @@ const UploadPdf = () => {
 
                     title = processedPdf.querySelector('hasTitle')?.textContent;
                     authors = [...processedPdf.querySelectorAll('hasAuthor')].map(auth => auth.textContent);
-                    resourceUri = [...processedPdf.querySelectorAll('ResearchContribution researchproblem')]?.map(
-                        description => description.querySelector('Description')?.getAttribute('rdf:about') || null,
-                    );
+                    // resourceUri = [...processedPdf.querySelectorAll('ResearchContribution researchproblem')]?.map(
+                    //     description => description.querySelector('Description')?.getAttribute('rdf:about') || null,
+                    // );
 
-                    researchProblemLink = processedPdf.querySelector('Description label')?.textContent;
+                    // researchProblemLink = processedPdf.querySelector('Description label')?.textContent;
 
-                    researchContributionURI = [...processedPdf.querySelectorAll('ResearchContribution')].map(contribution =>
-                        contribution.getAttribute('rdf:about'),
-                    );
-                    researchProblem = [...processedPdf.querySelectorAll('ResearchContribution')].map(
-                        researchProblems => researchProblems?.querySelector('researchproblem')?.textContent || null,
-                    );
-                    method = [...processedPdf.querySelectorAll('ResearchContribution')].map(
-                        methods => methods?.querySelector('method')?.textContent || null,
-                    );
+                    // researchContributionURI = [...processedPdf.querySelectorAll('ResearchContribution')].map(contribution =>
+                    //     contribution.getAttribute('rdf:about'),
+                    // );
+                    // researchProblem = [...processedPdf.querySelectorAll('ResearchContribution')].map(
+                    //     researchProblems => researchProblems?.querySelector('researchproblem')?.textContent || null,
+                    // );
+                    // method = [...processedPdf.querySelectorAll('ResearchContribution')].map(
+                    //     methods => methods?.querySelector('method')?.textContent || null,
+                    // );
 
-                    methodResource = [...processedPdf.querySelectorAll('ResearchContribution method')]?.map(
-                        description => description.querySelector('Description')?.getAttribute('rdf:about') || null,
-                    );
-                    result = [...processedPdf.querySelectorAll('ResearchContribution')].map(
-                        results => results?.querySelector('result')?.textContent || null,
-                    );
+                    // methodResource = [...processedPdf.querySelectorAll('ResearchContribution method')]?.map(
+                    //     description => description.querySelector('Description')?.getAttribute('rdf:about') || null,
+                    // );
+                    // result = [...processedPdf.querySelectorAll('ResearchContribution')].map(
+                    //     results => results?.querySelector('result')?.textContent || null,
+                    // );
 
-                    objective = [...processedPdf.querySelectorAll('ResearchContribution')].map(
-                        objectives => objectives?.querySelector('objective')?.textContent || null,
-                    );
+                    // objective = [...processedPdf.querySelectorAll('ResearchContribution')].map(
+                    //     objectives => objectives?.querySelector('objective')?.textContent || null,
+                    // );
 
-                    error = [...processedPdf.querySelectorAll('ResearchContribution')].map(
-                        errors => errors?.querySelector('error')?.textContent || null,
-                    );
-                    conclusion = [...processedPdf.querySelectorAll('ResearchContribution')].map(
-                        conclusions => conclusions?.querySelector('conclusion')?.textContent || null,
-                    );
+                    // error = [...processedPdf.querySelectorAll('ResearchContribution')].map(
+                    //     errors => errors?.querySelector('error')?.textContent || null,
+                    // );
+                    // conclusion = [...processedPdf.querySelectorAll('ResearchContribution')].map(
+                    //     conclusions => conclusions?.querySelector('conclusion')?.textContent || null,
+                    // );
                     // eslint-disable-next-line array-callback-return
 
                     // eslint-disable-next-line array-callback-return
@@ -107,6 +107,10 @@ const UploadPdf = () => {
 
                         collectProperties.push({ contribution: [...propertyData] });
                         //   console.log('show all properties in', collectProperties);
+                    });
+                    [...processedPdf.querySelectorAll('ResearchContribution Description')].forEach(description => {
+                        resourceURI.push(description.getAttribute('rdf:about'));
+                        console.log('show all properties', resourceURI);
                     });
                 }
             };
@@ -135,16 +139,16 @@ const UploadPdf = () => {
                     entry: doi,
                     abstract,
                     extractedResearchField: extractedResearchField || researchField,
-                    objective,
-                    result,
-                    conclusion,
-                    researchProblem,
-                    method,
-                    error,
-                    resourceUri,
-                    researchProblemLink,
-                    researchContributionURI,
-                    methodResource,
+                    // objective,
+                    // result,
+                    // conclusion,
+                    // researchProblem,
+                    // method,
+                    // error,
+
+                    // researchProblemLink,
+                    resourceURI,
+                    // methodResource,
                 }),
             );
             toast.success('PDF parsed successfully');
