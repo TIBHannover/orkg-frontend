@@ -47,9 +47,11 @@ const ItemMetadata = ({ item, showClasses, showCreatedAt, showCreatedBy, showPro
                 </span>
             )}
         </div>
-        <div className="d-flex align-items-end flex-shrink-0">
-            <CopyId id={item.id} />
-        </div>
+        {item.id && (
+            <div className="d-flex align-items-end flex-shrink-0">
+                <CopyId id={item.id} />
+            </div>
+        )}
     </div>
 );
 

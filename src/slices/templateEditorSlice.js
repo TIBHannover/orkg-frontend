@@ -1,13 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LOCATION_CHANGE } from 'utils';
-import { deleteStatementsByIds, createResourceStatement, getTemplateById, getTemplatesByClass } from 'services/backend/statements';
-import { toast } from 'react-toastify';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
 import { uniqBy } from 'lodash';
-import { getClasses, createClass } from 'services/backend/classes';
+import { match } from 'path-to-regexp';
+import { toast } from 'react-toastify';
+import { createClass, getClasses } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
-import { createResource, updateResource } from 'services/backend/resources';
 import { createObject } from 'services/backend/misc';
-import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
+import { updateResource } from 'services/backend/resources';
+import { createResourceStatement, deleteStatementsByIds, getTemplateById, getTemplatesByClass } from 'services/backend/statements';
+import { LOCATION_CHANGE } from 'utils';
 
 const initialState = {
     label: '',
@@ -17,11 +19,11 @@ const initialState = {
     predicate: null,
     class: null,
     templateID: '',
-    isStrict: false,
+    isClosed: false,
     hasLabelFormat: false,
     labelFormat: '',
     error: null,
-    components: [],
+    propertyShapes: [],
     isLoading: false,
     statements: [],
     isSaving: false,
@@ -37,8 +39,8 @@ export const templateEditorSlice = createSlice({
         updatePredicate: (state, { payload }) => {
             state.predicate = payload;
         },
-        updateIsStrict: (state, { payload }) => {
-            state.isStrict = payload;
+        updateIsClosed: (state, { payload }) => {
+            state.isClosed = payload;
         },
         updateHasLabelFormat: (state, { payload }) => {
             state.hasLabelFormat = payload;
@@ -58,8 +60,8 @@ export const templateEditorSlice = createSlice({
         setEditMode: (state, { payload }) => {
             state.editMode = payload;
         },
-        updateComponents: (state, { payload }) => {
-            state.components = payload;
+        updatePropertyShapes: (state, { payload }) => {
+            state.propertyShapes = payload;
         },
         initTemplate: (state, { payload }) => ({
             ...initialState,
@@ -68,11 +70,11 @@ export const templateEditorSlice = createSlice({
             label: payload.label,
             labelFormat: payload.labelFormat,
             hasLabelFormat: payload.hasLabelFormat,
-            isStrict: payload.isStrict,
+            isClosed: payload.isClosed,
             statements: payload.statements,
             predicate: payload.predicate,
             class: payload.class,
-            components: payload.components,
+            propertyShapes: payload.propertyShapes,
             researchFields: payload.researchFields,
             researchProblems: payload.researchProblems,
         }),
@@ -93,21 +95,29 @@ export const templateEditorSlice = createSlice({
         },
     },
     extraReducers: builder => {
-        builder.addCase(LOCATION_CHANGE, () => initialState);
+        builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
+            const matchTemplate = match(ROUTES.TEMPLATE_TABS);
+            const parsedPayload = matchTemplate(payload.location.pathname);
+            if (parsedPayload && parsedPayload.params?.id === state.templateID) {
+                // when it's the same template  (just the tab changed) do not init
+                return state;
+            }
+            return initialState;
+        });
     },
 });
 
 export const {
     updateLabel,
     updatePredicate,
-    updateIsStrict,
+    updateIsClosed,
     updateHasLabelFormat,
     updateLabelFormat,
     updateClass,
     updateResearchProblems,
     updateResearchFields,
     setEditMode,
-    updateComponents,
+    updatePropertyShapes,
     initTemplate,
     setIsLoading,
     setHasFailed,
@@ -159,24 +169,19 @@ export const saveTemplate = () => async (dispatch, getState) => {
     }
     try {
         const promises = [];
-        let templateResource;
-        if (!data.templateID) {
-            templateResource = await createResource(data.label, [CLASSES.TEMPLATE]);
-            templateResource = templateResource.id;
-        } else {
-            templateResource = data.templateID;
-            await updateResource(templateResource, data.label);
-        }
 
-        if (data.isStrict) {
+        const templateResource = data.templateID;
+        await updateResource(templateResource, data.label);
+
+        if (data.isClosed) {
             // set the statement that says this is strict template
             const strictLiteral = await createLiteral('True');
-            promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_STRICT, strictLiteral.id));
+            promises.push(createResourceStatement(templateResource, PREDICATES.SHACL_CLOSED, strictLiteral.id));
         }
 
         // save template class
         if (data.class && data.class.id) {
-            promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_CLASS, data.class.id));
+            promises.push(createResourceStatement(templateResource, PREDICATES.SHACL_TARGET_CLASS, data.class.id));
         } else {
             // Generate class for the template
             let templateClass = await getClasses({
@@ -184,10 +189,10 @@ export const saveTemplate = () => async (dispatch, getState) => {
                 exact: true,
             });
             if (templateClass && templateClass.totalElements === 1) {
-                promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_CLASS, templateClass.content[0].id));
+                promises.push(createResourceStatement(templateResource, PREDICATES.SHACL_TARGET_CLASS, templateClass.content[0].id));
             } else {
                 templateClass = await createClass(templateResource);
-                promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_CLASS, templateClass.id));
+                promises.push(createResourceStatement(templateResource, PREDICATES.SHACL_TARGET_CLASS, templateClass.id));
             }
         }
 
@@ -211,71 +216,90 @@ export const saveTemplate = () => async (dispatch, getState) => {
         }
 
         // save template properties
-        if (data.components && data.components.length > 0) {
-            const componentsAPICalls = [];
-            for (const [index, component] of uniqBy(data.components, 'property.id').entries()) {
-                const componentObject = {
+        if (data.propertyShapes && data.propertyShapes.length > 0) {
+            const propertyShapesAPICalls = [];
+            for (const [index, propertyShape] of uniqBy(data.propertyShapes, 'property.id').entries()) {
+                const propertyShapeObject = {
                     predicates: [],
                     resource: {
-                        name: `Component for template ${templateResource}`,
-                        classes: [CLASSES.TEMPLATE_COMPONENT],
+                        name: `Property shape for ${templateResource}`,
+                        classes: [CLASSES.PROPERTY_SHAPE],
                         values: {
-                            [PREDICATES.TEMPLATE_COMPONENT_PROPERTY]: [
+                            [PREDICATES.SHACL_PATH]: [
                                 {
-                                    '@id': component.property.id,
+                                    '@id': propertyShape.property.id,
                                     '@type': ENTITIES.PREDICATE,
                                 },
                             ],
-                            ...(component.value &&
-                                component.value.id && {
-                                    [PREDICATES.TEMPLATE_COMPONENT_VALUE]: [
-                                        {
-                                            '@id': component.value.id,
-                                            '@type': ENTITIES.CLASS,
-                                        },
-                                    ],
-                                }),
-                            ...((component.minOccurs || component.minOccurs === 0) && {
-                                [PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MIN]: [
+                            ...(propertyShape.value?.id && {
+                                [['Decimal', 'Integer', 'String', 'Boolean', 'Date', 'URI'].includes(propertyShape.value.id)
+                                    ? PREDICATES.SHACL_DATATYPE
+                                    : PREDICATES.SHACL_CLASS]: [
                                     {
-                                        text: component.minOccurs,
+                                        '@id': propertyShape.value.id,
+                                        '@type': ENTITIES.CLASS,
+                                    },
+                                ],
+                            }),
+                            ...((propertyShape.minCount || propertyShape.minCount === 0) && {
+                                [PREDICATES.SHACL_MIN_COUNT]: [
+                                    {
+                                        text: propertyShape.minCount,
                                         datatype: 'xsd:integer',
                                     },
                                 ],
                             }),
-                            ...((component.maxOccurs || component.maxOccurs === 0) && {
-                                [PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MAX]: [
+                            ...((propertyShape.maxCount || propertyShape.maxCount === 0) && {
+                                [PREDICATES.SHACL_MAX_COUNT]: [
                                     {
-                                        text: component.maxOccurs,
+                                        text: propertyShape.maxCount,
                                         datatype: 'xsd:integer',
                                     },
                                 ],
                             }),
-                            [PREDICATES.TEMPLATE_COMPONENT_ORDER]: [
+                            [PREDICATES.SHACL_ORDER]: [
                                 {
                                     text: index,
                                     datatype: 'xsd:integer',
                                 },
                             ],
-                            ...(component.value &&
-                                ['Number', 'Integer', 'String'].includes(component.value.id) &&
-                                component.validationRules && {
-                                    [PREDICATES.TEMPLATE_COMPONENT_VALIDATION_RULE]: Object.keys(component.validationRules)
-                                        .filter(key => component.validationRules[key])
-                                        .map(key => ({
-                                            text: `${key}#${component.validationRules[key]}`,
-                                            datatype: 'xsd:integer',
-                                        })),
-                                }),
+                            ...(['Decimal', 'Integer', 'String'].includes(propertyShape.value?.id)
+                                ? {
+                                      ...((propertyShape.minInclusive || propertyShape.minInclusive === 0) && {
+                                          [PREDICATES.SHACL_MIN_INCLUSIVE]: [
+                                              {
+                                                  text: propertyShape.minInclusive,
+                                                  datatype: 'xsd:integer',
+                                              },
+                                          ],
+                                      }),
+                                      ...((propertyShape.maxInclusive || propertyShape.maxInclusive === 0) && {
+                                          [PREDICATES.SHACL_MAX_INCLUSIVE]: [
+                                              {
+                                                  text: propertyShape.maxInclusive,
+                                                  datatype: 'xsd:integer',
+                                              },
+                                          ],
+                                      }),
+                                      ...((propertyShape.pattern || propertyShape.pattern === 0) && {
+                                          [PREDICATES.SHACL_PATTERN]: [
+                                              {
+                                                  text: propertyShape.pattern,
+                                                  datatype: 'xsd:string',
+                                              },
+                                          ],
+                                      }),
+                                  }
+                                : {}),
                         },
                     },
                 };
-                // create the component using createObject endpoint
-                componentsAPICalls.push(createObject(componentObject));
+                // create the propertyShape using createObject endpoint
+                propertyShapesAPICalls.push(createObject(propertyShapeObject));
             }
-            const components = await Promise.all(componentsAPICalls);
+            const propertyShapes = await Promise.all(propertyShapesAPICalls);
             // link components to the template
-            components.map(c => promises.push(createResourceStatement(templateResource, PREDICATES.HAS_TEMPLATE_COMPONENT, c.id)));
+            propertyShapes.map(c => promises.push(createResourceStatement(templateResource, PREDICATES.SHACL_PROPERTY, c.id)));
         }
 
         // save Label Format
@@ -284,24 +308,23 @@ export const saveTemplate = () => async (dispatch, getState) => {
             promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_LABEL_FORMAT, labelFormatLiteral.id));
         }
 
-        // delete all the statement old
-        if (data.templateID) {
-            if (data.statements.length > 0) {
-                promises.push(deleteStatementsByIds(data.statements));
-            }
-        }
-
         return Promise.all(promises)
-            .then(() => {
+            .then(async responses => {
+                // delete all the statement old
+                if (data.templateID) {
+                    if (data.statements.length > 0) {
+                        await deleteStatementsByIds(data.statements.filter(s => !responses.map(r => r.id).includes(s))); // filter on the newly created statements
+                    }
+                }
                 if (data.templateID) {
                     toast.success('Template updated successfully');
                 } else {
                     toast.success('Template created successfully');
                 }
-
-                dispatch(loadTemplate(templateResource)); // reload the template
                 dispatch(setIsSaving(false));
                 dispatch(setTemplateId(templateResource));
+                dispatch(loadTemplate(templateResource)); // reload the template
+                return templateResource;
             })
             .catch(() => {
                 dispatch(setHasFailedSaving(true));

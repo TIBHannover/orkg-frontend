@@ -23,8 +23,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
     cursor: default;
     background-color: ${props => props.theme.lightLighter} !important;
     border-color: ${props => props.theme.lightDarker} !important;
-    overflow-wrap: break-word;
-    word-break: break-all;
+    overflow-wrap: anywhere;
     flex: 1;
 
     &.selectable {

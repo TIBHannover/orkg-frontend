@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import Select, { components } from 'react-select';
 import { getAllObservatories } from 'services/backend/observatories';
-import { getAllOrganizations } from 'services/backend/organizations';
+import { getAllOrganizations, getOrganizationLogoUrl } from 'services/backend/organizations';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Label, FormGroup } from 'reactstrap';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
 const LogoContainer = styled.div`
     overflow: hidden;

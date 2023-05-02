@@ -28,10 +28,10 @@ function InformationTab({ id, label, uri, editMode, callBackToReloadTree, showSt
             // Get the template of the class
             getStatementsByObjectAndPredicate({
                 objectId: id,
-                predicateId: PREDICATES.TEMPLATE_OF_CLASS,
+                predicateId: PREDICATES.SHACL_TARGET_CLASS,
             })
                 .then(statements =>
-                    Promise.all(statements.filter(statement => statement.subject.classes?.includes(CLASSES.TEMPLATE)).map(st => st.subject)),
+                    Promise.all(statements.filter(statement => statement.subject.classes?.includes(CLASSES.NODE_SHAPE)).map(st => st.subject)),
                 )
                 .then(templates => {
                     if (templates.length > 0) {

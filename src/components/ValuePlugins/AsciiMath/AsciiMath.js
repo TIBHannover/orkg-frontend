@@ -1,9 +1,9 @@
-import { Component } from 'react';
+import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
-import MathJax from 'react-mathjax-preview';
 import { renderToString } from 'react-dom/server';
-import styled from 'styled-components';
+import MathJax from 'react-mathjax-preview';
 import ReactStringReplace from 'react-string-replace';
+import styled from 'styled-components';
 
 const StyledMathJax = styled(MathJax)`
     display: inline;
@@ -16,46 +16,40 @@ const StyledMathJax = styled(MathJax)`
     }
 `;
 
-class AsciiMath extends Component {
-    constructor(props) {
-        super(props);
-        // eslint-disable-next-line no-useless-escape
-        const expression = /(\`.*\`)/g;
-        this.supportedValues = new RegExp(expression);
+const AsciiMath = props => {
+    // eslint-disable-next-line no-useless-escape
+    const expression = /(\`.*\`)/g;
+    const supportedValues = new RegExp(expression);
+    const label = props.children;
+    const labelToText = renderToString(label);
+
+    if (!labelToText) {
+        return '';
     }
 
-    render() {
-        const label = this.props.children;
-        const labelToText = renderToString(label);
-
-        if (!labelToText) {
-            return '';
-        }
-
-        if (this.props.type === 'literal' && labelToText.match(this.supportedValues)) {
-            return ReactStringReplace(labelToText, this.supportedValues, (match, i) => (
-                <StyledMathJax
-                    key={i}
-                    config={{
-                        jax: ['input/AsciiMath', 'output/CommonHTML'],
-                        showMathMenu: false,
-                        SVG: {
-                            useFontCache: false,
-                            useGlobalCache: false,
-                        },
-                        skipStartupTypeset: true,
-                    }}
-                    math={match}
-                />
-            ));
-        }
-        return label;
+    if (props.type === ENTITIES.LITERAL && labelToText.match(supportedValues)) {
+        return ReactStringReplace(labelToText, supportedValues, (match, i) => (
+            <StyledMathJax
+                key={i}
+                config={{
+                    jax: ['input/AsciiMath', 'output/CommonHTML'],
+                    showMathMenu: false,
+                    SVG: {
+                        useFontCache: false,
+                        useGlobalCache: false,
+                    },
+                    skipStartupTypeset: true,
+                }}
+                math={match}
+            />
+        ));
     }
-}
+    return label;
+};
 
 AsciiMath.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-    type: PropTypes.oneOf(['resource', 'literal']),
+    type: PropTypes.oneOf([ENTITIES.RESOURCE, ENTITIES.LITERAL]),
 };
 
 export default AsciiMath;

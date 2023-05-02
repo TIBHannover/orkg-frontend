@@ -1,15 +1,35 @@
-import { Container } from 'reactstrap';
-import useResearchProblemBenchmarks from 'components/ResearchProblem/hooks/useResearchProblemBenchmarks';
+import usePaginate from 'components/hooks/usePaginate';
 import BenchmarksCarousel from 'components/ResearchProblem/Benchmarks/BenchmarksCarousel';
-import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
+import ContentLoader from 'react-content-loader';
+import { Container } from 'reactstrap';
+import { getDatasetsBenchmarksByResearchProblemId } from 'services/backend/datasets';
 
 const Benchmarks = props => {
-    const { researchProblemBenchmarksData: benchmarks, isLoadingData } = useResearchProblemBenchmarks({
-        researchProblemId: props.id,
+    const fetchItems = async ({ id, page, pageSize }) => {
+        const { content: items, last, totalElements } = await getDatasetsBenchmarksByResearchProblemId({ id, page, size: pageSize });
+        return {
+            items,
+            last,
+            totalElements,
+        };
+    };
+
+    const {
+        results: benchmarks,
+        isLoading,
+        isLastPageReached,
+        hasNextPage,
+        page,
+        loadNextPage,
+        handleKeyDown,
+    } = usePaginate({
+        fetchItems,
+        fetchItemsExtraParams: { id: props.id },
+        pageSize: 6,
     });
 
-    if (benchmarks.length === 0 && !isLoadingData) {
+    if (benchmarks.length === 0 && !isLoading) {
         return null;
     }
 
@@ -17,13 +37,23 @@ const Benchmarks = props => {
         <>
             <>
                 <Container className="d-flex align-items-center mt-4 mb-4">
-                    <div className="d-flex flex-grow-1">
-                        <h1 className="h5 flex-shrink-0 mb-0">Benchmarks</h1>
+                    <div className="d-flex flex-md-grow-1  align-items-center">
+                        <h1 className="h5 mb-0 me-2">Benchmarks</h1>
                     </div>
                 </Container>
                 <Container className="p-0">
-                    {benchmarks.length > 0 && <BenchmarksCarousel problemId={props.id} benchmarks={benchmarks} />}
-                    {isLoadingData && (
+                    <BenchmarksCarousel
+                        problemId={props.id}
+                        benchmarks={benchmarks}
+                        isLoading={isLoading}
+                        isLastPageReached={isLastPageReached}
+                        hasNextPage={hasNextPage}
+                        loadNextPage={loadNextPage}
+                        handleKeyDown={handleKeyDown}
+                        page={page}
+                    />
+
+                    {isLoading && page === 0 && (
                         <>
                             <ContentLoader
                                 height="100%"

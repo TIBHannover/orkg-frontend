@@ -2,24 +2,24 @@ import { useState, useCallback } from 'react';
 import { Row, Col, FormGroup, Input, Label } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import { updateComponents, updateIsStrict } from 'slices/templateEditorSlice';
-import TemplateComponent from 'components/Templates/TemplateComponent/TemplateComponent';
+import { updatePropertyShapes, updateIsClosed } from 'slices/templateEditorSlice';
+import PropertyShape from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/PropertyShape';
 import AddPropertyView from 'components/StatementBrowser/AddProperty/AddPropertyView';
 import update from 'immutability-helper';
 import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
 
-const ComponentsTab = () => {
+const PropertyShapesTab = () => {
     const [showAddProperty, setShowAddProperty] = useState(false);
     const dispatch = useDispatch();
-    const components = useSelector(state => state.templateEditor.components);
+    const propertyShapes = useSelector(state => state.templateEditor.propertyShapes);
     const editMode = useSelector(state => state.templateEditor.editMode);
-    const isStrictTemplate = useSelector(state => state.templateEditor.isStrict);
+    const isClosedTemplate = useSelector(state => state.templateEditor.isClosed);
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
     const [propertyLabel, setPropertyLabel] = useState('');
     const [propertyIndex, setPropertyIndex] = useState(null);
 
-    const handleDeleteTemplateComponent = index => {
-        dispatch(updateComponents(components.filter((item, j) => index !== j)));
+    const handleDeletePropertyShape = index => {
+        dispatch(updatePropertyShapes(propertyShapes.filter((item, j) => index !== j)));
     };
 
     const handlePropertiesSelect = async (selected, action, index) => {
@@ -28,24 +28,24 @@ const ComponentsTab = () => {
             setPropertyLabel(selected.label);
             setPropertyIndex(index);
         } else {
-            const templateComponents = components.map((item, j) => {
+            const templatePropertyShapes = propertyShapes.map((item, j) => {
                 const _item = { ...item };
                 if (j === index) {
                     _item.property = !selected ? null : selected;
                 }
                 return _item;
             });
-            dispatch(updateComponents(templateComponents));
+            dispatch(updatePropertyShapes(templatePropertyShapes));
         }
     };
 
     const handleCreate = ({ id }) => {
-        let templateComponents = [];
+        let templatePropertyShapes = [];
 
         // when updating existing components the propertyIndex is set, otherwise a new component is added
         if (propertyIndex) {
             const selected = { id, label: propertyLabel };
-            templateComponents = components.map((item, j) => {
+            templatePropertyShapes = propertyShapes.map((item, j) => {
                 const _item = { ...item };
                 if (j === propertyIndex) {
                     _item.property = !selected ? null : selected;
@@ -53,20 +53,21 @@ const ComponentsTab = () => {
                 return _item;
             });
         } else {
-            templateComponents = [
-                ...components,
+            templatePropertyShapes = [
+                ...propertyShapes,
                 {
                     property: { id, label: propertyLabel },
                     value: {},
-                    validationRules: {},
-                    minOccurs: '0',
-                    maxOccurs: null,
+                    minCount: '0',
+                    maxCount: null,
                     order: null,
+                    maxInclusive: null,
+                    minInclusive: null,
                 },
             ];
             setShowAddProperty(false);
         }
-        dispatch(updateComponents(templateComponents));
+        dispatch(updatePropertyShapes(templatePropertyShapes));
         setIsOpenConfirmModal(false);
         setPropertyIndex(null);
     };
@@ -82,24 +83,20 @@ const ComponentsTab = () => {
                 return null;
             }
         }
-        const templateComponents = components.map((item, j) => {
+        const templatePropertyShapes = propertyShapes.map((item, j) => {
             const _item = { ...item };
             if (j === index) {
                 _item.value = !selected ? null : selected;
-                _item.validationRules = {};
             }
             return _item;
         });
 
-        dispatch(updateComponents(templateComponents));
+        dispatch(updatePropertyShapes(templatePropertyShapes));
     };
 
     const handleSelectNewProperty = ({ id, value: label }) => {
-        const templateComponents = [
-            ...components,
-            { property: { id, label }, value: {}, validationRules: {}, minOccurs: '0', maxOccurs: null, order: null },
-        ];
-        dispatch(updateComponents(templateComponents));
+        const templatePropertyShapes = [...propertyShapes, { property: { id, label }, value: {}, minCount: '0', maxCount: null, order: null }];
+        dispatch(updatePropertyShapes(templatePropertyShapes));
         setShowAddProperty(false);
     };
 
@@ -111,10 +108,10 @@ const ComponentsTab = () => {
 
     const moveCard = useCallback(
         (dragIndex, hoverIndex) => {
-            const dragCard = components[dragIndex];
+            const dragCard = propertyShapes[dragIndex];
             dispatch(
-                updateComponents(
-                    update(components, {
+                updatePropertyShapes(
+                    update(propertyShapes, {
                         $splice: [
                             [dragIndex, 1],
                             [hoverIndex, 0, dragCard],
@@ -123,11 +120,11 @@ const ComponentsTab = () => {
                 ),
             );
         },
-        [components, dispatch],
+        [propertyShapes, dispatch],
     );
 
-    const handleSwitchIsStrictTemplate = event => {
-        dispatch(updateIsStrict(event.target.checked));
+    const handleSwitchIsClosedTemplate = event => {
+        dispatch(updateIsClosed(event.target.checked));
     };
 
     return (
@@ -141,30 +138,32 @@ const ComponentsTab = () => {
                 />
             )}
             <div className="pb-4">
-                {components && components.length > 0 && (
+                {propertyShapes && propertyShapes.length > 0 && (
                     <Row className="text-center">
                         <Col md={6}>Property</Col>
                         <Col md={5}>Type</Col>
                     </Row>
                 )}
-                {components &&
-                    components.length > 0 &&
-                    components.map((templateProperty, index) => (
-                        <TemplateComponent
+                {propertyShapes &&
+                    propertyShapes.length > 0 &&
+                    propertyShapes.map((templateProperty, index) => (
+                        <PropertyShape
                             key={`tc${templateProperty.property.id}`}
-                            handleDeleteTemplateComponent={handleDeleteTemplateComponent}
+                            handleDeletePropertyShape={handleDeletePropertyShape}
                             id={index}
                             moveCard={moveCard}
                             property={templateProperty.property}
                             value={templateProperty.value}
-                            minOccurs={templateProperty.minOccurs}
-                            maxOccurs={templateProperty.maxOccurs}
-                            validationRules={templateProperty.validationRules}
+                            minCount={templateProperty.minCount}
+                            maxCount={templateProperty.maxCount}
+                            minInclusive={templateProperty.minInclusive}
+                            maxInclusive={templateProperty.maxInclusive}
+                            pattern={templateProperty.pattern}
                             handlePropertiesSelect={handlePropertiesSelect}
                             handleClassOfPropertySelect={handleClassOfPropertySelect}
                         />
                     ))}
-                {components && components.length === 0 && <i>No properties specified.</i>}
+                {propertyShapes && propertyShapes.length === 0 && <i>No properties specified.</i>}
                 {editMode && (
                     <>
                         <AddPropertyView
@@ -178,14 +177,14 @@ const ComponentsTab = () => {
                 <FormGroup className="mt-3">
                     <div>
                         <Input
-                            onChange={handleSwitchIsStrictTemplate}
-                            checked={isStrictTemplate}
-                            id="switchIsStrictTemplate"
+                            onChange={handleSwitchIsClosedTemplate}
+                            checked={isClosedTemplate}
+                            id="switchIsClosedTemplate"
                             type="switch"
                             name="customSwitch"
                             disabled={!editMode}
                         />{' '}
-                        <Label for="switchIsStrictTemplate" className="mb-0">
+                        <Label for="switchIsClosedTemplate" className="mb-0">
                             This template is strict (users cannot add additional properties themselves)
                         </Label>
                     </div>
@@ -195,4 +194,4 @@ const ComponentsTab = () => {
     );
 };
 
-export default ComponentsTab;
+export default PropertyShapesTab;

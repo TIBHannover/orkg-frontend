@@ -1,4 +1,4 @@
 const dndTypes = {
-    TEMPLATE_COMPONENT: 'TemplateComponent',
+    PROPERTY_SHAPE: 'PropertyShape',
 };
 export default dndTypes;

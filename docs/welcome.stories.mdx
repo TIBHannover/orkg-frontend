@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/addon-docs';
+import logo from '../src/assets/img/logo.svg';
+
+<Meta title="Introduction" />
+
+# Introduction
+
+Here we document some of the components used in the [ORKG Frontend](https://orkg.org). The scope of this component library includes:
+
+-   components that are reusable (i.e., they are made to be used more than once in the codebase)
+-   components that are usable in isolation (i.e., not relying on a global store)
+-   components that are not tightly coupled with the backend
+
+## Bootstrap components
+
+The ORKG frontend relies mainly on [Bootstrap](https://getbootstrap.com/) using [Reactstrap](https://reactstrap.github.io/). We do not duplicate the documentation from Reactstrap, so please refer to their documentation to find the majority of components used in the ORKG. We always recommend to use their components instead of creating new ones yourself. Only if components are missing, or are not well suited, we create our own components.
+
+## Color palette
+
+|           Name           |    Variable name    |  Color  | Preview                                                      |
+| :----------------------: | :-----------------: | :-----: | ------------------------------------------------------------ |
+|      Primary color       |     `$primary`      | #e86161 | ![#e86161](https://via.placeholder.com/90x25/e86161/e86161/) |
+|  Primary color - darker  |  `$primary-darker`  | #c61d1d | ![#c61d1d](https://via.placeholder.com/90x25/c61d1d/c61d1d/) |
+|     Secondary color      |    `$secondary`     | #80869b | ![#80869b](https://via.placeholder.com/90x25/80869b/80869b/) |
+| Secondary color - darker | `$secondary-darker` | #505565 | ![#505565](https://via.placeholder.com/90x25/505565/505565/) |
+|          Light           |      `$light`       | #e9ebf2 | ![#e9ebf2](https://via.placeholder.com/90x25/e9ebf2/e9ebf2/) |
+|      Light lighter       |  `$light-lighter`   | #f8f9fb | ![#f8f9fb](https://via.placeholder.com/90x25/f8f9fb/f8f9fb/) |
+|       Light darker       |   `$light-darker`   | #dbdde5 | ![#dbdde5](https://via.placeholder.com/90x25/dbdde5/dbdde5/) |
+|           Dark           |       `$dark`       | #5b6176 | ![#5b6176](https://via.placeholder.com/90x25/5b6176/5b6176/) |
+
+In case you are using the colors in the frontend, you can access them via the theme variables file. For styled components, it works like this:
+
+```javascript
+const ExampleStyled = styled.div`
+    color: ${props => props.theme.primary};
+`;
+```

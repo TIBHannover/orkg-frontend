@@ -2,8 +2,7 @@ import { MISC } from 'constants/graphSettings';
 import { url } from 'constants/misc';
 import qs from 'qs';
 import { submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
-import { getOrganization } from 'services/backend/organizations';
-import { getOrganizationLogoUrl } from 'services/backend/organizations';
+import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
 
 export const observatoriesUrl = `${url}observatories/`;
 

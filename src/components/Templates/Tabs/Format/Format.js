@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 const Format = () => {
     const dispatch = useDispatch();
-    const components = useSelector(state => state.templateEditor.components);
+    const propertyShapes = useSelector(state => state.templateEditor.propertyShapes);
     const editMode = useSelector(state => state.templateEditor.editMode);
     const hasLabelFormat = useSelector(state => state.templateEditor.hasLabelFormat);
     const labelFormat = useSelector(state => state.templateEditor.labelFormat);
@@ -33,7 +33,7 @@ const Format = () => {
                         Show formatted text instead of resource label
                     </Label>
                 </div>
-                {hasLabelFormat && components?.length > 0 && (
+                {hasLabelFormat && propertyShapes?.length > 0 && (
                     <div className="mt-3">
                         <FormGroup className="mb-4">
                             <Label for="formatted-label">Formatted label</Label>
@@ -64,17 +64,17 @@ const Format = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {components.map(component => (
-                                    <tr key={`row${component.property.id}`}>
-                                        <th scope="row">{component.property.id}</th>
-                                        <td style={{}}>{component.property.label}</td>
+                                {propertyShapes.map(propertyShape => (
+                                    <tr key={`row${propertyShape.property.id}`}>
+                                        <th scope="row">{propertyShape.property.id}</th>
+                                        <td style={{}}>{propertyShape.property.label}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </Table>
                     </div>
                 )}
-                {hasLabelFormat && components?.length === 0 && (
+                {hasLabelFormat && propertyShapes?.length === 0 && (
                     <div className="mt-3 text-primary">Please add some properties first to use this feature.</div>
                 )}
             </FormGroup>

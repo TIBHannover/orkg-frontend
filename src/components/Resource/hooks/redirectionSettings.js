@@ -39,7 +39,7 @@ const DEDICATED_PAGE_LINKS = {
         route: ROUTES.VENUE_PAGE,
         routeParams: 'venueId',
     },
-    [CLASSES.TEMPLATE]: {
+    [CLASSES.NODE_SHAPE]: {
         label: 'Template',
         route: ROUTES.TEMPLATE,
         routeParams: 'id',

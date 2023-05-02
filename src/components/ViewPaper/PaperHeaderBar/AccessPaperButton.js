@@ -6,7 +6,7 @@ import ContentLoader from 'react-content-loader';
 import { ButtonDropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import { getLinksByDoi, getLinksByTitle } from 'services/unpaywall';
 
-const ViewPaperButton = ({ paperLink = null, doi = null, title = null }) => {
+const AccessPaperButton = ({ paperLink = null, doi = null, title = null }) => {
     const [links, setLinks] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,7 +35,7 @@ const ViewPaperButton = ({ paperLink = null, doi = null, title = null }) => {
     return (
         <ButtonDropdown isOpen={isMenuOpen} toggle={() => setIsMenuOpen(v => !v)}>
             <DropdownToggle style={{ marginRight: 2 }} size="sm" color="secondary" className="px-3 d-flex align-items-center">
-                View paper <Icon icon={faSortDown} style={{ margin: '-4px 0 0 6px' }} />
+                Access paper <Icon icon={faSortDown} style={{ margin: '-4px 0 0 6px' }} />
             </DropdownToggle>
             <DropdownMenu>
                 {paperLink && (
@@ -72,10 +72,10 @@ const ViewPaperButton = ({ paperLink = null, doi = null, title = null }) => {
     );
 };
 
-ViewPaperButton.propTypes = {
+AccessPaperButton.propTypes = {
     paperLink: PropTypes.string,
     doi: PropTypes.string,
     title: PropTypes.string,
 };
 
-export default ViewPaperButton;
+export default AccessPaperButton;

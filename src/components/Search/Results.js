@@ -27,8 +27,7 @@ const StyledLoadMoreButton = styled.div`
 `;
 
 const StyledListGroupItem = styled(ListGroupItem)`
-    overflow-wrap: break-word;
-    word-break: break-all;
+    overflow-wrap: anywhere;
 
     &:last-child {
         border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
@@ -69,7 +68,7 @@ const Results = props => (
                     <ListGroup>
                         {props.items.map((item, index) => (
                             <StyledListGroupItem rounded={props.hasNextPage.toString()} key={`result-${index}`} className="pt-1 pb-2">
-                                <Link to={getResourceLink(props.class, item.id)}>{item.label}</Link>
+                                <Link to={item.customRoute ?? getResourceLink(props.class, item.id)}>{item.label}</Link>
                                 <ItemMetadata
                                     item={item}
                                     showClasses={props.showClasses}

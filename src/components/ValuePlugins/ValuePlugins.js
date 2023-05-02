@@ -1,34 +1,32 @@
-import { Component } from 'react';
-import PropTypes from 'prop-types';
+import AsciiMath from 'components/ValuePlugins/AsciiMath/AsciiMath';
+import Boolean from 'components/ValuePlugins/Boolean/Boolean';
+import Code from 'components/ValuePlugins/Code/Code';
+import Doi from 'components/ValuePlugins/Doi/Doi';
+import ImageAsFigure from 'components/ValuePlugins/Images/ImagesAsFigures';
+import Latex from 'components/ValuePlugins/Latex/Latex';
+import Link from 'components/ValuePlugins/Link/Link';
+import Video from 'components/ValuePlugins/Video/Video';
 import { ENTITIES } from 'constants/graphSettings';
-import Boolean from './Boolean/Boolean';
-import Link from './Link/Link';
-import Latex from './Latex/Latex';
-import AsciiMath from './AsciiMath/AsciiMath';
-import Video from './Video/Video';
-import Doi from './Doi/Doi';
-import ImageAsFigure from './Images/ImagesAsFiguers';
+import PropTypes from 'prop-types';
 
-class ValuePlugins extends Component {
-    render() {
-        // Link exclude videos and images pattern
-        return (
-            <Boolean>
-                <Latex type={this.props.type}>
-                    <AsciiMath type={this.props.type}>
-                        <Doi type={this.props.type}>
-                            <Video type={this.props.type} options={this.props.options}>
-                                <ImageAsFigure type={this.props.type} options={this.props.options}>
-                                    <Link type={this.props.type}>{this.props.children}</Link>
-                                </ImageAsFigure>
-                            </Video>
-                        </Doi>
-                    </AsciiMath>
-                </Latex>
-            </Boolean>
-        );
-    }
-}
+const ValuePlugins = props => (
+    // Link exclude videos and images pattern
+    <Boolean>
+        <Latex type={props.type}>
+            <AsciiMath type={props.type}>
+                <Doi type={props.type}>
+                    <Video type={props.type} options={props.options}>
+                        <Code type={props.type}>
+                            <ImageAsFigure type={props.type} options={props.options}>
+                                <Link type={props.type}>{props.children}</Link>
+                            </ImageAsFigure>
+                        </Code>
+                    </Video>
+                </Doi>
+            </AsciiMath>
+        </Latex>
+    </Boolean>
+);
 
 ValuePlugins.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.node]).isRequired,

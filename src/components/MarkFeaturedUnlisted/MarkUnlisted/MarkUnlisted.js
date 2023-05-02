@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 const StyledIcon = styled(Icon)`
-    cursor: pointer;
+    cursor: ${props => (props.isButton ? 'pointer' : 'initial')};
 `;
 
 const MarkUnlisted = ({ unlisted, size, handleChangeStatus }) => {
@@ -16,11 +16,18 @@ const MarkUnlisted = ({ unlisted, size, handleChangeStatus }) => {
 
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
-    if (!isCurationAllowed) {
+    const buttonTooltip = unlisted ? 'Remove unlisted badge' : 'Mark as unlisted';
+
+    if (!isCurationAllowed && !unlisted) {
         return null;
     }
+
     return (
-        <Tippy content={isCurationAllowed ? (unlisted ? 'Remove unlisted badge' : 'Mark as unlisted') : 'Unlisted content'}>
+        <Tippy
+            content={
+                isCurationAllowed ? buttonTooltip : 'This resource has been unlisted by a curator as it does not meet the orkg quality standards'
+            }
+        >
             <span
                 role="checkbox"
                 tabIndex="0"
@@ -29,6 +36,7 @@ const MarkUnlisted = ({ unlisted, size, handleChangeStatus }) => {
                 onKeyDown={isCurationAllowed ? handleChangeStatus : undefined}
             >
                 <StyledIcon
+                    isButton={isCurationAllowed}
                     onMouseOver={() => setOver(true)}
                     onMouseLeave={() => setOver(false)}
                     inverse={true}

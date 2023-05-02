@@ -69,13 +69,14 @@ const ShowMoreButton = styled(Button)`
 
 const MAX_PROPERTIES_ITEMS = 8;
 
-const EntityRecognition = ({ activeNERService }) => {
-    const { title, abstract, nerProperties } = useSelector(state => state.addPaper);
+const EntityRecognition = ({ title = '', abstract = '', activeNERService }) => {
+    const { nerProperties } = useSelector(state => state.addPaper);
+
     const dispatch = useDispatch();
     const { handleInsertData } = useInsertData();
-    const { suggestions } = useEntityRecognition({ activeNERService });
-    const { recommendedPredicates } = usePredicatesRecommendation();
-    const { recommendedTemplates } = useTemplatesRecommendation();
+    const { suggestions } = useEntityRecognition({ activeNERService, title, abstract });
+    const { recommendedPredicates } = usePredicatesRecommendation({ title, abstract });
+    const { recommendedTemplates } = useTemplatesRecommendation({ title, abstract });
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const [showMorePredicates, setShowMorePredicates] = useState(false);
 
@@ -218,7 +219,13 @@ const EntityRecognition = ({ activeNERService }) => {
             </ListGroup>
             {recommendedPredicates.length > MAX_PROPERTIES_ITEMS && (
                 <div className="text-center">
-                    <ShowMoreButton onClick={() => setShowMorePredicates(v => !v)} color="link" size="sm" className="p-0 ms-2" style={{ outline: 0 }}>
+                    <ShowMoreButton
+                        onClick={() => setShowMorePredicates(v => !v)}
+                        color="link"
+                        size="sm"
+                        className="p-0 ms-2 mt-2 mb-3"
+                        style={{ outline: 0 }}
+                    >
                         {showMorePredicates ? 'Show less suggestions' : 'Show more suggestions'}
                     </ShowMoreButton>
                 </div>
@@ -229,6 +236,9 @@ const EntityRecognition = ({ activeNERService }) => {
 
 EntityRecognition.propTypes = {
     activeNERService: PropTypes.string,
+    isViewPaper: PropTypes.string,
+    title: PropTypes.string,
+    abstract: PropTypes.string,
 };
 
 export default EntityRecognition;

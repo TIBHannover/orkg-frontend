@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getTopContributors } from 'services/backend/stats';
-import { orderBy } from 'lodash';
 import { RESOURCES } from 'constants/graphSettings';
 
 function useContributors({ researchFieldId, pageSize = 30, initialSort = 'top', initialIncludeSubFields = true }) {
@@ -29,14 +28,14 @@ function useContributors({ researchFieldId, pageSize = 30, initialSort = 'top', 
 
             contributorsCall
                 .then(result => {
-                    setContributors(prevResources => orderBy([...prevResources, ...(result.content || [])], ['contributions'], ['desc']));
+                    setContributors(prevResources => [...prevResources, ...(result.content || [])]);
                     setIsLoading(false);
                     setHasNextPage(!result.last);
                     setIsLastPageReached(result.last);
                     setTotalElements(result.totalElements);
                     setPage(page + 1);
                 })
-                .catch(error => {
+                .catch(() => {
                     setIsLoading(false);
                     setHasNextPage(false);
                     setIsLastPageReached(page > 1);

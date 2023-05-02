@@ -13,9 +13,7 @@ COPY package.json package-lock.json ./
 RUN npm install react-scripts@5.0.1 opencollective --location=global
 
 # install the dependencies
-# replace npm ci beceause of npm v7   
-# Peer Dependencies https://blog.npmjs.org/post/626173315965468672/npm-v7-series-beta-release-and-semver-major
-RUN npm install --legacy-peer-deps
+RUN npm install --force
 
 COPY . ./
 

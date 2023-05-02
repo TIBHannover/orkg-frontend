@@ -25,8 +25,8 @@ const ContributorsBox = ({ researchFieldId }) => {
                             <div className="pt-1 ps-2 pe-2" key={`rp${index}`}>
                                 <ContributorCard
                                     contributor={{
-                                        ...contributor.profile,
-                                        subTitle: `${pluralize('contribution', contributor.counts.total, true)}`,
+                                        ...contributor,
+                                        subTitle: `${pluralize('contribution', contributor.total, true)}`,
                                     }}
                                 />
                                 {contributors.slice(0, 4).length - 1 !== index && <hr className="mb-0 mt-1" />}

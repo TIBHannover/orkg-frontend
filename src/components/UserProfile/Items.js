@@ -4,7 +4,7 @@ import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
 import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
-import TemplateCard from 'components/Templates/TemplateCard';
+import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
@@ -170,15 +170,15 @@ const Items = props => {
                         if (props.filterClass === CLASSES.COMPARISON) {
                             return <ComparisonCard comparison={{ ...resource }} key={`pc${resource.id}`} />;
                         }
-                        if (props.filterClass === CLASSES.TEMPLATE) {
-                            return <TemplateCard template={resource} />;
+                        if (props.filterClass === CLASSES.NODE_SHAPE) {
+                            return <TemplateCard template={resource} key={`pc${resource.id}`} />;
                         }
 
                         if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
                             return <ReviewCard key={resource[0]?.id} versions={resource} showBadge={false} showCurationFlags={true} />;
                         }
                         if (props.filterClass === CLASSES.VISUALIZATION) {
-                            return <VisualizationCard visualization={resource} showBadge={false} showCurationFlags={true} />;
+                            return <VisualizationCard visualization={resource} showBadge={false} showCurationFlags={true} key={`pc${resource.id}`} />;
                         }
 
                         return null;

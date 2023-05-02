@@ -14,6 +14,7 @@ import EOSC_LOGO from 'assets/img/poweredby/EOSC.png';
 import styled from 'styled-components';
 import { reverse } from 'named-urls';
 import Tippy from '@tippyjs/react';
+import InfoSheet from 'assets/pdf/infosheet-data-protection.pdf';
 
 const FooterWrapper = styled.div`
     background: #e0e2ea;
@@ -80,13 +81,12 @@ const Footer = () => (
                             <li>
                                 <Link to={ROUTES.HELP_CENTER}>Help center</Link>
                             </li>
-                            {/* <li>
-                                <a href="https://projects.tib.eu/orkg/get-involved/" target="_blank" rel="noopener noreferrer">
-                                    Get involved
-                                </a>
-                            </li> */}
                             <li>
-                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })}>Data protection</Link>
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })}>Data protection</Link> (
+                                <a href={InfoSheet} target="_blank" rel="noreferrer">
+                                    Info sheet
+                                </a>
+                                )
                             </li>
                             <li>
                                 <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.TERMS_OF_USE })}>Terms of use</Link>
@@ -112,10 +112,12 @@ const Footer = () => (
                                 </a>
                             </li>
                             <li>
-                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.ACCESSIBILITY_STATEMENT })}>Accessibility</Link>
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.LICENSE })}>License</Link>
                             </li>
                             <li>
-                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.LICENSE })}>License</Link>
+                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues" target="_blank" rel="noopener noreferrer">
+                                    Report issue
+                                </a>
                             </li>
                         </ul>
                     </FooterCol>
@@ -133,8 +135,11 @@ const Footer = () => (
                                 <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.CONTACT })}>Contact us</Link>
                             </li>
                             <li>
-                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues" target="_blank" rel="noopener noreferrer">
-                                    Report an issue
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.ACCESSIBILITY_STATEMENT })}>Accessibility</Link>
+                            </li>
+                            <li>
+                                <a href="https://forms.gle/NK8Jzti8qGdRooDJ8" target="_blank" rel="noopener noreferrer">
+                                    Report abuse
                                 </a>
                             </li>
                             <li>

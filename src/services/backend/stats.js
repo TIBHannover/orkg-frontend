@@ -1,4 +1,5 @@
 import { url } from 'constants/misc';
+import { getContributorInformationById } from 'services/backend/contributors';
 import { submitGetRequest } from 'network';
 import qs from 'qs';
 
@@ -21,7 +22,7 @@ export const getComparisonsCountByObservatoryId = id => submitGetRequest(`${stat
  * @param {Boolean} subfields whether include the subfields or not
  * @return {Object} List of contributors
  */
-export const getTopContributors = ({
+export const getTopContributors = async ({
     researchFieldId = null,
     days = null,
     page = 0,
@@ -31,37 +32,26 @@ export const getTopContributors = ({
     subfields = true,
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    if (researchFieldId) {
-        const params = qs.stringify(
-            { days, sort },
-            {
-                skipNulls: true,
-            },
-        );
-        return submitGetRequest(`${statsUrl}research-field/${researchFieldId}/${subfields ? 'subfields/' : ''}top/contributors?${params}`).then(
-            result => {
-                result = {
-                    content: result,
-                    last: true,
-                    totalElements: result.length,
-                };
-                return result;
-            },
-        );
-    }
     const params = qs.stringify(
         { page, size, sort, days },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${statsUrl}top/contributors?${params}`).then(result => ({
-        ...result,
-        content: result.content.map(c => ({
-            profile: c.profile,
-            counts: { total: c.contributions },
-        })),
-    }));
+    let apiCall = null;
+    if (researchFieldId) {
+        apiCall = await submitGetRequest(`${statsUrl}research-field/${researchFieldId}/${subfields ? 'subfields/' : ''}top/contributors?${params}`);
+    } else {
+        apiCall = await submitGetRequest(`${statsUrl}top/contributors?${params}`);
+    }
+
+    const uniqContributorsInfosRequests = apiCall.content.map(c => getContributorInformationById(c.contributor));
+    const uniqContributorsInfos = await Promise.all(uniqContributorsInfosRequests);
+
+    return {
+        ...apiCall,
+        content: apiCall.content.map(c => ({ ...c, ...uniqContributorsInfos.find(i => c.contributor === i.id) })),
+    };
 };
 
 export const getChangelogs = ({ researchFieldId = null, page = 0, items = 9999, sortBy = 'createdAt', desc = true }) => {

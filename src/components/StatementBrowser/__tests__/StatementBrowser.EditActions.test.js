@@ -232,7 +232,7 @@ describe('ValueItem', () => {
         await waitForElementToBeRemoved(() => screen.queryByText(/Saving/i));
         await waitFor(() => expect(screen.getByText('New text')).toBeInTheDocument());
         expect(screen.getAllByText('Text')).toHaveLength(2);
-        expect(screen.queryByText(/Date/i)).toBeNull();
+        expect(screen.queryByText('Date')).toBeNull();
     });
 });
 

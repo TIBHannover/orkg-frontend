@@ -110,7 +110,7 @@ const TemplatesModal = props => {
                                 <div className="col-3 m-0 p-0">
                                     <SearchFieldSelector options={filterOptions} value={selectedFilter} setValue={handleSelectedFilterChange} />
                                 </div>
-                                {selectedFilter.id === CLASSES.TEMPLATE && (
+                                {selectedFilter.id === CLASSES.NODE_SHAPE && (
                                     <Input
                                         placeholder="Search template by label"
                                         value={labelFilter}
@@ -119,7 +119,7 @@ const TemplatesModal = props => {
                                         onChange={handleLabelFilterChange}
                                     />
                                 )}
-                                {selectedFilter.id !== CLASSES.TEMPLATE && (
+                                {selectedFilter.id !== CLASSES.NODE_SHAPE && (
                                     <ConditionalWrapper
                                         condition={selectedFilter.id === CLASSES.RESEARCH_FIELD}
                                         wrapper={children => (

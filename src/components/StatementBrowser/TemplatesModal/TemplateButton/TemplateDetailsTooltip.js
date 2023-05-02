@@ -100,13 +100,13 @@ const TemplateDetailsTooltip = ({ addMode, template, isTemplateLoading, source }
                         <b>Has formatted label:</b>
                         <p>
                             <i>
-                                {template.components?.length > 0 &&
+                                {template.propertyShapes?.length > 0 &&
                                     format(
                                         template.labelFormat,
                                         Object.assign(
                                             {},
-                                            ...template.components.map(component => ({
-                                                [component.property.id]: `{${component.property.label}}`,
+                                            ...template.propertyShapes.map(propertyShape => ({
+                                                [propertyShape.property.id]: `{${propertyShape.property.label}}`,
                                             })),
                                         ),
                                     )}
@@ -114,22 +114,22 @@ const TemplateDetailsTooltip = ({ addMode, template, isTemplateLoading, source }
                         </p>
                     </div>
                 )}
-                {template.components?.length > 0 && (
+                {template.propertyShapes?.length > 0 && (
                     <div>
                         <b>
                             {template.predicate && template.predicate?.id !== PREDICATES.HAS_CONTRIBUTION ? 'With' : addMode ? 'Add' : 'Remove'}{' '}
                             properties{!addMode ? ' (with no values)' : ''}:{' '}
                         </b>
-                        <ul className={`ps-3 ${template?.components?.length > 7 && 'mb-0'}`}>
-                            {template.components &&
-                                template.components.length > 0 &&
-                                template.components
+                        <ul className={`ps-3 ${template?.propertyShapes?.length > 7 && 'mb-0'}`}>
+                            {template.propertyShapes &&
+                                template.propertyShapes.length > 0 &&
+                                template.propertyShapes
                                     .slice(0, 10)
-                                    .map(component => <li key={`t-${component.property.id}`}>{component.property.label}</li>)}
+                                    .map(propertyShape => <li key={`t-${propertyShape.property.id}`}>{propertyShape.property.label}</li>)}
                         </ul>
-                        {template.components && template.components.length > 7 && (
+                        {template.propertyShapes && template.propertyShapes.length > 7 && (
                             <Link target="_blank" className="ms-2 mb-2 d-block" to={reverse(ROUTES.TEMPLATE, { id: template.id })}>
-                                + {template.components?.length - 5} more
+                                + {template.propertyShapes?.length - 5} more
                             </Link>
                         )}
                     </div>

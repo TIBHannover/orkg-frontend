@@ -5,12 +5,12 @@ import configureStore from 'store';
 import theme from 'assets/scss/ThemeVariables';
 import { ThemeProvider } from 'styled-components';
 import { ToastContainer } from 'react-toastify';
+import PropTypes from 'prop-types';
 
-// wrap the components with the required providers
-// redux part based on: https://redux.js.org/recipes/writing-tests#connected-components
-const render = (ui, { initialState, store = configureStore(initialState), ...renderOptions } = {}) => {
+const Wrapper = ({ children, initialState = {}, store = configureStore(initialState) }) => {
     const { store: _store, history } = store;
-    const wrapper = ({ children }) => (
+
+    return (
         <Provider store={_store}>
             <ThemeProvider theme={theme}>
                 <Router history={history} noInitialPop>
@@ -20,8 +20,18 @@ const render = (ui, { initialState, store = configureStore(initialState), ...ren
             </ThemeProvider>
         </Provider>
     );
+};
 
-    const rendered = rtlRender(ui, { wrapper, ...renderOptions });
+Wrapper.propTypes = {
+    children: PropTypes.node.isRequired,
+    initialState: PropTypes.object,
+    store: PropTypes.object,
+};
+
+// wrap the components with the required providers
+// redux part based on: https://redux.js.org/recipes/writing-tests#connected-components
+const render = (ui, { initialState, store, ...renderOptions } = {}) => {
+    const rendered = rtlRender(ui, { wrapper: ({ children }) => Wrapper({ children, store, initialState }), ...renderOptions });
 
     return {
         ...rendered,
@@ -33,4 +43,4 @@ const render = (ui, { initialState, store = configureStore(initialState), ...ren
 // re-export everything
 export * from '@testing-library/react';
 // override render method
-export { render };
+export { render, Wrapper };

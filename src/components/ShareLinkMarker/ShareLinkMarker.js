@@ -71,6 +71,11 @@ const ShareLinkMarker = ({ typeOfLink, title }) => {
     );
 };
 
-ShareLinkMarker.propTypes = { typeOfLink: PropTypes.string.isRequired, title: PropTypes.string };
+ShareLinkMarker.propTypes = {
+    /** What is the type of the content being shared? (e.g. resource, paper, review) */
+    typeOfLink: PropTypes.string.isRequired,
+    /** The title of the content being share (e.g. the paper title) */
+    title: PropTypes.string,
+};
 
 export default ShareLinkMarker;

@@ -32,33 +32,31 @@ const ObservatoryCardStyled = styled.div`
 function ObservatoryCard(props) {
     return (
         <ObservatoryCardStyled className="col-6 mb-4">
+            <Card className="h-100">
+                <Link to={reverse(ROUTES.OBSERVATORY, { id: props.observatory.display_id })} style={{ textDecoration: 'none' }}>
+                    <CardBody>
+                        {props.observatory.organizations.map(o => (
+                            <span key={o.id} style={{ marginLeft: '10px' }}>
+                                <img
+                                    className="justify-content-center orgLogo"
+                                    key={`imageLogo${o.id}`}
+                                    height="45px"
+                                    src={getOrganizationLogoUrl(o.id)}
+                                    alt={`${o.name} logo`}
+                                />
+                            </span>
+                        ))}{' '}
+                        <div className="mt-2">
+                            <div className="observatoryName">{props.observatory.name}</div>
 
-                <Card className="h-100">
-                    <Link to={reverse(ROUTES.OBSERVATORY, { id: props.observatory.display_id })} style={{ textDecoration: 'none' }}>
-                        <CardBody>
-                            {props.observatory.organizations.map(o => (
-                                <span key={o.id} style={{ marginLeft: '10px' }}>
-                                    <img
-                                        className="justify-content-center orgLogo"
-                                        key={`imageLogo${o.id}`}
-                                        height="45px"
-                                        src={getOrganizationLogoUrl(o.id)}
-                                        alt={`${o.name} logo`}
-                                    />
-                                </span>
-                            ))}{' '}
-                            <div className="mt-2">
-                                <div className="observatoryName">{props.observatory.name}</div>
-
-                                <div className="observatoryStats text-muted">
-                                    Papers: <b>{props.observatory.numPapers}</b> <br />
-                                    Comparisons: <b>{props.observatory.numComparisons}</b>
-                                </div>
+                            <div className="observatoryStats text-muted">
+                                Papers: <b>{props.observatory.numPapers}</b> <br />
+                                Comparisons: <b>{props.observatory.numComparisons}</b>
                             </div>
-                        </CardBody>
-                    </Link>
-                </Card>
-
+                        </div>
+                    </CardBody>
+                </Link>
+            </Card>
         </ObservatoryCardStyled>
     );
 }

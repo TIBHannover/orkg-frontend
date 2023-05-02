@@ -42,40 +42,39 @@ const Contributors = ({ researchFieldId }) => {
             {!isLoading && contributors && contributors.length > 0 && (
                 <ContributorsAvatars>
                     {contributors.slice(0, 18).map((contributor /* 18 perfect for the container width */) => (
-                        <div key={`contributor${contributor.profile.id}`}>
+                        <div key={`contributor${contributor.id}`}>
                             <Tippy
                                 offset={[0, 20]}
                                 placement="bottom"
                                 content={
                                     <div className="p-2">
-                                        {contributor.profile.display_name}
+                                        {contributor.display_name}
                                         <br />
-                                        {contributor?.counts && contributor.counts.total !== null && (
+
+                                        <ul className="p-0 ps-3 mb-0 mt-2">
+                                            <li>{pluralize('paper', contributor.papers, true)}</li>
+                                            <li>{pluralize('contribution', contributor.contributions, true)}</li>
+                                            <li>{pluralize('comparison', contributor.comparisons, true)}</li>
+                                            <li>{pluralize('visualization', contributor.visualizations, true)}</li>
+                                            <li>{pluralize('research problem', contributor.problems, true)}</li>
+                                        </ul>
+
+                                        <>
+                                            <hr className="mb-1 mt-1" style={{ background: '#fff' }} />
                                             <ul className="p-0 ps-3 mb-0 mt-2">
-                                                <li>{pluralize('paper', contributor.counts.papers, true)}</li>
-                                                <li>{pluralize('contribution', contributor.counts.contributions, true)}</li>
-                                                <li>{pluralize('comparison', contributor.counts.comparisons, true)}</li>
-                                                <li>{pluralize('visualization', contributor.counts.visualizations, true)}</li>
-                                                <li>{pluralize('research problem', contributor.counts.problems, true)}</li>
+                                                <li>
+                                                    <i>
+                                                        <b>{contributor.total} </b>
+                                                        {pluralize('total contribution', contributor.total, false)}
+                                                    </i>
+                                                </li>
                                             </ul>
-                                        )}
-                                        {contributor?.counts && contributor.counts.total !== null && (
-                                            <>
-                                                <hr className="mb-1 mt-1" style={{ background: '#fff' }} />
-                                                <ul className="p-0 ps-3 mb-0 mt-2">
-                                                    <li>
-                                                        <i>
-                                                            <b>{contributor.counts.total} </b>total contributions
-                                                        </i>
-                                                    </li>
-                                                </ul>
-                                            </>
-                                        )}
+                                        </>
                                     </div>
                                 }
                             >
-                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.profile.id })}>
-                                    <StyledGravatar className="rounded-circle" md5={contributor.profile.gravatar_id} size={48} />
+                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
+                                    <StyledGravatar className="rounded-circle" md5={contributor.gravatar_id} size={48} />
                                 </Link>
                             </Tippy>
                         </div>
