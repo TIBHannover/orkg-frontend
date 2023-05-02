@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
-import { createResourceStatement, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+import { createResourceStatement, getStatementsBySubject, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { generateDoi, createObject } from 'services/backend/misc';
 import { createLiteral } from 'services/backend/literals';
 import { getComparison, createResourceData } from 'services/similarity/index';
 import { useSelector, useDispatch } from 'react-redux';
 import { reverse } from 'named-urls';
 import { useNavigate } from 'react-router-dom';
-import { filterObjectOfStatementsByPredicateAndClass, getPublicUrl, getErrorMessage } from 'utils';
+import { filterObjectOfStatementsByPredicateAndClass, getPublicUrl, getErrorMessage, getComparisonData } from 'utils';
 import { setDoi } from 'slices/comparisonSlice';
 import { getComparisonURLConfig, getPropertyObjectFromData, activatedContributionsToList } from 'components/Comparison/hooks/helpers';
 import { saveAuthors } from 'components/AuthorsInput/helpers';
 import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
-import { getConferencesSeries } from 'services/backend/conferences-series';
+import { getConferencesSeries, getConferenceById } from 'services/backend/conferences-series';
 import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
 
 function usePublish() {
@@ -54,6 +54,9 @@ function usePublish() {
     };
 
     useEffect(() => {
+        if (comparisonResource.hasPreviousVersion) {
+            return;
+        }
         setTitle(comparisonResource && comparisonResource.label ? comparisonResource.label : '');
         setDescription(comparisonResource && comparisonResource.description ? comparisonResource.description : '');
         setReferences(comparisonResource?.references && comparisonResource.references.length > 0 ? comparisonResource.references : ['']);
@@ -64,6 +67,35 @@ function usePublish() {
                 : [{ label: displayName, id: displayName, orcid: '', statementId: '', __isNew__: true }],
         );
     }, [comparisonResource, displayName]);
+
+    const getConference = async conferenceId => {
+        if (!conferenceId || conferenceId === MISC.UNKNOWN_ID) {
+            return null;
+        }
+        try {
+            return await getConferenceById(conferenceId);
+        } catch (e) {
+            return null;
+        }
+    };
+
+    // populate the publish model with metadata when republishing an existing comparison
+    useEffect(() => {
+        if (!comparisonResource?.hasPreviousVersion?.id) {
+            return;
+        }
+        const fetchData = async () => {
+            const statements = await getStatementsBySubject({ id: comparisonResource.hasPreviousVersion.id });
+            const comparisonData = getComparisonData(statements[0].subject, statements);
+            setTitle(comparisonData.label);
+            setDescription(comparisonData.description);
+            setResearchField(comparisonData.researchField);
+            setComparisonCreators(comparisonData.authors);
+            setReferences(comparisonData.references.length > 0 ? comparisonData.references.map(reference => reference.label) : ['']);
+            setConference((await getConference(comparisonData.organization_id)) ?? null);
+        };
+        fetchData();
+    }, [comparisonResource?.hasPreviousVersion?.id]);
 
     useEffect(() => {
         const getConferencesList = () => {
@@ -238,7 +270,7 @@ function usePublish() {
         setReferences(list);
     };
 
-    const handleSelectField = ({ _id, label }) =>
+    const handleSelectField = ({ id: _id, label }) =>
         setResearchField({
             id: _id,
             label,
