@@ -63,7 +63,6 @@ const Contributions = () => {
         resourceURI,
         propertyData,
     } = useSelector(state => state.addPaper);
-    // console.log('show propertyData data in researchContributionURI', resourceURI);
 
     const [isOpenAbstractModal, setIsOpenAbstractModal] = useState(false);
     const [activeNERService, setActiveNERService] = useState(null);
@@ -100,18 +99,21 @@ const Contributions = () => {
         if (contributions.allIds.length === 0 && resourceURI?.length > 0) {
             const propertiesList = [];
             const valuesList = [];
-            const r = 'researchproblem';
-            const spacedResearchProblem = `${r.slice(0, 8)} ${r.slice(8)}`;
-            console.log(spacedResearchProblem); // Output: "research problem"
 
             (async () => {
                 await Promise.all(
-                    propertyData?.map(async cont => {
+                    propertyData?.map(async (cont, outerIndex) => {
                         let pred = [];
                         let res = [];
-
+                        console.log('show cont?.contribution', cont?.contribution);
                         cont?.contribution?.forEach((a, i) => {
-                            pred.push(getPredicates({ q: cont.contribution[i]?.localName, items: 2 }));
+                            pred.push(
+                                getPredicates({
+                                    //  q: cont.contribution[i]?.localName === 'researchproblem' ? cont.contribution[i]?.localName : 'research problem',
+                                    q: cont.contribution[i]?.localName,
+                                    items: 1,
+                                }),
+                            );
                         });
                         resourceURI?.forEach((a, i) => {
                             res.push(getResource(resourceURI[i].split('/').pop()));
@@ -125,28 +127,30 @@ const Contributions = () => {
                                 existingPredicateId: apiCalls[i]?.content[0]?.id,
 
                                 // eslint-disable-next-line no-unsafe-optional-chaining
-                                propertyId: apiCalls[i]?.content[0]?.id + i,
+                                propertyId: `${apiCalls[i]?.content[0]?.id}_${i}_${outerIndex}`,
                                 label: p?.localName,
                             })),
                         );
                         valuesList.push(
                             cont?.contribution?.map((v, i) => ({
+                                // label: v?.resourceURI[0] ? apiCallsResource[i]?.label : v?.textContent,
                                 label: v?.textContent,
                                 // eslint-disable-next-line no-unsafe-optional-chaining
-                                propertyId: apiCalls[i].content[0]?.id + i,
-                                existingResourceId: apiCallsResource[i]?.id || null,
-                                _class: apiCallsResource[i]?.id ? ENTITIES.RESOURCE : ENTITIES.LITERAL,
+                                isExistingValue: v?.resourceURI[0] != null,
+                                propertyId: `${apiCalls[i].content[0]?.id}_${i}_${outerIndex}`,
+                                existingResourceId: v?.resourceURI[0] != null ? v?.resourceURI[0].split('/').pop() : null,
+                                _class: v?.resourceURI[0] ? ENTITIES.RESOURCE : ENTITIES.LITERAL,
                             })),
                         );
-                        console.log('apiCallsResource ', apiCallsResource);
-                        console.log('apiCalls', apiCalls);
-                        // console.log('get resource', resource);
-                        console.log('propertiesList', propertiesList);
-                        console.log('valuesList', valuesList);
+                        // console.log('apiCallsResource ', apiCallsResource);
+                        // console.log('apiCalls', apiCalls);
+
+                        // console.log('propertiesList', propertiesList);
+                        // console.log('valuesList', valuesList);
                         return apiCalls;
                     }),
                 );
-                resourceURI.map((c, index) => {
+                resourceURI?.map((c, index) => {
                     dispatch(
                         createContribution({
                             selectAfterCreation: true,

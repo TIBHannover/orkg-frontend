@@ -87,30 +87,32 @@ const UploadPdf = () => {
                     // conclusion = [...processedPdf.querySelectorAll('ResearchContribution')].map(
                     //     conclusions => conclusions?.querySelector('conclusion')?.textContent || null,
                     // );
-                    // eslint-disable-next-line array-callback-return
 
                     // eslint-disable-next-line array-callback-return
                     [...processedPdf.querySelectorAll('ResearchContribution')].map(contribution => {
                         properties = contribution.querySelectorAll(':scope > *');
-                        //   console.log('show properties', properties);
 
-                        // eslint-disable-next-line array-callback-return
                         propertyData = [...properties]?.map((property, index) => {
                             const textContent = property?.textContent;
-                            // console.log(`${property.localName} ${index + 1}: ${textContent}`);
+
+                            const uri = [];
+
+                            property.querySelectorAll('Description').forEach(description => {
+                                uri.push(description.getAttribute('rdf:about'));
+                            });
+
                             return {
                                 localName: property.localName,
+                                resourceURI: uri,
                                 index: index + 1,
                                 textContent,
                             };
                         });
 
                         collectProperties.push({ contribution: [...propertyData] });
-                        //   console.log('show all properties in', collectProperties);
                     });
                     [...processedPdf.querySelectorAll('ResearchContribution Description')].forEach(description => {
                         resourceURI.push(description.getAttribute('rdf:about'));
-                        console.log('show all properties', resourceURI);
                     });
                 }
             };
