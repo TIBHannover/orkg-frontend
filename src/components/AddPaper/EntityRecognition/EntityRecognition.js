@@ -13,7 +13,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useDebounce } from 'react-use';
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import { getNerResults } from 'services/orkgNlp';
-import { ENTITIES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { createPropertyAction as createProperty } from 'slices/statementBrowserSlice';
 import { setNerProperties, setNerResources, setNerRawResponse } from 'slices/addPaperSlice';
 import styled from 'styled-components';
@@ -78,6 +78,11 @@ const EntityRecognition = ({ title = '', abstract = '', activeNERService }) => {
     const { recommendedPredicates } = usePredicatesRecommendation({ title, abstract });
     const { recommendedTemplates } = useTemplatesRecommendation({ title, abstract });
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
+
+    const isContributionLevel = useSelector(
+        state => selectedResource && state.statementBrowser.resources.byId[selectedResource]?.classes?.includes(CLASSES.CONTRIBUTION),
+    );
+
     const [showMorePredicates, setShowMorePredicates] = useState(false);
 
     useDebounce(
@@ -109,7 +114,8 @@ const EntityRecognition = ({ title = '', abstract = '', activeNERService }) => {
 
     const _recommendedPredicates = showMorePredicates ? recommendedPredicates : recommendedPredicates.slice(0, MAX_PROPERTIES_ITEMS);
 
-    const showSuggestionHeader = Object.keys(suggestions).length > 0 || recommendedPredicates?.length > 0 || recommendedTemplates?.length > 0;
+    const showSuggestionHeader =
+        Object.keys(suggestions).length > 0 || recommendedPredicates?.length > 0 || (isContributionLevel && recommendedTemplates?.length > 0);
 
     const [source, target] = useSingleton();
 
@@ -123,31 +129,33 @@ const EntityRecognition = ({ title = '', abstract = '', activeNERService }) => {
                     </Tooltip>
                 </h3>
             )}
-            {recommendedTemplates?.length > 0 && <h6 className="mt-2">Templates</h6>}
-            <ListGroup>
-                <TransitionGroup component={null} height="30px">
-                    {recommendedTemplates.map(template => (
-                        <AnimationContainer
-                            key={`tr${template.id}`}
-                            classNames="slide-left"
-                            className="d-flex align-items-center"
-                            timeout={{ enter: 600, exit: 600 }}
-                        >
-                            <div>
-                                <TemplateButton
-                                    addMode={true}
-                                    tippyTarget={target}
-                                    id={template.id}
-                                    label={template.label}
-                                    resourceId={selectedResource}
-                                    syncBackend={false}
-                                    isSmart={true}
-                                />
-                            </div>
-                        </AnimationContainer>
-                    ))}
-                </TransitionGroup>
-            </ListGroup>
+            {isContributionLevel && recommendedTemplates?.length > 0 && <h6 className="mt-2">Templates</h6>}
+            {isContributionLevel && (
+                <ListGroup>
+                    <TransitionGroup component={null} height="30px">
+                        {recommendedTemplates.map(template => (
+                            <AnimationContainer
+                                key={`tr${template.id}`}
+                                classNames="slide-left"
+                                className="d-flex align-items-center"
+                                timeout={{ enter: 600, exit: 600 }}
+                            >
+                                <div>
+                                    <TemplateButton
+                                        addMode={true}
+                                        tippyTarget={target}
+                                        id={template.id}
+                                        label={template.label}
+                                        resourceId={selectedResource}
+                                        syncBackend={false}
+                                        isSmart={true}
+                                    />
+                                </div>
+                            </AnimationContainer>
+                        ))}
+                    </TransitionGroup>
+                </ListGroup>
+            )}
             {Object.keys(suggestions).length > 0 && <h6 className="mt-2">Statements</h6>}
             <ListGroup>
                 {Object.keys(suggestions).map(key => (
