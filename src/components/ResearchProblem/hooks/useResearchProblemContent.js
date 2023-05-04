@@ -13,7 +13,7 @@ function useResearchProblemContent({
     initialSort,
     initialClassFilterOptions,
     initClassesFilter,
-    pageSize = 10,
+    pageSize = 30,
     updateURL = false,
 }) {
     const [isLoading, setIsLoading] = useState(false);
