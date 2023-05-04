@@ -13,6 +13,8 @@ import { LOCATION_CHANGE } from 'utils';
 
 const initialState = {
     label: '',
+    created_by: null,
+    created_at: null,
     editMode: false,
     researchFields: [],
     researchProblems: [],
@@ -67,6 +69,7 @@ export const templateEditorSlice = createSlice({
             ...initialState,
             templateID: payload.templateID,
             created_by: payload.created_by,
+            created_at: payload.created_at,
             label: payload.label,
             labelFormat: payload.labelFormat,
             hasLabelFormat: payload.hasLabelFormat,

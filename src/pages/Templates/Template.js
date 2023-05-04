@@ -28,6 +28,7 @@ const Template = () => {
         isLoading,
         label,
         created_by: createdBy,
+        created_at: createdAt,
         observatory_id: observatoryId,
         organization_id: organizationId,
     } = useSelector(state => state.templateEditor);
@@ -160,6 +161,7 @@ const Template = () => {
                                         item={{
                                             id,
                                             created_by: createdBy,
+                                            created_at: createdAt,
                                             organization_id: organizationId,
                                             observatory_id: observatoryId,
                                         }}
