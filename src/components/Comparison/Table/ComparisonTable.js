@@ -25,6 +25,8 @@ const ComparisonTable = props => {
     const comparisonType = useSelector(state => state.comparison.configuration.comparisonType);
     const transpose = useSelector(state => state.comparison.configuration.transpose);
     const hiddenGroups = useSelector(state => state.comparison.hiddenGroups ?? []);
+    const isEditing = useSelector(state => state.comparison.isEditing);
+
     const scrollContainerHead = useRef(null);
     const smallerFontSize = viewDensity === 'compact';
     const isSmallScreen = useMedia('(max-width: 576px)');
@@ -51,7 +53,7 @@ const ComparisonTable = props => {
                           }),
                   }))),
         ];
-        if (!transpose && comparisonType === 'path') {
+        if (!transpose && comparisonType === 'path' && !isEditing) {
             let groups = omit(groupArrayByDirectoryPrefix(dataFrame.map(dO => dO.property.id)), '');
             groups = Object.keys(groups);
             const shownGroups = [];
@@ -90,7 +92,7 @@ const ComparisonTable = props => {
             dataFrame = dataFrame.filter(row => !hiddenGroups.includes(row.property.inGroupId) || row.property.group);
         }
         return dataFrame;
-    }, [comparisonType, contributions, data, properties, hiddenGroups, transpose]);
+    }, [comparisonType, contributions, data, properties, hiddenGroups, transpose, isEditing]);
 
     const columns = useMemo(() => {
         if (filterControlData.length === 0) {
