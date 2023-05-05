@@ -3,6 +3,18 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.104.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.103.1...v0.104.0) - 2023-05-05
+
+### Changes
+
+- fix(Sidebar): Template suggestions only on top-level contribution [`#1094`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1094)
+- fix(Template): Show correct creation time [`#1095`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1095)
+- chore: update browsers list db [`#1096`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1096)
+- ux: Increase the page size of research problem items [`#1097`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1097)
+- feat(Comparison): preserve metadata when publishing new version [`#1093`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1093)
+- fix(AboutPage): responsive images [`#1092`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1092)
+
+---
 ## [v0.103.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.103.0...v0.103.1) - 2023-04-27
 
 ### Changes
