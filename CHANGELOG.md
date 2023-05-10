@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.105.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.104.1...v0.105.0) - 2023-05-10
+
+### Changes
+
+- feat(Comparison): Hide the authors and curator when the property "is anonymized" set to true [`#1103`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1103)
+
+---
 ## [v0.104.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.104.0...v0.104.1) - 2023-05-05
 
 ### Changes
