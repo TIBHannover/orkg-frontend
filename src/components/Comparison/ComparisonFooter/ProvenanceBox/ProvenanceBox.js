@@ -49,6 +49,7 @@ const StyledOrganizationCard = styled.div`
 function ProvenanceBox() {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
     const id = useSelector(state => state.comparison.comparisonResource.id);
+    const anonymized = useSelector(state => state.comparison.comparisonResource?.anonymized ?? false);
     const user = useSelector(state => state.auth.user);
     const { createdBy } = useCreator();
     const { observatory, updateCallBack } = useProvenance();
@@ -59,6 +60,10 @@ function ProvenanceBox() {
     const isDoubleBlind =
         observatory?.metadata?.review_process === CONFERENCE_REVIEW_MISC.DOUBLE_BLIND &&
         moment().format('YYYY-MM-DD') < observatory?.metadata?.start_date;
+
+    if ((isDoubleBlind || anonymized) && !observatory && !user.isCurationAllowed) {
+        return null;
+    }
 
     return (
         <div id="provenance" className="container box rounded-3 mt-4">
@@ -84,7 +89,7 @@ function ProvenanceBox() {
                                 </h4>
                             </>
                         )}
-                        {createdBy?.id && !isDoubleBlind && (
+                        {createdBy?.id && !isDoubleBlind && !anonymized && (
                             <>
                                 <div className="mb-1">
                                     <i>Added by:</i>

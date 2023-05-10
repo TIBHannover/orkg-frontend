@@ -122,7 +122,7 @@ const ComparisonMetaData = () => {
                                                     {comparisonResource.created_at ? moment(comparisonResource.created_at).format('YYYY') : ''}
                                                 </Badge>
                                             )}
-                                            {comparisonResource.authors?.length > 0 && !isDoubleBlind && (
+                                            {comparisonResource.authors?.length > 0 && !isDoubleBlind && !comparisonResource.anonymized && (
                                                 <AuthorBadges authors={comparisonResource.authors} />
                                             )}
                                         </div>
