@@ -18,7 +18,6 @@ import {
 
 const initialState = {
     propertyData: {},
-    // extractedData: {
     title: '',
     authors: [],
     abstract: '',
@@ -30,17 +29,7 @@ const initialState = {
     extractedResearchField: '',
     extractedResearchFieldId: '',
     researchContributionURI: '',
-    method: '',
-    researchProblem: '',
-    result: '',
-    objective: '',
-    conclusion: '',
-    error: '',
     resourceURI: '',
-    researchProblemLink: '',
-    methodResource: '',
-    // },
-
     isTourOpen: false,
     showAbstractDialog: false,
     abstractDialogView: 'annotator', // annotator | input | list

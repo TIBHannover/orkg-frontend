@@ -1,4 +1,3 @@
-/* eslint-disable array-callback-return */
 import env from '@beam-australia/react-env';
 import { faAngleDown, faExclamationTriangle, faFlask, faMagic } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -35,7 +34,6 @@ import {
     updateContributionLabelAction as updateContributionLabel,
 } from 'slices/addPaperSlice';
 import { updateSettings } from 'slices/statementBrowserSlice';
-import { getResource } from 'services/backend/resources';
 import ContributionsHelpTour from './ContributionsHelpTour';
 
 const Contributions = () => {
@@ -51,13 +49,6 @@ const Contributions = () => {
         contributions,
         selectedContribution,
         abstract,
-        researchProblem,
-        // method,
-        // methodResource,
-        // conclusion,
-        // objective,
-        // result,
-        error,
         extractedResearchField,
         extractedResearchFieldId,
         resourceURI,
@@ -103,53 +94,43 @@ const Contributions = () => {
             (async () => {
                 await Promise.all(
                     propertyData?.map(async (cont, outerIndex) => {
-                        let pred = [];
-                        let res = [];
-                        console.log('show cont?.contribution', cont?.contribution);
+                        const pred = [];
+
                         cont?.contribution?.forEach((a, i) => {
                             pred.push(
                                 getPredicates({
-                                    //  q: cont.contribution[i]?.localName === 'researchproblem' ? cont.contribution[i]?.localName : 'research problem',
-                                    q: cont.contribution[i]?.localName,
+                                    q: cont.contribution[i]?.localName.includes('_')
+                                        ? cont.contribution[i].localName.replace(/_/g, ' ')
+                                        : cont.contribution[i].localName,
+
                                     items: 1,
                                 }),
                             );
                         });
-                        resourceURI?.forEach((a, i) => {
-                            res.push(getResource(resourceURI[i].split('/').pop()));
-                        });
 
                         const apiCalls = await Promise.all(pred);
-                        const apiCallsResource = await Promise.all(res);
 
                         propertiesList.push(
                             cont?.contribution?.map((p, i) => ({
                                 existingPredicateId: apiCalls[i]?.content[0]?.id,
-
-                                // eslint-disable-next-line no-unsafe-optional-chaining
                                 propertyId: `${apiCalls[i]?.content[0]?.id}_${i}_${outerIndex}`,
-                                label: p?.localName,
+                                label: p?.localName.replace(/_/g, ' '),
                             })),
                         );
                         valuesList.push(
                             cont?.contribution?.map((v, i) => ({
-                                // label: v?.resourceURI[0] ? apiCallsResource[i]?.label : v?.textContent,
-                                label: v?.textContent,
-                                // eslint-disable-next-line no-unsafe-optional-chaining
+                                label: v?.label || v?.textContent,
                                 isExistingValue: v?.resourceURI[0] != null,
                                 propertyId: `${apiCalls[i].content[0]?.id}_${i}_${outerIndex}`,
                                 existingResourceId: v?.resourceURI[0] != null ? v?.resourceURI[0].split('/').pop() : null,
                                 _class: v?.resourceURI[0] ? ENTITIES.RESOURCE : ENTITIES.LITERAL,
                             })),
                         );
-                        // console.log('apiCallsResource ', apiCallsResource);
-                        // console.log('apiCalls', apiCalls);
 
-                        // console.log('propertiesList', propertiesList);
-                        // console.log('valuesList', valuesList);
                         return apiCalls;
                     }),
                 );
+                // eslint-disable-next-line array-callback-return
                 resourceURI?.map((c, index) => {
                     dispatch(
                         createContribution({
@@ -173,11 +154,10 @@ const Contributions = () => {
     }, [
         contributions.allIds.length,
         dispatch,
-        error,
+        extractedResearchField,
         extractedResearchFieldId,
         properties,
         propertyData,
-        researchProblem,
         resourceURI,
         selectedResearchField,
         values,

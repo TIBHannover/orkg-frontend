@@ -15,10 +15,10 @@ const ResearchField = () => {
     const handleNextClick = useCallback(() => {
         if (!selectedResearchField) {
             setShowError(true);
-            // return;
-        } else {
-            setShowError(false);
+            return;
         }
+        setShowError(false);
+
         dispatch(nextStep());
     }, [dispatch, selectedResearchField]);
 
