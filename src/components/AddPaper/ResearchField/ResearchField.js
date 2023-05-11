@@ -48,14 +48,9 @@ const ResearchField = () => {
                     updateResearchField={handleUpdateResearchField}
                 />
             </div>
-
             {researchFieldLabel && selectedResearchField ? (
                 <div className="mt-3 mb-3">
-                    Selected research field: <b>{researchFieldLabel}</b>
-                </div>
-            ) : extractedResearchField ? (
-                <div className="mt-3 mb-3">
-                    Selected research field: <b>{extractedResearchField}</b>
+                    Selected research field: <b>{researchFieldLabel || extractedResearchField}</b>
                 </div>
             ) : (
                 <p className={`text-danger mt-2 ps-2 ${!showError ? ' d-none' : ''}`} style={{ borderLeft: '4px red solid' }}>

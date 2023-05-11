@@ -42,6 +42,7 @@ const UploadPdf = () => {
                     // you might want to replace 'querySelector' with 'querySelectorAll' to get all the values if there are multiple annotations of the same type
                     extractedResearchField = processedPdf.querySelector('hasResearchField label')?.textContent;
                     researchField = processedPdf.querySelector('hasResearchField')?.textContent;
+
                     title = processedPdf.querySelector('hasTitle')?.textContent;
                     authors = [...processedPdf.querySelectorAll('hasAuthor')].map(auth => auth.textContent);
                     [...processedPdf.querySelectorAll('ResearchContribution Description')].forEach(description => {

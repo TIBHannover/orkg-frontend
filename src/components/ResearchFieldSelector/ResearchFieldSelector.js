@@ -170,11 +170,9 @@ const ResearchFieldSelector = ({
                 let fields = await getFieldsByIds([RESOURCES.RESEARCH_FIELD_MAIN]);
                 fields = await getChildFields(RESOURCES.RESEARCH_FIELD_MAIN, fields);
 
-                const newField = await getResourcesByClass({ id: CLASSES.RESEARCH_FIELD, q: extractedResearchField, exact: true });
-
-                const field = newField.content.find(rf => rf.label === extractedResearchField);
-
-                extractedResearchFieldId = field ? field?.id : selectedResearchField;
+                const field = (await getResourcesByClass({ id: CLASSES.RESEARCH_FIELD, q: extractedResearchField, exact: true })).content.find(
+                    rf => rf.label === extractedResearchField,
+                );
 
                 dispatch(
                     updateGeneralData({
@@ -190,7 +188,7 @@ const ResearchFieldSelector = ({
             };
             initializeFields();
         }
-    }, [getChildFields, getFieldsByIds, selectedResearchField, updateResearchField]);
+    }, [dispatch, extractedResearchField, getChildFields, getFieldsByIds, selectedResearchField, updateResearchField]);
 
     const fieldList = selectedField => {
         const subFields = researchFields.filter(field => field.parent === selectedField);
