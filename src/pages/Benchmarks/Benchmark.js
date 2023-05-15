@@ -85,7 +85,14 @@ function Benchmark() {
             {
                 Header: 'Model',
                 accessor: 'model_name',
-                Cell: cell => cell.value ?? '-',
+                Cell: cell =>
+                    cell.value ? (
+                        <Link to={reverse(ROUTES.RESOURCE, { id: cell.row.original.model_id })} style={{ textDecoration: 'none' }}>
+                            {cell.value ?? '-'}
+                        </Link>
+                    ) : (
+                        '-'
+                    ),
             },
             {
                 Header: 'Score',
