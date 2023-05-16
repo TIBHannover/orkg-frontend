@@ -128,6 +128,51 @@ export const submitPutRequest = (url, headers, data, jsonStringify = true) => {
     });
 };
 
+export const submitPatchRequest = (url, headers, data, jsonStringify = true) => {
+    if (!url) {
+        throw new Error('Cannot submit PATCH request. URL is null or undefined.');
+    }
+
+    const cookies = new Cookies();
+    const token = cookies.get('token') ? cookies.get('token') : null;
+    const myHeaders = new Headers(headers);
+    if (token) {
+        myHeaders.append('Authorization', `Bearer ${token}`);
+    }
+    let _data = data;
+    if (jsonStringify) {
+        _data = JSON.stringify(_data);
+    }
+
+    return new Promise((resolve, reject) => {
+        fetch(url, { method: 'PATCH', headers: myHeaders, body: _data })
+            .then(response => {
+                if (!response.ok) {
+                    const json = response.json();
+                    if (json.then) {
+                        return json.then(reject);
+                    }
+                    return reject({
+                        error: new Error(`Error response. (${response.status}) ${response.statusText}`),
+                        statusCode: response.status,
+                        statusText: response.statusText,
+                    });
+                }
+                if (response.status === 204) {
+                    // HTTP 204 No Content success status
+                    return resolve();
+                }
+                const json = response.json();
+                if (json.then) {
+                    json.then(resolve).catch(reject);
+                } else {
+                    return resolve(json);
+                }
+            })
+            .catch(reject);
+    });
+};
+
 export const submitDeleteRequest = (url, headers, data) => {
     if (!url) {
         throw new Error('Cannot submit DELETE request. URL is null or undefined.');
