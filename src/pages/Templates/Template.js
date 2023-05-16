@@ -1,6 +1,7 @@
 import { faEllipsisV, faPen, faQuestionCircle, faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import NotFound from 'pages/NotFound';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { EditModeContainer, Title } from 'components/EditModeHeader/EditModeHeader';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
@@ -26,6 +27,7 @@ const Template = () => {
         editMode,
         isSaving,
         isLoading,
+        hasFailed,
         label,
         created_by: createdBy,
         created_at: createdAt,
@@ -49,6 +51,10 @@ const Template = () => {
     useEffect(() => {
         document.title = `${label ? `${label} - ` : ''}Contribution Template - ORKG`;
     }, [label]);
+
+    if (!isLoading && hasFailed) {
+        return <NotFound />;
+    }
 
     return (
         <>

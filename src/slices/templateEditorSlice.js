@@ -27,6 +27,7 @@ const initialState = {
     error: null,
     propertyShapes: [],
     isLoading: false,
+    hasFailed: false,
     statements: [],
     isSaving: false,
 };
@@ -134,15 +135,20 @@ export default templateEditorSlice.reducer;
 export const loadTemplate = data => dispatch => {
     dispatch(setIsLoading(true));
 
-    return getTemplateById(data).then(templateData => {
-        dispatch(
-            initTemplate({
-                templateID: data,
-                ...templateData,
-            }),
-        );
-        dispatch(setIsLoading(false));
-    });
+    return getTemplateById(data)
+        .then(templateData => {
+            dispatch(
+                initTemplate({
+                    templateID: data,
+                    ...templateData,
+                }),
+            );
+            dispatch(setIsLoading(false));
+        })
+        .catch(() => {
+            dispatch(setIsLoading(false));
+            dispatch(setHasFailed(true));
+        });
 };
 
 export const saveTemplate = () => async (dispatch, getState) => {
