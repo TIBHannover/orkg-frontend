@@ -1,15 +1,13 @@
-import { Button } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
-import TemplateDetailsTooltip from 'components/StatementBrowser/TemplatesModal/TemplateButton/TemplateDetailsTooltip';
-import { fillContributionsWithTemplate, removeEmptyPropertiesOfClass, removeClassFromContributionResource } from 'slices/contributionEditorSlice';
-import { getTemplateById } from 'services/backend/statements';
-import { useDispatch } from 'react-redux';
-import Tippy from '@tippyjs/react';
-import { useState, useRef, useCallback } from 'react';
-import styled from 'styled-components';
-import { toast } from 'react-toastify';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
 import PropTypes from 'prop-types';
+import { useCallback, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import { Button } from 'reactstrap';
+import { fillContributionsWithTemplate, removeClassFromContributionResource, removeEmptyPropertiesOfClass } from 'slices/contributionEditorSlice';
+import styled from 'styled-components';
 
 const IconWrapper = styled.span`
     background-color: ${props => (props.addMode ? '#d1d5e4' : '#dc3545')};
@@ -36,9 +34,6 @@ const TemplateButton = props => {
     const [isSaving, setIsSaving] = useState(false);
     const ref = useRef(null);
     const dispatch = useDispatch();
-    const [template, setTemplate] = useState({});
-    const [isTemplateLoading, setIsTemplateLoading] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
 
     const addTemplate = useCallback(() => {
         setIsSaving(true);
@@ -74,40 +69,18 @@ const TemplateButton = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const onTrigger = useCallback(() => {
-        if (!isLoaded) {
-            setIsTemplateLoading(true);
-            getTemplateById(props.id).then(template => {
-                setTemplate(template);
-                setIsLoaded(true);
-                setIsTemplateLoading(false);
-            });
-        }
-    }, [isLoaded, props.id]);
-
     return (
-        <Tippy
-            onTrigger={onTrigger}
-            interactive={true}
-            appendTo={document.body}
-            content={
-                <TemplateDetailsTooltip
-                    useTemplate={addTemplate}
-                    id={props.id}
-                    source={props.source}
-                    isTemplateLoading={isTemplateLoading}
-                    template={template}
-                    addMode={props.addMode}
-                />
-            }
-        >
+        <TemplateTooltip id={props.id}>
             <span tabIndex="0">
                 <Button
                     innerRef={ref}
                     onClick={() => {
                         ref.current.setAttribute('disabled', 'disabled');
-                        props.addMode && addTemplate();
-                        !props.addMode && deleteTemplate();
+                        if (props.addMode) {
+                            addTemplate();
+                        } else {
+                            deleteTemplate();
+                        }
                     }}
                     size="sm"
                     color={props.addMode ? 'light' : 'danger'}
@@ -121,7 +94,7 @@ const TemplateButton = props => {
                     <Label>{props.label}</Label>
                 </Button>
             </span>
-        </Tippy>
+        </TemplateTooltip>
     );
 };
 
@@ -130,7 +103,6 @@ TemplateButton.propTypes = {
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     classId: PropTypes.string,
-    source: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     tippyTarget: PropTypes.object,
 };
 

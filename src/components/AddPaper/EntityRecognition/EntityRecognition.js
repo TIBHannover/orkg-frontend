@@ -13,7 +13,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useDebounce } from 'react-use';
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import { getNerResults } from 'services/orkgNlp';
-import { ENTITIES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { createPropertyAction as createProperty } from 'slices/statementBrowserSlice';
 import { setNerProperties, setNerResources, setNerRawResponse } from 'slices/addPaperSlice';
 import styled from 'styled-components';
@@ -69,14 +69,20 @@ const ShowMoreButton = styled(Button)`
 
 const MAX_PROPERTIES_ITEMS = 8;
 
-const EntityRecognition = ({ activeNERService }) => {
-    const { title, abstract, nerProperties } = useSelector(state => state.addPaper);
+const EntityRecognition = ({ title = '', abstract = '', activeNERService }) => {
+    const { nerProperties } = useSelector(state => state.addPaper);
+
     const dispatch = useDispatch();
     const { handleInsertData } = useInsertData();
-    const { suggestions } = useEntityRecognition({ activeNERService });
-    const { recommendedPredicates } = usePredicatesRecommendation();
-    const { recommendedTemplates } = useTemplatesRecommendation();
+    const { suggestions } = useEntityRecognition({ activeNERService, title, abstract });
+    const { recommendedPredicates } = usePredicatesRecommendation({ title, abstract });
+    const { recommendedTemplates } = useTemplatesRecommendation({ title, abstract });
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
+
+    const isContributionLevel = useSelector(
+        state => selectedResource && state.statementBrowser.resources.byId[selectedResource]?.classes?.includes(CLASSES.CONTRIBUTION),
+    );
+
     const [showMorePredicates, setShowMorePredicates] = useState(false);
 
     useDebounce(
@@ -108,7 +114,8 @@ const EntityRecognition = ({ activeNERService }) => {
 
     const _recommendedPredicates = showMorePredicates ? recommendedPredicates : recommendedPredicates.slice(0, MAX_PROPERTIES_ITEMS);
 
-    const showSuggestionHeader = Object.keys(suggestions).length > 0 || recommendedPredicates?.length > 0 || recommendedTemplates?.length > 0;
+    const showSuggestionHeader =
+        Object.keys(suggestions).length > 0 || recommendedPredicates?.length > 0 || (isContributionLevel && recommendedTemplates?.length > 0);
 
     const [source, target] = useSingleton();
 
@@ -122,31 +129,33 @@ const EntityRecognition = ({ activeNERService }) => {
                     </Tooltip>
                 </h3>
             )}
-            {recommendedTemplates?.length > 0 && <h6 className="mt-2">Templates</h6>}
-            <ListGroup>
-                <TransitionGroup component={null} height="30px">
-                    {recommendedTemplates.map(template => (
-                        <AnimationContainer
-                            key={`tr${template.id}`}
-                            classNames="slide-left"
-                            className="d-flex align-items-center"
-                            timeout={{ enter: 600, exit: 600 }}
-                        >
-                            <div>
-                                <TemplateButton
-                                    addMode={true}
-                                    tippyTarget={target}
-                                    id={template.id}
-                                    label={template.label}
-                                    resourceId={selectedResource}
-                                    syncBackend={false}
-                                    isSmart={true}
-                                />
-                            </div>
-                        </AnimationContainer>
-                    ))}
-                </TransitionGroup>
-            </ListGroup>
+            {isContributionLevel && recommendedTemplates?.length > 0 && <h6 className="mt-2">Templates</h6>}
+            {isContributionLevel && (
+                <ListGroup>
+                    <TransitionGroup component={null} height="30px">
+                        {recommendedTemplates.map(template => (
+                            <AnimationContainer
+                                key={`tr${template.id}`}
+                                classNames="slide-left"
+                                className="d-flex align-items-center"
+                                timeout={{ enter: 600, exit: 600 }}
+                            >
+                                <div>
+                                    <TemplateButton
+                                        addMode={true}
+                                        tippyTarget={target}
+                                        id={template.id}
+                                        label={template.label}
+                                        resourceId={selectedResource}
+                                        syncBackend={false}
+                                        isSmart={true}
+                                    />
+                                </div>
+                            </AnimationContainer>
+                        ))}
+                    </TransitionGroup>
+                </ListGroup>
+            )}
             {Object.keys(suggestions).length > 0 && <h6 className="mt-2">Statements</h6>}
             <ListGroup>
                 {Object.keys(suggestions).map(key => (
@@ -218,7 +227,13 @@ const EntityRecognition = ({ activeNERService }) => {
             </ListGroup>
             {recommendedPredicates.length > MAX_PROPERTIES_ITEMS && (
                 <div className="text-center">
-                    <ShowMoreButton onClick={() => setShowMorePredicates(v => !v)} color="link" size="sm" className="p-0 ms-2" style={{ outline: 0 }}>
+                    <ShowMoreButton
+                        onClick={() => setShowMorePredicates(v => !v)}
+                        color="link"
+                        size="sm"
+                        className="p-0 ms-2 mt-2 mb-3"
+                        style={{ outline: 0 }}
+                    >
                         {showMorePredicates ? 'Show less suggestions' : 'Show more suggestions'}
                     </ShowMoreButton>
                 </div>
@@ -229,6 +244,9 @@ const EntityRecognition = ({ activeNERService }) => {
 
 EntityRecognition.propTypes = {
     activeNERService: PropTypes.string,
+    isViewPaper: PropTypes.string,
+    title: PropTypes.string,
+    abstract: PropTypes.string,
 };
 
 export default EntityRecognition;

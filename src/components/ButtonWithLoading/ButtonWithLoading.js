@@ -3,6 +3,9 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 
+/**
+ * Wrapper for Reactstrap Button component that adds a loading state
+ */
 const ButtonWithLoading = ({ children, isLoading = false, loadingMessage = 'Loading', ...props }) => (
     <Button disabled={isLoading} {...props}>
         {!isLoading ? (

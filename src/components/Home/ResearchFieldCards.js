@@ -36,7 +36,7 @@ const Card = styled.div`
     display: flex;
     flex-direction: column;
     min-width: 140px;
-    word-wrap: break-word;
+    overflow-wrap: anywhere;
 
     &:hover {
         opacity: 0.8;
@@ -100,6 +100,8 @@ const ShowMore = styled(Card)`
     color: ${props => props.theme.bodyColor} !important;
     text-align: center;
 `;
+
+const MAX_FIELDS = 30;
 
 const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, researchFields, isLoading }) => {
     const [stats, setStats] = useState(null);
@@ -168,7 +170,7 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                 <div className="mt-3">
                     <div>
                         <TransitionGroup id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap" exit={false}>
-                            {researchFields.slice(0, 9).map(field => (
+                            {researchFields.slice(0, MAX_FIELDS).map(field => (
                                 <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
                                     <Card
                                         role="button"
@@ -180,9 +182,9 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                                     </Card>
                                 </AnimationContainer>
                             ))}
-                            {researchFields.length > 9 &&
+                            {researchFields.length > MAX_FIELDS &&
                                 showMoreFields &&
-                                researchFields.slice(9).map(field => (
+                                researchFields.slice(MAX_FIELDS).map(field => (
                                     <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
                                         <Card
                                             role="button"
@@ -194,7 +196,7 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                                         </Card>
                                     </AnimationContainer>
                                 ))}
-                            {researchFields.length > 9 && (
+                            {researchFields.length > MAX_FIELDS && (
                                 <AnimationContainer classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
                                     <ShowMore role="button" onClick={() => setShowMoreFields(v => !v)}>
                                         {showMoreFields ? 'Show less fields' : 'Show more fields...'}

@@ -349,7 +349,7 @@ function Autocomplete(props) {
             } else {
                 if (selectedOntologies.find(ontology => ontology.id === 'ORKG') || props.optionsClass) {
                     const orkgResponseItems = await orkgLookup(value, page);
-                    responseItems.push(...orkgResponseItems.content);
+                    responseItems.push(...(orkgResponseItems?.content ?? []));
 
                     // TODO: check if this this is still needed?
                     if (responseItems.length > PAGE_SIZE) {
@@ -364,7 +364,7 @@ function Autocomplete(props) {
                     props.entityType === ENTITIES.CLASS
                 ) {
                     const olsResponseItems = await olsLookup(value, page);
-                    responseItems.push(...olsResponseItems.content);
+                    responseItems.push(...(olsResponseItems?.content ?? []));
                     hasMore = hasMore || !olsResponseItems.last;
                 }
 

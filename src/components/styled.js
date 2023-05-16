@@ -150,6 +150,7 @@ export const CardBadgeFilter = styled.div`
 export const CmsPage = styled.div`
     img {
         max-width: 100%;
+        height: auto;
     }
 `;
 

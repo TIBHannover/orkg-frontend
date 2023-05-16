@@ -14,17 +14,20 @@ function useBenchmarkDatasetPapers({ datasetId, problemId }) {
     const loadBenchmarkDatasetPapers = useCallback(() => {
         setIsLoading(true);
         setIsFailedLoadingPapers(false);
-        return Promise.all([getDatasetBenchmarksByDatasetId(datasetId, problemId), getResearchProblemsByDatasetId(datasetId)])
+        return Promise.all([
+            getDatasetBenchmarksByDatasetId({ datasetId, problemId, size: 9999 }),
+            getResearchProblemsByDatasetId({ datasetId, size: 9999 }),
+        ])
             .then(([benchmark, problems]) => {
                 // TODO: this trim needs to be done on the data itself
-                let trimResult = benchmark.map(s => {
+                let trimResult = benchmark.content.map(s => {
                     s.metric = s.metric.trim();
                     return s;
                 });
                 trimResult = sortBy(trimResult, ['paper_year', 'paper_month']);
                 setBenchmarkDatasetPapers(groupBy(trimResult, 'metric'));
                 setMetrics(Object.keys(groupBy(trimResult, 'metric')));
-                setDatasetProblems(problems);
+                setDatasetProblems(problems.content);
                 setSelectedMetric(Object.keys(groupBy(trimResult, 'metric'))[0]);
                 setIsLoading(false);
                 setIsFailedLoadingPapers(false);

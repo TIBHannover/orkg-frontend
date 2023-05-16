@@ -1,18 +1,19 @@
-import { Alert, Badge } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
-import { ENTITIES } from 'constants/graphSettings';
-import Video from 'components/ValuePlugins/Video/Video';
 import OrganizationBanner from 'components/Comparison/ComparisonFooter/ProvenanceBox/OrganizationBanner';
 import MarkFeaturedUnlistedContainer from 'components/Comparison/ComparisonHeader/MarkFeaturedUnlistedContainer';
 import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
-import moment from 'moment';
-import ROUTES from 'constants/routes.js';
-import { useNavigate, Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { Helmet } from 'react-helmet';
+import LinkValuePlugins from 'components/ValuePlugins/Link/Link';
+import Video from 'components/ValuePlugins/Video/Video';
+import { ENTITIES } from 'constants/graphSettings';
 import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
+import ROUTES from 'constants/routes.js';
+import moment from 'moment';
+import { Helmet } from 'react-helmet';
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { Alert, Badge } from 'reactstrap';
 
 const ComparisonMetaData = () => {
     const comparisonResource = useSelector(state => state.comparison.comparisonResource);
@@ -33,7 +34,8 @@ const ComparisonMetaData = () => {
     };
 
     const isDoubleBlind =
-        provenance?.metadata?.review_process === CONFERENCE_REVIEW_MISC.DOUBLE_BLIND && moment().format('YYYY-MM-DD') < provenance?.metadata?.start_date;
+        provenance?.metadata?.review_process === CONFERENCE_REVIEW_MISC.DOUBLE_BLIND &&
+        moment().format('YYYY-MM-DD') < provenance?.metadata?.start_date;
 
     const ldJson = {
         mainEntity: {
@@ -121,13 +123,13 @@ const ComparisonMetaData = () => {
                                                     {comparisonResource.created_at ? moment(comparisonResource.created_at).format('YYYY') : ''}
                                                 </Badge>
                                             )}
-                                            {comparisonResource.authors?.length > 0 && !isDoubleBlind && (
+                                            {comparisonResource.authors?.length > 0 && !isDoubleBlind && !comparisonResource.anonymized && (
                                                 <AuthorBadges authors={comparisonResource.authors} />
                                             )}
                                         </div>
                                         {comparisonResource.description && (
                                             <div style={{ lineHeight: 1.5 }} className="h6 mb-2">
-                                                {comparisonResource.description}
+                                                <LinkValuePlugins type={ENTITIES.LITERAL}>{comparisonResource.description}</LinkValuePlugins>
                                             </div>
                                         )}
                                         {comparisonResource.doi && (

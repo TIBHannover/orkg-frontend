@@ -7,6 +7,7 @@ import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatu
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
 import OpenCitations from 'components/ViewPaper/OpenCitations/OpenCitations';
+import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
@@ -145,11 +146,13 @@ const PaperHeader = props => {
                         </Button>
                     )}
                 </div>
-                {isCurationAllowed && viewPaper.verified && (
-                    <div className="mt-3 justify-content-end">
-                        <Icon icon={faCheckCircle} className="mt-1 me-1 text-success" />
-                        Verified
-                    </div>
+                {viewPaper.verified && (
+                    <Tippy content="The paper metadata was verified by an ORKG curator">
+                        <div className="mt-3 justify-content-end">
+                            <Icon icon={faCheckCircle} className="mt-1 me-1 text-success" />
+                            Verified
+                        </div>
+                    </Tippy>
                 )}
             </div>
 

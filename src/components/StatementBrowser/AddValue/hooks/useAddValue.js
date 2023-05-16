@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import {
     createValueAction as createValue,
-    getComponentsByResourceIDAndPredicateID,
+    getPropertyShapesByResourceIDAndPredicateID,
     fetchTemplatesOfClassIfNeeded,
     createRequiredPropertiesInResource,
     selectResourceAction as selectResource,
@@ -22,8 +22,12 @@ import { ENTITIES, MISC } from 'constants/graphSettings';
 const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
     const dispatch = useDispatch();
     const property = useSelector(state => state.statementBrowser.properties.byId[propertyId]);
-    const valueClass = useSelector(state => getValueClass(getComponentsByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)));
-    const isLiteralField = useSelector(state => isLiteral(getComponentsByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)));
+    const valueClass = useSelector(state =>
+        getValueClass(getPropertyShapesByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)),
+    );
+    const isLiteralField = useSelector(state =>
+        isLiteral(getPropertyShapesByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)),
+    );
     const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
     const [modal, setModal] = useState(false);
     const [dialogResourceId, setDialogResourceId] = useState(null);

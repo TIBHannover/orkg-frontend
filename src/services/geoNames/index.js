@@ -1,5 +1,6 @@
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
+import fetch from 'cross-fetch';
 
 export const geonamesUrl = env('GEONAMES_API_SEARCH_URL');
 export const geonamesUsername = env('GEONAMES_API_USERNAME');

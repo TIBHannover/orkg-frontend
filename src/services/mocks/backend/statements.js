@@ -128,7 +128,7 @@ const statements = [
             }),
         );
     }),
-    rest.get(`${statementsUrl}object/:id/predicate/TemplateOfClass/`, (req, res, ctx) => {
+    rest.get(`${statementsUrl}object/:id/predicate/sh:targetClass/`, (req, res, ctx) => {
         const { id } = req.params;
         const MAPPING = {
             Problem: templateOfClassProblem,

@@ -28,7 +28,7 @@ const DEFAULT_FILTERS = [
     },
     {
         label: 'Template',
-        id: CLASSES.TEMPLATE,
+        id: CLASSES.NODE_SHAPE,
         isCreatedByActive: true,
     },
     {

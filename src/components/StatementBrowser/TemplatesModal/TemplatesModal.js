@@ -45,7 +45,10 @@ const TemplatesModal = props => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
-    const { recommendedTemplates, isLoadingRT } = useTemplatesRecommendation();
+    const { title, abstract } = useSelector(state =>
+        state.addPaper.title ? state.addPaper : { title: state.viewPaper.paperResource.label, abstract: '' },
+    );
+    const { recommendedTemplates, isLoadingRT } = useTemplatesRecommendation({ title, abstract });
 
     const onlyFeatured = true;
     const {
@@ -92,7 +95,6 @@ const TemplatesModal = props => {
                                         id={template.id}
                                         label={template.label}
                                         classId={template.classId}
-                                        source={template.source}
                                         resourceId={selectedResource}
                                         syncBackend={props.syncBackend}
                                     />
@@ -106,7 +108,7 @@ const TemplatesModal = props => {
                                 <div className="col-3 m-0 p-0">
                                     <SearchFieldSelector options={filterOptions} value={selectedFilter} setValue={handleSelectedFilterChange} />
                                 </div>
-                                {selectedFilter.id === CLASSES.TEMPLATE && (
+                                {selectedFilter.id === CLASSES.NODE_SHAPE && (
                                     <Input
                                         placeholder="Search template by label"
                                         value={labelFilter}
@@ -115,7 +117,7 @@ const TemplatesModal = props => {
                                         onChange={handleLabelFilterChange}
                                     />
                                 )}
-                                {selectedFilter.id !== CLASSES.TEMPLATE && (
+                                {selectedFilter.id !== CLASSES.NODE_SHAPE && (
                                     <ConditionalWrapper
                                         condition={selectedFilter.id === CLASSES.RESEARCH_FIELD}
                                         wrapper={children => (
@@ -199,7 +201,6 @@ const TemplatesModal = props => {
                                             key={`t${template.id}`}
                                             id={template.id}
                                             label={template.label}
-                                            source={template.source}
                                             resourceId={selectedResource}
                                             syncBackend={props.syncBackend}
                                             isSmart={true}
@@ -236,7 +237,6 @@ const TemplatesModal = props => {
                                             key={`t${template.id}`}
                                             id={template.id}
                                             label={template.label}
-                                            source={template.source}
                                             resourceId={selectedResource}
                                             syncBackend={props.syncBackend}
                                         />
@@ -277,7 +277,6 @@ const TemplatesModal = props => {
                                             key={`t${template.id}`}
                                             id={template.id}
                                             label={template.label}
-                                            source={template.source}
                                             resourceId={selectedResource}
                                             syncBackend={props.syncBackend}
                                         />

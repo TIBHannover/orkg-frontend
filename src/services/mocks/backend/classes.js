@@ -127,6 +127,21 @@ const resources = [
         }
         return res(ctx.json({ root: id, statements: [] }));
     }),
+    rest.post(classesUrl, async (req, res, ctx) => {
+        const { label, uri } = await req.json();
+
+        return res(
+            ctx.json({
+                id: `C${faker.datatype.number()}`,
+                label,
+                uri,
+                description: null,
+                _class: 'class',
+                created_at: '2020-06-22T10:38:53.178764Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+            }),
+        );
+    }),
 ];
 
 export default resources;

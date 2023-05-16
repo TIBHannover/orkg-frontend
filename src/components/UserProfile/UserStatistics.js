@@ -22,7 +22,7 @@ const STATISTICS = [
     },
     {
         label: 'Templates',
-        class: CLASSES.TEMPLATE,
+        class: CLASSES.NODE_SHAPE,
     },
     {
         label: 'Visualizations',

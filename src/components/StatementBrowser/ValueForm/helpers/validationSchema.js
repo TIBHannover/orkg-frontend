@@ -2,10 +2,10 @@ import Joi from 'joi';
 import { CLASSES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 
-export default function validationSchema(component) {
+export default function validationSchema(propertyShape) {
     let schema;
-    if (component.value) {
-        switch (component.value.id) {
+    if (propertyShape.value) {
+        switch (propertyShape.value.id) {
             case CLASSES.DATE:
                 schema = Joi.date().iso();
                 break;
@@ -27,23 +27,15 @@ export default function validationSchema(component) {
             default:
                 break;
         }
-        for (const key in component.validationRules) {
-            if (component.validationRules.hasOwnProperty(key)) {
-                switch (key) {
-                    case 'min':
-                        schema = schema.min(parseFloat(component.validationRules[key]));
-                        break;
-                    case 'max':
-                        schema = schema.max(parseFloat(component.validationRules[key]));
-                        break;
-                    case 'pattern':
-                        schema = schema.regex(new RegExp(component.validationRules[key]));
-                        break;
-                    default:
-                        break;
-                }
-            }
+        if (propertyShape.minInclusive) {
+            schema = schema.min(parseFloat(propertyShape.minInclusive));
+        }
+        if (propertyShape.maxInclusive) {
+            schema = schema.max(parseFloat(propertyShape.maxInclusive));
+        }
+        if (propertyShape.pattern) {
+            schema = schema.regex(new RegExp(propertyShape.pattern));
         }
     }
-    return schema.label(component.property.label);
+    return schema.label(propertyShape.property.label);
 }

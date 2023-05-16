@@ -36,18 +36,16 @@ const StyledOrganizationCard = styled.div`
 function OrganizationCard(props) {
     return (
         <div className="col-4 mb-3">
-
-                <Link to={reverse(ROUTES.ORGANIZATION, { type: props.type, id: props.organization.display_id })}>
-                    <StyledOrganizationCard className="card h-100">
-                        <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { type: props.type, id: props.organization.display_id })}>
-                            <img className="mx-auto p-2" src={getOrganizationLogoUrl(props.organization?.id)} alt={`${props.organization.name} logo`} />
-                        </Link>
-                        <CardBody>
-                            <CardTitle className="text-center">{props.organization.name}</CardTitle>
-                        </CardBody>
-                    </StyledOrganizationCard>
-                </Link>
-
+            <Link to={reverse(ROUTES.ORGANIZATION, { type: props.type, id: props.organization.display_id })}>
+                <StyledOrganizationCard className="card h-100">
+                    <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { type: props.type, id: props.organization.display_id })}>
+                        <img className="mx-auto p-2" src={getOrganizationLogoUrl(props.organization?.id)} alt={`${props.organization.name} logo`} />
+                    </Link>
+                    <CardBody>
+                        <CardTitle className="text-center">{props.organization.name}</CardTitle>
+                    </CardBody>
+                </StyledOrganizationCard>
+            </Link>
         </div>
     );
 }

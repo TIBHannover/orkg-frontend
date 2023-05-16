@@ -98,7 +98,7 @@ function Publish(props) {
         return null;
     }
     return (
-        <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
+        <Modal size="lg" isOpen toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>Publish comparison</ModalHeader>
             <ModalBody>
                 {!id && comparisonResource.hasPreviousVersion && props.nextVersions?.length > 0 && (
@@ -328,7 +328,7 @@ function Publish(props) {
                                                     disabled={Boolean(id)}
                                                     type="text"
                                                     name="reference"
-                                                    value={reference.label}
+                                                    value={reference}
                                                     onChange={e => handleReferenceChange(e, i)}
                                                     id="publish-reference"
                                                 />
@@ -375,6 +375,7 @@ function Publish(props) {
                                         isClearable={true}
                                         classNamePrefix="react-select"
                                         inputId="conference"
+                                        value={conference}
                                     />
                                     <SelectGlobalStyle />
                                 </FormGroup>
@@ -406,7 +407,6 @@ function Publish(props) {
 }
 
 Publish.propTypes = {
-    showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     nextVersions: PropTypes.array.isRequired,
 };

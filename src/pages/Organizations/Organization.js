@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'reactstrap';
-import { getOrganization } from 'services/backend/organizations';
+import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
 import InternalServerError from 'pages/InternalServerError';
 import Members from 'components/Organization/Members';
 import Observatories from 'components/Organization/Observatories';
@@ -18,7 +18,6 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import { ORGANIZATIONS_TYPES, ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import ConferenceEvents from 'pages/Conferences/ConferenceEvents';
 import { upperFirst } from 'lodash';
-import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
 const StyledOrganizationHeader = styled.div`
     .logoContainer {

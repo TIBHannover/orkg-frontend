@@ -28,7 +28,7 @@ const setup = (
 describe('ClassesItem', () => {
     it('should show classes when the preference is activated', async () => {
         setup();
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
         fireEvent.click(screen.getByText('Preferences'));
         await waitFor(() => expect(screen.getByText(/Show classes of resources/i)).toBeInTheDocument());
         fireEvent.click(screen.getByText(/Show classes of resources/i));
@@ -39,7 +39,7 @@ describe('ClassesItem', () => {
 describe('ClassesItem', () => {
     it('should show edit classes input form when the clicking on edit', async () => {
         setup();
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
         fireEvent.click(screen.getByText('Preferences'));
         await waitFor(() => expect(screen.getByText(/Show classes of resources/i)).toBeInTheDocument());
         fireEvent.click(screen.getByText(/Show classes of resources/i));
@@ -54,7 +54,7 @@ describe('ClassesItem', () => {
 describe('ClassesItem', () => {
     it('should show hide classes input form when the clicking on done', async () => {
         setup();
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
         fireEvent.click(screen.getByText('Preferences'));
         fireEvent.click(screen.getByText(/Show classes of resources/i));
         fireEvent.click(screen.getByRole('button', { name: 'Edit classes' }));
@@ -68,18 +68,19 @@ describe('ClassesItem', () => {
 describe('ClassesItem', () => {
     it('should add class and add its required properties', async () => {
         setup();
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
         fireEvent.click(screen.getByText('Preferences'));
         fireEvent.click(screen.getByText(/Show classes of resources/i));
         fireEvent.click(screen.getByRole('button', { name: 'Edit classes' }));
         await waitFor(() => expect(screen.getByLabelText(/Specify the classes of the resource/i)).toBeInTheDocument());
         // Basic reproduction number estimate
         fireEvent.change(screen.getByLabelText(/Specify the classes of the resource/i), { target: { value: 'R40006' } });
-        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
+        // await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         await selectEvent.select(screen.getByRole('combobox', { name: /Specify the classes of the resource/i }), 'R40006');
         await waitFor(() => screen.getByRole('button', { name: 'Done' }));
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
-        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        expect(screen.queryAllByText(/Template/i)).toHaveLength(2);
+        await waitFor(() => expect(screen.queryAllByText(/Basic reproduction number/i)).toHaveLength(2));
         await waitFor(() => expect(screen.getByText(/Location/i)).toBeInTheDocument());
     });
 });

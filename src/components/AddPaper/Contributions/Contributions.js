@@ -334,7 +334,7 @@ const Contributions = () => {
                 </Col>
 
                 <Col lg="3" className="ps-lg-3 mt-2">
-                    <EntityRecognition activeNERService={activeNERService} />
+                    <EntityRecognition title={title} abstract={abstract} activeNERService={activeNERService} />
                 </Col>
             </Row>
 

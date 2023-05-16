@@ -4,8 +4,7 @@ import { getTemplateRecommendations } from 'services/orkgNlp';
 import { differenceBy } from 'lodash';
 import useUsedTemplates from 'components/StatementBrowser/TemplatesModal/hooks/useUsedTemplates';
 
-const useTemplatesRecommendation = () => {
-    const { title, abstract } = useSelector(state => state.addPaper);
+const useTemplatesRecommendation = ({ title, abstract }) => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const [recommendedTemplates, setRecommendedTemplates] = useState([]);
     const [isLoadingRT, setIsLoadingRT] = useState(false);
@@ -24,7 +23,9 @@ const useTemplatesRecommendation = () => {
                     setIsLoadingRT(false);
                 });
         };
-        fetchRecommendation();
+        if (title || abstract) {
+            fetchRecommendation();
+        }
     }, [abstract, title]);
 
     return {

@@ -112,10 +112,12 @@ const Footer = () => (
                                 </a>
                             </li>
                             <li>
-                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.ACCESSIBILITY_STATEMENT })}>Accessibility</Link>
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.LICENSE })}>License</Link>
                             </li>
                             <li>
-                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.LICENSE })}>License</Link>
+                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues" target="_blank" rel="noopener noreferrer">
+                                    Report issue
+                                </a>
                             </li>
                         </ul>
                     </FooterCol>
@@ -133,8 +135,11 @@ const Footer = () => (
                                 <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.CONTACT })}>Contact us</Link>
                             </li>
                             <li>
-                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues" target="_blank" rel="noopener noreferrer">
-                                    Report an issue
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.ACCESSIBILITY_STATEMENT })}>Accessibility</Link>
+                            </li>
+                            <li>
+                                <a href="https://forms.gle/NK8Jzti8qGdRooDJ8" target="_blank" rel="noopener noreferrer">
+                                    Report abuse
                                 </a>
                             </li>
                             <li>

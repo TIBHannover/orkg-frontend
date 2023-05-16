@@ -13,7 +13,9 @@ import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 const AddPropertyView = props => (
     <AddPropertyStyle className={props.inTemplate ? 'inTemplate' : 'mt-3'}>
         <AddPropertyContentStyle
-            onClick={() => (!props.isLoading && props.inTemplate && !props.showAddProperty ? props.setShowAddProperty(true) : undefined)}
+            onClick={() =>
+                !props.isLoading && props.inTemplate && !props.showAddProperty && !props.isDisabled ? props.setShowAddProperty(true) : undefined
+            }
             className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'} ${props.showAddProperty ? 'col-12 large' : ''}`}
         >
             {props.isLoading || !props.showAddProperty ? (
@@ -63,7 +65,7 @@ const AddPropertyView = props => (
                             inputId="addProperty"
                         />
 
-                        <StyledButton outline onClick={() => props.setShowAddProperty(false)}>
+                        <StyledButton className="w-auto" outline onClick={() => props.setShowAddProperty(false)}>
                             Cancel
                         </StyledButton>
                     </InputGroup>

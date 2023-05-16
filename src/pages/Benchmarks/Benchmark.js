@@ -1,33 +1,34 @@
-import { useState, useMemo } from 'react';
+import { faEllipsisV, faPen, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import CodeURLsTooltip from 'components/Benchmarks/BenchmarkCard/CodeURLsTooltip';
+import useBenchmarkDatasetPapers from 'components/Benchmarks/hooks/useBenchmarkDatasetPapers';
+import useBenchmarkDatasetResource from 'components/Benchmarks/hooks/useBenchmarkDatasetResource';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
+import TitleBar from 'components/TitleBar/TitleBar';
+import usePaginate from 'components/hooks/usePaginate';
+import { SubTitle } from 'components/styled';
+import ROUTES from 'constants/routes';
+import moment from 'moment';
+import { reverse } from 'named-urls';
+import { useMemo, useState } from 'react';
+import ContentLoader from 'react-content-loader';
+import Chart from 'react-google-charts';
+import { Link, NavLink, useNavigate, useParams } from 'react-router-dom';
+import { useSortBy, useTable } from 'react-table';
 import {
-    Container,
-    Table,
     Button,
-    ButtonGroup,
     ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
+    ButtonGroup,
+    Container,
     DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Table,
     UncontrolledButtonDropdown,
 } from 'reactstrap';
-import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
-import moment from 'moment';
-import Chart from 'react-google-charts';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import ContentLoader from 'react-content-loader';
+import { getDatasetsBenchmarksByResearchProblemId } from 'services/backend/datasets';
 import { reverseWithSlug } from 'utils';
-import { SubTitle } from 'components/styled';
-import useBenchmarkDatasetResource from 'components/Benchmarks/hooks/useBenchmarkDatasetResource';
-import useBenchmarkDatasetPapers from 'components/Benchmarks/hooks/useBenchmarkDatasetPapers';
-import CodeURLsTooltip from 'components/Benchmarks/BenchmarkCard/CodeURLsTooltip';
-import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import { useParams, useNavigate, NavLink, Link } from 'react-router-dom';
-import { useTable, useSortBy } from 'react-table';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { CLASSES } from 'constants/graphSettings';
 
 function getTicksAxisH(data) {
     const dateRange = data.slice(1).map(value => value[0]);
@@ -69,6 +70,21 @@ function Benchmark() {
     } = useBenchmarkDatasetPapers({
         datasetId,
         problemId,
+    });
+
+    const fetchItems = async ({ id, page, pageSize }) => {
+        const { content: items, last, totalElements } = await getDatasetsBenchmarksByResearchProblemId({ id, page, size: pageSize });
+        return {
+            items,
+            last,
+            totalElements,
+        };
+    };
+
+    const { results: datasets, isLoading: isLoadingDatasets } = usePaginate({
+        fetchItems,
+        fetchItemsExtraParams: { id: problemId },
+        pageSize: 9999,
     });
 
     const columns = useMemo(
@@ -246,14 +262,29 @@ function Benchmark() {
                                 {problemData.label}
                             </Link>
                         </div>
-                        <div>
-                            <i>Dataset:</i>{' '}
-                            <Link
-                                to={reverse(ROUTES.CONTENT_TYPE_NO_MODE, { type: CLASSES.DATASET, id: resourceData.id })}
-                                style={{ textDecoration: 'none', flex: 1 }}
-                            >
-                                {resourceData.label}
-                            </Link>
+                        <div className="mt-3 mb-3">
+                            <ButtonGroup size="sm">
+                                <Button disabled>Dataset</Button>
+                                {isLoadingDatasets && <Button disabled>Loading...</Button>}
+                                {!isLoadingDatasets && (
+                                    <UncontrolledButtonDropdown className="flex-shrink-0">
+                                        <DropdownToggle caret size="sm" color="secondary">
+                                            {resourceData.label}
+                                        </DropdownToggle>
+                                        <DropdownMenu style={{ maxHeight: '280px', overflowY: 'auto' }}>
+                                            {datasets.map((ds, index) => (
+                                                <DropdownItem
+                                                    key={index}
+                                                    disabled={isLoading}
+                                                    onClick={() => navigate(reverse(ROUTES.BENCHMARK, { datasetId: ds.id, problemId }))}
+                                                >
+                                                    {ds.label}
+                                                </DropdownItem>
+                                            ))}
+                                        </DropdownMenu>
+                                    </UncontrolledButtonDropdown>
+                                )}
+                            </ButtonGroup>
                         </div>
 
                         <>{resourceData.description && <p className="m-0">{resourceData.description}</p>}</>
@@ -416,6 +447,11 @@ function Benchmark() {
             {!isLoadingPapers && isFailedLoadingPapers && (
                 <Container className="p-0 mt-3 rounded box">
                     <div className="text-center mt-4 mb-4">Failed loading benchmark papers.</div>
+                </Container>
+            )}
+            {isLoadingPapers && !isFailedLoadingPapers && (
+                <Container className="p-0 mt-3 rounded box">
+                    <div className="text-center mt-4 mb-4 py-4">Loading benchmark papers...</div>
                 </Container>
             )}
         </div>

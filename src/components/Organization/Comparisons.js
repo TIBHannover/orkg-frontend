@@ -32,7 +32,7 @@ const Comparisons = ({ organizationsId }) => {
                             return data;
                         });
                         setComparisonsList(prevComparisons => {
-                            let updatedComparisons = groupVersionsOfComparisons([
+                            const updatedComparisons = groupVersionsOfComparisons([
                                 ...flatten([...prevComparisons.map(c => c.versions ?? []), ...prevComparisons]),
                                 ...comparisonsData,
                             ]);

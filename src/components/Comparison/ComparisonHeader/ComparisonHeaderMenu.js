@@ -457,11 +457,9 @@ const ComparisonHeaderMenu = props => {
                     showDialog={showComparisonVersions}
                 />
             )}
-            <Publish
-                showDialog={showPublishDialog}
-                toggle={() => setShowPublishDialog(v => !v)}
-                nextVersions={!isLoadingVersions && hasNextVersion ? versions : []}
-            />
+            {showPublishDialog && (
+                <Publish toggle={() => setShowPublishDialog(v => !v)} nextVersions={!isLoadingVersions && hasNextVersion ? versions : []} />
+            )}
             <AddContribution onAddContributions={addContributions} showDialog={showAddContribution} toggle={() => setShowAddContribution(v => !v)} />
             <ExportToLatex showDialog={showLatexDialog} toggle={() => setShowLatexDialog(v => !v)} s />
             <ExportCitation

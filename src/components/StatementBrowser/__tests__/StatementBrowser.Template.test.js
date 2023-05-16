@@ -29,8 +29,8 @@ describe('StatementBrowser', () => {
     it('should load template of a resource and add required properties', async () => {
         setup();
         await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
-        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        //  await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        await waitFor(() => expect(screen.queryAllByText(/Basic reproduction number/i)).toHaveLength(2));
         expect(screen.getByText(/Location/i)).toBeInTheDocument();
         expect(screen.getByText(/Time period/i)).toBeInTheDocument();
     });
@@ -40,8 +40,8 @@ describe('AddValue', () => {
     it('should add blank node', async () => {
         setup();
         await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
-        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        await waitFor(() => expect(screen.queryAllByText(/Basic reproduction number/i)).toHaveLength(2));
         // Basic reproduction number
         await waitFor(() => expect(screen.getByTestId('add-value-P23140-true')).toBeInTheDocument());
         fireEvent.click(screen.getByTestId('add-value-P23140-true'));
@@ -54,8 +54,8 @@ describe('AddValue', () => {
     it('should disable add value after adding a value on the property that require only one value', async () => {
         setup();
         await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
-        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        await waitFor(() => expect(screen.queryAllByText(/Basic reproduction number/i)).toHaveLength(2));
         // Basic reproduction number
         await waitFor(() => expect(screen.getByTestId('add-value-P23140-true')).toBeInTheDocument());
         fireEvent.click(screen.getByTestId('add-value-P23140-true'));
@@ -71,8 +71,8 @@ describe('AddValue', () => {
     it('should disable edit property for required properties', async () => {
         setup();
         await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
-        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        await waitFor(() => expect(screen.queryAllByText(/Basic reproduction number/i)).toHaveLength(2));
         // Basic reproduction number
         const changeR0Property = screen.getByTestId('change-property-P23140');
         expect(changeR0Property).toBeInTheDocument();
@@ -84,8 +84,8 @@ describe('AddValue', () => {
     it('should disable delete property for required properties', async () => {
         setup();
         await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
-        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        await waitFor(() => expect(screen.queryAllByText(/Basic reproduction number/i)).toHaveLength(2));
         // Basic reproduction number
         const deleteR0Property = screen.getByTestId('delete-property-P23140');
         expect(deleteR0Property).toBeInTheDocument();
@@ -97,13 +97,13 @@ describe('AddValue', () => {
     it('should add value of the range specified by the template', async () => {
         setup();
         await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
-        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        await waitFor(() => expect(screen.queryAllByText(/Basic reproduction number/i)).toHaveLength(2));
         // Location
         await waitFor(() => expect(screen.getByTestId('add-value-P5049-false')).toBeInTheDocument());
         fireEvent.click(screen.getByTestId('add-value-P5049-false'));
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: 'Hannover' } });
-        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
+        // await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         await selectEvent.select(screen.getByRole('combobox', { name: /Enter a resource/i, hidden: true }), /Hannover/i);
         await waitFor(() => expect(screen.getByText(/Hannover/i)).toBeInTheDocument());
         // Because location has cardinality 1, the button add should be disabled after adding a new value

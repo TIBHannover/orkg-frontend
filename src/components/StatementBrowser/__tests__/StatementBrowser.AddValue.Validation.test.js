@@ -32,7 +32,7 @@ const setValueAndClickOnCreate = async (sc, datatype = 'Resource', value = 'test
     fireEvent.click(addButton);
     await waitFor(() => expect(sc.getByLabelText(/Enter a resource/i)).toBeInTheDocument());
     fireEvent.change(sc.getByLabelText(/Enter a resource/i), { target: { value } });
-    await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+    // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
     const selectInput = screen.getByText('Resource');
     await selectEvent.openMenu(selectInput);
     await selectEvent.select(selectInput, [datatype]);

@@ -1,19 +1,17 @@
-import { Button } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
+import PropTypes from 'prop-types';
+import { useCallback, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { Button } from 'reactstrap';
 import {
     fillResourceWithTemplate,
     removeEmptyPropertiesOfClass,
     updateResourceClassesAction as updateResourceClasses,
 } from 'slices/statementBrowserSlice';
-import { getTemplateById } from 'services/backend/statements';
-import { useDispatch, useSelector } from 'react-redux';
-import Tippy from '@tippyjs/react';
-import { useState, useRef, useCallback } from 'react';
 import styled from 'styled-components';
-import { toast } from 'react-toastify';
-import PropTypes from 'prop-types';
-import TemplateDetailsTooltip from './TemplateDetailsTooltip';
 
 const IconWrapper = styled.span`
     background-color: ${props => (props.addMode ? (props.isSmart ? props.theme.smart : '#d1d5e4') : '#dc3545')};
@@ -40,9 +38,6 @@ const TemplateButton = props => {
     const [isSaving, setIsSaving] = useState(false);
     const ref = useRef(null);
     const dispatch = useDispatch();
-    const [template, setTemplate] = useState({});
-    const [isTemplateLoading, setIsTemplateLoading] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
     const resource = useSelector(state => props.resourceId && state.statementBrowser.resources.byId[props.resourceId]);
 
     const addTemplate = useCallback(() => {
@@ -75,7 +70,9 @@ const TemplateButton = props => {
                 ref.current?.removeAttribute('disabled');
                 setIsSaving(false);
                 toast.dismiss();
-                props.syncBackend && toast.success('Resource classes updated successfully');
+                if (props.syncBackend) {
+                    toast.success('Resource classes updated successfully');
+                }
             })
             .catch(() => {
                 ref.current?.removeAttribute('disabled');
@@ -85,40 +82,18 @@ const TemplateButton = props => {
             });
     }, [dispatch, props.classId, props.resourceId, props.syncBackend, resource.classes]);
 
-    const onTrigger = useCallback(() => {
-        if (!isLoaded) {
-            setIsTemplateLoading(true);
-            getTemplateById(props.id).then(template => {
-                setTemplate(template);
-                setIsLoaded(true);
-                setIsTemplateLoading(false);
-            });
-        }
-    }, [isLoaded, props.id]);
-
     return (
-        <Tippy
-            onTrigger={onTrigger}
-            interactive={true}
-            appendTo={document.body}
-            content={
-                <TemplateDetailsTooltip
-                    useTemplate={addTemplate}
-                    id={props.id}
-                    source={props.source}
-                    isTemplateLoading={isTemplateLoading}
-                    template={template}
-                    addMode={props.addMode}
-                />
-            }
-        >
+        <TemplateTooltip id={props.id}>
             <span tabIndex="0">
                 <Button
                     innerRef={ref}
                     onClick={() => {
                         ref.current.setAttribute('disabled', 'disabled');
-                        props.addMode && addTemplate();
-                        !props.addMode && deleteTemplate();
+                        if (props.addMode) {
+                            addTemplate();
+                        } else {
+                            deleteTemplate();
+                        }
                     }}
                     size="sm"
                     outline={props.isSmart}
@@ -134,7 +109,7 @@ const TemplateButton = props => {
                     <Label>{props.label}</Label>
                 </Button>
             </span>
-        </Tippy>
+        </TemplateTooltip>
     );
 };
 
@@ -144,7 +119,6 @@ TemplateButton.propTypes = {
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     classId: PropTypes.string,
-    source: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     syncBackend: PropTypes.bool.isRequired,
     isSmart: PropTypes.bool,
     tippyTarget: PropTypes.object,

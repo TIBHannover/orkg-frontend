@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Slider from 'react-slick';
 
-export const StyledSlider = styled(Slider)`
+const StyledSlider = styled(Slider)`
     /* slick.css */
     /* Slider */
     &.slick-slider {
@@ -279,3 +279,5 @@ export const StyledSlider = styled(Slider)`
         color: black;
     }
 `;
+
+export default StyledSlider;

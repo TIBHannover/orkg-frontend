@@ -73,6 +73,7 @@ import ConferenceDetails from 'pages/Conferences/ConferenceDetails';
 import AddConference from 'pages/Conferences/AddConference';
 import ResearchProblem from 'pages/ResearchProblem';
 import AuthorLiteral from 'pages/AuthorLiteral';
+import TemplateNew from 'pages/Templates/TemplateNew';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -134,8 +135,12 @@ const routes = [
         element: Template,
     },
     {
-        path: ROUTES.ADD_TEMPLATE,
+        path: ROUTES.TEMPLATE_TABS,
         element: Template,
+    },
+    {
+        path: ROUTES.ADD_TEMPLATE,
+        element: TemplateNew,
     },
     {
         path: ROUTES.USER_SETTINGS,

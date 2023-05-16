@@ -27,7 +27,7 @@ function Breadcrumbs(props) {
     const [siblings, setSiblings] = useState([]);
 
     useEffect(() => {
-        if (props.researchFieldId !== undefined) {
+        if (props.researchFieldId) {
             setIsLoading(true);
             getParentResearchFields(props.researchFieldId)
                 .then(result => {

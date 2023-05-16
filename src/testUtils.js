@@ -1,27 +1,41 @@
 import { render as rtlRender } from '@testing-library/react';
-import { HistoryRouter as Router } from 'redux-first-history/rr6';
-import { Provider } from 'react-redux';
-import configureStore from 'store';
 import theme from 'assets/scss/ThemeVariables';
-import { ThemeProvider } from 'styled-components';
+import { MathJaxContext } from 'better-react-mathjax';
+import MATH_JAX_CONFIG from 'constants/mathJax';
+import PropTypes from 'prop-types';
+import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
+import { HistoryRouter as Router } from 'redux-first-history/rr6';
+import configureStore from 'store';
+import { ThemeProvider } from 'styled-components';
 
-// wrap the components with the required providers
-// redux part based on: https://redux.js.org/recipes/writing-tests#connected-components
-const render = (ui, { initialState, store = configureStore(initialState), ...renderOptions } = {}) => {
+const Wrapper = ({ children, initialState = {}, store = configureStore(initialState) }) => {
     const { store: _store, history } = store;
-    const wrapper = ({ children }) => (
+
+    return (
         <Provider store={_store}>
             <ThemeProvider theme={theme}>
-                <Router history={history} noInitialPop>
-                    {children}
-                </Router>
-                <ToastContainer position="top-right" autoClose={5000} hideProgressBar className="toast-container" icon={false} theme="colored" />
+                <MathJaxContext config={MATH_JAX_CONFIG}>
+                    <Router history={history} noInitialPop>
+                        {children}
+                    </Router>
+                    <ToastContainer position="top-right" autoClose={5000} hideProgressBar className="toast-container" icon={false} theme="colored" />
+                </MathJaxContext>
             </ThemeProvider>
         </Provider>
     );
+};
 
-    const rendered = rtlRender(ui, { wrapper, ...renderOptions });
+Wrapper.propTypes = {
+    children: PropTypes.node.isRequired,
+    initialState: PropTypes.object,
+    store: PropTypes.object,
+};
+
+// wrap the components with the required providers
+// redux part based on: https://redux.js.org/recipes/writing-tests#connected-components
+const render = (ui, { initialState, store, ...renderOptions } = {}) => {
+    const rendered = rtlRender(ui, { wrapper: ({ children }) => Wrapper({ children, store, initialState }), ...renderOptions });
 
     return {
         ...rendered,
@@ -33,4 +47,4 @@ const render = (ui, { initialState, store = configureStore(initialState), ...ren
 // re-export everything
 export * from '@testing-library/react';
 // override render method
-export { render };
+export { render, Wrapper };

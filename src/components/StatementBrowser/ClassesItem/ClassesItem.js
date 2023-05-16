@@ -1,22 +1,25 @@
-import { useState, Fragment, useRef, useEffect } from 'react';
-import { Button, InputGroup } from 'reactstrap';
+import { faPen, faPuzzlePiece, faSpinner, faTags } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faTags, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
-import { Link } from 'react-router-dom';
-import { getClassById } from 'services/backend/classes';
-import { reverse } from 'named-urls';
-import { CSSTransition } from 'react-transition-group';
-import ROUTES from 'constants/routes.js';
-import { updateResourceClassesAction as updateResourceClasses, removeEmptyPropertiesOfClass } from 'slices/statementBrowserSlice';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
-import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
-import styled from 'styled-components';
 import Confirm from 'components/ConfirmationModal/ConfirmationModal';
-import { ENTITIES } from 'constants/graphSettings';
-import { toast } from 'react-toastify';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import useUsedTemplates from 'components/StatementBrowser/TemplatesModal/hooks/useUsedTemplates';
+import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
+import { ENTITIES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
+import pluralize from 'pluralize';
+import PropTypes from 'prop-types';
+import { Fragment, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { CSSTransition } from 'react-transition-group';
+import { Button, InputGroup } from 'reactstrap';
+import { getClassById } from 'services/backend/classes';
+import { removeEmptyPropertiesOfClass, updateResourceClassesAction as updateResourceClasses } from 'slices/statementBrowserSlice';
+import styled from 'styled-components';
 
 export const ClassesStyle = styled.div`
     background-color: ${props => props.theme.lightLighter};
@@ -59,6 +62,7 @@ const ClassesItem = props => {
     const [isSaving, setIsSaving] = useState(false);
     const dispatch = useDispatch();
     const preferences = useSelector(state => state.statementBrowser.preferences);
+    const { usedTemplates, isLoadingUsedTemplates } = useUsedTemplates({ resourceId: selectedResource });
 
     useEffect(() => {
         let isMounted = true;
@@ -66,17 +70,16 @@ const ClassesItem = props => {
             setIsLoading(true);
             const classesCalls = resource.classes?.map(c => getClassById(c)) ?? [];
             await Promise.all(classesCalls)
-                .then(res_classes => {
+                .then(resClasses => {
                     if (isMounted) {
                         setIsLoading(false);
-                        setClasses(res_classes ?? []);
+                        setClasses(resClasses ?? []);
                     }
                 })
-                .catch(err => {
+                .catch(() => {
                     if (isMounted) {
                         setClasses([]);
                         setIsLoading(false);
-                        console.error(err);
                     }
                 });
         };
@@ -96,8 +99,8 @@ const ClassesItem = props => {
                 label: selected[foundIndex].label,
             });
             if (newClass) {
-                const foundIndex = selected.findIndex(x => x.__isNew__);
-                selected[foundIndex] = newClass;
+                const _foundIndex = selected.findIndex(x => x.__isNew__);
+                selected[_foundIndex] = newClass;
             } else {
                 setIsSaving(false);
                 return null;
@@ -113,7 +116,9 @@ const ClassesItem = props => {
                 setClasses(newClasses);
                 setIsSaving(false);
                 toast.dismiss();
-                props.syncBackend && toast.success('Resource classes updated successfully');
+                if (props.syncBackend) {
+                    toast.success('Resource classes updated successfully');
+                }
             })
             .catch(() => {
                 setIsSaving(false);
@@ -123,69 +128,99 @@ const ClassesItem = props => {
     };
 
     return (
-        <AnimationContainer in={preferences.showClasses} timeout={300} classNames="zoom" unmountOnExit>
-            <div>
-                {selectedResource && resource._class === ENTITIES.RESOURCE && (
-                    <ClassesStyle className="text-muted mb-2 d-flex align-items-center clearfix">
-                        <Icon icon={faTags} className="me-1" />
-                        <span className="text-secondary-darker"> Instance of: </span>
-                        {!editMode && !isLoading && (
-                            <div className="mx-1" style={{ padding: '3.5px 0' }}>
-                                {classes?.map((c, index) => (
-                                    <Fragment key={c.id}>
-                                        <DescriptionTooltip id={c.id} _class={ENTITIES.CLASS} disabled={!preferences.showDescriptionTooltips}>
-                                            <Link target="_blank" to={reverse(ROUTES.CLASS, { id: c.id })}>
-                                                {c.label}
-                                            </Link>
-                                        </DescriptionTooltip>
-                                        {index + 1 !== classes.length && ', '}
-                                    </Fragment>
-                                ))}
-                                {classes?.length === 0 && <i className="text-secondary-darker">No classes</i>}
-                            </div>
-                        )}
-                        {!editMode && isLoading && (
-                            <div style={{ padding: '3.5px 0' }}>
-                                <i>Loading ...</i>
-                            </div>
-                        )}
-                        {props.enableEdit && editMode && (
-                            <div className="flex-grow-1 ms-1 ">
-                                <InputGroup size="sm">
-                                    <AutoComplete
-                                        entityType={ENTITIES.CLASS}
-                                        onChange={(selected, action) => {
-                                            // blur the field allows to focus and open the menu again
-                                            classesAutocompleteRef.current && classesAutocompleteRef.current.blur();
-                                            handleChangeClasses(selected, action);
-                                        }}
-                                        placeholder="Specify the classes of the resource"
-                                        value={classes}
-                                        autoLoadOption={true}
-                                        openMenuOnFocus={true}
-                                        allowCreate={true}
-                                        innerRef={classesAutocompleteRef}
-                                        isMulti
-                                        autoFocus={false}
-                                        ols={true}
-                                        isDisabled={isSaving}
-                                        cssClasses="form-control-sm"
-                                        inputId="classes-autocomplete"
-                                    />
+        <>
+            <AnimationContainer in={preferences.showClasses} timeout={300} classNames="zoom" unmountOnExit>
+                <div>
+                    {selectedResource && resource._class === ENTITIES.RESOURCE && (
+                        <ClassesStyle className="text-muted mb-2 d-flex align-items-center clearfix">
+                            <Icon icon={faTags} className="me-1" />
+                            <span className="text-secondary-darker"> Instance of: </span>
+                            {!editMode && !isLoading && (
+                                <div className="mx-1" style={{ padding: '3.5px 0' }}>
+                                    {classes?.map((c, index) => (
+                                        <Fragment key={c.id}>
+                                            <DescriptionTooltip id={c.id} _class={ENTITIES.CLASS} disabled={!preferences.showDescriptionTooltips}>
+                                                <Link target="_blank" to={reverse(ROUTES.CLASS, { id: c.id })}>
+                                                    {c.label}
+                                                </Link>
+                                            </DescriptionTooltip>
+                                            {index + 1 !== classes.length && ', '}
+                                        </Fragment>
+                                    ))}
+                                    {classes?.length === 0 && <i className="text-secondary-darker">No classes</i>}
+                                </div>
+                            )}
+                            {!editMode && isLoading && (
+                                <div style={{ padding: '3.5px 0' }}>
+                                    <i>Loading ...</i>
+                                </div>
+                            )}
+                            {props.enableEdit && editMode && (
+                                <div className="flex-grow-1 ms-1 ">
+                                    <InputGroup size="sm">
+                                        <AutoComplete
+                                            entityType={ENTITIES.CLASS}
+                                            onChange={(selected, action) => {
+                                                // blur the field allows to focus and open the menu again
+                                                if (classesAutocompleteRef.current) {
+                                                    classesAutocompleteRef.current.blur();
+                                                }
+                                                handleChangeClasses(selected, action);
+                                            }}
+                                            placeholder="Specify the classes of the resource"
+                                            value={classes}
+                                            autoLoadOption={true}
+                                            openMenuOnFocus={true}
+                                            allowCreate={true}
+                                            innerRef={classesAutocompleteRef}
+                                            isMulti
+                                            autoFocus={false}
+                                            ols={true}
+                                            isDisabled={isSaving}
+                                            cssClasses="form-control-sm"
+                                            inputId="classes-autocomplete"
+                                        />
 
-                                    <Button onClick={() => setEditMode(false)} disabled={isSaving}>
-                                        {!isSaving ? 'Done' : <Icon icon={faSpinner} spin={true} />}
-                                    </Button>
-                                </InputGroup>
-                            </div>
-                        )}
-                        {props.enableEdit && !editMode && (
-                            <StatementActionButton title="Edit classes" icon={faPen} action={() => setEditMode(true)} />
-                        )}
-                    </ClassesStyle>
-                )}
-            </div>
-        </AnimationContainer>
+                                        <Button onClick={() => setEditMode(false)} disabled={isSaving}>
+                                            {!isSaving ? 'Done' : <Icon icon={faSpinner} spin={true} />}
+                                        </Button>
+                                    </InputGroup>
+                                </div>
+                            )}
+                            {props.enableEdit && !editMode && (
+                                <StatementActionButton title="Edit classes" icon={faPen} action={() => setEditMode(true)} />
+                            )}
+                        </ClassesStyle>
+                    )}
+                </div>
+            </AnimationContainer>
+            {selectedResource && resource._class === ENTITIES.RESOURCE && (
+                <ClassesStyle className="text-muted mb-2 d-flex align-items-center clearfix">
+                    <Icon icon={faPuzzlePiece} className="me-1" />
+                    <span className="text-secondary-darker"> Applied {pluralize('template', usedTemplates?.length ?? 0, false)}: </span>
+                    {!isLoading && !isLoadingUsedTemplates && (
+                        <div className="mx-1" style={{ padding: '3.5px 0' }}>
+                            {usedTemplates?.map((t, index) => (
+                                <Fragment key={t.id}>
+                                    <TemplateTooltip id={t.id}>
+                                        <Link target="_blank" to={reverse(ROUTES.TEMPLATE, { id: t.id })}>
+                                            {t.label}
+                                        </Link>
+                                    </TemplateTooltip>
+                                    {index + 1 !== usedTemplates.length && ', '}
+                                </Fragment>
+                            ))}
+                            {usedTemplates?.length === 0 && <i className="text-secondary-darker">No templates applied</i>}
+                        </div>
+                    )}
+                    {!isLoading && isLoadingUsedTemplates && (
+                        <div style={{ padding: '3.5px 0' }}>
+                            <i>Loading ...</i>
+                        </div>
+                    )}
+                </ClassesStyle>
+            )}
+        </>
     );
 };
 

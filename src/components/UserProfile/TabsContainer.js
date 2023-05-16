@@ -46,7 +46,7 @@ function TabsContainer({ currentUserId, userId }) {
                 {
                     label: 'Templates',
                     key: 'templates',
-                    children: <Items filterLabel="templates" filterClass={CLASSES.TEMPLATE} userId={userId} showDelete={false} />,
+                    children: <Items filterLabel="templates" filterClass={CLASSES.NODE_SHAPE} userId={userId} showDelete={false} />,
                 },
             ]}
         />

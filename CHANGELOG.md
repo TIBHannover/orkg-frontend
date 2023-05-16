@@ -3,6 +3,129 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.105.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.104.1...v0.105.0) - 2023-05-10
+
+### Changes
+
+- feat(Comparison): Hide the authors and curator when the property "is anonymized" set to true [`#1103`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1103)
+
+---
+## [v0.104.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.104.0...v0.104.1) - 2023-05-05
+
+### Changes
+
+- fix(Comparison): disable row groups when sorting [`#1098`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1098)
+
+---
+## [v0.104.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.103.1...v0.104.0) - 2023-05-05
+
+### Changes
+
+- fix(Sidebar): Template suggestions only on top-level contribution [`#1094`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1094)
+- fix(Template): Show correct creation time [`#1095`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1095)
+- chore: update browsers list db [`#1096`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1096)
+- ux: Increase the page size of research problem items [`#1097`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1097)
+- feat(Comparison): preserve metadata when publishing new version [`#1093`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1093)
+- fix(AboutPage): responsive images [`#1092`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1092)
+
+---
+## [v0.103.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.103.0...v0.103.1) - 2023-04-27
+
+### Changes
+
+- fix(Storybook): list docs for components [`#1091`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1091)
+
+---
+## [v0.103.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.102.2...v0.103.0) - 2023-04-26
+
+### Changes
+
+- chore: Sync with the backend refactoring of top contributor endpoints [`#1067`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1067)
+- fix(ComparisonCard): Small discrepancy in count of contributions for a comparison [`#1086`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1086)
+- docs: implement Storybook for frequently used components [`#1071`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1071)
+- feat(UserTooltip): improve animation [`#1088`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1088)
+- fix(ResearchFieldsCards): fix word wrap, feat: change limit max displayed items [`#1087`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1087)
+
+---
+## [v0.102.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.102.1...v0.102.2) - 2023-04-21
+
+### Changes
+
+- fix: Do not allow setting unlisted and featured flag for non-content type resources [`#1085`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1085)
+- fix(Template): make templates publicly accessible [`#1084`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1084)
+- fix(CodeValuePlugin): show non-code links as anchors [`#1083`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1083)
+- internal: Update dependencies [`#1081`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1081)
+
+---
+## [v0.102.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.102.0...v0.102.1) - 2023-04-20
+
+### Changes
+
+- fix(StatementBrowser): Load templates recommendation [`#1082`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1082)
+
+---
+## [v0.102.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.101.1...v0.102.0) - 2023-04-20
+
+### Changes
+
+- feat(suggestions):added Recommendations  in view paper-edit mode [`#1062`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1062)
+- feat(Template): use SHACL vocab [`#1060`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1060)
+- ux: Show unlisted badge for authored resources for non-curators [`#1077`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1077)
+
+---
+## [v0.101.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.101.0...v0.101.1) - 2023-04-11
+
+### Changes
+
+- fix(CI): use cjs path instead of esm in Code component [`#1080`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1080)
+
+---
+## [v0.101.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.100.0...v0.101.0) - 2023-04-11
+
+### Changes
+
+- fix(UserProfile): ensure organization logo is displayed [`#1079`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1079)
+- feat(StatementBrowser): support syntax highlighting for Github URLs [`#1070`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1070)
+- ux(Observatory): Increase the page size of observatory items [`#1073`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1073)
+- fix(Comparison): Multiple API calls to invalid resource [`#1076`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1076)
+- chore(Paper): rename 'View paper' to 'Access paper' [`#1074`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1074)
+- feat(GeneratePdf): add loading indicator [`#1075`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1075)
+
+---
+## [v0.100.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.99.0...v0.100.0) - 2023-04-04
+
+### Changes
+
+- fix(Comparison): fix export comparison as PDF [`#1072`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1072)
+- feat(Footer): add report content link [`#1069`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1069)
+- chore: make env switching easier [`#1068`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1068)
+
+---
+## [v0.99.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.98.1...v0.99.0) - 2023-03-29
+
+### Changes
+
+- fix(Style): Long URLs overflows into the provenance column [`#1064`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1064)
+- fix(style): Markdown table out of container [`#1066`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1066)
+- fix(ViewPaper): Verified Metadata Icon is only visible for curators [`#1065`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1065)
+- feat(Discussion): support discussions on papers [`#1040`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1040)
+
+---
+## [v0.98.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.98.0...v0.98.1) - 2023-03-28
+
+### Changes
+
+- fix(TemplateEditor): losing statements while saving template [`#1063`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1063)
+
+---
+## [v0.98.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.97.1...v0.98.0) - 2023-03-27
+
+### Changes
+
+- feat(Observatory): set maximum length for observatory description [`#1061`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1061)
+- enhancement(Benchmarks): paginate the list and refactor ListPage [`#1051`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1051)
+
+---
 ## [v0.97.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.97.0...v0.97.1) - 2023-03-23
 
 ### Changes

@@ -7,8 +7,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
     cursor: default;
     background-color: ${props => props.theme.lightLighter} !important;
     border-color: ${props => props.theme.lightDarker} !important;
-    overflow-wrap: break-word;
-    word-break: break-all;
+    overflow-wrap: anywhere;
     flex: 1;
 
     &.selectable {
@@ -111,7 +110,7 @@ export const StyledDropdownToggle = styled(DropdownToggle).withConfig({
 
 export const ValueItemStyle = styled(ListGroupItem)`
     background-color: #fff;
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
     padding: 8px 0px !important;
 
     &:last-child {
@@ -171,7 +170,7 @@ export const ValueItemStyle = styled(ListGroupItem)`
     .typeCircle {
         width: 18px;
         height: 18px;
-        line-height: 18px;
+        line-height: 15px;
         text-align: center;
         color: white;
         display: inline-block;
@@ -373,8 +372,7 @@ export const TemplateHeaderStyle = styled.div`
     position: relative;
     display: block;
     padding: 0.55rem 1.25rem;
-    overflow-wrap: break-word;
-    word-break: break-all;
+    overflow-wrap: anywhere;
 
     .headerOptions {
         visibility: none;

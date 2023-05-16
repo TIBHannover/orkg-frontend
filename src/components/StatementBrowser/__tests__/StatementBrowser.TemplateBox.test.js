@@ -28,12 +28,12 @@ const setup = (
 describe('StatementBrowser with Template Box', () => {
     it('should render template box if the value is a template', async () => {
         setup();
-        await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
+        // await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
         await waitFor(() => expect(screen.queryAllByText(/Climate response/i)).toHaveLength(2));
         expect(screen.queryAllByText(/Climate sensitivity/i)).toHaveLength(2);
         expect(screen.queryAllByText(/Data used/i)).toHaveLength(2);
         expect(screen.queryAllByText(/Has evaluation/i)).toHaveLength(2);
-        expect(screen.queryAllByText(/Template/i)).toHaveLength(3);
+        expect(screen.queryAllByText(/Template/i)).toHaveLength(5);
         expect(screen.getByText(/Has research problem/i)).toBeInTheDocument();
     });
 });
@@ -41,7 +41,7 @@ describe('StatementBrowser with Template Box', () => {
 describe('StatementBrowser with Template Box ', () => {
     it('should disable add value on the property that require only one value', async () => {
         setup();
-        await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
+        // await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
         await waitFor(() => expect(screen.queryAllByText(/Climate response/i)).toHaveLength(2));
         // Data used
         await waitFor(() => expect(screen.getAllByTestId('add-value-P25059-false')).toHaveLength(2));

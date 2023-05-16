@@ -6,8 +6,7 @@ import { getExistingPredicatesByResource } from 'slices/statementBrowserSlice';
 import { setPredicatesRawResponse } from 'slices/addPaperSlice';
 import env from '@beam-australia/react-env';
 
-const usePredicatesRecommendation = () => {
-    const { title, abstract } = useSelector(state => state.addPaper);
+const usePredicatesRecommendation = ({ title, abstract }) => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const existingPropertyIds = useSelector(state => getExistingPredicatesByResource(state, selectedResource));
     const dispatch = useDispatch();

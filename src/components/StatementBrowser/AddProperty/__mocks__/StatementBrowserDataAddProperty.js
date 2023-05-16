@@ -49,7 +49,7 @@ export const statementBrowserStrictTemplate = {
                 predicate: null,
                 labelFormat: '',
                 hasLabelFormat: false,
-                isStrict: true,
+                isClosed: true,
                 components: [],
                 class: {
                     id: 'C19000',

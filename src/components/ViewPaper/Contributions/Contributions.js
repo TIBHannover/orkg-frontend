@@ -1,20 +1,20 @@
-import { Alert, Col, Container, FormGroup, Row } from 'reactstrap';
-import ContentLoader from 'react-content-loader';
-import { useParams } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import ROUTES from 'constants/routes';
+import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import EntityRecognition from 'components/AddPaper/EntityRecognition/EntityRecognition';
+import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
+import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
+import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
+import Tabs from 'components/Tabs/Tabs';
 import ContributionComparisons from 'components/ViewPaper/ContributionComparisons/ContributionComparisons';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
-import ContributionTab from 'components/ContributionTabs/ContributionTab';
-import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
+import PropTypes from 'prop-types';
+import ContentLoader from 'react-content-loader';
 import { useSelector } from 'react-redux';
-import Tabs from 'components/Tabs/Tabs';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
-// import SimilarContributions from 'components/ViewPaper/SimilarContributions/SimilarContributions';
+import { useParams } from 'react-router-dom';
+import { Alert, Col, FormGroup, Row } from 'reactstrap';
 import useContributions from './hooks/useContributions';
 
 const Contributions = props => {
@@ -142,6 +142,12 @@ const Contributions = props => {
                             <AddToComparison showLabel={true} paper={{ id: resourceId, label: paperTitle, contributions }} />
                         </div>
                     )}
+                    {props.enableEdit && (
+                        <div className="mb-3">
+                            <EntityRecognition title={paperTitle} />
+                        </div>
+                    )}
+
                     <ProvenanceBox />
                 </div>
             </Row>

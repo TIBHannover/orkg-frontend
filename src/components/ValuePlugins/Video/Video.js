@@ -1,11 +1,11 @@
-import { Component } from 'react';
-import PropTypes from 'prop-types';
-import { renderToString } from 'react-dom/server';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faVideo } from '@fortawesome/free-solid-svg-icons';
-import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { ENTITIES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { renderToString } from 'react-dom/server';
+import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
 
 const VideoContainer = styled.div`
@@ -23,84 +23,72 @@ const IframeFullWidth = styled.iframe`
 `;
 
 // Plugin for video previews of TIB AV portal, Youtube, Dailymotion and Vimeo
-class Video extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showVideoDialog: false,
-        };
+const Video = props => {
+    const [showVideoDialog, setShowVideoDialog] = useState(false);
+
+    const label = props.children;
+    const labelToText = renderToString(label);
+
+    if (!labelToText) {
+        return '';
     }
 
-    toggleVideoDialog = () => {
-        this.setState(prevState => ({
-            showVideoDialog: !prevState.showVideoDialog,
-        }));
-    };
+    if (
+        props.type === 'literal' &&
+        (labelToText.match(new RegExp(REGEX.TIB_URL)) ||
+            labelToText.match(new RegExp(REGEX.YOUTUBE_URL)) ||
+            labelToText.match(new RegExp(REGEX.DAILYMOTION_URL)) ||
+            labelToText.match(new RegExp(REGEX.VIMEO_URL)))
+    ) {
+        const videoId = labelToText
+            .replace(new RegExp(REGEX.TIB_URL), '')
+            .replace(new RegExp(REGEX.YOUTUBE_URL), '')
+            .replace(new RegExp(REGEX.DAILYMOTION_URL), '')
+            .replace(new RegExp(REGEX.VIMEO_URL), '');
 
-    render() {
-        const label = this.props.children;
-        const labelToText = renderToString(label);
-
-        if (!labelToText) {
-            return '';
+        let providerUrl = '';
+        if (labelToText.match(new RegExp(REGEX.TIB_URL))) {
+            providerUrl = '//av.tib.eu/player/';
+        } else if (labelToText.match(new RegExp(REGEX.YOUTUBE_URL))) {
+            providerUrl = 'https://www.youtube.com/embed/';
+        } else if (labelToText.match(new RegExp(REGEX.DAILYMOTION_URL))) {
+            providerUrl = 'https://www.dailymotion.com/embed/video/';
+        } else if (labelToText.match(new RegExp(REGEX.VIMEO_URL))) {
+            providerUrl = 'https://player.vimeo.com/video/';
         }
-
-        if (
-            this.props.type === 'literal' &&
-            (labelToText.match(new RegExp(REGEX.TIB_URL)) ||
-                labelToText.match(new RegExp(REGEX.YOUTUBE_URL)) ||
-                labelToText.match(new RegExp(REGEX.DAILYMOTION_URL)) ||
-                labelToText.match(new RegExp(REGEX.VIMEO_URL)))
-        ) {
-            const videoId = labelToText
-                .replace(new RegExp(REGEX.TIB_URL), '')
-                .replace(new RegExp(REGEX.YOUTUBE_URL), '')
-                .replace(new RegExp(REGEX.DAILYMOTION_URL), '')
-                .replace(new RegExp(REGEX.VIMEO_URL), '');
-
-            let providerUrl = '';
-            if (labelToText.match(new RegExp(REGEX.TIB_URL))) {
-                providerUrl = '//av.tib.eu/player/';
-            } else if (labelToText.match(new RegExp(REGEX.YOUTUBE_URL))) {
-                providerUrl = 'https://www.youtube.com/embed/';
-            } else if (labelToText.match(new RegExp(REGEX.DAILYMOTION_URL))) {
-                providerUrl = 'https://www.dailymotion.com/embed/video/';
-            } else if (labelToText.match(new RegExp(REGEX.VIMEO_URL))) {
-                providerUrl = 'https://player.vimeo.com/video/';
-            }
-            if (!this.props.options.inModal) {
-                return (
-                    <VideoContainer>
-                        <IframeFullWidth title="Video" scrolling="no" src={`${providerUrl}${videoId}`} allowFullScreen />
-                    </VideoContainer>
-                );
-            }
+        if (!props.options.inModal) {
             return (
-                <>
-                    <span
-                        className="btn-link"
-                        onClick={this.toggleVideoDialog}
-                        style={{ cursor: 'pointer' }}
-                        onKeyDown={e => (e.keyCode === 13 ? this.toggleVideoDialog : undefined)}
-                        role="button"
-                        tabIndex={0}
-                    >
-                        {labelToText} <Icon icon={faVideo} />
-                    </span>
-                    <Modal isOpen={this.state.showVideoDialog} toggle={this.toggleVideoDialog} size="lg">
-                        <ModalHeader toggle={this.toggleVideoDialog}>Video Preview</ModalHeader>
-                        <ModalBody>
-                            <VideoContainer>
-                                <IframeFullWidth title="Video" scrolling="no" src={`${providerUrl}${videoId}`} allowFullScreen />
-                            </VideoContainer>
-                        </ModalBody>
-                    </Modal>
-                </>
+                <VideoContainer>
+                    <IframeFullWidth title="Video" scrolling="no" src={`${providerUrl}${videoId}`} allowFullScreen />
+                </VideoContainer>
             );
         }
-        return label;
+
+        return (
+            <>
+                <span
+                    className="btn-link"
+                    onClick={() => setShowVideoDialog(true)}
+                    style={{ cursor: 'pointer' }}
+                    onKeyDown={e => (e.keyCode === 13 ? setShowVideoDialog(true) : undefined)}
+                    role="button"
+                    tabIndex={0}
+                >
+                    {labelToText} <Icon icon={faVideo} />
+                </span>
+                <Modal isOpen={showVideoDialog} toggle={() => setShowVideoDialog(v => !v)} size="lg">
+                    <ModalHeader toggle={() => setShowVideoDialog(v => !v)}>Video Preview</ModalHeader>
+                    <ModalBody>
+                        <VideoContainer>
+                            <IframeFullWidth title="Video" scrolling="no" src={`${providerUrl}${videoId}`} allowFullScreen />
+                        </VideoContainer>
+                    </ModalBody>
+                </Modal>
+            </>
+        );
     }
-}
+    return label;
+};
 
 Video.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,

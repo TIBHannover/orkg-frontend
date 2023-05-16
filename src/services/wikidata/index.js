@@ -11,8 +11,9 @@ export const searchEntity = async ({ value, page, pageSize, type }) => {
     const newOptions = [];
 
     const results = await submitGetRequest(
-        `${wikidataUrl}?action=wbsearchentities&search=${encodeURIComponent(value)}&limit=${pageSize}&continue=${page *
-            pageSize}&type=${type}&language=en&format=json&origin=*`,
+        `${wikidataUrl}?action=wbsearchentities&search=${encodeURIComponent(value)}&limit=${pageSize}&continue=${
+            page * pageSize
+        }&type=${type}&language=en&format=json&origin=*`,
     );
     if (results && results.search) {
         for (const [index, result] of results.search.entries()) {
