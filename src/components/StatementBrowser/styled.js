@@ -170,7 +170,7 @@ export const ValueItemStyle = styled(ListGroupItem)`
     .typeCircle {
         width: 18px;
         height: 18px;
-        line-height: 18px;
+        line-height: 15px;
         text-align: center;
         color: white;
         display: inline-block;

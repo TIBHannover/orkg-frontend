@@ -98,7 +98,6 @@ const TemplatesModal = props => {
                                         id={template.id}
                                         label={template.label}
                                         classId={template.classId}
-                                        source={template.source}
                                     />
                                 ))}
                                 <hr />
@@ -196,13 +195,7 @@ const TemplatesModal = props => {
                                 <p>Featured templates:</p>
                                 <div>
                                     {featuredTemplates.map(template => (
-                                        <TemplateButton
-                                            tippyTarget={target}
-                                            key={`t${template.id}`}
-                                            id={template.id}
-                                            label={template.label}
-                                            source={template.source}
-                                        />
+                                        <TemplateButton tippyTarget={target} key={`t${template.id}`} id={template.id} label={template.label} />
                                     ))}
                                 </div>
                             </FormGroup>
@@ -235,13 +228,7 @@ const TemplatesModal = props => {
                                 )}
                                 <div>
                                     {templates.map(template => (
-                                        <TemplateButton
-                                            tippyTarget={target}
-                                            key={`t${template.id}`}
-                                            id={template.id}
-                                            label={template.label}
-                                            source={template.source}
-                                        />
+                                        <TemplateButton tippyTarget={target} key={`t${template.id}`} id={template.id} label={template.label} />
                                     ))}
                                 </div>
                             </FormGroup>

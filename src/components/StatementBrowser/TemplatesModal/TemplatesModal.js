@@ -95,7 +95,6 @@ const TemplatesModal = props => {
                                         id={template.id}
                                         label={template.label}
                                         classId={template.classId}
-                                        source={template.source}
                                         resourceId={selectedResource}
                                         syncBackend={props.syncBackend}
                                     />
@@ -202,7 +201,6 @@ const TemplatesModal = props => {
                                             key={`t${template.id}`}
                                             id={template.id}
                                             label={template.label}
-                                            source={template.source}
                                             resourceId={selectedResource}
                                             syncBackend={props.syncBackend}
                                             isSmart={true}
@@ -239,7 +237,6 @@ const TemplatesModal = props => {
                                             key={`t${template.id}`}
                                             id={template.id}
                                             label={template.label}
-                                            source={template.source}
                                             resourceId={selectedResource}
                                             syncBackend={props.syncBackend}
                                         />
@@ -280,7 +277,6 @@ const TemplatesModal = props => {
                                             key={`t${template.id}`}
                                             id={template.id}
                                             label={template.label}
-                                            source={template.source}
                                             resourceId={selectedResource}
                                             syncBackend={props.syncBackend}
                                         />

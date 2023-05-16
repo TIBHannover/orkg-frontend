@@ -30,7 +30,7 @@ describe('StatementBrowser', () => {
         setup();
         await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
         //  await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
-        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.queryAllByText(/Basic reproduction number/i)).toHaveLength(2));
         expect(screen.getByText(/Location/i)).toBeInTheDocument();
         expect(screen.getByText(/Time period/i)).toBeInTheDocument();
     });
@@ -41,7 +41,7 @@ describe('AddValue', () => {
         setup();
         await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
         // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
-        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.queryAllByText(/Basic reproduction number/i)).toHaveLength(2));
         // Basic reproduction number
         await waitFor(() => expect(screen.getByTestId('add-value-P23140-true')).toBeInTheDocument());
         fireEvent.click(screen.getByTestId('add-value-P23140-true'));
@@ -55,7 +55,7 @@ describe('AddValue', () => {
         setup();
         await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
         // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
-        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.queryAllByText(/Basic reproduction number/i)).toHaveLength(2));
         // Basic reproduction number
         await waitFor(() => expect(screen.getByTestId('add-value-P23140-true')).toBeInTheDocument());
         fireEvent.click(screen.getByTestId('add-value-P23140-true'));
@@ -72,7 +72,7 @@ describe('AddValue', () => {
         setup();
         await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
         // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
-        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.queryAllByText(/Basic reproduction number/i)).toHaveLength(2));
         // Basic reproduction number
         const changeR0Property = screen.getByTestId('change-property-P23140');
         expect(changeR0Property).toBeInTheDocument();
@@ -85,7 +85,7 @@ describe('AddValue', () => {
         setup();
         await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
         // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
-        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.queryAllByText(/Basic reproduction number/i)).toHaveLength(2));
         // Basic reproduction number
         const deleteR0Property = screen.getByTestId('delete-property-P23140');
         expect(deleteR0Property).toBeInTheDocument();
@@ -98,7 +98,7 @@ describe('AddValue', () => {
         setup();
         await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
         // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
-        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.queryAllByText(/Basic reproduction number/i)).toHaveLength(2));
         // Location
         await waitFor(() => expect(screen.getByTestId('add-value-P5049-false')).toBeInTheDocument());
         fireEvent.click(screen.getByTestId('add-value-P5049-false'));
