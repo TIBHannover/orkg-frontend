@@ -14,13 +14,12 @@ import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tabs from 'components/Tabs/Tabs';
 import Tooltip from 'components/Utils/Tooltip';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { ENTITIES } from 'constants/graphSettings';
 import { BIOASSAYS_FIELDS_LIST } from 'constants/nlpFieldLists';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Row, UncontrolledAlert } from 'reactstrap';
 import { determineActiveNERService } from 'services/orkgNlp/index';
-import { guid } from 'utils';
 import { getPredicates } from 'services/backend/predicates';
 import {
     createContributionAction as createContribution,
@@ -34,6 +33,7 @@ import {
     updateContributionLabelAction as updateContributionLabel,
 } from 'slices/addPaperSlice';
 import { updateSettings } from 'slices/statementBrowserSlice';
+import useEntityRecognition from 'components/AddPaper/hooks/useEntityRecognition';
 import ContributionsHelpTour from './ContributionsHelpTour';
 
 const Contributions = () => {
@@ -49,14 +49,13 @@ const Contributions = () => {
         contributions,
         selectedContribution,
         abstract,
-        extractedResearchField,
-        extractedResearchFieldId,
         resourceURI,
         propertyData,
     } = useSelector(state => state.addPaper);
 
     const [isOpenAbstractModal, setIsOpenAbstractModal] = useState(false);
     const [activeNERService, setActiveNERService] = useState(null);
+    const { handleSaveFeedback } = useEntityRecognition({ activeNERService });
     const { resources, properties, values } = useSelector(state => state.statementBrowser);
 
     const isBioassayField = BIOASSAYS_FIELDS_LIST.includes(selectedResearchField);
@@ -136,7 +135,7 @@ const Contributions = () => {
                         createContribution({
                             selectAfterCreation: true,
                             fillStatements: true,
-                            researchField: extractedResearchFieldId || selectedResearchField,
+                            researchField: selectedResearchField,
                             statements: {
                                 properties: propertiesList[index],
                                 values: valuesList[index],
@@ -151,21 +150,11 @@ const Contributions = () => {
                 });
             })();
         }
-    }, [
-        contributions.allIds.length,
-        dispatch,
-        extractedResearchField,
-        extractedResearchFieldId,
-        properties,
-        propertyData,
-        resourceURI,
-        selectedResearchField,
-        values,
-    ]);
+    }, [contributions.allIds.length, dispatch, properties, propertyData, resourceURI, selectedResearchField, values]);
 
     const handleNextClick = async () => {
         if (activeNERService) {
-            // handleSaveFeedback();
+            handleSaveFeedback();
         }
         if (isBioassayField) {
             handleSaveBioassaysFeedback();
@@ -186,8 +175,6 @@ const Contributions = () => {
                 publishedIn,
                 url,
                 selectedResearchField,
-                extractedResearchField,
-                extractedResearchFieldId,
                 contributions,
                 resources,
                 properties,

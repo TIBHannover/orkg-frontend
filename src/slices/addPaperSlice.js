@@ -26,9 +26,6 @@ const initialState = {
     doi: '',
     publishedIn: '',
     researchFields: [],
-    extractedResearchField: '',
-    extractedResearchFieldId: '',
-    researchContributionURI: '',
     resourceURI: '',
     isTourOpen: false,
     showAbstractDialog: false,
@@ -39,6 +36,7 @@ const initialState = {
     entry: '',
     showLookupTable: false,
     selectedResearchField: '',
+    extractedResearchField: null,
     selectedContribution: '',
     paperNewResourceId: null,
     url: '',
@@ -404,7 +402,7 @@ export const saveAddPaperAction = data => async dispatch => {
             publicationYear: data.publicationYear,
             publishedIn: data.publishedIn ? data.publishedIn : undefined,
             url: data.url,
-            researchField: data.extractedResearchFieldId || data.selectedResearchField,
+            researchField: data.selectedResearchField,
             // Set the contributions data
             contributions: data.contributions.allIds.map(c => {
                 const contribution = data.contributions.byId[c];

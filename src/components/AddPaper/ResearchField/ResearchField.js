@@ -1,32 +1,49 @@
-import { nextStep, previousStep, updateResearchField } from 'slices/addPaperSlice';
 import ResearchFieldSelector from 'components/ResearchFieldSelector/ResearchFieldSelector';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
+import { nextStep, previousStep, updateResearchField } from 'slices/addPaperSlice';
 
 const ResearchField = () => {
     const [showError, setShowError] = useState(false);
     const selectedResearchField = useSelector(state => state.addPaper.selectedResearchField);
+    const extractedResearchField = useSelector(state => state.addPaper.extractedResearchField);
     const researchFields = useSelector(state => state.addPaper.researchFields);
-    const extractedResearchField = useSelector(state => state.addPaper.extractedResearchField || ' ');
-
+    const [selectedField, setSelectedField] = useState({});
     const dispatch = useDispatch();
 
+    // used in case in the previous step, a research field was provided as label
+    useEffect(() => {
+        if (extractedResearchField) {
+            setSelectedField({
+                id: extractedResearchField?.id,
+                label: extractedResearchField?.label,
+            });
+        }
+    }, [extractedResearchField, dispatch]);
+
+    useEffect(() => {
+        if (selectedResearchField) {
+            let researchFieldLabel;
+            if (researchFields && researchFields.length > 0) {
+                const field = researchFields.find(rf => rf.id === selectedResearchField);
+                researchFieldLabel = field ? field.label : selectedResearchField;
+            }
+            setSelectedField({
+                id: selectedResearchField,
+                label: researchFieldLabel,
+            });
+        }
+    }, [researchFields, selectedResearchField]);
+
     const handleNextClick = useCallback(() => {
-        if (!selectedResearchField) {
+        if (!selectedField.id) {
             setShowError(true);
             return;
         }
-        setShowError(false);
 
         dispatch(nextStep());
-    }, [dispatch, selectedResearchField]);
-
-    let researchFieldLabel;
-    if (researchFields && researchFields.length > 0) {
-        const field = researchFields.find(rf => rf.id === selectedResearchField);
-        researchFieldLabel = field ? field.label : selectedResearchField;
-    }
+    }, [dispatch, selectedField]);
 
     const handleUpdateResearchField = useCallback(
         (data, submit = false) => {
@@ -42,15 +59,14 @@ const ResearchField = () => {
 
             <div>
                 <ResearchFieldSelector
-                    selectedResearchField={selectedResearchField}
+                    selectedResearchField={researchFields.length !== 0 && selectedResearchField ? selectedResearchField : ''}
                     researchFields={researchFields}
-                    extractedResearchField={extractedResearchField}
                     updateResearchField={handleUpdateResearchField}
                 />
             </div>
-            {researchFieldLabel && selectedResearchField ? (
+            {selectedField.label ? (
                 <div className="mt-3 mb-3">
-                    Selected research field: <b>{researchFieldLabel || extractedResearchField}</b>
+                    Selected research field: <b>{selectedField.label}</b>
                 </div>
             ) : (
                 <p className={`text-danger mt-2 ps-2 ${!showError ? ' d-none' : ''}`} style={{ borderLeft: '4px red solid' }}>

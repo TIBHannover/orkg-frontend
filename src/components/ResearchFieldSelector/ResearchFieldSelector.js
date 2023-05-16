@@ -9,11 +9,8 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import { Badge, Button } from 'reactstrap';
-import { getResourcesByClass } from 'services/backend/resources';
 import { getParentResearchFields, getStatementsBySubjects } from 'services/backend/statements';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
-import { updateGeneralData } from 'slices/addPaperSlice';
 
 const FieldItem = styled(Button)`
     &&& {
@@ -62,16 +59,13 @@ const ResearchFieldSelector = ({
     selectedResearchField,
     researchFields,
     updateResearchField,
-    extractedResearchField,
     researchFieldStats,
     insideModal,
     showPreviouslySelected,
 }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [loadingId, setLoadingId] = useState(null);
-    const [inputValue, setInputValue] = useState('');
-    const dispatch = useDispatch();
-    let extractedResearchFieldId;
+
     const handleFieldSelect = (selected, submit = false) => {
         setIsLoading(true);
         getParentResearchFields(selected.id).then(async parents => {
@@ -85,16 +79,15 @@ const ResearchFieldSelector = ({
             updateResearchField(
                 {
                     researchFields: fields,
-                    selectedResearchField: selected?.id,
+                    selectedResearchField: selected.id,
+                    selectedResearchFieldLabel: selected.label,
                 },
                 submit,
             );
             setIsLoading(false);
         });
     };
-    function handleInputChange(event) {
-        setInputValue(event.target.value); // update input value on change
-    }
+
     const handleFieldClick = async (e, fieldId, shouldSetActive = true) => {
         // prevent triggering outer handler when the icon is pressed
         e.stopPropagation();
@@ -130,7 +123,7 @@ const ResearchFieldSelector = ({
                 );
             }
 
-            const fieldIndex = fields.findIndex(field => field?.id === id);
+            const fieldIndex = fields.findIndex(field => field.id === id);
             if (fieldIndex !== -1) {
                 fields[fieldIndex].hasChildren = hasChildren;
             }
@@ -141,7 +134,7 @@ const ResearchFieldSelector = ({
     const getChildFields = useCallback(
         async (fieldId, previousFields, toggleExpand = false) => {
             const fields = cloneDeep(previousFields);
-            const fieldIndex = fields.findIndex(field => field?.id === fieldId);
+            const fieldIndex = fields.findIndex(field => field.id === fieldId);
 
             if (fieldIndex !== -1) {
                 const field = fields[fieldIndex];
@@ -170,29 +163,17 @@ const ResearchFieldSelector = ({
                 let fields = await getFieldsByIds([RESOURCES.RESEARCH_FIELD_MAIN]);
                 fields = await getChildFields(RESOURCES.RESEARCH_FIELD_MAIN, fields);
 
-                const field = (await getResourcesByClass({ id: CLASSES.RESEARCH_FIELD, q: extractedResearchField, exact: true })).content.find(
-                    rf => rf.label === extractedResearchField,
-                );
-
-                dispatch(
-                    updateGeneralData({
-                        extractedResearchFieldId: field?.id,
-                    }),
-                );
                 updateResearchField({
                     researchFields: fields,
-                    extractedResearchFieldId: field?.id,
-                    selectedResearchField: field?.label,
                 });
                 setIsLoading(false);
             };
             initializeFields();
         }
-    }, [dispatch, extractedResearchField, getChildFields, getFieldsByIds, selectedResearchField, updateResearchField]);
+    }, [getChildFields, getFieldsByIds, selectedResearchField, updateResearchField]);
 
     const fieldList = selectedField => {
         const subFields = researchFields.filter(field => field.parent === selectedField);
-
         if (subFields.length === 0) {
             return null;
         }
@@ -247,7 +228,7 @@ const ResearchFieldSelector = ({
     let parents = [];
     if (researchFields && researchFields.length > 0) {
         const field = researchFields.find(rf => rf.id === selectedResearchField);
-        researchFieldLabel = field ? field?.label : selectedResearchField; // just changed id into label
+        researchFieldLabel = field ? field.label : selectedResearchField;
         parents = getParents(field, []);
     }
 
@@ -259,13 +240,7 @@ const ResearchFieldSelector = ({
                     optionsClass={CLASSES.RESEARCH_FIELD}
                     placeholder="Search for fields..."
                     onItemSelected={handleFieldSelect}
-                    inputValue={inputValue} // pass input value as a prop
-                    onInputChange={handleInputChange} // pass input change event handler as a prop to handle changes to the input field
-                    value={
-                        selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN
-                            ? { id: selectedResearchField, label: researchFieldLabel || selectedResearchField }
-                            : null
-                    }
+                    value={selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN ? { id: selectedResearchField, label: researchFieldLabel } : null}
                     allowCreate={false}
                     ols={false}
                     autoLoadOption={true}
@@ -321,7 +296,6 @@ const ResearchFieldSelector = ({
 
 ResearchFieldSelector.propTypes = {
     selectedResearchField: PropTypes.string,
-    extractedResearchField: PropTypes.string,
     researchFields: PropTypes.array,
     updateResearchField: PropTypes.func,
     researchFieldStats: PropTypes.object,

@@ -9,7 +9,8 @@ import processPdf from 'services/grobid';
 import { updateGeneralData } from 'slices/addPaperSlice';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/build/pdf';
-import { getResource } from 'services/backend/resources';
+import { getResource, getResourcesByClass } from 'services/backend/resources';
+import { CLASSES } from 'constants/graphSettings';
 
 const UploadPdf = () => {
     const { pdfName } = useSelector(state => state.addPaper);
@@ -22,14 +23,14 @@ const UploadPdf = () => {
             GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
             const reader = new FileReader();
-            let extractedResearchField;
             let researchField;
             let authors;
             let title;
             let properties;
             let propertyData;
+            let extractedResearchField;
             const collectProperties = [];
-            const resourceURI = [];
+            let resourceURI = [];
 
             reader.onload = async () => {
                 const data = new Uint8Array(reader?.result);
@@ -40,34 +41,37 @@ const UploadPdf = () => {
                 if (metadata?.metadata?._data) {
                     const processedPdf = new window.DOMParser().parseFromString(metadata.metadata._data, 'text/xml');
                     // you might want to replace 'querySelector' with 'querySelectorAll' to get all the values if there are multiple annotations of the same type
-                    extractedResearchField = processedPdf.querySelector('hasResearchField label')?.textContent;
                     researchField = processedPdf.querySelector('hasResearchField')?.textContent;
+                    const field = (await getResourcesByClass({ id: CLASSES.RESEARCH_FIELD, q: researchField, exact: true })).content.find(
+                        rf => rf.label === researchField,
+                    );
+                    extractedResearchField = field
+                        ? {
+                              id: field.id,
+                              label: field.label,
+                          }
+                        : {};
 
                     title = processedPdf.querySelector('hasTitle')?.textContent;
                     authors = [...processedPdf.querySelectorAll('hasAuthor')].map(auth => auth.textContent);
-                    [...processedPdf.querySelectorAll('ResearchContribution Description')].forEach(description => {
-                        resourceURI.push(description.getAttribute('rdf:about'));
-                    });
-                    const res = [];
+                    resourceURI = [...processedPdf.querySelectorAll('ResearchContribution Description')].map(description =>
+                        description.getAttribute('rdf:about'),
+                    );
 
-                    resourceURI?.forEach((a, i) => {
-                        res.push(getResource(resourceURI[i].split('/').pop()));
-                    });
+                    const resourcePromises = resourceURI.map(resource => getResource(resource.split('/').pop()));
+                    const apiResourceCalls = await Promise.all(resourcePromises);
 
-                    const apiResourceCalls = await Promise.all(res);
-
-                    [...processedPdf.querySelectorAll('ResearchContribution')].map(contribution => {
+                    for (const contribution of processedPdf.querySelectorAll('ResearchContribution')) {
                         properties = contribution.querySelectorAll(':scope > *');
 
                         propertyData = [...properties]?.map((property, index) => {
                             const textContent = property?.textContent;
-
                             const uri = [];
 
                             property.querySelectorAll('Description').forEach(description => {
                                 uri.push(description.getAttribute('rdf:about'));
                             });
-                            const urlId = uri.map((u, i) => u.split('/').pop());
+                            const urlId = uri.map(u => u.split('/').pop());
                             const label = apiResourceCalls.filter(a => a.id === urlId[0])?.[0]?.label ?? '';
                             return {
                                 localName: property.localName,
@@ -79,8 +83,7 @@ const UploadPdf = () => {
                         });
 
                         collectProperties.push({ contribution: [...propertyData] });
-                        return true;
-                    });
+                    }
                 }
             };
 
@@ -102,12 +105,12 @@ const UploadPdf = () => {
                     pdfName: files?.[0]?.name,
                     propertyData: collectProperties,
                     showLookupTable: true,
+                    extractedResearchField,
                     title: title || titleGrobid,
                     authors: authorsGrobid || authors,
                     doi,
                     entry: doi,
                     abstract,
-                    extractedResearchField: extractedResearchField || researchField,
                     resourceURI,
                 }),
             );
