@@ -147,7 +147,7 @@ const ValueItem = props => {
                                     {value._class === ENTITIES.LITERAL && (
                                         <div className="literalLabel">
                                             <ValuePlugins type={ENTITIES.LITERAL}>
-                                                {value.label !== '' || value.label !== undefined ? value?.label?.toString() : <i>No label</i>}
+                                                {value.label !== '' ? value.label.toString() : <i>No label</i>}
                                             </ValuePlugins>
                                         </div>
                                     )}
