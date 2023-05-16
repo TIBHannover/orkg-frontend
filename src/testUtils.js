@@ -1,11 +1,13 @@
 import { render as rtlRender } from '@testing-library/react';
-import { HistoryRouter as Router } from 'redux-first-history/rr6';
-import { Provider } from 'react-redux';
-import configureStore from 'store';
 import theme from 'assets/scss/ThemeVariables';
-import { ThemeProvider } from 'styled-components';
-import { ToastContainer } from 'react-toastify';
+import { MathJaxContext } from 'better-react-mathjax';
+import MATH_JAX_CONFIG from 'constants/mathJax';
 import PropTypes from 'prop-types';
+import { Provider } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
+import { HistoryRouter as Router } from 'redux-first-history/rr6';
+import configureStore from 'store';
+import { ThemeProvider } from 'styled-components';
 
 const Wrapper = ({ children, initialState = {}, store = configureStore(initialState) }) => {
     const { store: _store, history } = store;
@@ -13,10 +15,12 @@ const Wrapper = ({ children, initialState = {}, store = configureStore(initialSt
     return (
         <Provider store={_store}>
             <ThemeProvider theme={theme}>
-                <Router history={history} noInitialPop>
-                    {children}
-                </Router>
-                <ToastContainer position="top-right" autoClose={5000} hideProgressBar className="toast-container" icon={false} theme="colored" />
+                <MathJaxContext config={MATH_JAX_CONFIG}>
+                    <Router history={history} noInitialPop>
+                        {children}
+                    </Router>
+                    <ToastContainer position="top-right" autoClose={5000} hideProgressBar className="toast-container" icon={false} theme="colored" />
+                </MathJaxContext>
             </ThemeProvider>
         </Provider>
     );
