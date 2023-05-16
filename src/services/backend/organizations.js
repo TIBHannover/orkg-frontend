@@ -1,7 +1,7 @@
-import { url } from 'constants/misc';
-import { submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
+import { url as backendURL } from 'constants/misc';
+import { submitGetRequest, submitPostRequest, submitPutRequest, submitPatchRequest } from 'network';
 
-export const organizationsUrl = `${url}organizations/`;
+export const organizationsUrl = `${backendURL}organizations/`;
 
 export const getAllOrganizations = () => submitGetRequest(`${organizationsUrl}`);
 
@@ -14,14 +14,23 @@ export const createOrganization = (organization_name, organization_logo, created
         { organization_name, organization_logo, created_by, url, display_id, type },
     );
 
-export const updateOrganizationName = (id, value) =>
-    submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/name`, { 'Content-Type': 'application/json' }, { value });
-
-export const updateOrganizationUrl = (id, value) =>
-    submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/url`, { 'Content-Type': 'application/json' }, { value });
-
-export const updateOrganizationLogo = (id, value) =>
-    submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/logo`, { 'Content-Type': 'application/json' }, { value });
+export const updateOrganization = (id, { name, url, type, logo }) => {
+    const formData = new FormData();
+    if (logo) formData.append('logo', logo);
+    if (name || url || type) {
+        const _properties = {};
+        if (name) _properties.name = name;
+        if (url) _properties.url = url;
+        if (type) _properties.type = type;
+        formData.append(
+            'properties',
+            new Blob([JSON.stringify(_properties)], {
+                type: 'application/json',
+            }),
+        );
+    }
+    return submitPatchRequest(`${organizationsUrl}${encodeURIComponent(id)}`, {}, formData, false);
+};
 
 export const updateOrganizationType = (id, value) =>
     submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/type`, { 'Content-Type': 'application/json' }, { value });
