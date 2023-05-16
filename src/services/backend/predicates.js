@@ -23,7 +23,7 @@ export const getPredicates = ({
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
-        { page, size, sort, exact, ...(q ? { q } : {}) },
+        { page, size, exact, ...(q ? { q } : { sort }) },
         {
             skipNulls: true,
         },
