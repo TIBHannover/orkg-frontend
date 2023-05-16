@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { getPropertyObjectFromData } from 'components/Comparison/hooks/helpers';
 import REVIEW_QUESTIONS from 'components/Comparison/QualityReportModal/reviewQuestions';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
@@ -204,7 +203,6 @@ const useQualityReport = () => {
                         };
                     },
                 },
-
                 {
                     title: 'Other researchers provided reviews',
                     info: 'Other researcher can help evaluating the correctness and completeness of a comparison. Therefore, it makes sense to share the created comparison and ask other researchers for their opinions.',

@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import { useState, useRef, useEffect } from 'react';
 import { InputGroup, FormFeedback } from 'reactstrap';
 import { toggleEditValue } from 'slices/statementBrowserSlice';
@@ -138,7 +137,6 @@ const ValueForm = props => {
                     valueType={inputDataType}
                     setValueType={setInputDataType}
                 />
-
                 {!editMode && inputFormType === 'autocomplete' ? (
                     <AutoComplete
                         entityType={entityType}

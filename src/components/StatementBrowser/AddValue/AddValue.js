@@ -1,7 +1,6 @@
-/* eslint-disable no-nested-ternary */
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { ENTITIES } from 'constants/graphSettings';
+import { useSelector } from 'react-redux';
 import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
 import { ValueItemStyle } from 'components/StatementBrowser/styled';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
@@ -35,7 +34,6 @@ const AddValue = props => {
                     enableEdit={true}
                 />
             )}
-
             <ValueItemStyle className={showAddValue ? 'editingLabel' : ''}>
                 {!showAddValue ? (
                     !templateIsLoading && !isAddingValue ? ( // Show loading indicator if the template is still loading

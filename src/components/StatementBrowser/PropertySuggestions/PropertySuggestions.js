@@ -52,7 +52,6 @@ const PropertySuggestions = () => {
                             timeout={{ enter: 600, exit: 600 }}
                         >
                             <ListGroupItem
-                                style={{ cursor: 'pointer' }}
                                 action
                                 onClick={() => {
                                     dispatch(
@@ -66,6 +65,7 @@ const PropertySuggestions = () => {
                                     );
                                 }}
                                 className="py-2 px-3"
+                                style={{ cursor: 'pointer' }}
                             >
                                 <DescriptionTooltip id={c.property.id} _class={ENTITIES.PREDICATE}>
                                     <div className="d-flex">

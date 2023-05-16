@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import { forwardRef } from 'react';
 import { toggleEditPropertyLabel } from 'slices/statementBrowserSlice';
 import { faPen, faTrash, faCheck, faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -174,7 +173,6 @@ const StatementItem = forwardRef((props, ref) => {
                                 <small>No values</small>
                             </div>
                         )}
-
                         {props.enableEdit && (
                             <AddValue isDisabled={!canAddValue} propertyId={props.id} resourceId={props.resourceId} syncBackend={props.syncBackend} />
                         )}

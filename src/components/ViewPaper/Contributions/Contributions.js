@@ -66,6 +66,7 @@ const Contributions = props => {
                             </ContentLoader>
                         </div>
                     )}
+
                     <Tabs
                         tabBarExtraContent={
                             props.enableEdit ? (
