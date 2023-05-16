@@ -1,24 +1,22 @@
 import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { renderToString } from 'react-dom/server';
-import MathJax from 'react-mathjax-preview';
+import { MathJax as MathJaxPreview } from 'better-react-mathjax';
 import ReactStringReplace from 'react-string-replace';
 import styled from 'styled-components';
 
-const StyledMathJax = styled(MathJax)`
-    display: inline;
+const StyledMathJax = styled(MathJaxPreview)`
     & div {
         display: inline;
     }
 
-    & .MathJax_Display {
+    & .MathJax {
         display: inline !important;
     }
 `;
 
-const AsciiMath = props => {
-    // eslint-disable-next-line no-useless-escape
-    const expression = /(\`.*\`)/g;
+const MathJax = props => {
+    const expression = /(\${2}.*\${2})/gm;
     const supportedValues = new RegExp(expression);
     const label = props.children;
     const labelToText = renderToString(label);
@@ -29,27 +27,17 @@ const AsciiMath = props => {
 
     if (props.type === ENTITIES.LITERAL && labelToText.match(supportedValues)) {
         return ReactStringReplace(labelToText, supportedValues, (match, i) => (
-            <StyledMathJax
-                key={i}
-                config={{
-                    jax: ['input/AsciiMath', 'output/CommonHTML'],
-                    showMathMenu: false,
-                    SVG: {
-                        useFontCache: false,
-                        useGlobalCache: false,
-                    },
-                    skipStartupTypeset: true,
-                }}
-                math={match}
-            />
+            <StyledMathJax key={i} inline>
+                {match}
+            </StyledMathJax>
         ));
     }
     return label;
 };
 
-AsciiMath.propTypes = {
+MathJax.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
     type: PropTypes.oneOf([ENTITIES.RESOURCE, ENTITIES.LITERAL]),
 };
 
-export default AsciiMath;
+export default MathJax;
