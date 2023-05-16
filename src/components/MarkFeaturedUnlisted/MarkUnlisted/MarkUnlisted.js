@@ -24,8 +24,19 @@ const MarkUnlisted = ({ unlisted, size, handleChangeStatus }) => {
 
     return (
         <Tippy
+            interactive={true}
             content={
-                isCurationAllowed ? buttonTooltip : 'This resource has been unlisted by a curator as it does not meet the orkg quality standards'
+                isCurationAllowed ? (
+                    buttonTooltip
+                ) : (
+                    <>
+                        This resource has been automatically unlisted by the system or by a curator as it does not meet the orkg quality standards.{' '}
+                        <a href="https://orkg.org/help-center/article/49/Why_were_my_papers_unlisted" rel="noreferrer" target="_blank">
+                            Learn more in the help center
+                        </a>
+                        .
+                    </>
+                )
             }
         >
             <span
