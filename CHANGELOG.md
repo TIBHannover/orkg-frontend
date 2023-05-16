@@ -3,6 +3,24 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.106.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.105.0...v0.106.0) - 2023-05-16
+
+### Changes
+
+- ux:added links for add reviews and add lists in ContentTypeNew [`#1109`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1109)
+- fix(Template): Show error if a template doesn't exist [`#1113`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1113)
+- chore: Remove sort order parameter for search queries [`#1090`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1090)
+- fix(Comparison): Slow processing time when there are multiple MathJax instances [`#1099`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1099)
+- docs: Provide more information for unlisted badge for authored resources for non-curators [`#1100`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1100)
+- feat(StatementBrowser): Indicate and link the used templates in the selected resource [`#1101`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1101)
+- chore: Migrate to new organization update endpoint [`#1102`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1102)
+- fix(Comparison): description doesn't render clickable urls [`#1106`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1106)
+- fix(StatementBrowser): Add property is activated in the template box even if it's strict [`#1111`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1111)
+- feat(Benchmark): dropdown for Datasets on a particular Research Problem [`#1110`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1110)
+- fix(Visualization): Missing axis labels on view mode [`#1107`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1107)
+- fix(StatementBrowser): Breadcrumbs navigation for resources in comparisons [`#1108`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1108)
+
+---
 ## [v0.105.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.104.1...v0.105.0) - 2023-05-10
 
 ### Changes
