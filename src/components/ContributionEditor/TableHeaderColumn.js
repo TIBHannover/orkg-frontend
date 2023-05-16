@@ -1,22 +1,25 @@
+import env from '@beam-australia/react-env';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { paperUpdated, contributionUpdated, fetchTemplatesOfClassIfNeeded } from 'slices/contributionEditorSlice';
+import { Contribution, ContributionButton, Delete, ItemHeader, ItemHeaderInner } from 'components/Comparison/styled';
 import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
-import { Contribution, Delete, ItemHeader, ItemHeaderInner, ContributionButton } from 'components/Comparison/styled';
-import EditPaperDialog from 'components/ViewPaper/EditDialog/EditPaperDialog';
 import EditResourceDialog from 'components/EditResourceDialog/EditResourceDialog';
+import useUsedTemplates from 'components/StatementBrowser/TemplatesModal/hooks/useUsedTemplates';
+import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
+import EditPaperDialog from 'components/ViewPaper/EditDialog/EditPaperDialog';
 import useEditPaper from 'components/ViewPaper/EditDialog/hooks/useEditPaper';
-import PropTypes from 'prop-types';
-import ROUTES from 'constants/routes.js';
-import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
-import env from '@beam-australia/react-env';
-import { toast } from 'react-toastify';
-import { memo, useState, Fragment } from 'react';
-import { useDispatch } from 'react-redux';
-import { Button } from 'reactstrap';
 import { CLASSES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
+import pluralize from 'pluralize';
+import PropTypes from 'prop-types';
+import { Fragment, memo, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Button } from 'reactstrap';
+import { contributionUpdated, fetchTemplatesOfClassIfNeeded, paperUpdated } from 'slices/contributionEditorSlice';
 
 const TableHeaderColumn = ({ contribution, paper }) => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -25,6 +28,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
     const { handleRemoveContribution } = useContributionEditor();
     const { loadPaperData } = useEditPaper();
     const dispatch = useDispatch();
+    const { usedTemplates, isLoadingUsedTemplates } = useUsedTemplates({ resourceObject: contribution });
 
     const handleEditPaper = async () => {
         setIsOpenEditModal(true);
@@ -87,6 +91,28 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                                         </Fragment>
                                     ))}
                                     {contribution.classes?.length === 0 && <i className="text-secondary">No classes</i>}
+                                    <br />
+                                    Applied {pluralize('template', usedTemplates?.length ?? 0, false)}:{' '}
+                                    {!isLoadingUsedTemplates && (
+                                        <>
+                                            {usedTemplates?.map((t, index) => (
+                                                <Fragment key={t.id}>
+                                                    <TemplateTooltip id={t.id}>
+                                                        <Link target="_blank" to={reverse(ROUTES.TEMPLATE, { id: t.id })}>
+                                                            {t.label}
+                                                        </Link>
+                                                    </TemplateTooltip>
+                                                    {index + 1 !== usedTemplates.length && ', '}
+                                                </Fragment>
+                                            ))}
+                                            {usedTemplates?.length === 0 && <i>No templates applied</i>}
+                                        </>
+                                    )}
+                                    {isLoadingUsedTemplates && (
+                                        <div style={{ padding: '3.5px 0' }}>
+                                            <i>Loading ...</i>
+                                        </div>
+                                    )}
                                 </>
                             }
                         >

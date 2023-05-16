@@ -4,10 +4,10 @@ import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { useDeepCompareEffect } from 'react-use';
 
-const useUsedTemplates = ({ resourceId }) => {
+const useUsedTemplates = ({ resourceId = null, resourceObject = null }) => {
     const [usedTemplates, setUsedTemplates] = useState([]);
     const [isLoadingUsedTemplates, setIsLoadingUsedTemplates] = useState(false);
-    const resource = useSelector(state => resourceId && state.statementBrowser.resources.byId[resourceId]);
+    const resource = useSelector(state => (resourceId && state.statementBrowser.resources.byId[resourceId]) || resourceObject);
     const pageSize = 25;
 
     /**

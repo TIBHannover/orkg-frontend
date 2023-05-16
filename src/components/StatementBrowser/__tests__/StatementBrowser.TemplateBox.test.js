@@ -33,7 +33,7 @@ describe('StatementBrowser with Template Box', () => {
         expect(screen.queryAllByText(/Climate sensitivity/i)).toHaveLength(2);
         expect(screen.queryAllByText(/Data used/i)).toHaveLength(2);
         expect(screen.queryAllByText(/Has evaluation/i)).toHaveLength(2);
-        expect(screen.queryAllByText(/Template/i)).toHaveLength(3);
+        expect(screen.queryAllByText(/Template/i)).toHaveLength(5);
         expect(screen.getByText(/Has research problem/i)).toBeInTheDocument();
     });
 });
