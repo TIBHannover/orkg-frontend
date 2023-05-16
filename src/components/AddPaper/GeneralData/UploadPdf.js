@@ -23,34 +23,36 @@ const UploadPdf = () => {
             GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
             const reader = new FileReader();
-            let researchField;
-            let authors;
-            let title;
-            let properties;
-            let propertyData;
-            let extractedResearchField;
-            const collectProperties = [];
-            let resourceURI = [];
 
             reader.onload = async () => {
+                let researchField;
+                let authors;
+                let title;
+                let extractedResearchField;
+                const collectProperties = [];
+                let resourceURI = [];
                 const data = new Uint8Array(reader?.result);
                 const loadingTask = getDocument({ data });
                 const pdf = await loadingTask.promise;
-                const metadata = await pdf.getMetadata();
+                const metadata = await (await pdf?.getMetadata())?.metadata?.getRaw();
 
-                if (metadata?.metadata?._data) {
-                    const processedPdf = new window.DOMParser().parseFromString(metadata.metadata._data, 'text/xml');
+                if (metadata) {
+                    const processedPdf = new window.DOMParser().parseFromString(metadata, 'text/xml');
                     // you might want to replace 'querySelector' with 'querySelectorAll' to get all the values if there are multiple annotations of the same type
                     researchField = processedPdf.querySelector('hasResearchField')?.textContent;
-                    const field = (await getResourcesByClass({ id: CLASSES.RESEARCH_FIELD, q: researchField, exact: true })).content.find(
-                        rf => rf.label === researchField,
-                    );
-                    extractedResearchField = field
-                        ? {
-                              id: field.id,
-                              label: field.label,
-                          }
-                        : {};
+                    try {
+                        const field = (await getResourcesByClass({ id: CLASSES.RESEARCH_FIELD, q: researchField, exact: true })).content.find(
+                            rf => rf.label === researchField,
+                        );
+                        extractedResearchField = field
+                            ? {
+                                  id: field.id,
+                                  label: field.label,
+                              }
+                            : {};
+                    } catch (e) {
+                        console.log(e);
+                    }
 
                     title = processedPdf.querySelector('hasTitle')?.textContent;
                     authors = [...processedPdf.querySelectorAll('hasAuthor')].map(auth => auth.textContent);
@@ -62,9 +64,8 @@ const UploadPdf = () => {
                     const apiResourceCalls = await Promise.all(resourcePromises);
 
                     for (const contribution of processedPdf.querySelectorAll('ResearchContribution')) {
-                        properties = contribution.querySelectorAll(':scope > *');
-
-                        propertyData = [...properties]?.map((property, index) => {
+                        const properties = contribution.querySelectorAll(':scope > *');
+                        const propertyData = [...properties]?.map((property, index) => {
                             const textContent = property?.textContent;
                             const uri = [];
 
@@ -82,39 +83,39 @@ const UploadPdf = () => {
                             };
                         });
 
-                        collectProperties.push({ contribution: [...propertyData] });
+                        collectProperties.push({ contribution: propertyData });
                     }
                 }
+
+                // metadata extraction via Grobid
+                const processedPdf = await new window.DOMParser().parseFromString(await processPdf({ pdf: files[0] }), 'text/xml');
+
+                const titleGrobid = processedPdf.querySelector('fileDesc titleStmt title')?.textContent;
+                const authorsGrobid = [...processedPdf.querySelectorAll('fileDesc biblStruct author')].map(author => ({
+                    label: [...author.querySelectorAll('forename, surname')].map(name => name?.textContent).join(' '),
+                    orcid: author.querySelector('idno[type="ORCID"]')?.textContent ?? undefined,
+                }));
+                const doi = processedPdf.querySelector('fileDesc biblStruct idno[type="DOI"]')?.textContent ?? '';
+                const abstract = processedPdf.querySelector('profileDesc abstract')?.textContent.trim();
+
+                dispatch(
+                    updateGeneralData({
+                        pdfName: files?.[0]?.name,
+                        propertyData: collectProperties,
+                        showLookupTable: true,
+                        extractedResearchField,
+                        title: title || titleGrobid,
+                        authors: authorsGrobid || authors,
+                        doi,
+                        entry: doi,
+                        abstract,
+                        resourceURI,
+                    }),
+                );
+                toast.success('PDF parsed successfully');
             };
 
             reader.readAsArrayBuffer(files[0]);
-
-            // metadata extraction via Grobid
-            const processedPdf = await new window.DOMParser().parseFromString(await processPdf({ pdf: files[0] }), 'text/xml');
-
-            const titleGrobid = processedPdf.querySelector('fileDesc titleStmt title')?.textContent;
-            const authorsGrobid = [...processedPdf.querySelectorAll('fileDesc biblStruct author')].map(author => ({
-                label: [...author.querySelectorAll('forename, surname')].map(name => name?.textContent).join(' '),
-                orcid: author.querySelector('idno[type="ORCID"]')?.textContent ?? undefined,
-            }));
-            const doi = processedPdf.querySelector('fileDesc biblStruct idno[type="DOI"]')?.textContent ?? '';
-            const abstract = processedPdf.querySelector('profileDesc abstract')?.textContent.trim();
-
-            dispatch(
-                updateGeneralData({
-                    pdfName: files?.[0]?.name,
-                    propertyData: collectProperties,
-                    showLookupTable: true,
-                    extractedResearchField,
-                    title: title || titleGrobid,
-                    authors: authorsGrobid || authors,
-                    doi,
-                    entry: doi,
-                    abstract,
-                    resourceURI,
-                }),
-            );
-            toast.success('PDF parsed successfully');
         } catch (e) {
             toast.error('Something went wrong while parsing the PDF', e);
         }
