@@ -51,6 +51,7 @@ const Contributions = () => {
         abstract,
         resourceURI,
         propertyData,
+        extractedResearchField,
     } = useSelector(state => state.addPaper);
 
     const [isOpenAbstractModal, setIsOpenAbstractModal] = useState(false);
@@ -174,7 +175,7 @@ const Contributions = () => {
                 doi,
                 publishedIn,
                 url,
-                selectedResearchField,
+                selectedResearchField: selectedResearchField || extractedResearchField?.id,
                 contributions,
                 resources,
                 properties,
