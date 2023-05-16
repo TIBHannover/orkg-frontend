@@ -11,6 +11,7 @@ import { createAnnotation, setIsLoadedPdfViewer } from 'slices/pdfTextAnnotation
 import Highlight from 'components/PdfTextAnnotation/Highlight';
 import useDeleteAnnotation from 'components/PdfTextAnnotation/hooks/useDeleteAnnotation';
 import DragUpload from 'components/PdfTextAnnotation/DragUpload';
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 
 const Wrapper = styled.div`
     margin-top: -30px;
@@ -105,7 +106,7 @@ const PdfTextAnnotation = () => {
 
             <Main>
                 {pdf ? (
-                    <PdfLoader url={pdf} beforeLoad={<Icon icon={faSpinner} />}>
+                    <PdfLoader url={pdf} beforeLoad={<Icon icon={faSpinner} />} workerSrc={pdfjsWorker}>
                         {pdfDocument => (
                             <PdfHighlighter
                                 pdfDocument={pdfDocument}

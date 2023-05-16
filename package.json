@@ -46,7 +46,7 @@
         "node-html-parser": "^6.1.3",
         "olap-cube": "^1.0.0",
         "path-to-regexp": "^6.2.1",
-        "pdfjs-dist": "^2.11.338",
+        "pdfjs-dist": "2.11.338",
         "pluralize": "^8.0.0",
         "prop-types": "^15.8.1",
         "qs": "^6.11.1",
