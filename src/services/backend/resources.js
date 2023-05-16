@@ -36,10 +36,8 @@ export const getResources = ({
         {
             page,
             size,
-            sort,
-            desc,
             exact,
-            ...(q ? { q } : {}),
+            ...(q ? { q } : { sort, desc }),
             ...(exclude ? { exclude } : {}),
         },
         {
@@ -113,7 +111,7 @@ export const getResourcesByClass = async ({
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
-        { page, size, sort, desc, creator, exact, ...(q ? { q } : {}), verified, featured, unlisted },
+        { page, size, creator, exact, ...(q ? { q } : { sort, desc }), verified, featured, unlisted },
         {
             skipNulls: true,
         },

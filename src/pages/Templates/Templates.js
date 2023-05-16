@@ -74,8 +74,6 @@ const Templates = () => {
                 page,
                 q: label,
                 items: pageSize,
-                sortBy: 'created_at',
-                desc: true,
             });
         }
 

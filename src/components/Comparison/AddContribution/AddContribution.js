@@ -99,8 +99,6 @@ export default function AddContribution(props) {
             getResourcesByClass({
                 page: page || currentPage,
                 items: numberOfPaper,
-                sortBy: 'id',
-                desc: true,
                 q: searchQuery,
                 id: CLASSES.PAPER,
                 returnContent: true,
