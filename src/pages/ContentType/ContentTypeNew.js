@@ -25,7 +25,7 @@ const TYPES = [
         icon: faComments,
     },
     {
-        id: CLASSES.LIST_NEW,
+        id: CLASSES.LITERATURE_LIST,
         label: 'List',
         icon: faBars,
     },
@@ -99,23 +99,23 @@ const ContentTypeNew = () => {
                 {selectedClassId === CLASSES.SMART_REVIEW && (
                     <>
                         <Alert color="info" fade={false}>
-                            The add review wizard guides you through the steps to add a review
+                            Visit the add review page to create a new ORKG Review
                         </Alert>
                         <p>
                             <Link to={reverse(ROUTES.REVIEW_NEW)}>
-                                <Button color="light">Add Reviews</Button>
+                                <Button color="light">Add review</Button>
                             </Link>
                         </p>
                     </>
                 )}
-                {selectedClassId === CLASSES.LIST_NEW && (
+                {selectedClassId === CLASSES.LITERATURE_LIST && (
                     <>
                         <Alert color="info" fade={false}>
-                            The add list wizard guide syou through the steps to add a list
+                            Visit the add list page to create a new ORKG List
                         </Alert>
                         <p>
                             <Link to={reverse(ROUTES.LIST_NEW)}>
-                                <Button color="light">Add Lists</Button>
+                                <Button color="light">Add list</Button>
                             </Link>
                         </p>
                     </>
