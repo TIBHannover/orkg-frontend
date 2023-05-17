@@ -17,7 +17,6 @@ import {
 } from 'slices/statementBrowserSlice';
 
 const initialState = {
-    propertyData: {},
     title: '',
     authors: [],
     abstract: '',
@@ -26,7 +25,6 @@ const initialState = {
     doi: '',
     publishedIn: '',
     researchFields: [],
-    resourceURI: '',
     isTourOpen: false,
     showAbstractDialog: false,
     abstractDialogView: 'annotator', // annotator | input | list
@@ -37,6 +35,7 @@ const initialState = {
     showLookupTable: false,
     selectedResearchField: '',
     extractedResearchField: null,
+    extractedContributionData: [],
     selectedContribution: '',
     paperNewResourceId: null,
     url: '',

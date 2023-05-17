@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import DragUploadPdf from 'components/DragUploadPdf/DragUploadPdf';
@@ -11,6 +10,7 @@ import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/build/pdf';
 import { getResource, getResourcesByClass } from 'services/backend/resources';
 import { CLASSES } from 'constants/graphSettings';
+import convertExtractData2ContributionsStatements from './helpers';
 
 const UploadPdf = () => {
     const { pdfName } = useSelector(state => state.addPaper);
@@ -29,7 +29,8 @@ const UploadPdf = () => {
                 let authors;
                 let title;
                 let extractedResearchField;
-                const collectProperties = [];
+                let extractedContributionData;
+                const collectedContribution = [];
                 let resourceURI = [];
                 const data = new Uint8Array(reader?.result);
                 const loadingTask = getDocument({ data });
@@ -49,7 +50,7 @@ const UploadPdf = () => {
                                   id: field.id,
                                   label: field.label,
                               }
-                            : {};
+                            : null;
                     } catch (e) {
                         console.log(e);
                     }
@@ -83,8 +84,9 @@ const UploadPdf = () => {
                             };
                         });
 
-                        collectProperties.push({ contribution: propertyData });
+                        collectedContribution.push({ data: propertyData });
                     }
+                    extractedContributionData = await convertExtractData2ContributionsStatements(collectedContribution);
                 }
 
                 // metadata extraction via Grobid
@@ -101,7 +103,7 @@ const UploadPdf = () => {
                 dispatch(
                     updateGeneralData({
                         pdfName: files?.[0]?.name,
-                        propertyData: collectProperties,
+                        extractedContributionData,
                         showLookupTable: true,
                         extractedResearchField,
                         title: title || titleGrobid,
@@ -109,7 +111,6 @@ const UploadPdf = () => {
                         doi,
                         entry: doi,
                         abstract,
-                        resourceURI,
                     }),
                 );
                 toast.success('PDF parsed successfully');
@@ -125,6 +126,13 @@ const UploadPdf = () => {
         dispatch(
             updateGeneralData({
                 pdfName: null,
+                extractedContributionData: [],
+                showLookupTable: false,
+                extractedResearchField: null,
+                title: '',
+                authors: [],
+                doi: '',
+                abstract: '',
             }),
         );
 

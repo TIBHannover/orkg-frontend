@@ -14,13 +14,11 @@ import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tabs from 'components/Tabs/Tabs';
 import Tooltip from 'components/Utils/Tooltip';
-import { ENTITIES } from 'constants/graphSettings';
 import { BIOASSAYS_FIELDS_LIST } from 'constants/nlpFieldLists';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Row, UncontrolledAlert } from 'reactstrap';
 import { determineActiveNERService } from 'services/orkgNlp/index';
-import { getPredicates } from 'services/backend/predicates';
 import {
     createContributionAction as createContribution,
     deleteContributionAction as deleteContribution,
@@ -49,9 +47,8 @@ const Contributions = () => {
         contributions,
         selectedContribution,
         abstract,
-        resourceURI,
-        propertyData,
         extractedResearchField,
+        extractedContributionData,
     } = useSelector(state => state.addPaper);
 
     const [isOpenAbstractModal, setIsOpenAbstractModal] = useState(false);
@@ -71,14 +68,14 @@ const Contributions = () => {
     useEffect(() => {
         (async () => setActiveNERService(await determineActiveNERService(selectedResearchField)))();
     }, [selectedResearchField]);
+
     useEffect(() => {
         // if there is no contribution yet, create the first one
-        if (contributions.allIds.length === 0 && resourceURI?.length === 0) {
+        if (contributions.allIds.length === 0 && extractedContributionData?.length === 0) {
             dispatch(
                 createContribution({
                     selectAfterCreation: true,
                     prefillStatements: true,
-                    researchField: selectedResearchField,
                 }),
             );
             dispatch(
@@ -87,71 +84,24 @@ const Contributions = () => {
                 }),
             );
         }
-        if (contributions.allIds.length === 0 && resourceURI?.length > 0) {
-            const propertiesList = [];
-            const valuesList = [];
-
-            (async () => {
-                await Promise.all(
-                    propertyData?.map(async (cont, outerIndex) => {
-                        const pred = [];
-
-                        cont?.contribution?.forEach((a, i) => {
-                            pred.push(
-                                getPredicates({
-                                    q: cont.contribution[i]?.localName.includes('_')
-                                        ? cont.contribution[i].localName.replace(/_/g, ' ')
-                                        : cont.contribution[i].localName,
-
-                                    items: 1,
-                                }),
-                            );
-                        });
-
-                        const apiCalls = await Promise.all(pred);
-
-                        propertiesList.push(
-                            cont?.contribution?.map((p, i) => ({
-                                existingPredicateId: apiCalls[i]?.content[0]?.id,
-                                propertyId: `${apiCalls[i]?.content[0]?.id}_${i}_${outerIndex}`,
-                                label: p?.localName.replace(/_/g, ' '),
-                            })),
-                        );
-                        valuesList.push(
-                            cont?.contribution?.map((v, i) => ({
-                                label: v?.label || v?.textContent,
-                                isExistingValue: v?.resourceURI[0] != null,
-                                propertyId: `${apiCalls[i].content[0]?.id}_${i}_${outerIndex}`,
-                                existingResourceId: v?.resourceURI[0] != null ? v?.resourceURI[0].split('/').pop() : null,
-                                _class: v?.resourceURI[0] ? ENTITIES.RESOURCE : ENTITIES.LITERAL,
-                            })),
-                        );
-
-                        return apiCalls;
+        if (contributions.allIds.length === 0 && extractedContributionData?.length > 0) {
+            extractedContributionData?.map(c => {
+                dispatch(
+                    createContribution({
+                        selectAfterCreation: true,
+                        fillStatements: true,
+                        statements: c.statements,
                     }),
                 );
-                // eslint-disable-next-line array-callback-return
-                resourceURI?.map((c, index) => {
-                    dispatch(
-                        createContribution({
-                            selectAfterCreation: true,
-                            fillStatements: true,
-                            researchField: selectedResearchField,
-                            statements: {
-                                properties: propertiesList[index],
-                                values: valuesList[index],
-                            },
-                        }),
-                    );
-                    dispatch(
-                        updateSettings({
-                            openExistingResourcesInDialog: true,
-                        }),
-                    );
-                });
-            })();
+                dispatch(
+                    updateSettings({
+                        openExistingResourcesInDialog: true,
+                    }),
+                );
+                return null;
+            });
         }
-    }, [contributions.allIds.length, dispatch, properties, propertyData, resourceURI, selectedResearchField, values]);
+    }, [contributions.allIds.length, dispatch, extractedContributionData]);
 
     const handleNextClick = async () => {
         if (activeNERService) {
