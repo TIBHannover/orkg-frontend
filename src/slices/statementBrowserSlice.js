@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 import { createSlice } from '@reduxjs/toolkit';
 import DATA_TYPES from 'constants/DataTypes.js';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';

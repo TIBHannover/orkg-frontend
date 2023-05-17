@@ -584,17 +584,19 @@ const GeneralData = () => {
                               },
                               {
                                   element: '#entryOptions',
-                                  intro: 'In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button on the right.',
+                                  intro: 'In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button in the middle. If you have the PDF of the paper, you can extract it automatically by uploading it. Simply click on the \'PDF\' button. Please note that the PDF should be annotated with <a href="https://orkg.org/about/33/SciKGTeX" target="_blank" rel="noopener noreferrer">SciKGTeX</a>.',
                               },
                               {
                                   element: '#helpIcon',
                                   intro: 'If you want to start the tour again at a later point, you can do so from this button.',
                               },
                           ]
-                        : [
+                        : []),
+                    ...(dataEntry === 'manually'
+                        ? [
                               {
                                   element: '#entryOptions',
-                                  intro: 'In case you have the DOI, you can enter the doi to fetch paper meta-data automatically. Do this by pressing the "By DOI" button on the left.',
+                                  intro: 'In case you have the DOI, you can enter the doi to fetch paper meta-data automatically. Do this by pressing the "DOI" button on the left. If you have the PDF of the paper, you can extract it automatically by uploading it. Simply click on the \'PDF\' button. Please note that the PDF should be annotated with <a href="https://orkg.org/about/33/SciKGTeX" target="_blank" rel="noopener noreferrer">SciKGTeX</a>.',
                               },
                               {
                                   element: '#manuelInputGroup',
@@ -604,7 +606,24 @@ const GeneralData = () => {
                                   element: '#helpIcon',
                                   intro: 'If you want to start the tour again at a later point, you can do so from this button.',
                               },
-                          ]),
+                          ]
+                        : []),
+                    ...(dataEntry === 'pdf'
+                        ? [
+                              {
+                                  element: '#pdfUploader',
+                                  intro: 'You can upload a PDF file and we will you use it to extract (meta)data.',
+                              },
+                              {
+                                  element: '#entryOptions',
+                                  intro: 'In case you have the DOI, you can enter the doi to fetch paper meta-data automatically. Do this by pressing the "DOI" button on the left. In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button in the middle.',
+                              },
+                              {
+                                  element: '#helpIcon',
+                                  intro: 'If you want to start the tour again at a later point, you can do so from this button.',
+                              },
+                          ]
+                        : []),
                 ]}
                 onExit={requestCloseTour}
                 enabled={isTourOpen}

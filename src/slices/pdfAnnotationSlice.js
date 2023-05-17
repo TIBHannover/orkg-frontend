@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import env from '@beam-australia/react-env';
 import { parse } from 'node-html-parser';
 import { toast } from 'react-toastify';
 import { convertPdf as convertPdfAPI } from 'services/orkgNlp/index';

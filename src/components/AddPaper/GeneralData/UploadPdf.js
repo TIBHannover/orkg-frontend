@@ -129,7 +129,7 @@ const UploadPdf = () => {
         );
 
     return (
-        <div>
+        <div id="pdfUploader">
             <Alert color="info" className="mt-4" fade={false}>
                 The uploaded PDF file will not be stored on our servers and is only used to extract (meta)data. If the paper was annotated with{' '}
                 <a href="https://orkg.org/about/33/SciKGTeX" target="_blank" rel="noopener noreferrer">
