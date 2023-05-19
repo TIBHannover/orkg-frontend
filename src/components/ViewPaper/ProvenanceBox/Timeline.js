@@ -23,8 +23,16 @@ const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, h
                         <div>
                             {paperResource.created_by && (
                                 <>
-                                    {version.publishedResource ? 'Published by ' : 'Updated by '}
-                                    {version.created_by !== MISC.UNKNOWN_ID ? (
+                                    {version.publishedResource && 'Published by '}
+                                    {!version.publishedResource &&
+                                    !isLoadingContributors &&
+                                    !hasNextPageContributors &&
+                                    moment(version.created_at).format('DD MMM YYYY HH:mm') ===
+                                        moment(paperResource.created_at).format('DD MMM YYYY HH:mm') &&
+                                    version.created_by.id === (createdBy?.id ?? MISC.UNKNOWN_ID)
+                                        ? 'Added by '
+                                        : 'Updated by '}
+                                    {version.created_by?.id !== MISC.UNKNOWN_ID ? (
                                         <>
                                             <Link
                                                 to={reverse(ROUTES.USER_PROFILE, {
@@ -66,24 +74,26 @@ const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, h
                     </div>
                 </StyledActivity>
             )}
-            <StyledActivity className="ps-3 pb-3">
-                <div className="time">{moment(paperResource.created_at).format('DD MMM YYYY HH:mm')}</div>
-                <>
-                    Added by{' '}
-                    {createdBy ? (
-                        <Link
-                            to={reverse(ROUTES.USER_PROFILE, {
-                                userId: createdBy.created_by,
-                            })}
-                        >
-                            <b>{createdBy.display_name}</b>
-                        </Link>
-                    ) : (
-                        'Unknown'
-                    )}
-                </>
-            </StyledActivity>
-            {!isLoadingContributors && versions?.length === 0 && 'No contributors'}
+
+            {!isLoadingContributors && hasNextPageContributors && (
+                <StyledActivity className="ps-3 pb-3">
+                    <div className="time">{moment(paperResource.created_at).format('DD MMM YYYY HH:mm')}</div>
+                    <>
+                        Added by{' '}
+                        {createdBy ? (
+                            <Link
+                                to={reverse(ROUTES.USER_PROFILE, {
+                                    userId: createdBy.id,
+                                })}
+                            >
+                                <b>{createdBy.display_name}</b>
+                            </Link>
+                        ) : (
+                            'Unknown'
+                        )}
+                    </>
+                </StyledActivity>
+            )}
 
             {isLoadingContributors && (
                 <StyledActivity>
@@ -93,7 +103,6 @@ const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, h
         </div>
     </div>
 );
-
 Timeline.propTypes = {
     versions: PropTypes.array,
     paperResource: PropTypes.object,
