@@ -508,61 +508,59 @@ const GeneralData = () => {
                         <UploadPdf />
                     </Container>
                 )}
-
-                <TransitionGroup>
-                    {showLookupTable && (dataEntry === 'doi' || dataEntry === 'pdf') && (
-                        <Container key={1} classNames="slideDown" timeout={{ enter: 500, exit: 300 }}>
-                            <>
-                                <div className="mt-5">
-                                    <h3 className="h4 mb-3">
-                                        Data
-                                        <Button className="pull-right ms-1" outline size="sm" onClick={() => setDataEntry('manually')}>
-                                            Edit
-                                        </Button>
-                                    </h3>
-                                    <Card body>
-                                        <Table className="mb-0">
-                                            <tbody>
-                                                <tr className="">
-                                                    <td>
-                                                        <strong>Paper title:</strong> {title}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <strong>Authors:</strong>{' '}
-                                                        {authors.map((author, index) => (
-                                                            <span key={index}>{authors.length > index + 1 ? `${author.label}, ` : author.label}</span>
-                                                        ))}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <strong>DOI:</strong> {doi || <em>Empty</em>}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <strong>Publication date:</strong>{' '}
-                                                        {publicationMonth ? moment(publicationMonth, 'M').format('MMMM') : ''} {publicationYear}
-                                                        {!publicationMonth && !publicationYear && <em>Empty</em>}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="border-0">
-                                                        <strong>Published in:</strong> {publishedIn || <em>Empty</em>}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </Table>
-                                    </Card>
-                                </div>
-                            </>
-                        </Container>
-                    )}
-                </TransitionGroup>
             </TransitionGroup>
-
+            <TransitionGroup>
+                {showLookupTable && (dataEntry === 'doi' || dataEntry === 'pdf') && (
+                    <Container key={1} classNames="slideDown" timeout={{ enter: 500, exit: 300 }}>
+                        <>
+                            <div className="mt-5">
+                                <h3 className="h4 mb-3">
+                                    Data
+                                    <Button className="pull-right ms-1" outline size="sm" onClick={() => setDataEntry('manually')}>
+                                        Edit
+                                    </Button>
+                                </h3>
+                                <Card body>
+                                    <Table className="mb-0">
+                                        <tbody>
+                                            <tr className="">
+                                                <td>
+                                                    <strong>Paper title:</strong> {title}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <strong>Authors:</strong>{' '}
+                                                    {authors.map((author, index) => (
+                                                        <span key={index}>{authors.length > index + 1 ? `${author.label}, ` : author.label}</span>
+                                                    ))}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <strong>DOI:</strong> {doi || <em>Empty</em>}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <strong>Publication date:</strong>{' '}
+                                                    {publicationMonth ? moment(publicationMonth, 'M').format('MMMM') : ''} {publicationYear}
+                                                    {!publicationMonth && !publicationYear && <em>Empty</em>}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td className="border-0">
+                                                    <strong>Published in:</strong> {publishedIn || <em>Empty</em>}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </Table>
+                                </Card>
+                            </div>
+                        </>
+                    </Container>
+                )}
+            </TransitionGroup>
             <hr className="mt-5 mb-3" />
             {errors && errors.length > 0 && (
                 <ul className="float-start mb-4 text-danger">
