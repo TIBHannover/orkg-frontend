@@ -1,44 +1,45 @@
-import { useState, useEffect, useRef } from 'react';
-import {
-    Row,
-    Col,
-    Form,
-    FormGroup,
-    Label,
-    Input,
-    InputGroup,
-    Button,
-    ButtonGroup,
-    FormFeedback,
-    Table,
-    Card,
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-} from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { range, parseCiteResult } from 'utils';
-import Tooltip from 'components/Utils/Tooltip';
-import AuthorsInput from 'components/AuthorsInput/AuthorsInput';
-import Joi from 'joi';
-import { useSelector, useDispatch } from 'react-redux';
-import { updateGeneralData, nextStep, openTour, closeTour } from 'slices/addPaperSlice';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { useCookies } from 'react-cookie';
-import styled from 'styled-components';
-import moment from 'moment';
-import { Cite } from '@citation-js/core';
-import { Steps } from 'intro.js-react';
-import { useLocation } from 'react-router-dom';
-import qs from 'qs';
 import env from '@beam-australia/react-env';
+import { Cite } from '@citation-js/core';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import AuthorsInput from 'components/AuthorsInput/AuthorsInput';
 import AutocompleteContentTypeTitle from 'components/AutocompleteContentTypeTitle/AutocompleteContentTypeTitle';
 import Confirm from 'components/Confirmation/Confirmation';
 import useExistingPaper from 'components/ExistingPaperModal/useExistingPaper';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import UploadPdf from 'components/AddPaper/GeneralData/UploadPdf';
+import Tooltip from 'components/Utils/Tooltip';
+import { Steps } from 'intro.js-react';
+import Joi from 'joi';
+import moment from 'moment';
+import qs from 'qs';
+import { lazy, useEffect, useRef, useState } from 'react';
+import { useCookies } from 'react-cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import {
+    Button,
+    ButtonGroup,
+    Card,
+    Col,
+    Form,
+    FormFeedback,
+    FormGroup,
+    Input,
+    InputGroup,
+    Label,
+    Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,
+    Row,
+    Table,
+} from 'reactstrap';
+import { closeTour, nextStep, openTour, updateGeneralData } from 'slices/addPaperSlice';
+import styled from 'styled-components';
+import { parseCiteResult, range } from 'utils';
+
+const UploadPdf = lazy(() => import('components/AddPaper/GeneralData/UploadPdf')); // for dependency "pdfjs-dist" ~2.91MB
 
 const Container = styled(CSSTransition)`
     &.fadeIn-enter {
