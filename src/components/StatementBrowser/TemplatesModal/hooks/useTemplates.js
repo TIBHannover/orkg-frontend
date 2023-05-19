@@ -96,14 +96,10 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
             if (target) {
                 searchCall = getTemplatesOfResourceId(target.id, sf.predicate, page);
             } else {
-                let _label = label?.trim();
-                if (_label.length > 1 && _label.split(/\s+/).length === 1 && !_label.endsWith('*')) {
-                    _label += '*';
-                }
                 searchCall = getResourcesByClass({
                     id: CLASSES.NODE_SHAPE,
                     page,
-                    q: _label,
+                    q: label?.trim(),
                     items: pageSize,
                 });
             }
