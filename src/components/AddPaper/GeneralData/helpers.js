@@ -26,7 +26,7 @@ async function convertExtractData2ContributionsStatements(collectedContribution)
                 valuesList.push(
                     cont?.data?.map((v, i) => ({
                         label: v?.label || v?.textContent,
-                        isExistingValue: v?.resourceURI[0] != null,
+                        isExistingValue: v?.resourceURI?.[0] != null,
                         propertyId: `${apiPredicatesCalls[i].content[0]?.id}_${i}_${outerIndex}`,
                         existingResourceId: v?.resourceURI[0] != null ? v?.resourceURI[0].split('/').pop() : null,
                         _class: v?.resourceURI[0] ? ENTITIES.RESOURCE : ENTITIES.LITERAL,

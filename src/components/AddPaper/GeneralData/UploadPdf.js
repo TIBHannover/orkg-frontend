@@ -62,7 +62,8 @@ const UploadPdf = () => {
                     );
 
                     const resourcePromises = resourceURI.map(resource => getResource(resource.split('/').pop()));
-                    const apiResourceCalls = await Promise.all(resourcePromises);
+
+                    const apiResourceCalls = await Promise.all(resourcePromises).catch(() => []);
 
                     for (const contribution of processedPdf.querySelectorAll('ResearchContribution')) {
                         const properties = contribution.querySelectorAll(':scope > *');
@@ -77,7 +78,7 @@ const UploadPdf = () => {
                             const label = apiResourceCalls.filter(a => a.id === urlId[0])?.[0]?.label ?? '';
                             return {
                                 localName: property.localName,
-                                resourceURI: urlId,
+                                resourceURI: label ? urlId : [],
                                 index: index + 1,
                                 textContent,
                                 label,
