@@ -12,7 +12,7 @@ import { Steps } from 'intro.js-react';
 import Joi from 'joi';
 import moment from 'moment';
 import qs from 'qs';
-import { lazy, useEffect, useRef, useState } from 'react';
+import { lazy, useEffect, useRef, useState, Suspense } from 'react';
 import { useCookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -506,7 +506,9 @@ const GeneralData = () => {
 
                 {dataEntry === 'pdf' && (
                     <Container key={3} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
-                        <UploadPdf />
+                        <Suspense fallback={<div>Loading...</div>}>
+                            <UploadPdf />
+                        </Suspense>
                     </Container>
                 )}
             </TransitionGroup>
