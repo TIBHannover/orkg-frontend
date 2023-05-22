@@ -1,43 +1,45 @@
-import { useState, useEffect, useRef } from 'react';
-import {
-    Row,
-    Col,
-    Form,
-    FormGroup,
-    Label,
-    Input,
-    InputGroup,
-    Button,
-    ButtonGroup,
-    FormFeedback,
-    Table,
-    Card,
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-} from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { range, parseCiteResult } from 'utils';
-import Tooltip from 'components/Utils/Tooltip';
-import AuthorsInput from 'components/AuthorsInput/AuthorsInput';
-import Joi from 'joi';
-import { useSelector, useDispatch } from 'react-redux';
-import { updateGeneralData, nextStep, openTour, closeTour } from 'slices/addPaperSlice';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { useCookies } from 'react-cookie';
-import styled from 'styled-components';
-import moment from 'moment';
-import { Cite } from '@citation-js/core';
-import { Steps } from 'intro.js-react';
-import { useLocation } from 'react-router-dom';
-import qs from 'qs';
 import env from '@beam-australia/react-env';
+import { Cite } from '@citation-js/core';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import AuthorsInput from 'components/AuthorsInput/AuthorsInput';
 import AutocompleteContentTypeTitle from 'components/AutocompleteContentTypeTitle/AutocompleteContentTypeTitle';
 import Confirm from 'components/Confirmation/Confirmation';
 import useExistingPaper from 'components/ExistingPaperModal/useExistingPaper';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import Tooltip from 'components/Utils/Tooltip';
+import { Steps } from 'intro.js-react';
+import Joi from 'joi';
+import moment from 'moment';
+import qs from 'qs';
+import { lazy, useEffect, useRef, useState, Suspense } from 'react';
+import { useCookies } from 'react-cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import {
+    Button,
+    ButtonGroup,
+    Card,
+    Col,
+    Form,
+    FormFeedback,
+    FormGroup,
+    Input,
+    InputGroup,
+    Label,
+    Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,
+    Row,
+    Table,
+} from 'reactstrap';
+import { closeTour, nextStep, openTour, updateGeneralData } from 'slices/addPaperSlice';
+import styled from 'styled-components';
+import { parseCiteResult, range } from 'utils';
+
+const UploadPdf = lazy(() => import('components/AddPaper/GeneralData/UploadPdf')); // for dependency "pdfjs-dist" ~2.91MB
 
 const Container = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -166,8 +168,6 @@ const GeneralData = () => {
             dispatch(updateGeneralData({ entry: entryParam }));
             handleLookupClick(entryParam);
         }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -294,16 +294,35 @@ const GeneralData = () => {
                 </div>
                 <div className="col-md-4 mb-2" style={{ textAlign: 'right' }}>
                     <ButtonGroup id="entryOptions">
-                        <Button size="sm" color={dataEntry === 'doi' ? 'primary' : 'light'} onClick={() => setDataEntry('doi')}>
-                            By DOI
+                        <Button
+                            className="flex-shrink-0"
+                            size="sm"
+                            color={dataEntry === 'doi' ? 'primary' : 'light'}
+                            onClick={() => setDataEntry('doi')}
+                            style={{ marginRight: 2 }}
+                        >
+                            DOI
                         </Button>
-                        <Button size="sm" color={dataEntry === 'manually' ? 'primary' : 'light'} onClick={() => setDataEntry('manually')}>
+                        <Button
+                            className="flex-shrink-0"
+                            size="sm"
+                            color={dataEntry === 'manually' ? 'primary' : 'light'}
+                            onClick={() => setDataEntry('manually')}
+                            style={{ marginRight: 2 }}
+                        >
                             Manually
+                        </Button>
+                        <Button
+                            className="flex-shrink-0"
+                            size="sm"
+                            color={dataEntry === 'pdf' ? 'primary' : 'light'}
+                            onClick={() => setDataEntry('pdf')}
+                        >
+                            PDF
                         </Button>
                     </ButtonGroup>
                 </div>
             </div>
-
             <Modal isOpen={isFirstVisit} toggle={() => setIsFirstVisit(!isFirstVisit)}>
                 <ModalHeader toggle={() => setIsFirstVisit(!isFirstVisit)}>A very warm welcome</ModalHeader>
                 <ModalBody>
@@ -323,7 +342,6 @@ const GeneralData = () => {
                     </Button>
                 </ModalFooter>
             </Modal>
-
             <TransitionGroup exit={false}>
                 {dataEntry === 'doi' && (
                     <Container key={1} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
@@ -385,63 +403,11 @@ const GeneralData = () => {
                                     </InputGroup>
                                 </FormGroup>
                             </Form>
-
-                            <TransitionGroup>
-                                {showLookupTable ? (
-                                    <Container key={1} classNames="slideDown" timeout={{ enter: 500, exit: 300 }}>
-                                        <>
-                                            <div className="mt-5">
-                                                <h3 className="h4 mb-3">
-                                                    Lookup result
-                                                    <Button className="pull-right ms-1" outline size="sm" onClick={() => setDataEntry('manually')}>
-                                                        Edit
-                                                    </Button>
-                                                </h3>
-                                                <Card body>
-                                                    <Table className="mb-0">
-                                                        <tbody>
-                                                            <tr className="table-borderless">
-                                                                <td>
-                                                                    <strong>Paper title:</strong> {title}
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <strong>Authors:</strong>{' '}
-                                                                    {authors.map((author, index) => (
-                                                                        <span key={index}>
-                                                                            {authors.length > index + 1 ? `${author.label}, ` : author.label}
-                                                                        </span>
-                                                                    ))}
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <strong>Publication date:</strong>{' '}
-                                                                    {publicationMonth ? moment(publicationMonth, 'M').format('MMMM') : ''}{' '}
-                                                                    {publicationYear}
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <strong>Published in:</strong> {publishedIn}
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </Table>
-                                                </Card>
-                                            </div>
-                                        </>
-                                    </Container>
-                                ) : (
-                                    ''
-                                )}
-                            </TransitionGroup>
                         </div>
                     </Container>
                 )}
 
-                {dataEntry !== 'doi' && (
+                {dataEntry === 'manually' && (
                     <Container key={2} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
                         <Form className="mt-4" onSubmit={submitHandler} id="manuelInputGroup">
                             <FormGroup>
@@ -537,6 +503,66 @@ const GeneralData = () => {
                         </Form>
                     </Container>
                 )}
+
+                {dataEntry === 'pdf' && (
+                    <Container key={3} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
+                        <Suspense fallback={<div>Loading...</div>}>
+                            <UploadPdf />
+                        </Suspense>
+                    </Container>
+                )}
+            </TransitionGroup>
+            <TransitionGroup>
+                {showLookupTable && (dataEntry === 'doi' || dataEntry === 'pdf') && (
+                    <Container key={1} classNames="slideDown" timeout={{ enter: 500, exit: 300 }}>
+                        <>
+                            <div className="mt-5">
+                                <h3 className="h4 mb-3">
+                                    Data
+                                    <Button className="pull-right ms-1" outline size="sm" onClick={() => setDataEntry('manually')}>
+                                        Edit
+                                    </Button>
+                                </h3>
+                                <Card body>
+                                    <Table className="mb-0">
+                                        <tbody>
+                                            <tr className="">
+                                                <td>
+                                                    <strong>Paper title:</strong> {title}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <strong>Authors:</strong>{' '}
+                                                    {authors.map((author, index) => (
+                                                        <span key={index}>{authors.length > index + 1 ? `${author.label}, ` : author.label}</span>
+                                                    ))}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <strong>DOI:</strong> {doi || <em>Empty</em>}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <strong>Publication date:</strong>{' '}
+                                                    {publicationMonth ? moment(publicationMonth, 'M').format('MMMM') : ''} {publicationYear}
+                                                    {!publicationMonth && !publicationYear && <em>Empty</em>}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td className="border-0">
+                                                    <strong>Published in:</strong> {publishedIn || <em>Empty</em>}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </Table>
+                                </Card>
+                            </div>
+                        </>
+                    </Container>
+                )}
             </TransitionGroup>
             <hr className="mt-5 mb-3" />
             {errors && errors.length > 0 && (
@@ -549,7 +575,6 @@ const GeneralData = () => {
             <RequireAuthentication component={Button} color="primary" className="float-end mb-4" onClick={handleNextClick} data-test="nextStep">
                 Next step
             </RequireAuthentication>
-
             <Steps
                 steps={[
                     ...(dataEntry === 'doi'
@@ -560,17 +585,19 @@ const GeneralData = () => {
                               },
                               {
                                   element: '#entryOptions',
-                                  intro: 'In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button on the right.',
+                                  intro: 'In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button in the middle. If you have the PDF of the paper, you can extract it automatically by uploading it. Simply click on the \'PDF\' button. Please note that the PDF should be annotated with <a href="https://orkg.org/about/33/SciKGTeX" target="_blank" rel="noopener noreferrer">SciKGTeX</a>.',
                               },
                               {
                                   element: '#helpIcon',
                                   intro: 'If you want to start the tour again at a later point, you can do so from this button.',
                               },
                           ]
-                        : [
+                        : []),
+                    ...(dataEntry === 'manually'
+                        ? [
                               {
                                   element: '#entryOptions',
-                                  intro: 'In case you have the DOI, you can enter the doi to fetch paper meta-data automatically. Do this by pressing the "By DOI" button on the left.',
+                                  intro: 'In case you have the DOI, you can enter the doi to fetch paper meta-data automatically. Do this by pressing the "DOI" button on the left. If you have the PDF of the paper, you can extract it automatically by uploading it. Simply click on the \'PDF\' button. Please note that the PDF should be annotated with <a href="https://orkg.org/about/33/SciKGTeX" target="_blank" rel="noopener noreferrer">SciKGTeX</a>.',
                               },
                               {
                                   element: '#manuelInputGroup',
@@ -580,7 +607,24 @@ const GeneralData = () => {
                                   element: '#helpIcon',
                                   intro: 'If you want to start the tour again at a later point, you can do so from this button.',
                               },
-                          ]),
+                          ]
+                        : []),
+                    ...(dataEntry === 'pdf'
+                        ? [
+                              {
+                                  element: '#pdfUploader',
+                                  intro: 'You can upload a PDF file and we will you use it to extract (meta)data.',
+                              },
+                              {
+                                  element: '#entryOptions',
+                                  intro: 'In case you have the DOI, you can enter the doi to fetch paper meta-data automatically. Do this by pressing the "DOI" button on the left. In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button in the middle.',
+                              },
+                              {
+                                  element: '#helpIcon',
+                                  intro: 'If you want to start the tour again at a later point, you can do so from this button.',
+                              },
+                          ]
+                        : []),
                 ]}
                 onExit={requestCloseTour}
                 enabled={isTourOpen}
@@ -588,7 +632,6 @@ const GeneralData = () => {
                 ref={refIntroJS}
                 options={{ tooltipClass: 'introjs-ORKG-tooltip' }}
             />
-
             <ExistingPaperModels onContinue={() => dispatch(nextStep())} />
         </div>
     );

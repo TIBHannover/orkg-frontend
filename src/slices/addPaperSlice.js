@@ -17,23 +17,25 @@ import {
 } from 'slices/statementBrowserSlice';
 
 const initialState = {
+    title: '',
+    authors: [],
+    abstract: '',
+    publicationMonth: '',
+    publicationYear: '',
+    doi: '',
+    publishedIn: '',
+    researchFields: [],
     isTourOpen: false,
     showAbstractDialog: false,
     abstractDialogView: 'annotator', // annotator | input | list
     currentStep: 1,
     shouldBlockNavigation: false,
     tourStartAt: 0,
-    title: '',
-    authors: [],
-    abstract: '',
-    publicationMonth: '',
-    publicationYear: '',
     entry: '',
     showLookupTable: false,
-    doi: '',
-    publishedIn: '',
-    researchFields: [],
     selectedResearchField: '',
+    extractedResearchField: null,
+    extractedContributionData: [],
     selectedContribution: '',
     paperNewResourceId: null,
     url: '',
@@ -48,6 +50,7 @@ const initialState = {
     predicatesRawResponse: {},
     bioassayText: '',
     bioassayRawResponse: [],
+    pdfName: null,
 };
 
 export const addPaperSlice = createSlice({
@@ -381,6 +384,7 @@ export const saveAddPaperAction = data => async dispatch => {
     newProperties = newProperties.map(propertyId => ({ id: propertyId, label: data.properties.byId[propertyId].label }));
     newProperties = uniqBy(newProperties, 'label');
     newProperties = newProperties.map(property => ({ [property.label]: `_${property.id}` }));
+
     const paperObj = {
         // Set new predicates label and temp ID
         predicates: newProperties,
@@ -416,7 +420,6 @@ export const saveAddPaperAction = data => async dispatch => {
     try {
         const paper = await saveFullPaper(paperObj);
         dispatch(saveAddPaper(paper.id));
-
         dispatch(blockNavigation({ status: false }));
     } catch (e) {
         console.log(e);

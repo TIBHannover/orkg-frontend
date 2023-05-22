@@ -7,15 +7,14 @@ import AbstractModal from 'components/AddPaper/AbstractModal/AbstractModal';
 import BioAssaysModal from 'components/AddPaper/BioAssaysModal/BioAssaysModal';
 import EntityRecognition from 'components/AddPaper/EntityRecognition/EntityRecognition';
 import useBioassays from 'components/AddPaper/hooks/useBioassays';
-import useEntityRecognition from 'components/AddPaper/hooks/useEntityRecognition';
 import useFeedbacks from 'components/AddPaper/hooks/useFeedbacks';
 import Confirm from 'components/Confirmation/Confirmation';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
+import Tabs from 'components/Tabs/Tabs';
 import Tooltip from 'components/Utils/Tooltip';
 import { BIOASSAYS_FIELDS_LIST } from 'constants/nlpFieldLists';
-import Tabs from 'components/Tabs/Tabs';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Row, UncontrolledAlert } from 'reactstrap';
@@ -32,6 +31,7 @@ import {
     updateContributionLabelAction as updateContributionLabel,
 } from 'slices/addPaperSlice';
 import { updateSettings } from 'slices/statementBrowserSlice';
+import useEntityRecognition from 'components/AddPaper/hooks/useEntityRecognition';
 import ContributionsHelpTour from './ContributionsHelpTour';
 
 const Contributions = () => {
@@ -47,14 +47,17 @@ const Contributions = () => {
         contributions,
         selectedContribution,
         abstract,
+        extractedResearchField,
+        extractedContributionData,
     } = useSelector(state => state.addPaper);
+
     const [isOpenAbstractModal, setIsOpenAbstractModal] = useState(false);
     const [activeNERService, setActiveNERService] = useState(null);
+    const { handleSaveFeedback } = useEntityRecognition({ activeNERService });
     const { resources, properties, values } = useSelector(state => state.statementBrowser);
 
     const isBioassayField = BIOASSAYS_FIELDS_LIST.includes(selectedResearchField);
 
-    const { handleSaveFeedback } = useEntityRecognition({ activeNERService });
     const { handleSaveBioassaysFeedback } = useBioassays();
     const { handleSavePredicatesRecommendationFeedback } = useFeedbacks();
 
@@ -68,12 +71,11 @@ const Contributions = () => {
 
     useEffect(() => {
         // if there is no contribution yet, create the first one
-        if (contributions.allIds.length === 0) {
+        if (contributions.allIds.length === 0 && extractedContributionData?.length === 0) {
             dispatch(
                 createContribution({
                     selectAfterCreation: true,
                     prefillStatements: true,
-                    researchField: selectedResearchField,
                 }),
             );
             dispatch(
@@ -82,7 +84,24 @@ const Contributions = () => {
                 }),
             );
         }
-    }, [contributions.allIds.length, dispatch, selectedResearchField]);
+        if (contributions.allIds.length === 0 && extractedContributionData?.length > 0) {
+            extractedContributionData?.map(c => {
+                dispatch(
+                    createContribution({
+                        selectAfterCreation: true,
+                        fillStatements: true,
+                        statements: c.statements,
+                    }),
+                );
+                dispatch(
+                    updateSettings({
+                        openExistingResourcesInDialog: true,
+                    }),
+                );
+                return null;
+            });
+        }
+    }, [contributions.allIds.length, dispatch, extractedContributionData]);
 
     const handleNextClick = async () => {
         if (activeNERService) {
@@ -95,6 +114,7 @@ const Contributions = () => {
             // because this feature is disabled in production
             handleSavePredicatesRecommendationFeedback(properties);
         }
+
         // save add paper
         dispatch(
             saveAddPaper({
@@ -105,7 +125,7 @@ const Contributions = () => {
                 doi,
                 publishedIn,
                 url,
-                selectedResearchField,
+                selectedResearchField: selectedResearchField || extractedResearchField?.id,
                 contributions,
                 resources,
                 properties,
@@ -116,12 +136,12 @@ const Contributions = () => {
     };
 
     const toggleDeleteContribution = async id => {
-        const result = await Confirm({
+        const deleteContributionPrompt = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure you want to delete this contribution?',
         });
 
-        if (result) {
+        if (deleteContributionPrompt) {
             // delete the contribution and select the first one in the remaining list
             const selectedId = contributions.allIds.filter(i => i !== id)[0];
             dispatch(deleteContribution({ id, selectAfterDeletion: contributions.byId[selectedId] }));
@@ -134,6 +154,7 @@ const Contributions = () => {
 
     const handleChange = (contributionId, label) => {
         const contribution = contributions.byId[contributionId];
+
         dispatch(
             updateContributionLabel({
                 label,

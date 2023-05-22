@@ -720,7 +720,6 @@ export const fillStatements =
                 }),
             );
         }
-
         return Promise.resolve();
     };
 
