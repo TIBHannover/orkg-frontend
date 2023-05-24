@@ -12,21 +12,27 @@ const STATISTICS = [
         label: 'Comparisons',
         class: CLASSES.COMPARISON,
     },
+
     {
         label: 'Papers',
         class: CLASSES.PAPER,
+    },
+
+    {
+        label: 'Visualizations',
+        class: CLASSES.VISUALIZATION,
     },
     {
         label: 'Reviews',
         class: CLASSES.SMART_REVIEW,
     },
     {
-        label: 'Templates',
-        class: CLASSES.NODE_SHAPE,
+        label: 'Lists',
+        class: CLASSES.LITERATURE_LIST_PUBLISHED,
     },
     {
-        label: 'Visualizations',
-        class: CLASSES.VISUALIZATION,
+        label: 'Templates',
+        class: CLASSES.NODE_SHAPE,
     },
 ];
 
