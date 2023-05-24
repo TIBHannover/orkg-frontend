@@ -15,7 +15,7 @@ import capitalize from 'capitalize';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
-const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observatoryId, toggleOrganizationItem }) => {
+const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observatoryId, toggleOrganizationItem, isEditMode }) => {
     const user = useSelector(state => state.auth.user);
     const [showAddOrganizationDialog, setShowAddOrganizationDialog] = useState(false);
     const [organizations, setOrganizations] = useState([]);
@@ -39,7 +39,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
         <div className="box rounded-3 p-3 flex-grow-1">
             <h5>
                 Organizations{' '}
-                {!!user && user.isCurationAllowed && (
+                {isEditMode && !!user && user.isCurationAllowed && (
                     <Button outline size="sm" className="float-end" onClick={() => setShowAddOrganizationDialog(v => !v)}>
                         <Icon icon={faPlus} /> Add
                     </Button>
@@ -65,7 +65,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
                                             alt={`${organization.name} logo`}
                                         />
                                     </Link>
-                                    {!!user && user.isCurationAllowed && (
+                                    {isEditMode && !!user && user.isCurationAllowed && (
                                         <div className="position-absolute" style={{ top: 3, right: 0 }}>
                                             <StatementActionButton
                                                 title="Delete this organization from the observatory"
@@ -108,10 +108,10 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
         </div>
     );
 };
-
 OrganizationsBox.propTypes = {
     organizationsList: PropTypes.array.isRequired,
     isLoadingOrganizations: PropTypes.bool.isRequired,
+    isEditMode: PropTypes.bool.isRequired,
     observatoryId: PropTypes.string.isRequired,
     toggleOrganizationItem: PropTypes.func.isRequired,
 };
