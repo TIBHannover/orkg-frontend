@@ -59,6 +59,16 @@ function ClassDetails() {
                                 >
                                     <Icon icon={faPlus} /> Add resource
                                 </RequireAuthentication>
+
+                                <RequireAuthentication
+                                    style={{ marginRight: 2 }}
+                                    component={Button}
+                                    size="sm"
+                                    color="secondary"
+                                    onClick={() => setModalImportIsOpen(true)}
+                                >
+                                    <Icon icon={faFileCsv} /> Import instances
+                                </RequireAuthentication>
                                 {!editMode ? (
                                     <RequireAuthentication
                                         component={Button}
@@ -71,19 +81,10 @@ function ClassDetails() {
                                         <Icon icon={faPen} /> Edit
                                     </RequireAuthentication>
                                 ) : (
-                                    <Button
-                                        style={{ marginRight: 2 }}
-                                        className="flex-shrink-0"
-                                        color="secondary-darker"
-                                        size="sm"
-                                        onClick={() => setEditMode(v => !v)}
-                                    >
+                                    <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
                                         <Icon icon={faTimes} /> Stop editing
                                     </Button>
                                 )}
-                                <RequireAuthentication component={Button} size="sm" color="secondary" onClick={() => setModalImportIsOpen(true)}>
-                                    <Icon icon={faFileCsv} /> Import Instances
-                                </RequireAuthentication>
                             </>
                         }
                         titleAddition="Class"

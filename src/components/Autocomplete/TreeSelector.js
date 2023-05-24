@@ -49,7 +49,7 @@ const TreeSelector = props => {
                     />
                 </ModalBody>
                 <ModalFooter className="d-flex">
-                    <Button className="float-start" color="secondary" onClick={toggleTree}>
+                    <Button className="float-start" color="light" onClick={toggleTree}>
                         Cancel
                     </Button>
                     {!props.isDisabled && (

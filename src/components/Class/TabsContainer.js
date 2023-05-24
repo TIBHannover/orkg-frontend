@@ -33,6 +33,7 @@ function TabsContainer({ id, label, uri, editMode }) {
                 </Col>
                 <Col md={6}>
                     <Tabs
+                        className="box rounded"
                         style={{ position: 'sticky', top: '70px' }}
                         destroyInactiveTabPane={true}
                         onChange={onTabChange}
