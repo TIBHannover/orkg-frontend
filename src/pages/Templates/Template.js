@@ -1,10 +1,11 @@
-import { faEllipsisV, faPen, faQuestionCircle, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faDiagramProject, faEllipsisV, faPen, faQuestionCircle, faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { EditModeContainer, Title } from 'components/EditModeHeader/EditModeHeader';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ItemMetadata from 'components/Search/ItemMetadata';
+import ShaclFlowModal from 'components/Templates/ShaclFlow/ShaclFlowModal';
 import TabsContainer from 'components/Templates/TabsContainer';
 import TemplateEditorHeaderBar from 'components/Templates/TemplateEditorHeaderBar';
 import TitleBar from 'components/TitleBar/TitleBar';
@@ -15,8 +16,8 @@ import LoadingOverlay from 'react-loading-overlay';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink as RouterNavLink, useNavigate, useParams } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';
-import { Button, ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
-import { loadTemplate, saveTemplate, setEditMode } from 'slices/templateEditorSlice';
+import { Button, ButtonDropdown, ButtonGroup, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import { loadTemplate, saveTemplate, setDiagramMode, setEditMode } from 'slices/templateEditorSlice';
 
 const Template = () => {
     const { id } = useParams();
@@ -24,6 +25,7 @@ const Template = () => {
 
     const {
         editMode,
+        diagramMode,
         isSaving,
         isLoading,
         label,
@@ -65,15 +67,26 @@ const Template = () => {
                 buttonGroup={
                     <>
                         {!editMode && !isSaving ? (
-                            <RequireAuthentication
-                                disabled={isLoading}
-                                component={Button}
-                                color="secondary"
-                                size="sm"
-                                onClick={() => dispatch(setEditMode(true))}
-                            >
-                                <Icon icon={faPen} /> Edit
-                            </RequireAuthentication>
+                            <ButtonGroup size="sm">
+                                <RequireAuthentication
+                                    disabled={isLoading}
+                                    component={Button}
+                                    color="secondary"
+                                    size="sm"
+                                    onClick={() => dispatch(setEditMode(true))}
+                                >
+                                    <Icon icon={faPen} /> Edit
+                                </RequireAuthentication>
+                                <Button
+                                    style={{ marginLeft: 1 }}
+                                    className="float-end"
+                                    color="secondary"
+                                    size="sm"
+                                    onClick={() => dispatch(setDiagramMode(true))}
+                                >
+                                    <Icon icon={faDiagramProject} /> View diagram
+                                </Button>
+                            </ButtonGroup>
                         ) : (
                             <ButtonWithLoading
                                 disabled={isSaving}
@@ -178,6 +191,7 @@ const Template = () => {
                 {showHeaderBar && <TemplateEditorHeaderBar />}
                 <TabsContainer id={id} />
             </LoadingOverlay>
+            {diagramMode && <ShaclFlowModal />}
         </>
     );
 };

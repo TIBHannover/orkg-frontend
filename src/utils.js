@@ -521,13 +521,13 @@ export function listToTree(list) {
     return roots;
 }
 
-function convertTreeToFlat(treeStructure) {
+export function convertTreeToFlat(treeStructure, childrenAttribute = 'versions') {
     const flatten = (children, extractChildren) =>
         Array.prototype.concat.apply(
             children,
             children.map(x => flatten(extractChildren(x) || [], extractChildren)),
         );
-    const extractChildren = x => x.versions ?? [];
+    const extractChildren = x => x[childrenAttribute] ?? [];
     const flat = flatten(extractChildren(treeStructure), extractChildren);
     return flat;
 }
@@ -545,7 +545,7 @@ export const groupVersionsOfComparisons = (comparisons, sortFunc = (a, b) => new
     // 3- We flat the versions  inside the roots
     for (let i = 0; i < result.length; i += 1) {
         // Always the new version if the main resource
-        const arrayVersions = [...convertTreeToFlat(result[i]), result[i]].sort(sortFunc);
+        const arrayVersions = [...convertTreeToFlat(result[i], 'versions'), result[i]].sort(sortFunc);
         result[i] = { ...arrayVersions[0], versions: arrayVersions };
     }
     // 4- We sort the roots
