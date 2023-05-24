@@ -123,6 +123,10 @@ const routes = [
         element: ClassDetails,
     },
     {
+        path: ROUTES.CLASS_TABS,
+        element: ClassDetails,
+    },
+    {
         path: ROUTES.ADD_CLASS,
         element: requireAuthentication(AddClass),
     },

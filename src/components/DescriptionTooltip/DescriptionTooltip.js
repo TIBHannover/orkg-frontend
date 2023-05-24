@@ -4,7 +4,7 @@ import Tippy from '@tippyjs/react';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -69,6 +69,10 @@ const DescriptionTooltip = props => {
                 });
         }
     };
+
+    useEffect(() => {
+        setIsLoaded(false);
+    }, [props?.id]);
 
     const renderTypeLabel = () => {
         switch (props._class) {
@@ -171,7 +175,9 @@ const DescriptionTooltip = props => {
             interactive={true}
             arrow={true}
         >
-            <span tabIndex="0">{props.children}</span>
+            <span tabIndex="0" title="">
+                {props.children}
+            </span>
         </TippyStyle>
     );
 };

@@ -27,6 +27,7 @@ import { asyncLocalStorage, compareOption } from 'utils';
 import getExternalData from './3rdPartyRegistries/index';
 import CustomOption from './CustomOption';
 import OntologiesModal from './OntologiesModal';
+import TreeSelector from './TreeSelector';
 
 export const StyledAutoCompleteInputFormControl = styled.div`
     padding-top: 0 !important;
@@ -793,10 +794,13 @@ function Autocomplete(props) {
 
     return (
         <ConditionalWrapper
-            condition={props.copyValueButton}
+            condition={props.copyValueButton || props.showTreeSelector}
             wrapper={children => (
                 <ConditionalWrapper condition={props.inputGroup} wrapper={children => <InputGroup size="sm">{children}</InputGroup>}>
                     {children}
+                    {props.showTreeSelector && props.value && props.value.id && (
+                        <TreeSelector value={props.value} handleExternalSelect={handleExternalSelect} isDisabled={props.isDisabled} />
+                    )}
                     {props.copyValueButton && props.value && props.value.id && (
                         <>
                             <Button disabled={!props.value || !props.value.label} onClick={handleCopyClick} outline>
@@ -942,6 +946,7 @@ Autocomplete.propTypes = {
     cacheOptions: PropTypes.bool,
     fixedOptions: PropTypes.array,
     onOntologySelectorIsOpenStatusChange: PropTypes.func,
+    showTreeSelector: PropTypes.bool,
 };
 
 Autocomplete.defaultProps = {
@@ -962,5 +967,6 @@ Autocomplete.defaultProps = {
     allowCreateDuplicate: false,
     cacheOptions: false,
     fixedOptions: [],
+    showTreeSelector: false,
 };
 export default withTheme(Autocomplete);

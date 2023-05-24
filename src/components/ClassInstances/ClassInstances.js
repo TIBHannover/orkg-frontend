@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getResourcesByClass } from 'services/backend/resources';
-import { Button, Table, Collapse, Input, FormGroup, Label, Form } from 'reactstrap';
+import { Table, Input, FormGroup, Label, Form } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
@@ -11,8 +11,7 @@ import PropTypes from 'prop-types';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 
 const ClassInstances = props => {
-    const pageSize = 10;
-    const [showClassInstances, setShowClassInstances] = useState(false);
+    const pageSize = 25;
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
@@ -78,83 +77,77 @@ const ClassInstances = props => {
     }, [searchQuery]);
 
     return (
-        <div>
-            <Button color="secondary" size="sm" className="mt-5" onClick={() => setShowClassInstances(!showClassInstances)}>
-                {!showClassInstances ? 'Show' : 'Hide'} class instances
-            </Button>
-
-            <Collapse isOpen={showClassInstances}>
-                <Form inline className="mt-3">
-                    <FormGroup>
-                        <Label for="searchInputField">Search</Label>
-                        <Input
-                            id="searchInputField"
-                            className="ms-2"
-                            value={searchQuery}
-                            onChange={e => setSearchQuery(e.target.value)}
-                            placeholder="Enter a label"
-                            bsSize="sm"
-                        />
-                    </FormGroup>
-                </Form>
-                <p className="mt-2">
-                    Total number of instances: <b>{totalElements}</b>
-                </p>
-                {instances.length > 0 && (
-                    <div className="mt-3">
-                        <Table size="sm" bordered>
-                            <thead>
-                                <tr>
-                                    <th>Resource ID</th>
-                                    <th>Label</th>
-                                    <th>Shared</th>
+        <div className="py-2 px-4">
+            <Form className="mt-3">
+                <FormGroup>
+                    <Label for="searchInputField">Search</Label>
+                    <Input
+                        id="searchInputField"
+                        className="ms-2"
+                        value={searchQuery}
+                        onChange={e => setSearchQuery(e.target.value)}
+                        placeholder="Enter a label"
+                        bsSize="sm"
+                    />
+                </FormGroup>
+            </Form>
+            <p className="mt-2">
+                Total number of instances: <b>{totalElements}</b>
+            </p>
+            {instances.length > 0 && (
+                <div className="mt-3">
+                    <Table size="sm" bordered>
+                        <thead>
+                            <tr>
+                                <th>Resource ID</th>
+                                <th>Label</th>
+                                <th>Shared</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {instances.map(instance => (
+                                <tr key={instance.id}>
+                                    <td>
+                                        <DescriptionTooltip id={instance.id} _class={instance._class} classes={instance.classes}>
+                                            <Link to={`${reverse(ROUTES.RESOURCE, { id: instance.id })}?noRedirect`}>{instance.id}</Link>
+                                        </DescriptionTooltip>
+                                    </td>
+                                    <td>
+                                        <DescriptionTooltip id={instance.id} _class={instance._class} classes={instance.classes}>
+                                            <Link to={`${reverse(ROUTES.RESOURCE, { id: instance.id })}?noRedirect`}>{instance.label}</Link>
+                                        </DescriptionTooltip>
+                                    </td>
+                                    <td>{instance.shared}</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {instances.map(instance => (
-                                    <tr key={instance.id}>
-                                        <td>
-                                            <DescriptionTooltip id={instance.id} _class={instance._class} classes={instance.classes}>
-                                                <Link to={`${reverse(ROUTES.RESOURCE, { id: instance.id })}?noRedirect`}>{instance.id}</Link>
-                                            </DescriptionTooltip>
-                                        </td>
-                                        <td>
-                                            <DescriptionTooltip id={instance.id} _class={instance._class} classes={instance.classes}>
-                                                <Link to={`${reverse(ROUTES.RESOURCE, { id: instance.id })}?noRedirect`}>{instance.label}</Link>
-                                            </DescriptionTooltip>
-                                        </td>
-                                        <td>{instance.shared}</td>
-                                    </tr>
-                                ))}
-                                {!isLoading && hasNextPage && (
-                                    <tr style={{ cursor: 'pointer' }} className="text-center" onClick={!isLoading ? handleLoadMore : undefined}>
-                                        <td colSpan="3">View more class instances</td>
-                                    </tr>
-                                )}
-                                {!hasNextPage && isLastPageReached && page !== 0 && (
-                                    <tr className="text-center mt-3">
-                                        <td colSpan="3">You have reached the last page</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </Table>
-                    </div>
-                )}
+                            ))}
+                            {!isLoading && hasNextPage && (
+                                <tr style={{ cursor: 'pointer' }} className="text-center" onClick={!isLoading ? handleLoadMore : undefined}>
+                                    <td colSpan="3">View more class instances</td>
+                                </tr>
+                            )}
+                            {!hasNextPage && isLastPageReached && page !== 0 && (
+                                <tr className="text-center mt-3">
+                                    <td colSpan="3">You have reached the last page</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </Table>
+                </div>
+            )}
 
-                {isLoading && loadingIndicator}
+            {isLoading && loadingIndicator}
 
-                {totalElements === 0 && !isLoading && (
-                    <div className="text-center mb-2">
-                        {searchQuery ? (
-                            <>
-                                No result found for the term: <i>{searchQuery}</i>.
-                            </>
-                        ) : (
-                            'This class has no instances yet'
-                        )}
-                    </div>
-                )}
-            </Collapse>
+            {totalElements === 0 && !isLoading && (
+                <div className="text-center mb-2">
+                    {searchQuery ? (
+                        <>
+                            No result found for the term: <i>{searchQuery}</i>.
+                        </>
+                    ) : (
+                        'This class has no instances yet'
+                    )}
+                </div>
+            )}
         </div>
     );
 };

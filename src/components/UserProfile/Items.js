@@ -183,14 +183,14 @@ const Items = props => {
                             return <ComparisonCard comparison={{ ...resource }} key={`pc${resource.id}`} />;
                         }
                         if (props.filterClass === CLASSES.NODE_SHAPE) {
-                            return <TemplateCard template={resource} />;
+                            return <TemplateCard template={resource} key={`pc${resource.id}`} />;
                         }
 
                         if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
                             return <ReviewCard key={resource[0]?.id} versions={resource} showBadge={false} showCurationFlags={true} />;
                         }
                         if (props.filterClass === CLASSES.VISUALIZATION) {
-                            return <VisualizationCard visualization={resource} showBadge={false} showCurationFlags={true} />;
+                            return <VisualizationCard visualization={resource} showBadge={false} showCurationFlags={true} key={`pc${resource.id}`} />;
                         }
                         if (props.filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
                             return <ListCard versions={resource} showBadge={false} showCurationFlags={true} />;

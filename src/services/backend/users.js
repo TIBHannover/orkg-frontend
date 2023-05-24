@@ -7,8 +7,6 @@ export const authenticationUrl = env('BACKEND_URL');
 
 export const getUserInformation = () => submitGetRequest(`${userUrl}`, {}, true);
 
-export const getUserInformationById = userId => submitGetRequest(`${userUrl}${userId}`, {}, true);
-
 export const updateUserInformation = ({ email, display_name }) => {
     const headers = { 'Content-Type': 'application/json' };
 
