@@ -3,6 +3,21 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.107.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.106.0...v0.107.0) - 2023-05-24
+
+### Changes
+
+- remove unused file [`#1119`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1119)
+- feat(Class): view and edit class hierarchy [`#1011`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1011)
+- feat(UserProfile): show lists [`#1117`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1117)
+- feat(Benchmarks): render resource page links on PwC Models [`#1112`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1112)
+- fix: Duplicate Timeline entries [`#1116`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1116)
+- feat(Observatories): Show unlisted filter option publicly [`#1118`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1118)
+- feat(Template): diagram view (UML Class like) [`#1105`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1105)
+- feat(Observatory): edit mode [`#1104`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1104)
+- feat(AddPaperWizard): support PDF upload for metadata extraction [`#976`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/976)
+
+---
 ## [v0.106.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.105.0...v0.106.0) - 2023-05-16
 
 ### Changes
