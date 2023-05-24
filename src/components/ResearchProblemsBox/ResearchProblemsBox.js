@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import ResearchProblemsModal from './ResearchProblemsModal';
 
-const ResearchProblemsBox = ({ id, by = 'ResearchField' }) => {
+const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
     const { problems, isLoading, totalElements, setProblems, deleteResearchProblem, setTotalElements } = useResearchProblems({
         id,
         by,
@@ -30,7 +30,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField' }) => {
         <div className="box rounded-3 p-3 flex-grow-1 d-flex flex-column">
             <div className="d-flex">
                 <h5 className="flex-grow-1">Research problems</h5>{' '}
-                {!!user && user.isCurationAllowed && by === 'Observatory' && (
+                {isEditMode && !!user && user.isCurationAllowed && by === 'Observatory' && (
                     <>
                         <Button outline size="sm" className="d-inline-block" onClick={() => setShowAddResearchProblemDialog(v => !v)}>
                             <Icon icon={faPlus} /> Add
@@ -55,7 +55,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField' }) => {
                                         {truncate(rp.label, { length: 70 })}
                                     </Link>
                                 </Tippy>{' '}
-                                {!!user && user.isCurationAllowed && by === 'Observatory' && (
+                                {isEditMode && !!user && user.isCurationAllowed && by === 'Observatory' && (
                                     <StatementActionButton
                                         title="Delete this research problem from the observatory"
                                         icon={faTrash}
@@ -106,11 +106,11 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField' }) => {
         </div>
     );
 };
-
 ResearchProblemsBox.propTypes = {
     id: PropTypes.string.isRequired,
     by: PropTypes.string.isRequired, // ResearchField || Observatory
     organizationsList: PropTypes.array,
+    isEditMode: PropTypes.bool.isRequired,
 };
 
 export default ResearchProblemsBox;

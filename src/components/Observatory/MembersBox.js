@@ -10,7 +10,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AddMember from 'components/Observatory/AddMember';
 import { toast } from 'react-toastify';
 
-const MembersBox = ({ observatoryId, organizationsList }) => {
+const MembersBox = ({ observatoryId, organizationsList, isEditMode }) => {
     const user = useSelector(state => state.auth.user);
     const [members, setMembers] = useState([]);
     const [isLoadingMembers, setIsLoadingMembers] = useState(null);
@@ -48,7 +48,7 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
     return (
         <div className="box rounded-3 p-3 flex-grow-1">
             <h5>Members</h5>
-            {!!user && user.isCurationAllowed && (
+            {isEditMode && !!user && user.isCurationAllowed && (
                 <Button outline size="sm" style={{ float: 'right', marginTop: '-33px' }} onClick={() => setShowAddMemberDialog(v => !v)}>
                     <Icon icon={faPlus} /> Add
                 </Button>
@@ -66,7 +66,7 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                                                 subTitle: organizationsList.find(o => o.id.includes(user.organization_id))?.name,
                                             }}
                                             options={
-                                                userData && userData.isCurationAllowed
+                                                isEditMode && userData && userData.isCurationAllowed
                                                     ? [
                                                           {
                                                               label: 'Delete this member from the observatory',
@@ -144,6 +144,7 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
 MembersBox.propTypes = {
     observatoryId: PropTypes.string.isRequired,
     organizationsList: PropTypes.array.isRequired,
+    isEditMode: PropTypes.bool.isRequired,
 };
 
 export default MembersBox;
