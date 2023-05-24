@@ -16,6 +16,7 @@ const initialState = {
     created_by: null,
     created_at: null,
     editMode: false,
+    diagramMode: false,
     researchFields: [],
     researchProblems: [],
     predicate: null,
@@ -62,6 +63,9 @@ export const templateEditorSlice = createSlice({
         },
         setEditMode: (state, { payload }) => {
             state.editMode = payload;
+        },
+        setDiagramMode: (state, { payload }) => {
+            state.diagramMode = payload;
         },
         updatePropertyShapes: (state, { payload }) => {
             state.propertyShapes = payload;
@@ -121,6 +125,7 @@ export const {
     updateResearchProblems,
     updateResearchFields,
     setEditMode,
+    setDiagramMode,
     updatePropertyShapes,
     initTemplate,
     setIsLoading,
