@@ -720,7 +720,6 @@ export const fillStatements =
                 }),
             );
         }
-
         return Promise.resolve();
     };
 
@@ -1365,6 +1364,13 @@ export function selectResourceAction(data) {
 
 export const goToResourceHistory = data => (dispatch, getState) => {
     if (!getState().statementBrowser.resources.byId[data.id]) {
+        dispatch(
+            createResource({
+                label: '',
+                existingResourceId: data.id,
+                resourceId: data.id,
+            }),
+        );
         dispatch(
             fetchStatementsForResource({
                 resourceId: data.id,

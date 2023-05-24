@@ -32,6 +32,9 @@ const GDCVisualizationRenderer = props => {
         },
     ];
 
+    const hAxisTitle = props.model.data.reconstructionData?.customizationState?.xAxisLabel ?? '';
+    const vAxisTitle = props.model.data.reconstructionData?.customizationState?.yAxisLabel ?? '';
+
     return (
         <StyledChart
             chartType={props.model.data.visMethod}
@@ -43,6 +46,12 @@ const GDCVisualizationRenderer = props => {
                 showRowNumber: true,
                 enableInteractivity: !props.disableInteractivity,
                 ...(props.height ? { height: props.height } : {}),
+                hAxis: {
+                    title: hAxisTitle,
+                },
+                vAxis: {
+                    title: vAxisTitle,
+                },
             }}
             chartEvents={props.downloadChart ? chartEvents : undefined}
         />

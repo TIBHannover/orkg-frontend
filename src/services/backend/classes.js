@@ -20,7 +20,7 @@ export const getClasses = ({
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
-        { page, size, sort, exact, ...(q ? { q } : {}), uri },
+        { page, size, exact, ...(q ? { q } : { sort }), uri },
         {
             skipNulls: true,
         },

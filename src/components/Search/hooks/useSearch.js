@@ -47,8 +47,6 @@ export const useSearch = () => {
                 resultsResponse = await getPredicates({
                     page,
                     items: itemsPerFilter,
-                    sortBy: 'id',
-                    desc: true,
                     q: searchQuery,
                     returnContent: true,
                 });
@@ -56,8 +54,6 @@ export const useSearch = () => {
                 resultsResponse = await getResources({
                     page,
                     items: itemsPerFilter,
-                    sortBy: 'id',
-                    desc: true,
                     q: searchQuery,
                     exclude: DEFAULT_FILTERS.map(df => df.id)
                         .concat(IGNORED_CLASSES)
@@ -68,8 +64,6 @@ export const useSearch = () => {
                 resultsResponse = await getClasses({
                     page,
                     items: itemsPerFilter,
-                    sortBy: 'id',
-                    desc: true,
                     q: searchQuery,
                     returnContent: true,
                 });
@@ -77,8 +71,6 @@ export const useSearch = () => {
                 resultsResponse = await getResourcesByClass({
                     page,
                     items: itemsPerFilter,
-                    sortBy: 'id',
-                    desc: true,
                     q: searchQuery,
                     id: filterType,
                     returnContent: true,

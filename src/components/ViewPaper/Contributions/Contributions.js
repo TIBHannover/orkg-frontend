@@ -143,7 +143,11 @@ const Contributions = props => {
                             <AddToComparison showLabel={true} paper={{ id: resourceId, label: paperTitle, contributions }} />
                         </div>
                     )}
-                    {props.enableEdit && <EntityRecognition title={paperTitle} />}
+                    {props.enableEdit && (
+                        <div className="mb-3">
+                            <EntityRecognition title={paperTitle} />
+                        </div>
+                    )}
 
                     <ProvenanceBox />
                 </div>

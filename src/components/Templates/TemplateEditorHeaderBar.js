@@ -1,12 +1,12 @@
-import { Container, ButtonGroup, Button } from 'reactstrap';
-import { setEditMode, saveTemplate } from 'slices/templateEditorSlice';
-import styled from 'styled-components';
+import { faDiagramProject, faPen, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faSpinner, faSave } from '@fortawesome/free-solid-svg-icons';
-import { CSSTransition } from 'react-transition-group';
-import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { Title } from 'components/EditModeHeader/EditModeHeader';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { CSSTransition } from 'react-transition-group';
+import { Button, ButtonGroup, Container } from 'reactstrap';
+import { saveTemplate, setDiagramMode, setEditMode } from 'slices/templateEditorSlice';
+import styled from 'styled-components';
 
 const PaperHeaderBarContainer = styled.div`
     position: fixed;
@@ -70,9 +70,20 @@ const TemplateEditorHeaderBar = () => {
                             </Button>
                         </ButtonGroup>
                     ) : (
-                        <Button className="float-end" color="secondary" size="sm" onClick={() => dispatch(setEditMode(true))}>
-                            <Icon icon={faPen} /> Edit
-                        </Button>
+                        <ButtonGroup size="sm">
+                            <Button className="float-end" color="secondary" size="sm" onClick={() => dispatch(setEditMode(true))}>
+                                <Icon icon={faPen} /> Edit
+                            </Button>
+                            <Button
+                                style={{ marginLeft: 1 }}
+                                className="float-end"
+                                color="secondary"
+                                size="sm"
+                                onClick={() => dispatch(setDiagramMode(true))}
+                            >
+                                <Icon icon={faDiagramProject} /> View diagram
+                            </Button>
+                        </ButtonGroup>
                     )}
                 </Container>
             </PaperHeaderBarContainer>

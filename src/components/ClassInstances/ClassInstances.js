@@ -29,8 +29,6 @@ const ClassInstances = props => {
                 id: props.classId,
                 page,
                 items: pageSize,
-                sortBy: 'id',
-                desc: true,
                 q: searchQuery,
             }).then(result => {
                 // Resources

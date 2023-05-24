@@ -1,23 +1,25 @@
-import 'react-app-polyfill/ie9';
-import 'react-app-polyfill/stable';
-import 'fast-text-encoding/text.min';
-import 'jspdf/dist/polyfills.es.js';
-import { createRoot } from 'react-dom/client';
-import theme from 'assets/scss/ThemeVariables';
-import { Provider } from 'react-redux';
-import { CookiesProvider } from 'react-cookie';
-import { ThemeProvider } from 'styled-components';
+import env from '@beam-australia/react-env';
 import { plugins } from '@citation-js/core';
 import { MatomoProvider, createInstance } from '@jonkoops/matomo-tracker-react';
-import { DndProvider } from 'react-dnd';
-import env from '@beam-australia/react-env';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { HistoryRouter as Router } from 'redux-first-history/rr6';
+import App from 'App';
+import theme from 'assets/scss/ThemeVariables';
+import { MathJaxContext } from 'better-react-mathjax';
+import MATH_JAX_CONFIG from 'constants/mathJax';
 import REGEX from 'constants/regex';
+import 'fast-text-encoding/text.min';
+import 'jspdf/dist/polyfills.es.js';
+import 'react-app-polyfill/ie9';
+import 'react-app-polyfill/stable';
+import { CookiesProvider } from 'react-cookie';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { HistoryRouter as Router } from 'redux-first-history/rr6';
+import { unregister } from 'registerServiceWorker';
 import rootReducer from 'slices/rootReducer';
 import configureStore from 'store';
-import { unregister } from 'registerServiceWorker';
-import App from 'App';
+import { ThemeProvider } from 'styled-components';
 
 const matomoInstance =
     env('MATOMO_TRACKER') === 'true'
@@ -60,11 +62,13 @@ const render = () => {
             <CookiesProvider>
                 <Provider store={store}>
                     <ThemeProvider theme={theme}>
-                        <MatomoProvider value={matomoInstance}>
-                            <Router basename={env('PUBLIC_URL')} history={history}>
-                                <App />
-                            </Router>
-                        </MatomoProvider>
+                        <MathJaxContext config={MATH_JAX_CONFIG}>
+                            <MatomoProvider value={matomoInstance}>
+                                <Router basename={env('PUBLIC_URL')} history={history}>
+                                    <App />
+                                </Router>
+                            </MatomoProvider>
+                        </MathJaxContext>
                     </ThemeProvider>
                 </Provider>
             </CookiesProvider>

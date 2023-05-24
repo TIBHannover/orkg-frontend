@@ -1,4 +1,4 @@
-import { faFile } from '@fortawesome/free-solid-svg-icons';
+import { faFile, faBars, faComments } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { CLASSES } from 'constants/graphSettings';
@@ -18,6 +18,16 @@ const TYPES = [
         id: CLASSES.PAPER,
         label: 'Paper',
         icon: faFile,
+    },
+    {
+        id: CLASSES.SMART_REVIEW,
+        label: 'Review',
+        icon: faComments,
+    },
+    {
+        id: CLASSES.LITERATURE_LIST,
+        label: 'List',
+        icon: faBars,
     },
 ];
 
@@ -59,6 +69,7 @@ const ContentTypeNew = () => {
                         {upperFirst(pluralize(type?.label || '', 0, false))}
                     </Button>
                 ))}
+
                 <hr />
                 {(selectedClassId === CLASSES.DATASET || selectedClassId === CLASSES.SOFTWARE) && (
                     <FormGroup>
@@ -81,6 +92,30 @@ const ContentTypeNew = () => {
                         <p>
                             <Link to={reverse(ROUTES.ADD_PAPER.GENERAL_DATA)}>
                                 <Button color="light">Add paper wizard</Button>
+                            </Link>
+                        </p>
+                    </>
+                )}
+                {selectedClassId === CLASSES.SMART_REVIEW && (
+                    <>
+                        <Alert color="info" fade={false}>
+                            Visit the add review page to create a new ORKG Review
+                        </Alert>
+                        <p>
+                            <Link to={reverse(ROUTES.REVIEW_NEW)}>
+                                <Button color="light">Add review</Button>
+                            </Link>
+                        </p>
+                    </>
+                )}
+                {selectedClassId === CLASSES.LITERATURE_LIST && (
+                    <>
+                        <Alert color="info" fade={false}>
+                            Visit the add list page to create a new ORKG List
+                        </Alert>
+                        <p>
+                            <Link to={reverse(ROUTES.LIST_NEW)}>
+                                <Button color="light">Add list</Button>
                             </Link>
                         </p>
                     </>

@@ -13,7 +13,10 @@ import { LOCATION_CHANGE } from 'utils';
 
 const initialState = {
     label: '',
+    created_by: null,
+    created_at: null,
     editMode: false,
+    diagramMode: false,
     researchFields: [],
     researchProblems: [],
     predicate: null,
@@ -25,6 +28,7 @@ const initialState = {
     error: null,
     propertyShapes: [],
     isLoading: false,
+    hasFailed: false,
     statements: [],
     isSaving: false,
 };
@@ -60,6 +64,9 @@ export const templateEditorSlice = createSlice({
         setEditMode: (state, { payload }) => {
             state.editMode = payload;
         },
+        setDiagramMode: (state, { payload }) => {
+            state.diagramMode = payload;
+        },
         updatePropertyShapes: (state, { payload }) => {
             state.propertyShapes = payload;
         },
@@ -67,6 +74,7 @@ export const templateEditorSlice = createSlice({
             ...initialState,
             templateID: payload.templateID,
             created_by: payload.created_by,
+            created_at: payload.created_at,
             label: payload.label,
             labelFormat: payload.labelFormat,
             hasLabelFormat: payload.hasLabelFormat,
@@ -117,6 +125,7 @@ export const {
     updateResearchProblems,
     updateResearchFields,
     setEditMode,
+    setDiagramMode,
     updatePropertyShapes,
     initTemplate,
     setIsLoading,
@@ -131,15 +140,20 @@ export default templateEditorSlice.reducer;
 export const loadTemplate = data => dispatch => {
     dispatch(setIsLoading(true));
 
-    return getTemplateById(data).then(templateData => {
-        dispatch(
-            initTemplate({
-                templateID: data,
-                ...templateData,
-            }),
-        );
-        dispatch(setIsLoading(false));
-    });
+    return getTemplateById(data)
+        .then(templateData => {
+            dispatch(
+                initTemplate({
+                    templateID: data,
+                    ...templateData,
+                }),
+            );
+            dispatch(setIsLoading(false));
+        })
+        .catch(() => {
+            dispatch(setIsLoading(false));
+            dispatch(setHasFailed(true));
+        });
 };
 
 export const saveTemplate = () => async (dispatch, getState) => {

@@ -354,3 +354,32 @@ export const getTemplatesByClass = classID =>
                 .filter(c => c),
         )
         .catch(() => []);
+
+/**
+ * Load template flow by ID
+ *
+ * @param {String} id template ID
+ * @param {Array} loadedNodes Set of templates {id: String, ...restOfProperties, neighbors}
+ */
+export const loadTemplateFlowByID = (id, loadedNodes) => {
+    if (!loadedNodes.has(id)) {
+        loadedNodes.add(id);
+        return getTemplateById(id).then(t => {
+            const promises = t.propertyShapes
+                .filter(ps => ps.value)
+                .map(ps =>
+                    getTemplatesByClass(ps.value.id).then(templateIds => {
+                        if (templateIds.length) {
+                            return loadTemplateFlowByID(templateIds[0], loadedNodes);
+                        }
+                        return Promise.resolve([]);
+                    }),
+                );
+            return Promise.all(promises).then(neighborNodes => ({
+                ...t,
+                neighbors: neighborNodes,
+            }));
+        });
+    }
+    return Promise.resolve([]);
+};

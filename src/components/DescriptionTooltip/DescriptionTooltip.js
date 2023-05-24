@@ -1,17 +1,17 @@
-import { useState, Fragment, useEffect } from 'react';
-import { Button, Table } from 'reactstrap';
-import PropTypes from 'prop-types';
-import Tippy from '@tippyjs/react';
-import { truncate } from 'lodash';
-import { Link } from 'react-router-dom';
+import { faClipboard, faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faClipboard } from '@fortawesome/free-solid-svg-icons';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { PREDICATES, ENTITIES } from 'constants/graphSettings';
+import Tippy from '@tippyjs/react';
+import { ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { truncate } from 'lodash';
+import PropTypes from 'prop-types';
+import { Fragment, useEffect, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { getResourceLink } from 'utils';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Button, Table } from 'reactstrap';
+import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import styled from 'styled-components';
+import { getLinkByEntityType, getResourceLink } from 'utils';
 
 const TippyStyle = styled(Tippy)`
     &.tippy-box[data-theme~='descriptionTooltip'] .tippy-content {
@@ -98,26 +98,37 @@ const DescriptionTooltip = props => {
                     <tbody>
                         <tr>
                             <td>{renderTypeLabel()} id</td>
-                            <td>
-                                <span>{props.id}</span>
-                                <CopyToClipboard
-                                    text={props.id}
-                                    onCopy={() => {
-                                        toast.dismiss();
-                                        toast.success('ID copied to clipboard');
-                                    }}
-                                >
-                                    <Button
-                                        title="Click to copy id"
-                                        onClick={e => e.stopPropagation()}
-                                        className="py-0 px-0 ms-1"
-                                        size="sm"
-                                        color="link"
-                                        style={{ verticalAlign: 'middle' }}
+                            <td className="d-flex">
+                                <div className="flex-grow-1">
+                                    <span>{props.id}</span>
+                                    <CopyToClipboard
+                                        text={props.id}
+                                        onCopy={() => {
+                                            toast.dismiss();
+                                            toast.success('ID copied to clipboard');
+                                        }}
                                     >
-                                        <Icon icon={faClipboard} size="xs" />
-                                    </Button>
-                                </CopyToClipboard>
+                                        <Button
+                                            title="Click to copy id"
+                                            onClick={e => e.stopPropagation()}
+                                            className="py-0 px-0 ms-1"
+                                            size="sm"
+                                            color="link"
+                                            style={{ verticalAlign: 'middle' }}
+                                        >
+                                            <Icon icon={faClipboard} size="xs" />
+                                        </Button>
+                                    </CopyToClipboard>
+                                </div>
+                                {props.showURL && (
+                                    <div>
+                                        <Tippy content={`Go to ${renderTypeLabel()} page`}>
+                                            <Link to={getLinkByEntityType(ENTITIES.CLASS, props.id)} target="_blank">
+                                                <Icon icon={faLink} size="xs" />
+                                            </Link>
+                                        </Tippy>
+                                    </div>
+                                )}
                             </td>
                         </tr>
                         {props.classes?.length > 0 && (
@@ -178,10 +189,12 @@ DescriptionTooltip.propTypes = {
     classes: PropTypes.array,
     extraContent: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     disabled: PropTypes.bool.isRequired,
+    showURL: PropTypes.bool.isRequired,
 };
 
 DescriptionTooltip.defaultProps = {
     disabled: false,
+    showURL: false,
 };
 
 export default DescriptionTooltip;

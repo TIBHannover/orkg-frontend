@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup } from 'reactstrap';
-import { updateOrganizationName, updateOrganizationUrl, updateOrganizationLogo } from 'services/backend/organizations';
+import { updateOrganization } from 'services/backend/organizations';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import capitalize from 'capitalize';
@@ -10,9 +10,8 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
     const [organizationLabel, setOrganizationLabel] = useState('');
     const [organizationUrl, setOrganizationUrl] = useState('');
     const [organizationPreviewSrc, setOrganizationPreviewSrc] = useState('');
-    const [isLoadingName, setIsLoadingName] = useState(false);
-    const [isLoadingUrl, setIsLoadingUrl] = useState(false);
-    const [isLoadingLogo, setIsLoadingLogo] = useState(false);
+    const [newLogo, setNewLogo] = useState('');
+    const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
         setOrganizationLabel(label);
@@ -30,6 +29,8 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
             return;
         }
 
+        setNewLogo(file);
+
         reader.onloadend = () => {
             setOrganizationPreviewSrc(reader.result);
         };
@@ -37,47 +38,10 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
         reader.readAsDataURL(file);
     };
 
-    const updateName = async (_id, name) => {
-        setIsLoadingName(true);
-        try {
-            await updateOrganizationName(_id, name);
-            setIsLoadingName(false);
-        } catch (error) {
-            setIsLoadingName(false);
-            toast.error(`Error updating ${typeName} ${error.message}`);
-        }
-    };
-
-    const updateUrl = async (_id, _url) => {
-        setIsLoadingUrl(true);
-        try {
-            await updateOrganizationUrl(_id, _url);
-            setIsLoadingUrl(false);
-        } catch (error) {
-            setIsLoadingUrl(false);
-            toast.error(`Error updating ${typeName} ${error.message}`);
-        }
-    };
-
-    const updateLogo = async (_id, image) => {
-        setIsLoadingLogo(true);
-        try {
-            await updateOrganizationLogo(_id, image);
-            setIsLoadingLogo(false);
-        } catch (error) {
-            setIsLoadingLogo(false);
-            toast.error(`Error updating ${typeName} ${error.message}`);
-        }
-    };
-
     const handleSubmit = async () => {
         const value = organizationLabel;
         const image = organizationPreviewSrc;
         const OrgUrl = organizationUrl;
-
-        let isUpdatedLabel = false;
-        let isUpdatedImage = false;
-        let isUpdatedUrl = false;
 
         toast.dismiss();
         const URL_REGEX = /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gi;
@@ -97,32 +61,35 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
             toast.error('Please upload an organization image');
             return false;
         }
-
+        const data = {};
         if (value !== label && value.length !== 0) {
-            await updateName(id, value);
-            isUpdatedLabel = true;
+            data.name = value;
         }
 
         if (OrgUrl !== url && OrgUrl.match(URL_REGEX)) {
-            await updateUrl(id, url);
-            isUpdatedUrl = true;
+            data.url = OrgUrl;
         }
 
         if (image !== previewSrc && image.length !== 0) {
-            await updateLogo(id, image);
-            isUpdatedImage = true;
+            data.logo = newLogo;
         }
 
-        if (isUpdatedLabel || isUpdatedUrl || isUpdatedImage) {
-            toast.success(`${typeName} updated successfully`);
-            updateOrganizationMetadata(value, url, image !== previewSrc && image.length !== 0 ? image : previewSrc);
-            toggle();
+        if (Object.keys(data).length > 0) {
+            try {
+                await updateOrganization(id, data);
+                setIsSaving(false);
+                toast.success(`${typeName} updated successfully`);
+                updateOrganizationMetadata(value, OrgUrl, image !== previewSrc && image.length !== 0 ? image : previewSrc);
+                toggle();
+            } catch {
+                toast.warning(`Something went wrong while updating ${typeName}`);
+                setIsSaving(false);
+            }
         } else {
             toggle();
         }
     };
 
-    const isLoading = isLoadingName || isLoadingUrl || isLoadingLogo;
     return (
         <>
             <Modal isOpen={showDialog} toggle={toggle}>
@@ -140,7 +107,7 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
                                 id="organizationLabel"
                                 value={organizationLabel}
                                 placeholder={`${typeName} name`}
-                                disabled={isLoading}
+                                disabled={isSaving}
                             />
                         </FormGroup>
                         <FormGroup>
@@ -151,7 +118,7 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
                                 name="url"
                                 id="OrganizationUrl"
                                 value={organizationUrl}
-                                disabled={isLoading}
+                                disabled={isSaving}
                                 placeholder="https://www.example.com"
                             />
                         </FormGroup>
@@ -161,13 +128,13 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
                                 <img src={organizationPreviewSrc} style={{ width: '20%', height: '20%' }} alt="Organization logo" />
                             </div>
                             <br />
-                            <Input disabled={isLoading} type="file" onChange={handlePreview} />
+                            <Input disabled={isSaving} type="file" onChange={handlePreview} />
                         </FormGroup>
                     </>
                 </ModalBody>
                 <ModalFooter>
                     <div className="text-align-center mt-2">
-                        <ButtonWithLoading color="primary" isLoading={isLoading} onClick={handleSubmit}>
+                        <ButtonWithLoading color="primary" isLoading={isSaving} onClick={handleSubmit}>
                             Save
                         </ButtonWithLoading>
                     </div>
