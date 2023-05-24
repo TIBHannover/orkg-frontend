@@ -39,9 +39,19 @@ function TabsContainer({ currentUserId, userId }) {
                     children: <Items filterLabel="papers" filterClass={CLASSES.PAPER} userId={userId} showDelete={userId === currentUserId} />,
                 },
                 {
+                    label: 'Visualizations',
+                    key: 'visualizations',
+                    children: <Items filterLabel="visualizations" filterClass={CLASSES.VISUALIZATION} userId={userId} showDelete={false} />,
+                },
+                {
                     label: 'Reviews',
                     key: 'reviews',
                     children: <Items filterLabel="reviews" filterClass={CLASSES.SMART_REVIEW_PUBLISHED} userId={userId} showDelete={false} />,
+                },
+                {
+                    label: 'Lists',
+                    key: 'lists',
+                    children: <Items filterLabel="lists" filterClass={CLASSES.LITERATURE_LIST_PUBLISHED} userId={userId} showDelete={false} />,
                 },
                 {
                     label: 'Templates',

@@ -5,6 +5,7 @@ import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
 import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
 import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
+import ListCard from 'components/Cards/ListCard/ListCard';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
@@ -16,7 +17,8 @@ import { useNavigate } from 'react-router-dom';
 import { Button, ListGroup } from 'reactstrap';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getComparisonData, getPaperData, getReviewData, groupVersionsOfComparisons } from 'utils';
+import { getComparisonData, getListData, getVisualizationData, getPaperData, getReviewData, groupVersionsOfComparisons } from 'utils';
+import { researchFieldUpdated } from 'slices/reviewSlice';
 
 const Items = props => {
     const pageSize = 25;
@@ -61,6 +63,12 @@ const Items = props => {
                             if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
                                 return getReviewData(resourceSubject, resourceStatements.statements);
                             }
+                            if (props.filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
+                                return getListData(resourceSubject, resourceStatements.statements);
+                            }
+                            if (props.filterClass === CLASSES.VISUALIZATION) {
+                                return getVisualizationData(resourceSubject, resourceStatements.statements);
+                            }
                             return resourceSubject;
                         });
                         if (props.filterClass === CLASSES.COMPARISON) {
@@ -68,6 +76,10 @@ const Items = props => {
                                 groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...newResources]),
                             );
                         } else if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
+                            const groupedByPaper = groupBy(newResources, 'paperId');
+                            newResources = Object.keys(groupedByPaper).map(paperId => [...groupedByPaper[paperId]]);
+                            setResources(prevResources => [...prevResources, ...newResources]);
+                        } else if (props.filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
                             const groupedByPaper = groupBy(newResources, 'paperId');
                             newResources = Object.keys(groupedByPaper).map(paperId => [...groupedByPaper[paperId]]);
                             setResources(prevResources => [...prevResources, ...newResources]);
@@ -179,6 +191,9 @@ const Items = props => {
                         }
                         if (props.filterClass === CLASSES.VISUALIZATION) {
                             return <VisualizationCard visualization={resource} showBadge={false} showCurationFlags={true} />;
+                        }
+                        if (props.filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
+                            return <ListCard versions={resource} showBadge={false} showCurationFlags={true} />;
                         }
 
                         return null;
