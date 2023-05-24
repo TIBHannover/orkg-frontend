@@ -9,6 +9,7 @@ import REGEX from 'constants/regex';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Container, FormGroup, FormText, Input, Label } from 'reactstrap';
@@ -24,6 +25,8 @@ const AddClass = () => {
     const parentClassAutocompleteRef = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+
+    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
     useEffect(() => {
         // Set document title
@@ -116,7 +119,7 @@ const AddClass = () => {
                         </Label>
                         <AutoComplete
                             entityType={ENTITIES.CLASS}
-                            placeholder="Select or type to enter a class"
+                            placeholder={isCurationAllowed ? 'Select or type to enter a class' : 'This field requires a curator role'}
                             onChange={handleParentClassSelect}
                             value={parentClass}
                             autoLoadOption={true}
@@ -130,10 +133,13 @@ const AddClass = () => {
                             linkButton={parentClass && parentClass.id ? reverse(ROUTES.CLASS, { id: parentClass.id }) : ''}
                             linkButtonTippy="Go to class page"
                             inputId="target-class"
+                            isDisabled={!isCurationAllowed}
                         />
-                        <FormText color="muted">
-                            Enter the parent class for this new class. Select an existing class, or create a new one by typing its name.
-                        </FormText>
+                        {isCurationAllowed && (
+                            <FormText color="muted">
+                                Enter the parent class for this new class. Select an existing class, or create a new one by typing its name.
+                            </FormText>
+                        )}
                     </FormGroup>
                     <ButtonWithLoading color="primary" onClick={handleAdd} className="mt-3 mb-2" isLoading={isLoading}>
                         Create class

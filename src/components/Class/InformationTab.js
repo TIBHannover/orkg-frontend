@@ -1,4 +1,6 @@
+import { faPen } from '@fortawesome/free-solid-svg-icons';
 import ClassInlineItem from 'components/Class/ClassInlineItem/ClassInlineItem';
+import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
@@ -174,7 +176,20 @@ function InformationTab({ id, label, uri, editMode, callBackToReloadTree, showSt
                                         }}
                                     />
                                 )}
-                                {((!editMode && _children?.length === 0) || !isCurationAllowed) && 'Not defined'}
+                                {!editMode && _children?.length === 0 && 'Not defined'}
+                                {editMode && _children?.length === 0 && !isCurationAllowed && (
+                                    <>
+                                        Not defined
+                                        <span className="ms-2">
+                                            <StatementActionButton
+                                                title="Editing require requires a curator role"
+                                                icon={faPen}
+                                                action={null}
+                                                isDisabled={true}
+                                            />
+                                        </span>
+                                    </>
+                                )}
                             </div>
                         </td>
                     </tr>

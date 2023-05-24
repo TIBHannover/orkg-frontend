@@ -80,6 +80,11 @@ const ClassInlineItem = ({ classObject, editMode, noValueMessage, displayButtonO
                     )}
                     {!isSavingChange && !classObject && noValueMessage}
                     <ButtonsContainer className="item-buttons" displayButtonOnHover={displayButtonOnHover}>
+                        {editMode && !isCurationAllowed && (
+                            <span className="ms-2">
+                                <StatementActionButton title="Editing require requires a curator role" icon={faPen} action={null} isDisabled={true} />
+                            </span>
+                        )}
                         {classObject && editMode && isCurationAllowed && (
                             <span className="ms-2">
                                 {props.onChange && (
