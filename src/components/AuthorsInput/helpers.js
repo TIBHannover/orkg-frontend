@@ -55,7 +55,7 @@ export const saveAuthors = async (_authors, resourceId) => {
     // Create the new literals for authors
     authors = await Promise.all(
         authors.map(author => {
-            if (!author.orcid && author.__isNew__) {
+            if (!author.orcid) {
                 return createLiteral(author.label);
             }
             return Promise.resolve(author);
@@ -79,6 +79,7 @@ export async function updateAuthors({ prevAuthors, newAuthors, resourceId }) {
 
     const statementsIds = [];
     // remove all authors statement from reducer
+    // literals will be also delete if they are not linked to any statements
     for (const author of prevAuthors) {
         statementsIds.push(author.statementId);
     }
