@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.107.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.107.0...v0.107.1) - 2023-05-30
+
+### Changes
+
+- set the height of the contentloader in templateModal [`#1122`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1122)
+- fix: Data loss when reordering authors [`#1121`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1121)
+- fix: class editor typo [`#1123`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1123)
+- Revert fuzzy search string optimization [`#1114`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1114)
+
+---
 ## [v0.107.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.106.0...v0.107.0) - 2023-05-24
 
 ### Changes
