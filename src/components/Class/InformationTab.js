@@ -182,7 +182,7 @@ function InformationTab({ id, label, uri, editMode, callBackToReloadTree, showSt
                                         Not defined
                                         <span className="ms-2">
                                             <StatementActionButton
-                                                title="Editing require requires a curator role"
+                                                title="Editing requires a curator role"
                                                 icon={faPen}
                                                 action={null}
                                                 isDisabled={true}
