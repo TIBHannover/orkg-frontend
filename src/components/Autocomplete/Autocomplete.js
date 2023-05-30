@@ -179,11 +179,7 @@ function Autocomplete(props) {
         }
         let responseJson;
         if (props.optionsClass) {
-            let _label = value?.trim();
-            if (_label.length > 1 && _label.split(/\s+/).length === 1 && !_label.endsWith('*')) {
-                _label += '*';
-            }
-            responseJson = await getResourcesByClass({ id: props.optionsClass, q: _label, page, items: PAGE_SIZE, exact });
+            responseJson = await getResourcesByClass({ id: props.optionsClass, q: value?.trim(), page, items: PAGE_SIZE, exact });
         } else {
             const isURI = new RegExp(REGEX.URL).test(value.trim());
             if (props.entityType === ENTITIES.CLASS && isURI) {
@@ -203,14 +199,10 @@ function Autocomplete(props) {
                     ? { content: [responseJson], last: true, totalElements: 1 }
                     : { content: [], last: true, totalElements: 0 };
             } else {
-                let _label = value?.trim();
-                if (_label.length > 1 && _label.split(/\s+/).length === 1 && !_label.endsWith('*')) {
-                    _label += '*';
-                }
                 responseJson = await getEntities(props.entityType, {
                     page,
                     items: PAGE_SIZE,
-                    q: _label,
+                    q: value?.trim(),
                     exclude: props.excludeClasses ? props.excludeClasses : null,
                     exact,
                 });

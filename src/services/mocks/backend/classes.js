@@ -5,10 +5,7 @@ import { DClocationResources, QBDatasetClasses } from 'services/mocks/backend/__
 
 const resources = [
     rest.get(classesUrl, (req, res, ctx) => {
-        let query = req.url.searchParams.get('q');
-        if (query && query.endsWith('*')) {
-            query = query.replace('*', '');
-        }
+        const query = req.url.searchParams.get('q');
         if (query === 'qb:') {
             return res(ctx.json(QBDatasetClasses));
         }
