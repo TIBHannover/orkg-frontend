@@ -6,7 +6,15 @@ import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organi
 
 export const observatoriesUrl = `${url}observatories/`;
 
-export const getAllObservatories = () => submitGetRequest(`${observatoriesUrl}`);
+export const getAllObservatories = ({ page = 0, size = 9999 }) => {
+    const params = qs.stringify(
+        { page, size },
+        {
+            skipNulls: true,
+        },
+    );
+    return submitGetRequest(`${observatoriesUrl}?${params}`);
+};
 
 export const getObservatoryById = id => submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/`);
 
@@ -19,17 +27,21 @@ export const updateObservatoryDescription = (id, value) =>
 export const updateObservatoryResearchField = (id, value) =>
     submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/research_field`, { 'Content-Type': 'application/json' }, { value });
 
-export const getUsersByObservatoryId = id => submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/users`);
+export const getUsersByObservatoryId = ({ id, page = 0, size = 9999 }) => {
+    const params = qs.stringify(
+        { page, size },
+        {
+            skipNulls: true,
+        },
+    );
+    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/users?${params}`);
+};
 
 export const addOrganizationToObservatory = (id, organization_id) =>
     submitPutRequest(`${observatoriesUrl}add/${encodeURIComponent(id)}/organization`, { 'Content-Type': 'application/json' }, { organization_id });
 
 export const deleteOrganizationFromObservatory = (id, organization_id) =>
     submitPutRequest(`${observatoriesUrl}delete/${encodeURIComponent(id)}/organization`, { 'Content-Type': 'application/json' }, { organization_id });
-
-export const getResourcesByObservatoryId = id => submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/papers`);
-
-export const getComparisonsByObservatoryId = id => submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/comparisons`);
 
 export const getContentByObservatoryIdAndClasses = ({
     id,
@@ -52,9 +64,15 @@ export const getContentByObservatoryIdAndClasses = ({
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/class?${params}`);
 };
 
-export const getObservatoriesByResearchFieldId = id => submitGetRequest(`${observatoriesUrl}research-field/${encodeURIComponent(id)}/observatories`);
-
-export const getObservatoriesStats = id => submitGetRequest(`${observatoriesUrl}stats/observatories`);
+export const getObservatoriesByResearchFieldId = ({ id, page = 0, size = 9999 }) => {
+    const params = qs.stringify(
+        { research_field: encodeURIComponent(id), page, size },
+        {
+            skipNulls: true,
+        },
+    );
+    return submitGetRequest(`${observatoriesUrl}?${params}`);
+};
 
 export const createObservatory = (observatory_name, organization_id, description, research_field, display_id) =>
     submitPostRequest(

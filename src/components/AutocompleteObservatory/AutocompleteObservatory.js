@@ -27,7 +27,7 @@ function AutocompleteObservatory(props) {
 
     useEffect(() => {
         const loadOptions = () => {
-            const observatories = getAllObservatories();
+            const observatories = getAllObservatories({}).then(res => res.content);
             const organizations = getAllOrganizations();
             return Promise.all([observatories, organizations]).then(data => {
                 const items = [];

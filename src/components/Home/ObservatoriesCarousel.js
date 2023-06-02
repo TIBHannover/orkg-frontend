@@ -117,7 +117,7 @@ function ObservatoriesCarousel(props) {
                                 {observatory.resources} papers
                             </small>
                             <div className="float-end" style={{ height: '25px' }}>
-                                {observatory.contributors.slice(0, 5).map(contributor => (
+                                {observatory.members.slice(0, 5).map(contributor => (
                                     <Tippy key={`contributor${contributor.id}`} content={contributor.display_name}>
                                         <Link className="ms-1" to={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
                                             <StyledGravatar className="rounded-circle" md5={contributor.gravatar_id} size={24} />
@@ -133,15 +133,15 @@ function ObservatoriesCarousel(props) {
 
     return (
         <CarouselContainer>
-            {!props.isLoading ? (
-                props.observatories.length ? (
+            {!props.isLoading &&
+                (props.observatories.length ? (
                     <Carousel activeIndex={activeIndex} next={next} previous={previous}>
                         {slides()}
 
                         <CarouselIndicatorsStyled items={props.observatories} activeIndex={activeIndex} onClickHandler={goToIndex} />
                     </Carousel>
                 ) : (
-                    <div className="pt-4 pb-4 ps-4 pe-4 text-center">
+                    <div className="flex-grow-1 mt-4 text-center">
                         No observatories yet
                         <br />
                         <small>
@@ -150,8 +150,8 @@ function ObservatoriesCarousel(props) {
                             </a>
                         </small>
                     </div>
-                )
-            ) : (
+                ))}
+            {props.isLoading && (
                 <div style={{ height: '130px' }} className="pt-4 pb-1 ps-4 pe-4">
                     <ContentLoader
                         width={300}

@@ -50,8 +50,8 @@ function ObservatoryCard(props) {
                             <div className="observatoryName">{props.observatory.name}</div>
 
                             <div className="observatoryStats text-muted">
-                                Papers: <b>{props.observatory.numPapers}</b> <br />
-                                Comparisons: <b>{props.observatory.numComparisons}</b>
+                                Papers: <b>{props.observatory.papers}</b> <br />
+                                Comparisons: <b>{props.observatory.comparisons}</b>
                             </div>
                         </div>
                     </CardBody>
