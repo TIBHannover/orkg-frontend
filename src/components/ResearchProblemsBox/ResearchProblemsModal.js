@@ -39,7 +39,7 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
                             <option value="combined">Top recent</option>
                             <option value="newest">Recently added</option>
                             <option value="featured">Featured</option>
-                            {isCurationAllowed && <option value="unlisted">Unlisted</option>}
+                            <option value="unlisted">Unlisted</option>
                         </Input>
                     </div>
                     {id !== RESOURCES.RESEARCH_FIELD_MAIN && by === 'ResearchField' && (
