@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.108.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.107.1...v0.108.0) - 2023-06-02
+
+### Changes
+
+- feat(ResearchField): Show unlisted filter option publicly [`#1124`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1124)
+- fix(TemplateEditor): Redux state cleared on location change [`#1120`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1120)
+- chore: Sync with the backend refactoring of observatories endpoints [`#1089`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1089)
+
+---
 ## [v0.107.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.107.0...v0.107.1) - 2023-05-30
 
 ### Changes
