@@ -5,7 +5,6 @@ import useResearchProblemContent from 'components/ResearchProblem/hooks/useResea
 import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import { CLASSES } from 'constants/graphSettings';
-import { useSelector } from 'react-redux';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -37,7 +36,6 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
                 : DEFAULT_CLASSES_FILTER,
             updateURL: true,
         });
-    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
     const handleSelect = classFilter => {
         if (classesFilter.map(i => i.id).includes(classFilter.id) && classesFilter.length === 1) {
@@ -97,7 +95,7 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
                             <option value="combined">Top recent</option>
                             <option value="newest">Recently added</option>
                             <option value="featured">Featured</option>
-                            {isCurationAllowed && <option value="unlisted">Unlisted</option>}
+                            <option value="unlisted">Unlisted</option>
                         </Input>
                     </div>
                 </div>
