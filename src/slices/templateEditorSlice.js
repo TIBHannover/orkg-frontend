@@ -104,9 +104,14 @@ export const templateEditorSlice = createSlice({
     },
     extraReducers: builder => {
         builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
-            const matchTemplate = match(ROUTES.TEMPLATE_TABS);
+            const matchTemplateTabs = match(ROUTES.TEMPLATE_TABS);
+            const matchTemplate = match(ROUTES.TEMPLATE);
+            const parsedPayloadTabs = matchTemplateTabs(payload.location.pathname);
             const parsedPayload = matchTemplate(payload.location.pathname);
-            if (parsedPayload && parsedPayload.params?.id === state.templateID) {
+            if (
+                (parsedPayloadTabs && parsedPayloadTabs.params?.id === state.templateID) ||
+                (parsedPayload && parsedPayload.params?.id === state.templateID)
+            ) {
                 // when it's the same template  (just the tab changed) do not init
                 return state;
             }
