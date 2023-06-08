@@ -62,6 +62,7 @@ const Observatory = () => {
                     setError(error);
                 });
         };
+
         loadObservatory();
     }, [id]);
 
@@ -109,15 +110,16 @@ const Observatory = () => {
                     >
                         {label}
                     </TitleBar>
+
                     <EditModeHeader isVisible={isEditMode} />
                     <Container
                         className={`box py-3 px-4 mb-4 clearfix position-relative 
-                                ${isEditMode ? 'rounded-bottom' : 'rounded'}`}
+                              ${isEditMode ? 'rounded-bottom' : 'rounded'}`}
                     >
                         <>
                             {description && (
                                 <p className="m-0" style={{ whiteSpace: 'pre-wrap' }}>
-                                    {description}
+                                    {description || <small className="fst-italic">No Description provided</small>}
                                 </p>
                             )}
 
