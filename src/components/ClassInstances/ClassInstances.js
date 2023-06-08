@@ -96,12 +96,12 @@ const ClassInstances = props => {
             </p>
             {instances.length > 0 && (
                 <div className="mt-3">
-                    <Table size="sm" bordered>
+                    <Table size="sm" bordered className="text-break">
                         <thead>
                             <tr>
-                                <th>Resource ID</th>
+                                <th className="col-4">Resource ID</th>
                                 <th>Label</th>
-                                <th>Shared</th>
+                                <th className="col-2">Shared</th>
                             </tr>
                         </thead>
                         <tbody>
