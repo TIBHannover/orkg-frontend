@@ -3,6 +3,19 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.109.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.108.0...v0.109.0) - 2023-06-08
+
+### Changes
+
+- CD(Netlify): add redirection rule for index.html [`#1135`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1135)
+- chore: replace 'featured' and 'unlisted' flags with 'visibility' parameter [`#1129`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1129)
+- feat(Template): download template diagram as image [`#1134`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1134)
+- fix(Visualization): problems with tables width [`#1131`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1131)
+- style(Class): overflowing content of instances table [`#1133`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1133)
+- fix(StatementBrowser): template properties vanish once saved [`#1132`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1132)
+- fix(Observatory): show message when no description is provided [`#1130`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1130)
+
+---
 ## [v0.108.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.107.1...v0.108.0) - 2023-06-02
 
 ### Changes
