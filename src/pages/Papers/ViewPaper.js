@@ -6,6 +6,7 @@ import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import TitleBar from 'components/TitleBar/TitleBar';
 import Contributions from 'components/ViewPaper/Contributions/Contributions';
 import GizmoGraphViewModal from 'components/ViewPaper/GraphView/GizmoGraphViewModal';
+import ReGraph from 'components/ViewPaper/GraphView/ReaGraph';
 import useViewPaper from 'components/ViewPaper/hooks/useViewPaper';
 import PaperHeader from 'components/ViewPaper/PaperHeader';
 import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
@@ -97,7 +98,12 @@ const ViewPaper = () => {
                             View paper
                         </TitleBar>
                     </VisibilitySensor>
-
+                    <Container>
+                        <div style={{ width: '1000px', height: '700px', border: '1px solid black' }}>
+                            <h1>hello</h1>
+                            <ReGraph />
+                        </div>
+                    </Container>
                     <EditModeHeader isVisible={editMode} />
 
                     <Container

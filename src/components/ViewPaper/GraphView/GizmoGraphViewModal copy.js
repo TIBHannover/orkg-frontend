@@ -424,18 +424,22 @@ class GraphView extends Component {
                 isOpen={this.props.showDialog}
                 toggle={this.props.toggle}
                 size="lg"
-                // onOpened={() => {
-                //     if (!this.graphVis.graphIsInitialized) {
-                //         this.loadStatements().then(() => {
-                //             if (this.child && this.child.current) {
-                //                 this.graphVis.ensureLayoutConsistency(this.state.layout);
-                //             }
-                //             this.seenDepth = this.graphVis.getMaxDepth();
-                //         });
-                //     }
-                // }}
+                onOpened={() => {
+                    if (!this.graphVis.graphIsInitialized) {
+                        this.loadStatements().then(() => {
+                            if (this.child && this.child.current) {
+                                this.graphVis.ensureLayoutConsistency(this.state.layout);
+                            }
+                            this.seenDepth = this.graphVis.getMaxDepth();
+                        });
+                    }
+                }}
                 style={{ maxWidth: '90%', marginBottom: 0 }}
             >
+                <div>
+                    <h1>REAGRAPH</h1>
+                    <ReGraph />
+                </div>
                 <ModalHeader toggle={this.props.toggle}>
                     <div className="d-flex" style={{ height: '40px' }}>
                         <div style={{ width: '300px', height: '40px', paddingTop: '5px' }}>Paper graph visualization</div>
@@ -562,8 +566,32 @@ class GraphView extends Component {
                     </div>
                 </ModalHeader>
                 <ModalBody style={{ padding: '0', minHeight: '100px', height: this.state.windowHeight }}>
-                    <h1>REAGRAPH</h1>
-                    <ReGraph />
+                    {!this.state.isLoadingStatements && (
+                        <GizmoGraph
+                            ref={this.child}
+                            isLoadingStatements={this.state.isLoadingStatements}
+                            depth={this.state.depth}
+                            updateDepthRange={this.updateDepthRange}
+                            maxDepth={this.state.maxDepth}
+                            layout={this.state.layout}
+                            graph={{ nodes: this.state.nodes, edges: this.state.edges }}
+                            initializeGraph={this.state.initializeGraph}
+                            graphVis={this.graphVis}
+                            graphBgColor="#ecf0f1"
+                            addPaperVisualization={this.props.addPaperVisualization}
+                        />
+                    )}
+
+                    {this.state.isLoadingStatements && (
+                        <div className="text-center text-primary mt-4 mb-4">
+                            {/* using a manual fixed scale value for the spinner scale! */}
+                            <span style={{ fontSize: this.state.windowHeight / 5 }}>
+                                <Icon icon={faSpinner} spin />
+                            </span>
+                            <br />
+                            <h2 className="h5">Loading graph...</h2>
+                        </div>
+                    )}
                 </ModalBody>
             </Modal>
         );

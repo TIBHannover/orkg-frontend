@@ -105,6 +105,7 @@
         "react-visibility-sensor": "^5.1.1",
         "reactflow": "^11.7.0",
         "reactstrap": "^9.1.9",
+        "reagraph": "^4.8.2",
         "redux": "^4.2.1",
         "redux-first-history": "^5.1.1",
         "sbd": "^1.0.19",
