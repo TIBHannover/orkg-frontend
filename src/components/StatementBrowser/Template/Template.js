@@ -1,10 +1,11 @@
-import { setDoneAnimation } from 'slices/statementBrowserSlice';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
-import TemplateHeader from 'components/StatementBrowser/Template/TemplateHeader/TemplateHeader';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItem';
-import { useDispatch, useSelector } from 'react-redux';
+import TemplateHeader from 'components/StatementBrowser/Template/TemplateHeader/TemplateHeader';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { setDoneAnimation } from 'slices/statementBrowserSlice';
 import { AddPropertyWrapper, AnimationContainer } from './styled';
+import PropertySuggestions from './PropertySuggestions';
 
 const Template = props => {
     const dispatch = useDispatch();
@@ -51,6 +52,7 @@ const Template = props => {
                         resourceId={props.value.resourceId}
                     />
                 ))}
+                {props.enableEdit && <PropertySuggestions selectedResource={props.value.resourceId} />}
                 {props.enableEdit && (
                     <AddPropertyWrapper className="mb-3">
                         <div className="row gx-0">
