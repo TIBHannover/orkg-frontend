@@ -1,11 +1,12 @@
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
+import ROUTES from 'constants/routes.js';
 import { find, flatten } from 'lodash';
+import { reverse } from 'named-urls';
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getContentByResearchProblemIdAndClasses } from 'services/backend/problems';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate, reverseWithSlug } from 'utils';
-import { useNavigate } from 'react-router-dom';
-import ROUTES from 'constants/routes.js';
-import { reverse } from 'named-urls';
 
 function useResearchProblemContent({
     researchProblemId,
@@ -39,8 +40,7 @@ function useResearchProblemContent({
                     items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
-                    featured: false,
-                    unlisted: false,
+                    visibility: VISIBILITY_FILTERS.NON_FEATURED,
                     classes: classesFilter.map(c => c.id),
                 });
                 const featuredContentService = getContentByResearchProblemIdAndClasses({
@@ -49,8 +49,7 @@ function useResearchProblemContent({
                     items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
-                    featured: true,
-                    unlisted: false,
+                    visibility: VISIBILITY_FILTERS.FEATURED,
                     classes: classesFilter.map(c => c.id),
                 });
                 contentService = Promise.all([noFeaturedContentService, featuredContentService]).then(([noFeaturedContent, featuredContent]) => {
@@ -68,8 +67,7 @@ function useResearchProblemContent({
                     items: pageSize,
                     sortBy: 'created_at',
                     desc: true,
-                    featured: sort === 'featured' ? true : null,
-                    unlisted: sort === 'unlisted',
+                    visibility: sort,
                     classes: classesFilter.map(c => c.id),
                 });
             }
@@ -107,20 +105,16 @@ function useResearchProblemContent({
                             setTotalElements(result.totalElements);
                             setCurrentPage(page + 1);
                         })
-                        .catch(error => {
+                        .catch(() => {
                             setIsLoading(false);
                             setHasNextPage(false);
                             setIsLastPageReached(page > 1);
-
-                            console.log(error);
                         });
                 })
-                .catch(error => {
+                .catch(() => {
                     setIsLoading(false);
                     setHasNextPage(false);
                     setIsLastPageReached(page > 1);
-
-                    console.log(error);
                 });
         },
         [sort, researchProblemId, pageSize, classesFilter],

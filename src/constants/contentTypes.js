@@ -11,4 +11,12 @@ const contentTypes = [
     CLASSES.PROBLEM,
 ];
 
+export const VISIBILITY_FILTERS = {
+    ALL_LISTED: 'ALL_LISTED',
+    UNLISTED: 'UNLISTED',
+    FEATURED: 'FEATURED',
+    NON_FEATURED: 'NON_FEATURED',
+    DELETED: 'DELETED',
+};
+
 export default contentTypes;

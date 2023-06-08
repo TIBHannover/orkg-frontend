@@ -1,10 +1,11 @@
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
+import { CLASSES, MISC } from 'constants/graphSettings';
 import { useCallback, useEffect, useState } from 'react';
-import { mergeAlternate } from 'utils';
+import { toast } from 'react-toastify';
 import { getContentByObservatoryIdAndClasses } from 'services/backend/observatories';
 import { getResearchProblemsByResearchFieldId } from 'services/backend/researchFields';
-import { CLASSES, MISC } from 'constants/graphSettings';
 import { addResourceToObservatory } from 'services/backend/resources';
-import { toast } from 'react-toastify';
+import { mergeAlternate } from 'utils';
 
 function useResearchProblems({ id, by = 'ResearchField', initialSort, initialIncludeSubFields, pageSize = 10 }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +18,7 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
     const [includeSubFields, setIncludeSubFields] = useState(initialIncludeSubFields);
 
     const loadData = useCallback(
-        (page, total) => {
+        (_page, total) => {
             const apiFunc = by === 'ResearchField' ? getResearchProblemsByResearchFieldId : getContentByObservatoryIdAndClasses;
             setIsLoading(true);
             // problems
@@ -26,45 +27,42 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
                 // in case of combined sort we list 50% featured and 50% newest items (new not featured)
                 const newService = apiFunc({
                     id,
-                    page,
+                    page: _page,
                     items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     ...(by === 'ResearchField' ? { subfields: includeSubFields } : {}),
                     ...(by === 'Observatory' ? { classes: [CLASSES.PROBLEM] } : {}),
-                    featured: false,
-                    unlisted: false,
+                    visibility: VISIBILITY_FILTERS.NON_FEATURED,
                 });
                 const featuredService = apiFunc({
                     id,
-                    page,
+                    page: _page,
                     items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     ...(by === 'ResearchField' ? { subfields: includeSubFields } : {}),
                     ...(by === 'Observatory' ? { classes: [CLASSES.PROBLEM] } : {}),
-                    featured: true,
-                    unlisted: false,
+                    visibility: VISIBILITY_FILTERS.FEATURED,
                 });
                 problemsService = Promise.all([newService, featuredService]).then(([newC, featuredC]) => {
                     const combinedC = mergeAlternate(newC.content, featuredC.content);
                     return {
                         content: combinedC,
-                        totalElements: page === 0 ? newC.totalElements + featuredC.totalElements : total,
+                        totalElements: _page === 0 ? newC.totalElements + featuredC.totalElements : total,
                         last: newC.last && featuredC.last,
                     };
                 });
             } else {
                 problemsService = apiFunc({
                     id,
-                    page,
+                    page: _page,
                     items: pageSize,
                     sortBy: 'created_at',
                     desc: true,
                     ...(by === 'ResearchField' ? { subfields: includeSubFields } : {}),
                     ...(by === 'Observatory' ? { classes: [CLASSES.PROBLEM] } : {}),
-                    featured: sort === 'featured' ? true : null,
-                    unlisted: sort === 'unlisted',
+                    visibility: sort,
                 });
             }
             problemsService
@@ -74,13 +72,13 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
                     setHasNextPage(!result.last);
                     setIsLastPageReached(result.last);
                     setTotalElements(result.totalElements);
-                    setPage(page + 1);
+                    setPage(_page + 1);
                 })
-                .catch(error => {
+                .catch(() => {
                     setProblems([]);
                     setIsLoading(false);
                     setHasNextPage(false);
-                    setIsLastPageReached(page > 1);
+                    setIsLastPageReached(_page > 1);
                 });
         },
         [sort, id, pageSize, by, includeSubFields],
@@ -88,7 +86,7 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
 
     const deleteResearchProblem = async researchProblem => {
         await addResourceToObservatory({ observatory_id: MISC.UNKNOWN_ID, organization_id: MISC.UNKNOWN_ID, id: researchProblem.id })
-            .then(_ => {
+            .then(() => {
                 setProblems(v => v.filter(t => t.id !== researchProblem.id));
                 setTotalElements(r => r - 1);
                 toast.success('Research problem deleted successfully');

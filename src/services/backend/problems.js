@@ -1,4 +1,5 @@
 import { url } from 'constants/misc';
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { submitGetRequest } from 'network';
 import qs from 'qs';
 
@@ -32,14 +33,13 @@ export const getContentByResearchProblemIdAndClasses = ({
     items = 9999,
     sortBy = 'created_at',
     desc = true,
-    featured = null,
-    unlisted = null,
+    visibility = VISIBILITY_FILTERS.ALL_LISTED,
     classes = [],
 }) => {
     // Sort is not supported in this endpoint
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
-        { page, size: items, sort, featured, unlisted, classes: classes.join(',') },
+        { page, size: items, sort, visibility, classes: classes.join(',') },
         {
             skipNulls: true,
         },

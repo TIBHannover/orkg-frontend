@@ -1,10 +1,11 @@
-import { submitPostRequest, submitPutRequest, submitGetRequest, submitDeleteRequest } from 'network';
-import { getContributorInformationById } from 'services/backend/contributors';
-import { classesUrl } from 'services/backend/classes';
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { MISC } from 'constants/graphSettings';
-import qs from 'qs';
-import { uniqBy, uniq } from 'lodash';
 import { url } from 'constants/misc';
+import { uniq, uniqBy } from 'lodash';
+import { submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
+import qs from 'qs';
+import { classesUrl } from 'services/backend/classes';
+import { getContributorInformationById } from 'services/backend/contributors';
 
 export const resourcesUrl = `${url}resources/`;
 
@@ -106,12 +107,11 @@ export const getResourcesByClass = async ({
     exact = false,
     verified = null,
     returnContent = false,
-    featured = null,
-    unlisted = null,
+    visibility = VISIBILITY_FILTERS.ALL_LISTED,
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
-        { page, size, creator, exact, ...(q ? { q } : { sort, desc }), verified, featured, unlisted },
+        { page, size, creator, exact, ...(q ? { q } : { sort, desc }), verified, visibility },
         {
             skipNulls: true,
         },

@@ -1,15 +1,16 @@
-import { Container, ListGroup, FormGroup, Label, Input } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import useResearchProblemContent from 'components/ResearchProblem/hooks/useResearchProblemContent';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import CardFactory from 'components/Cards/CardFactory/CardFactory';
+import useResearchProblemContent from 'components/ResearchProblem/hooks/useResearchProblemContent';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
-import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
-import { useLocation } from 'react-router-dom';
 import qs from 'qs';
+import ContentLoader from 'react-content-loader';
+import { useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Container, FormGroup, Input, Label, ListGroup } from 'reactstrap';
 
 const DEFAULT_CLASSES_FILTER = [
     { id: CLASSES.PAPER, label: 'Paper' },
@@ -48,6 +49,12 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
         }
     };
 
+    const visibilityText =
+        {
+            [VISIBILITY_FILTERS.FEATURED]: 'featured',
+            [VISIBILITY_FILTERS.UNLISTED]: 'unlisted',
+        }[sort] || '';
+
     return (
         <>
             <Container className="d-md-flex align-items-center mt-4 mb-4">
@@ -67,12 +74,12 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
                     style={{ fontSize: '0.875rem', padding: '0.25rem 1.25rem', color: '#646464', backgroundColor: '#dcdee6' }}
                 >
                     <div className="me-1"> Show:</div>
-                    {DEFAULT_CLASSES_FILTER.map(({ id, label }) => (
-                        <FormGroup check key={id} className="mb-0">
+                    {DEFAULT_CLASSES_FILTER.map(({ id: _id, label }) => (
+                        <FormGroup check key={_id} className="mb-0">
                             <Label check className="mb-0 ms-2" style={{ fontSize: '0.875rem' }}>
                                 <Input
-                                    onChange={() => handleSelect({ id, label })}
-                                    checked={classesFilter.map(i => i.id).includes(id)}
+                                    onChange={() => handleSelect({ id: _id, label })}
+                                    checked={classesFilter.map(i => i.id).includes(_id)}
                                     type="checkbox"
                                     disabled={isLoading}
                                 />
@@ -93,9 +100,9 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
                             disabled={isLoading}
                         >
                             <option value="combined">Top recent</option>
-                            <option value="newest">Recently added</option>
-                            <option value="featured">Featured</option>
-                            <option value="unlisted">Unlisted</option>
+                            <option value={VISIBILITY_FILTERS.ALL_LISTED}>Recently added</option>
+                            <option value={VISIBILITY_FILTERS.FEATURED}>Featured</option>
+                            <option value={VISIBILITY_FILTERS.UNLISTED}>Unlisted</option>
                         </Input>
                     </div>
                 </div>
@@ -111,7 +118,13 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
                                 style={{ cursor: 'pointer' }}
                                 className="list-group-item list-group-item-action text-center"
                                 onClick={!isLoading ? handleLoadMore : undefined}
-                                onKeyDown={e => (e.keyCode === 13 ? (!isLoading ? handleLoadMore : undefined) : undefined)}
+                                onKeyDown={e => {
+                                    if (e.key === 'Enter') {
+                                        if (!isLoading) {
+                                            handleLoadMore();
+                                        }
+                                    }
+                                }}
                                 role="button"
                                 tabIndex={0}
                             >
@@ -124,8 +137,7 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
                 {items.length === 0 && !isLoading && (
                     <div className={boxShadow ? 'container box rounded' : ''}>
                         <div className="p-5 text-center mt-4 mb-4">
-                            There are no {sort === 'featured' ? 'featured' : sort === 'unlisted' ? 'unlisted' : ''}{' '}
-                            {classesFilter.map(c => c.label).join(', ')} for this research problem, yet
+                            There are no {visibilityText} {classesFilter.map(c => c.label).join(', ')} for this research problem, yet
                             <br />
                             <br />
                         </div>
