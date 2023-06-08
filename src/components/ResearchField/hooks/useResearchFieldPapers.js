@@ -1,10 +1,11 @@
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
+import { CLASSES, RESOURCES } from 'constants/graphSettings';
 import { find } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
-import { getStatementsBySubjects } from 'services/backend/statements';
 import { getPapersByResearchFieldId } from 'services/backend/researchFields';
 import { getResourcesByClass } from 'services/backend/resources';
+import { getStatementsBySubjects } from 'services/backend/statements';
 import { getPaperData, mergeAlternate } from 'utils';
-import { RESOURCES, CLASSES } from 'constants/graphSettings';
 
 function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSubFields, pageSize = 10 }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +18,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
     const [includeSubFields, setIncludeSubFields] = useState(initialIncludeSubFields);
 
     const loadData = useCallback(
-        (page, total) => {
+        (_page, total) => {
             setIsLoading(true);
             // Papers
             let papersService;
@@ -25,30 +26,28 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                 // in case of combined sort we list 50% featured and 50% not featured items
                 const noFeaturedPapersService = getPapersByResearchFieldId({
                     id: researchFieldId,
-                    page,
+                    page: _page,
                     items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
-                    featured: false,
-                    unlisted: false,
+                    visibility: VISIBILITY_FILTERS.NON_FEATURED,
                 });
                 const featuredPapersService = getPapersByResearchFieldId({
                     id: researchFieldId,
-                    page,
+                    page: _page,
                     items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
-                    featured: true,
-                    unlisted: false,
+                    visibility: VISIBILITY_FILTERS.FEATURED,
                 });
                 papersService = Promise.all([noFeaturedPapersService, featuredPapersService]).then(([noFeaturedPapers, featuredPapers]) => {
                     // merge two arrays and alternate values
                     const combinedPapers = mergeAlternate(noFeaturedPapers.content, featuredPapers.content);
                     return {
                         content: combinedPapers,
-                        totalElements: page === 0 ? noFeaturedPapers.totalElements + featuredPapers.totalElements : total,
+                        totalElements: _page === 0 ? noFeaturedPapers.totalElements + featuredPapers.totalElements : total,
                         last: noFeaturedPapers.last && featuredPapers.last,
                     };
                 });
@@ -58,19 +57,17 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                     sortBy: 'created_at',
                     desc: true,
                     items: pageSize,
-                    featured: sort === 'featured' ? true : null,
-                    unlisted: sort === 'unlisted',
+                    visibility: sort,
                 });
             } else {
                 papersService = getPapersByResearchFieldId({
                     id: researchFieldId,
-                    page,
+                    page: _page,
                     items: pageSize,
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
-                    featured: sort === 'featured' ? true : null,
-                    unlisted: sort === 'unlisted',
+                    visibility: sort,
                 });
             }
 
@@ -81,34 +78,30 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                         ids: result.content.map(p => p.id),
                     })
                         .then(papersStatements => {
-                            const papers = papersStatements.map(paperStatements => {
+                            const _papers = papersStatements.map(paperStatements => {
                                 const paperSubject = find(result.content, {
                                     id: paperStatements.id,
                                 });
                                 return getPaperData(paperSubject, paperStatements.statements);
                             });
 
-                            setPapers(prevResources => [...prevResources, ...papers]);
+                            setPapers(prevResources => [...prevResources, ..._papers]);
                             setIsLoading(false);
                             setHasNextPage(!result.last);
                             setIsLastPageReached(result.last);
                             setTotalElements(result.totalElements);
-                            setPage(page + 1);
+                            setPage(_page + 1);
                         })
-                        .catch(error => {
+                        .catch(() => {
                             setIsLoading(false);
                             setHasNextPage(false);
-                            setIsLastPageReached(page > 1);
-
-                            console.log(error);
+                            setIsLastPageReached(_page > 1);
                         });
                 })
-                .catch(error => {
+                .catch(() => {
                     setIsLoading(false);
                     setHasNextPage(false);
-                    setIsLastPageReached(page > 1);
-
-                    console.log(error);
+                    setIsLastPageReached(_page > 1);
                 });
         },
         [sort, researchFieldId, pageSize, includeSubFields],

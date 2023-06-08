@@ -1,11 +1,12 @@
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
+import ROUTES from 'constants/routes.js';
 import { find, flatten } from 'lodash';
+import { reverse } from 'named-urls';
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getContentByResearchFieldIdAndClasses } from 'services/backend/researchFields';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate, reverseWithSlug } from 'utils';
-import { useNavigate } from 'react-router-dom';
-import ROUTES from 'constants/routes.js';
-import { reverse } from 'named-urls';
 
 function useResearchFieldContent({
     researchFieldId,
@@ -42,8 +43,7 @@ function useResearchFieldContent({
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
-                    featured: false,
-                    unlisted: false,
+                    visibility: VISIBILITY_FILTERS.NON_FEATURED,
                     classes: classesFilter.map(c => c.id),
                 });
                 const featuredContentService = getContentByResearchFieldIdAndClasses({
@@ -53,8 +53,7 @@ function useResearchFieldContent({
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
-                    featured: true,
-                    unlisted: false,
+                    visibility: VISIBILITY_FILTERS.FEATURED,
                     classes: classesFilter.map(c => c.id),
                 });
                 contentService = Promise.all([noFeaturedContentService, featuredContentService]).then(([noFeaturedContent, featuredContent]) => {
@@ -73,8 +72,7 @@ function useResearchFieldContent({
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
-                    featured: sort === 'featured' ? true : null,
-                    unlisted: sort === 'unlisted',
+                    visibility: sort,
                     classes: classesFilter.map(c => c.id),
                 }).then(response => ({ ...response, content: response.content }));
             }
@@ -113,20 +111,16 @@ function useResearchFieldContent({
                             setTotalElements(result.totalElements);
                             setCurrentPage(page + 1);
                         })
-                        .catch(error => {
+                        .catch(() => {
                             setIsLoading(false);
                             setHasNextPage(false);
                             setIsLastPageReached(page > 1);
-
-                            console.log(error);
                         });
                 })
-                .catch(error => {
+                .catch(() => {
                     setIsLoading(false);
                     setHasNextPage(false);
                     setIsLastPageReached(page > 1);
-
-                    console.log(error);
                 });
         },
         [sort, researchFieldId, pageSize, includeSubFields, classesFilter],

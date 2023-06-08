@@ -1,6 +1,7 @@
 import { find, flatten } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { getContentByObservatoryIdAndClasses } from 'services/backend/observatories';
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate, reverseWithSlug } from 'utils';
 import { useNavigate } from 'react-router-dom';
@@ -30,8 +31,7 @@ function useObservatoryContent({ observatoryId, slug, initialSort, initialClassF
                     items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
-                    featured: false,
-                    unlisted: false,
+                    visibility: VISIBILITY_FILTERS.NON_FEATURED,
                     classes: classesFilter.map(c => c.id),
                 });
                 const featuredContentService = getContentByObservatoryIdAndClasses({
@@ -40,8 +40,7 @@ function useObservatoryContent({ observatoryId, slug, initialSort, initialClassF
                     items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
-                    featured: true,
-                    unlisted: false,
+                    visibility: VISIBILITY_FILTERS.FEATURED,
                     classes: classesFilter.map(c => c.id),
                 });
                 contentService = Promise.all([noFeaturedContentService, featuredContentService]).then(([noFeaturedContent, featuredContent]) => {
@@ -59,8 +58,7 @@ function useObservatoryContent({ observatoryId, slug, initialSort, initialClassF
                     items: pageSize,
                     sortBy: 'created_at',
                     desc: true,
-                    featured: sort === 'featured' ? true : null,
-                    unlisted: sort === 'unlisted',
+                    visibility: sort,
                     classes: classesFilter.map(c => c.id),
                 }).then(response => ({ ...response, content: response.content }));
             }
