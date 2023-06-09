@@ -24,7 +24,7 @@ function Node({ data }) {
                     <PropertyShape key={ps.id} data={ps} nodeId={data.id} />
                 ))}
             </div>
-            <NodeFooter isClosed={data.isClosed} />
+            <NodeFooter isClosed={data.isClosed} targetClass={data.class} />
         </NodeStyled>
     );
 }
