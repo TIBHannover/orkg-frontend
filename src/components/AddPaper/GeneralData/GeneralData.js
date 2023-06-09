@@ -74,6 +74,7 @@ const GeneralData = () => {
     const { entry, doi, title, publishedIn, url, authors, showLookupTable, publicationMonth, publicationYear, isTourOpen, tourStartAt } = useSelector(
         state => state.addPaper,
     );
+
     const dispatch = useDispatch();
     const refLookup = useRef(null);
     const refIntroJS = useRef(null);
