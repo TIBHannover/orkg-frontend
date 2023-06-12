@@ -92,16 +92,16 @@ function useResearchFieldContent({
                             });
                             setItems(prevResources => {
                                 let newItems = dataObjects;
+                                newItems = groupVersionsOfComparisons([
+                                    ...flatten([...prevResources.map(c => c.versions ?? []), ...prevResources]),
+                                    ...newItems,
+                                ]);
                                 if (sort === 'combined') {
                                     newItems = mergeAlternate(
                                         newItems.filter(i => i.featured),
                                         newItems.filter(i => !i.featured),
                                     );
                                 }
-                                newItems = groupVersionsOfComparisons([
-                                    ...flatten([...prevResources.map(c => c.versions ?? []), ...prevResources]),
-                                    ...newItems,
-                                ]);
                                 return flatten([...prevResources, newItems.filter(t => t && !prevResources.map(p => p.id).includes(t.id))]);
                             });
 
