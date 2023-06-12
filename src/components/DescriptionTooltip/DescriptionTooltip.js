@@ -123,7 +123,7 @@ const DescriptionTooltip = props => {
                                 {props.showURL && (
                                     <div>
                                         <Tippy content={`Go to ${renderTypeLabel()} page`}>
-                                            <Link to={getLinkByEntityType(ENTITIES.CLASS, props.id)} target="_blank">
+                                            <Link to={getLinkByEntityType(props._class, props.id)} target="_blank">
                                                 <Icon icon={faLink} size="xs" />
                                             </Link>
                                         </Tippy>
@@ -185,7 +185,7 @@ const DescriptionTooltip = props => {
 DescriptionTooltip.propTypes = {
     children: PropTypes.node.isRequired,
     id: PropTypes.string,
-    _class: PropTypes.string.isRequired,
+    _class: PropTypes.oneOf([ENTITIES.RESOURCE, ENTITIES.LITERAL, ENTITIES.CLASS, ENTITIES.PREDICATE]),
     classes: PropTypes.array,
     extraContent: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     disabled: PropTypes.bool.isRequired,
