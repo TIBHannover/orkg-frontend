@@ -275,6 +275,7 @@ export const getTemplateById = async templateId => {
             ? {
                   id: targetClass.id,
                   label: targetClass.label,
+                  uri: targetClass.uri,
               }
             : {},
         researchFields: researchFields.map(statement => ({

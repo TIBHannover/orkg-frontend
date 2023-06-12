@@ -3,6 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
 import DownloadButton from 'components/Templates/ShaclFlow/DownloadImage/DownloadButton';
+import ExportSHACL from 'components/Templates/ShaclFlow/ExportSHACL/ExportSHACL';
 import Node from 'components/Templates/ShaclFlow/Node/Node';
 import useAutoLayout from 'components/Templates/ShaclFlow/hooks/useAutoLayoutAndFitView';
 import { CLASSES } from 'constants/graphSettings';
@@ -13,7 +14,7 @@ import ReactFlow, { Background, Controls, MiniMap, ReactFlowProvider, applyEdgeC
 import 'reactflow/dist/style.css';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { loadTemplateFlowByID } from 'services/backend/statements';
-import { setDiagramMode } from 'slices/templateEditorSlice';
+import { setDiagramMode, setTemplateFlow } from 'slices/templateEditorSlice';
 import { convertTreeToFlat } from 'utils';
 
 function ShaclFlowModal() {
@@ -28,46 +29,49 @@ function ShaclFlowModal() {
     const [nodes, setNodes] = useState([]);
     const [edges, setEdges] = useState([]);
 
-    const loadFlow = useCallback(async id => {
-        setIsLoading(true);
-        try {
-            const templatesFlow = await loadTemplateFlowByID(id, new Set());
+    const loadFlow = useCallback(
+        async id => {
+            setIsLoading(true);
+            try {
+                const templatesFlow = await loadTemplateFlowByID(id, new Set());
 
-            // We need this root node to make sure the algorithm of useAutoLayout always use as a root node if the selected template doesn't have a root (not a Tree) like qudt:Unit template
-            const startNode = {
-                id: 'ROOT',
-                data: { label: 'Current Template' },
-                position: { x: 0, y: 0 },
-            };
-            const flattenNodes = [templatesFlow, ...convertTreeToFlat(templatesFlow, 'neighbors').filter(n => !isEmpty(n))];
-            setNodes([startNode, ...flattenNodes.map(n => ({ id: n.id, data: n, type: CLASSES.NODE_SHAPE, position: { x: 0, y: 0 } }))]);
+                // We need this root node to make sure the algorithm of useAutoLayout always use as a root node if the selected template doesn't have a root (not a Tree) like qudt:Unit template
+                const startNode = {
+                    id: 'ROOT',
+                    data: { label: 'Current Template' },
+                    position: { x: 0, y: 0 },
+                };
+                const flattenNodes = [templatesFlow, ...convertTreeToFlat(templatesFlow, 'neighbors').filter(n => !isEmpty(n))];
+                dispatch(setTemplateFlow(flattenNodes));
+                setNodes([startNode, ...flattenNodes.map(n => ({ id: n.id, data: n, type: CLASSES.NODE_SHAPE, position: { x: 0, y: 0 } }))]);
 
-            const _edges = [{ id: 'startingEdge', type: 'straight', source: startNode.id, target: id }];
-            flattenNodes.map(cn => {
-                cn.propertyShapes
-                    .filter(ps => ps.value)
-                    .map(ps => {
-                        const targetNode = flattenNodes.find(c => c.class.id === ps.value.id);
-                        if (targetNode) {
-                            _edges.push({
-                                style: { strokeWidth: 3 },
-                                id: `${cn.id}-${targetNode.id}-${ps.id}`,
-                                source: cn.id,
-                                sourceHandle: ps.property.id,
-                                target: targetNode.id,
-                            });
-                        }
-                        return null;
-                    });
-                return null;
-            });
-            setEdges(_edges);
-            setIsLoading(false);
-        } catch {
-            setIsLoading(false);
-        }
-        throw new Error('test');
-    }, []);
+                const _edges = [{ id: 'startingEdge', type: 'straight', source: startNode.id, target: id }];
+                flattenNodes.map(cn => {
+                    cn.propertyShapes
+                        .filter(ps => ps.value)
+                        .map(ps => {
+                            const targetNode = flattenNodes.find(c => c.class.id === ps.value.id);
+                            if (targetNode) {
+                                _edges.push({
+                                    style: { strokeWidth: 3 },
+                                    id: `${cn.id}-${targetNode.id}-${ps.id}`,
+                                    source: cn.id,
+                                    sourceHandle: ps.property.id,
+                                    target: targetNode.id,
+                                });
+                            }
+                            return null;
+                        });
+                    return null;
+                });
+                setEdges(_edges);
+                setIsLoading(false);
+            } catch {
+                setIsLoading(false);
+            }
+        },
+        [dispatch],
+    );
 
     useEffect(() => {
         loadFlow(templateID);
@@ -114,6 +118,7 @@ function ShaclFlowModal() {
             <ModalFooter className="d-flex justify-content-between">
                 <div>
                     <DownloadButton />
+                    <ExportSHACL />
                 </div>
                 <div>
                     <Button

@@ -399,6 +399,7 @@ export const getPropertyShapeData = (propertyShape, propertyShapeStatements) => 
             ? {
                   id: value.id,
                   label: value.label,
+                  uri: value.uri,
               }
             : null,
         minCount: minCount ? minCount.label : 0,
