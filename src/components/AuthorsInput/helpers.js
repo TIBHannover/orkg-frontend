@@ -2,7 +2,7 @@ import { createResourceStatement, getStatementsByPredicateAndLiteral, deleteStat
 import { isEqual } from 'lodash';
 import { createLiteral } from 'services/backend/literals';
 import { createObject } from 'services/backend/misc';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 
 /**
  * Save the authors of a resource
@@ -18,20 +18,21 @@ export const saveAuthors = async (_authors, resourceId) => {
     let authors = _authors;
     // Search authors by ORCID
     authors = await Promise.all(
-        authors.map(author => {
+        authors.map(async author => {
             if (author.orcid) {
-                return getStatementsByPredicateAndLiteral({
+                const s = await getStatementsByPredicateAndLiteral({
                     predicateId: PREDICATES.HAS_ORCID,
                     literal: author.orcid,
                     subjectClass: CLASSES.AUTHOR,
                     items: 1,
-                }).then(s => (s.length > 0 ? Promise.resolve(s.object) : Promise.resolve(author)));
+                });
+                return s.length > 0 ? s[0].subject : author;
             }
-            return Promise.resolve(author);
+            return author;
         }),
     );
     // Create authors for the new ORCID
-    authors = await await Promise.all(
+    authors = await Promise.all(
         authors.map(author => {
             if (author.orcid) {
                 return createObject({
@@ -55,7 +56,7 @@ export const saveAuthors = async (_authors, resourceId) => {
     // Create the new literals for authors
     authors = await Promise.all(
         authors.map(author => {
-            if (!author.orcid) {
+            if (!author.orcid && author._class !== ENTITIES.RESOURCE) {
                 return createLiteral(author.label);
             }
             return Promise.resolve(author);
