@@ -1,0 +1,132 @@
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import rdf from 'rdf';
+import { isEmpty } from 'lodash';
+
+function downloadN3(graph, turtleName) {
+    const a = document.createElement('a');
+
+    // Create the RDF file
+    const file = new Blob(
+        [
+            graph
+                .toArray()
+                .map(t => t.toString())
+                .join('\n'),
+        ],
+        { type: 'text/n3' },
+    );
+    a.href = URL.createObjectURL(file);
+    a.download = turtleName;
+    document.body.appendChild(a); // Required for this to work in FireFox
+    a.click();
+}
+
+function ExportSHACL() {
+    const [isConvertingToImage, setIsConvertingToImage] = useState(false);
+    const templateID = useSelector(state => state.templateEditor.templateID);
+    const templateFlow = useSelector(state => state.templateEditor.templateFlow);
+
+    const convertFlowToSHACL = () => {
+        const graph = new rdf.Graph();
+        const shacl = rdf.ns('http://www.w3.org/ns/shacl#');
+        const orkgr = rdf.ns('http://orkg.org/orkg/resource/');
+        const orkgc = rdf.ns('http://orkg.org/orkg/class/');
+        const orkgp = rdf.ns('http://orkg.org/orkg/predicate/');
+        const owl = rdf.ns('http://www.w3.org/2002/07/owl#');
+        templateFlow.map(template => {
+            // NodeShape
+            graph.add(new rdf.Triple(orkgr(template.id), rdf.rdfns('type'), shacl('NodeShape')));
+            graph.add(new rdf.Triple(orkgr(template.id), rdf.rdfsns('label'), new rdf.Literal(template.label)));
+            graph.add(new rdf.Triple(orkgr(template.id), shacl('targetClass'), orkgc(template.class.id.toString())));
+            if (template.class.uri) {
+                graph.add(new rdf.Triple(orkgc(template.class.id.toString()), owl('equivalentClass'), new rdf.NamedNode(template.class.uri)));
+            }
+            graph.add(new rdf.Triple(orkgr(template.id), shacl('closed'), new rdf.Literal(template.isClosed.toString(), rdf.xsdns('boolean'))));
+            // PropertyShapes
+            template.propertyShapes.map(propertyShape => {
+                const propertyShapeNode = new rdf.BlankNode();
+                graph.add(new rdf.Triple(orkgr(template.id), shacl('property'), propertyShapeNode));
+                graph.add(new rdf.Triple(propertyShapeNode, rdf.rdfns('type'), shacl('PropertyShape')));
+                graph.add(new rdf.Triple(propertyShapeNode, shacl('path'), orkgp(propertyShape.property.id)));
+                graph.add(new rdf.Triple(orkgp(propertyShape.property.id), rdf.rdfsns('label'), new rdf.Literal(propertyShape.property.label)));
+
+                if (!isEmpty(propertyShape.minCount)) {
+                    graph.add(new rdf.Triple(propertyShapeNode, shacl('minCount'), new rdf.Literal(propertyShape.minCount, rdf.xsdns('integer'))));
+                }
+
+                if (propertyShape.maxCount) {
+                    graph.add(new rdf.Triple(propertyShapeNode, shacl('maxCount'), new rdf.Literal(propertyShape.maxCount, rdf.xsdns('integer'))));
+                }
+
+                if (propertyShape.value?.id && !['Decimal', 'Integer', 'String', 'Boolean', 'Date', 'URI'].includes(propertyShape.value.id)) {
+                    graph.add(new rdf.Triple(propertyShapeNode, shacl('class'), orkgc(propertyShape.value.id.toString())));
+                    graph.add(
+                        new rdf.Triple(orkgc(propertyShape.value.id.toString()), rdf.rdfsns('label'), new rdf.Literal(propertyShape.value.label)),
+                    );
+                    if (propertyShape.value.uri) {
+                        graph.add(
+                            new rdf.Triple(
+                                orkgc(propertyShape.value.id.toString()),
+                                owl('equivalentClass'),
+                                new rdf.NamedNode(propertyShape.value.uri),
+                            ),
+                        );
+                    }
+                }
+
+                if (propertyShape.value?.id && ['Decimal', 'Integer', 'String', 'Boolean', 'Date', 'URI'].includes(propertyShape.value.id)) {
+                    graph.add(new rdf.Triple(propertyShapeNode, shacl('datatype'), orkgc(propertyShape.value.id.toString())));
+                    graph.add(
+                        new rdf.Triple(orkgc(propertyShape.value.id.toString()), rdf.rdfsns('label'), new rdf.Literal(propertyShape.value.label)),
+                    );
+                    if (propertyShape.value.uri) {
+                        graph.add(
+                            new rdf.Triple(
+                                orkgc(propertyShape.value.id.toString()),
+                                owl('equivalentClass'),
+                                new rdf.NamedNode(propertyShape.value.uri),
+                            ),
+                        );
+                    }
+                }
+
+                if (propertyShape.pattern) {
+                    graph.add(new rdf.Triple(propertyShapeNode, shacl('pattern'), new rdf.Literal(propertyShape.pattern)));
+                }
+                if (propertyShape.order) {
+                    graph.add(new rdf.Triple(propertyShapeNode, shacl('order'), new rdf.Literal(propertyShape.order, rdf.xsdns('integer'))));
+                }
+                if (!isEmpty(propertyShape.minInclusive)) {
+                    graph.add(
+                        new rdf.Triple(propertyShapeNode, shacl('minInclusive'), new rdf.Literal(propertyShape.minInclusive, rdf.xsdns('integer'))),
+                    );
+                }
+                if (propertyShape.maxInclusive) {
+                    graph.add(
+                        new rdf.Triple(propertyShapeNode, shacl('maxInclusive'), new rdf.Literal(propertyShape.maxInclusive, rdf.xsdns('integer'))),
+                    );
+                }
+                return null;
+            });
+            return null;
+        });
+        return graph;
+    };
+
+    const onClick = async () => {
+        setIsConvertingToImage(true);
+        const graph = await convertFlowToSHACL();
+        setIsConvertingToImage(false);
+        downloadN3(graph, `template-${templateID}.n3`);
+    };
+
+    return (
+        <ButtonWithLoading color="light" isLoading={isConvertingToImage} onClick={onClick}>
+            Export as SHACL
+        </ButtonWithLoading>
+    );
+}
+
+export default ExportSHACL;

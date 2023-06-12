@@ -45,7 +45,7 @@ function DownloadButton() {
     };
 
     return (
-        <ButtonWithLoading color="light" isLoading={isConvertingToImage} onClick={onClick}>
+        <ButtonWithLoading className="me-1" color="light" isLoading={isConvertingToImage} onClick={onClick}>
             Download image
         </ButtonWithLoading>
     );
