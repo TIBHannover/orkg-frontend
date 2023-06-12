@@ -287,7 +287,7 @@ const ResearchFieldSelector = ({
                             </ContentLoader>
                         </div>
                     )}
-                    <List>{fieldList(RESOURCES.RESEARCH_FIELD_MAIN)}</List>
+                    {!isLoading && <List>{fieldList(RESOURCES.RESEARCH_FIELD_MAIN)}</List>}
                 </div>
             </div>
         </>
