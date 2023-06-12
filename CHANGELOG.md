@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.110.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.109.0...v0.110.0) - 2023-06-12
+
+### Changes
+
+- feat(Template): export as SHACL shape [`#1138`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1138)
+- feat(TemplateDiagram): display number of instances [`#1139`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1139)
+- fix(AuthorInput): adding an ORCID to a literal author freezes the paper editor [`#1140`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1140)
+- feat(uploadPdf):metadata compatibility [`#1128`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1128)
+
+---
 ## [v0.109.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.108.0...v0.109.0) - 2023-06-08
 
 ### Changes
