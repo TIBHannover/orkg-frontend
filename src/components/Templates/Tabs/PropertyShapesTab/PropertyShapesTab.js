@@ -5,8 +5,8 @@ import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import { updatePropertyShapes, updateIsClosed } from 'slices/templateEditorSlice';
 import PropertyShape from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/PropertyShape';
 import AddPropertyView from 'components/StatementBrowser/AddProperty/AddPropertyView';
-import update from 'immutability-helper';
 import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
+import arrayMove from 'array-move';
 
 const PropertyShapesTab = () => {
     const [showAddProperty, setShowAddProperty] = useState(false);
@@ -108,17 +108,7 @@ const PropertyShapesTab = () => {
 
     const moveCard = useCallback(
         (dragIndex, hoverIndex) => {
-            const dragCard = propertyShapes[dragIndex];
-            dispatch(
-                updatePropertyShapes(
-                    update(propertyShapes, {
-                        $splice: [
-                            [dragIndex, 1],
-                            [hoverIndex, 0, dragCard],
-                        ],
-                    }),
-                ),
-            );
+            dispatch(updatePropertyShapes(arrayMove(propertyShapes, dragIndex, hoverIndex)));
         },
         [propertyShapes, dispatch],
     );
