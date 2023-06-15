@@ -98,12 +98,7 @@ const ViewPaper = () => {
                             View paper
                         </TitleBar>
                     </VisibilitySensor>
-                    <Container>
-                        <div style={{ width: '1000px', height: '700px', border: '1px solid black' }}>
-                            <h1>hello</h1>
-                            <ReGraph />
-                        </div>
-                    </Container>
+
                     <EditModeHeader isVisible={editMode} />
 
                     <Container
