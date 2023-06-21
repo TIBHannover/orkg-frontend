@@ -32,34 +32,14 @@ const UploadPdf = () => {
 
                 // read the contents of the file
                 const docStr = reader?.result;
-
                 const sciKGMetadata = '/Type /SciKGMetadata';
-                const normalMetadata = '/Type /Metadata';
-
-                const metadataPatternsCombined = [
-                    new RegExp(`(${sciKGMetadata}.*?)stream(.*?)endstream`, 'gs'),
-                    new RegExp(`(${normalMetadata}.*?)stream(.*?)endstream`, 'gs'),
-                ];
-                for (const pattern of metadataPatternsCombined) {
-                    const matches = Array.from(docStr.matchAll(pattern));
-                    // When the condition is met, the flag is set to true, and the loops will break
-                    let isExit = false;
-                    for (const match of matches) {
-                        const header = match[1];
-                        const data = match[2];
-                        if (header.includes('/Type /SciKGMetadata')) {
-                            metadata = data.toString('utf-8').trim();
-                            isExit = true;
-                            break;
-                        }
-                        if (header.includes('/Type /Metadata')) {
-                            metadata = data.toString('utf-8').trim();
-                            isExit = true;
-                            break;
-                        }
-                    }
-                    if (isExit) {
-                        break;
+                const metadataPatterns = new RegExp(`(${sciKGMetadata}.*?)stream(.*?)endstream`, 'gs');
+                const matches = docStr.matchAll(metadataPatterns);
+                for (const match of matches) {
+                    const header = match[1];
+                    const data = match[2];
+                    if (header.includes('/Type /SciKGMetadata')) {
+                        metadata = data.toString('utf-8').trim();
                     }
                 }
                 if (metadata) {
@@ -172,7 +152,7 @@ const UploadPdf = () => {
                 <a href="https://orkg.org/about/33/SciKGTeX" target="_blank" rel="noopener noreferrer">
                     SciKGTeX
                 </a>{' '}
-                the annotation will be imported automatically.
+                in compatiblity mode the annotation will be imported automatically.
             </Alert>
             {pdfName && (
                 <div className="border rounded p-2 d-flex align-items-center">
