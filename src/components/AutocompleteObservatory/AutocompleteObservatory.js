@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react';
-import Select, { components } from 'react-select';
-import { getAllObservatories } from 'services/backend/observatories';
-import { getAllOrganizations, getOrganizationLogoUrl } from 'services/backend/organizations';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Label, FormGroup } from 'reactstrap';
-import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+import { truncate } from 'lodash';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import Select, { components } from 'react-select';
+import { AsyncPaginate } from 'react-select-async-paginate';
+import { FormGroup, Label } from 'reactstrap';
+import { getObservatories } from 'services/backend/observatories';
+import { getConferences, getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
+import styled from 'styled-components';
 
 const LogoContainer = styled.div`
     overflow: hidden;
@@ -20,57 +21,67 @@ const LogoContainer = styled.div`
     }
 `;
 
+const PAGE_SIZE = 10;
+const MAXIMUM_DESCRIPTION_LENGTH = 120;
+
 function AutocompleteObservatory(props) {
-    const [options, setOptions] = useState([]);
     const [optionsOrganizations, setOptionsOrganizations] = useState([]);
     const [conferences, setConferences] = useState([]);
 
     useEffect(() => {
-        const loadOptions = () => {
-            const observatories = getAllObservatories({}).then(res => res.content);
-            const organizations = getAllOrganizations();
-            return Promise.all([observatories, organizations]).then(data => {
-                const items = [];
-                for (const observatory of data[0]) {
-                    const orgs = data[1].filter(org => observatory.organization_ids.includes(org.id));
-                    items.push({
-                        ...observatory,
-                        organizations: orgs,
-                    });
-                }
-                setOptions(items);
-                setConferences(data[1].filter(org => org.type === ORGANIZATIONS_MISC.CONFERENCE));
-                setOptionsOrganizations(data[1].filter(org => org.type === ORGANIZATIONS_MISC.CONFERENCE));
-            });
+        const loadConferences = async () => {
+            const callConferences = await getConferences();
+            setConferences(callConferences);
+            setOptionsOrganizations(callConferences);
         };
-        loadOptions();
+        loadConferences();
     }, []);
 
-    const onChangeObservatory = selected => {
+    const loadObservatoryOptions = async (search, prevOptions, { page }) => {
+        const emptyList = {
+            options: prevOptions,
+            hasMore: false,
+            additional: {
+                page: 0,
+            },
+        };
+        try {
+            const result = await getObservatories({
+                q: search.trim(),
+                size: PAGE_SIZE,
+                page,
+            });
+            const items = result.content;
+            const hasMore = !result.last;
+            return {
+                options: items,
+                hasMore,
+                additional: {
+                    page: page + 1,
+                },
+            };
+        } catch (err) {
+            return emptyList;
+        }
+    };
+
+    const onChangeObservatory = async selected => {
         props.onChangeObservatory(selected ?? null);
-        props.onChangeOrganization(selected?.organizations[0] ?? null);
-        setOptionsOrganizations(selected?.organizations ?? conferences);
+        const data = selected ? await Promise.all(selected?.organization_ids.map(o => getOrganization(o))) : null;
+        // Select the first organization
+        props.onChangeOrganization(data?.[0] ?? null);
+        setOptionsOrganizations(selected ? data : conferences);
     };
 
     const onChangeOrganization = selected => {
         props.onChangeOrganization(selected ?? null);
     };
 
-    useEffect(() => {
-        if (options.length && props.observatory && props.observatory.id) {
-            const selected = options.find(o => props.observatory.id === o.id);
-            props.onChangeObservatory(selected ?? null);
-            setOptionsOrganizations(selected.organizations);
-        }
-    }, [options, props, props.observatory]);
-
     const CustomOptionObservatory = innerProps => (
         <components.Option {...innerProps}>
             <div>{innerProps.data.name}</div>
             <small className={!innerProps.isSelected ? 'text-muted' : ''}>
-                {innerProps.data.organizations.length === 1
-                    ? innerProps.data.organizations[0].name
-                    : innerProps.data.organizations.map(or => or.name).join(', ')}
+                {truncate(innerProps.data.description ?? '', { length: MAXIMUM_DESCRIPTION_LENGTH })}
             </small>
         </components.Option>
     );
@@ -94,18 +105,21 @@ function AutocompleteObservatory(props) {
             </p>
             <FormGroup>
                 <Label for="select-observatory">Select an observatory</Label>
-                <Select
+                <AsyncPaginate
                     value={props.observatory}
                     components={{ Option: CustomOptionObservatory }}
                     cacheOptions
-                    options={options}
+                    additional={{
+                        page: 0,
+                    }}
+                    loadOptions={loadObservatoryOptions}
                     onChange={onChangeObservatory}
                     getOptionValue={({ id }) => id}
                     getOptionLabel={({ name }) => name}
                     inputId="select-observatory"
                     isClearable={true}
                     classNamePrefix="react-select"
-                />{' '}
+                />
             </FormGroup>
             <FormGroup>
                 <Label for="select-organization">Select an organization</Label>
@@ -131,7 +145,6 @@ AutocompleteObservatory.propTypes = {
     onChangeOrganization: PropTypes.func,
     observatory: PropTypes.object,
     organization: PropTypes.object,
-    inputId: PropTypes.string,
 };
 
 export default AutocompleteObservatory;
