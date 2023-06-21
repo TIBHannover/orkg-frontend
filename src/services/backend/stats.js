@@ -31,6 +31,13 @@ export const getObservatoriesStats = ({ page = 0, size = 9999, sortBy = 'total',
 };
 
 /**
+ * Get statistics of an observatory by id
+ * @param {Number} id Observatory id
+ * @return {Object} Stats of observatory
+ */
+export const getObservatoryStatsById = id => submitGetRequest(`${statsUrl}observatories/${id}/`);
+
+/**
  * Get top contributors
  * @param {String} researchFieldId Research field id
  * @param {Number} days Number of last days (by default it counts all time, from 2010-01-01)

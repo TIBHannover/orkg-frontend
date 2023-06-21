@@ -200,6 +200,10 @@ const routes = [
         element: Observatories,
     },
     {
+        path: ROUTES.OBSERVATORIES_RESEARCH_FIELD,
+        element: Observatories,
+    },
+    {
         path: ROUTES.PAPERS,
         element: Papers,
     },

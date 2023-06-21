@@ -1,10 +1,13 @@
-import { Card, CardBody } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import useObservatoryStats from 'components/Observatory/hooks/useObservatoryStats';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import { Card, CardBody } from 'reactstrap';
 import { getOrganizationLogoUrl } from 'services/backend/organizations';
+import styled from 'styled-components';
 
 const ObservatoryCardStyled = styled.div`
     cursor: initial;
@@ -30,19 +33,21 @@ const ObservatoryCardStyled = styled.div`
 `;
 
 function ObservatoryCard(props) {
+    const { stats, isLoading: isLoadingStats } = useObservatoryStats({ id: props.observatory.id });
+
     return (
         <ObservatoryCardStyled className="col-6 mb-4">
             <Card className="h-100">
                 <Link to={reverse(ROUTES.OBSERVATORY, { id: props.observatory.display_id })} style={{ textDecoration: 'none' }}>
                     <CardBody>
-                        {props.observatory.organizations.map(o => (
-                            <span key={o.id} style={{ marginLeft: '10px' }}>
+                        {props.observatory.organization_ids.map(oId => (
+                            <span key={oId} style={{ marginLeft: '10px' }}>
                                 <img
                                     className="justify-content-center orgLogo"
-                                    key={`imageLogo${o.id}`}
+                                    key={`imageLogo${oId}`}
                                     height="45px"
-                                    src={getOrganizationLogoUrl(o.id)}
-                                    alt={`${o.name} logo`}
+                                    src={getOrganizationLogoUrl(oId)}
+                                    alt={`${oId} logo`}
                                 />
                             </span>
                         ))}{' '}
@@ -50,8 +55,8 @@ function ObservatoryCard(props) {
                             <div className="observatoryName">{props.observatory.name}</div>
 
                             <div className="observatoryStats text-muted">
-                                Papers: <b>{props.observatory.papers}</b> <br />
-                                Comparisons: <b>{props.observatory.comparisons}</b>
+                                Papers: <b>{!isLoadingStats ? stats.papers : <Icon icon={faSpinner} spin size="sm" />}</b> <br />
+                                Comparisons: <b>{!isLoadingStats ? stats.comparisons : <Icon icon={faSpinner} spin size="xs" />}</b>
                             </div>
                         </div>
                     </CardBody>

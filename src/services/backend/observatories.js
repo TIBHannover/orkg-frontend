@@ -7,14 +7,32 @@ import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organi
 
 export const observatoriesUrl = `${url}observatories/`;
 
-export const getAllObservatories = ({ page = 0, size = 9999 }) => {
+/**
+ * Get Observatories (400 BAD REQUEST if both q and research_field are specified)
+ * @param {String} researchFieldId Research field id
+ * @param {String} q Search query
+ * @param {Number} page Page number
+ * @param {Number} size Number of items per page
+ * @return {Object} List of observatories
+ */
+export const getObservatories = ({ researchFieldId = null, q = null, page = 0, size = 9999 }) => {
+    const params = qs.stringify(
+        { research_field: researchFieldId ? encodeURIComponent(researchFieldId) : null, q, page, size },
+        {
+            skipNulls: true,
+        },
+    );
+    return submitGetRequest(`${observatoriesUrl}?${params}`);
+};
+
+export const getResearchFieldOfObservatories = ({ page = 0, size = 9999 }) => {
     const params = qs.stringify(
         { page, size },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${observatoriesUrl}?${params}`);
+    return submitGetRequest(`${observatoriesUrl}research-fields/?${params}`);
 };
 
 export const getObservatoryById = id => submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/`);
@@ -62,16 +80,6 @@ export const getContentByObservatoryIdAndClasses = ({
         },
     );
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/class?${params}`);
-};
-
-export const getObservatoriesByResearchFieldId = ({ id, page = 0, size = 9999 }) => {
-    const params = qs.stringify(
-        { research_field: encodeURIComponent(id), page, size },
-        {
-            skipNulls: true,
-        },
-    );
-    return submitGetRequest(`${observatoriesUrl}?${params}`);
 };
 
 export const createObservatory = (observatory_name, organization_id, description, research_field, display_id) =>

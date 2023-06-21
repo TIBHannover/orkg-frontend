@@ -180,6 +180,9 @@ export const ORKGTabsStyle = styled.div`
     .rc-tabs-right > div > .rc-tabs-nav {
         flex-direction: column;
         min-width: 40px;
+        border-width:0 !important;
+        padding-top: 15px;
+        padding-bottom: 15px;
     }
     .rc-tabs-left > .rc-tabs-nav .rc-tabs-tab,
     .rc-tabs-right > .rc-tabs-nav .rc-tabs-tab,
@@ -192,7 +195,7 @@ export const ORKGTabsStyle = styled.div`
     .rc-tabs-right > .rc-tabs-nav .rc-tabs-tab + .rc-tabs-tab,
     .rc-tabs-left > div > .rc-tabs-nav .rc-tabs-tab + .rc-tabs-tab,
     .rc-tabs-right > div > .rc-tabs-nav .rc-tabs-tab + .rc-tabs-tab {
-        margin: 16px 0 0 0;
+        margin: 8px 0 0 0;
     }
     .rc-tabs-left > .rc-tabs-nav .rc-tabs-nav-wrap,
     .rc-tabs-right > .rc-tabs-nav .rc-tabs-nav-wrap,
@@ -267,12 +270,13 @@ export const ORKGTabsStyle = styled.div`
     }
     .rc-tabs-left > .rc-tabs-content-holder,
     .rc-tabs-left > div > .rc-tabs-content-holder {
-        margin-left: -1px;
-        border-left: 1px solid #d9d9d9;
+        border-radius: ${props => props.theme.borderRadius} !important;
+        border: ${props => props.theme.borderWidth} solid ${props => props.theme.primary} !important;
+        padding: 15px 30px;
     }
     .rc-tabs-left > .rc-tabs-content-holder > .rc-tabs-content > .rc-tabs-tabpane,
     .rc-tabs-left > div > .rc-tabs-content-holder > .rc-tabs-content > .rc-tabs-tabpane {
-        padding-left: 24px;
+        padding-left: 0;
     }
     .rc-tabs-right > .rc-tabs-nav,
     .rc-tabs-right > div > .rc-tabs-nav {
@@ -546,6 +550,15 @@ export const ORKGTabsStyle = styled.div`
         outline: none;
         cursor: pointer;
     }
+    .rc-tabs-left .rc-tabs-tab {
+        padding: 12px 10px 12px 15px;
+        transition: 0.3s background;
+        border-top-left-radius: ${props => props.theme.borderRadius};
+        border-bottom-left-radius: ${props => props.theme.borderRadius};
+        border: 1px solid ${props => props.theme.lightDarker};
+        background-color: ${props => props.theme.lightLighter};
+    }
+
     .rc-tabs .rc-tabs-tab-btn:focus:not(:focus-visible),
     .rc-tabs .rc-tabs-tab-remove:focus:not(:focus-visible),
     .rc-tabs .rc-tabs-tab-btn:active,
@@ -582,6 +595,15 @@ export const ORKGTabsStyle = styled.div`
     }
     .rc-tabs .rc-tabs-tab.rc-tabs-tab-active .rc-tabs-tab-btn {
         color: ${props => props.theme.primary};
+    }
+    .rc-tabs-left .rc-tabs-tab.rc-tabs-tab-active {
+        background: ${props => props.theme.primary};
+        color: #fff;
+        cursor: initial !important;
+        border-color: ${props => props.theme.primary};
+    }
+    .rc-tabs-left .rc-tabs-tab.rc-tabs-tab-active .rc-tabs-tab-btn {
+        color: #fff;
     }
     .rc-tabs .rc-tabs-tab.rc-tabs-tab-disabled {
         color: rgba(0, 0, 0, 0.25);
