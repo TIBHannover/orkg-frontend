@@ -3,6 +3,20 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.111.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.110.0...v0.111.0) - 2023-06-21
+
+### Changes
+
+- feat(Observatories): paginate observatories and use complimentary observatory endpoints [`#1149`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1149)
+- fix(ResearchField): alternation between feature and no featured items on research field page [`#1144`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1144)
+- feat(AddPaper): only support SciKGTeX in compatibility mode [`#1147`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1147)
+- feat(Paper): hide low score unpaywall results [`#1146`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1146)
+- chore: async jspdf for code splitting, remove immutability-helper and use array-move instead [`#1145`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1145)
+- feat(EntityRecognition): show DescriptionTooltip for recommendations [`#1141`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1141)
+- fix(Breadcrumbs): fix flickering on hover [`#1142`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1142)
+- fix(ResearchFieldSelector): hide fields while loading [`#1143`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1143)
+
+---
 ## [v0.110.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.109.0...v0.110.0) - 2023-06-12
 
 ### Changes
