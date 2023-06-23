@@ -37,11 +37,11 @@ export const StyledGravatar = styled(Gravatar)`
 `;
 
 export const StyledDotGravatar = styled.div`
-    width: 48px;
-    height: 48px;
+    width: ${props => props.size || 48}px;
+    height: ${props => props.size || 48}px;
     display: inline-block;
     text-align: center;
-    line-height: 48px;
+    line-height: ${props => props.size || 48}px;
     color: ${props => props.theme.secondary};
     border: 2px solid ${props => props.theme.lightDarker};
     cursor: pointer;
