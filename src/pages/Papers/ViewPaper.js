@@ -22,6 +22,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';
 import { Container, UncontrolledAlert } from 'reactstrap';
 import { determineActiveNERService, SERVICE_MAPPING } from 'services/orkgNlp/index';
+import GraphViewModal from 'components/ViewPaper/GraphView/GraphViewModal';
 
 const ViewPaper = () => {
     const { resourceId } = useParams();
@@ -159,7 +160,8 @@ const ViewPaper = () => {
                 </>
             )}
 
-            <GizmoGraphViewModal showDialog={showGraphModal} toggle={() => setShowGraphModal(v => !v)} paperId={resourceId} />
+            {/* <GizmoGraphViewModal showDialog={showGraphModal} toggle={() => setShowGraphModal(v => !v)} paperId={resourceId} /> */}
+            <GraphViewModal isOpen={showGraphModal} toggle={() => setShowGraphModal(v => !v)} paperId={resourceId} />
         </div>
     );
 };
