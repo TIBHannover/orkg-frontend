@@ -107,6 +107,7 @@ class GraphView extends Component {
     fetchMultipleResourcesFromAPI = async resourceIds => {
         try {
             const objectStatements = await getStatementsBySubjects({ ids: resourceIds });
+            console.log('objectStatements', objectStatements);
             if (objectStatements.length === 0) {
                 return {}; // we dont have incremental data
             }
