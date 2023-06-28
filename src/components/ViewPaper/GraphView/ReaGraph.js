@@ -1,26 +1,8 @@
-// import './style.css';
-
 import * as PropTypes from 'prop-types';
 import { useRef, useState, useEffect } from 'react';
 import { GraphCanvas, useSelection, lightTheme } from 'reagraph';
 
 export default function ReGraph(props) {
-    // console.log('show props', props);
-    // const myTheme = {
-    //     ...lightTheme,
-    //     node: {
-    //         ...lightTheme.node,
-    //         color: '#000',
-    //     },
-    // };
-
-    // return (
-    //     <div className="App">
-    //         <div style={{ border: 'solid 1px red', margin: 15, width: 800, height: 800 }}>
-    //             <GraphCanvas theme={myTheme} edges={props.edgesz} nodes={props.nodesz} />
-    //         </div>
-    //     </div>
-    // );
     const graphRef = useRef();
     const [collapsed, setCollapsed] = useState(['n-2']);
     const [active, setActive] = useState(null);
@@ -190,7 +172,7 @@ export default function ReGraph(props) {
                     <pre>{JSON.stringify(collapsed, null, 2)}</pre>
                 </code>
             </div>
-            <div style={{ border: 'solid 1px red', margin: 15, width: 800, height: 800 }}>
+            <div style={{ border: 'solid 1px red', margin: 15 }}>
                 <GraphCanvas
                     draggable
                     ref={graphRef}
@@ -222,7 +204,6 @@ export default function ReGraph(props) {
     );
 }
 ReGraph.propTypes = {
-    // eslint-disable-next-line no-undef
     nodesz: PropTypes.array,
     edgesz: PropTypes.array,
 };

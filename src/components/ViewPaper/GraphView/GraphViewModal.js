@@ -1,14 +1,13 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
-import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
+import { Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { getStatementsBySubject } from 'services/backend/statements';
+import { PREDICATES } from 'constants/graphSettings';
 import uniqBy from 'lodash/uniqBy';
-import flattenDeep from 'lodash/flattenDeep';
 import ReGraph from './ReaGraph';
 
 const GraphViewModal = props => {
-    const { isOpen, toggle, header, content, paperId } = props;
+    const { isOpen, toggle, paperId } = props;
 
     const [nodesz, setNodes] = useState([]);
     const [edgesz, setEdges] = useState([]);
@@ -131,101 +130,17 @@ const GraphViewModal = props => {
         }
         return { nodes, edges };
     };
-    const processSingleStatement = (nodes, edges, statement) => {
-        const subjectLabel = statement.subject.label.substring(0, 20);
-        const objectLabel = statement.object.label.substring(0, 20);
 
-        nodes.push({
-            id: statement.subject.id,
-            label: subjectLabel,
-            title: statement.subject.label,
-            classificationArray: statement.subject.classes,
-        });
-
-        // check if node type is resource or literal
-        if (statement.object._class === 'resource') {
-            nodes.push({
-                id: statement.object.id,
-                label: objectLabel,
-                title: statement.object.label,
-                classificationArray: statement.object.classes,
-                isResearchFieldRelated:
-                    statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD || statement.predicate.id === PREDICATES.HAS_SUB_RESEARCH_FIELD,
-            });
-        } else {
-            nodes.push({
-                id: statement.object.id,
-                label: objectLabel,
-                title: statement.object.label,
-                type: 'literal',
-            });
-        }
-
-        if (statement.predicate.id === 'P27') {
-            // add user Icon to target node if we have 'has author' property === P27
-            edges.push({
-                source: statement.subject.id,
-                target: statement.object.id,
-                label: statement.predicate.label,
-                isAuthorProp: true,
-                id: statement.predicate.id,
-            });
-        } else if (statement.predicate.id === 'P26') {
-            // add DOI Icon to target node
-            edges.push({
-                source: statement.subject.id,
-                target: statement.object.id,
-                label: statement.predicate.label,
-                isDOIProp: false,
-                id: statement.predicate.id,
-            }); // remove doi icon for now
-        } else {
-            // no Icon for the target node
-            edges.push({
-                source: statement.subject.id,
-                target: statement.object.id,
-                label: statement.predicate.label,
-                id: statement.predicate.id,
-            });
-        }
-    };
-    const processMultiStatements = objectStatements => {
-        let nodes = [];
-        let edges = [];
-        objectStatements.forEach(obj => {
-            for (const statement of obj.statements) {
-                // limit the label length to 20 chars
-                // remove duplicate nodes
-                processSingleStatement(nodes, edges, statement);
-            }
-        });
-        nodes = uniqBy(nodes, 'id');
-        edges = uniqBy(edges, e => [e.source, e.target, e.label].join());
-        setNodes(nodes);
-        setEdges(edges);
-        return { nodes, edges };
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps, consistent-return
     const fetchData = async () => {
         if (isOpen && paperId) {
             const statements = await getStatementsBySubject({ id: paperId });
-            console.log('statements by resource and statements', statements);
             if (statements.length === 0) {
                 return {}; // we don't have incremental data
             }
             // result is the incremental data we get;
             setStatements(statements);
-
-            // const objectStatements = await getStatementsBySubjects({ ids: paperId });
-            // if (objectStatements.length === 0) {
-            //     return {}; // we dont have incremental data
-            // }
-
-            // const resultMulti = processMultiStatements(objectStatements);
-            // console.log('resultMulti', resultMulti);
             const auxiliaryMetaDataNode = true; // flag for using or not using auxiliary node for meta info
             const result = processStatements(auxiliaryMetaDataNode);
-            console.log('show result', result);
             setNodes(result?.nodes);
             setEdges(result?.edges);
         }
@@ -233,8 +148,6 @@ const GraphViewModal = props => {
 
     useEffect(() => {
         fetchData();
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, paperId]);
 
     return (
@@ -254,11 +167,6 @@ const GraphViewModal = props => {
             <ModalBody style={{ padding: '0', minHeight: '100px', height: windowHeight }}>
                 <ReGraph nodesz={nodesz} edgesz={edgesz} />
             </ModalBody>
-            <ModalFooter className="d-flex justify-content-center">
-                <Button onClick={toggle} color="primary">
-                    click me
-                </Button>
-            </ModalFooter>
         </Modal>
     );
 };
@@ -266,8 +174,6 @@ const GraphViewModal = props => {
 GraphViewModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    content: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-    header: PropTypes.string.isRequired,
     paperId: PropTypes.string,
 };
 
