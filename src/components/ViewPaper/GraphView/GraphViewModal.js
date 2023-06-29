@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { getStatementsBySubject } from 'services/backend/statements';
+import { getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
 import { PREDICATES } from 'constants/graphSettings';
 import uniqBy from 'lodash/uniqBy';
 import ReGraph from './ReaGraph';
@@ -39,12 +39,14 @@ const GraphViewModal = props => {
                 title: statement.subject.label,
                 classificationArray: statement.subject.classes,
             });
+            console.log('statemne statement.object._class', statement.object);
             // check if node type is resource or literal
             if (statement.object._class === 'resource') {
                 nodes.push({
                     id: statement.object.id,
                     label: objectLabel,
                     title: statement.object.label,
+                    fill: 'blue',
                     classificationArray: statement.object.classes,
                     isResearchFieldRelated:
                         statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD || statement.predicate.id === PREDICATES.HAS_SUB_RESEARCH_FIELD,
@@ -55,6 +57,8 @@ const GraphViewModal = props => {
                     label: objectLabel,
                     title: statement.object.label,
                     type: 'literal',
+                    fill: 'yellow',
+                    border: '1px solid black',
                 });
             }
 
@@ -101,6 +105,7 @@ const GraphViewModal = props => {
                 label: 'Meta Information',
                 title: 'Meta Information',
                 classificationArray: [],
+                fill: 'green',
             };
             const link = {
                 source: nodes[0]?.id || '__META_NODE__',

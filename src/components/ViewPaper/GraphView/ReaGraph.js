@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from 'react';
 import { GraphCanvas, useSelection, lightTheme } from 'reagraph';
 
 export default function ReGraph(props) {
+    console.log('show nodes', props.nodesz);
     const graphRef = useRef();
     const [collapsed, setCollapsed] = useState(['n-2']);
     const [active, setActive] = useState(null);
@@ -24,7 +25,9 @@ export default function ReGraph(props) {
         ...lightTheme,
         node: {
             ...lightTheme.node,
-            color: '#000',
+            fill: props.nodesz.fill,
+            // border: props.nodesz.border,
+            size: 15,
         },
     };
     function handleCollapseNode(nodeId) {
