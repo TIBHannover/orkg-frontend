@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.112.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.111.0...v0.112.0) - 2023-07-06
+
+### Changes
+
+- fix(ViewPaper): ORCIDs not displayed after updating authors [`#1155`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1155)
+- chore: allow console.error [`#1153`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1153)
+- fix: sync with backend change on getStatementsByPredicateAndLiteral endpoint [`#1137`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1137)
+- feat(Contributors): hide contributors with a contribution less than 3 percent [`#1151`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1151)
+
+---
 ## [v0.111.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.110.0...v0.111.0) - 2023-06-21
 
 ### Changes
