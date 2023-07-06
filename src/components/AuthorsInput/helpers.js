@@ -26,16 +26,16 @@ export const saveAuthors = async (_authors, resourceId) => {
                     subjectClass: CLASSES.AUTHOR,
                     items: 1,
                 });
-                return s.length > 0 ? s[0].subject : author;
+                return s.length > 0 ? { ...s[0].subject, orcid: author.orcid } : author;
             }
             return author;
         }),
     );
     // Create authors for the new ORCID
     authors = await Promise.all(
-        authors.map(author => {
-            if (author.orcid) {
-                return createObject({
+        authors.map(async author => {
+            if (author.orcid && author._class !== ENTITIES.RESOURCE) {
+                const newAuthor = await createObject({
                     predicates: [],
                     resource: {
                         name: author.label,
@@ -49,6 +49,10 @@ export const saveAuthors = async (_authors, resourceId) => {
                         },
                     },
                 });
+                return {
+                    orcid: author.orcid,
+                    ...newAuthor,
+                };
             }
             return Promise.resolve(author);
         }),
@@ -67,7 +71,7 @@ export const saveAuthors = async (_authors, resourceId) => {
     for (const author of authors) {
         // eslint-disable-next-line no-await-in-loop
         const s = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, author.id);
-        authorsList.push({ ...s.object, statementId: s.id, s_created_at: s.created_at });
+        authorsList.push({ ...s.object, statementId: s.id, s_created_at: s.created_at, orcid: author.orcid ?? null });
     }
     return authorsList;
 };
