@@ -14,6 +14,13 @@ export const VisualizationCard = styled.div`
     padding: 5px;
 `;
 
+export const StyledChart = styled(Chart)`
+    & .google-visualization-table > div {
+        overflow: hidden !important;
+        width: 220px !important;
+    }
+`;
+
 const SingleVisualizationComponent = props => {
     const [isOpenViewModal, setIsOpenViewModal] = useState(false);
     const [renderingData, setRenderingData] = useState(undefined);
@@ -37,7 +44,7 @@ const SingleVisualizationComponent = props => {
         <VisualizationCard onClick={() => setIsOpenViewModal(true)} id={`#Vis${props.input.reconstructionModel.orkgOrigin}`} className="mx-1">
             <div className="pe-none">
                 {renderingData && (
-                    <Chart
+                    <StyledChart
                         chartType={visMethod}
                         data={renderingData}
                         width="100%"

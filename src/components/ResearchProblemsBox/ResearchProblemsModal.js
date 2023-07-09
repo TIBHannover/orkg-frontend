@@ -1,11 +1,12 @@
-import ContentLoader from 'react-content-loader';
-import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
-import ResearchProblemCard from 'components/ResearchProblemsBox/ResearchProblemCard';
-import { RESOURCES } from 'constants/graphSettings';
-import { FormGroup, Label, Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import ResearchProblemCard from 'components/ResearchProblemsBox/ResearchProblemCard';
+import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
+import { RESOURCES } from 'constants/graphSettings';
+import PropTypes from 'prop-types';
+import ContentLoader from 'react-content-loader';
+import { useSelector } from 'react-redux';
+import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenModal }) => {
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
@@ -37,9 +38,9 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
                     <div className="mb-0 ms-2 me-2">
                         <Input value={sort} onChange={e => setSort(e.target.value)} bsSize="sm" type="select" name="sort" disabled={isLoading}>
                             <option value="combined">Top recent</option>
-                            <option value="newest">Recently added</option>
-                            <option value="featured">Featured</option>
-                            <option value="unlisted">Unlisted</option>
+                            <option value={VISIBILITY_FILTERS.ALL_LISTED}>Recently added</option>
+                            <option value={VISIBILITY_FILTERS.FEATURED}>Featured</option>
+                            <option value={VISIBILITY_FILTERS.UNLISTED}>Unlisted</option>
                         </Input>
                     </div>
                     {id !== RESOURCES.RESEARCH_FIELD_MAIN && by === 'ResearchField' && (
@@ -86,7 +87,13 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
                             style={{ cursor: 'pointer' }}
                             className="list-group-item list-group-item-action text-center"
                             onClick={!isLoading ? handleLoadMore : undefined}
-                            onKeyDown={e => (e.keyCode === 13 ? (!isLoading ? handleLoadMore : undefined) : undefined)}
+                            onKeyDown={e => {
+                                if (e.key === 'Enter') {
+                                    if (!isLoading) {
+                                        handleLoadMore();
+                                    }
+                                }
+                            }}
                             role="button"
                             tabIndex={0}
                         >

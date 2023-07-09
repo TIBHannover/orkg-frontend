@@ -6,8 +6,6 @@ import { toast } from 'react-toastify';
 import { Alert, Button } from 'reactstrap';
 import processPdf from 'services/grobid';
 import { updateGeneralData } from 'slices/addPaperSlice';
-import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
-import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/build/pdf';
 import { getResource, getResourcesByClass } from 'services/backend/resources';
 import { CLASSES } from 'constants/graphSettings';
 import convertExtractData2ContributionsStatements from './helpers';
@@ -20,8 +18,6 @@ const UploadPdf = () => {
     const handleOnDrop = async files => {
         try {
             // metadata extraction via embedded XML
-            GlobalWorkerOptions.workerSrc = pdfjsWorker;
-
             const reader = new FileReader();
 
             reader.onload = async () => {
@@ -32,11 +28,20 @@ const UploadPdf = () => {
                 let extractedContributionData;
                 const collectedContribution = [];
                 let resourceURI = [];
-                const data = new Uint8Array(reader?.result);
-                const loadingTask = getDocument({ data });
-                const pdf = await loadingTask.promise;
-                const metadata = await (await pdf?.getMetadata())?.metadata?.getRaw();
+                let metadata;
 
+                // read the contents of the file
+                const docStr = reader?.result;
+                const sciKGMetadata = '/Type /SciKGMetadata';
+                const metadataPatterns = new RegExp(`(${sciKGMetadata}.*?)stream(.*?)endstream`, 'gs');
+                const matches = docStr.matchAll(metadataPatterns);
+                for (const match of matches) {
+                    const header = match[1];
+                    const data = match[2];
+                    if (header.includes('/Type /SciKGMetadata')) {
+                        metadata = data.toString('utf-8').trim();
+                    }
+                }
                 if (metadata) {
                     const processedPdf = new window.DOMParser().parseFromString(metadata, 'text/xml');
                     // you might want to replace 'querySelector' with 'querySelectorAll' to get all the values if there are multiple annotations of the same type
@@ -56,15 +61,18 @@ const UploadPdf = () => {
                     }
 
                     title = processedPdf.querySelector('hasTitle')?.textContent;
-                    authors = [...processedPdf.querySelectorAll('hasAuthor')].map(auth => auth.textContent);
+
+                    authors = [...processedPdf.querySelectorAll('hasAuthor')].map(author => ({
+                        label: author.textContent,
+                        id: author.textContent,
+                        orcid: author.querySelector('Description')?.getAttribute('rdf:about')?.split('/').pop() ?? null,
+                    }));
+
                     resourceURI = [...processedPdf.querySelectorAll('ResearchContribution Description')].map(description =>
                         description.getAttribute('rdf:about'),
                     );
-
                     const resourcePromises = resourceURI.map(resource => getResource(resource.split('/').pop()));
-
                     const apiResourceCalls = await Promise.all(resourcePromises).catch(() => []);
-
                     for (const contribution of processedPdf.querySelectorAll('ResearchContribution')) {
                         const properties = contribution.querySelectorAll(':scope > *');
                         const propertyData = [...properties]?.map((property, index) => {
@@ -92,7 +100,6 @@ const UploadPdf = () => {
 
                 // metadata extraction via Grobid
                 const processedPdf = await new window.DOMParser().parseFromString(await processPdf({ pdf: files[0] }), 'text/xml');
-
                 const titleGrobid = processedPdf.querySelector('fileDesc titleStmt title')?.textContent;
                 const authorsGrobid = [...processedPdf.querySelectorAll('fileDesc biblStruct author')].map(author => ({
                     label: [...author.querySelectorAll('forename, surname')].map(name => name?.textContent).join(' '),
@@ -108,7 +115,7 @@ const UploadPdf = () => {
                         showLookupTable: true,
                         extractedResearchField,
                         title: title || titleGrobid,
-                        authors: authorsGrobid || authors,
+                        authors: authors || authorsGrobid,
                         doi,
                         entry: doi,
                         abstract,
@@ -117,7 +124,8 @@ const UploadPdf = () => {
                 toast.success('PDF parsed successfully');
             };
 
-            reader.readAsArrayBuffer(files[0]);
+            // file in binary format
+            reader.readAsBinaryString(files[0]);
         } catch (e) {
             toast.error('Something went wrong while parsing the PDF', e);
         }
@@ -144,7 +152,7 @@ const UploadPdf = () => {
                 <a href="https://orkg.org/about/33/SciKGTeX" target="_blank" rel="noopener noreferrer">
                     SciKGTeX
                 </a>{' '}
-                the annotation will be imported automatically.
+                in compatiblity mode the annotation will be imported automatically.
             </Alert>
             {pdfName && (
                 <div className="border rounded p-2 d-flex align-items-center">

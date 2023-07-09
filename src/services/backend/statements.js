@@ -190,14 +190,12 @@ export const getStatementsByPredicateAndLiteral = ({
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
-        { size, subjectClass, page, sort },
+        { size, subjectClass, page, sort, q: literal },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${statementsUrl}predicate/${predicateId}/literal/${literal}/?${params}`).then(res =>
-        returnContent ? res.content : res,
-    );
+    return submitGetRequest(`${statementsUrl}predicate/${predicateId}/literals/?${params}`).then(res => (returnContent ? res.content : res));
 };
 
 /**
@@ -275,6 +273,7 @@ export const getTemplateById = async templateId => {
             ? {
                   id: targetClass.id,
                   label: targetClass.label,
+                  uri: targetClass.uri,
               }
             : {},
         researchFields: researchFields.map(statement => ({

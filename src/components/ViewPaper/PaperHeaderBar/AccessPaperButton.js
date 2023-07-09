@@ -1,5 +1,6 @@
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';
@@ -57,9 +58,19 @@ const AccessPaperButton = ({ paperLink = null, doi = null, title = null }) => {
                 {!isLoading && links.length > 0 && (
                     <>
                         {paperLink && <DropdownItem divider />}
-                        <DropdownItem tag="a" className="dropdown-header" href="https://unpaywall.org/" target="_blank" rel="noopener noreferrer">
-                            Alternative sources by Unpaywall
-                        </DropdownItem>
+                        <Tippy content="Results can be incomplete or incorrect (especially if no DOI is available for this paper)">
+                            <span>
+                                <DropdownItem
+                                    tag="a"
+                                    className="dropdown-header"
+                                    href="https://unpaywall.org/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Alternative sources by Unpaywall
+                                </DropdownItem>
+                            </span>
+                        </Tippy>
                         {links.map((link, index) => (
                             <DropdownItem key={index} tag="a" href={link.url} target="_blank" rel="noopener noreferrer">
                                 {link.name}

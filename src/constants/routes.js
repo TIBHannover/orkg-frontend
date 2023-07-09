@@ -21,6 +21,7 @@ const routes = {
     ADD_TEMPLATE: '/template/',
     ORGANIZATIONS: '/organizations/:type',
     OBSERVATORIES: '/observatories',
+    OBSERVATORIES_RESEARCH_FIELD: '/observatories/:researchFieldId',
     ADD_ORGANIZATION: '/addOrganization/:type',
     ORGANIZATION: '/organization/:type/:id',
     CONFERENCE: '/conference/:id',

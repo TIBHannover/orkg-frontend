@@ -7,6 +7,7 @@ import { RESOURCES } from 'constants/graphSettings';
 import ContentLoader from 'react-content-loader';
 import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import useResearchFieldContent from 'components/ResearchField/hooks/useResearchFieldContent';
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { reverseWithSlug } from 'utils';
 
 const ListGroupStyled = styled(ListGroup)`
@@ -56,8 +57,8 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
                             disabled={isLoading}
                         >
                             <option value="combined">Top recent</option>
-                            <option value="newest">Recently added</option>
-                            <option value="featured">Featured</option>
+                            <option value={VISIBILITY_FILTERS.ALL_LISTED}>Recently added</option>
+                            <option value={VISIBILITY_FILTERS.FEATURED}>Featured</option>
                         </Input>
                     </div>
                 </div>

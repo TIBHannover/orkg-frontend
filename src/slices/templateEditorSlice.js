@@ -31,6 +31,7 @@ const initialState = {
     hasFailed: false,
     statements: [],
     isSaving: false,
+    templateFlow: null,
 };
 
 export const templateEditorSlice = createSlice({
@@ -101,6 +102,9 @@ export const templateEditorSlice = createSlice({
         setTemplateId: (state, { payload }) => {
             state.templateID = payload;
         },
+        setTemplateFlow: (state, { payload }) => {
+            state.templateFlow = payload;
+        },
     },
     extraReducers: builder => {
         builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
@@ -138,6 +142,7 @@ export const {
     setIsSaving,
     setHasFailedSaving,
     setTemplateId,
+    setTemplateFlow,
 } = templateEditorSlice.actions;
 
 export default templateEditorSlice.reducer;

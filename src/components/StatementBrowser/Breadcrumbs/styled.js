@@ -25,12 +25,7 @@ export const BreadcrumbItem = styled.li`
 
     &:hover {
         max-width: 100%;
-
         color: #000;
-    }
-
-    &:hover:not(:last-of-type) {
-        padding-right: 15px;
     }
 
     :last-of-type {

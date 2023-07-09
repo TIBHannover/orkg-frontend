@@ -3,6 +3,53 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.112.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.111.0...v0.112.0) - 2023-07-06
+
+### Changes
+
+- fix(ViewPaper): ORCIDs not displayed after updating authors [`#1155`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1155)
+- chore: allow console.error [`#1153`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1153)
+- fix: sync with backend change on getStatementsByPredicateAndLiteral endpoint [`#1137`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1137)
+- feat(Contributors): hide contributors with a contribution less than 3 percent [`#1151`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1151)
+
+---
+## [v0.111.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.110.0...v0.111.0) - 2023-06-21
+
+### Changes
+
+- feat(Observatories): paginate observatories and use complimentary observatory endpoints [`#1149`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1149)
+- fix(ResearchField): alternation between feature and no featured items on research field page [`#1144`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1144)
+- feat(AddPaper): only support SciKGTeX in compatibility mode [`#1147`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1147)
+- feat(Paper): hide low score unpaywall results [`#1146`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1146)
+- chore: async jspdf for code splitting, remove immutability-helper and use array-move instead [`#1145`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1145)
+- feat(EntityRecognition): show DescriptionTooltip for recommendations [`#1141`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1141)
+- fix(Breadcrumbs): fix flickering on hover [`#1142`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1142)
+- fix(ResearchFieldSelector): hide fields while loading [`#1143`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1143)
+
+---
+## [v0.110.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.109.0...v0.110.0) - 2023-06-12
+
+### Changes
+
+- feat(Template): export as SHACL shape [`#1138`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1138)
+- feat(TemplateDiagram): display number of instances [`#1139`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1139)
+- fix(AuthorInput): adding an ORCID to a literal author freezes the paper editor [`#1140`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1140)
+- feat(uploadPdf):metadata compatibility [`#1128`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1128)
+
+---
+## [v0.109.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.108.0...v0.109.0) - 2023-06-08
+
+### Changes
+
+- CD(Netlify): add redirection rule for index.html [`#1135`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1135)
+- chore: replace 'featured' and 'unlisted' flags with 'visibility' parameter [`#1129`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1129)
+- feat(Template): download template diagram as image [`#1134`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1134)
+- fix(Visualization): problems with tables width [`#1131`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1131)
+- style(Class): overflowing content of instances table [`#1133`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1133)
+- fix(StatementBrowser): template properties vanish once saved [`#1132`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1132)
+- fix(Observatory): show message when no description is provided [`#1130`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1130)
+
+---
 ## [v0.108.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.107.1...v0.108.0) - 2023-06-02
 
 ### Changes

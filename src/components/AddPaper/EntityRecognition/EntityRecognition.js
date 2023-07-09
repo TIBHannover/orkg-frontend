@@ -162,7 +162,9 @@ const EntityRecognition = ({ title = '', abstract = '', activeNERService }) => {
                     <Fragment key={key}>
                         {suggestions[key].length > 0 && (
                             <PropertyItem color="smart" className="py-1">
-                                {capitalize(nerProperties?.[key]?.label)}
+                                <DescriptionTooltip id={nerProperties?.[key]?.id} _class={ENTITIES.PREDICATE} showURL>
+                                    {capitalize(nerProperties?.[key]?.label)}
+                                </DescriptionTooltip>
                             </PropertyItem>
                         )}
                         <TransitionGroup component={null}>
@@ -184,7 +186,13 @@ const EntityRecognition = ({ title = '', abstract = '', activeNERService }) => {
                                             })
                                         }
                                     >
-                                        <Icon icon={faAngleDoubleLeft} className="text-smart me-2" /> <div>{item.label}</div>
+                                        <DescriptionTooltip
+                                            id={item.isExistingValue ? item.id : null}
+                                            _class={ENTITIES.RESOURCE}
+                                            showURL={item.isExistingValue}
+                                        >
+                                            <Icon icon={faAngleDoubleLeft} className="text-smart me-2" /> {item.label}
+                                        </DescriptionTooltip>
                                     </ValueItem>
                                 </AnimationContainer>
                             ))}
@@ -217,7 +225,7 @@ const EntityRecognition = ({ title = '', abstract = '', activeNERService }) => {
                                     )
                                 }
                             >
-                                <DescriptionTooltip id={p.id} _class={ENTITIES.PREDICATE}>
+                                <DescriptionTooltip id={p.id} _class={ENTITIES.PREDICATE} showURL>
                                     <Icon icon={faAngleDoubleLeft} className="text-smart me-2" /> {p.label}
                                 </DescriptionTooltip>
                             </ValueItem>

@@ -1,5 +1,3 @@
-import { jsPDF as JsPDF } from 'jspdf';
-
 export const downloadJPG = (chart, imageTitle) => {
     const img = new Image();
     img.addEventListener('load', () => {
@@ -21,7 +19,10 @@ export const downloadJPG = (chart, imageTitle) => {
 
 export const downloadPDF = (chart, fileName) => {
     const img = new Image();
-    img.addEventListener('load', () => {
+    img.addEventListener('load', async () => {
+        // dynamically import it for code splitting
+        const { default: JsPDF } = await import('jspdf');
+
         const canvas = document.createElement('canvas');
         canvas.width = img.width;
         canvas.height = img.height;
