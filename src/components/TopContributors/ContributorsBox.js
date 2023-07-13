@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import useContributors from 'components/TopContributors/hooks/useContributors';
 import ContributorCard from 'components/Cards/ContributorCard/ContributorCard';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faAward } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
@@ -15,9 +13,8 @@ const ContributorsBox = ({ researchFieldId }) => {
 
     return (
         <div className="box rounded-3 p-3 flex-grow-1 d-flex flex-column">
-            <h5>
-                <Icon icon={faAward} className="text-primary" /> Top Contributors
-            </h5>
+            <h2 className="h5 mb-0">Top contributors</h2>
+            <hr className="mt-2" />
             <div className="flex-grow-1">
                 {!isLoading && contributors && contributors.length > 0 && (
                     <div className="mt-2">

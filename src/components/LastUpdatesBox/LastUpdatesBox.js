@@ -18,7 +18,8 @@ const LastUpdatesBox = ({ researchFieldId }) => {
 
     return (
         <div className="box rounded-3 p-3 flex-grow-1 d-flex flex-column">
-            <h5>Last updates</h5>
+            <h2 className="h5 mb-0">Latest updates</h2>
+            <hr className="mt-2" />
             <div className="mt-3 flex-grow-1">
                 <div>
                     <div>
