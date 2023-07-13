@@ -67,6 +67,18 @@ export default function Home() {
                 </Col>
                 <Col md="4">
                     <TwitterTimeline />
+
+                    <div className="mt-3 box rounded p-3">
+                        <h2 className="h5 mb-0 mt-0">ORKG stories</h2>
+                        <hr className="mt-2" />
+                        <p className="m-0">
+                            See how researchers benefit from using ORKG. <br />
+                            <a href="https://orkg.org/about/36/ORKG_Stories" rel="noopener noreferrer">
+                                Find out more
+                            </a>
+                        </p>
+                    </div>
+
                     <News />
 
                     <div className="mt-3 box rounded d-flex flex-column overflow-hidden">

@@ -59,7 +59,7 @@ export default function News() {
         <div className="mt-3 box rounded d-flex flex-column overflow-hidden">
             <div className="d-flex align-items-center pt-3 ps-3 pe-3 pb-0">
                 <div className="flex-grow-1">
-                    <h2 className="h6 mb-1 mt-0">Latest news</h2>
+                    <h2 className="h5 mb-1 mt-0">Latest news</h2>
                 </div>
             </div>
 
