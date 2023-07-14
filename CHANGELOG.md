@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.113.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.112.0...v0.113.0) - 2023-07-14
+
+### Changes
+
+- feat(Home): add ORKG stories box [`#1156`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1156)
+
+---
 ## [v0.112.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.111.0...v0.112.0) - 2023-07-06
 
 ### Changes
