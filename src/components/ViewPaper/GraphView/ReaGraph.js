@@ -1,21 +1,18 @@
 import * as PropTypes from 'prop-types';
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { GraphCanvas, useSelection, lightTheme } from 'reagraph';
 
 export default function ReGraph(props) {
-    console.log('show nodes', props.nodesz);
-    const graphRef = useRef();
     const [collapsed, setCollapsed] = useState(['n-2']);
     const [active, setActive] = useState(null);
     const [mode, setMode] = useState('rotate');
-    const [layoutType, setLayoutType] = useState('forceDirected2d');
 
     useEffect(() => {
         setCollapsed(collapsed);
     }, [collapsed]);
 
     const { onNodePointerOver, onNodePointerOut, selections, actives, onNodeClick, onCanvasClick } = useSelection({
-        ref: graphRef,
+        ref: props.graphRef,
         nodes: props.nodesz,
         edges: props.edgesz,
         pathSelectionType: 'all',
@@ -23,11 +20,12 @@ export default function ReGraph(props) {
     });
     const myTheme = {
         ...lightTheme,
-        node: {
+        nodes: {
             ...lightTheme.node,
-            fill: props.nodesz.fill,
-            // border: props.nodesz.border,
-            size: 15,
+        },
+
+        edges: {
+            ...lightTheme.node,
         },
     };
     function handleCollapseNode(nodeId) {
@@ -41,9 +39,7 @@ export default function ReGraph(props) {
             setCollapsed(collapsed.filter(n => n !== nodeId));
         }
     }
-    const handleLayoutChange = newLayoutType => {
-        setLayoutType(newLayoutType);
-    };
+
     return (
         <div className="App">
             <div
@@ -57,93 +53,6 @@ export default function ReGraph(props) {
                     color: 'white',
                 }}
             >
-                <button
-                    style={{
-                        display: 'block',
-                        width: '100%',
-                    }}
-                    onClick={() => graphRef.current?.centerGraph()}
-                >
-                    Center
-                </button>
-
-                <button
-                    style={{
-                        display: 'block',
-                        width: '100%',
-                    }}
-                    onClick={() => graphRef.current?.zoomIn()}
-                >
-                    Zoom In
-                </button>
-                <button
-                    style={{
-                        display: 'block',
-                        width: '100%',
-                    }}
-                    onClick={() => graphRef.current?.zoomOut()}
-                >
-                    Zoom Out
-                </button>
-
-                <br />
-                <button
-                    style={{
-                        display: 'block',
-                        width: '100%',
-                    }}
-                    onClick={() => handleLayoutChange('forceDirected2d')}
-                >
-                    ForceDirected
-                </button>
-                <button
-                    style={{
-                        display: 'block',
-                        width: '100%',
-                    }}
-                    onClick={() => handleLayoutChange('treeTd2d')}
-                >
-                    Tree Top Down
-                </button>
-                <button
-                    style={{
-                        display: 'block',
-                        width: '100%',
-                    }}
-                    onClick={() => handleLayoutChange('treeLr2d')}
-                >
-                    Tree Left Right
-                </button>
-
-                <button
-                    style={{
-                        display: 'block',
-                        width: '100%',
-                    }}
-                    onClick={() => handleLayoutChange('radialOut2d')}
-                >
-                    RadialOut
-                </button>
-
-                <button
-                    style={{
-                        display: 'block',
-                        width: '100%',
-                    }}
-                    onClick={() => handleLayoutChange('circular2d')}
-                >
-                    Circular
-                </button>
-                <br />
-                <button
-                    style={{
-                        display: 'block',
-                        width: '100%',
-                    }}
-                    onClick={() => setMode(mode === 'orbit' ? 'rotate' : 'orbit')}
-                >
-                    Enable/Disable Orbit
-                </button>
                 {active ? (
                     <>
                         Selected: {active.node.id}
@@ -178,13 +87,13 @@ export default function ReGraph(props) {
             <div style={{ border: 'solid 1px red', margin: 15 }}>
                 <GraphCanvas
                     draggable
-                    ref={graphRef}
+                    ref={props.graphRef}
                     theme={myTheme}
                     edges={props.edgesz}
                     nodes={props.nodesz}
                     selections={selections}
                     collapsedNodeIds={collapsed}
-                    layoutType={layoutType}
+                    layoutType={props.layoutType}
                     labelType="all"
                     actives={actives}
                     cameraMode={mode}
@@ -209,4 +118,6 @@ export default function ReGraph(props) {
 ReGraph.propTypes = {
     nodesz: PropTypes.array,
     edgesz: PropTypes.array,
+    layoutType: PropTypes.array,
+    graphRef: PropTypes.array,
 };

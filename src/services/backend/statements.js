@@ -103,7 +103,7 @@ export const getStatementsBundleBySubject = ({ id, maxLevel = 10, blacklist = []
 export const getStatementsBySubjects = ({ ids, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
-        { ids: ids.join(), page, size, sort },
+        { ids, page, size, sort },
         {
             skipNulls: true,
         },

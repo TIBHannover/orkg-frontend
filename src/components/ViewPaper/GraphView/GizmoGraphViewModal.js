@@ -91,6 +91,8 @@ class GraphView extends Component {
     };
 
     getDataFromApi = async resourceId => {
+        // eslint-disable-next-line no-debugger
+        debugger;
         try {
             const statements = await getStatementsBySubject({ id: resourceId });
             console.log('statements', statements);
@@ -118,6 +120,8 @@ class GraphView extends Component {
     };
 
     processMultiStatements = objectStatements => {
+        // eslint-disable-next-line no-debugger
+        debugger;
         let nodes = [];
         let edges = [];
         objectStatements.forEach(obj => {
@@ -245,6 +249,8 @@ class GraphView extends Component {
     };
 
     loadStatements = async () => {
+        // eslint-disable-next-line no-debugger
+        debugger;
         this.setState({ isLoadingStatements: true, initializeGraph: false });
         this.graphVis.stopBackgroundProcesses();
         if (this.seenDepth < this.state.depth) {
