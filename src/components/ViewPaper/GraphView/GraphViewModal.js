@@ -239,27 +239,6 @@ const GraphViewModal = props => {
                             <Button
                                 color="secondary"
                                 size="sm"
-                                //    className='mb-4 mt-4'
-                                style={{ margin: '0 10px', flexGrow: '1', display: 'flex', alignSelf: 'center', width: '155px' }}
-                                onClick={() => {
-                                    exploreTheFullGraph();
-                                }}
-                                disabled={exploringFullGraph}
-                            >
-                                {!exploringFullGraph ? (
-                                    <>
-                                        <Icon icon={faExpandArrowsAlt} className="me-1 align-self-center" />
-                                        Expand all nodes{' '}
-                                    </>
-                                ) : (
-                                    <>
-                                        <Icon icon={faSpinner} spin className="me-1 align-self-center" /> Expanding graph
-                                    </>
-                                )}
-                            </Button>
-                            <Button
-                                color="secondary"
-                                size="sm"
                                 style={{ margin: '0 10px', flexGrow: '1', display: 'flex', alignSelf: 'center', width: '130px' }}
                                 onClick={() => graphRef.current?.centerGraph()}
                             >
@@ -360,6 +339,30 @@ const GraphViewModal = props => {
                                     <DropdownItem onClick={() => handleDepthChange(3)}>Level 3</DropdownItem>
                                     <DropdownItem onClick={() => handleDepthChange(4)}>Level 4</DropdownItem>
                                     <DropdownItem onClick={() => handleDepthChange(5)}>Level 5</DropdownItem>
+                                    <DropdownItem>
+                                        {' '}
+                                        <Button
+                                            color="secondary"
+                                            size="sm"
+                                            //    className='mb-4 mt-4'
+
+                                            onClick={() => {
+                                                exploreTheFullGraph();
+                                            }}
+                                            disabled={exploringFullGraph}
+                                        >
+                                            {!exploringFullGraph ? (
+                                                <>
+                                                    <Icon icon={faExpandArrowsAlt} className="me-1 align-self-center" />
+                                                    Expand all nodes{' '}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Icon icon={faSpinner} spin className="me-1 align-self-center" /> Expanding graph
+                                                </>
+                                            )}
+                                        </Button>
+                                    </DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </div>
