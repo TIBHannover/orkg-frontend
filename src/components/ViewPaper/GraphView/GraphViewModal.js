@@ -23,15 +23,19 @@ const GraphViewModal = props => {
     const { isOpen, toggle, paperId } = props;
     const [layoutType, setLayoutType] = useState('forceDirected2d');
     const [layoutSelectionOpen, setLayoutSelectionOpen] = useState(false);
+    const [levelSelectionOpen, setLevelSelectionOpen] = useState(false);
     const [nodesz, setNodes] = useState([]);
     const [edgesz, setEdges] = useState([]);
     const [windowHeight, setWindowHeight] = useState(0);
     const [isLoadingStatements, setIsLoadingStatements] = useState(false);
+    const [depth, setDepth] = useState(0);
+    const [exploringFullGraph, setExploringFullGraph] = useState(false);
 
     const updateDimensions = () => {
         const offset = 28 * 2 + 65;
         setWindowHeight(window.innerHeight - offset);
     };
+
     useEffect(() => {
         updateDimensions();
         window.addEventListener('resize', updateDimensions);
@@ -39,19 +43,21 @@ const GraphViewModal = props => {
             window.removeEventListener('resize', updateDimensions);
         };
     }, []);
+
     function generateAutoID() {
         // generate random number
         const randomNum = Math.random();
         return `${randomNum}`;
     }
-    const constructEachTriple = (nodes, edges, statement) => {
+    const constructEachTriple = (nodes, edges, statement, depthx) => {
         const subjectLabel = statement.subject.label.substring(0, 20);
         const objectLabel = statement.object.label.substring(0, 20);
-
+        setDepth(depthx + 1);
         nodes.push({
             id: statement.subject.id,
             label: subjectLabel,
             title: statement.subject.label,
+            class: statement.object._class,
             classificationArray: statement.subject.classes,
             fill: 'brown',
         });
@@ -62,6 +68,7 @@ const GraphViewModal = props => {
                 id: statement.object.id,
                 label: objectLabel,
                 title: statement.object.label,
+                class: statement.object._class,
                 fill: '#1E90FF',
                 classificationArray: statement.object.classes,
                 isResearchFieldRelated:
@@ -73,6 +80,7 @@ const GraphViewModal = props => {
                 label: objectLabel,
                 title: statement.object.label,
                 type: 'literal',
+                class: statement.object._class,
                 fill: 'yellow',
                 icon: literal,
             });
@@ -113,9 +121,10 @@ const GraphViewModal = props => {
     const processStatements = (statementss, auxNode) => {
         let nodes = [];
         let edges = [];
+        let depthx = 0;
 
         for (const statement of statementss) {
-            constructEachTriple(nodes, edges, statement);
+            constructEachTriple(nodes, edges, statement, depthx);
         }
 
         // remove duplicate nodes ans edges
@@ -165,9 +174,9 @@ const GraphViewModal = props => {
         return { nodes, edges };
     };
 
-    const fetchData = async () => {
+    const fetchData = async depthx => {
         if (isOpen && paperId) {
-            const statements = await getStatementsBundleBySubject({ id: paperId, maxLevel: 10 });
+            const statements = await getStatementsBundleBySubject({ id: paperId, maxLevel: depthx });
 
             if (statements.statements.length === 0) {
                 return {}; // we don't have incremental data
@@ -183,23 +192,41 @@ const GraphViewModal = props => {
             setNodes(result?.nodes);
             setEdges(result?.edges);
         }
+        return 1;
+    };
+
+    const exploreTheFullGraph = async () => {
+        setExploringFullGraph(true);
+        const statements = await getStatementsBundleBySubject({ id: paperId, maxLevel: 10 });
+        setExploringFullGraph(false);
+        const result = processStatements(statements.statements);
+        setNodes(result?.nodes);
+        setEdges(result?.edges);
     };
 
     useEffect(() => {
         setIsLoadingStatements(true);
-        fetchData();
+        fetchData(depth);
     }, [isOpen, paperId]);
 
     const handleLayoutChange = newLayoutType => {
         setLayoutType(newLayoutType);
     };
+
+    const handleDepthChange = d => {
+        if (d) {
+            setDepth(d);
+            fetchData(d);
+        }
+    };
+
     return (
         <Modal
             size="lg"
             isOpen={isOpen}
             toggle={toggle}
             onOpened={() => {
-                fetchData();
+                fetchData(depth);
             }}
             style={{ maxWidth: '90%', marginBottom: 0 }}
         >
@@ -214,19 +241,21 @@ const GraphViewModal = props => {
                                 size="sm"
                                 //    className='mb-4 mt-4'
                                 style={{ margin: '0 10px', flexGrow: '1', display: 'flex', alignSelf: 'center', width: '155px' }}
-                                // onClick={exploreTheFullGraph}
-                                // disabled={exploringFullGraph}
+                                onClick={() => {
+                                    exploreTheFullGraph();
+                                }}
+                                disabled={exploringFullGraph}
                             >
-                                {/* {!exploringFullGraph ? ( */}
-                                <>
-                                    <Icon icon={faExpandArrowsAlt} className="me-1 align-self-center" />
-                                    Expand all nodes{' '}
-                                </>
-                                {/* ) : (
+                                {!exploringFullGraph ? (
+                                    <>
+                                        <Icon icon={faExpandArrowsAlt} className="me-1 align-self-center" />
+                                        Expand all nodes{' '}
+                                    </>
+                                ) : (
                                     <>
                                         <Icon icon={faSpinner} spin className="me-1 align-self-center" /> Expanding graph
                                     </>
-                                )} */}
+                                )}
                             </Button>
                             <Button
                                 color="secondary"
@@ -307,12 +336,38 @@ const GraphViewModal = props => {
                                     </DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
+                            <Dropdown
+                                color="secondary"
+                                size="sm"
+                                style={{
+                                    marginLeft: '10px',
+                                    flexGrow: '1',
+                                    display: 'flex',
+                                    height: 'min-content',
+                                    paddingTop: '5px',
+                                }}
+                                isOpen={levelSelectionOpen}
+                                toggle={() => {
+                                    setLevelSelectionOpen(!levelSelectionOpen);
+                                }}
+                            >
+                                <DropdownToggle caret color="secondary">
+                                    Depth
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem onClick={() => handleDepthChange(1)}>Level 1</DropdownItem>
+                                    <DropdownItem onClick={() => handleDepthChange(2)}>Level 2</DropdownItem>
+                                    <DropdownItem onClick={() => handleDepthChange(3)}>Level 3</DropdownItem>
+                                    <DropdownItem onClick={() => handleDepthChange(4)}>Level 4</DropdownItem>
+                                    <DropdownItem onClick={() => handleDepthChange(5)}>Level 5</DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
                         </div>
                     </div>
                 </div>
             </ModalHeader>
             <ModalBody style={{ padding: '0', minHeight: '100px', height: windowHeight }}>
-                <ReGraph nodesz={nodesz} edgesz={edgesz} layoutType={layoutType} graphRef={graphRef} />
+                {!isLoadingStatements && <ReGraph nodesz={nodesz} edgesz={edgesz} layoutType={layoutType} graphRef={graphRef} depth={depth} />}
                 {isLoadingStatements && (
                     <div className="text-center text-primary mt-4 mb-4">
                         {/* using a manual fixed scale value for the spinner scale! */}

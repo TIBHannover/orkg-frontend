@@ -1,11 +1,16 @@
 import * as PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
-import { GraphCanvas, useSelection, lightTheme } from 'reagraph';
+import { useState, useEffect, useMemo } from 'react';
+import { GraphCanvas, useSelection, lightTheme, useCollapse, getVisibleEntities } from 'reagraph';
 
 export default function ReGraph(props) {
     const [collapsed, setCollapsed] = useState(['n-2']);
+    // const { getExpandPathIds } = useCollapse({
+    //     collapsedNodeIds: collapsed,
+    //     nodes: props.nodesz,
+    //     edges: props.edgesz,
+    // });
     const [active, setActive] = useState(null);
-    const [mode, setMode] = useState('rotate');
+    // const [mode, setMode] = useState('rotate');
 
     useEffect(() => {
         setCollapsed(collapsed);
@@ -39,6 +44,16 @@ export default function ReGraph(props) {
             setCollapsed(collapsed.filter(n => n !== nodeId));
         }
     }
+    // const hiddenNodeIds = useMemo(() => {
+    //     const { visibleNodes } = getVisibleEntities({
+    //         collapsedIds: collapsed,
+    //         nodes: props.nodesz,
+    //         edges: props.edgesz,
+    //     });
+    //     const visibleNodeIds = visibleNodes.map(n => n.id);
+    //     const hiddenNodes = props.nodesz.filter(n => !visibleNodeIds.includes(n.id));
+    //     return hiddenNodes.map(n => n.id);
+    // }, [collapsed]);
 
     return (
         <div className="App">
@@ -83,6 +98,27 @@ export default function ReGraph(props) {
                 <code>
                     <pre>{JSON.stringify(collapsed, null, 2)}</pre>
                 </code>
+                {/* <h3>Hidden Nodes</h3>
+                <ul>
+                    {hiddenNodeIds.map(id => (
+                        <li key={id}>
+                            {id}
+                            <button
+                                style={{
+                                    display: 'block',
+                                    width: '100%',
+                                }}
+                                onClick={() => {
+                                    const toExpandIds = getExpandPathIds(id.toString());
+                                    const newCollapsed = collapsed.filter(id => !toExpandIds.includes(id));
+                                    setCollapsed(newCollapsed);
+                                }}
+                            >
+                                View Node
+                            </button>
+                        </li>
+                    ))}
+                </ul> */}
             </div>
             <div style={{ border: 'solid 1px red', margin: 15 }}>
                 <GraphCanvas
@@ -96,7 +132,7 @@ export default function ReGraph(props) {
                     layoutType={props.layoutType}
                     labelType="all"
                     actives={actives}
-                    cameraMode={mode}
+                    // cameraMode={mode}
                     onNodeClick={node => {
                         if (onNodeClick) {
                             onNodeClick(node);
@@ -120,4 +156,5 @@ ReGraph.propTypes = {
     edgesz: PropTypes.array,
     layoutType: PropTypes.array,
     graphRef: PropTypes.array,
+    depth: PropTypes.array,
 };
