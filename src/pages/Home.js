@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col } from 'reactstrap';
 import ResearchFieldCards from 'components/Home/ResearchFieldCards';
@@ -13,8 +14,8 @@ import { toast } from 'react-toastify';
 import { Helmet } from 'react-helmet';
 import env from '@beam-australia/react-env';
 import HomeAlerts from 'components/HomeAlerts/HomeAlerts';
-import { useEffect } from 'react';
 import TwitterTimeline from 'components/Home/TwitterTimeline';
+import HelpTour from 'components/Home/HelpTour';
 
 export default function Home() {
     const location = useLocation();
@@ -48,7 +49,7 @@ export default function Home() {
             <HomeAlerts />
             <Row style={{ position: 'relative', zIndex: 99 }}>
                 <Col md="12">
-                    <div className="box rounded-3 p-3">
+                    <div className="box rounded-3 p-3" id="research-field-cards">
                         <ResearchFieldCards
                             selectedResearchField={selectedResearchField}
                             handleFieldSelect={handleFieldSelect}
@@ -98,6 +99,8 @@ export default function Home() {
                     </div>
                 </Col>
             </Row>
+
+            <HelpTour />
         </Container>
     );
 }
