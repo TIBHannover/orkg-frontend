@@ -6,7 +6,8 @@ export const classesUrl = `${url}classes/`;
 
 export const getClassById = id => submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/`);
 
-export const createClass = (label, uri = null) => submitPostRequest(classesUrl, { 'Content-Type': 'application/json' }, { label, uri });
+export const createClass = (label, uri = null, id = null) =>
+    submitPostRequest(classesUrl, { 'Content-Type': 'application/json' }, { label, uri, id });
 
 export const getClasses = ({
     page = 0,

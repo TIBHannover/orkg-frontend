@@ -1,18 +1,33 @@
-import { useState, useEffect, useRef } from 'react';
-import { Container, Col, Row, FormGroup, Label, Form, Input, ListGroup, ListGroupItem, Alert } from 'reactstrap';
+import { faEllipsisV, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
-import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
-import { getResourcesByClass } from 'services/backend/resources';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
-import { reverse } from 'named-urls';
-import { debounce } from 'lodash';
-import ROUTES from 'constants/routes';
-import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
+import { debounce } from 'lodash';
+import { reverse } from 'named-urls';
+import { useEffect, useRef, useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import {
+    Badge,
+    ButtonDropdown,
+    Col,
+    Container,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Form,
+    FormGroup,
+    Input,
+    Label,
+    ListGroup,
+    ListGroupItem,
+    Row,
+} from 'reactstrap';
+import { getResourcesByClass } from 'services/backend/resources';
+import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 
 const Templates = () => {
     const pageSize = 25;
@@ -149,6 +164,8 @@ const Templates = () => {
         setFilterLabel(e.target.value);
     };
 
+    const [menuOpen, setMenuOpen] = useState(false);
+
     const infoContainerText = (
         <>
             Templates allows to specify the structure of content types, and they can be used when describing research contributions.{' '}
@@ -169,15 +186,37 @@ const Templates = () => {
                     </div>
                 }
                 buttonGroup={
-                    <RequireAuthentication
-                        component={Link}
-                        color="secondary"
-                        size="sm"
-                        className="btn btn-secondary btn-sm flex-shrink-0"
-                        to={reverse(ROUTES.ADD_TEMPLATE)}
-                    >
-                        <Icon icon={faPlus} /> Create template
-                    </RequireAuthentication>
+                    <>
+                        <RequireAuthentication
+                            component={Link}
+                            color="secondary"
+                            size="sm"
+                            className="btn btn-secondary btn-sm flex-shrink-0"
+                            to={reverse(ROUTES.ADD_TEMPLATE)}
+                        >
+                            <Icon icon={faPlus} /> Create template
+                        </RequireAuthentication>
+                        <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                            <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
+                                <Icon icon={faEllipsisV} />
+                            </DropdownToggle>
+                            <DropdownMenu end>
+                                <RequireAuthentication
+                                    component={DropdownItem}
+                                    tag={NavLink}
+                                    color="secondary"
+                                    size="sm"
+                                    end
+                                    to={reverse(ROUTES.IMPORT_SHACL)}
+                                >
+                                    Import SHACL{' '}
+                                    <small className="ms-2">
+                                        <Badge color="info">Beta</Badge>
+                                    </small>
+                                </RequireAuthentication>
+                            </DropdownMenu>
+                        </ButtonDropdown>
+                    </>
                 }
             >
                 View all templates

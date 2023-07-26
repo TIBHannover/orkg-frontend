@@ -199,7 +199,7 @@ export const saveTemplate = () => async (dispatch, getState) => {
 
         if (data.isClosed) {
             // set the statement that says this is strict template
-            const strictLiteral = await createLiteral('True');
+            const strictLiteral = await createLiteral('true', 'xsd:boolean');
             promises.push(createResourceStatement(templateResource, PREDICATES.SHACL_CLOSED, strictLiteral.id));
         }
 

@@ -22,6 +22,7 @@ import Properties from 'pages/Properties/Properties';
 import AddProperty from 'pages/Properties/AddProperty';
 import PropertyDetails from 'pages/Properties/Property';
 import Templates from 'pages/Templates/Templates';
+import ImportSHACL from 'pages/Templates/ImportSHACL';
 import Template from 'pages/Templates/Template';
 import ROUTES from 'constants/routes';
 import RedirectShortLinks from 'pages/RedirectShortLinks';
@@ -133,6 +134,10 @@ const routes = [
     {
         path: ROUTES.TEMPLATES,
         element: Templates,
+    },
+    {
+        path: ROUTES.IMPORT_SHACL,
+        element: requireAuthentication(ImportSHACL),
     },
     {
         path: ROUTES.TEMPLATE,

@@ -267,7 +267,7 @@ export const getTemplateById = async templateId => {
         predicate: templatePredicate,
         labelFormat: templateFormatLabel ? templateFormatLabel.label : '',
         hasLabelFormat: !!templateFormatLabel,
-        isClosed: !!templateIsClosed,
+        isClosed: templateIsClosed?.label === 'true' || templateIsClosed?.label === 'True',
         propertyShapes: propertyShapes?.length > 0 ? propertyShapes.sort((c1, c2) => sortMethod(c1.order, c2.order)) : [],
         class: targetClass
             ? {

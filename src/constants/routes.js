@@ -16,6 +16,7 @@ const routes = {
     CLASS_TABS: '/class/:id/:activeTab',
     ADD_CLASS: '/addClass',
     TEMPLATES: '/templates',
+    IMPORT_SHACL: '/template/ImportSHACL',
     TEMPLATE: '/template/:id',
     TEMPLATE_TABS: '/template/:id/:activeTab',
     ADD_TEMPLATE: '/template/',
