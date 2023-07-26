@@ -159,8 +159,8 @@ const Review = () => {
             {researchField && <Breadcrumbs researchFieldId={researchField.id} />}
             <GlobalStyle />
             <Helmet>
-                <title>{`${paper?.title ?? 'Unpublished'} - Review - ORKG`}</title>
-                <meta property="og:title" content={`${paper?.title ?? 'Unpublished'} - Review - ORKG`} />
+                <title>{`${paper?.title ?? ''} - Review - ORKG`}</title>
+                <meta property="og:title" content={`${paper?.title ?? ''} - Review - ORKG`} />
                 <meta property="og:type" content="article" />
                 <meta property="og:description" content={version?.description} />
                 <script type="application/ld+json">{JSON.stringify(ldJson)}</script>
