@@ -47,7 +47,7 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
     };
 
     return (
-        <Form className="mt-2 mt-md-0 mx-2 search-box mb-2 mb-md-0" onSubmit={handleSubmit} style={{ minWidth: 57 }}>
+        <Form className="mt-2 mt-md-0 mx-2 search-box mb-2 mb-md-0" onSubmit={handleSubmit} style={{ minWidth: 57 }} id="tour-search-bar">
             <InputGroup>
                 <Input
                     placeholder={placeholder}

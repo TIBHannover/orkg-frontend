@@ -156,6 +156,7 @@
         "eslint-config-airbnb": "^19.0.4",
         "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-jsx-a11y": "^6.7.1",
+        "eslint-plugin-no-relative-import-paths": "^1.5.2",
         "eslint-plugin-prettier": "^4.2.1",
         "husky": "^8.0.3",
         "jest-canvas-mock": "^2.5.0",
@@ -208,7 +209,8 @@
         ],
         "plugins": [
             "prettier",
-            "jsx-a11y"
+            "jsx-a11y",
+            "no-relative-import-paths"
         ],
         "rules": {
             "prettier/prettier": 1,
@@ -267,6 +269,12 @@
                     "ignorePropertyModificationsFor": [
                         "state"
                     ]
+                }
+            ],
+            "no-relative-import-paths/no-relative-import-paths": [
+                1,
+                {
+                    "rootDir": "src"
                 }
             ],
             "import/no-unresolved": 0,

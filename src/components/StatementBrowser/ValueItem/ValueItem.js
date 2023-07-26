@@ -90,7 +90,7 @@ const ValueItem = props => {
                                                     interactive
                                                     zIndex={1}
                                                     content={
-                                                        <div style={{ padding: 5 }}>
+                                                        <div className="p-1">
                                                             Click on a resource <br />
                                                             for more details.
                                                             <div className="text-end">

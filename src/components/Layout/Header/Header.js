@@ -34,8 +34,8 @@ import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
 import Nfdi4dsButton from 'components/Layout/Header/Nfdi4dsButton';
 import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
 import UserTooltip from 'components/Layout/Header/UserTooltip';
-import SearchForm from './SearchForm';
-import AddNew from './AddNew';
+import SearchForm from 'components/Layout/Header/SearchForm';
+import AddNew from 'components/Layout/Header/AddNew';
 
 const cookies = new Cookies();
 
@@ -188,7 +188,6 @@ const Header = () => {
     const [isOpenAboutMenu, setIsOpenAboutMenu] = useState(false);
     const [isOpenViewMenu, setIsOpenViewMenu] = useState(false);
     const [logoutTimeoutId, setLogoutTimeoutId] = useState(null);
-
     const location = useLocation();
     const isHomePath = location.pathname === ROUTES.HOME;
     const [isTransparentNavbar, setIsTransparentNavbar] = useState(isHomePath);
@@ -329,7 +328,7 @@ const Header = () => {
                 <Collapse isOpen={isOpenNavBar} navbar>
                     <Nav className="me-auto flex-shrink-0" navbar>
                         {/* view menu */}
-                        <ButtonDropdown nav isOpen={isOpenViewMenu} toggle={toggleViewMenu}>
+                        <ButtonDropdown nav isOpen={isOpenViewMenu} toggle={toggleViewMenu} id="tour-views">
                             <DropdownToggle nav className="ms-2">
                                 View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                             </DropdownToggle>
@@ -474,7 +473,7 @@ const Header = () => {
                         </ButtonDropdown>
 
                         {/* about menu */}
-                        <ButtonDropdown isOpen={isOpenAboutMenu} toggle={toggleAboutMenu} nav>
+                        <ButtonDropdown isOpen={isOpenAboutMenu} toggle={toggleAboutMenu} nav id="about">
                             <DropdownToggle nav className="ms-2" onClick={toggleAboutMenu}>
                                 About <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                             </DropdownToggle>
@@ -510,6 +509,7 @@ const Header = () => {
 
                     {!user && (
                         <Button
+                            id="sign-in"
                             color="secondary"
                             className="ps-4 pe-4 flex-shrink-0 sign-in"
                             outline
