@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import rdf from 'rdf';
 import { isEmpty } from 'lodash';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 
 function downloadN3(graph, turtleName) {
     const a = document.createElement('a');
@@ -40,10 +41,36 @@ function ExportSHACL() {
             graph.add(new rdf.Triple(orkgr(template.id), rdf.rdfns('type'), shacl('NodeShape')));
             graph.add(new rdf.Triple(orkgr(template.id), rdf.rdfsns('label'), new rdf.Literal(template.label)));
             graph.add(new rdf.Triple(orkgr(template.id), shacl('targetClass'), orkgc(template.class.id.toString())));
+            graph.add(new rdf.Triple(orkgc(template.class.id.toString()), rdf.rdfsns('label'), new rdf.Literal(template.class.label)));
             if (template.class.uri) {
                 graph.add(new rdf.Triple(orkgc(template.class.id.toString()), owl('equivalentClass'), new rdf.NamedNode(template.class.uri)));
             }
             graph.add(new rdf.Triple(orkgr(template.id), shacl('closed'), new rdf.Literal(template.isClosed.toString(), rdf.xsdns('boolean'))));
+            if (template.labelFormat) {
+                graph.add(
+                    new rdf.Triple(orkgr(template.id), orkgp(PREDICATES.TEMPLATE_LABEL_FORMAT), new rdf.Literal(template.labelFormat.toString())),
+                );
+            }
+            if (template.predicate) {
+                graph.add(new rdf.Triple(orkgr(template.id), orkgp(PREDICATES.TEMPLATE_OF_PREDICATE), orkgp(template.predicate.id)));
+                graph.add(new rdf.Triple(orkgp(template.predicate.id), rdf.rdfsns('label'), new rdf.Literal(template.predicate.label)));
+            }
+            if (template.researchFields?.length > 0) {
+                template.researchFields.map(researchField => {
+                    graph.add(new rdf.Triple(orkgr(template.id), orkgp(PREDICATES.TEMPLATE_OF_RESEARCH_FIELD), orkgr(researchField.id)));
+                    graph.add(new rdf.Triple(orkgr(researchField.id), rdf.rdfsns('label'), new rdf.Literal(researchField.label)));
+                    graph.add(new rdf.Triple(orkgr(researchField.id), rdf.rdfns('type'), orkgc(CLASSES.RESEARCH_FIELD)));
+                    return null;
+                });
+            }
+            if (template.researchProblems?.length > 0) {
+                template.researchProblems.map(researchProblem => {
+                    graph.add(new rdf.Triple(orkgr(template.id), orkgp(PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM), orkgr(researchProblem.id)));
+                    graph.add(new rdf.Triple(orkgr(researchProblem.id), rdf.rdfsns('label'), new rdf.Literal(researchProblem.label)));
+                    graph.add(new rdf.Triple(orkgr(researchProblem.id), rdf.rdfns('type'), orkgc(CLASSES.PROBLEM)));
+                    return null;
+                });
+            }
             // PropertyShapes
             template.propertyShapes.map(propertyShape => {
                 const propertyShapeNode = new rdf.BlankNode();
