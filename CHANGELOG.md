@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.114.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.113.0...v0.114.0) - 2023-07-27
+
+### Changes
+
+- fix(Review): remove unpublished while loading [`#1161`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1161)
+- feat(Home): intro for new visitors [`#1136`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1136)
+- feat(Template): Import SHACL [`#1152`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1152)
+
+---
 ## [v0.113.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.112.0...v0.113.0) - 2023-07-14
 
 ### Changes
