@@ -13,6 +13,7 @@ import { getHelpArticle } from 'services/cms';
 
 const HelpCenterArticle = () => {
     const { loadPage, page, isLoading, isNotFound } = usePage();
+
     const params = useParams();
 
     useEffect(() => {
@@ -24,7 +25,7 @@ const HelpCenterArticle = () => {
     }, [params, loadPage]);
 
     useEffect(() => {
-        document.title = `${page?.title ?? ''} - ORKG`;
+        document.title = `${page?.attributes?.title ?? ''} - ORKG`;
     }, [page]);
 
     if (isNotFound) {
