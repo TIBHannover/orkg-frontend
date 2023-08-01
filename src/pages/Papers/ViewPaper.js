@@ -160,8 +160,7 @@ const ViewPaper = () => {
                 </>
             )}
 
-            {/* <GizmoGraphViewModal showDialog={showGraphModal} toggle={() => setShowGraphModal(v => !v)} paperId={resourceId} /> */}
-            <GraphViewModal isOpen={showGraphModal} toggle={() => setShowGraphModal(v => !v)} paperId={resourceId} />
+            {showGraphModal && <GraphViewModal toggle={() => setShowGraphModal(v => !v)} resourceId={resourceId} />}
         </div>
     );
 };

@@ -40,6 +40,7 @@ export default function ReGraph(props) {
     }
 
     function handleExpandNode(nodeId) {
+        console.log('nodeId', nodeId);
         if (collapsed.includes(nodeId)) {
             setCollapsed(collapsed.filter(n => n !== nodeId));
         }
