@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.114.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.114.0...v0.114.1) - 2023-08-01
+
+### Changes
+
+- fix(Home): hide broken Twitter timeline widget [`#1165`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1165)
+- fix: Encode dois for widget endpoint [`#1164`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1164)
+- HelpCenter:added title in browser [`#1162`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1162)
+
+---
 ## [v0.114.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.113.0...v0.114.0) - 2023-07-27
 
 ### Changes
