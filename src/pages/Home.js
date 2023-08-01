@@ -14,7 +14,6 @@ import { toast } from 'react-toastify';
 import { Helmet } from 'react-helmet';
 import env from '@beam-australia/react-env';
 import HomeAlerts from 'components/HomeAlerts/HomeAlerts';
-import TwitterTimeline from 'components/Home/TwitterTimeline';
 import HelpTour from 'components/Home/HelpTour';
 
 export default function Home() {
@@ -67,7 +66,7 @@ export default function Home() {
                     </div>
                 </Col>
                 <Col md="4">
-                    <TwitterTimeline />
+                    {/* <TwitterTimeline /> */}
 
                     <div className="mt-3 box rounded p-3">
                         <h2 className="h5 mb-0 mt-0">ORKG stories</h2>
