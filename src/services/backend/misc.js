@@ -7,7 +7,7 @@ import { getResources, getResource } from './resources';
 
 export const doisUrl = `${url}dois/`;
 
-export const getPaperByDOI = doi => submitGetRequest(`${url}widgets/?doi=${doi}`);
+export const getPaperByDOI = doi => submitGetRequest(`${url}widgets/?doi=${encodeURIComponent(doi)}`);
 
 export const getPaperByTitle = title => submitGetRequest(`${url}widgets/?title=${title}`);
 
