@@ -4,7 +4,7 @@ import ContextMenu from 'components/ViewPaper/GraphView/ContextMenu';
 import GraphSearch from 'components/ViewPaper/GraphView/GraphSearch';
 import Node from 'components/ViewPaper/GraphView/Node';
 import SelectedNodeBox from 'components/ViewPaper/GraphView/SelectedNodeBox';
-import useGraphView from 'components/ViewPaper/GraphView/useGraphView';
+import useGraphView from 'components/ViewPaper/GraphView/hooks/useGraphView';
 import PropTypes from 'prop-types';
 import { useId, useState } from 'react';
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
