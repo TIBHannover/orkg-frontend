@@ -25,7 +25,7 @@ import DEDICATED_PAGE_LINKS from 'components/Resource/hooks/redirectionSettings'
 import useQuery from 'components/Resource/hooks/useQuery';
 import getPreventEditCase from 'components/Resource/hooks/preventEditing';
 import PreventModal from 'components/Resource/PreventModal/PreventModal';
-import GraphViewModal from 'components/ViewPaper/GraphView/GraphViewModal';
+import GraphViewModal from 'components/GraphView/GraphViewModal';
 
 function Resource() {
     const { id } = useParams();

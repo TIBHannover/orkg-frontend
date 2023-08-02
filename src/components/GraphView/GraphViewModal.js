@@ -1,10 +1,10 @@
 import { faDharmachakra, faHome, faProjectDiagram, faSitemap, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import ContextMenu from 'components/ViewPaper/GraphView/ContextMenu';
-import GraphSearch from 'components/ViewPaper/GraphView/GraphSearch';
-import Node from 'components/ViewPaper/GraphView/Node';
-import SelectedNodeBox from 'components/ViewPaper/GraphView/SelectedNodeBox';
-import useGraphView from 'components/ViewPaper/GraphView/hooks/useGraphView';
+import ContextMenu from 'components/GraphView/ContextMenu';
+import GraphSearch from 'components/GraphView/GraphSearch';
+import Node from 'components/GraphView/Node';
+import SelectedNodeBox from 'components/GraphView/SelectedNodeBox';
+import useGraphView from 'components/GraphView/hooks/useGraphView';
 import PropTypes from 'prop-types';
 import { useId, useState } from 'react';
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
@@ -119,7 +119,7 @@ const GraphViewModal = ({ toggle, resourceId }) => {
                     </div>
                 </div>
             </ModalHeader>
-            <ModalBody style={{ padding: '0', minHeight: '100px', height: 'calc(100vh - 150px)' }}>
+            <ModalBody className="p-0 mb-2" style={{ minHeight: '100px', height: 'calc(100vh - 150px)' }}>
                 {selectedNode && (
                     <SelectedNodeBox
                         nodes={nodes}

@@ -29,8 +29,8 @@ function PaperMenuBar(props) {
     return (
         <>
             <AccessPaperButton paperLink={paperLink} doi={doi} title={label} />
-            <Button className="flex-shrink-0" color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => props.toggle('showGraphModal')}>
-                <Icon icon={faComments} style={{ margin: '2px 4px 0 0' }} /> Graph dev{' '}
+            <Button className="flex-shrink-0" color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => setIsOpenDiscussionModal(true)}>
+                <Icon icon={faComments} style={{ margin: '2px 4px 0 0' }} /> Discussion{' '}
                 {!isLoading && discussionCount !== null && `(${discussionCount})`}
             </Button>
             {!props.editMode && (

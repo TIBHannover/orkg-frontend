@@ -12,12 +12,26 @@ const useGraphView = ({ resourceId }) => {
     const [edges, setEdges] = useState([]);
     const [depth, setDepth] = useState(2);
     const [collapsed, setCollapsed] = useState([]);
-    const [isLoadingStatements, setIsLoadingStatements] = useState(false);
+    const [isLoadingStatements, setIsLoadingStatements] = useState(true);
     const graphRef = useRef(null);
 
     const formatNodeLabel = label => (label.length > MAX_NODE_LABEL_LENGTH ? `${label.substring(0, MAX_NODE_LABEL_LENGTH)}...` : label);
 
-    const processStatements = ({ statements, isFetchingIncoming = false }) => {
+    const setIsLoadingNode = ({ nodeId, isLoading }) => {
+        setNodes(_nodes =>
+            _nodes.map(node => ({
+                ...node,
+                data: {
+                    ...node.data,
+                    isLoading: node.id === nodeId ? isLoading : node.data.isLoading,
+                },
+            })),
+        );
+    };
+
+    const checkIsLoadingNode = id => !!nodes.find(node => node.id === id).data.isLoading;
+
+    const processStatements = useCallback(({ statements, isFetchingIncoming = false }) => {
         const _nodes = [];
         const _edges = [];
 
@@ -44,15 +58,12 @@ const useGraphView = ({ resourceId }) => {
             });
         }
 
-        // _nodes = uniqBy(_nodes, 'id');
-        // _edges = uniqBy(_edges, e => [e.source, e.target, e.label].join());
-
         return { nodes: _nodes, edges: _edges };
-    };
+    }, []);
 
-    const addStatementsLevel = useCallback(({ subjectId, statements, level = 0, maxLevel }) => {
+    const addStatementsLevel = useCallback(({ subjectId, statements, level: currentLevel = 0, maxLevel }) => {
         const result = [];
-        level += 1;
+        const level = currentLevel + 1;
         for (const statement of statements) {
             if (statement.subject.id === subjectId) {
                 let objectStatements = [];
@@ -73,6 +84,7 @@ const useGraphView = ({ resourceId }) => {
 
     const fetchStatements = useCallback(
         async ({ nodeId, shouldAddSubject = false, depth: maxLevel = depth, resetNodes = false }) => {
+            setIsLoadingNode({ nodeId, isLoading: true });
             const bundle = await getStatementsBundleBySubject({ id: nodeId, maxLevel: parseInt(maxLevel, 10) + 1 });
             const statements = addStatementsLevel({ subjectId: nodeId, statements: bundle.statements, maxLevel }).filter(
                 statement => statement.level <= maxLevel,
@@ -103,6 +115,7 @@ const useGraphView = ({ resourceId }) => {
                                   data: {
                                       ...node.data,
                                       hasFetchedObjectStatements: node.id === nodeId ? true : node.data.hasFetchedObjectStatements,
+                                      isLoading: false,
                                   },
                               }))
                             : []),
@@ -120,17 +133,28 @@ const useGraphView = ({ resourceId }) => {
             );
             return result;
         },
-        [addStatementsLevel, depth],
+        [addStatementsLevel, depth, processStatements],
     );
 
     const fetchIncomingStatements = async nodeId => {
+        if (checkIsLoadingNode(nodeId)) {
+            return;
+        }
+
+        setIsLoadingNode({ nodeId, isLoading: true });
+
         const statements = await getStatementsByObject({ id: nodeId, returnContent: true });
         const result = processStatements({ statements, isFetchingIncoming: true });
         setNodes(uniqBy([...nodes, ...result.nodes], 'id'));
+        setIsLoadingNode({ nodeId, isLoading: false });
+
         setEdges(uniqWith([...edges, ...result.edges], (edgeA, edgeB) => edgeA.source === edgeB.source && edgeA.target === edgeB.target));
     };
 
     const toggleExpandNode = async nodeId => {
+        if (checkIsLoadingNode(nodeId)) {
+            return;
+        }
         const resource = nodes.find(node => node.id === nodeId);
 
         if (!resource.data.hasObjectStatements) {
@@ -149,11 +173,6 @@ const useGraphView = ({ resourceId }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            // only show loading indicator on initial load
-            if (nodes.length === 0) {
-                setIsLoadingStatements(true);
-            }
-            console.log('fetch');
             await fetchStatements({ nodeId: resourceId, shouldAddSubject: true, resetNodes: true });
             setCollapsed([]);
             setIsLoadingStatements(false);
