@@ -149,7 +149,7 @@ function Resource() {
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu end>
-                                        <DropdownItem onClick={() => setIsOpenGraphViewModal(true)}>Graph view</DropdownItem>
+                                        <DropdownItem onClick={() => setIsOpenGraphViewModal(true)}>View graph</DropdownItem>
                                     </DropdownMenu>
                                 </UncontrolledButtonDropdown>
                             </>
@@ -201,7 +201,7 @@ function Resource() {
                 </>
             )}
 
-            {isOpenGraphViewModal && <GraphViewModal isOpen toggle={() => setIsOpenGraphViewModal(v => !v)} resourceId={resource.id} />}
+            {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal(v => !v)} resourceId={resource.id} />}
         </>
     );
 }

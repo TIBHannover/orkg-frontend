@@ -1,6 +1,7 @@
 import { uniqWith } from 'lodash';
 import uniqBy from 'lodash/uniqBy';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { getResource } from 'services/backend/resources';
 import { getStatementsBundleBySubject, getStatementsByObject } from 'services/backend/statements';
 
 const COLOR_NODE = '#80869B';
@@ -90,6 +91,8 @@ const useGraphView = ({ resourceId }) => {
                 statement => statement.level <= maxLevel,
             );
 
+            // if no statements found, just fetch the single subject resource then
+            const subjectNode = statements.length > 0 ? statements[0].subject : await getResource(nodeId);
             const result = processStatements({ statements });
 
             setNodes(_nodes =>
@@ -98,13 +101,13 @@ const useGraphView = ({ resourceId }) => {
                         ...(shouldAddSubject
                             ? [
                                   {
-                                      id: statements[0].subject.id,
-                                      label: formatNodeLabel(statements[0].subject.label),
+                                      id: subjectNode.id,
+                                      label: formatNodeLabel(subjectNode.label),
                                       fill: COLOR_NODE_START,
                                       data: {
-                                          ...statements[0].subject,
+                                          ...subjectNode,
                                           hasFetchedObjectStatements: true,
-                                          hasObjectStatements: true,
+                                          hasObjectStatements: statements.length > 0,
                                       },
                                   },
                               ]

@@ -43,6 +43,7 @@ import LoadingOverlay from 'components/ArticleBuilder/LoadingOverlay';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { Helmet } from 'react-helmet';
 import InternalServerError from 'pages/InternalServerError';
+import GraphViewModal from 'components/GraphView/GraphViewModal';
 
 const GlobalStyle = createGlobalStyle`
     // ensure printing only prints the contents and no other elements
@@ -73,6 +74,8 @@ const Review = () => {
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
     const [isOpenShouldPublishModal, setIsOpenShouldPublishModal] = useState(false);
     const [isOpenReferencesModal, setIsOpenReferencesModal] = useState(false);
+    const [isOpenGraphViewModal, setIsOpenGraphViewModal] = useState(false);
+
     const isLoadingInline = useSelector(state => state.review.isLoading);
     const isLoadingSortSection = useSelector(state => state.review.isLoadingSortSection);
     const isEditing = useSelector(state => state.review.isEditing);
@@ -274,6 +277,7 @@ const Review = () => {
                                 <Icon icon={faEllipsisV} />
                             </DropdownToggle>
                             <DropdownMenu end>
+                                <DropdownItem onClick={() => setIsOpenGraphViewModal(true)}>View graph</DropdownItem>
                                 <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                                     View resource
                                 </DropdownItem>
@@ -318,6 +322,7 @@ const Review = () => {
             {isOpenShouldPublishModal && (
                 <ShouldPublishModal toggle={() => setIsOpenShouldPublishModal(v => !v)} show openPublishModal={() => setIsOpenPublishModal(true)} />
             )}
+            {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal(v => !v)} resourceId={id} />}
         </div>
     );
 };

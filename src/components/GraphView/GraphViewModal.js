@@ -51,7 +51,7 @@ const GraphViewModal = ({ toggle, resourceId }) => {
         <Modal size="lg" isOpen toggle={toggle} style={{ maxWidth: '90%', marginBottom: 0 }}>
             <ModalHeader toggle={toggle} tag="div" cssModule={{ 'modal-title': 'w-100' }}>
                 <div className="d-flex align-items-center">
-                    <h1 className="h5 m-0">Graph view</h1>
+                    <h1 className="h5 m-0">View graph</h1>
                     <div className="d-flex ms-3 align-items-center flex-grow-1">
                         <Button color="secondary" className="me-2" size="sm" onClick={() => graphRef.current?.centerGraph()}>
                             <Icon icon={faHome} className="me-1" /> Center graph
