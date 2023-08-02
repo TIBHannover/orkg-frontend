@@ -54,7 +54,7 @@ const GraphSearch = ({ nodes, edges, setSelections, collapsed, setCollapsed, gra
         <>
             <Select
                 onChange={handleSearch}
-                options={nodes}
+                options={nodes.map(node => ({ label: node.data.label, id: node.id }))}
                 placeholder="Search in graph..."
                 classNamePrefix="react-select"
                 isClearable
