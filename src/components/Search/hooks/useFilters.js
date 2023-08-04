@@ -24,7 +24,13 @@ export const useFilters = () => {
 
     const submitSearch = useCallback(
         query => {
-            const _query = decodeURIComponent(query);
+            let _query;
+            try {
+                _query = decodeURIComponent(query);
+            } catch (e) {
+                _query = query;
+            }
+
             if (isString(_query) && _query.length >= REGEX.MINIMUM_LENGTH_PATTERN && getEntityTypeByID(_query)) {
                 const id = _query.substring(1);
                 navigate(getLinkByEntityType(getEntityTypeByID(_query), id));
