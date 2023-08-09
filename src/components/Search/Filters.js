@@ -11,12 +11,18 @@ import UserAvatar from 'components/UserAvatar/UserAvatar';
 const Filters = () => {
     const { user, value, selectedFilters, createdBy, isLoadingFilterClasses, setValue, setCreatedBy, toggleFilter, submitSearch } = useFilters();
 
+    let decodedValue;
+    try {
+        decodedValue = decodeURIComponent(value);
+    } catch (e) {
+        decodedValue = value;
+    }
     return (
         <FormGroup>
             <Label for="searchQuery">Search query</Label>
             <InputGroup>
                 <Input
-                    value={decodeURIComponent(value)}
+                    value={decodedValue}
                     onChange={e => setValue(e.target.value)}
                     placeholder="Search..."
                     id="searchQuery"

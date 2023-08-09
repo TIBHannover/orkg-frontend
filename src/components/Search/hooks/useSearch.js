@@ -36,7 +36,12 @@ export const useSearch = () => {
         if (!searchTerm || searchTerm.length === 0) {
             return;
         }
-        const searchQuery = decodeURIComponent(searchTerm);
+        let searchQuery;
+        try {
+            searchQuery = decodeURIComponent(searchTerm);
+        } catch (e) {
+            searchQuery = searchTerm;
+        }
 
         setIsNextPageLoading(prev => ({ ...prev, [filterType]: true }));
 
