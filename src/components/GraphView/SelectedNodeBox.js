@@ -2,13 +2,16 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import CopyId from 'components/CopyId/CopyId';
+import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
+import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
+import { getResourceLink } from 'utils';
 
 const StyledBox = styled.div`
     position: absolute;
@@ -38,9 +41,29 @@ const SelectedNodeBox = ({ nodes, selectedNode, getExpandButtonLabel, toggleExpa
                 <CopyId id={selectedNode.id} />
             </div>
         </div>
-        <div className="mt-2">{selectedNode.data.label}</div>
+
+        <div className="mt-2" style={{ overflowX: 'auto' }}>
+            {selectedNode.data._class === ENTITIES.LITERAL && <ValuePlugins type={ENTITIES.LITERAL}>{selectedNode.data.label}</ValuePlugins>}
+            {selectedNode.data._class !== ENTITIES.LITERAL && selectedNode.data.label}
+        </div>
         {selectedNode.data._class === ENTITIES.RESOURCE && (
             <>
+                {selectedNode.data.classes?.length > 0 && (
+                    <div className="text-muted small">
+                        Instance of{' '}
+                        <span>
+                            {selectedNode.data.classes.map((c, index) => (
+                                <Fragment key={index}>
+                                    <Link to={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
+                                        {c}
+                                    </Link>
+                                    {index + 1 < selectedNode.data.classes.length && ','}
+                                </Fragment>
+                            ))}
+                        </span>
+                    </div>
+                )}
+
                 <hr />
                 <ButtonGroup className="d-flex">
                     <Button
