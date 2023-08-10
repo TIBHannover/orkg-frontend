@@ -16,8 +16,9 @@ const HelpButton = styled.div`
     padding-left: 0;
     list-style: none;
     padding: 0;
-    bottom: ${props => (props.woochat ? '74px' : '24px')};
-    right: ${props => (props.woochat ? '4px' : '24px')};
+    bottom: ${props => (props.woochat ? '100px' : '24px')};
+    right: ${props => (props.woochat ? '8px' : '24px')};
+
     color: #80869b;
 
     .text {
