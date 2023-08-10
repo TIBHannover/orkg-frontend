@@ -104,7 +104,7 @@ const AuthorHeader = ({ authorId }) => {
                                         </div>
                                         <div className="mb-3 text-wrap">
                                             <a
-                                                href={`https://scholar.google.com/citations?user=${author.googleScholar.label}=en&oi=ao`}
+                                                href={`https://scholar.google.com/citations?user=${author.googleScholar.label}&=en&oi=ao`}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                             >
