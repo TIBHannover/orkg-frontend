@@ -3,6 +3,17 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.115.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.114.1...v0.115.0) - 2023-08-10
+
+### Changes
+
+- fix(AuthorProfile): add missing ampersand in Google scholar url [`#1169`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1169)
+- Fix(Feedback/FeedbackQuestions/WriteFeedback) [`#1163`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1163)
+- fix(Home): overlapping of tour guide button and chat box button [`#1167`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1167)
+- feat(GraphVisualization): implement Reagraph for graph visualizations [`#1160`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1160)
+- fix(Search): catch decodeURIComponent failure [`#1168`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1168)
+
+---
 ## [v0.114.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.114.0...v0.114.1) - 2023-08-01
 
 ### Changes
