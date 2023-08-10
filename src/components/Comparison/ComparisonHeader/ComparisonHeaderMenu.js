@@ -46,6 +46,7 @@ import ComparisonAuthorsModel from 'components/TopAuthors/ComparisonAuthorsModel
 import QualityReportModal from 'components/Comparison/QualityReportModal/QualityReportModal';
 import WriteReview from 'components/Comparison/QualityReportModal/WriteReview';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import GraphViewModal from 'components/GraphView/GraphViewModal';
 
 const ComparisonHeaderMenu = props => {
     const dispatch = useDispatch();
@@ -85,6 +86,7 @@ const ComparisonHeaderMenu = props => {
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
     const [isOpenTopAuthorsModal, setIsOpenTopAuthorsModal] = useState(false);
     const [isOpenQualityReportModal, setIsOpenQualityReportModal] = useState(false);
+    const [isOpenGraphViewModal, setIsOpenGraphViewModal] = useState(false);
 
     const user = useSelector(state => state.auth.user);
 
@@ -409,11 +411,8 @@ const ComparisonHeaderMenu = props => {
                                     {comparisonResource?.id && (
                                         <>
                                             <DropdownItem divider />
-                                            <DropdownItem
-                                                tag={NavLink}
-                                                end
-                                                to={`${reverse(ROUTES.RESOURCE, { id: comparisonResource.id })}?noRedirect`}
-                                            >
+                                            <DropdownItem onClick={() => setIsOpenGraphViewModal(true)}>View graph</DropdownItem>
+                                            <DropdownItem tag={NavLink} to={`${reverse(ROUTES.RESOURCE, { id: comparisonResource.id })}?noRedirect`}>
                                                 View resource
                                             </DropdownItem>
                                         </>
@@ -481,6 +480,7 @@ const ComparisonHeaderMenu = props => {
             {isOpenReviewModal && (
                 <WriteReview comparisonId={comparisonResource?.id} toggle={() => dispatch(setIsOpenReviewModal(!isOpenReviewModal))} />
             )}
+            {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal(v => !v)} resourceId={comparisonResource?.id} />}
         </>
     );
 };

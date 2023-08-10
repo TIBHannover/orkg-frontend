@@ -5,7 +5,6 @@ import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import TitleBar from 'components/TitleBar/TitleBar';
 import Contributions from 'components/ViewPaper/Contributions/Contributions';
-import GizmoGraphViewModal from 'components/ViewPaper/GraphView/GizmoGraphViewModal';
 import useViewPaper from 'components/ViewPaper/hooks/useViewPaper';
 import PaperHeader from 'components/ViewPaper/PaperHeader';
 import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
@@ -21,6 +20,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';
 import { Container, UncontrolledAlert } from 'reactstrap';
 import { determineActiveNERService, SERVICE_MAPPING } from 'services/orkgNlp/index';
+import GraphViewModal from 'components/GraphView/GraphViewModal';
 
 const ViewPaper = () => {
     const { resourceId } = useParams();
@@ -158,7 +158,7 @@ const ViewPaper = () => {
                 </>
             )}
 
-            <GizmoGraphViewModal showDialog={showGraphModal} toggle={() => setShowGraphModal(v => !v)} paperId={resourceId} />
+            {showGraphModal && <GraphViewModal toggle={() => setShowGraphModal(v => !v)} resourceId={resourceId} />}
         </div>
     );
 };

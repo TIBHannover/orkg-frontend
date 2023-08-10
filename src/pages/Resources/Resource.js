@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Container, Button } from 'reactstrap';
+import { Container, Button, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
 import InternalServerError from 'pages/InternalServerError';
 import EditableHeader from 'components/EditableHeader';
@@ -10,7 +10,7 @@ import ROUTES from 'constants/routes.js';
 import CONTENT_TYPES from 'constants/contentTypes';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { ENTITIES } from 'constants/graphSettings';
 import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
@@ -25,6 +25,7 @@ import DEDICATED_PAGE_LINKS from 'components/Resource/hooks/redirectionSettings'
 import useQuery from 'components/Resource/hooks/useQuery';
 import getPreventEditCase from 'components/Resource/hooks/preventEditing';
 import PreventModal from 'components/Resource/PreventModal/PreventModal';
+import GraphViewModal from 'components/GraphView/GraphViewModal';
 
 function Resource() {
     const { id } = useParams();
@@ -35,6 +36,7 @@ function Resource() {
     const [resource, setResource] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
+    const [isOpenGraphViewModal, setIsOpenGraphViewModal] = useState(false);
     const [preventEditCase, setPreventEditCase] = useState(null);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const { deleteResource } = useDeleteResource({ resourceId: id, redirect: true });
@@ -142,6 +144,14 @@ function Resource() {
                                         <Icon icon={faTimes} /> Stop editing
                                     </Button>
                                 )}
+                                <UncontrolledButtonDropdown>
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
+                                        <Icon icon={faEllipsisV} />
+                                    </DropdownToggle>
+                                    <DropdownMenu end>
+                                        <DropdownItem onClick={() => setIsOpenGraphViewModal(true)}>View graph</DropdownItem>
+                                    </DropdownMenu>
+                                </UncontrolledButtonDropdown>
                             </>
                         }
                     >
@@ -190,6 +200,8 @@ function Resource() {
                     )}
                 </>
             )}
+
+            {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal(v => !v)} resourceId={resource.id} />}
         </>
     );
 }

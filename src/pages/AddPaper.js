@@ -16,7 +16,6 @@ import PropTypes from 'prop-types';
 import { resetStatementBrowser } from 'slices/statementBrowserSlice';
 import { openTour, closeTour, blockNavigation, loadPaperDataAction as loadPaperData } from 'slices/addPaperSlice';
 // import { Prompt } from 'react-router';
-import GizmoGraphViewModal from 'components/ViewPaper/GraphView/GizmoGraphViewModal';
 import env from '@beam-australia/react-env';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { SubTitle } from 'components/styled';
@@ -207,11 +206,12 @@ class AddPaper extends Component {
                     <TransitionGroup exit={false}>{currentStepDetails}</TransitionGroup>
                 </Container>
 
-                <GizmoGraphViewModal
+                {/* <GizmoGraphViewModal
                     addPaperVisualization={true}
                     showDialog={this.state.showGraphModal}
                     toggle={() => this.toggle('showGraphModal')}
-                />
+                /> */}
+
                 {/* the style display node will hide the help button when the graph view is activated */}
                 {this.props.currentStep !== 2 && (
                     <Help

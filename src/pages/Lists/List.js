@@ -26,6 +26,7 @@ import { createGlobalStyle } from 'styled-components';
 import ExportBibtexModal from 'components/List/ExportBibtexModal/ExportBibtexModal';
 import EmbedModal from 'components/List/EmbedModal/EmbedModal';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import GraphViewModal from 'components/GraphView/GraphViewModal';
 
 const GlobalEmbedStyle = createGlobalStyle`
     // hide all other UI components when a list is embedded
@@ -55,6 +56,8 @@ const List = () => {
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
     const [isOpenEmbedModal, setIsOpenEmbedModal] = useState(false);
     const [isOpenExportBibtexModal, setIsOpenExportBibtexModal] = useState(false);
+    const [isOpenGraphViewModal, setIsOpenGraphViewModal] = useState(false);
+
     const { id, embed } = useParams();
     const isPublished = useSelector(state => state.list.isPublished);
     const list = useSelector(state => state.list.list);
@@ -210,6 +213,7 @@ const List = () => {
                             </DropdownToggle>
                             <DropdownMenu end>
                                 <DropdownItem onClick={() => setIsOpenExportBibtexModal(true)}>Export as BibTeX</DropdownItem>
+                                <DropdownItem onClick={() => setIsOpenGraphViewModal(true)}>View graph</DropdownItem>
                                 <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                                     View resource
                                 </DropdownItem>
@@ -238,6 +242,8 @@ const List = () => {
             {isEmbedded && <GlobalEmbedStyle />}
 
             {isOpenExportBibtexModal && <ExportBibtexModal toggle={() => setIsOpenExportBibtexModal(v => !v)} isOpen />}
+
+            {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal(v => !v)} resourceId={id} />}
         </div>
     );
 };
