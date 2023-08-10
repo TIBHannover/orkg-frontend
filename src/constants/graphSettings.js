@@ -79,7 +79,7 @@ export const PREDICATES = {
     CSVW_VALUE: 'CSVW_Value',
     CSVW_NAME: 'CSVW_Name',
     CSVW_TITLES: 'CSVW_Titles',
-    HAS_QUALITY_REVIEW: 'hasQualityReview',
+    QUALITY_FEEDBACK: 'qualityFeedback',
 };
 
 export const CLASSES = {
@@ -137,7 +137,7 @@ export const CLASSES = {
     SOFTWARE: 'Software',
     EXTERNAL: 'External',
     DIAGRAM: 'Diagram',
-    QUALITY_REVIEW: 'QualityReview',
+    QUALITY_FEEDBACK: 'QualityFeedback',
 };
 
 export const RESOURCES = {

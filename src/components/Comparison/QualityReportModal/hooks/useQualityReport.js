@@ -1,5 +1,5 @@
 import { getPropertyObjectFromData } from 'components/Comparison/hooks/helpers';
-import REVIEW_QUESTIONS from 'components/Comparison/QualityReportModal/reviewQuestions';
+import FEEDBACK_QUESTIONS from 'components/Comparison/QualityReportModal/FeedbackQuestions';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { flattenDeep, isEmpty, reject, values } from 'lodash';
 import moment from 'moment';
@@ -15,7 +15,7 @@ import { reverse } from 'named-urls';
 const useQualityReport = () => {
     const [issueRecommendations, setIssueRecommendations] = useState([]);
     const [passingRecommendations, setPassingRecommendations] = useState([]);
-    const [reviews, setReviews] = useState([]);
+    const [feedbacks, setFeedbacks] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     const comparisonResource = useSelector(state => state.comparison.comparisonResource);
@@ -26,18 +26,18 @@ const useQualityReport = () => {
     const performQualityEvaluation = useCallback(async () => {
         try {
             setIsLoading(true);
-            // get the reviews from all different comparison versions
-            const reviewStatementsPromises = versions.map(version =>
-                getStatementsBySubjectAndPredicate({ subjectId: version.id, predicateId: PREDICATES.HAS_QUALITY_REVIEW }),
+            // get the feedbacks from all different comparison versions
+            const feedbackStatementsPromises = versions.map(version =>
+                getStatementsBySubjectAndPredicate({ subjectId: version.id, predicateId: PREDICATES.QUALITY_FEEDBACK }),
             );
-            const reviewDataPromises = (await Promise.all(reviewStatementsPromises)).reduce(
-                (acc, _reviews) => [...acc, ..._reviews.map(review => getResourceData(review.object.id))],
+            const feedbackDataPromises = (await Promise.all(feedbackStatementsPromises)).reduce(
+                (acc, _feedbacks) => [...acc, ..._feedbacks.map(feedback => getResourceData(feedback.object.id))],
                 [],
             );
 
-            const _reviews = (await Promise.all(reviewDataPromises)).map(review => review.data.answers) ?? [];
+            const _feedbacks = (await Promise.all(feedbackDataPromises)).map(feedback => feedback.data.answers) ?? [];
 
-            setReviews(_reviews);
+            setFeedbacks(_feedbacks);
 
             // suggestions
             const resourcesAndLiterals = reject(flattenDeep(values(data)), isEmpty);
@@ -204,14 +204,14 @@ const useQualityReport = () => {
                     },
                 },
                 {
-                    title: 'Other researchers provided reviews',
+                    title: 'Other researchers provided feedback',
                     info: 'Other researcher can help evaluating the correctness and completeness of a comparison. Therefore, it makes sense to share the created comparison and ask other researchers for their opinions.',
-                    solution: 'Click the "User reviews" tab above and invite researchers via the "Invite researchers" button.',
+                    solution: 'Click the "User feedback" tab above and invite researchers via the "Invite researchers" button.',
                     performEvaluation: () => {
-                        const MINIMUM_REVIEWS = 3;
+                        const MINIMUM_FEEDBACKS = 3;
                         return {
-                            passing: _reviews.length >= MINIMUM_REVIEWS,
-                            evaluation: `The comparison has ${_reviews.length} reviews, a minimum of ${MINIMUM_REVIEWS} reviews is recommended.`,
+                            passing: _feedbacks.length >= MINIMUM_FEEDBACKS,
+                            evaluation: `The comparison has ${_feedbacks.length} feedback evaluations, a minimum of ${MINIMUM_FEEDBACKS} evaluations is recommended.`,
                         };
                     },
                 },
@@ -247,28 +247,28 @@ const useQualityReport = () => {
         [issueRecommendations.length, passingRecommendations.length],
     );
 
-    const reviewsPercentage = useMemo(
+    const feedbacksPercentage = useMemo(
         () =>
-            reviews.length > 0
-                ? reviews.reduce((acc, questions) => {
+            feedbacks.length > 0
+                ? feedbacks.reduce((acc, questions) => {
                       const likertQuestions = Object.keys(questions).filter(
-                          questionId => REVIEW_QUESTIONS.find(question => question.id === parseInt(questionId, 10))?.input === 'likert',
+                          questionId => FEEDBACK_QUESTIONS.find(question => question.id === parseInt(questionId, 10))?.input === 'likert',
                       );
                       return (
                           acc +
                           likertQuestions.reduce((acc2, questionId) => acc2 + ((parseInt(questions[questionId], 10) + 2) / 4) * 100, 0) /
                               likertQuestions.length
                       );
-                  }, 0) / reviews.length
+                  }, 0) / feedbacks.length
                 : 0,
-        [reviews],
+        [feedbacks],
     );
 
     useEffect(() => {
         performQualityEvaluation();
     }, [performQualityEvaluation]);
 
-    return { recommendationsPercentage, issueRecommendations, passingRecommendations, reviews, reviewsPercentage, isLoading };
+    return { recommendationsPercentage, issueRecommendations, passingRecommendations, feedbacks, feedbacksPercentage, isLoading };
 };
 
 export default useQualityReport;

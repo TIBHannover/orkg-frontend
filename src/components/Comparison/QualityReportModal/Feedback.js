@@ -1,14 +1,14 @@
 import InviteResearchersButton from 'components/Comparison/QualityReportModal/InviteResearchersButton';
-import REVIEW_QUESTIONS from 'components/Comparison/QualityReportModal/reviewQuestions';
+import FEEDBACK_QUESTIONS from 'components/Comparison/QualityReportModal/FeedbackQuestions';
 import PropTypes from 'prop-types';
 import { Alert, ListGroup, ListGroupItem, Progress } from 'reactstrap';
 
-const Reviews = ({ reviews, comparisonId }) => {
-    const questions = REVIEW_QUESTIONS.map(question => ({
+const Feedback = ({ feedbacks, comparisonId }) => {
+    const questions = FEEDBACK_QUESTIONS.map(question => ({
         ...question,
         score:
             question.input === 'likert'
-                ? Math.round(reviews.reduce((acc, review) => acc + ((parseInt(review[question.id], 10) + 2) / 4) * 100, 0) / reviews.length) || 0
+                ? Math.round(feedbacks.reduce((acc, review) => acc + ((parseInt(review[question.id], 10) + 2) / 4) * 100, 0) / feedbacks.length) || 0
                 : undefined,
     }));
 
@@ -16,7 +16,7 @@ const Reviews = ({ reviews, comparisonId }) => {
         <div className="px-3">
             <div className="d-flex justify-content-between align-items-center my-4">
                 <p className="m-0">
-                    The results displayed below are based on reviews from <strong>{reviews.length} different evaluators</strong>
+                    The displayed results are based on feedback from <strong>{feedbacks.length} different evaluators</strong>
                 </p>
                 <div>
                     <InviteResearchersButton comparisonId={comparisonId} />
@@ -38,7 +38,7 @@ const Reviews = ({ reviews, comparisonId }) => {
                     )}
                     {question.input === 'textarea' && (
                         <ListGroup className="my-3 mx-5">
-                            {reviews.map((review, index) => (
+                            {feedbacks.map((review, index) => (
                                 <ListGroupItem key={index}>{review[question.id]}</ListGroupItem>
                             ))}
                         </ListGroup>
@@ -48,14 +48,14 @@ const Reviews = ({ reviews, comparisonId }) => {
         </div>
     ) : (
         <Alert color="danger" className="m-3" fade={false}>
-            User reviews are not available for unpublished comparisons
+            User feedback is not available for unpublished comparisons
         </Alert>
     );
 };
 
-Reviews.propTypes = {
+Feedback.propTypes = {
     comparisonId: PropTypes.string.isRequired,
-    reviews: PropTypes.array.isRequired,
+    feedbacks: PropTypes.array.isRequired,
 };
 
-export default Reviews;
+export default Feedback;

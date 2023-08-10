@@ -1,6 +1,6 @@
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import InviteResearchersButton from 'components/Comparison/QualityReportModal/InviteResearchersButton';
-import reviewQuestions from 'components/Comparison/QualityReportModal/reviewQuestions';
+import feedbackQuestions from 'components/Comparison/QualityReportModal/FeedbackQuestions';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
@@ -11,7 +11,7 @@ import { createResource } from 'services/backend/resources';
 import { createResourceStatement } from 'services/backend/statements';
 import { createResourceData } from 'services/similarity/index';
 
-const WriteReview = ({ toggle }) => {
+const WriteFeedback = ({ toggle }) => {
     const [answers, setAnswers] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -27,7 +27,7 @@ const WriteReview = ({ toggle }) => {
     };
 
     const handleSubmit = async () => {
-        if (Object.keys(answers).length < reviewQuestions.length) {
+        if (Object.keys(answers).length < feedbackQuestions.length) {
             toast.error('Please answer all questions');
             return;
         }
@@ -37,9 +37,9 @@ const WriteReview = ({ toggle }) => {
             answers,
         };
         try {
-            const reviewResource = await createResource('review', [CLASSES.QUALITY_REVIEW]);
-            createResourceStatement(comparisonId, PREDICATES.HAS_QUALITY_REVIEW, reviewResource.id);
-            createResourceData({ resourceId: reviewResource.id, data });
+            const feedbackResource = await createResource('feedback', [CLASSES.QUALITY_FEEDBACK]);
+            createResourceStatement(comparisonId, PREDICATES.QUALITY_FEEDBACK, feedbackResource.id);
+            createResourceData({ resourceId: feedbackResource.id, data });
             setIsSubmitted(true);
         } catch (e) {
             toast.error('Something went wrong');
@@ -51,16 +51,16 @@ const WriteReview = ({ toggle }) => {
 
     return (
         <Modal isOpen toggle={toggle} size="lg">
-            <ModalHeader toggle={toggle}>Write review</ModalHeader>
+            <ModalHeader toggle={toggle}>Write feedback</ModalHeader>
             <ModalBody>
                 {!comparisonId && (
                     <Alert color="danger" className="d-flex align-items-center">
-                        You cannot write a review an unpublished comparison
+                        You cannot provide feedback for an unpublished comparison
                     </Alert>
                 )}
                 {comparisonCreator === userId && (
                     <Alert color="danger" className="d-flex align-items-center">
-                        <div className="me-2">You cannot review your own comparison.</div>
+                        <div className="me-2">You cannot provide feedback for your own comparison.</div>
 
                         <InviteResearchersButton comparisonId={comparisonId} />
                     </Alert>
@@ -88,7 +88,7 @@ const WriteReview = ({ toggle }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {reviewQuestions.map(({ id, question, input }) => (
+                            {feedbackQuestions.map(({ id, question, input }) => (
                                 <tr key={id}>
                                     <th scope="row" className="fw-normal">
                                         {question}
@@ -163,7 +163,7 @@ const WriteReview = ({ toggle }) => {
                         </tbody>
                     </Table>
                 )}
-                {isSubmitted && <Alert color="success">The review has been saved successfully. Thank you for your review!</Alert>}
+                {isSubmitted && <Alert color="success">The feedback has been saved successfully. Thank you for your feedback!</Alert>}
             </ModalBody>
             {comparisonId && !isSubmitted && (
                 <ModalFooter className="d-flex">
@@ -181,9 +181,9 @@ const WriteReview = ({ toggle }) => {
     );
 };
 
-WriteReview.propTypes = {
+WriteFeedback.propTypes = {
     comparisonId: PropTypes.string.isRequired,
     toggle: PropTypes.func.isRequired,
 };
 
-export default WriteReview;
+export default WriteFeedback;
