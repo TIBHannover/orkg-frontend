@@ -34,7 +34,7 @@ import {
     setUseReconstructedDataInVisualization,
     getMatrixOfComparison,
     setIsEditing,
-    setIsOpenReviewModal,
+    setIsOpenFeedbackModal,
 } from 'slices/comparisonSlice';
 import Confirm from 'components/Confirmation/Confirmation';
 import SaveDraft from 'components/Comparison/SaveDraft/SaveDraft';
@@ -44,7 +44,7 @@ import pluralize from 'pluralize';
 import { SubTitle } from 'components/styled';
 import ComparisonAuthorsModel from 'components/TopAuthors/ComparisonAuthorsModel';
 import QualityReportModal from 'components/Comparison/QualityReportModal/QualityReportModal';
-import WriteReview from 'components/Comparison/QualityReportModal/WriteReview';
+import WriteFeedback from 'components/Comparison/QualityReportModal/WriteFeedback';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import GraphViewModal from 'components/GraphView/GraphViewModal';
 
@@ -59,7 +59,7 @@ const ComparisonHeaderMenu = props => {
     const isLoadingResult = useSelector(state => state.comparison.isLoadingResult);
     const isFailedLoadingResult = useSelector(state => state.comparison.isFailedLoadingResult);
     const isOpenVisualizationModal = useSelector(state => state.comparison.isOpenVisualizationModal);
-    const isOpenReviewModal = useSelector(state => state.comparison.isOpenReviewModal);
+    const isOpenFeedbackModal = useSelector(state => state.comparison.isOpenFeedbackModal);
     const fullWidth = useSelector(state => state.comparison.configuration.fullWidth);
     const viewDensity = useSelector(state => state.comparison.configuration.viewDensity);
     const comparisonType = useSelector(state => state.comparison.configuration.comparisonType);
@@ -433,19 +433,19 @@ const ComparisonHeaderMenu = props => {
             {!isLoadingVersions && hasNextVersion && (
                 <NewerVersionWarning versions={versions} comparisonId={comparisonResource?.id || comparisonResource?.hasPreviousVersion?.id} />
             )}
-            {searchParams.get('requestReview') && (
+            {searchParams.get('requestFeedback') && (
                 <Alert color="info" className="container d-flex box align-items-center">
                     <span>
-                        You are requested to write a review about this comparison. Please have a look at the comparison and submit the review.
+                        You are requested to write a feedback about this comparison. Please have a look at the comparison and submit the feedback.
                     </span>
                     <RequireAuthentication
                         component={Button}
                         size="sm"
                         color="primary"
                         className="ms-2"
-                        onClick={() => dispatch(setIsOpenReviewModal(true))}
+                        onClick={() => dispatch(setIsOpenFeedbackModal(true))}
                     >
-                        Submit review
+                        Submit feedback
                     </RequireAuthentication>
                 </Alert>
             )}
@@ -477,8 +477,8 @@ const ComparisonHeaderMenu = props => {
                 <ComparisonAuthorsModel comparisonId={comparisonResource?.id} toggle={() => setIsOpenTopAuthorsModal(v => !v)} />
             )}
             {isOpenQualityReportModal && <QualityReportModal toggle={() => setIsOpenQualityReportModal(v => !v)} />}
-            {isOpenReviewModal && (
-                <WriteReview comparisonId={comparisonResource?.id} toggle={() => dispatch(setIsOpenReviewModal(!isOpenReviewModal))} />
+            {isOpenFeedbackModal && (
+                <WriteFeedback comparisonId={comparisonResource?.id} toggle={() => dispatch(setIsOpenFeedbackModal(!isOpenFeedbackModal))} />
             )}
             {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal(v => !v)} resourceId={comparisonResource?.id} />}
         </>

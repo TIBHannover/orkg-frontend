@@ -65,7 +65,7 @@ const initialState = {
     isLoadingResult: true,
     isFailedLoadingResult: false,
     isOpenVisualizationModal: false,
-    isOpenReviewModal: false,
+    isOpenFeedbackModal: false,
     useReconstructedDataInVisualization: false,
     hiddenGroups: [],
     isEditing: false,
@@ -142,8 +142,8 @@ export const comparisonSlice = createSlice({
         setIsOpenVisualizationModal: (state, { payload }) => {
             state.isOpenVisualizationModal = payload;
         },
-        setIsOpenReviewModal: (state, { payload }) => {
-            state.isOpenReviewModal = payload;
+        setIsOpenFeedbackModal: (state, { payload }) => {
+            state.isOpenFeedbackModal = payload;
         },
         setUseReconstructedDataInVisualization: (state, { payload }) => {
             state.useReconstructedDataInVisualization = payload;
@@ -197,7 +197,7 @@ export const {
     setResearchField,
     setConfiguration,
     setIsOpenVisualizationModal,
-    setIsOpenReviewModal,
+    setIsOpenFeedbackModal,
     setUseReconstructedDataInVisualization,
     setHiddenGroups,
     setIsEditing,
