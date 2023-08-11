@@ -1,6 +1,10 @@
 import { faClipboard, faGear, faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import getExternalData from 'components/Autocomplete/3rdPartyRegistries/index';
+import CustomOption from 'components/Autocomplete/CustomOption';
+import OntologiesModal from 'components/Autocomplete/OntologiesModal';
+import TreeSelector from 'components/Autocomplete/TreeSelector';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
@@ -24,10 +28,6 @@ import { createLiteralStatement } from 'services/backend/statements';
 import { getAllOntologies, getOntologyTerms, getTermMatchingAcrossOntologies, olsBaseUrl, selectTerms } from 'services/ols/index';
 import styled, { withTheme } from 'styled-components';
 import { asyncLocalStorage, compareOption } from 'utils';
-import getExternalData from './3rdPartyRegistries/index';
-import CustomOption from './CustomOption';
-import OntologiesModal from './OntologiesModal';
-import TreeSelector from './TreeSelector';
 
 export const StyledAutoCompleteInputFormControl = styled.div`
     padding-top: 0 !important;
@@ -833,6 +833,7 @@ function Autocomplete(props) {
                             : props.value
                     }
                     loadOptions={loadOptions}
+                    debounceTimeout={300}
                     additional={defaultAdditional}
                     noOptionsMessage={noResults}
                     onChange={
