@@ -158,7 +158,7 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
                             There are no {visibilityText} papers for this research field, yet
                             <br />
                             <br />
-                            <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
+                            <Link to={ROUTES.ADD_PAPER}>
                                 <Button size="sm" color="primary " className="me-3">
                                     Add paper
                                 </Button>

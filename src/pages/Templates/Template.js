@@ -13,7 +13,6 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
-import LoadingOverlay from 'react-loading-overlay';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink as RouterNavLink, useNavigate, useParams } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';
@@ -130,73 +129,40 @@ const Template = () => {
             >
                 Template
             </TitleBar>
-            <LoadingOverlay
-                active={isLoading || isSaving}
-                spinner
-                text={
-                    <>
-                        {!isSaving && isLoading && 'Loading...'}
-                        {isSaving && (
-                            <>
-                                <h4>Saving...</h4>
-                                <br />
-                                Please <b>do not </b>leave this page until the save process is finished.
-                            </>
-                        )}
-                    </>
-                }
-                styles={{
-                    content: base => ({
-                        ...base,
-                        marginTop: '30%',
-                    }),
-                    overlay: base => ({
-                        ...base,
-                        borderRadius: 7,
-                        overflow: 'hidden',
-                        background: 'rgba(215, 215, 215, 0.7)',
-                        color: '#282828',
-                        '& svg circle': {
-                            stroke: '#282828',
-                        },
-                    }),
-                }}
-            >
-                <VisibilitySensor onChange={handleShowHeaderBar}>
-                    <Container className="p-0">
-                        {(editMode || isSaving) && (
-                            <EditModeContainer className="box rounded-top">
-                                <Title>Edit mode</Title>
-                            </EditModeContainer>
-                        )}
+            <VisibilitySensor onChange={handleShowHeaderBar}>
+                <Container className="p-0">
+                    {(editMode || isSaving) && (
+                        <EditModeContainer className="box rounded-top">
+                            <Title>Edit mode</Title>
+                        </EditModeContainer>
+                    )}
 
-                        <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
-                            <div className="mb-2">
-                                <>
-                                    <h3 className="pb-2 mb-3" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                        {label}
-                                    </h3>
-                                    <ItemMetadata
-                                        item={{
-                                            id,
-                                            created_by: createdBy,
-                                            created_at: createdAt,
-                                            organization_id: organizationId,
-                                            observatory_id: observatoryId,
-                                        }}
-                                        showCreatedAt={true}
-                                        showCreatedBy={true}
-                                        showProvenance={true}
-                                        editMode={editMode}
-                                    />
-                                </>
-                            </div>
+                    <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
+                        <div className="mb-2">
+                            <>
+                                <h3 className="pb-2 mb-3" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                    {label}
+                                </h3>
+                                <ItemMetadata
+                                    item={{
+                                        id,
+                                        created_by: createdBy,
+                                        created_at: createdAt,
+                                        organization_id: organizationId,
+                                        observatory_id: observatoryId,
+                                    }}
+                                    showCreatedAt={true}
+                                    showCreatedBy={true}
+                                    showProvenance={true}
+                                    editMode={editMode}
+                                />
+                            </>
                         </div>
-                    </Container>
-                </VisibilitySensor>
-                {showHeaderBar && <TemplateEditorHeaderBar />}
-                <TabsContainer id={id} />
-            </LoadingOverlay>
+                    </div>
+                </Container>
+            </VisibilitySensor>
+            {showHeaderBar && <TemplateEditorHeaderBar />}
+            <TabsContainer id={id} />
             {diagramMode && <ShaclFlowModal />}
         </>
     );

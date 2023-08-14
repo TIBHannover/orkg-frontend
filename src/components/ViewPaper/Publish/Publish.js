@@ -19,7 +19,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { uniqBy, flatten } from 'lodash';
-import { AuthorTag } from 'components/AuthorsInput/styled';
+import { AuthorTag } from 'components/Input/AuthorsInput/styled';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 function Publish(props) {

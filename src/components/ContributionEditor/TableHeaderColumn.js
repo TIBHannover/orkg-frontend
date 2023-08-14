@@ -5,10 +5,10 @@ import Tippy from '@tippyjs/react';
 import { Contribution, ContributionButton, Delete, ItemHeader, ItemHeaderInner } from 'components/Comparison/styled';
 import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
 import EditResourceDialog from 'components/EditResourceDialog/EditResourceDialog';
+import EditPaperModal from 'components/PaperForm/EditPaperModal';
+import useEditPaper from 'components/PaperForm/hooks/useEditPaper';
 import useUsedTemplates from 'components/StatementBrowser/TemplatesModal/hooks/useUsedTemplates';
 import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
-import EditPaperDialog from 'components/ViewPaper/EditDialog/EditPaperDialog';
-import useEditPaper from 'components/ViewPaper/EditDialog/hooks/useEditPaper';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
@@ -26,7 +26,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
     const [isOpenContributionModal, setIsOpenContributionModal] = useState(false);
     const [data, setData] = useState(null);
     const { handleRemoveContribution } = useContributionEditor();
-    const { loadPaperData } = useEditPaper();
+    const { loadPaperData } = useEditPaper({});
     const dispatch = useDispatch();
     const { usedTemplates, isLoadingUsedTemplates } = useUsedTemplates({ resourceObject: contribution });
 
@@ -142,7 +142,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
             )}
 
             {isOpenEditModal && (
-                <EditPaperDialog paperData={data} afterUpdate={handleUpdatePaper} toggle={v => setIsOpenEditModal(!v)} isOpen showPaperLink />
+                <EditPaperModal paperData={data} afterUpdate={handleUpdatePaper} toggle={v => setIsOpenEditModal(!v)} isPaperLinkVisible />
             )}
         </ItemHeader>
     );

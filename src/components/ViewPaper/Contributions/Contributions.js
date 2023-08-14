@@ -1,21 +1,23 @@
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import EntityRecognition from 'components/AddPaper/EntityRecognition/EntityRecognition';
 import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tabs from 'components/Tabs/Tabs';
 import ContributionComparisons from 'components/ViewPaper/ContributionComparisons/ContributionComparisons';
+import useContributions from 'components/ViewPaper/Contributions/hooks/useContributions';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
+import SmartSuggestions from 'components/ViewPaper/SmartSuggestions/SmartSuggestions';
+import useFetchAbstract from 'components/ViewPaper/hooks/useFetchAbstract';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 import ContentLoader from 'react-content-loader';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Alert, Col, FormGroup, Row } from 'reactstrap';
-import useContributions from './hooks/useContributions';
 
 const Contributions = props => {
     const { resourceId, contributionId } = useParams();
@@ -23,7 +25,7 @@ const Contributions = props => {
     const {
         isLoading,
         isLoadingContributionFailed,
-        selectedContribution,
+        selectedContributionId,
         contributions,
         paperTitle,
         handleChangeContributionLabel,
@@ -34,16 +36,26 @@ const Contributions = props => {
         paperId: resourceId,
         contributionId,
     });
+
     const isAddingContribution = useSelector(state => state.viewPaper.isAddingContribution);
 
     const onTabChange = key => {
-        navigate(
-            reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
+        navigate({
+            pathname: reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                 resourceId,
                 contributionId: key,
             }),
-        );
+            search: props.enableEdit ? `?isEditMode=${props.enableEdit}` : null,
+        });
     };
+
+    const { fetchAbstract, isLoading: isLoadingAbstract, abstract } = useFetchAbstract();
+
+    useEffect(() => {
+        if (props.enableEdit && !abstract) {
+            fetchAbstract();
+        }
+    }, [props.enableEdit, abstract, fetchAbstract]);
 
     return (
         <div>
@@ -74,14 +86,14 @@ const Contributions = props => {
                             ) : null
                         }
                         moreIcon={<Icon size="lg" icon={faAngleDown} />}
-                        activeKey={selectedContribution}
+                        activeKey={selectedContributionId}
                         destroyInactiveTabPane={true}
                         onChange={onTabChange}
                         items={contributions.map(contribution => ({
                             label: (
                                 <ContributionTab
                                     handleChangeContributionLabel={handleChangeContributionLabel}
-                                    isSelected={contribution.id === selectedContribution}
+                                    isSelected={contribution.id === selectedContributionId}
                                     canDelete={contributions.length !== 1}
                                     contribution={contribution}
                                     key={contribution.id}
@@ -100,7 +112,7 @@ const Contributions = props => {
                                                     syncBackend={props.enableEdit}
                                                     openExistingResourcesInDialog={false}
                                                     initOnLocationChange={false}
-                                                    keyToKeepStateOnLocationChange={resourceId}
+                                                    keyToKeepStateOnLocationChange={contributionId ?? resourceId}
                                                     renderTemplateBox={true}
                                                 />
                                             </FormGroup>
@@ -143,9 +155,10 @@ const Contributions = props => {
                             <AddToComparison showLabel={true} paper={{ id: resourceId, label: paperTitle, contributions }} />
                         </div>
                     )}
+
                     {props.enableEdit && (
                         <div className="mb-3">
-                            <EntityRecognition title={paperTitle} />
+                            <SmartSuggestions isLoadingAbstract={isLoadingAbstract} title={paperTitle} abstract={abstract} />
                         </div>
                     )}
 

@@ -902,7 +902,7 @@ Autocomplete.propTypes = {
     entityType: PropTypes.string,
     excludeClasses: PropTypes.string,
     optionsClass: PropTypes.string,
-    placeholder: PropTypes.string.isRequired,
+    placeholder: PropTypes.string,
     onItemSelected: PropTypes.func,
     onChange: PropTypes.func,
     allowCreate: PropTypes.bool,
@@ -961,5 +961,6 @@ Autocomplete.defaultProps = {
     cacheOptions: false,
     fixedOptions: [],
     showTreeSelector: false,
+    placeholder: '',
 };
 export default withTheme(Autocomplete);

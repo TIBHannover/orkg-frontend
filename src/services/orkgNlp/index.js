@@ -11,7 +11,6 @@ import { getPredicate } from 'services/backend/predicates';
 import { getResources } from 'services/backend/resources';
 import { getParentResearchFields } from 'services/backend/statements';
 import { COMPUTER_SCIENCE_FIELDS_LIST, AGRICULTURE_FIELDS_LIST } from 'constants/nlpFieldLists';
-import { guid } from 'utils';
 import fetch from 'cross-fetch';
 
 export const nlpServiceUrl = env('NLP_SERVICE_URL');
@@ -119,7 +118,6 @@ export const getNerResults = async ({ title = '', abstract = '', service = SERVI
             resource = { ...resourceResults[0], isExistingValue: true };
         } else {
             resource = {
-                id: guid(),
                 label: mappedResourcePromises[index].label,
                 isExistingValue: false,
             };
@@ -143,7 +141,7 @@ export const getNerResults = async ({ title = '', abstract = '', service = SERVI
 
 export const saveFeedback = async ({ request, response, serviceName }) =>
     submitPostRequest(
-        `${nlpServiceUrl}feedback`,
+        `${nlpServiceUrl}feedback/`,
         { 'Content-Type': 'application/json' },
         { feedback: { request, response, service_name: serviceName } },
     );

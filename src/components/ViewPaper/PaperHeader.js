@@ -18,7 +18,7 @@ import { Link } from 'react-router-dom';
 import { Button, Alert } from 'reactstrap';
 import { getAltMetrics } from 'services/altmetric/index';
 import { loadPaper } from 'slices/viewPaperSlice';
-import EditPaperDialog from './EditDialog/EditPaperDialog';
+import EditPaperModal from 'components/PaperForm/EditPaperModal';
 
 const PaperHeader = props => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -137,7 +137,7 @@ const PaperHeader = props => {
                 <div className="flex-grow-1">
                     {props.editMode && (
                         <Button color="secondary" size="sm" className="mt-2" style={{ marginLeft: 'auto' }} onClick={() => setIsOpenEditModal(true)}>
-                            <Icon icon={faPen} /> Edit data
+                            <Icon icon={faPen} /> Edit metadata
                         </Button>
                     )}{' '}
                     {showDeleteButton && (
@@ -157,7 +157,7 @@ const PaperHeader = props => {
             </div>
 
             {isOpenEditModal && (
-                <EditPaperDialog
+                <EditPaperModal
                     paperData={{
                         paper: viewPaper.paperResource,
                         month: viewPaper.publicationMonth,

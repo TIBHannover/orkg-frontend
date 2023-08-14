@@ -1,13 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { asyncLocalStorage } from 'utils';
+import ROUTES from 'constants/routes';
+import { match } from 'path-to-regexp';
 import {
-    createResourceAction as createResource,
-    fetchStatementsForResource,
-    selectResourceAction as selectResource,
     clearResourceHistory,
     createContributionObject,
+    createResourceAction as createResource,
+    fetchStatementsForResource,
     loadContributionHistory,
+    selectResourceAction as selectResource,
 } from 'slices/statementBrowserSlice';
+import { LOCATION_CHANGE, asyncLocalStorage, guid } from 'utils';
 
 const initialState = {
     comparison: {
@@ -26,14 +28,25 @@ const initialState = {
         organization_id: '00000000-0000-0000-0000-000000000000',
     },
     authors: [],
+    selectedContributionId: '',
     publicationMonth: {},
     publicationYear: {},
     doi: {},
+    abstract: '',
+    isAbstractFetched: false,
     researchField: {},
     verified: false,
     publishedIn: {},
     url: {},
     isAddingContribution: false,
+    nerResources: [],
+    nerProperties: [],
+    nerRawResponse: {},
+    predicatesRawResponse: {},
+    bioassayText: '',
+    bioassayRawResponse: [],
+    ranges: {},
+    abstractDialogView: 'annotator', // annotator | input | list
 };
 
 export const viewPaperSlice = createSlice({
@@ -76,6 +89,78 @@ export const viewPaperSlice = createSlice({
             state.comparison.allIds = state.comparison.allIds.filter(id => id !== payload);
             asyncLocalStorage.setItem('comparison', JSON.stringify(state.comparison));
         },
+        setAbstract: (state, { payload }) => {
+            state.abstract = payload;
+        },
+        setIsAbstractFetched: (state, { payload }) => {
+            state.isAbstractFetched = payload;
+        },
+        setSelectedContributionId: (state, { payload }) => {
+            state.selectedContributionId = payload;
+        },
+        setNerResources: (state, { payload }) => {
+            state.nerResources = payload;
+        },
+        setNerProperties: (state, { payload }) => {
+            state.nerProperties = payload;
+        },
+        setNerRawResponse: (state, { payload }) => {
+            state.nerRawResponse = payload;
+        },
+        setPredicatesRawResponse: (state, { payload }) => {
+            state.predicatesRawResponse = payload;
+        },
+        setBioassayText: (state, { payload }) => {
+            state.bioassayText = payload;
+        },
+        setBioassayRawResponse: (state, { payload }) => {
+            state.bioassayRawResponse = payload;
+        },
+        createAnnotation: (state, { payload }) => {
+            const id = guid();
+            state.ranges[id] = {
+                id,
+                ...payload,
+            };
+        },
+        removeAnnotation: (state, { payload }) => {
+            delete state.ranges[payload.id];
+        },
+        toggleEditAnnotation: (state, { payload }) => {
+            state.ranges[payload].isEditing = !state.ranges[payload].isEditing;
+        },
+        validateAnnotation: (state, { payload }) => {
+            state.ranges[payload].certainty = 1;
+        },
+        updateAnnotationClass: (state, { payload }) => {
+            state.ranges[payload.range.id].class = {
+                id: payload.selectedOption.id,
+                label: payload.selectedOption.label,
+            };
+            state.ranges[payload.range.id].certainty = 1;
+        },
+        clearAnnotations: state => {
+            state.ranges = {};
+        },
+        setAbstractDialogView: (state, { payload }) => {
+            state.abstractDialogView = payload;
+        },
+    },
+    extraReducers: builder => {
+        builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
+            const matchPaper = match(ROUTES.VIEW_PAPER);
+            const matchPaperContribution = match(ROUTES.VIEW_PAPER_CONTRIBUTION);
+            const parsedPayload = matchPaper(payload.location.pathname);
+            const parsedPayload2 = matchPaperContribution(payload.location.pathname);
+            if (
+                (parsedPayload && parsedPayload.params?.resourceId === state.paperResource.id) ||
+                (parsedPayload2 && parsedPayload2.params?.resourceId === state.paperResource.id)
+            ) {
+                // when it's the same paper, do not init
+                return state;
+            }
+            return initialState;
+        });
     },
 });
 
@@ -90,6 +175,22 @@ export const {
     loadComparisonFromLocalStorage,
     addToComparison,
     removeFromComparison,
+    setAbstract,
+    setIsAbstractFetched,
+    setSelectedContributionId,
+    setNerResources,
+    setNerProperties,
+    setNerRawResponse,
+    setPredicatesRawResponse,
+    setBioassayText,
+    setBioassayRawResponse,
+    createAnnotation,
+    removeAnnotation,
+    toggleEditAnnotation,
+    validateAnnotation,
+    updateAnnotationClass,
+    clearAnnotations,
+    setAbstractDialogView,
 } = viewPaperSlice.actions;
 
 export default viewPaperSlice.reducer;

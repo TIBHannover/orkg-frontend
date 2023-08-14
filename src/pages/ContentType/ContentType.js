@@ -7,16 +7,15 @@ import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import TitleBar from 'components/TitleBar/TitleBar';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { upperFirst } from 'lodash';
-import { reverse } from 'named-urls';
 import InternalServerError from 'pages/InternalServerError';
 import NotFound from 'pages/NotFound';
 import Unauthorized from 'pages/Unauthorized';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Button, Container } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
 
@@ -26,9 +25,8 @@ function ContentType() {
     const [contentType, setContentType] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const params = useParams();
-    const [editMode, setEditMode] = useState(params.mode === 'edit' || false);
+    const { isEditMode, toggleIsEditMode } = useIsEditMode();
     const user = useSelector(state => state.auth.user);
-    const navigate = useNavigate();
     const resourceId = params.id;
 
     useEffect(() => {
@@ -58,22 +56,11 @@ function ContentType() {
         load();
     }, [params.id, resourceId]);
 
-    const toggleEdit = () => {
-        setEditMode(v => !v);
-        navigate(
-            reverse(params.mode !== 'edit' ? ROUTES.CONTENT_TYPE : ROUTES.CONTENT_TYPE_NO_MODE, {
-                type: params.type,
-                id: params.id,
-                mode: params.mode !== 'edit' ? 'edit' : null,
-            }),
-        );
-    };
-
     const handleHeaderChange = val => {
         setResource(prev => ({ ...prev, label: val }));
     };
 
-    if (!isLoading && !user && editMode) {
+    if (!isLoading && !user && isEditMode) {
         return <Unauthorized />;
     }
 
@@ -86,12 +73,18 @@ function ContentType() {
                     <TitleBar
                         buttonGroup={
                             <>
-                                {!editMode ? (
-                                    <RequireAuthentication component={Button} className="float-end" color="secondary" size="sm" onClick={toggleEdit}>
+                                {!isEditMode ? (
+                                    <RequireAuthentication
+                                        component={Button}
+                                        className="float-end"
+                                        color="secondary"
+                                        size="sm"
+                                        onClick={toggleIsEditMode}
+                                    >
                                         <Icon icon={faPen} /> Edit
                                     </RequireAuthentication>
                                 ) : (
-                                    <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={toggleEdit}>
+                                    <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={toggleIsEditMode}>
                                         <Icon icon={faTimes} /> Stop editing
                                     </Button>
                                 )}
@@ -100,10 +93,10 @@ function ContentType() {
                     >
                         {contentType.label && upperFirst(contentType.label)}
                     </TitleBar>
-                    <EditModeHeader isVisible={editMode} />
-                    <Container className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
+                    <EditModeHeader isVisible={isEditMode} />
+                    <Container className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${isEditMode ? 'rounded-bottom' : 'rounded'}`}>
                         <div className="">
-                            {!editMode ? (
+                            {!isEditMode ? (
                                 <div className="pb-2">
                                     <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                         {resource.label || (
@@ -119,8 +112,8 @@ function ContentType() {
                         </div>
                         <hr />
                         <StatementBrowser
-                            enableEdit={editMode}
-                            syncBackend={editMode}
+                            enableEdit={isEditMode}
+                            syncBackend={isEditMode}
                             openExistingResourcesInDialog={false}
                             initialSubjectId={resourceId}
                             newStore={true}

@@ -4,11 +4,11 @@ import { createLiteralStatement, createResourceStatement } from 'services/backen
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
 import Tooltip from 'components/Utils/Tooltip';
-import AuthorsInput from 'components/AuthorsInput/AuthorsInput';
+import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import { addVisualization } from 'services/similarity';
-import { saveAuthors } from 'components/AuthorsInput/helpers';
+import { saveAuthors } from 'components/Input/AuthorsInput/helpers';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';

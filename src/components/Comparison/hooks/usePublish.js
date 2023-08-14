@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { filterObjectOfStatementsByPredicateAndClass, getPublicUrl, getErrorMessage, getComparisonData } from 'utils';
 import { setDoi } from 'slices/comparisonSlice';
 import { getComparisonURLConfig, getPropertyObjectFromData, activatedContributionsToList } from 'components/Comparison/hooks/helpers';
-import { saveAuthors } from 'components/AuthorsInput/helpers';
+import { saveAuthors } from 'components/Input/AuthorsInput/helpers';
 import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import { getConferencesSeries, getConferenceById } from 'services/backend/conferences-series';
@@ -34,8 +34,6 @@ function usePublish() {
     const [comparisonCreators, setComparisonCreators] = useState(comparisonResource?.authors ?? []);
     const [conferencesList, setConferencesList] = useState([]);
     const [conference, setConference] = useState(null);
-    const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
-    const [inputValue, setInputValue] = useState(null);
 
     const data = useSelector(state => state.comparison.data);
     const id = useSelector(state => state.comparison.comparisonResource.id);
@@ -270,12 +268,6 @@ function usePublish() {
         setReferences(list);
     };
 
-    const handleSelectField = ({ id: _id, label }) =>
-        setResearchField({
-            id: _id,
-            label,
-        });
-
     return {
         displayName,
         comparisonResource,
@@ -285,21 +277,16 @@ function usePublish() {
         description,
         comparisonCreators,
         researchField,
-        inputValue,
         conference,
         references,
         conferencesList,
         isLoading,
-        isOpenResearchFieldModal,
         setTitle,
         setDescription,
         setResearchField,
-        setInputValue,
-        setIsOpenResearchFieldModal,
         setAssignDOI,
         setReferences,
         setConference,
-        handleSelectField,
         handleCreatorsChange,
         handleRemoveReferenceClick,
         handleReferenceChange,

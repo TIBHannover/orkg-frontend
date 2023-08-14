@@ -3,6 +3,7 @@ import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 export default {
     title: 'ButtonWithLoading',
     component: ButtonWithLoading,
+    argTypes: { onClick: { action: 'clicked' } },
 };
 
 const Template = args => <ButtonWithLoading {...args} />;

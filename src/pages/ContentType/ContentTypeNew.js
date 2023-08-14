@@ -48,7 +48,7 @@ const ContentTypeNew = () => {
         setIsLoading(true);
         const _resource = await createResource(title, [selectedClassId]);
         setResource(_resource);
-        navigate(reverse(ROUTES.CONTENT_TYPE, { id: _resource.id, type: selectedClassId, mode: 'edit' }));
+        navigate({ pathname: reverse(ROUTES.CONTENT_TYPE, { id: _resource.id, type: selectedClassId }), search: '?isEditMode=true' });
     };
 
     return (
@@ -87,11 +87,11 @@ const ContentTypeNew = () => {
                 {selectedClassId === CLASSES.PAPER && (
                     <>
                         <Alert color="info" fade={false}>
-                            The add paper wizard guides you through the steps to add a paper
+                            The add paper form guides you through the steps to add a paper
                         </Alert>
                         <p>
-                            <Link to={reverse(ROUTES.ADD_PAPER.GENERAL_DATA)}>
-                                <Button color="light">Add paper wizard</Button>
+                            <Link to={reverse(ROUTES.ADD_PAPER)}>
+                                <Button color="light">Add paper form</Button>
                             </Link>
                         </p>
                     </>

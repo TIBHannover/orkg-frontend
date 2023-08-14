@@ -430,32 +430,15 @@ export const statementBrowserSlice = createSlice({
     },
     extraReducers: builder => {
         builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
-            // prevent reset location for content type page (location change is trigger on edit mode)
+            // prevent reset location that is triggered by the edit mode query param change
             if (
                 state.keyToKeepStateOnLocationChange === match(ROUTES.CONTENT_TYPE)(payload.location.pathname)?.params?.id ||
-                state.keyToKeepStateOnLocationChange === match(ROUTES.CONTENT_TYPE_NO_MODE)(payload.location.pathname)?.params?.id
+                state.keyToKeepStateOnLocationChange === match(ROUTES.VIEW_PAPER)(payload.location.pathname)?.params?.resourceId ||
+                state.keyToKeepStateOnLocationChange === match(ROUTES.VIEW_PAPER_CONTRIBUTION)(payload.location.pathname)?.params?.contributionId
             ) {
                 return state;
             }
 
-            // from redux-first-history, reset the wizard when the page is changed
-            if (
-                !state.initOnLocationChange &&
-                state.keyToKeepStateOnLocationChange === match(ROUTES.VIEW_PAPER)(payload.location.pathname)?.params?.resourceId
-            ) {
-                return {
-                    ...state,
-                    // returns current state but resets some variables :
-                    selectedResource: '',
-                    selectedProperty: '',
-                    level: 0,
-                    isFetchingStatements: false,
-                    resourceHistory: {
-                        byId: {},
-                        allIds: [],
-                    },
-                };
-            }
             return {
                 ...initialState,
                 preferences: {

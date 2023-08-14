@@ -1,7 +1,7 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Cite } from '@citation-js/core';
-import AutocompleteContentTypeTitle from 'components/AutocompleteContentTypeTitle/AutocompleteContentTypeTitle';
+import PaperTitleInput from 'components/Input/PaperTitleInput/PaperTitleInput';
 import useList from 'components/List/hooks/useList';
 import MetadataTable from 'components/List/MetadataTable/MetadataTable';
 import { CLASSES, RESOURCES, PREDICATES } from 'constants/graphSettings';
@@ -230,7 +230,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                                     <option value={CLASSES.SOFTWARE}>Software</option>
                                 </Input>
                                 <div className="form-control form-control p-0 border-0">
-                                    <AutocompleteContentTypeTitle
+                                    <PaperTitleInput
                                         key={contentType} // reset autocomplete when content type changes
                                         contentType={contentType}
                                         value={title}

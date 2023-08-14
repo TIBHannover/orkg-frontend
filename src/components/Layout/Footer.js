@@ -146,7 +146,7 @@ const Footer = () => (
                                 <i className="me-3">Version</i>
                                 <Tippy content="GIT_VERSION_LONG">
                                     <span>
-                                        <Badge color="info">GIT_VERSION</Badge>
+                                        <Badge color="secondary">GIT_VERSION</Badge>
                                     </span>
                                 </Tippy>
                             </li>

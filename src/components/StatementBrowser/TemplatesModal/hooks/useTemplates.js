@@ -44,9 +44,7 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
     const selectedResource = useSelector(state => (!isContributionEditor ? state.statementBrowser.selectedResource : null));
 
     // in case of contribution editor, we consider only the research field of the first contribution
-    const researchField = useSelector(state =>
-        !isContributionEditor ? state.viewPaper.researchField?.id || state.addPaper.selectedResearchField : getResearchFields(state)?.[0],
-    );
+    const researchField = useSelector(state => (!isContributionEditor ? state.viewPaper.researchField?.id : getResearchFields(state)?.[0]));
     const resource = useSelector(state =>
         !isContributionEditor ? selectedResource && state.statementBrowser.resources.byId[selectedResource] : { classes: getCommonClasses(state) },
     );
