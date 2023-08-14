@@ -13,7 +13,7 @@ import SearchFieldSelector from 'components/StatementBrowser/TemplatesModal/Sear
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import useTemplatesRecommendation from 'components/AddPaper/hooks/useTemplatesRecommendation';
+import useTemplatesRecommendation from 'components/ViewPaper/hooks/useTemplatesRecommendation';
 import Tooltip from 'components/Utils/Tooltip';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
@@ -45,9 +45,9 @@ const TemplatesModal = props => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
-    const { title, abstract } = useSelector(state =>
-        state.addPaper.title ? state.addPaper : { title: state.viewPaper.paperResource.label, abstract: '' },
-    );
+    const title = useSelector(state => state.viewPaper.paperResource?.label);
+    const abstract = useSelector(state => state.viewPaper.abstract);
+
     const { recommendedTemplates, isLoadingRT } = useTemplatesRecommendation({ title, abstract });
 
     const onlyFeatured = true;

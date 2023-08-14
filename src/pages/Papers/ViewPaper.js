@@ -11,35 +11,30 @@ import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
 import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import moment from 'moment';
 import NotFound from 'pages/NotFound';
-import qs from 'qs';
-import { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';
-import { Container, UncontrolledAlert } from 'reactstrap';
-import { determineActiveNERService, SERVICE_MAPPING } from 'services/orkgNlp/index';
+import { Container } from 'reactstrap';
 import GraphViewModal from 'components/GraphView/GraphViewModal';
 
 const ViewPaper = () => {
     const { resourceId } = useParams();
-    const location = useLocation();
     const viewPaper = useSelector(state => state.viewPaper);
-    const [shouldShowNerSurvey, setShouldShowNerSurvey] = useState(false);
-    const { isLoading, isLoadingFailed, showHeaderBar, editMode, showGraphModal, toggle, handleShowHeaderBar, setEditMode, setShowGraphModal } =
-        useViewPaper({
-            paperId: resourceId,
-        });
-
-    let comingFromWizard = qs.parse(location.search, { ignoreQueryPrefix: true });
-    comingFromWizard = comingFromWizard ? comingFromWizard.comingFromWizard === 'true' : false;
-
-    useEffect(() => {
-        if (comingFromWizard) {
-            (async () => setShouldShowNerSurvey((await determineActiveNERService(viewPaper.researchField?.id)) === SERVICE_MAPPING.CS_NER))();
-        }
-    }, [comingFromWizard, viewPaper.researchField?.id]);
+    const {
+        isLoading,
+        isLoadingFailed,
+        showHeaderBar,
+        isEditMode,
+        showGraphModal,
+        toggle,
+        handleShowHeaderBar,
+        toggleIsEditMode,
+        setShowGraphModal,
+    } = useViewPaper({
+        paperId: resourceId,
+    });
 
     const getSEODescription = () =>
         `Published: ${viewPaper.publicationMonth ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''} ${
@@ -72,7 +67,11 @@ const ViewPaper = () => {
             {!isLoadingFailed && (
                 <>
                     {showHeaderBar && (
-                        <PaperHeaderBar disableEdit={env('PWC_USER_ID') === viewPaper.paperResource.created_by} editMode={editMode} toggle={toggle} />
+                        <PaperHeaderBar
+                            disableEdit={env('PWC_USER_ID') === viewPaper.paperResource.created_by}
+                            editMode={isEditMode}
+                            toggle={toggle}
+                        />
                     )}
                     <Breadcrumbs researchFieldId={viewPaper.researchField ? viewPaper.researchField.id : null} />
 
@@ -89,7 +88,7 @@ const ViewPaper = () => {
                             buttonGroup={
                                 <PaperMenuBar
                                     disableEdit={env('PWC_USER_ID') === viewPaper.paperResource.created_by}
-                                    editMode={editMode}
+                                    editMode={isEditMode}
                                     toggle={toggle}
                                 />
                             }
@@ -98,11 +97,11 @@ const ViewPaper = () => {
                         </TitleBar>
                     </VisibilitySensor>
 
-                    <EditModeHeader isVisible={editMode} />
+                    <EditModeHeader isVisible={isEditMode} />
 
                     <Container
                         className={`box pt-md-4 pb-md-4 ps-md-5 pe-md-5 pt-sm-2 pb-sm-2 ps-sm-2 pe-sm-2 clearfix position-relative 
-                                ${editMode ? 'rounded-bottom' : 'rounded'}`}
+                                ${isEditMode ? 'rounded-bottom' : 'rounded'}`}
                     >
                         {!isLoading && <ShareLinkMarker typeOfLink="paper" title={viewPaper.paperResource.label} />}
 
@@ -123,33 +122,12 @@ const ViewPaper = () => {
                                 <rect x="36" y="6" rx="1" ry="1" width="10" height="2" />
                             </ContentLoader>
                         )}
-                        {!isLoading && !isLoadingFailed && (
-                            <>
-                                {comingFromWizard && (
-                                    <UncontrolledAlert color="info">
-                                        Help us to improve the ORKG and{' '}
-                                        <a
-                                            href={
-                                                shouldShowNerSurvey
-                                                    ? 'https://tib.eu/umfragen/index.php/248163'
-                                                    : 'https://forms.gle/AgcUXuiuQzexqZmr6'
-                                            }
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            fill out the online evaluation form
-                                        </a>
-                                        . Thank you!
-                                    </UncontrolledAlert>
-                                )}
-                                <PaperHeader editMode={editMode} />
-                            </>
-                        )}
+                        {!isLoading && !isLoadingFailed && <PaperHeader editMode={isEditMode} />}
                         {!isLoading && (
                             <>
                                 <hr className="mt-3" />
 
-                                <Contributions enableEdit={editMode} toggleEditMode={() => setEditMode(v => !v)} />
+                                <Contributions enableEdit={isEditMode} toggleEditMode={toggleIsEditMode} />
 
                                 <ComparisonPopup />
                             </>

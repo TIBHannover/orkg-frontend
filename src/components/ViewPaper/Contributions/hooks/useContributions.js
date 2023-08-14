@@ -15,14 +15,14 @@ import {
     setIsAddingContribution,
     setIsDeletingContribution,
     setIsSavingContribution,
+    setSelectedContributionId,
 } from 'slices/viewPaperSlice';
 
 const useContributions = ({ paperId, contributionId }) => {
     const contributions = useSelector(state => state.viewPaper.contributions);
-    const [selectedContribution, setSelectedContribution] = useState(contributionId);
     const paperResource = useSelector(state => state.viewPaper.paperResource);
+    const selectedContributionId = useSelector(state => state.viewPaper.selectedContributionId);
     const dispatch = useDispatch();
-
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingContributionFailed, setLoadingContributionFailed] = useState(false);
 
@@ -30,25 +30,25 @@ const useContributions = ({ paperId, contributionId }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (contributions?.length && (selectedContribution !== contributionId || !contributionId)) {
+        if (contributions?.length && (selectedContributionId !== contributionId || !contributionId)) {
             try {
                 // apply selected contribution
                 if (contributionId && !contributions.some(el => el.id === contributionId)) {
                     throw new Error('Contribution not found');
                 }
                 const selected = contributionId && contributions.some(el => el.id === contributionId) ? contributionId : contributions[0].id;
-                setSelectedContribution(selected);
+                dispatch(setSelectedContributionId(selected));
             } catch {
                 setLoadingContributionFailed(true);
             }
         }
-    }, [contributionId, contributions, selectedContribution]);
+    }, [contributionId, contributions, dispatch, selectedContributionId]);
 
     useEffect(() => {
         const handleSelectContribution = cId => {
             setIsLoading(true);
             // get the contribution label
-            const contributionResource = contributions.find(c => c.id === selectedContribution);
+            const contributionResource = contributions.find(c => c.id === selectedContributionId);
             if (contributionResource) {
                 setLoadingContributionFailed(false);
                 dispatch(
@@ -62,8 +62,8 @@ const useContributions = ({ paperId, contributionId }) => {
             }
             setIsLoading(false);
         };
-        handleSelectContribution(selectedContribution);
-    }, [contributions, dispatch, selectedContribution]);
+        handleSelectContribution(selectedContributionId);
+    }, [contributions, dispatch, selectedContributionId]);
 
     const handleChangeContributionLabel = (cId, label) => {
         // find the index of contribution
@@ -143,7 +143,7 @@ const useContributions = ({ paperId, contributionId }) => {
     return {
         isLoading,
         isLoadingContributionFailed,
-        selectedContribution,
+        selectedContributionId,
         contributions,
         paperTitle: paperResource.label,
         handleChangeContributionLabel,

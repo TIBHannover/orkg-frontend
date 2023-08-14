@@ -3,8 +3,7 @@ import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import Tooltip from 'components/Utils/Tooltip';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import AuthorsInput from 'components/AuthorsInput/AuthorsInput';
+import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
 import ShareCreatedContent from 'components/ShareLinkMarker/ShareCreatedContent';
 import NewerVersionWarning from 'components/Comparison/HistoryModal/NewerVersionWarning';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -19,12 +18,12 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { slugify, getPublicUrl } from 'utils';
 import styled from 'styled-components';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
+import { MISC } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
-import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 import usePublish from 'components/Comparison/hooks/usePublish';
 import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import ResearchFieldInput from 'components/Input/ResearchFieldInput/ResearchFieldInput';
 
 const StyledCustomInput = styled(Input)`
     margin-right: 0;
@@ -72,21 +71,16 @@ function Publish(props) {
         description,
         comparisonCreators,
         researchField,
-        inputValue,
         conference,
         references,
         conferencesList,
         isLoading,
-        isOpenResearchFieldModal,
         setTitle,
         setDescription,
         setResearchField,
-        setInputValue,
-        setIsOpenResearchFieldModal,
         setAssignDOI,
         setReferences,
         setConference,
-        handleSelectField,
         handleCreatorsChange,
         handleRemoveReferenceClick,
         handleReferenceChange,
@@ -237,36 +231,7 @@ function Publish(props) {
                             <Label for="research-field">
                                 <Tooltip message="Enter the research field of the comparison">Research field</Tooltip>
                             </Label>
-                            <InputGroup>
-                                <Autocomplete
-                                    allowCreate={false}
-                                    entityType={ENTITIES.RESOURCE}
-                                    optionsClass={CLASSES.RESEARCH_FIELD}
-                                    onItemSelected={i => {
-                                        setResearchField({ ...i, label: i.value });
-                                    }}
-                                    placeholder="Search or choose a research field"
-                                    autoFocus
-                                    cacheOptions
-                                    value={researchField || null}
-                                    isClearable={false}
-                                    onBlur={() => setInputValue('')}
-                                    onChangeInputValue={e => setInputValue(e)}
-                                    inputValue={inputValue}
-                                    ols={false}
-                                />
-                                <Button color="secondary" onClick={() => setIsOpenResearchFieldModal(true)}>
-                                    Choose
-                                </Button>
-
-                                {isOpenResearchFieldModal && (
-                                    <ResearchFieldSelectorModal
-                                        isOpen
-                                        toggle={() => setIsOpenResearchFieldModal(v => !v)}
-                                        onSelectField={handleSelectField}
-                                    />
-                                )}
-                            </InputGroup>
+                            <ResearchFieldInput value={researchField} onChange={setResearchField} inputId="research-field" />
                         </FormGroup>
                         <FormGroup>
                             <Label for="Creator">

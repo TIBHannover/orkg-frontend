@@ -4,9 +4,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import styled, { createGlobalStyle } from 'styled-components';
 import 'tippy.js/dist/tippy.css';
 import { Wrapper } from '../src/testUtils';
+import '../public/__ENV';
 
 export const parameters = {
-    actions: { argTypesRegex: '^on[A-Z].*' },
+    actions: { argTypesRegex: '^on.*' },
     controls: {
         matchers: {
             color: /(background|color)$/i,

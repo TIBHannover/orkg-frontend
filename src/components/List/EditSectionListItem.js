@@ -3,18 +3,18 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Confirm from 'components/Confirmation/Confirmation';
 import { supportedContentTypes } from 'components/ContentType/types';
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
-import EditPaperDialog from 'components/ViewPaper/EditDialog/EditPaperDialog';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { SortableElement, sortableHandle } from 'react-sortable-hoc';
 import { Button, ListGroupItem } from 'reactstrap';
-import { deleteListEntry, listEntryUpdated, updateListEntryDescription } from 'slices/listSlice';
+import { deleteListEntry, listEntryUpdated } from 'slices/listSlice';
 import styled from 'styled-components';
+import EditPaperModal from 'components/PaperForm/EditPaperModal';
 
 const Toolbar = styled.div`
     width: 200px;
@@ -43,7 +43,6 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
     const [isHovering, setIsHovering] = useState(false);
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
     const contentType = useSelector(state => state.list.contentTypes[entry.contentTypeId]);
-    const [description, setDescription] = useState(entry.description?.label);
     const dispatch = useDispatch();
     const isPaper = contentType?.classes?.includes(CLASSES.PAPER);
     const contentTypeClass = contentType?.classes?.filter(classId => supportedContentTypes.find(c => c.id === classId))?.[0];
@@ -61,23 +60,11 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
 
     const handleUpdatePaper = async data => {
         dispatch(listEntryUpdated({ ...data, contentType: data.paper, ...data.paper }));
-        if (entry.description?.id || description) {
-            dispatch(updateListEntryDescription({ description, entryId: entry.entry.id, descriptionLiteralId: entry.description?.id, sectionId }));
-        }
         setIsOpenEditModal(false);
     };
 
     const handleEditPaper = async () => {
         setIsOpenEditModal(true);
-    };
-
-    const additionalFields = {
-        description: {
-            label: 'Description',
-            type: 'textarea',
-            value: description,
-            onChange: e => setDescription(e.target.value),
-        },
     };
 
     return (
@@ -101,7 +88,10 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
                                 <Icon icon={faPen} />
                             </Button>
                         ) : (
-                            <Link to={reverse(ROUTES.CONTENT_TYPE, { id: contentType.id, type: contentTypeClass, mode: 'edit' })} target="_blank">
+                            <Link
+                                to={`${reverse(ROUTES.CONTENT_TYPE, { id: contentType.id, type: contentTypeClass })}?isEditMode=true`}
+                                target="_blank"
+                            >
                                 <Button color="secondary" className="px-2 py-0">
                                     <Icon icon={faPen} />
                                 </Button>
@@ -122,11 +112,11 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
                     showAddToComparison
                     linkTarget="_blank"
                     showContributionCount={true}
-                    route={!isPaper ? reverse(ROUTES.CONTENT_TYPE_NO_MODE, { id: contentType.id, type: contentTypeClass }) : undefined}
+                    route={!isPaper ? reverse(ROUTES.CONTENT_TYPE, { id: contentType.id, type: contentTypeClass }) : undefined}
                 />
             </div>
             {isOpenEditModal && (
-                <EditPaperDialog
+                <EditPaperModal
                     paperData={{
                         ...contentType,
                         paper: { label: contentType.label, id: contentType.id },
@@ -135,9 +125,7 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
                     }}
                     afterUpdate={handleUpdatePaper}
                     toggle={v => setIsOpenEditModal(!v)}
-                    isOpen
-                    showPaperLink
-                    additionalFields={additionalFields}
+                    isPaperLinkVisible
                 />
             )}
         </ListGroupItem>

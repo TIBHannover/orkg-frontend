@@ -7,14 +7,15 @@ import { resetStatementBrowser } from 'slices/statementBrowserSlice';
 import { loadPaper, setPaperAuthors } from 'slices/viewPaperSlice';
 import { getPaperDataViewPaper, filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 
 const useViewPaper = ({ paperId }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingFailed, setIsLoadingFailed] = useState(false);
     const [showGraphModal, setShowGraphModal] = useState(false);
-    const [editMode, setEditMode] = useState(false);
     const [showHeaderBar, setShowHeaderBar] = useState(false);
     const dispatch = useDispatch();
+    const { isEditMode, toggleIsEditMode } = useIsEditMode();
 
     const setAuthorsORCID = useCallback(
         (paperStatements, pId) => {
@@ -78,7 +79,7 @@ const useViewPaper = ({ paperId }) => {
                 setShowGraphModal(v => !v);
                 break;
             case 'editMode':
-                setEditMode(v => !v);
+                toggleIsEditMode();
                 break;
             default:
                 break;
@@ -89,11 +90,11 @@ const useViewPaper = ({ paperId }) => {
         isLoading,
         isLoadingFailed,
         showHeaderBar,
-        editMode,
+        isEditMode,
         showGraphModal,
         toggle,
         handleShowHeaderBar,
-        setEditMode,
+        toggleIsEditMode,
         setShowGraphModal,
     };
 };

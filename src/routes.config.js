@@ -168,7 +168,7 @@ const routes = [
         element: UserProfile,
     },
     {
-        path: ROUTES.ADD_PAPER.GENERAL_DATA,
+        path: ROUTES.ADD_PAPER,
         element: AddPaper,
     },
     {
@@ -432,10 +432,6 @@ const routes = [
     },
     {
         path: ROUTES.CONTENT_TYPE,
-        element: ContentType,
-    },
-    {
-        path: ROUTES.CONTENT_TYPE_NO_MODE,
         element: ContentType,
     },
     {

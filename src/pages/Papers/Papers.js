@@ -92,7 +92,7 @@ const Papers = () => {
                 color="secondary"
                 size="sm"
                 className="btn btn-secondary btn-sm flex-shrink-0"
-                to={ROUTES.ADD_PAPER.GENERAL_DATA}
+                to={ROUTES.ADD_PAPER}
             >
                 <Icon icon={faPlus} /> Create paper
             </RequireAuthentication>

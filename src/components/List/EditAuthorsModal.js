@@ -1,10 +1,10 @@
-import AuthorsInput from 'components/AuthorsInput/AuthorsInput';
+import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { authorsUpdated } from 'slices/listSlice';
-import { updateAuthors } from 'components/AuthorsInput/helpers';
+import { updateAuthors } from 'components/Input/AuthorsInput/helpers';
 
 const EditAuthorsModal = props => {
     const { show, toggle } = props;

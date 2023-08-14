@@ -6,8 +6,8 @@ import { Button } from 'reactstrap';
 /**
  * Wrapper for Reactstrap Button component that adds a loading state
  */
-const ButtonWithLoading = ({ children, isLoading = false, loadingMessage = 'Loading', ...props }) => (
-    <Button disabled={isLoading} {...props}>
+const ButtonWithLoading = ({ children, isLoading = false, loadingMessage = 'Loading', isDisabled = false, ...props }) => (
+    <Button disabled={isLoading || isDisabled} {...props}>
         {!isLoading ? (
             children
         ) : (
@@ -21,6 +21,7 @@ const ButtonWithLoading = ({ children, isLoading = false, loadingMessage = 'Load
 ButtonWithLoading.propTypes = {
     children: PropTypes.node.isRequired,
     isLoading: PropTypes.bool,
+    isDisabled: PropTypes.bool,
     loadingMessage: PropTypes.string,
 };
 

@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Badge, Container } from 'reactstrap';
 import styled from 'styled-components';
+import LoadingOverlay from 'components/LoadingOverlay/LoadingOverlay';
 
 export const StyledContainer = styled(Container)`
     fieldset.scheduler-border {
@@ -23,6 +24,8 @@ export const StyledContainer = styled(Container)`
 function TabsContainer({ id }) {
     const { activeTab } = useParams();
     const countPropertyShapes = useSelector(state => state.templateEditor.propertyShapes.length ?? 0);
+    const isSaving = useSelector(state => state.templateEditor.isSaving);
+    const isLoading = useSelector(state => state.templateEditor.isLoading);
     const navigate = useNavigate();
 
     const onTabChange = key => {
@@ -35,47 +38,63 @@ function TabsContainer({ id }) {
     };
 
     return (
-        <StyledContainer className="mt-3 p-0">
-            <Tabs
-                className="box rounded"
-                getPopupContainer={trigger => trigger.parentNode}
-                destroyInactiveTabPane={false}
-                onChange={onTabChange}
-                activeKey={activeTab ?? 'description'}
-                items={[
-                    {
-                        label: 'Description',
-                        key: 'description',
-                        children: (
-                            <div className="px-4 py-3">
-                                <GeneralSettings />
+        <StyledContainer className="mt-3 p-0 position-relative">
+            <LoadingOverlay
+                isLoading={isLoading || isSaving}
+                classNameOverlay="rounded"
+                loadingText={
+                    <>
+                        {!isSaving && isLoading && <h1 className="h4">Loading</h1>}
+                        {isSaving && (
+                            <div>
+                                <h1 className="h4">Saving...</h1>
+                                Please <strong>do not</strong> leave this page until the save process is finished.
                             </div>
-                        ),
-                    },
-                    {
-                        label: (
-                            <>
-                                Properties <Badge pill>{countPropertyShapes}</Badge>
-                            </>
-                        ),
-                        key: 'properties',
-                        children: (
-                            <div className="px-4 py-3">
-                                <PropertyShapesTab />
-                            </div>
-                        ),
-                    },
-                    {
-                        label: 'Format',
-                        key: 'format',
-                        children: (
-                            <div className="px-4 py-3">
-                                <Format />
-                            </div>
-                        ),
-                    },
-                ]}
-            />
+                        )}
+                    </>
+                }
+            >
+                <Tabs
+                    className="box rounded"
+                    getPopupContainer={trigger => trigger.parentNode}
+                    destroyInactiveTabPane={false}
+                    onChange={onTabChange}
+                    activeKey={activeTab ?? 'description'}
+                    items={[
+                        {
+                            label: 'Description',
+                            key: 'description',
+                            children: (
+                                <div className="px-4 py-3">
+                                    <GeneralSettings />
+                                </div>
+                            ),
+                        },
+                        {
+                            label: (
+                                <>
+                                    Properties <Badge pill>{countPropertyShapes}</Badge>
+                                </>
+                            ),
+                            key: 'properties',
+                            children: (
+                                <div className="px-4 py-3">
+                                    <PropertyShapesTab />
+                                </div>
+                            ),
+                        },
+                        {
+                            label: 'Format',
+                            key: 'format',
+                            children: (
+                                <div className="px-4 py-3">
+                                    <Format />
+                                </div>
+                            ),
+                        },
+                    ]}
+                />
+            </LoadingOverlay>
         </StyledContainer>
     );
 }

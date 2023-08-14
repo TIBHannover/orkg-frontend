@@ -118,18 +118,13 @@ const AddNew = ({ isHomePageStyle, onAdd = null }) => {
                                 </p>
                             </TextContainer>
                         </ToolContainer>
-                        <RequireAuthentication
-                            onClick={handleClickMenuItem}
-                            component={ToolContainer}
-                            to={ROUTES.ADD_PAPER.GENERAL_DATA}
-                            className="d-flex p-2"
-                        >
+                        <RequireAuthentication onClick={handleClickMenuItem} component={ToolContainer} to={ROUTES.ADD_PAPER} className="d-flex p-2">
                             <ImgContainer>
                                 <img src={AddPaperWizard} width="90%" alt="Add paper wizard preview" />
                             </ImgContainer>
                             <TextContainer className="ps-2 pe-2">
                                 <Header>Paper</Header>
-                                <p className="m-0">The add paper wizard guides you to the process of generating structured data for your paper.</p>
+                                <p className="m-0">The add paper form guides you to the process of generating structured data for your paper.</p>
                             </TextContainer>
                         </RequireAuthentication>
                         <RequireAuthentication

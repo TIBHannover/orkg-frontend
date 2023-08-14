@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 import auth from 'slices/authSlice';
 import statementBrowser from 'slices/statementBrowserSlice';
-import addPaper from 'slices/addPaperSlice';
 import viewPaper from 'slices/viewPaperSlice';
 import list from 'slices/listSlice';
 import contributionEditor from 'slices/contributionEditorSlice';
@@ -17,7 +16,6 @@ export default routerReducer =>
         router: routerReducer,
         auth,
         statementBrowser,
-        addPaper,
         viewPaper,
         list,
         contributionEditor,

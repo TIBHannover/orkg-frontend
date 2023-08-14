@@ -51,7 +51,7 @@ const ContributionTab = props => {
     }, [isEditing]);
 
     return (
-        <div>
+        <div className="d-flex align-items-center">
             {isEditing && (
                 <StyledInput
                     bsSize="sm"

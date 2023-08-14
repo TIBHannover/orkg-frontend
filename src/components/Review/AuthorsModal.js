@@ -1,10 +1,10 @@
 import { updateAuthors } from 'slices/reviewSlice';
-import AuthorsInput from 'components/AuthorsInput/AuthorsInput';
+import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { updateAuthors as updateAuthorsHelper } from 'components/AuthorsInput/helpers';
+import { updateAuthors as updateAuthorsHelper } from 'components/Input/AuthorsInput/helpers';
 
 const AuthorsModal = props => {
     const { show, toggle } = props;

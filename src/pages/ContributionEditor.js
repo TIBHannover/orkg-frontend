@@ -9,7 +9,6 @@ import TableLoadingIndicator from 'components/ContributionEditor/TableLoadingInd
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
 import TableScrollContainer from 'components/Comparison/Table/TableScrollContainer';
 import CreateContributionModal from 'components/CreateContributionModal/CreateContributionModal';
-import CreatePaperModal from 'components/CreatePaperModal/CreatePaperModal';
 import routes from 'constants/routes';
 import { reverse } from 'named-urls';
 import qs from 'qs';
@@ -19,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import env from '@beam-australia/react-env';
 import { Alert, Button, Container } from 'reactstrap';
 import TitleBar from 'components/TitleBar/TitleBar';
+import AddPaperModal from 'components/PaperForm/AddPaperModal';
 
 const ContributionEditor = () => {
     const [isOpenAddContribution, setIsOpenAddContribution] = useState(false);
@@ -170,7 +170,7 @@ const ContributionEditor = () => {
             )}
 
             {isOpenCreatePaper && (
-                <CreatePaperModal
+                <AddPaperModal
                     isOpen
                     onCreatePaper={handleCreatePaper}
                     toggle={() => setIsOpenCreatePaper(v => !v)}

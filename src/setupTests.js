@@ -15,6 +15,11 @@ afterAll(() => {
     server.close();
 });
 
+jest.mock('react-dnd', () => ({
+    useDrag: jest.fn().mockImplementation(() => [jest.fn(), jest.fn(), jest.fn()]),
+    useDrop: jest.fn().mockImplementation(() => [jest.fn(), jest.fn(), jest.fn()]),
+}));
+
 jest.setTimeout(20000);
 
 // required due to the usage of react-slick https://github.com/akiran/react-slick/issues/742
