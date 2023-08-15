@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.116.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.115.0...v0.116.0) - 2023-08-15
+
+### Changes
+
+- feat(AddPaper): replace wizard with single form [`#1154`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1154)
+- feat: Debounce autocomplete [`#1170`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1170)
+
+---
 ## [v0.115.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.114.1...v0.115.0) - 2023-08-10
 
 ### Changes
