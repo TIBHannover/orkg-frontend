@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
-const ResearchFieldSelectorModal = ({ isOpen, toggle, onSelectField }) => {
+const ResearchFieldSelectorModal = ({ isOpen, toggle, onSelectField, title = null, abstract = null }) => {
     const [selectedResearchField, setSelectedResearchField] = useState('');
     const [researchFields, setResearchFields] = useState([]);
 
@@ -36,7 +36,7 @@ const ResearchFieldSelectorModal = ({ isOpen, toggle, onSelectField }) => {
     };
 
     return (
-        <Modal isOpen={isOpen} toggle={toggle}>
+        <Modal isOpen={isOpen} toggle={toggle} size="lg">
             <ModalHeader toggle={toggle}>Choose research field</ModalHeader>
             <ModalBody>
                 <ResearchFieldSelector
@@ -44,6 +44,8 @@ const ResearchFieldSelectorModal = ({ isOpen, toggle, onSelectField }) => {
                     researchFields={researchFields}
                     updateResearchField={handleUpdate}
                     insideModal={true}
+                    title={title}
+                    abstract={abstract}
                 />
             </ModalBody>
             <ModalFooter className="d-flex">
@@ -59,6 +61,8 @@ ResearchFieldSelectorModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     onSelectField: PropTypes.func.isRequired,
+    title: PropTypes.string,
+    abstract: PropTypes.string,
 };
 
 export default ResearchFieldSelectorModal;

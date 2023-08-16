@@ -189,3 +189,17 @@ export const getTemplateRecommendations = async ({ title, abstract, topN = 5 }) 
     );
     return payload;
 };
+
+export const classifyPaper = async ({ smartSuggestionInputText, topN = 5 }) => {
+    const { payload } = await submitPostRequest(
+        `${nlpServiceUrl}annotation/rfclf`,
+        {
+            'Content-Type': 'application/json',
+        },
+        {
+            raw_input: smartSuggestionInputText,
+            top_n: topN,
+        },
+    );
+    return payload;
+};

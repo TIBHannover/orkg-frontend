@@ -3,7 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
-import usePreviouslySelectedResearchField from './hooks/usePreviouslySelectedResearchField';
+import usePreviouslySelectedResearchField from 'components/ResearchFieldSelector/PreviouslySelectedResearchField/hooks/usePreviouslySelectedResearchField';
 
 const PreviouslySelectedResearchField = props => {
     const { researchFields } = usePreviouslySelectedResearchField();

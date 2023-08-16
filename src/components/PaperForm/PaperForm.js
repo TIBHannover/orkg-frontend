@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import { Button, Col, Form, FormGroup, FormText, Input, InputGroup, Label, Row } from 'reactstrap';
 import { parseCiteResult } from 'utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getAbstractByDoi } from 'services/semanticScholar';
 
 const PaperForm = ({
     isLoadingParsing,
@@ -36,6 +37,8 @@ const PaperForm = ({
     setPublishedIn,
     url,
     setUrl,
+    abstract,
+    setAbstract = () => {},
     isNewPaper = false,
     isMetadataExpanded = false,
     setIsMetadataExpanded = () => {},
@@ -105,6 +108,14 @@ const PaperForm = ({
             toast.error(messageMapping[e.message] || messageMapping.default);
             console.error(e);
             setIsLoadingParsing(false);
+        }
+
+        try {
+            if (isNewPaper) {
+                setAbstract(await getAbstractByDoi(entryParsed));
+            }
+        } catch (e) {
+            console.error(e);
         }
     };
 
@@ -201,6 +212,8 @@ const PaperForm = ({
                                 onChange={setResearchField}
                                 inputId={`${formId}-researchField`}
                                 isDisabled={isLoadingParsing}
+                                title={title}
+                                abstract={abstract}
                             />
                         </FormGroup>
                         <FormGroup>
@@ -281,6 +294,8 @@ PaperForm.propTypes = {
     setPublishedIn: PropTypes.func.isRequired,
     url: PropTypes.string,
     setUrl: PropTypes.func.isRequired,
+    abstract: PropTypes.string,
+    setAbstract: PropTypes.func,
     isNewPaper: PropTypes.bool,
     isMetadataExpanded: PropTypes.bool,
     setIsMetadataExpanded: PropTypes.func,
