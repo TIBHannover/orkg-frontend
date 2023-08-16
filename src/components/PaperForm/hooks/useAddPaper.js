@@ -14,6 +14,7 @@ const useAddPaper = ({ onCreate = null }) => {
     const [publicationMonth, setPublicationMonth] = useState('');
     const [publicationYear, setPublicationYear] = useState('');
     const [publishedIn, setPublishedIn] = useState({});
+    const [abstract, setAbstract] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [url, setUrl] = useState('');
     const [extractedContributionData, setExtractedContributionData] = useState([]);
@@ -95,6 +96,7 @@ const useAddPaper = ({ onCreate = null }) => {
         publishedIn,
         isLoading,
         url,
+        abstract,
         setDoi,
         setTitle,
         setResearchField,
@@ -103,6 +105,7 @@ const useAddPaper = ({ onCreate = null }) => {
         setPublicationYear,
         setPublishedIn,
         setUrl,
+        setAbstract,
         extractedContributionData,
         setExtractedContributionData,
         ExistingPaperModels,

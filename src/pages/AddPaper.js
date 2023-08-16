@@ -41,6 +41,7 @@ const AddPaper = () => {
         publishedIn,
         isLoading,
         url,
+        abstract,
         setDoi,
         setTitle,
         setResearchField,
@@ -49,6 +50,7 @@ const AddPaper = () => {
         setPublicationYear,
         setPublishedIn,
         setUrl,
+        setAbstract,
         setExtractedContributionData,
         ExistingPaperModels,
         handleSave,
@@ -159,6 +161,8 @@ const AddPaper = () => {
                     setPublishedIn={setPublishedIn}
                     url={url}
                     setUrl={setUrl}
+                    abstract={abstract}
+                    setAbstract={setAbstract}
                     isNewPaper
                     isMetadataExpanded={isMetadataExpanded}
                     setIsMetadataExpanded={setIsMetadataExpanded}

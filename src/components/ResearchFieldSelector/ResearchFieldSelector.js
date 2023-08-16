@@ -2,7 +2,8 @@ import { faMinusSquare, faPlusSquare, faSpinner } from '@fortawesome/free-solid-
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import PreviouslySelectedResearchField from 'components/PreviouslySelectedResearchField/PreviouslySelectedResearchField';
+import PreviouslySelectedResearchField from 'components/ResearchFieldSelector/PreviouslySelectedResearchField/PreviouslySelectedResearchField';
+import SmartSuggestionsFields from 'components/ResearchFieldSelector/SmartSuggestionsFields/SmartSuggestionsFields';
 import { CLASSES, ENTITIES, RESOURCES } from 'constants/graphSettings';
 import { cloneDeep, find, set, sortBy } from 'lodash';
 import PropTypes from 'prop-types';
@@ -62,14 +63,16 @@ const ResearchFieldSelector = ({
     researchFieldStats,
     insideModal,
     showPreviouslySelected,
+    title,
+    abstract,
 }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [loadingId, setLoadingId] = useState(null);
 
     const handleFieldSelect = (selected, submit = false) => {
         setIsLoading(true);
-        getParentResearchFields(selected.id).then(async parents => {
-            parents = parents.reverse();
+        getParentResearchFields(selected.id).then(async _parents => {
+            const parents = _parents.reverse();
             let fields = cloneDeep(researchFields);
 
             for (const parent of parents) {
@@ -178,9 +181,9 @@ const ResearchFieldSelector = ({
             return null;
         }
         return subFields.map(field => {
-            const isLoading = loadingId === field.id;
+            const _isLoading = loadingId === field.id;
             let icon;
-            if (isLoading) {
+            if (_isLoading) {
                 icon = faSpinner;
             } else if (field.isExpanded) {
                 icon = faMinusSquare;
@@ -194,7 +197,7 @@ const ResearchFieldSelector = ({
                         <div className="flex-grow-1 d-flex">
                             <IndicatorContainer onClick={e => handleFieldClick(e, field.id, false)}>
                                 {field.hasChildren && (
-                                    <Icon icon={icon} spin={isLoading} className={selectedResearchField !== field.id ? 'text-secondary' : ''} />
+                                    <Icon icon={icon} spin={_isLoading} className={selectedResearchField !== field.id ? 'text-secondary' : ''} />
                                 )}
                             </IndicatorContainer>
                             {find(parents, p => p.id === field.id) ? <b>{field.label}</b> : field.label}
@@ -209,14 +212,14 @@ const ResearchFieldSelector = ({
                             </Tippy>
                         )}
                     </FieldItem>
-                    {field.isExpanded && !isLoading && <SubList>{fieldList(field.id)}</SubList>}
+                    {field.isExpanded && !_isLoading && <SubList>{fieldList(field.id)}</SubList>}
                 </li>
             );
         });
     };
 
     const getParents = (field, parents) => {
-        const f = field ? find(researchFields, f => f.id === field.parent) : null;
+        const f = field ? find(researchFields, _f => _f.id === field.parent) : null;
         if (f) {
             parents.push(f);
             return getParents(f, parents);
@@ -248,27 +251,31 @@ const ResearchFieldSelector = ({
             </div>
 
             <div className="row">
-                {showPreviouslySelected && (
-                    <div className={`${insideModal ? 'col-12' : 'col-md-4 order-md-2'}`}>
+                <div className={`${insideModal ? 'col-12' : 'col-md-4 order-md-2'}`}>
+                    <SmartSuggestionsFields handleFieldSelect={handleFieldSelect} title={title} abstract={abstract} />
+                    {showPreviouslySelected && (
                         <PreviouslySelectedResearchField selectedResearchField={selectedResearchField} handleFieldSelect={handleFieldSelect} />
-                    </div>
-                )}
+                    )}
+                </div>
 
                 <div className={`${insideModal || !showPreviouslySelected ? 'col-12' : 'col-md-8 order-md-1'}`}>
-                    <CollapseButton
-                        size="sm"
-                        color="link"
-                        disabled={!find(researchFields, f => f.isExpanded)}
-                        className="float-end pe-0 text-decoration-none"
-                        onClick={() => {
-                            const fields = cloneDeep(researchFields);
-                            updateResearchField({
-                                researchFields: fields.map(f => set(f, 'isExpanded', false)),
-                            });
-                        }}
-                    >
-                        <Icon icon={faMinusSquare} /> <span className="text-decoration-underline">Collapse all</span>
-                    </CollapseButton>
+                    <div className="d-flex">
+                        <h3 className="fw-bold h6 mt-1 mb-0">Browse taxonomy</h3>
+                        <CollapseButton
+                            size="sm"
+                            color="link"
+                            disabled={!find(researchFields, f => f.isExpanded)}
+                            className="ms-auto text-decoration-none p-0"
+                            onClick={() => {
+                                const fields = cloneDeep(researchFields);
+                                updateResearchField({
+                                    researchFields: fields.map(f => set(f, 'isExpanded', false)),
+                                });
+                            }}
+                        >
+                            <Icon icon={faMinusSquare} /> <span className="text-decoration-underline">Collapse all</span>
+                        </CollapseButton>
+                    </div>
                     {isLoading && (
                         <div>
                             <ContentLoader
@@ -301,11 +308,15 @@ ResearchFieldSelector.propTypes = {
     researchFieldStats: PropTypes.object,
     insideModal: PropTypes.bool.isRequired,
     showPreviouslySelected: PropTypes.bool.isRequired,
+    title: PropTypes.string,
+    abstract: PropTypes.string,
 };
 
 ResearchFieldSelector.defaultProps = {
     insideModal: false,
     showPreviouslySelected: true,
+    title: '',
+    abstract: '',
 };
 
 export default ResearchFieldSelector;

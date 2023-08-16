@@ -36,6 +36,7 @@ const EditPaperModal = ({ paperData, toggle, afterUpdate = null, isPaperLinkVisi
         isLoadingEdit,
         isVerified,
         setIsVerified,
+        abstract,
     } = useEditPaper({ paperData, afterUpdate });
 
     const user = useSelector(state => state.auth.user);
@@ -72,6 +73,7 @@ const EditPaperModal = ({ paperData, toggle, afterUpdate = null, isPaperLinkVisi
                     setPublishedIn={setPublishedIn}
                     url={url}
                     setUrl={setUrl}
+                    abstract={abstract}
                 />
             </ModalBody>
             <ModalFooter className="align-items-center">

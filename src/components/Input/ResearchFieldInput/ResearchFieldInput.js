@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Button, InputGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
 
-const ResearchFieldInput = ({ value = '', onChange, inputId = '', isDisabled = false }) => {
+const ResearchFieldInput = ({ value = '', onChange, inputId = '', isDisabled = false, title = '', abstract = '' }) => {
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
     const [inputValue, setInputValue] = useState(null);
 
@@ -40,7 +40,13 @@ const ResearchFieldInput = ({ value = '', onChange, inputId = '', isDisabled = f
             </Button>
 
             {isOpenResearchFieldModal && (
-                <ResearchFieldSelectorModal isOpen toggle={() => setIsOpenResearchFieldModal(v => !v)} onSelectField={handleSelectField} />
+                <ResearchFieldSelectorModal
+                    isOpen
+                    toggle={() => setIsOpenResearchFieldModal(v => !v)}
+                    onSelectField={handleSelectField}
+                    title={title}
+                    abstract={abstract}
+                />
             )}
         </InputGroup>
     );
@@ -51,6 +57,8 @@ ResearchFieldInput.propTypes = {
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     onChange: PropTypes.func,
     isDisabled: PropTypes.bool,
+    title: PropTypes.string,
+    abstract: PropTypes.string,
 };
 
 export default ResearchFieldInput;

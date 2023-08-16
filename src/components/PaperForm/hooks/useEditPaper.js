@@ -25,6 +25,7 @@ const useEditPaper = ({ paperData, afterUpdate }) => {
     const [researchField, setResearchField] = useState('');
     const [url, setUrl] = useState('');
     const [isVerified, setIsVerified] = useState(false);
+    const abstract = useSelector(state => state.viewPaper.abstract);
 
     const [isLoadingEdit, setIsLoadingEdit] = useState(false);
     const user = useSelector(state => state.auth.user);
@@ -230,6 +231,7 @@ const useEditPaper = ({ paperData, afterUpdate }) => {
         isVerified,
         setIsVerified,
         loadPaperData,
+        abstract,
     };
 };
 
