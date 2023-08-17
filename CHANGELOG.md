@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.117.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.116.0...v0.117.0) - 2023-08-17
+
+### Changes
+
+- feat(ResearchFields): support smart suggestions [`#1159`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1159)
+
+---
 ## [v0.116.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.115.0...v0.116.0) - 2023-08-15
 
 ### Changes
