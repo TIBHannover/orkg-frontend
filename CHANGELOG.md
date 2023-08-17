@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.118.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.117.0...v0.118.0) - 2023-08-17
+
+### Changes
+
+- feat(Template): show the list of instances [`#1172`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1172)
+- fix(ViewPaper): add template to contribution is not synced with backend [`#1173`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1173)
+
+---
 ## [v0.117.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.116.0...v0.117.0) - 2023-08-17
 
 ### Changes
