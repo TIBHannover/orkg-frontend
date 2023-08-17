@@ -1,7 +1,12 @@
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import useCountInstances from 'components/Class/hooks/useCountInstances';
+import ClassInstances from 'components/ClassInstances/ClassInstances';
+import LoadingOverlay from 'components/LoadingOverlay/LoadingOverlay';
 import Tabs from 'components/Tabs/Tabs';
-import PropertyShapesTab from 'components/Templates/Tabs/PropertyShapesTab/PropertyShapesTab';
 import Format from 'components/Templates/Tabs/Format/Format';
 import GeneralSettings from 'components/Templates/Tabs/GeneralSettings/GeneralSettings';
+import PropertyShapesTab from 'components/Templates/Tabs/PropertyShapesTab/PropertyShapesTab';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
@@ -9,7 +14,6 @@ import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Badge, Container } from 'reactstrap';
 import styled from 'styled-components';
-import LoadingOverlay from 'components/LoadingOverlay/LoadingOverlay';
 
 export const StyledContainer = styled(Container)`
     fieldset.scheduler-border {
@@ -24,9 +28,12 @@ export const StyledContainer = styled(Container)`
 function TabsContainer({ id }) {
     const { activeTab } = useParams();
     const countPropertyShapes = useSelector(state => state.templateEditor.propertyShapes.length ?? 0);
+    const targetClassId = useSelector(state => state.templateEditor.class?.id);
     const isSaving = useSelector(state => state.templateEditor.isSaving);
     const isLoading = useSelector(state => state.templateEditor.isLoading);
     const navigate = useNavigate();
+
+    const { countInstances, isLoading: isLoadingCount } = useCountInstances(targetClassId);
 
     const onTabChange = key => {
         navigate(
@@ -89,6 +96,20 @@ function TabsContainer({ id }) {
                             children: (
                                 <div className="px-4 py-3">
                                     <Format />
+                                </div>
+                            ),
+                        },
+                        {
+                            label: (
+                                <>
+                                    Instances{' '}
+                                    {isLoadingCount ? <Icon icon={faSpinner} className="me-2" spin /> : <Badge pill>{countInstances}</Badge>}
+                                </>
+                            ),
+                            key: 'instances',
+                            children: (
+                                <div className="px-4 py-3">
+                                    <ClassInstances classId={targetClassId} title="template" />
                                 </div>
                             ),
                         },

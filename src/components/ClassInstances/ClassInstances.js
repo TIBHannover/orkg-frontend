@@ -22,14 +22,14 @@ const ClassInstances = props => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const loadInstances = useCallback(
-        debounce((page, searchQuery) => {
+        debounce((_page, _searchQuery) => {
             setIsLoading(true);
 
             getResourcesByClass({
                 id: props.classId,
-                page,
+                page: _page,
                 items: pageSize,
-                q: searchQuery,
+                q: _searchQuery,
             }).then(result => {
                 // Resources
                 setInstances(prevResources => [...prevResources, ...result.content]);
@@ -122,7 +122,7 @@ const ClassInstances = props => {
                             ))}
                             {!isLoading && hasNextPage && (
                                 <tr style={{ cursor: 'pointer' }} className="text-center" onClick={!isLoading ? handleLoadMore : undefined}>
-                                    <td colSpan="3">View more class instances</td>
+                                    <td colSpan="3">{`View more ${props.title} instances`}</td>
                                 </tr>
                             )}
                             {!hasNextPage && isLastPageReached && page !== 0 && (
@@ -144,7 +144,7 @@ const ClassInstances = props => {
                             No result found for the term: <i>{searchQuery}</i>.
                         </>
                     ) : (
-                        'This class has no instances yet'
+                        `This ${props.title} has no instances yet`
                     )}
                 </div>
             )}
@@ -154,6 +154,10 @@ const ClassInstances = props => {
 
 ClassInstances.propTypes = {
     classId: PropTypes.string.isRequired,
+    title: PropTypes.string,
 };
 
+ClassInstances.defaultProps = {
+    title: 'class',
+};
 export default ClassInstances;

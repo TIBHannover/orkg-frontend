@@ -2,6 +2,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import ClassInlineItem from 'components/Class/ClassInlineItem/ClassInlineItem';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
+import useCountInstances from 'components/Class/hooks/useCountInstances';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { orderBy } from 'lodash';
@@ -15,7 +16,6 @@ import { Button, Table } from 'reactstrap';
 import { deleteParentByID, getChildrenByID, getParentByID, setParentClassByID } from 'services/backend/classes';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getErrorMessage } from 'utils';
-import useCountInstances from './hooks/useCountInstances';
 
 function InformationTab({ id, label, uri, editMode, callBackToReloadTree, showStatementsBrowser }) {
     const [template, setTemplate] = useState(null);
