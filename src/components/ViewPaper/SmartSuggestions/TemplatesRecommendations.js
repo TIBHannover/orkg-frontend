@@ -35,7 +35,7 @@ function TemplatesRecommendations({ target, title = '', abstract = '' }) {
                                         id={template.id}
                                         label={template.label}
                                         resourceId={selectedResource}
-                                        syncBackend={false}
+                                        syncBackend={true}
                                         isSmart={true}
                                     />
                                 </div>
