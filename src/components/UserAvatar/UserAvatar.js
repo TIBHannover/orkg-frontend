@@ -1,16 +1,15 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
-import styled from 'styled-components';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import ROUTES from 'constants/routes.js';
-import { getContributorInformationById } from 'services/backend/contributors';
-import Gravatar from 'react-gravatar';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import PropTypes from 'prop-types';
-import { MISC } from 'constants/graphSettings';
 import hideOnEsc from 'components/Tippy/hideOnEsc';
+import useContributor from 'components/hooks/useContributor';
+import { MISC } from 'constants/graphSettings';
+import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
+import Gravatar from 'react-gravatar';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 const StyledGravatar = styled(Gravatar)`
     border: 2px solid ${props => props.theme.lightDarker};
@@ -44,22 +43,7 @@ const StyledSpinnerGravatar = styled.div`
 `;
 
 const UserAvatar = ({ userId, size, appendToTooltip, showDisplayName, linkTarget }) => {
-    const [contributor, setContributor] = useState(null);
-    const [isLoadingContributor, setIsLoadingContributor] = useState(true);
-
-    useEffect(() => {
-        if (userId) {
-            setIsLoadingContributor(true);
-            getContributorInformationById(userId)
-                .then(result => {
-                    setContributor(result);
-                    setIsLoadingContributor(false);
-                })
-                .catch(() => {
-                    setIsLoadingContributor(false);
-                });
-        }
-    }, [userId]);
+    const { contributor, isLoadingContributor } = useContributor({ userId });
 
     return (
         <>

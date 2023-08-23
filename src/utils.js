@@ -689,6 +689,7 @@ export function getRelatedResourcesData(resourcesStatements) {
 export const getResourceLink = (classId, id) => {
     const links = {
         [CLASSES.PAPER]: [ROUTES.VIEW_PAPER, 'resourceId'],
+        [CLASSES.TEMPLATE]: [ROUTES.TEMPLATE, 'id'],
         [CLASSES.PROBLEM]: [ROUTES.RESEARCH_PROBLEM_NO_SLUG, 'researchProblemId'],
         [CLASSES.AUTHOR]: [ROUTES.AUTHOR_PAGE, 'authorId'],
         [CLASSES.COMPARISON]: [ROUTES.COMPARISON, 'comparisonId'],

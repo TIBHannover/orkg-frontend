@@ -1,6 +1,13 @@
 import { useRef, useState } from 'react';
 import { FormGroup, Label, FormText, Input } from 'reactstrap';
-import { updateLabel, updatePredicate, updateClass, updateResearchFields, updateResearchProblems } from 'slices/templateEditorSlice';
+import {
+    updateLabel,
+    updateDescription,
+    updatePredicate,
+    updateClass,
+    updateResearchFields,
+    updateResearchProblems,
+} from 'slices/templateEditorSlice';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
@@ -8,6 +15,8 @@ import ROUTES from 'constants/routes.js';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { useSelector, useDispatch } from 'react-redux';
 import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
+
+export const MAX_DESCRIPTION_LENGTH = 350;
 
 const GeneralSettings = () => {
     const inputRef = useRef(null);
@@ -17,10 +26,14 @@ const GeneralSettings = () => {
     const [propertyLabel, setPropertyLabel] = useState('');
 
     const dispatch = useDispatch();
-    const { label, predicate, class: clasS, editMode, researchProblems, researchFields } = useSelector(state => state.templateEditor);
+    const { label, description, predicate, class: clasS, editMode, researchProblems, researchFields } = useSelector(state => state.templateEditor);
 
     const handleChangeLabel = event => {
         dispatch(updateLabel(event.target.value));
+    };
+
+    const handleChangeDescription = event => {
+        dispatch(updateDescription(event.target.value));
     };
 
     const handlePropertySelect = async (selected, { action }) => {
@@ -101,6 +114,21 @@ const GeneralSettings = () => {
                     inputId="target-class"
                 />
                 {editMode && <FormText>Specify the class of this template. If not specified, a class is generated automatically.</FormText>}
+            </FormGroup>
+            <FormGroup className="mb-4">
+                <Label for="template-description">Description</Label>
+                <Input
+                    type="textarea"
+                    value={description}
+                    onChange={handleChangeDescription}
+                    disabled={!editMode}
+                    id="template-description"
+                    placeholder="Give a brief description of the template. E.g. what are the intended use cases?"
+                    maxlength={MAX_DESCRIPTION_LENGTH}
+                />
+                <div className="text-muted text-end">
+                    {description?.length}/{MAX_DESCRIPTION_LENGTH}
+                </div>
             </FormGroup>
             <>
                 <fieldset className="scheduler-border p-3">

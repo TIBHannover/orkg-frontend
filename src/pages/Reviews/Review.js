@@ -11,39 +11,41 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { toggleHistoryModal as toggleHistoryModalAction, setIsEditing } from 'slices/reviewSlice';
+import LoadingArticle from 'components/ArticleBuilder/LoadingArticle';
+import LoadingOverlay from 'components/ArticleBuilder/LoadingOverlay';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
+import Confirm from 'components/Confirmation/Confirmation';
+import ExportCitation from 'components/ExportCitation/ExportCitation';
+import GraphViewModal from 'components/GraphView/GraphViewModal';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import AcknowledgementsSection from 'components/Review/AcknowledgementsSection';
 import AddSection from 'components/Review/AddSection';
 import AuthorsSection from 'components/Review/AuthorsSection';
 import HistoryModal from 'components/Review/HistoryModal';
-import useLoad from 'components/Review/hooks/useLoad';
-import LoadingArticle from 'components/ArticleBuilder/LoadingArticle';
 import PublishModal from 'components/Review/PublishModal';
+import ReferencesModal from 'components/Review/References/ReferencesModal';
+import ReferencesSection from 'components/Review/References/ReferencesSection';
 import Sections from 'components/Review/Sections';
+import ShouldPublishModal from 'components/Review/ShouldPublishModal';
 import Title from 'components/Review/Title';
 import ViewArticle from 'components/Review/ViewArticle';
+import useLoad from 'components/Review/hooks/useLoad';
+import TitleBar from 'components/TitleBar/TitleBar';
 import { SubTitle } from 'components/styled';
+import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
-import NotFound from 'pages/NotFound';
-import { useParams, useNavigate, NavLink } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Button, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
-import Confirm from 'components/Confirmation/Confirmation';
-import { createGlobalStyle } from 'styled-components';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import ReferencesModal from 'components/Review/References/ReferencesModal';
-import ReferencesSection from 'components/Review/References/ReferencesSection';
-import ShouldPublishModal from 'components/Review/ShouldPublishModal';
-import { usePrevious } from 'react-use';
-import LoadingOverlay from 'components/ArticleBuilder/LoadingOverlay';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { Helmet } from 'react-helmet';
 import InternalServerError from 'pages/InternalServerError';
-import GraphViewModal from 'components/GraphView/GraphViewModal';
+import NotFound from 'pages/NotFound';
+import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { usePrevious } from 'react-use';
+import { Button, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
+import { setIsEditing, toggleHistoryModal as toggleHistoryModalAction } from 'slices/reviewSlice';
+import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
     // ensure printing only prints the contents and no other elements
@@ -75,6 +77,7 @@ const Review = () => {
     const [isOpenShouldPublishModal, setIsOpenShouldPublishModal] = useState(false);
     const [isOpenReferencesModal, setIsOpenReferencesModal] = useState(false);
     const [isOpenGraphViewModal, setIsOpenGraphViewModal] = useState(false);
+    const [showExportCitation, setShowExportCitation] = useState(false);
 
     const isLoadingInline = useSelector(state => state.review.isLoading);
     const isLoadingSortSection = useSelector(state => state.review.isLoadingSortSection);
@@ -91,8 +94,8 @@ const Review = () => {
     const navigate = useNavigate();
     const { load, isLoading, isNotFound, hasFailed, getVersions } = useLoad();
     const { id } = useParams();
-    const version = versions.find(version => version.id === id);
-    const versionNumber = versions.length ? versions.length - versions.findIndex(version => version.id === id) : null;
+    const version = versions.find(_version => _version.id === id);
+    const versionNumber = versions.length ? versions.length - versions.findIndex(_version => _version.id === id) : null;
     const publicationDate = version ? moment(version.date).format('DD MMMM YYYY') : null;
 
     useEffect(() => {
@@ -277,6 +280,7 @@ const Review = () => {
                                 <Icon icon={faEllipsisV} />
                             </DropdownToggle>
                             <DropdownMenu end>
+                                <DropdownItem onClick={() => setShowExportCitation(v => !v)}>Export citation</DropdownItem>
                                 <DropdownItem onClick={() => setIsOpenGraphViewModal(true)}>View graph</DropdownItem>
                                 <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                                     View resource
@@ -323,6 +327,16 @@ const Review = () => {
                 <ShouldPublishModal toggle={() => setIsOpenShouldPublishModal(v => !v)} show openPublishModal={() => setIsOpenPublishModal(true)} />
             )}
             {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal(v => !v)} resourceId={id} />}
+            {showExportCitation && (
+                <ExportCitation
+                    id={id}
+                    title={paper?.title}
+                    authors={authors.map(author => author?.label)}
+                    classId={CLASSES.SMART_REVIEW_PUBLISHED}
+                    isOpen={showExportCitation}
+                    toggle={() => setShowExportCitation(v => !v)}
+                />
+            )}
         </div>
     );
 };

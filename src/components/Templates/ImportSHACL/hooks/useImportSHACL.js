@@ -41,6 +41,8 @@ const useImportSHACL = () => {
                     targetClassHasAlreadyTemplate = true;
                 }
             }
+            // Description
+            const description = extractConcept(parsed.graph, 'object', nodesShape, orkgp(PREDICATES.DESCRIPTION), null, true);
             // Formatted label
             const formattedLabel = extractConcept(parsed.graph, 'object', nodesShape, orkgp(PREDICATES.TEMPLATE_LABEL_FORMAT), null, true);
             // Template Predicate
@@ -95,6 +97,7 @@ const useImportSHACL = () => {
             const propertyShapesObj = await Promise.all(propertyShapes);
             result.push({
                 label: templateLabel?.value ?? extractLabelFromRdfURI(nodesShape.value),
+                description: description?.value,
                 formattedLabel: formattedLabel?.value,
                 templatePredicate,
                 researchFields,
@@ -130,6 +133,14 @@ const useImportSHACL = () => {
                         name: nodesShape.label,
                         classes: [CLASSES.NODE_SHAPE],
                         values: {
+                            ...(nodesShape.description && {
+                                [PREDICATES.DESCRIPTION]: [
+                                    {
+                                        text: nodesShape.description,
+                                        datatype: 'xsd:string',
+                                    },
+                                ],
+                            }),
                             [PREDICATES.SHACL_CLOSED]: [
                                 {
                                     text: nodesShape.closed,
