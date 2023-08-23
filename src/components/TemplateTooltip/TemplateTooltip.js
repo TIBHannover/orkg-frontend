@@ -76,6 +76,12 @@ const TemplateTooltip = props => {
                     </HeaderStyled>
                     {!isLoading ? (
                         <>
+                            {template.description && (
+                                <div>
+                                    <b>Description:</b>
+                                    <p className="small">{template.description}</p>
+                                </div>
+                            )}
                             {template.predicate && template.predicate?.id !== PREDICATES.HAS_CONTRIBUTION && (
                                 <div>
                                     <b>Template property:</b>

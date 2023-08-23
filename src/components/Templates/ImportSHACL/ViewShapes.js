@@ -69,6 +69,12 @@ const ViewShapes = ({ data }) => (
                                     )}
                                 </td>
                             </tr>
+                            {nodesShape.description && (
+                                <tr>
+                                    <th scope="row">Description</th>
+                                    <td>{nodesShape.description}</td>
+                                </tr>
+                            )}
                             {nodesShape.formattedLabel && (
                                 <tr>
                                     <th scope="row">Formatted label</th>

@@ -8,11 +8,18 @@ import { createClass, getClasses } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
 import { createObject } from 'services/backend/misc';
 import { updateResource } from 'services/backend/resources';
-import { createResourceStatement, deleteStatementsByIds, getTemplateById, getTemplatesByClass } from 'services/backend/statements';
+import {
+    createLiteralStatement,
+    createResourceStatement,
+    deleteStatementsByIds,
+    getTemplateById,
+    getTemplatesByClass,
+} from 'services/backend/statements';
 import { LOCATION_CHANGE } from 'utils';
 
 const initialState = {
     label: '',
+    description: '',
     created_by: null,
     created_at: null,
     editMode: false,
@@ -40,6 +47,9 @@ export const templateEditorSlice = createSlice({
     reducers: {
         updateLabel: (state, { payload }) => {
             state.label = payload;
+        },
+        updateDescription: (state, { payload }) => {
+            state.description = payload;
         },
         updatePredicate: (state, { payload }) => {
             state.predicate = payload;
@@ -77,6 +87,7 @@ export const templateEditorSlice = createSlice({
             created_by: payload.created_by,
             created_at: payload.created_at,
             label: payload.label,
+            description: payload.description,
             labelFormat: payload.labelFormat,
             hasLabelFormat: payload.hasLabelFormat,
             isClosed: payload.isClosed,
@@ -126,6 +137,7 @@ export const templateEditorSlice = createSlice({
 
 export const {
     updateLabel,
+    updateDescription,
     updatePredicate,
     updateIsClosed,
     updateHasLabelFormat,
@@ -220,12 +232,18 @@ export const saveTemplate = () => async (dispatch, getState) => {
             }
         }
 
-        // We use reverse() to create statements to keep the order of elements inside the input field
+        // save template description
+        if (data.description) {
+            const descriptionLiteral = await createLiteral(data.description);
+            promises.push(createLiteralStatement(templateResource, PREDICATES.DESCRIPTION, descriptionLiteral.id));
+        }
+
         // save template predicate
         if (data.predicate && data.predicate.id) {
             promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_PREDICATE, data.predicate.id));
         }
 
+        // We use reverse() to create statements to keep the order of elements inside the input field
         // save template research fields
         if (data.researchFields && data.researchFields.length > 0) {
             for (const researchField of [...data.researchFields].reverse()) {

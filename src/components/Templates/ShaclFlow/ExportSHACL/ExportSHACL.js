@@ -51,6 +51,9 @@ function ExportSHACL() {
                     new rdf.Triple(orkgr(template.id), orkgp(PREDICATES.TEMPLATE_LABEL_FORMAT), new rdf.Literal(template.labelFormat.toString())),
                 );
             }
+            if (template.description) {
+                graph.add(new rdf.Triple(orkgr(template.id), orkgp(PREDICATES.DESCRIPTION), new rdf.Literal(template.description.toString())));
+            }
             if (template.predicate) {
                 graph.add(new rdf.Triple(orkgr(template.id), orkgp(PREDICATES.TEMPLATE_OF_PREDICATE), orkgp(template.predicate.id)));
                 graph.add(new rdf.Triple(orkgp(template.predicate.id), rdf.rdfsns('label'), new rdf.Literal(template.predicate.label)));

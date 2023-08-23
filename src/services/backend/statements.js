@@ -227,6 +227,8 @@ export const getTemplateById = async templateId => {
         templateId,
     );
 
+    const descriptionLabel = filterObjectOfStatementsByPredicateAndClass(response.statements, PREDICATES.DESCRIPTION, true, null, templateId);
+
     const templateIsClosed = filterObjectOfStatementsByPredicateAndClass(response.statements, PREDICATES.SHACL_CLOSED, true, null, templateId);
     const templatePropertyShapes = filterObjectOfStatementsByPredicateAndClass(
         response.statements,
@@ -266,6 +268,7 @@ export const getTemplateById = async templateId => {
         statements: [...statements.map(s => s.id), ...flatten(propertyShapesStatements)],
         predicate: templatePredicate,
         labelFormat: templateFormatLabel ? templateFormatLabel.label : '',
+        description: descriptionLabel ? descriptionLabel.label : '',
         hasLabelFormat: !!templateFormatLabel,
         isClosed: templateIsClosed?.label === 'true' || templateIsClosed?.label === 'True',
         propertyShapes: propertyShapes?.length > 0 ? propertyShapes.sort((c1, c2) => sortMethod(c1.order, c2.order)) : [],
