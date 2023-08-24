@@ -91,9 +91,7 @@ const ClassInstances = props => {
                     />
                 </FormGroup>
             </Form>
-            <p className="mt-2">
-                Total number of instances: <b>{totalElements}</b>
-            </p>
+            <p className="mt-2">Total number of instances: {!isLoading ? <b>{totalElements}</b> : 'Loading...'}</p>
             {instances.length > 0 && (
                 <div className="mt-3">
                     <Table size="sm" bordered className="text-break">
