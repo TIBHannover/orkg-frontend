@@ -1,6 +1,6 @@
 # ORKG Widget Documentation
 
-bundle size: **8.57 kB**
+bundle size: **9.08 kB**
 
 ### How to use:
 

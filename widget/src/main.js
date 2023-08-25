@@ -1,6 +1,28 @@
-import { show } from './views/paper';
+import { show } from 'src/views/paper';
 
 const supportedAPI = ['paper']; // enlist all methods supported by API (e.g. `orkgw('event', 'user-login');`)
+
+/**
+    Method that handles all API calls
+*/
+function apiHandler(api, params) {
+    if (!api) {
+        throw Error('API method required');
+    }
+    const _api = api.toLowerCase();
+
+    if (supportedAPI.indexOf(_api) === -1) {
+        throw Error(`Method ${_api} is not supported`);
+    }
+
+    switch (_api) {
+        case 'paper':
+            show(params);
+            break;
+        default:
+            console.error(`No handler defined for ${_api}`);
+    }
+}
 
 /**
     The main entry of the application
@@ -11,7 +33,7 @@ function app(window) {
     let globalObject = window[window['ORKG-Widget']];
     const queue = globalObject.q;
     if (queue) {
-        for (let i = 0; i < queue.length; i++) {
+        for (let i = 0; i < queue.length; i += 1) {
             apiHandler(queue[i][0], queue[i][1]);
         }
     }
@@ -19,28 +41,6 @@ function app(window) {
     // override temporary (until the app loaded) handler
     // for widget's API calls
     globalObject = apiHandler;
-}
-
-/**
-    Method that handles all API calls
-*/
-function apiHandler(api, params) {
-    if (!api) {
-        throw Error('API method required');
-    }
-    api = api.toLowerCase();
-
-    if (supportedAPI.indexOf(api) === -1) {
-        throw Error(`Method ${api} is not supported`);
-    }
-
-    switch (api) {
-        case 'paper':
-            show(params);
-            break;
-        default:
-            console.warn(`No handler defined for ${api}`);
-    }
 }
 
 app(window);
