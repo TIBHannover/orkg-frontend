@@ -21,7 +21,7 @@ function TabsContainer({ id, classes, editMode }) {
             `${reverse(ROUTES.RESOURCE_TABS, {
                 id,
                 activeTab: key,
-            })}?noRedirect`,
+            })}?noRedirect&isEditMode=${editMode}`,
         );
     };
 
@@ -47,6 +47,7 @@ function TabsContainer({ id, classes, editMode }) {
                                     newStore={true}
                                     propertiesAsLinks={true}
                                     resourcesAsLinks={true}
+                                    keyToKeepStateOnLocationChange={id}
                                 />
                             </div>
                         ),

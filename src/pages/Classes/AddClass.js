@@ -52,7 +52,7 @@ const AddClass = () => {
                 }
                 toast.success('Class created successfully');
                 setIsLoading(false);
-                navigate(reverse(ROUTES.CLASS, { id: newClass.id }));
+                navigate(`${reverse(ROUTES.CLASS, { id: newClass.id })}?isEditMode=true`);
             } catch (error) {
                 console.error(error);
                 setIsLoading(false);

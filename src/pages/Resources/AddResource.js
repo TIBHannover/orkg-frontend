@@ -63,7 +63,7 @@ const AddResource = () => {
                     const newResource = await createResource(label.trim(), classes ? classes.map(c => c.id) : []);
                     toast.success('Resource created successfully');
                     setIsLoading(false);
-                    navigate(`${reverse(ROUTES.RESOURCE, { id: newResource.id })}?noRedirect`);
+                    navigate(`${reverse(ROUTES.RESOURCE, { id: newResource.id })}?noRedirect&isEditMode=true`);
                 } catch (error) {
                     console.error(error);
                     setIsLoading(false);
@@ -80,7 +80,7 @@ const AddResource = () => {
                         await createLiteralStatement(newResource.id, PREDICATES.HAS_DOI, responseJsonDoi.id);
                         toast.success('Resource created successfully');
                         setIsLoading(false);
-                        navigate(`${reverse(ROUTES.RESOURCE, { id: newResource.id })}?noRedirect`);
+                        navigate(`${reverse(ROUTES.RESOURCE, { id: newResource.id })}?noRedirect&isEditMode=true`);
                     } catch (error) {
                         console.error(error);
                         toast.error(`Error finding DOI : ${error.message}`);
