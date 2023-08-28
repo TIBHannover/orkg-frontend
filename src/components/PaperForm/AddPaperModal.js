@@ -1,4 +1,5 @@
 import ModalWithLoading from 'components/ModalWithLoading/ModalWithLoading';
+import AddPaperAdditionalButtons from 'components/PaperForm/AddPaperAdditionalButtons';
 import PaperForm from 'components/PaperForm/PaperForm';
 import useAddPaper from 'components/PaperForm/hooks/useAddPaper';
 import REGEX from 'constants/regex';
@@ -8,6 +9,7 @@ import { Button, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 const AddPaperModal = ({ isOpen, toggle, onCreatePaper, initialValue = '' }) => {
     const [isLoadingParsing, setIsLoadingParsing] = useState(false);
+    const [isMetadataExpanded, setIsMetadataExpanded] = useState(false);
 
     const onCreate = createdIds => {
         onCreatePaper(createdIds);
@@ -34,6 +36,7 @@ const AddPaperModal = ({ isOpen, toggle, onCreatePaper, initialValue = '' }) => 
         ExistingPaperModels,
         handleSave,
         savePaper,
+        setExtractedContributionData,
     } = useAddPaper({ onCreate });
 
     useEffect(() => {
@@ -52,7 +55,32 @@ const AddPaperModal = ({ isOpen, toggle, onCreatePaper, initialValue = '' }) => 
 
     return (
         <ModalWithLoading isLoading={isLoading} isOpen={isOpen} toggle={toggle} size="lg">
-            <ModalHeader toggle={toggle}>Create new paper</ModalHeader>
+            <ModalHeader toggle={toggle} tag="div" cssModule={{ 'modal-title': 'w-100' }}>
+                <div className="d-flex align-items-center">
+                    <h1 className="h5 m-0">Create new paper</h1>
+                    <div className="d-flex ms-3 align-items-center ms-auto me-2">
+                        <AddPaperAdditionalButtons
+                            doi={doi}
+                            title={title}
+                            authors={authors}
+                            publicationMonth={publicationMonth}
+                            publicationYear={publicationYear}
+                            publishedIn={publishedIn}
+                            url={url}
+                            setDoi={setDoi}
+                            setTitle={setTitle}
+                            setResearchField={setResearchField}
+                            setAuthors={setAuthors}
+                            setPublicationMonth={setPublicationMonth}
+                            setPublicationYear={setPublicationYear}
+                            setPublishedIn={setPublishedIn}
+                            setUrl={setUrl}
+                            setIsMetadataExpanded={setIsMetadataExpanded}
+                            setExtractedContributionData={setExtractedContributionData}
+                        />
+                    </div>
+                </div>
+            </ModalHeader>
             <ModalBody>
                 <PaperForm
                     isLoadingParsing={isLoadingParsing}
@@ -73,6 +101,9 @@ const AddPaperModal = ({ isOpen, toggle, onCreatePaper, initialValue = '' }) => 
                     setPublishedIn={setPublishedIn}
                     url={url}
                     setUrl={setUrl}
+                    isNewPaper
+                    isMetadataExpanded={isMetadataExpanded}
+                    setIsMetadataExpanded={setIsMetadataExpanded}
                 />
             </ModalBody>
             <ModalFooter className="d-flex">

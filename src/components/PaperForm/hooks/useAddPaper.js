@@ -72,7 +72,7 @@ const useAddPaper = ({ onCreate = null }) => {
             toast.error('Please enter the title of your paper or click on "Lookup" if you entered the DOI');
             return;
         }
-        if (!researchField.id) {
+        if (!researchField?.id) {
             toast.error('Please select a research field');
             return;
         }
