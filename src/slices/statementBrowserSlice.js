@@ -433,6 +433,10 @@ export const statementBrowserSlice = createSlice({
             // prevent reset location that is triggered by the edit mode query param change
             if (
                 state.keyToKeepStateOnLocationChange === match(ROUTES.CONTENT_TYPE)(payload.location.pathname)?.params?.id ||
+                state.keyToKeepStateOnLocationChange === match(ROUTES.RESOURCE)(payload.location.pathname)?.params?.id ||
+                state.keyToKeepStateOnLocationChange === match(ROUTES.RESOURCE_TABS)(payload.location.pathname)?.params?.id ||
+                state.keyToKeepStateOnLocationChange === match(ROUTES.CLASS)(payload.location.pathname)?.params?.id ||
+                state.keyToKeepStateOnLocationChange === match(ROUTES.CLASS_TABS)(payload.location.pathname)?.params?.id ||
                 state.keyToKeepStateOnLocationChange === match(ROUTES.VIEW_PAPER)(payload.location.pathname)?.params?.resourceId ||
                 state.keyToKeepStateOnLocationChange === match(ROUTES.VIEW_PAPER_CONTRIBUTION)(payload.location.pathname)?.params?.contributionId
             ) {

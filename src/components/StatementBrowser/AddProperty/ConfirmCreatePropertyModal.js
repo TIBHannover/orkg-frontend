@@ -38,7 +38,7 @@ const ConfirmCreatePropertyModal = ({ toggle, onCreate, shouldPerformCreate = fa
                         <Input
                             onChange={e => setDescription(e.target.value)}
                             value={description}
-                            type="text"
+                            type="textarea"
                             id="property-description"
                             placeholder="E.g. date of acceptance of the resource"
                         />

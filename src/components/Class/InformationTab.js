@@ -218,6 +218,7 @@ function InformationTab({ id, label, uri, editMode, callBackToReloadTree, showSt
                     newStore={true}
                     propertiesAsLinks={true}
                     resourcesAsLinks={true}
+                    keyToKeepStateOnLocationChange={id}
                 />
             )}
         </div>

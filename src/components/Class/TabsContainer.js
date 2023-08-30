@@ -20,7 +20,7 @@ function TabsContainer({ id, label, uri, editMode }) {
             `${reverse(ROUTES.CLASS_TABS, {
                 id,
                 activeTab: key,
-            })}?noRedirect`,
+            })}?noRedirect&isEditMode=${editMode}`,
         );
     };
 

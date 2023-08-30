@@ -1,13 +1,14 @@
 import { faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import EditableHeader from 'components/EditableHeader';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import useDeleteProperty from 'components/Property/hooks/useDeleteProperty';
+import EditableHeader from 'components/EditableHeader';
 import PropertyStatements from 'components/Property/PropertyStatements/PropertyStatements';
+import useDeleteProperty from 'components/Property/hooks/useDeleteProperty';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ItemMetadata from 'components/Search/ItemMetadata';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import TitleBar from 'components/TitleBar/TitleBar';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { ENTITIES } from 'constants/graphSettings';
 import InternalServerError from 'pages/InternalServerError';
 import NotFound from 'pages/NotFound';
@@ -22,7 +23,7 @@ function Property() {
     const [error, setError] = useState(null);
     const [property, setProperty] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-    const [editMode, setEditMode] = useState(false);
+    const { isEditMode, toggleIsEditMode } = useIsEditMode();
     const params = useParams();
     const propertyId = params.id;
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
@@ -59,18 +60,18 @@ function Property() {
                 <>
                     <TitleBar
                         buttonGroup={
-                            !editMode ? (
+                            !isEditMode ? (
                                 <RequireAuthentication
                                     component={Button}
                                     className="float-end flex-shrink-0"
                                     color="secondary"
                                     size="sm"
-                                    onClick={() => setEditMode(v => !v)}
+                                    onClick={toggleIsEditMode}
                                 >
                                     <Icon icon={faPen} /> Edit
                                 </RequireAuthentication>
                             ) : (
-                                <Button className="float-end flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
+                                <Button className="float-end flex-shrink-0" color="secondary-darker" size="sm" onClick={toggleIsEditMode}>
                                     <Icon icon={faTimes} /> Stop editing
                                 </Button>
                             )
@@ -79,9 +80,9 @@ function Property() {
                         Property view
                     </TitleBar>
                     <Container className="p-0 clearfix">
-                        <EditModeHeader isVisible={editMode} />
-                        <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
-                            {!editMode ? (
+                        <EditModeHeader isVisible={isEditMode} />
+                        <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${isEditMode ? 'rounded-bottom' : 'rounded'}`}>
+                            {!isEditMode ? (
                                 <h3 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                     {property?.label || (
                                         <i>
@@ -98,7 +99,7 @@ function Property() {
                                         entityType={ENTITIES.PREDICATE}
                                         curatorsOnly={true}
                                     />
-                                    {editMode && isCurationAllowed && (
+                                    {isEditMode && isCurationAllowed && (
                                         <Button
                                             color="danger"
                                             size="sm"
@@ -117,8 +118,8 @@ function Property() {
                             <div className="clearfix">
                                 <StatementBrowser
                                     rootNodeType={ENTITIES.PREDICATE}
-                                    enableEdit={editMode}
-                                    syncBackend={editMode}
+                                    enableEdit={isEditMode}
+                                    syncBackend={isEditMode}
                                     openExistingResourcesInDialog={false}
                                     initialSubjectId={propertyId}
                                     initialSubjectLabel={property?.label}
