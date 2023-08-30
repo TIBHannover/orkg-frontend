@@ -1,16 +1,16 @@
+import InformationTab from 'components/Class/InformationTab';
+import TreeView from 'components/Class/TreeView';
 import ClassInstances from 'components/ClassInstances/ClassInstances';
-import { TabHeaderStyle } from 'components/Tabs/styled';
 import Tabs from 'components/Tabs/Tabs';
+import { TabHeaderStyle } from 'components/Tabs/styled';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Col, Container, Row } from 'reactstrap';
-import InformationTab from './InformationTab';
-import TreeView from './TreeView';
 
-function TabsContainer({ id, label, uri, editMode }) {
+function TabsContainer({ id, label, uri, editMode, setLabel }) {
     const { activeTab } = useParams();
     const [reloadTree, setReloadTree] = useState(false);
     const navigate = useNavigate();
@@ -49,6 +49,7 @@ function TabsContainer({ id, label, uri, editMode }) {
                                         label={label}
                                         editMode={editMode}
                                         callBackToReloadTree={() => setReloadTree(v => !v)}
+                                        setLabel={setLabel}
                                     />
                                 ),
                             },
@@ -70,6 +71,7 @@ TabsContainer.propTypes = {
     label: PropTypes.string,
     uri: PropTypes.string,
     editMode: PropTypes.bool.isRequired,
+    setLabel: PropTypes.func.isRequired,
 };
 
 export default TabsContainer;

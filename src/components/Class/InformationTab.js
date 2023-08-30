@@ -1,8 +1,9 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import ClassInlineItem from 'components/Class/ClassInlineItem/ClassInlineItem';
+import useCountInstances from 'components/Class/hooks/useCountInstances';
+import useEditClassLabel from 'components/Class/hooks/useEditClassLabel';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
-import useCountInstances from 'components/Class/hooks/useCountInstances';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { orderBy } from 'lodash';
@@ -12,16 +13,24 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Button, Table } from 'reactstrap';
+import { Button, Input, InputGroup, Table } from 'reactstrap';
 import { deleteParentByID, getChildrenByID, getParentByID, setParentClassByID } from 'services/backend/classes';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getErrorMessage } from 'utils';
 
-function InformationTab({ id, label, uri, editMode, callBackToReloadTree, showStatementsBrowser }) {
+function InformationTab({ id, label, uri, editMode, callBackToReloadTree, showStatementsBrowser, setLabel }) {
     const [template, setTemplate] = useState(null);
     const [parent, setParent] = useState(null);
     const [children, setChildren] = useState([]);
     const { countInstances, isLoading: isLoadingCount } = useCountInstances(id);
+    const {
+        draftLabel,
+        isSaving,
+        isEditing: isEditingLabel,
+        setIsEditing: setIsEditingLabel,
+        setDraftLabel,
+        handleSubmitClick,
+    } = useEditClassLabel({ id, label, setLabel });
     const [showMoreChildren, setShowMoreChildren] = useState(false);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
@@ -79,10 +88,34 @@ function InformationTab({ id, label, uri, editMode, callBackToReloadTree, showSt
                     <tr>
                         <th scope="row">Label</th>
                         <td>
-                            {label || (
-                                <i>
-                                    <small>No label</small>
-                                </i>
+                            {!isEditingLabel && (
+                                <div className="d-inline-block py-1">
+                                    {label || (
+                                        <i>
+                                            <small>No label</small>
+                                        </i>
+                                    )}
+                                </div>
+                            )}
+                            {editMode && !isEditingLabel && (countInstances === 0 || isCurationAllowed) && (
+                                <>
+                                    <span className="ms-2">
+                                        <StatementActionButton title="Edit label" icon={faPen} action={() => setIsEditingLabel(v => !v)} />
+                                    </span>
+                                </>
+                            )}
+                            {editMode && isEditingLabel && (
+                                <>
+                                    <InputGroup>
+                                        <Input bsSize="sm" type="text" value={draftLabel} onChange={e => setDraftLabel(e.target.value)} />
+                                        <Button disabled={isSaving} size="sm" className="px-3" outline onClick={() => setIsEditingLabel(false)}>
+                                            Cancel
+                                        </Button>
+                                        <Button disabled={isSaving} size="sm" className="px-3" outline onClick={handleSubmitClick}>
+                                            Done
+                                        </Button>
+                                    </InputGroup>
+                                </>
                             )}
                         </td>
                     </tr>
@@ -232,6 +265,7 @@ InformationTab.propTypes = {
     editMode: PropTypes.bool.isRequired,
     callBackToReloadTree: PropTypes.func,
     showStatementsBrowser: PropTypes.bool,
+    setLabel: PropTypes.func,
 };
 
 InformationTab.defaultProps = {
