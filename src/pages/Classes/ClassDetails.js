@@ -96,7 +96,7 @@ function ClassDetails() {
                             </i>
                         )}
                     </TitleBar>
-                    <TabsContainer id={id} editMode={isEditMode} uri={uri} label={label} key={keyInstances} />
+                    <TabsContainer id={id} editMode={isEditMode} uri={uri} label={label} key={keyInstances} setLabel={setLabel} />
                     <ImportCSVInstances
                         classId={id}
                         showDialog={modalImportIsOpen}

@@ -1,5 +1,5 @@
 import { url } from 'constants/misc';
-import { submitPostRequest, submitGetRequest, submitPatchRequest, submitDeleteRequest } from 'network';
+import { submitPostRequest, submitGetRequest, submitPatchRequest, submitDeleteRequest, submitPutRequest } from 'network';
 import qs from 'qs';
 
 export const classesUrl = `${url}classes/`;
@@ -8,6 +8,8 @@ export const getClassById = id => submitGetRequest(`${classesUrl}${encodeURIComp
 
 export const createClass = (label, uri = null, id = null) =>
     submitPostRequest(classesUrl, { 'Content-Type': 'application/json' }, { label, uri, id });
+
+export const updateClass = (id, label) => submitPutRequest(`${classesUrl}${id}`, { 'Content-Type': 'application/json' }, { label });
 
 export const getClasses = ({
     page = 0,
