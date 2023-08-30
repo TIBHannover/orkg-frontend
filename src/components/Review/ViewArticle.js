@@ -1,27 +1,29 @@
+import env from '@beam-australia/react-env';
+import { faLink } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { toggleHistoryModal as toggleHistoryModalAction } from 'slices/reviewSlice';
+import { SectionStyled } from 'components/ArticleBuilder/styled';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
+import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import Acknowledgements from 'components/Review/Acknowledgements';
 import SectionDataTable from 'components/Review/DataTable/SectionOntology';
 import MarkdownRenderer from 'components/Review/MarkdownRenderer';
 import Outline from 'components/Review/Outline';
 import ListReferences from 'components/Review/References/ListReferences';
+import SectionComparison from 'components/Review/SectionComparison';
 import SectionVisualization from 'components/Review/SectionVisualization';
-import { SectionStyled } from 'components/ArticleBuilder/styled';
 import ViewArticleStatementBrowser from 'components/Review/ViewArticleStatementBrowser';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
-import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
-import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
-import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { Alert, Button, Container } from 'reactstrap';
-import SectionComparison from 'components/Review/SectionComparison';
-import env from '@beam-australia/react-env';
+import { toggleHistoryModal as toggleHistoryModalAction } from 'slices/reviewSlice';
 
 const ViewArticle = () => {
     const { id } = useParams();
@@ -105,7 +107,20 @@ const ViewArticle = () => {
                                                 typeof="doco:SectionTitle"
                                                 property="c4o:hasContent"
                                             >
-                                                {section.title.label}
+                                                {section.title.label}{' '}
+                                                {section.type.id === CLASSES.COMPARISON_SECTION && (
+                                                    <Tippy content="Go to comparison page">
+                                                        <Link
+                                                            target="_blank"
+                                                            className="ms-2"
+                                                            to={reverse(ROUTES.COMPARISON, {
+                                                                comparisonId: section.contentLink.objectId,
+                                                            })}
+                                                        >
+                                                            <Icon icon={faLink} size="xs" />
+                                                        </Link>
+                                                    </Tippy>
+                                                )}
                                             </h2>
                                             {section.type.id === CLASSES.ONTOLOGY_SECTION && <SectionDataTable key={section.id} section={section} />}
                                             {section?.contentLink?.objectId && (
