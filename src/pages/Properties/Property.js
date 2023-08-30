@@ -121,7 +121,6 @@ function Property() {
                                     syncBackend={editMode}
                                     openExistingResourcesInDialog={false}
                                     initialSubjectId={propertyId}
-                                    initialSubjectLabel={property?.label}
                                     newStore={true}
                                     propertiesAsLinks={true}
                                     resourcesAsLinks={true}
