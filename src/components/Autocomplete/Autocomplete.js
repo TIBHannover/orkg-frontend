@@ -600,9 +600,9 @@ function Autocomplete(props) {
      *
      */
     const handleCopyClick = () => {
-        if (navigator.clipboard && props.value && props.value.label) {
-            navigator.clipboard.writeText(props.value.label);
-            toast.success('Value copied');
+        if (navigator.clipboard && props.value && props.value.id) {
+            navigator.clipboard.writeText(props.value.id);
+            toast.success('ID copied to clipboard');
         }
     };
 
@@ -795,8 +795,8 @@ function Autocomplete(props) {
                     )}
                     {props.copyValueButton && props.value && props.value.id && (
                         <>
-                            <Button disabled={!props.value || !props.value.label} onClick={handleCopyClick} outline>
-                                <Tippy content="Copy the label to clipboard">
+                            <Button disabled={!props.value || !props.value.id} onClick={handleCopyClick} outline>
+                                <Tippy content="Copy the id to clipboard">
                                     <span>
                                         <Icon icon={faClipboard} size="sm" />
                                     </span>
