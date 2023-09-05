@@ -1,13 +1,6 @@
 import { render, screen } from 'testUtils';
 import App from './App';
 
-jest.mock(
-    'react-responsive-tabs',
-    () =>
-        ({ children }) =>
-            null,
-);
-
 jest.mock('d3-hierarchy', () => ({
     stratify: jest.fn().mockImplementation(() => [jest.fn(), jest.fn(), jest.fn()]),
     tree: jest.fn().mockImplementation(() => {

@@ -88,6 +88,10 @@ const routes = [
         element: Home,
     },
     {
+        path: ROUTES.HOME_TABS,
+        element: Home,
+    },
+    {
         path: ROUTES.RESOURCES,
         element: Resources,
     },

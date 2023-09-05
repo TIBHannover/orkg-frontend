@@ -1,5 +1,6 @@
 const routes = {
     HOME: '/',
+    HOME_TABS: '/home/:activeTab',
     USER_SETTINGS: '/settings/:tab',
     USER_SETTINGS_DEFAULT: '/settings',
     USER_PROFILE: '/u/:userId',
