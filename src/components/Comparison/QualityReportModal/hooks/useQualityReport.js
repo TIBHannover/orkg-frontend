@@ -76,7 +76,7 @@ const useQualityReport = () => {
                     performEvaluation: () => {
                         const passing = propertiesWithoutDescription.length === 0;
                         return {
-                            passing: false,
+                            passing,
                             evaluation: passing ? (
                                 'All properties have a human-readable description.'
                             ) : (
@@ -103,7 +103,7 @@ const useQualityReport = () => {
                     performEvaluation: () => {
                         const passing = !!comparisonResource?.doi;
                         return {
-                            passing: false,
+                            passing,
                             evaluation: passing
                                 ? `The comparison is published with the following DOI ${comparisonResource?.doi}.`
                                 : 'The comparison is not published with a DOI.',
