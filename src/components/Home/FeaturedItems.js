@@ -100,8 +100,8 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
                 ) : (
                     <div className="text-center mt-4 mb-4">
                         {sort === 'featured'
-                            ? `No featured ${featuredClass.label.toLowerCase()} found`
-                            : `There are no ${featuredClass.label.toLowerCase()} for this research field, yet`}
+                            ? `No featured ${featuredClass.label} found`
+                            : `There are no ${featuredClass.label} for this research field, yet`}
                     </div>
                 ))}
             {isLoading && (

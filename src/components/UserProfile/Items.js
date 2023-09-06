@@ -14,11 +14,11 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, ListGroup } from 'reactstrap';
+import { Button, ListGroup, ListGroupItem } from 'reactstrap';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getComparisonData, getListData, getVisualizationData, getPaperData, getReviewData, groupVersionsOfComparisons } from 'utils';
-import { researchFieldUpdated } from 'slices/reviewSlice';
+import FeaturedItems from 'components/Home/FeaturedItems';
 
 const Items = props => {
     const pageSize = 25;
@@ -163,54 +163,67 @@ const Items = props => {
     return (
         <div>
             {resources.length > 0 && (
-                <ListGroup flush className="rounded">
-                    {resources.map(resource => {
-                        if (props.filterClass === CLASSES.PAPER) {
-                            const paperId = resource.id;
-                            const selected = selectedItems.includes(paperId);
+                <>
+                    <ListGroup flush className="rounded">
+                        <ListGroupItem>
+                            {' '}
+                            <FeaturedItems
+                                researchFieldLabel={props.researchFieldLabel}
+                                researchFieldId={props.researchFieldId}
+                                featuredClass={props.filterClass}
+                                // featuredClass={props.featuredClass}
+                            />
+                        </ListGroupItem>
+                        {resources.map(resource => {
+                            if (props.filterClass === CLASSES.PAPER) {
+                                const paperId = resource.id;
+                                const selected = selectedItems.includes(paperId);
 
-                            return (
-                                <PaperCard
-                                    selectable={props.showDelete}
-                                    selected={selected}
-                                    onSelect={() => handleSelect(paperId)}
-                                    paper={{ title: resource.label, ...resource }}
-                                    key={`pc${resource.id}`}
-                                />
-                            );
-                        }
-                        if (props.filterClass === CLASSES.COMPARISON) {
-                            return <ComparisonCard comparison={{ ...resource }} key={`pc${resource.id}`} />;
-                        }
-                        if (props.filterClass === CLASSES.NODE_SHAPE) {
-                            return <TemplateCard template={resource} key={`pc${resource.id}`} />;
-                        }
+                                return (
+                                    <PaperCard
+                                        selectable={props.showDelete}
+                                        selected={selected}
+                                        onSelect={() => handleSelect(paperId)}
+                                        paper={{ title: resource.label, ...resource }}
+                                        key={`pc${resource.id}`}
+                                    />
+                                );
+                            }
+                            if (props.filterClass === CLASSES.COMPARISON) {
+                                return <ComparisonCard comparison={{ ...resource }} key={`pc${resource.id}`} />;
+                            }
+                            if (props.filterClass === CLASSES.NODE_SHAPE) {
+                                return <TemplateCard template={resource} key={`pc${resource.id}`} />;
+                            }
 
-                        if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
-                            return <ReviewCard key={resource[0]?.id} versions={resource} showBadge={false} showCurationFlags={true} />;
-                        }
-                        if (props.filterClass === CLASSES.VISUALIZATION) {
-                            return <VisualizationCard visualization={resource} showBadge={false} showCurationFlags={true} key={`pc${resource.id}`} />;
-                        }
-                        if (props.filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
-                            return <ListCard versions={resource} showBadge={false} showCurationFlags={true} />;
-                        }
+                            if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
+                                return <ReviewCard key={resource[0]?.id} versions={resource} showBadge={false} showCurationFlags={true} />;
+                            }
+                            if (props.filterClass === CLASSES.VISUALIZATION) {
+                                return (
+                                    <VisualizationCard visualization={resource} showBadge={false} showCurationFlags={true} key={`pc${resource.id}`} />
+                                );
+                            }
+                            if (props.filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
+                                return <ListCard versions={resource} showBadge={false} showCurationFlags={true} />;
+                            }
 
-                        return null;
-                    })}
-                    {!isLoading && hasNextPage && (
-                        <div
-                            style={{ cursor: 'pointer' }}
-                            className="list-group-item list-group-item-action text-center"
-                            onClick={handleLoadMore}
-                            onKeyDown={e => (e.keyCode === 13 ? handleLoadMore : undefined)}
-                            role="button"
-                            tabIndex={0}
-                        >
-                            View more {props.filterLabel}
-                        </div>
-                    )}
-                </ListGroup>
+                            return null;
+                        })}
+                        {!isLoading && hasNextPage && (
+                            <div
+                                style={{ cursor: 'pointer' }}
+                                className="list-group-item list-group-item-action text-center"
+                                onClick={handleLoadMore}
+                                onKeyDown={e => (e.keyCode === 13 ? handleLoadMore : undefined)}
+                                role="button"
+                                tabIndex={0}
+                            >
+                                View more {props.filterLabel}
+                            </div>
+                        )}
+                    </ListGroup>
+                </>
             )}
 
             {isLoading && loadingIndicator}
@@ -244,6 +257,9 @@ Items.propTypes = {
     filterLabel: PropTypes.string.isRequired,
     filterClass: PropTypes.string.isRequired,
     showDelete: PropTypes.bool,
+    researchFieldLabel: PropTypes.string,
+    researchFieldId: PropTypes.string,
+    featuredClass: PropTypes.string,
 };
 
 Items.defaultProps = {

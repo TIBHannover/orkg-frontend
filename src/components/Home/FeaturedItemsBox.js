@@ -1,35 +1,6 @@
 import styled from 'styled-components';
-import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
-import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
-import { reverse } from 'named-urls';
 import HomeTabsContainer from 'components/Tabs/HomeTabsContainer';
-import FeaturedItems from 'components/Home/FeaturedItems';
-
-// const DEFAULT_CLASSES_FILTER = [
-//     {
-//         id: CLASSES.COMPARISON,
-//         label: 'Comparisons',
-//         tippyContent: 'Comparisons in ORKG provide an overview of state-of-the-art literature for a particular topic.',
-//         link: reverse(ROUTES.COMPARISONS),
-//     },
-//     /*
-//     {
-//         id: CLASSES.SMART_REVIEW_PUBLISHED,
-//         label: 'Reviews',
-//         tippyContent: 'Reviews are dynamic, community maintained scholarly articles and are especially suitable for survey papers.',
-//         link: reverse(ROUTES.SMART_REVIEWS)
-//     },
-//     {
-//         id: CLASSES.LITERATURE_LIST_PUBLISHED,
-//         label: 'Lists',
-//         tippyContent: 'Lists provide a way to organize and describe state-of-the-art literature for a specific research domain.',
-//         link: reverse(ROUTES.LISTS)
-//     }, */
-//     { id: CLASSES.VISUALIZATION, label: 'Visualizations', tippyContent: false, link: reverse(ROUTES.VISUALIZATIONS) },
-//     { id: CLASSES.PAPER, label: 'Papers', tippyContent: false, link: reverse(ROUTES.PAPERS) },
-// ];
 
 const SidebarStyledBox = styled.div`
     flex-grow: 1;
@@ -40,20 +11,7 @@ const SidebarStyledBox = styled.div`
 
 const FeaturedItemsBox = ({ researchFieldId, researchFieldLabel }) => (
     <SidebarStyledBox className="box rounded-3 mt-3">
-        {/* {DEFAULT_CLASSES_FILTER.map(featuredClass => ({
-            title: (
-                <Tippy content={featuredClass.tippyContent} disabled={!featuredClass.tippyContent}>
-                    <div className="text-center">{featuredClass.label}</div>
-                </Tippy>
-            ),
-            getContent: () => (
-                <FeaturedItems researchFieldLabel={researchFieldLabel} researchFieldId={researchFieldId} featuredClass={featuredClass} />
-            ),
-            key: featuredClass.id,
-            tabClassName: 'tab h6',
-        }))} */}
-
-        <HomeTabsContainer />
+        <HomeTabsContainer researchFieldId={researchFieldId} researchFieldLabel={researchFieldLabel} />
     </SidebarStyledBox>
 );
 
