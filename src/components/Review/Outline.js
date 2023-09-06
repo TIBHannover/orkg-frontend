@@ -1,3 +1,4 @@
+import useScroll from 'components/Review/hooks/useScroll';
 import propTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -45,6 +46,7 @@ const ListItem = styled.li`
 `;
 
 const Outline = ({ editMode = false }) => {
+    useScroll();
     const sections = useSelector(state => state.review.sections);
 
     return (
