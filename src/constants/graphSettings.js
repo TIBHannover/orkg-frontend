@@ -2,6 +2,7 @@ export const PREDICATES = {
     HAS_DOI: 'P26',
     HAS_VENUE: 'HAS_VENUE',
     HAS_AUTHOR: 'P27',
+    HAS_AUTHORS: 'hasAuthors',
     HAS_PUBLICATION_MONTH: 'P28',
     HAS_PUBLICATION_YEAR: 'P29',
     HAS_RESEARCH_FIELD: 'P30',
@@ -79,6 +80,8 @@ export const PREDICATES = {
     CSVW_VALUE: 'CSVW_Value',
     CSVW_NAME: 'CSVW_Name',
     CSVW_TITLES: 'CSVW_Titles',
+    HAS_QUALITY_REVIEW: 'hasQualityReview',
+    HAS_LIST_ELEMENT: 'hasListElement',
     QUALITY_FEEDBACK: 'qualityFeedback',
 };
 
@@ -137,6 +140,8 @@ export const CLASSES = {
     SOFTWARE: 'Software',
     EXTERNAL: 'External',
     DIAGRAM: 'Diagram',
+    QUALITY_REVIEW: 'QualityReview',
+    LIST: 'List',
     QUALITY_FEEDBACK: 'QualityFeedback',
 };
 

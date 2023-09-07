@@ -3,7 +3,7 @@ import DiffView from 'components/DiffView/DiffView';
 import ROUTES from 'constants/routes';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBySubject } from 'services/backend/statements';
-import { getComparisonData } from 'utils';
+import { addAuthorsToStatements, getComparisonData } from 'utils';
 import { reverse } from 'named-urls';
 import moment from 'moment';
 
@@ -14,8 +14,8 @@ const ComparisonDiff = () => {
         await Promise.all([
             getResource(oldId),
             getResource(newId),
-            getStatementsBySubject({ id: oldId }),
-            getStatementsBySubject({ id: newId }),
+            getStatementsBySubject({ id: oldId }).then(statements => addAuthorsToStatements(statements)),
+            getStatementsBySubject({ id: newId }).then(statements => addAuthorsToStatements(statements)),
         ]).then(([oldResource, newResource, oldStatements, newStatements]) => ({
             oldText: comparisonToPlainText(getComparisonData(oldResource, oldStatements)),
             newText: comparisonToPlainText(getComparisonData(newResource, newStatements)),

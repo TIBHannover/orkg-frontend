@@ -102,6 +102,9 @@ const DatatypeSelector = props => {
         }),
     };
 
+    // lists are not supported when changes are not synced with the backend
+    const availableDataTypes = !props.syncBackend ? DATA_TYPES.filter(dataType => dataType.type !== 'list') : DATA_TYPES;
+
     return (
         <>
             <ConditionalWrapper
@@ -126,7 +129,7 @@ const DatatypeSelector = props => {
                     classNamePrefix="react-select-dark"
                     value={getConfigByType(props.valueType)}
                     components={{ Option: CustomOption }}
-                    options={!props.entity ? DATA_TYPES : DATA_TYPES.filter(dt => dt._class === props.entity)}
+                    options={!props.entity ? availableDataTypes : availableDataTypes.filter(dt => dt._class === props.entity)}
                     onChange={v => props.setValueType(v.type)}
                     getOptionValue={({ type }) => type}
                     getOptionLabel={({ name }) => name}
@@ -150,6 +153,7 @@ DatatypeSelector.propTypes = {
     menuPortalTarget: PropTypes.object,
     isDisabled: PropTypes.bool,
     valueClass: PropTypes.object,
+    syncBackend: PropTypes.bool.isRequired,
 };
 
 DatatypeSelector.defaultProps = {

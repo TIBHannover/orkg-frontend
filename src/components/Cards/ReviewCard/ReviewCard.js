@@ -14,7 +14,7 @@ import { CardBadge } from 'components/styled';
 import moment from 'moment';
 import Tippy from '@tippyjs/react';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
-import useCardData from './hooks/useCardData';
+import useCardData from 'components/Cards/hooks/useCardData';
 
 const ReviewCardStyled = styled.div`
     &:last-child {

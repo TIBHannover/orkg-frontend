@@ -18,7 +18,7 @@ import styled from 'styled-components';
 import { getComparisonURLConfig, activatedContributionsToList } from 'components/Comparison/hooks/helpers';
 import { setConfigurationAttribute, setShortLink, getMatrixOfComparison } from 'slices/comparisonSlice';
 import { PREDICATES } from 'constants/graphSettings';
-import { getPublicUrl } from 'utils';
+import { addAuthorsToStatements, getPublicUrl } from 'utils';
 import { clone } from 'lodash';
 
 const Textarea = styled(Input)`
@@ -193,7 +193,8 @@ const ExportToLatex = ({ showDialog, toggle }) => {
         }
 
         // authors
-        const authors = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR);
+        const authorsList = paperStatements.find(statement => statement.predicate.id === PREDICATES.HAS_AUTHORS);
+        const authors = paperStatements.filter(statement => statement.subject.id === authorsList?.object.id);
 
         const authorNamesArray = [];
 
@@ -204,7 +205,7 @@ const ExportToLatex = ({ showDialog, toggle }) => {
             }
         }
 
-        return { authors: authorNamesArray.reverse(), publicationYear };
+        return { authors: authorNamesArray, publicationYear };
     };
 
     const createCiteBibtex = (contribution, paperStatements) => {
@@ -237,6 +238,7 @@ const ExportToLatex = ({ showDialog, toggle }) => {
         const contributionsCalls = contributions.map(contribution =>
             // Fetch the data of each contribution
             getStatementsBySubject({ id: contribution.paperId })
+                .then(_statements => addAuthorsToStatements(_statements))
                 .then(paperStatements => {
                     const _contribution = clone(contribution);
                     let publicationDOI = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_DOI);

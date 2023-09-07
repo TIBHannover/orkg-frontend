@@ -108,7 +108,9 @@ export const StyledDropdownToggle = styled(DropdownToggle).withConfig({
     }
 `;
 
-export const ValueItemStyle = styled(ListGroupItem)`
+export const ValueItemStyle = styled.li.attrs({
+    className: 'list-group-item', // refs are not passed correctly by reactstrap, so instead of using ListGroupItem, we manually apply the class
+})`
     background-color: #fff;
     overflow-wrap: anywhere;
     padding: 8px 0px !important;

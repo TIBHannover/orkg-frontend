@@ -10,12 +10,14 @@ import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import defaultProperties from 'constants/defaultProperties';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { ENTITIES } from 'constants/graphSettings';
+import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { useSelector } from 'react-redux';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
-import useStatementItem from './hooks/useStatementItem';
+import useStatementItem from 'components/StatementBrowser/StatementItem/hooks/useStatementItem';
+import SortableValueItem from 'components/StatementBrowser/StatementItem/SortableValueItem';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 
 // eslint-disable-next-line react/display-name
 const StatementItem = forwardRef((props, ref) => {
@@ -142,7 +144,7 @@ const StatementItem = forwardRef((props, ref) => {
                                     disableBorderRadiusRight
                                     allowCreate
                                     defaultOptions={defaultProperties}
-                                    onBlur={e => {
+                                    onBlur={() => {
                                         dispatch(toggleEditPropertyLabel({ id: props.id }));
                                     }}
                                 />
@@ -156,16 +158,30 @@ const StatementItem = forwardRef((props, ref) => {
                             property.valueIds.map((valueId, index) => {
                                 const value = values.byId[valueId];
                                 return (
-                                    <ValueItem
-                                        value={value}
+                                    <ConditionalWrapper
                                         key={valueId}
-                                        id={valueId}
-                                        enableEdit={props.enableEdit}
-                                        syncBackend={props.syncBackend}
-                                        propertyId={props.id}
-                                        contextStyle="Template"
-                                        showHelp={!!(props.showValueHelp && index === 0)}
-                                    />
+                                        condition={property.existingPredicateId === PREDICATES.HAS_LIST_ELEMENT}
+                                        wrapper={children => (
+                                            <SortableValueItem index={index} id={valueId} enableEdit={props.enableEdit} propertyId={props.id}>
+                                                {children}
+                                            </SortableValueItem>
+                                        )}
+                                    >
+                                        <ValueItem
+                                            value={value}
+                                            id={valueId}
+                                            enableEdit={props.enableEdit}
+                                            syncBackend={props.syncBackend}
+                                            propertyId={props.id}
+                                            property={property}
+                                            contextStyle="Template"
+                                            index={index}
+                                            valueIds={property.valueIds}
+                                            showHelp={!!(props.showValueHelp && index === 0)}
+                                            subjectId={props.resourceId}
+                                            shouldDisableValueItemStyle={property.existingPredicateId === PREDICATES.HAS_LIST_ELEMENT}
+                                        />
+                                    </ConditionalWrapper>
                                 );
                             })}
                         {!props.enableEdit && property.valueIds.length === 0 && (

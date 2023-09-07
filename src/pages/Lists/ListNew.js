@@ -3,22 +3,18 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Container, FormGroup, Input, Label } from 'reactstrap';
-import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
-import { createLiteralStatement } from 'services/backend/statements';
 
 const ListNew = () => {
     const [title, setTitle] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const displayName = useSelector(state => state.auth.user.displayName);
     const navigate = useNavigate();
     useEffect(() => {
         document.title = 'Create list - ORKG';
@@ -32,8 +28,6 @@ const ListNew = () => {
 
         setIsLoading(true);
         const { id } = await createResource(title, [CLASSES.LITERATURE_LIST]);
-        const nameLiteral = await createLiteral(displayName);
-        await createLiteralStatement(id, PREDICATES.HAS_AUTHOR, nameLiteral.id);
         navigate(reverse(ROUTES.LIST, { id }));
         setIsLoading(false);
     };

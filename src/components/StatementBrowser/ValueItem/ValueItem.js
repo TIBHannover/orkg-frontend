@@ -54,9 +54,11 @@ const ValueItem = props => {
         setIsTooltipVisible(false);
     };
 
+    const Wrapper = !props.shouldDisableValueItemStyle ? ValueItemStyle : 'div';
+
     return (
         <>
-            <ValueItemStyle>
+            <Wrapper>
                 {!value.isEditing || !props.enableEdit ? (
                     <div>
                         {!value.isSaving && (
@@ -161,7 +163,7 @@ const ValueItem = props => {
                 ) : (
                     <ValueForm id={props.id} syncBackend={props.syncBackend} />
                 )}
-            </ValueItemStyle>
+            </Wrapper>
 
             {modal ? (
                 <StatementBrowserDialog
@@ -186,11 +188,13 @@ ValueItem.propTypes = {
     syncBackend: PropTypes.bool.isRequired,
     contextStyle: PropTypes.string.isRequired,
     showHelp: PropTypes.bool,
+    shouldDisableValueItemStyle: PropTypes.bool,
 };
 
 ValueItem.defaultProps = {
     contextStyle: 'StatementBrowser',
     showHelp: false,
+    shouldDisableValueItemStyle: false,
 };
 
 export default ValueItem;

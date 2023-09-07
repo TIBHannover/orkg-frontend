@@ -10,14 +10,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
 import { deleteStatementById } from 'services/backend/statements';
-import { deleteValue, isValueHasFormattedLabel, setIsDeletingValue, setIsHelpModalOpen, toggleEditValue } from 'slices/statementBrowserSlice';
-import InfoTippy from './InfoTippy';
+import {
+    checkIfIsList,
+    deleteValue,
+    isValueHasFormattedLabel,
+    setIsDeletingValue,
+    setIsHelpModalOpen,
+    toggleEditValue,
+} from 'slices/statementBrowserSlice';
+import { updateList } from 'services/backend/lists';
+import InfoTippy from 'components/StatementBrowser/ValueItem/ValueItemOptions/InfoTippy';
 
 const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
     const value = useSelector(state => state.statementBrowser.values.byId[id]);
-    const preferences = useSelector(state => state.statementBrowser.preferences);
+    const values = useSelector(state => state.statementBrowser.values);
     const resource = useSelector(state => state.statementBrowser.resources.byId[value.resourceId]);
+    const property = useSelector(state => state.statementBrowser.properties.byId[resource.propertyId]);
     const hasFormattedLabel = useSelector(state => isValueHasFormattedLabel(state, id));
+    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
+    const isList = useSelector(state => checkIfIsList({ state, propertyId: resource.propertyId }));
 
     const dispatch = useDispatch();
 
@@ -26,7 +37,15 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
     const handleDeleteValue = async () => {
         if (syncBackend) {
             dispatch(setIsDeletingValue({ id, status: true }));
-            deleteStatementById(value.statementId)
+
+            const deletePromise = !isList
+                ? deleteStatementById(value.statementId)
+                : updateList({
+                      id: selectedResource,
+                      elements: property.valueIds.map(_id => values.byId[_id].resourceId).filter(_id => id !== _id),
+                  });
+
+            deletePromise
                 .then(() => {
                     // dispatch(setIsDeletingValue({ id: id, status: false }));
                     toast.success('Statement deleted successfully');
@@ -144,6 +163,7 @@ ValueItemOptions.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     handleOnClick: PropTypes.func,
+    isListItem: PropTypes.bool,
 };
 
 export default ValueItemOptions;

@@ -3,7 +3,7 @@ import ExistingTitleModal from 'components/ExistingPaperModal/ExistingTitleModal
 import { useCallback, useState } from 'react';
 import { getPaperByDOI, getPaperByTitle } from 'services/backend/misc';
 import { getStatementsBySubject } from 'services/backend/statements';
-import { getPaperData } from 'utils';
+import { getPaperData, addAuthorsToStatements } from 'utils';
 
 const useExistingPaper = () => {
     const [existingPaperDoi, setExistingPaperDoi] = useState(null);
@@ -17,7 +17,8 @@ const useExistingPaper = () => {
         if (doi && doi.includes('10.') && doi.startsWith('10.')) {
             try {
                 const paperData = await getPaperByDOI(doi);
-                const statements = await getStatementsBySubject({ id: paperData.id });
+                let statements = await getStatementsBySubject({ id: paperData.id });
+                statements = await addAuthorsToStatements(statements);
                 setExistingPaperDoi({ ...getPaperData(paperData, statements), title: paperData.title });
                 setIsOpenExistingDoiModal(true);
                 return true;
@@ -29,7 +30,8 @@ const useExistingPaper = () => {
             // check if title exists
             try {
                 const paperData = await getPaperByTitle(title);
-                const statements = await getStatementsBySubject({ id: paperData.id });
+                let statements = await getStatementsBySubject({ id: paperData.id });
+                statements = await addAuthorsToStatements(statements);
                 setExistingPaperTitle({ ...getPaperData(paperData, statements), title: paperData.title });
                 setIsOpenExistingTitleModal(true);
                 setContinueNextStep(continueNext);

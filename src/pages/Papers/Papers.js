@@ -1,7 +1,7 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
-import { getPaperData } from 'utils';
+import { addAuthorsToStatementBundle, getPaperData } from 'utils';
 import ListPage from 'components/ListPage/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
@@ -54,9 +54,9 @@ const Papers = () => {
 
         // promise to prevent blocking loading of the additional paper data
         if (items.length > 0) {
-            getStatementsBySubjects({ ids: items.map(p => p.id) }).then(_statements =>
-                setStatements(prevStatements => [...prevStatements, ..._statements]),
-            );
+            getStatementsBySubjects({ ids: items.map(p => p.id) })
+                .then(_statements => addAuthorsToStatementBundle(_statements))
+                .then(_statements => setStatements(prevStatements => [...prevStatements, ..._statements]));
         }
 
         return {
