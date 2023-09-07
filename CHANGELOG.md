@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.120.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.119.0...v0.120.0) - 2023-09-07
+
+### Changes
+
+- feat(StatementBrowser): support ordered lists [`#1150`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1150)
+- fix(Review): outline links not working and comparisons break on link click [`#1192`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1192)
+- fix(QualityReport): correctly evaluate DOI and property descriptions [`#1189`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1189)
+
+---
 ## [v0.119.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.118.0...v0.119.0) - 2023-08-30
 
 ### Changes
