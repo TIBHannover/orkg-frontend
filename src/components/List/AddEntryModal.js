@@ -4,11 +4,11 @@ import { Cite } from '@citation-js/core';
 import PaperTitleInput from 'components/Input/PaperTitleInput/PaperTitleInput';
 import useList from 'components/List/hooks/useList';
 import MetadataTable from 'components/List/MetadataTable/MetadataTable';
-import { CLASSES, RESOURCES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, RESOURCES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Textarea from 'react-textarea-autosize';
@@ -18,7 +18,7 @@ import { getPaperByDOI, getPaperByTitle } from 'services/backend/misc';
 import { saveFullPaper } from 'services/backend/papers';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { addListEntry } from 'slices/listSlice';
-import { parseCiteResult } from 'utils';
+import { addAuthorsToStatements, getPaperData, parseCiteResult } from 'utils';
 
 const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -67,7 +67,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                             publicationMonth: entity.publicationMonth || undefined,
                             publicationYear: entity.publicationYear || undefined,
                             doi: doi || undefined,
-                            publishedIn: entity.publishedIn || undefined,
+                            publishedIn: entity.publishedIn || '',
                             contributions: [
                                 {
                                     name: 'Contribution',
@@ -175,17 +175,16 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
     };
 
     const getMetaData = async id => {
-        const statements = await getStatementsBySubject({ id });
+        let statements = await getStatementsBySubject({ id });
+        statements = await addAuthorsToStatements(statements);
+        const paperData = getPaperData(statements[0]?.subject, statements);
         return {
-            title: statements[0]?.subject?.label,
-            authors: statements
-                .filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR)
-                .map(authorStatement => ({ label: authorStatement.object.label }))
-                .reverse(),
-            paperPublicationMonth: statements.find(statement => statement.predicate.id === PREDICATES.HAS_PUBLICATION_MONTH)?.object.label ?? null,
-            paperPublicationYear: statements.find(statement => statement.predicate.id === PREDICATES.HAS_PUBLICATION_YEAR)?.object.label,
-            doi: statements.find(statement => statement.predicate.id === PREDICATES.HAS_DOI)?.object.label,
-            publishedIn: statements.find(statement => statement.predicate.id === PREDICATES.HAS_VENUE)?.object.label,
+            title: paperData?.label,
+            authors: paperData?.authors.map(author => ({ label: author.label })),
+            paperPublicationMonth: paperData?.publicationMonth?.label,
+            paperPublicationYear: paperData?.publicationYear?.label,
+            doi: paperData?.doi?.label,
+            publishedIn: paperData?.publishedIn?.label,
             existingContentTypeId: id,
         };
     };

@@ -1,15 +1,17 @@
-import { updateAuthors } from 'slices/reviewSlice';
 import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
+import { createAuthorsList, updateAuthorsList } from 'components/Input/AuthorsInput/helpers';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { updateAuthors as updateAuthorsHelper } from 'components/Input/AuthorsInput/helpers';
+import { setAuthorListResource, updateAuthors } from 'slices/reviewSlice';
 
 const AuthorsModal = props => {
     const { show, toggle } = props;
     const [authors, setAuthors] = useState([]);
     const authorResources = useSelector(state => state.review.authorResources);
+    const authorListResource = useSelector(state => state.review.authorListResource);
     const paper = useSelector(state => state.review.paper);
     const dispatch = useDispatch();
 
@@ -26,9 +28,22 @@ const AuthorsModal = props => {
     };
 
     const handleSave = async () => {
-        const _authors = await updateAuthorsHelper({ prevAuthors: authorResources, newAuthors: authors, resourceId: paper.id });
-        dispatch(updateAuthors(_authors));
-        toggle();
+        try {
+            let _authors = [];
+            if (authorListResource?.id) {
+                _authors = await updateAuthorsList({ prevAuthors: authorResources, newAuthors: authors, listId: authorListResource?.id });
+            } else {
+                const newList = await createAuthorsList({ authors, resourceId: paper.id });
+                _authors = newList?.authors;
+                dispatch(setAuthorListResource({ authorListResource: newList.list }));
+            }
+            dispatch(updateAuthors(_authors));
+            toggle();
+            toast.success('Authors saved successfully');
+        } catch (e) {
+            toast.error('An error occurred while saving the authors');
+            console.error(e);
+        }
     };
 
     return (

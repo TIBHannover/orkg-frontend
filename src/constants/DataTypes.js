@@ -86,6 +86,16 @@ const DATA_TYPES = [
         inputFormType: 'empty',
         weight: 0,
     },
+    {
+        name: 'List',
+        tooltip: 'Choose List create a list of custom sorted values',
+        type: 'list',
+        _class: ENTITIES.RESOURCE,
+        classId: CLASSES.LIST,
+        schema: Joi.string(),
+        inputFormType: 'autocomplete',
+        weight: 0,
+    },
 ];
 /*
 {

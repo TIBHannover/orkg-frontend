@@ -17,8 +17,15 @@ import { useNavigate } from 'react-router-dom';
 import { Button, ListGroup } from 'reactstrap';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getComparisonData, getListData, getVisualizationData, getPaperData, getReviewData, groupVersionsOfComparisons } from 'utils';
-import { researchFieldUpdated } from 'slices/reviewSlice';
+import {
+    getComparisonData,
+    getListData,
+    getVisualizationData,
+    getPaperData,
+    getReviewData,
+    groupVersionsOfComparisons,
+    addAuthorsToStatementBundle,
+} from 'utils';
 
 const Items = props => {
     const pageSize = 25;
@@ -51,6 +58,7 @@ const Items = props => {
                 getStatementsBySubjects({
                     ids: result.content.map(c => c.id),
                 })
+                    .then(statements => addAuthorsToStatementBundle(statements))
                     .then(resourcesStatements => {
                         let newResources = resourcesStatements.map(resourceStatements => {
                             const resourceSubject = find(result.content, { id: resourceStatements.id });

@@ -9,7 +9,7 @@ import { getPaperByDOI } from 'services/backend/misc';
 import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
-import { getStatementsByPredicateAndLiteral } from 'services/backend/statements';
+import { getStatementsByObject, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 
@@ -94,23 +94,27 @@ export const useSearch = () => {
 
             // try to find an author by literal
             if (filterType === CLASSES.AUTHOR) {
-                const authorLiteral = await getStatementsByPredicateAndLiteral({
+                const listStatements = await getStatementsByPredicateAndLiteral({
                     literal: searchQuery,
-                    predicateId: PREDICATES.HAS_AUTHOR,
+                    predicateId: PREDICATES.HAS_LIST_ELEMENT,
                     items: 1,
                     returnContent: true,
                 });
-
-                if (authorLiteral.length > 0) {
-                    resultsResponse.push({
-                        label: searchQuery,
-                        // id: authorLiteral[0].subject.id,
-                        class: CLASSES.AUTHOR,
-                        customRoute: reverse(ROUTES.AUTHOR_LITERAL, { authorString: encodeURIComponent(searchQuery) }),
-                    });
+                const statements = listStatements.length > 0 ? await getStatementsByObject({ id: listStatements[0].subject.id }) : null;
+                if (statements) {
+                    const hasAuthorsStatements = statements.find(statement => statement.predicate.id === PREDICATES.HAS_AUTHORS);
+                    if (hasAuthorsStatements) {
+                        resultsResponse.push({
+                            label: searchQuery,
+                            // id: authorLiteral[0].subject.id,
+                            class: CLASSES.AUTHOR,
+                            customRoute: reverse(ROUTES.AUTHOR_LITERAL, { authorString: encodeURIComponent(searchQuery) }),
+                        });
+                    }
                 }
             }
         } catch (e) {
+            console.error(e);
             toast.error('Something went wrong while loading search results.');
         }
 

@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getContentByResearchProblemIdAndClasses } from 'services/backend/problems';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate, reverseWithSlug } from 'utils';
+import { addAuthorsToStatementBundle, getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate, reverseWithSlug } from 'utils';
 
 function useResearchProblemContent({
     researchProblemId,
@@ -78,6 +78,7 @@ function useResearchProblemContent({
                     getStatementsBySubjects({
                         ids: result.content.map(p => p.id),
                     })
+                        .then(statements => addAuthorsToStatementBundle(statements))
                         .then(contentsStatements => {
                             const dataObjects = contentsStatements.map(statements => {
                                 const resourceSubject = find(result.content, {

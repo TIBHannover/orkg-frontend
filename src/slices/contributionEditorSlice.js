@@ -1,31 +1,32 @@
-import { guid, filterObjectOfStatementsByPredicateAndClass, LOCATION_CHANGE } from 'utils';
 import { createSlice } from '@reduxjs/toolkit';
-import {
-    getStatementsByObjectAndPredicate,
-    getStatementsBySubjectAndPredicate,
-    getStatementsBySubject,
-    getStatementsBundleBySubject,
-    getTemplateById,
-    getTemplatesByClass,
-    createResourceStatement,
-    deleteStatementById,
-    createLiteralStatement,
-    updateStatement,
-    deleteStatementsByIds,
-} from 'services/backend/statements';
 import { CLASSES, ENTITIES, MISC, PREDICATES, RESOURCES } from 'constants/graphSettings';
-import { uniq, flatten, intersection, uniqBy } from 'lodash';
+import { flatten, intersection, uniq, uniqBy } from 'lodash';
+import { toast } from 'react-toastify';
+import { createClass } from 'services/backend/classes';
+import { createList } from 'services/backend/lists';
+import { createLiteral as createLiteralApi, updateLiteral as updateLiteralApi } from 'services/backend/literals';
+import { createPredicate, getPredicate } from 'services/backend/predicates';
 import {
     createResource as createResourceApi,
     getResource,
     updateResource as updateResourceApi,
     updateResourceClasses as updateResourceClassesApi,
 } from 'services/backend/resources';
-import { toast } from 'react-toastify';
-import { createClass } from 'services/backend/classes';
-import { createLiteral as createLiteralApi, updateLiteral as updateLiteralApi } from 'services/backend/literals';
+import {
+    createLiteralStatement,
+    createResourceStatement,
+    deleteStatementById,
+    deleteStatementsByIds,
+    getStatementsBundleBySubject,
+    getStatementsByObjectAndPredicate,
+    getStatementsBySubject,
+    getStatementsBySubjectAndPredicate,
+    getTemplateById,
+    getTemplatesByClass,
+    updateStatement,
+} from 'services/backend/statements';
 import format from 'string-format';
-import { createPredicate, getPredicate } from 'services/backend/predicates';
+import { LOCATION_CHANGE, filterObjectOfStatementsByPredicateAndClass, guid } from 'utils';
 
 const initialState = {
     contributions: {},
@@ -373,7 +374,11 @@ export const addValue = (entityType, value, valueClass, contributionId, property
     if (!value.selected || value.external) {
         switch (entityType) {
             case ENTITIES.RESOURCE:
-                apiCall = createResourceApi(value.label, valueClass ? [valueClass.id] : []);
+                if (newEntity.datatype === 'list') {
+                    apiCall = createList({ label: value.label });
+                } else {
+                    apiCall = createResourceApi(value.label, valueClass ? [valueClass.id] : []);
+                }
                 break;
             case ENTITIES.PREDICATE:
                 apiCall = createPredicate(value.label);
@@ -397,6 +402,9 @@ export const addValue = (entityType, value, valueClass, contributionId, property
     await apiCall
         .then(response => {
             newEntity = response;
+            if (newEntity._class === 'list') {
+                newEntity._class = entityType;
+            }
             return createResourceStatement(contributionId, propertyId, newEntity.id);
         })
         .then(newStatement => {

@@ -21,6 +21,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { uniqBy, flatten } from 'lodash';
 import { AuthorTag } from 'components/Input/AuthorsInput/styled';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
 
 function Publish(props) {
     const [isLoading, setIsLoading] = useState(false);
@@ -103,14 +104,12 @@ function Publish(props) {
                                 },
                             ],
                         }),
-                        [PREDICATES.HAS_AUTHOR]: viewPaper.authors.map(author => ({
-                            '@id': author.id,
-                        })),
                     },
                 },
             };
 
             const createdPaper = await createObject(paperObj);
+            await createAuthorsList({ authors: viewPaper.authors, resourceId: createdPaper.id });
             generateDoi({
                 type: CLASSES.PAPER,
                 resource_type: CLASSES.DATASET,

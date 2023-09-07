@@ -5,7 +5,7 @@ import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationC
 import { CLASSES } from 'constants/graphSettings';
 import { find } from 'lodash';
 import { getResourcesByClass } from 'services/backend/resources';
-import { getVisualizationData } from 'utils';
+import { addAuthorsToStatementBundle, getVisualizationData } from 'utils';
 
 const Visualizations = () => {
     useEffect(() => {
@@ -23,6 +23,7 @@ const Visualizations = () => {
             desc: true,
         }).then(result =>
             getStatementsBySubjects({ ids: result.content.map(p => p.id) })
+                .then(statements => addAuthorsToStatementBundle(statements))
                 .then(visualizationsStatements =>
                     visualizationsStatements.map(visualizationStatements =>
                         getVisualizationData(find(result.content, { id: visualizationStatements.id }), visualizationStatements.statements),

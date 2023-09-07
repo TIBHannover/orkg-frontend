@@ -6,7 +6,7 @@ import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import Authors from 'components/Cards/PaperCard/Authors';
-import useCardData from 'components/Cards/ReviewCard/hooks/useCardData';
+import useCardData from 'components/Cards/hooks/useCardData';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
@@ -31,6 +31,7 @@ const ListCard = ({ versions, showBadge, showCurationFlags }) => {
         id: versions[0]?.id,
         initResearchField: versions[0]?.researchField,
         initAuthors: versions[0]?.authors,
+        isList: true,
     });
 
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({

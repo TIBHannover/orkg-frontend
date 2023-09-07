@@ -127,6 +127,13 @@ const ValueForm = props => {
         }
     }, [inputDataType, setEntityType, setInputFormType, setInputValue]);
 
+    let optionsClass;
+    if (entityType === ENTITIES.RESOURCE && valueClass) {
+        optionsClass = valueClass.id;
+    } else if (inputDataType === 'list') {
+        optionsClass = CLASSES.LIST;
+    }
+
     return (
         <div>
             <InputGroup size="sm">
@@ -136,6 +143,7 @@ const ValueForm = props => {
                     entity={editMode ? value._class : null}
                     valueType={inputDataType}
                     setValueType={setInputDataType}
+                    syncBackend={props.syncBackend}
                 />
                 {!editMode && inputFormType === 'autocomplete' ? (
                     <AutoComplete
@@ -145,13 +153,13 @@ const ValueForm = props => {
                                 ? `${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.NODE_SHAPE},${CLASSES.PROPERTY_SHAPE},${CLASSES.PAPER_DELETED},${CLASSES.CONTRIBUTION_DELETED},${CLASSES.EXTERNAL}`
                                 : null
                         }
-                        optionsClass={entityType === ENTITIES.RESOURCE && valueClass ? valueClass.id : undefined}
+                        optionsClass={optionsClass}
                         placeholder={`Enter a ${entityType}`}
                         onItemSelected={i => {
                             handleAddValue(entityType, { ...i, label: i.value, selected: true });
                             props.setShowAddValue?.(false);
                         }}
-                        ols={!valueClass}
+                        ols={!optionsClass}
                         onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                         value={inputValue}
                         additionalData={newResources}

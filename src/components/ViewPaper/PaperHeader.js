@@ -168,6 +168,7 @@ const PaperHeader = props => {
                         researchField: viewPaper.researchField,
                         url: viewPaper.url,
                         isVerified: viewPaper.verified,
+                        authorListResource: viewPaper.authorListResource,
                     }}
                     afterUpdate={handleUpdatePaper}
                     isOpen={isOpenEditModal}

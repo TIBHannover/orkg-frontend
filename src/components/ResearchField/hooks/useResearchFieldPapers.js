@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { getPapersByResearchFieldId } from 'services/backend/researchFields';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getPaperData, mergeAlternate } from 'utils';
+import { addAuthorsToStatementBundle, getPaperData, mergeAlternate } from 'utils';
 
 function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSubFields, pageSize = 10 }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -77,6 +77,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                     getStatementsBySubjects({
                         ids: result.content.map(p => p.id),
                     })
+                        .then(statements => addAuthorsToStatementBundle(statements))
                         .then(papersStatements => {
                             const _papers = papersStatements.map(paperStatements => {
                                 const paperSubject = find(result.content, {

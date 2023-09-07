@@ -1,8 +1,9 @@
-import { createResourceStatement, getStatementsByPredicateAndLiteral, deleteStatementsByIds } from 'services/backend/statements';
+import { createResourceStatement, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
 import { isEqual } from 'lodash';
 import { createLiteral } from 'services/backend/literals';
 import { createObject } from 'services/backend/misc';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
+import { createList, updateList } from 'services/backend/lists';
 
 /**
  * Save the authors of a resource
@@ -14,8 +15,9 @@ import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
  * @param {*} resourceId the resource id
  * @returns list of authors
  */
-export const saveAuthors = async (_authors, resourceId) => {
-    let authors = _authors;
+
+const prepareNewAuthors = async newAuthors => {
+    let authors = [...newAuthors];
     // Search authors by ORCID
     authors = await Promise.all(
         authors.map(async author => {
@@ -66,30 +68,26 @@ export const saveAuthors = async (_authors, resourceId) => {
             return Promise.resolve(author);
         }),
     );
-    // Create author statements (the order is imported so we have to wait for each request to finish to the sent the next)
-    const authorsList = [];
-    for (const author of authors) {
-        // eslint-disable-next-line no-await-in-loop
-        const s = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, author.id);
-        authorsList.push({ ...s.object, statementId: s.id, s_created_at: s.created_at, orcid: author.orcid ?? null });
-    }
-    return authorsList;
+    return authors;
 };
 
-export async function updateAuthors({ prevAuthors, newAuthors, resourceId }) {
+export const updateAuthorsList = async ({ prevAuthors, newAuthors, listId }) => {
     // Check if there is changes on the authors
     if (isEqual(prevAuthors, newAuthors)) {
         return prevAuthors;
     }
 
-    const statementsIds = [];
-    // remove all authors statement from reducer
-    // literals will be also delete if they are not linked to any statements
-    for (const author of prevAuthors) {
-        statementsIds.push(author.statementId);
-    }
-    deleteStatementsByIds(statementsIds);
-    const authorsUpdated = await saveAuthors(newAuthors, resourceId);
+    const authors = await prepareNewAuthors(newAuthors);
+    await updateList({ id: listId, elements: authors.map(author => author.id) });
+    return authors;
+};
 
-    return authorsUpdated;
-}
+export const createAuthorsList = async ({ resourceId, authors }) => {
+    const preparedAuthors = await prepareNewAuthors(authors);
+    const list = await createList({ label: 'authors', elements: preparedAuthors.map(author => author.id) });
+    await createResourceStatement(resourceId, PREDICATES.HAS_AUTHORS, list.id);
+    return {
+        authors: preparedAuthors,
+        list,
+    };
+};

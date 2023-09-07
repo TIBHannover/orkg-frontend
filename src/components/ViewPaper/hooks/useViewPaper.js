@@ -1,13 +1,13 @@
-import { useEffect, useState, useCallback } from 'react';
-import { getStatementsBundleBySubject } from 'services/backend/statements';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+import { CLASSES } from 'constants/graphSettings';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { getIsVerified } from 'services/backend/papers';
 import { getResource } from 'services/backend/resources';
-import { useDispatch } from 'react-redux';
+import { getStatementsBundleBySubject } from 'services/backend/statements';
 import { resetStatementBrowser } from 'slices/statementBrowserSlice';
-import { loadPaper, setPaperAuthors } from 'slices/viewPaperSlice';
-import { getPaperDataViewPaper, filterObjectOfStatementsByPredicateAndClass } from 'utils';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+import { loadPaper } from 'slices/viewPaperSlice';
+import { getPaperDataViewPaper } from 'utils';
 
 const useViewPaper = ({ paperId }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -16,24 +16,6 @@ const useViewPaper = ({ paperId }) => {
     const [showHeaderBar, setShowHeaderBar] = useState(false);
     const dispatch = useDispatch();
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
-
-    const setAuthorsORCID = useCallback(
-        (paperStatements, pId) => {
-            let authorsArray = [];
-            const paperAuthors = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHOR, false, null, pId);
-            for (const author of paperAuthors) {
-                const orcid = paperStatements.find(s => s.subject.id === author.id && s.predicate.id === PREDICATES.HAS_ORCID);
-                if (orcid) {
-                    authorsArray.push({ ...author, orcid: orcid.object.label });
-                } else {
-                    authorsArray.push({ ...author, orcid: '' });
-                }
-            }
-            authorsArray = authorsArray.length ? authorsArray.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [];
-            dispatch(setPaperAuthors(authorsArray));
-        },
-        [dispatch],
-    );
 
     const loadPaperData = useCallback(() => {
         setIsLoading(true);
@@ -46,24 +28,21 @@ const useViewPaper = ({ paperId }) => {
                     return;
                 }
                 // Load the paper metadata but skip the research field and contribution data
+                // 3 levels so the author list (level 2) and nested ORCIDs (level 3) can be fetched
                 Promise.all([
-                    getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD, CLASSES.CONTRIBUTION] }),
+                    getStatementsBundleBySubject({ id: paperId, maxLevel: 3, blacklist: [CLASSES.RESEARCH_FIELD, CLASSES.CONTRIBUTION] }),
                     getIsVerified(paperId).catch(() => false),
                 ]).then(([paperStatements, verified]) => {
-                    const paperData = getPaperDataViewPaper(
-                        paperResource,
-                        paperStatements.statements?.filter(s => s.subject.id === paperId),
-                    );
+                    const paperData = getPaperDataViewPaper(paperResource, paperStatements.statements);
                     dispatch(loadPaper({ ...paperData, verified }));
                     setIsLoading(false);
-                    setAuthorsORCID(paperStatements.statements, paperId);
                 });
             })
             .catch(error => {
                 setIsLoadingFailed(true);
                 setIsLoading(false);
             });
-    }, [dispatch, paperId, setAuthorsORCID]);
+    }, [dispatch, paperId]);
 
     useEffect(() => {
         loadPaperData();

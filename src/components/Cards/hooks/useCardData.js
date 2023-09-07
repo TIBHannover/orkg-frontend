@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
+import { filterObjectOfStatementsByPredicateAndClass, getAuthorStatements } from 'utils';
 import { getStatementsBySubjectAndPredicate, getStatementsBySubject } from 'services/backend/statements';
 
-function useCardData({ id, initResearchField = null, initAuthors = [] }) {
+function useCardData({ id, initResearchField = null, initAuthors = [], isList = false }) {
     const [researchField, setResearchField] = useState(initResearchField);
     const [authors, setAuthors] = useState(initAuthors);
     const [isLoading, setIsLoading] = useState(false);
@@ -12,20 +12,23 @@ function useCardData({ id, initResearchField = null, initAuthors = [] }) {
         setIsLoading(true);
         getStatementsBySubjectAndPredicate({
             subjectId: id,
-            predicateId: PREDICATES.HAS_PAPER,
+            predicateId: isList ? PREDICATES.HAS_LIST : PREDICATES.HAS_PAPER,
         })
-            .then(paper => (paper?.length > 0 ? getStatementsBySubject({ id: paper[0].object.id }) : []))
-            .then(paperStatements => {
+            .then(async subject => {
+                if (subject?.length > 0) {
+                    const statements = await getStatementsBySubject({ id: subject[0].object.id });
+                    setResearchField(
+                        filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD),
+                    );
+                    const authorStatements = await getAuthorStatements(statements);
+                    setAuthors(authorStatements.map(statement => statement.object));
+                }
                 setIsLoading(false);
-                setResearchField(
-                    filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD),
-                );
-                setAuthors(filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHOR, false));
             })
             .catch(() => {
                 setIsLoading(false);
             });
-    }, [id]);
+    }, [id, isList]);
 
     useEffect(() => {
         if (!initResearchField && !initAuthors?.length) {
@@ -35,7 +38,7 @@ function useCardData({ id, initResearchField = null, initAuthors = [] }) {
 
     return {
         researchField,
-        authors: authors.reverse(),
+        authors,
         isLoading,
     };
 }

@@ -692,7 +692,7 @@ function Autocomplete(props) {
             </components.Menu>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [selectedOntologies.map(o => o.id).join(','), inputValue],
+        [selectedOntologies.map(o => o.id).join(','), inputValue, props.ols],
     );
 
     const Option = useCallback(({ children, ...innerProps }) => {
