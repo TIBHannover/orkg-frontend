@@ -11,7 +11,6 @@ import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { find, flatten, groupBy } from 'lodash';
 import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, ListGroup, ListGroupItem } from 'reactstrap';
@@ -19,6 +18,7 @@ import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getComparisonData, getListData, getVisualizationData, getPaperData, getReviewData, groupVersionsOfComparisons } from 'utils';
 import FeaturedItems from 'components/Home/FeaturedItems';
+import PropTypes from 'prop-types';
 
 const Items = props => {
     const pageSize = 25;
@@ -171,7 +171,6 @@ const Items = props => {
                                 researchFieldLabel={props.researchFieldLabel}
                                 researchFieldId={props.researchFieldId}
                                 featuredClass={props.filterClass}
-                                // featuredClass={props.featuredClass}
                             />
                         </ListGroupItem>
                         {resources.map(resource => {

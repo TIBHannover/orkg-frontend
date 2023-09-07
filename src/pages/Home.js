@@ -23,7 +23,7 @@ export default function Home() {
         id: RESOURCES.RESEARCH_FIELD_MAIN,
         label: 'Main',
     });
-    console.log('selectedResearchField.id', selectedResearchField.id);
+
     useEffect(() => {
         const showSignOutMessage = location.state && location.state.signedOut;
 

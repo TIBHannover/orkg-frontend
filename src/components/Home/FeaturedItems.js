@@ -22,8 +22,8 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
     const { items, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useResearchFieldContent({
         researchFieldId,
         initialSort: 'combined',
-        initialClassFilterOptions: [{ id: featuredClass.id, label: featuredClass.label }],
-        initClassesFilter: [{ id: featuredClass.id, label: featuredClass.label }],
+        initialClassFilterOptions: [{ id: featuredClass, label: featuredClass }],
+        initClassesFilter: [{ id: featuredClass, label: featuredClass }],
         initialIncludeSubFields: true,
     });
 
@@ -53,7 +53,7 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
                             bsSize="sm"
                             type="select"
                             name="sort"
-                            id={`sort${featuredClass.label}`}
+                            id={`sort${featuredClass}`}
                             disabled={isLoading}
                         >
                             <option value="combined">Top recent</option>
@@ -86,7 +86,7 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
                                         ? `${reverseWithSlug(ROUTES.RESEARCH_FIELD, {
                                               researchFieldId,
                                               slug: researchFieldLabel,
-                                          })}?sort=${sort}&includeSubFields=${includeSubFields}&classesFilter=${featuredClass.id}`
+                                          })}?sort=${sort}&includeSubFields=${includeSubFields}&classesFilter=${featuredClass}`
                                         : featuredClass.link
                                 }
                                 color="primary"
@@ -99,9 +99,7 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
                     </>
                 ) : (
                     <div className="text-center mt-4 mb-4">
-                        {sort === 'featured'
-                            ? `No featured ${featuredClass.label} found`
-                            : `There are no ${featuredClass.label} for this research field, yet`}
+                        {sort === 'featured' ? `No featured ${featuredClass} found` : `There are no ${featuredClass} for this research field, yet`}
                     </div>
                 ))}
             {isLoading && (
