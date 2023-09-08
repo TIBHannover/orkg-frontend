@@ -42,7 +42,7 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                 ? deleteStatementById(value.statementId)
                 : updateList({
                       id: selectedResource,
-                      elements: property.valueIds.map(_id => values.byId[_id].resourceId).filter(_id => id !== _id),
+                      elements: property.valueIds.map(_id => values.byId[_id].resourceId).filter(_id => value.id !== _id),
                   });
 
             deletePromise
