@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.121.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.120.0...v0.121.0) - 2023-09-08
+
+### Changes
+
+- fix(List): list items were not deleted [`#1195`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1195)
+- feat(Home): integrate Mastodon timeline [`#1191`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1191)
+
+---
 ## [v0.120.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.119.0...v0.120.0) - 2023-09-07
 
 ### Changes
