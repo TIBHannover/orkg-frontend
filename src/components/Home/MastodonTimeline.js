@@ -67,7 +67,7 @@ const MastodonTimeline = () => {
             ) : (
                 <div>
                     <div className="px-3 pt-3">
-                        <h2 className="h5 mb-0 mt-0">Latest Mastodon Toots</h2>
+                        <h2 className="h5 mb-0 mt-0">Latest Mastodon posts</h2>
                         <hr className="mt-2 mb-0" />
                     </div>
                     <ListGroup className="overflow-auto rounded" flush style={{ maxHeight: 400 }}>
