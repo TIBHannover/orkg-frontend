@@ -96,10 +96,10 @@ const useContributions = ({ paperId, contributionId }) => {
                 dispatch(setPaperContributions([...contributions, { ...statement.object, statementId: statement.id }]));
                 dispatch(setIsAddingContribution(false));
                 navigate(
-                    reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
+                    `${reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                         resourceId: paperId,
                         contributionId: statement.object.id,
-                    }),
+                    })}?isEditMode=true`,
                 );
                 toast.success('Contribution created successfully');
             })
