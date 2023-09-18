@@ -100,8 +100,6 @@ export const getResourcesByClass = async ({
     id,
     page = 0,
     items: size = 9999,
-    sortBy = 'created_at',
-    desc = true,
     q = null,
     creator = null,
     exact = false,
@@ -109,9 +107,8 @@ export const getResourcesByClass = async ({
     returnContent = false,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
 }) => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
-        { page, size, creator, exact, ...(q ? { q } : { sort, desc }), verified, visibility },
+        { page, size, creator, exact, ...(q ? { q } : {}), verified, visibility },
         {
             skipNulls: true,
         },

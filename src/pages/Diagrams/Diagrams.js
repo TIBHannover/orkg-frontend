@@ -29,8 +29,6 @@ const Diagrams = () => {
             id: resourceClass,
             page,
             items: pageSize,
-            sortBy: 'created_at',
-            desc: true,
         });
 
         if (resources.length) {

@@ -15,8 +15,6 @@ const usePreviouslySelectedResearchField = () => {
             id: CLASSES.PAPER,
             page: 0,
             items: 8,
-            sortBy: 'created_at',
-            desc: true,
             creator: userId,
         }).then(result => {
             const papers = result.content.map(p =>

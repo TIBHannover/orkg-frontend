@@ -47,8 +47,6 @@ const Papers = () => {
             id: CLASSES.PAPER,
             page,
             items: pageSize,
-            sortBy: 'created_at',
-            desc: true,
             verified,
         });
 
