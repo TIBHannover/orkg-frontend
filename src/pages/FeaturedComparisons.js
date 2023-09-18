@@ -57,8 +57,6 @@ const FeaturedComparisons = () => {
 
         const responseJson = await getResourcesByClass({
             id: CLASSES.FEATURED_COMPARISON_CATEGORY,
-            sortBy: 'created_at',
-            desc: false,
             returnContent: true,
         });
 
@@ -73,8 +71,6 @@ const FeaturedComparisons = () => {
     const getFeaturedComparisons = async () => {
         const responseJson = await getResourcesByClass({
             id: CLASSES.FEATURED_COMPARISON,
-            sortBy: 'created_at',
-            desc: false,
             returnContent: true,
         });
 

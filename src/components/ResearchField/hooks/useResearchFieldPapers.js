@@ -54,8 +54,6 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
             } else if (researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN) {
                 papersService = getResourcesByClass({
                     id: sort === 'featured' ? CLASSES.FEATURED_PAPER : CLASSES.PAPER,
-                    sortBy: 'created_at',
-                    desc: true,
                     items: pageSize,
                     visibility: sort,
                 });

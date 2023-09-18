@@ -47,8 +47,6 @@ function ContentTypes() {
             id: type,
             page,
             items: pageSize,
-            sortBy: 'created_at',
-            desc: true,
         });
 
         return {

@@ -44,8 +44,6 @@ const Items = props => {
                 id: props.filterClass,
                 page: p,
                 items: pageSize,
-                sortBy: 'created_at',
-                desc: true,
                 creator: props.userId,
             }).then(result => {
                 // Resources

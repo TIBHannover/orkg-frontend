@@ -36,9 +36,7 @@ const DraftLists = () => {
             id: resourceClass,
             page,
             items: pageSize,
-            sortBy: 'created_at',
             creator: user.id,
-            desc: true,
         });
 
         if (resources.length) {
