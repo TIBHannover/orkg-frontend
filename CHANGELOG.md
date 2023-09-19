@@ -3,6 +3,19 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.122.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.121.0...v0.122.0) - 2023-09-19
+
+### Changes
+
+- feat: "Disable metadata editing of papers when paper is verified" [`#1193`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1193)
+- feat(Widget): add support for comparisons [`#1178`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1178)
+- chore(Publish): Update doi response [`#1199`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1199)
+- fix(ViewPaper): maintain the edit mode after creating a new contribution [`#1196`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1196)
+- fix: remove sorting parameter from class resources search [`#1185`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1185)
+- Fix: "Replace term 'Toots' with 'Posts' for Mastodon widget" [`#1200`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1200)
+- ux(Autocomplete): copy the id of selected item instead of label [`#1184`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1184)
+
+---
 ## [v0.121.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.120.0...v0.121.0) - 2023-09-08
 
 ### Changes
