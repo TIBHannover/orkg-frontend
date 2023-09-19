@@ -235,8 +235,8 @@ function usePublish() {
                     url: `${getPublicUrl()}${reverse(ROUTES.COMPARISON, { comparisonId })}`,
                 })
                     .then(doiResponse => {
-                        dispatch(setDoi(doiResponse.data.attributes.doi));
-                        createLiteral(doiResponse.data.attributes.doi).then(doiLiteral => {
+                        dispatch(setDoi(doiResponse.doi));
+                        createLiteral(doiResponse.doi).then(doiLiteral => {
                             createResourceStatement(comparisonId, PREDICATES.HAS_DOI, doiLiteral.id);
                             setIsLoading(false);
                             toast.success('DOI has been registered successfully');

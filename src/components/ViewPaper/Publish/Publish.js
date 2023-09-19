@@ -126,7 +126,7 @@ function Publish(props) {
                 .then(async doiResponse => {
                     // The followed model:
                     // https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Modeling-of-persistent-identification-of-ORKG-papers
-                    const doiLiteral = await createLiteral(doiResponse.data.attributes.doi);
+                    const doiLiteral = await createLiteral(doiResponse.doi);
                     const apiCalls = [createResourceStatement(createdPaper.id, PREDICATES.HAS_DOI, doiLiteral.id)];
                     if (viewPaper.hasVersion) {
                         await deleteStatementById(viewPaper.hasVersion.statementId);
@@ -140,7 +140,7 @@ function Publish(props) {
                         }),
                     );
                     await Promise.all(apiCalls);
-                    setDataCiteDoi(doiResponse.data.attributes.doi);
+                    setDataCiteDoi(doiResponse.doi);
                     setCreatedPaperId(createdPaper.id);
                     setIsLoading(false);
                     toast.success('DOI has been registered successfully');
