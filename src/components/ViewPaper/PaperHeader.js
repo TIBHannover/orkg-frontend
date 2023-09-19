@@ -19,6 +19,7 @@ import { Button, Alert } from 'reactstrap';
 import { getAltMetrics } from 'services/altmetric/index';
 import { loadPaper } from 'slices/viewPaperSlice';
 import EditPaperModal from 'components/PaperForm/EditPaperModal';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 
 const PaperHeader = props => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -66,6 +67,7 @@ const PaperHeader = props => {
         setIsOpenEditModal(false);
     };
     const hasDoi = viewPaper.doi && viewPaper.doi.label?.startsWith('10.');
+    const isMetadataDisabled = viewPaper.verified && !isCurationAllowed;
 
     return (
         <>
@@ -133,19 +135,38 @@ const PaperHeader = props => {
                     </div>
                 )}
             </div>
-            <div className="d-flex">
-                <div className="flex-grow-1">
+            <div className="d-flex justify-content-between">
+                <div className="d-flex">
                     {props.editMode && (
-                        <Button color="secondary" size="sm" className="mt-2" style={{ marginLeft: 'auto' }} onClick={() => setIsOpenEditModal(true)}>
-                            <Icon icon={faPen} /> Edit metadata
-                        </Button>
-                    )}{' '}
+                        <ConditionalWrapper
+                            condition={isMetadataDisabled}
+                            wrapper={children => (
+                                <Tippy content="The metadata cannot be edited because the correctness is manually verified by a human curator">
+                                    {children}
+                                </Tippy>
+                            )}
+                        >
+                            <div>
+                                <Button
+                                    disabled={isMetadataDisabled}
+                                    color="secondary"
+                                    size="sm"
+                                    className="mt-2 me-2"
+                                    onClick={() => setIsOpenEditModal(true)}
+                                >
+                                    <Icon icon={faPen} /> Edit metadata
+                                </Button>
+                            </div>
+                        </ConditionalWrapper>
+                    )}
+
                     {showDeleteButton && (
-                        <Button color="danger" size="sm" className="mt-2" style={{ marginLeft: 'auto' }} onClick={deletePapers}>
+                        <Button color="danger" size="sm" className="mt-2" onClick={deletePapers}>
                             <Icon icon={faTrash} /> Delete paper
                         </Button>
                     )}
                 </div>
+
                 {viewPaper.verified && (
                     <Tippy content="The paper metadata was verified by an ORKG curator">
                         <div className="mt-3 justify-content-end">
