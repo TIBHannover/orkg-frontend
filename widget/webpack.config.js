@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const copyWebpackPlugin = require('copy-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 const bundleOutputDir = './dist';
@@ -11,7 +11,7 @@ module.exports = (env, argv) => {
 
     return [
         {
-            entry: './src/main.js',
+            entry: 'src/main.js',
             output: {
                 filename: 'widget.js',
                 path: isDevBuild ? path.resolve(bundleOutputDir) : path.resolve(bundleReleaseOutputDir),
@@ -25,7 +25,7 @@ module.exports = (env, argv) => {
                     'process.env.FRONTEND_SERVER_URL': isDevBuild ? JSON.stringify('http://localhost:3000/') : JSON.stringify('https://orkg.org/'),
                 }),
                 ...(isDevBuild
-                    ? [new webpack.SourceMapDevToolPlugin(), new copyWebpackPlugin({ patterns: [{ from: 'demo/' }] })]
+                    ? [new webpack.SourceMapDevToolPlugin(), new CopyWebpackPlugin({ patterns: [{ from: 'demo/' }] })]
                     : [new TerserPlugin()]),
             ],
             module: {
@@ -61,6 +61,11 @@ module.exports = (env, argv) => {
                         },
                     },
                 ],
+            },
+            resolve: {
+                alias: {
+                    src: path.resolve(__dirname, 'src'),
+                },
             },
         },
     ];
