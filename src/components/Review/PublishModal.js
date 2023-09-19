@@ -77,8 +77,8 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                         authors,
                         url: `${getUrl()}${reverse(ROUTES.REVIEW, { id: versionResource.id })}`,
                     });
-                    setDoi(doiResponse.data.attributes.doi);
-                    const doiLiteral = await createLiteral(doiResponse.data.attributes.doi);
+                    setDoi(doiResponse.doi);
+                    const doiLiteral = await createLiteral(doiResponse.doi);
                     createResourceStatement(versionResource.id, PREDICATES.HAS_DOI, doiLiteral.id);
                     toast.success('DOI has been registered successfully');
                     setIsLoading(false);
