@@ -153,7 +153,6 @@ export default function AddContribution(props) {
         if (paper.contributions.length > 0) {
             paper.contributions.map(contribution => {
                 if (e.target.checked && !selectedContributions.includes(contribution.id)) {
-                    // setSelectedContributions(prev => [...prev, contribution.id]);
                     newSelectedContributions = [...newSelectedContributions, contribution.id];
                 } else if (!e.target.checked) {
                     newSelectedContributions = [...newSelectedContributions.filter(i => i !== contribution.id)];
