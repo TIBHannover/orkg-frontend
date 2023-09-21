@@ -3,10 +3,12 @@ import uniqBy from 'lodash/uniqBy';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBundleBySubject, getStatementsByObject } from 'services/backend/statements';
+import { CLASSES } from 'constants/graphSettings';
 
 const COLOR_NODE = '#80869B';
 const COLOR_NODE_START = '#E86161';
 const MAX_NODE_LABEL_LENGTH = 20;
+const EDGE_SIZE = 5;
 
 const useGraphView = ({ resourceId }) => {
     const [nodes, setNodes] = useState([]);
@@ -14,6 +16,8 @@ const useGraphView = ({ resourceId }) => {
     const [depth, setDepth] = useState(2);
     const [collapsed, setCollapsed] = useState([]);
     const [isLoadingStatements, setIsLoadingStatements] = useState(true);
+    const [blackListClasses, setBlackListClasses] = useState([{ label: 'ResearchField', id: CLASSES.RESEARCH_FIELD }]);
+
     const graphRef = useRef(null);
 
     const formatNodeLabel = label => (label.length > MAX_NODE_LABEL_LENGTH ? `${label.substring(0, MAX_NODE_LABEL_LENGTH)}...` : label);
@@ -56,6 +60,8 @@ const useGraphView = ({ resourceId }) => {
                 source: statement.subject.id,
                 target: statement.object.id,
                 label: statement.predicate.label,
+                propertyId: statement.predicate.id,
+                size: EDGE_SIZE,
             });
         }
 
@@ -84,9 +90,14 @@ const useGraphView = ({ resourceId }) => {
     }, []);
 
     const fetchStatements = useCallback(
-        async ({ nodeId, shouldAddSubject = false, depth: maxLevel = depth, resetNodes = false }) => {
+        async ({ nodeId, blackList = [], shouldAddSubject = false, depth: maxLevel = depth, resetNodes = false }) => {
             setIsLoadingNode({ nodeId, isLoading: true });
-            const bundle = await getStatementsBundleBySubject({ id: nodeId, maxLevel: parseInt(maxLevel, 10) + 1 });
+            const bundle = await getStatementsBundleBySubject({
+                id: nodeId,
+                maxLevel: parseInt(maxLevel, 10) + 1,
+                blacklist: blackList.map(c => c.id),
+            });
+
             const statements = addStatementsLevel({ subjectId: nodeId, statements: bundle.statements, maxLevel }).filter(
                 statement => statement.level <= maxLevel,
             );
@@ -176,12 +187,12 @@ const useGraphView = ({ resourceId }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            await fetchStatements({ nodeId: resourceId, shouldAddSubject: true, resetNodes: true });
+            await fetchStatements({ nodeId: resourceId, blackList: blackListClasses, shouldAddSubject: true, resetNodes: true });
             setCollapsed([]);
             setIsLoadingStatements(false);
         };
         fetchData();
-    }, [depth, resourceId, fetchStatements]);
+    }, [depth, resourceId, fetchStatements, blackListClasses]);
 
     useEffect(() => {
         setCollapsed(collapsed);
@@ -198,6 +209,8 @@ const useGraphView = ({ resourceId }) => {
         setCollapsed,
         graphRef,
         toggleExpandNode,
+        setBlackListClasses,
+        blackListClasses,
     };
 };
 

@@ -1,24 +1,41 @@
-import { faDharmachakra, faHome, faProjectDiagram, faSitemap, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { useState, useId } from 'react';
+import { faDharmachakra, faHome, faProjectDiagram, faSitemap, faSpinner, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ContextMenu from 'components/GraphView/ContextMenu';
 import GraphSearch from 'components/GraphView/GraphSearch';
 import Node from 'components/GraphView/Node';
 import SelectedNodeBox from 'components/GraphView/SelectedNodeBox';
+import SelectedEdgeBox from 'components/GraphView/SelectedEdgeBox';
 import useGraphView from 'components/GraphView/hooks/useGraphView';
 import PropTypes from 'prop-types';
-import { useId, useState } from 'react';
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { GraphCanvas, lightTheme, useSelection } from 'reagraph';
 import RobotoFont from 'components/GraphView/roboto-medium-webfont.woff';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
+import { ENTITIES } from 'constants/graphSettings';
+import Tippy from '@tippyjs/react';
 
 const LazyGraphViewModal = ({ toggle, resourceId }) => {
     const [layoutType, setLayoutType] = useState('forceDirected2d');
     const [layoutSelectionOpen, setLayoutSelectionOpen] = useState(false);
-
+    const [selectedEdge, setSelectedEdge] = useState(null);
+    const classSelectorId = useId();
     const depthId = useId();
 
-    const { nodes, edges, setDepth, depth, fetchIncomingStatements, isLoadingStatements, collapsed, setCollapsed, graphRef, toggleExpandNode } =
-        useGraphView({ resourceId });
+    const {
+        nodes,
+        edges,
+        setDepth,
+        depth,
+        fetchIncomingStatements,
+        isLoadingStatements,
+        collapsed,
+        setCollapsed,
+        graphRef,
+        toggleExpandNode,
+        setBlackListClasses,
+        blackListClasses,
+    } = useGraphView({ resourceId });
 
     const handleLayoutChange = newLayoutType => {
         setLayoutType(newLayoutType);
@@ -47,6 +64,15 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
     };
 
     const layoutIcon = layoutIcons[layoutType] || faSitemap;
+    const onEdgeButtonClick = edge => {
+        setSelectedEdge(edge);
+        setSelections([]);
+    };
+
+    const handleCanvasClick = e => {
+        setSelectedEdge(null);
+        onCanvasClick(e);
+    };
 
     return (
         <Modal size="lg" isOpen toggle={toggle} style={{ maxWidth: '90%', marginBottom: 0 }}>
@@ -65,7 +91,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                                 setLayoutSelectionOpen(!layoutSelectionOpen);
                             }}
                         >
-                            <DropdownToggle caret color="secondary">
+                            <DropdownToggle caret color="secondary" className="me-2">
                                 Layout:
                                 <Icon icon={layoutIcon} rotation={layoutType === 'treeLr2d' ? 270 : undefined} className="mx-2" />
                             </DropdownToggle>
@@ -92,7 +118,44 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                                 </DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
-                        <div className="d-flex ms-3 align-items-center">
+                        <div className="d-flex me-2 align-items-center">
+                            <Tippy
+                                interactive={true}
+                                trigger="click"
+                                content={
+                                    <div className="p-1" style={{ minWidth: 300 }}>
+                                        <Label for={classSelectorId}>Blacklisted classes</Label>
+                                        <div>
+                                            <AutoComplete
+                                                entityType={ENTITIES.CLASS}
+                                                isMulti={true}
+                                                placeholder="Select a class"
+                                                onChange={selected => {
+                                                    setBlackListClasses(!selected ? [] : selected);
+                                                }}
+                                                value={blackListClasses}
+                                                autoLoadOption={true}
+                                                openMenuOnFocus={true}
+                                                copyValueButton={true}
+                                                isClearable={false}
+                                                autoFocus={false}
+                                                inputId={classSelectorId}
+                                                cssClasses="form-control-sm"
+                                                isValidNewOption={false}
+                                                ols={false}
+                                            />
+                                        </div>
+                                    </div>
+                                }
+                            >
+                                <span>
+                                    <Button color="secondary" className="px-3" size="sm">
+                                        <Icon icon={faWrench} />
+                                    </Button>
+                                </span>
+                            </Tippy>
+                        </div>
+                        <div className="d-flex me-3 align-items-center">
                             <Label for={depthId} className="m-0">
                                 Depth
                             </Label>
@@ -130,6 +193,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                         fetchIncomingStatements={fetchIncomingStatements}
                     />
                 )}
+                {selectedEdge && !selectedNode && <SelectedEdgeBox selectedEdge={selectedEdge} />}
 
                 {!isLoadingStatements && (
                     <GraphCanvas
@@ -153,6 +217,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                         labelType="all"
                         edgeLabelPosition="natural"
                         actives={actives}
+                        onEdgeClick={onEdgeButtonClick}
                         onNodeClick={node => {
                             if (onNodeClick) {
                                 onNodeClick(node);
@@ -160,7 +225,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                         }}
                         onNodePointerOver={onNodePointerOver}
                         onNodePointerOut={onNodePointerOut}
-                        onCanvasClick={onCanvasClick}
+                        onCanvasClick={handleCanvasClick}
                         layoutOverrides={
                             layoutType === 'forceDirected2d'
                                 ? {
