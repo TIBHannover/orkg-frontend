@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.123.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.122.0...v0.123.0) - 2023-09-22
+
+### Changes
+
+- Revert "Merge branch '1496-remove-id-sorting-parameter-for-class-resource-search' into 'master'" [`#1206`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1206)
+- feat(GraphView): support blacklisting of classes, show the full label of properties [`#1194`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1194)
+
+---
 ## [v0.122.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.121.0...v0.122.0) - 2023-09-19
 
 ### Changes
