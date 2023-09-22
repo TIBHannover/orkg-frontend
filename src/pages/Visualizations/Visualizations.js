@@ -19,6 +19,8 @@ const Visualizations = () => {
             id: CLASSES.VISUALIZATION,
             page,
             items: pageSize,
+            sortBy: 'created_at',
+            desc: true,
         }).then(result =>
             getStatementsBySubjects({ ids: result.content.map(p => p.id) })
                 .then(statements => addAuthorsToStatementBundle(statements))

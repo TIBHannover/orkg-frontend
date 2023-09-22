@@ -26,6 +26,8 @@ const Comparisons = () => {
             id: CLASSES.COMPARISON,
             page,
             items: pageSize,
+            sortBy: 'created_at',
+            desc: true,
         }).then(async result => ({
             ...result,
             items: groupVersionsOfComparisons(
