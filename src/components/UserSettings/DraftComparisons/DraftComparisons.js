@@ -35,7 +35,9 @@ const DraftComparisons = () => {
                 id: CLASSES.COMPARISON_DRAFT,
                 page,
                 items: 10,
+                sortBy: 'created_at',
                 creator: userId,
+                desc: true,
             });
             const draftComparisonUrls = await Promise.all(_draftComparisons.map(draftComparison => getResourceData(draftComparison.id)));
             setIsLast(last);
