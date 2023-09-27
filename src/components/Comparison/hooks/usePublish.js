@@ -231,7 +231,7 @@ function usePublish() {
                     subject: researchField ? researchField.label : '',
                     description,
                     related_resources: contributionsList,
-                    authors: comparisonCreatorsORCID.map(c => ({ creator: c.label, orcid: c.orcid })),
+                    authors: comparisonCreatorsORCID.map(c => ({ creator: c.label, orcid: c.orcid || null })),
                     url: `${getPublicUrl()}${reverse(ROUTES.COMPARISON, { comparisonId })}`,
                 })
                     .then(doiResponse => {
