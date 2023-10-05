@@ -3,7 +3,12 @@ import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getResource } from 'services/backend/resources';
-import { getStatementsBundleBySubject, getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
+import {
+    getStatementsBundleBySubject,
+    getStatementsByObjectAndPredicate,
+    getStatementsBySubjectAndPredicate,
+    getStatementsBySubjects,
+} from 'services/backend/statements';
 import { getResourceData } from 'services/similarity';
 import { countBy, orderBy } from 'lodash';
 import { Cite } from '@citation-js/core';
@@ -133,6 +138,8 @@ const useLoad = () => {
         // get all published versions for this article
         const versions = await getVersions(paperResource.id);
 
+        const doiStatements = await getStatementsBySubjectAndPredicate({ subjectId: paramId, predicateId: PREDICATES.HAS_DOI });
+        const doi = doiStatements?.[0]?.object?.label ?? null;
         const contributionResources = getObjectsByPredicateAndSubject(paperStatements, PREDICATES.HAS_CONTRIBUTION, id);
 
         if (contributionResources.length === 0) {
@@ -281,6 +288,7 @@ const useLoad = () => {
             statements: paperStatements,
             contributors,
             references,
+            doi,
         };
     }, []);
 

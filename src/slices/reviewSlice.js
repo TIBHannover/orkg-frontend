@@ -36,6 +36,7 @@ const initialState = {
     references: [],
     usedReferences: {},
     statements: [],
+    doi: null,
 };
 
 export const reviewSlice = createSlice({
@@ -56,6 +57,7 @@ export const reviewSlice = createSlice({
             state.isPublished = payload.isPublished;
             state.statements = payload.statements;
             state.references = payload.references;
+            state.doi = payload.doi;
         },
         setIsLoading: (state, { payload }) => {
             state.isLoading = payload;
