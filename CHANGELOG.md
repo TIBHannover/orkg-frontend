@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.124.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.123.0...v0.124.0) - 2023-10-05
+
+### Changes
+
+- feat(Review): show DOI on top of review [`#1204`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1204)
+- fix: provide null instead of empty string for author ORCIDs [`#1207`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1207)
+
+---
 ## [v0.123.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.122.0...v0.123.0) - 2023-09-22
 
 ### Changes
