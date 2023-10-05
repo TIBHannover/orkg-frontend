@@ -34,6 +34,7 @@ const ViewArticle = () => {
     const isPublished = useSelector(state => state.review.isPublished);
     const versions = useSelector(state => state.review.versions);
     const researchField = useSelector(state => state.review.researchField);
+    const doi = useSelector(state => state.review.doi);
     const dispatch = useDispatch();
     const latestVersionId = versions?.[0]?.id;
     const newVersionAvailable = isPublished && latestVersionId !== id;
@@ -87,6 +88,16 @@ const ViewArticle = () => {
                                     </Alert>
                                     <ResearchFieldBadge researchField={researchField} />
                                     <AuthorBadges authors={authors} />{' '}
+                                    {doi && (
+                                        <div className="mb-1">
+                                            <small>
+                                                DOI:{' '}
+                                                <a href={`https://doi.org/${doi}`} target="_blank" rel="noopener noreferrer">
+                                                    https://doi.org/{doi}
+                                                </a>
+                                            </small>
+                                        </div>
+                                    )}
                                 </div>
                             </header>
                             {sections.map(section => {

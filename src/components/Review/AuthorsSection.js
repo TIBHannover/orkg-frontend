@@ -21,7 +21,7 @@ const AuthorsSection = () => {
             </SectionTypeStyled>
             <AuthorBadges authors={authorResources} />
             <Button size="sm" color="secondary" className="ms-2" onClick={() => setShowModal(true)} aria-label="Edit article authors">
-                <Icon icon={faPen} /> Edit
+                <Icon icon={faPen} /> Edit authors
             </Button>
 
             <AuthorsModal show={showModal} toggle={() => setShowModal(v => !v)} />
