@@ -120,7 +120,7 @@ function Publish(props) {
                 // we send only one contribution id because we want to create a DOI for the whole paper and not for each contribution.
                 // the backend will fetch the paper original DOI
                 related_sources: viewPaper.contributions?.[0] ? [viewPaper.contributions[0].id] : [''],
-                authors: contributors.map(creator => ({ ...creator.display_name, orcid: '' })),
+                authors: contributors.map(creator => ({ ...creator.display_name, orcid: null })),
                 url: `${getPublicUrl()}${reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaper.id })}`,
             })
                 .then(async doiResponse => {
