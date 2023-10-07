@@ -33,13 +33,12 @@ SHELL ["/bin/bash", "-c"]
 
 RUN npm install -g @beam-australia/react-env
 
-ADD entrypoint.sh /var/entrypoint.sh
-RUN ["chmod", "+x", "/var/entrypoint.sh"]
+ADD entrypoint.sh /docker-entrypoint.d/80-react-env.sh
+
+RUN chmod +x /docker-entrypoint.d/80-react-env.sh
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=build /app/build /usr/share/nginx/html
-
-ENTRYPOINT ["/var/entrypoint.sh"]
 
 CMD ["nginx", "-g", "daemon off;"]
