@@ -1,10 +1,10 @@
+import Link from 'components/NextJsMigration/Link';
 import { Container, Row, Col, Badge } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import ROUTES_CMS from 'constants/routesCms';
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
-import { ReactComponent as Logo } from 'assets/img/vertical_logo.svg';
+import Logo from 'assets/img/vertical_logo.svg';
 import TIB_LOGO from 'assets/img/poweredby/TIB_Logo_EN.png';
 import LUH_LOGO from 'assets/img/poweredby/LUH.png';
 import L3S_LOGO from 'assets/img/poweredby/L3S.png';
@@ -14,7 +14,7 @@ import EOSC_LOGO from 'assets/img/poweredby/EOSC.png';
 import styled from 'styled-components';
 import { reverse } from 'named-urls';
 import Tippy from '@tippyjs/react';
-import InfoSheet from 'assets/pdf/infosheet-data-protection.pdf';
+import Image from 'components/NextJsMigration/Image';
 
 const FooterWrapper = styled.div`
     background: #e0e2ea;
@@ -62,8 +62,8 @@ const Footer = () => (
                         <hr className="me-5" />
                         <Row>
                             <div className="float-start col-md-3">
-                                <Link to={ROUTES.HOME}>
-                                    <Logo style={{ height: '80px' }} />
+                                <Link href={ROUTES.HOME}>
+                                    <Image src={Logo} height="80" alt="Small ORKG logo" />
                                 </Link>
                             </div>
                             <div className="col-md-8 description">
@@ -76,23 +76,23 @@ const Footer = () => (
                         <hr className="me-5" />
                         <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
-                                <Link to={reverse(ROUTES.ABOUT_NO_SLUG_ID, {})}>About us</Link>
+                                <Link href={reverse(ROUTES.ABOUT_NO_SLUG_ID, {})}>About us</Link>
                             </li>
                             <li>
-                                <Link to={ROUTES.HELP_CENTER}>Help center</Link>
+                                <Link href={ROUTES.HELP_CENTER}>Help center</Link>
                             </li>
                             <li>
-                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })}>Data protection</Link> (
-                                <a href={InfoSheet} target="_blank" rel="noreferrer">
+                                <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })}>Data protection</Link> (
+                                <a href="/files/infosheet-data-protection.pdf" target="_blank" rel="noreferrer">
                                     Info sheet
                                 </a>
                                 )
                             </li>
                             <li>
-                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.TERMS_OF_USE })}>Terms of use</Link>
+                                <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.TERMS_OF_USE })}>Terms of use</Link>
                             </li>
                             <li>
-                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.IMPRINT })}>Imprint</Link>
+                                <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.IMPRINT })}>Imprint</Link>
                             </li>
                         </ul>
                     </FooterCol>
@@ -101,10 +101,10 @@ const Footer = () => (
                         <hr className="me-5" />
                         <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
-                                <Link to={ROUTES.DATA}>Data Access</Link>
+                                <Link href={ROUTES.DATA}>Data Access</Link>
                             </li>
                             <li>
-                                <Link to={ROUTES.CHANGELOG}>Changelog</Link>
+                                <Link href={ROUTES.CHANGELOG}>Changelog</Link>
                             </li>
                             <li>
                                 <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/" target="_blank" rel="noopener noreferrer">
@@ -112,7 +112,7 @@ const Footer = () => (
                                 </a>
                             </li>
                             <li>
-                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.LICENSE })}>License</Link>
+                                <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.LICENSE })}>License</Link>
                             </li>
                             <li>
                                 <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues" target="_blank" rel="noopener noreferrer">
@@ -132,10 +132,10 @@ const Footer = () => (
                                 </TwitterLink>
                             </li>
                             <li>
-                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.CONTACT })}>Contact us</Link>
+                                <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.CONTACT })}>Contact us</Link>
                             </li>
                             <li>
-                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.ACCESSIBILITY_STATEMENT })}>Accessibility</Link>
+                                <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.ACCESSIBILITY_STATEMENT })}>Accessibility</Link>
                             </li>
                             <li>
                                 <a href="https://forms.gle/NK8Jzti8qGdRooDJ8" target="_blank" rel="noopener noreferrer">
@@ -157,27 +157,28 @@ const Footer = () => (
                 <Row className="mt-4">
                     <PartnerLogoCol md={4} style={{}}>
                         <a href="https://www.tib.eu/en/" target="_blank" rel="noopener noreferrer">
-                            <img src={TIB_LOGO} alt="Logo Technische Informationsbibliothek (TIB)" style={{ borderWidth: 0, height: '50px' }} />
+                            <Image src={TIB_LOGO} alt="Logo Technische Informationsbibliothek (TIB)" style={{ borderWidth: 0 }} height="50" />
                         </a>
                     </PartnerLogoCol>
                     <Col md={8}>
                         <Row className="g-0">
                             <Col md={4} style={{ textAlign: 'center' }}>
                                 <a href="https://www.uni-hannover.de/en/" target="_blank" rel="noopener noreferrer">
-                                    <img src={LUH_LOGO} alt="Logo Leibniz University Hannover" style={{ borderWidth: 0, height: '45px' }} />
+                                    <Image src={LUH_LOGO} alt="Logo Leibniz University Hannover" style={{ borderWidth: 0 }} height="45" />
                                 </a>
                             </Col>
                             <Col md={4} style={{ textAlign: 'center' }}>
                                 <a href="https://www.l3s.de/en/" target="_blank" rel="noopener noreferrer">
-                                    <img src={L3S_LOGO} alt="Logo L3S Research Center" style={{ borderWidth: 0, height: '50px' }} />
+                                    <Image src={L3S_LOGO} alt="Logo L3S Research Center" style={{ borderWidth: 0 }} height="50" />
                                 </a>
                             </Col>
                             <Col md={4} style={{ textAlign: 'center' }}>
                                 <a href="https://infai.org/en/" target="_blank" rel="noopener noreferrer">
-                                    <img
+                                    <Image
                                         src={INFAI_LOGO}
                                         alt="Logo  Institute for Applied Informatics (InfAI)"
-                                        style={{ borderWidth: 0, height: '45px' }}
+                                        style={{ borderWidth: 0 }}
+                                        height="45"
                                     />
                                 </a>
                             </Col>
@@ -187,10 +188,11 @@ const Footer = () => (
                 <hr style={{ width: '50%', margin: '1rem auto' }} />
                 <Row>
                     <PartnerLogoCol md={{ size: 3, order: 1, offset: 3 }} style={{ textAlign: 'center' }}>
-                        <img
+                        <Image
                             src={EU_LOGO}
                             alt="Co-funded by the Horizon 2020 programme of the European Union"
-                            style={{ borderWidth: 0, height: '50px' }}
+                            style={{ borderWidth: 0 }}
+                            height="50"
                         />
                     </PartnerLogoCol>
                     <PartnerLogoCol md={{ size: 3, order: 2, offset: 0 }} style={{ textAlign: 'center' }}>
@@ -199,7 +201,7 @@ const Footer = () => (
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <img src={EOSC_LOGO} alt="European Open Science Cloud (EOSC)" style={{ borderWidth: 0, height: '45px' }} />
+                            <Image src={EOSC_LOGO} alt="European Open Science Cloud (EOSC)" style={{ borderWidth: 0 }} height="45" />
                         </a>
                     </PartnerLogoCol>
                 </Row>

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'components/NextJsMigration/Link';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -54,7 +54,7 @@ const ReviewCard = ({ versions, showCurationFlags, showBadge }) => {
                 )}
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
-                        <Link to={reverse(ROUTES.REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
+                        <Link href={reverse(ROUTES.REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
                         {showBadge && (
                             <div className="d-inline-block ms-2">
                                 <CardBadge color="primary">Review</CardBadge>
@@ -79,7 +79,7 @@ const ReviewCard = ({ versions, showCurationFlags, showBadge }) => {
                             {versions.map((version, index) => (
                                 <span key={version?.id}>
                                     <Tippy content={version?.description || 'no description'}>
-                                        <Link to={reverse(ROUTES.REVIEW, { id: version?.id })}>Version {versions?.length - index}</Link>
+                                        <Link href={reverse(ROUTES.REVIEW, { id: version?.id })}>Version {versions?.length - index}</Link>
                                     </Tippy>{' '}
                                     {index < versions.length - 1 && ' • '}
                                 </span>
@@ -88,7 +88,6 @@ const ReviewCard = ({ versions, showCurationFlags, showBadge }) => {
                     )}
                 </div>
             </div>
-
             <div className="col-md-3 d-flex align-items-end flex-column p-0">
                 <div className="flex-grow-1 mb-1">
                     <div className="d-none d-md-flex align-items-end justify-content-end">

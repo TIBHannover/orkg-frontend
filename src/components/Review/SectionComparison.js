@@ -8,7 +8,7 @@ import { isEqual } from 'lodash';
 import { Alert } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 
 const SectionComparison = ({ id, sectionId }) => {
     const references = useSelector(state => state.review.references);

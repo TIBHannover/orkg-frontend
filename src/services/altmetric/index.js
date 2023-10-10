@@ -1,4 +1,4 @@
 import { submitGetRequest } from 'network';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 
 export const getAltMetrics = doi => submitGetRequest(`${env('ALTMETRIC_URL')}doi/${doi}`).catch(e => {});

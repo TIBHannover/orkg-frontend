@@ -1,12 +1,12 @@
+import Link from 'components/NextJsMigration/Link';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faLink, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { goToResourceHistory } from 'slices/statementBrowserSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { truncate } from 'lodash';
 import { getResourceLink } from 'utils';
 import Tippy from '@tippyjs/react';
-import { Container, BackButton, BreadcrumbList, BreadcrumbItem } from './styled';
+import { Container, BackButton, BreadcrumbList, BreadcrumbItem } from 'components/StatementBrowser/Breadcrumbs/styled';
 
 const Breadcrumbs = () => {
     const dispatch = useDispatch();
@@ -66,7 +66,7 @@ const Breadcrumbs = () => {
                             </div>
                             {resourceHistory.allIds.length === index + 1 && !openExistingResourcesInDialog && existingResourceId && (
                                 <Tippy content="Go to resource page">
-                                    <Link target="_blank" className="ms-2 resourceLink" to={getResourceLink(_class, selectedResource)}>
+                                    <Link target="_blank" className="ms-2 resourceLink" href={getResourceLink(_class, selectedResource)}>
                                         <Icon icon={faLink} color="#fff" />
                                     </Link>
                                 </Tippy>

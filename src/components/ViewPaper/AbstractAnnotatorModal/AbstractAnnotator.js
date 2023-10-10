@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import rangy from 'rangy';
 import { useSelector, useDispatch } from 'react-redux';
 import { createAnnotation } from 'slices/viewPaperSlice';
-import AnnotationTooltip from './AnnotationTooltip';
+import AnnotationTooltip from 'components/ViewPaper/AbstractAnnotatorModal/AnnotationTooltip';
 
 function getAllIndexes(arr, val) {
     const indexes = [];

@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState, useEffect } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
@@ -14,7 +15,6 @@ import { getPublicUrl, filterObjectOfStatementsByPredicateAndClass, getErrorMess
 import { getStatementsBySubject, createResourceStatement, deleteStatementById, getStatementsBundleBySubject } from 'services/backend/statements';
 import { createResourceData } from 'services/similarity/index';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -177,7 +177,7 @@ function Publish(props) {
                     {createdPaperId && dataCiteDoi && (
                         <>
                             DOI is assigned successfully.{' '}
-                            <Link target="_blank" to={reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaperId })}>
+                            <Link target="_blank" href={reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaperId })}>
                                 View published version
                             </Link>
                         </>

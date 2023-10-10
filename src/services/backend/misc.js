@@ -1,9 +1,9 @@
 import { url } from 'constants/misc';
 import { ENTITIES } from 'constants/graphSettings';
 import { submitGetRequest, submitPostRequest } from 'network';
-import { getClasses, getClassById } from './classes';
-import { getPredicates, getPredicate } from './predicates';
-import { getResources, getResource } from './resources';
+import { getClasses, getClassById } from 'services/backend/classes';
+import { getPredicates, getPredicate } from 'services/backend/predicates';
+import { getResources, getResource } from 'services/backend/resources';
 
 export const doisUrl = `${url}dois/`;
 

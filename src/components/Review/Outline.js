@@ -1,7 +1,7 @@
+import Link from 'components/NextJsMigration/Link';
 import useScroll from 'components/Review/hooks/useScroll';
 import propTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Wrapper = styled.aside`
@@ -57,14 +57,16 @@ const Outline = ({ editMode = false }) => {
                         .filter(section => section?.title?.label)
                         .map(section => (
                             <ListItem key={section.id}>
-                                <Link to={`#section-${section.id}`}>{section.title.label}</Link>
+                                <Link href={`#section-${section.id}`} scroll={false}>
+                                    {section.title.label}
+                                </Link>
                             </ListItem>
                         ))}
                     <ListItem>
-                        <Link to="#section-acknowledgements">Acknowledgements</Link>
+                        <Link href="#section-acknowledgements">Acknowledgements</Link>
                     </ListItem>
                     <ListItem>
-                        <Link to="#section-references">References</Link>
+                        <Link href="#section-references">References</Link>
                     </ListItem>
                 </ol>
             </Box>

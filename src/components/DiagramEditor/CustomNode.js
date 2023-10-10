@@ -1,7 +1,7 @@
+import Link from 'components/NextJsMigration/Link';
 import { useEffect, useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { filterSubjectOfStatementsByPredicateAndClass, getResourceLink } from 'utils';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
@@ -25,7 +25,7 @@ function CustomNode({ data }) {
             <Handle type="target" position={Position.Top} />
             {data.id !== data.label ? (
                 <>
-                    <Link to={getResourceLink(data.classes?.[0], data.id)}>
+                    <Link href={getResourceLink(data.classes?.[0], data.id)}>
                         {paper?.id ? `${paper.label} - ` : ''}
                         {data.label}
                     </Link>
@@ -33,7 +33,6 @@ function CustomNode({ data }) {
             ) : (
                 <>{data.label}</>
             )}
-
             <Handle type="source" position={Position.Bottom} />
         </>
     );

@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from 'testUtils';
-import TableCellValue from '../TableCellValue';
+import TableCellValue from 'components/ContributionEditor/TableCellValue';
 
 const setup = className => {
     const label = 'example label';

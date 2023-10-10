@@ -3,7 +3,7 @@ import ROUTES from 'constants/routes.js';
 import { find, flatten } from 'lodash';
 import { reverse } from 'named-urls';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
 import { getContentByResearchProblemIdAndClasses } from 'services/backend/problems';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { addAuthorsToStatementBundle, getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate, reverseWithSlug } from 'utils';
@@ -26,7 +26,7 @@ function useResearchProblemContent({
     const [classFilterOptions] = useState(initialClassFilterOptions);
     const [classesFilter, setClassesFilter] = useState(initClassesFilter);
     const [totalElements, setTotalElements] = useState(0);
-    const navigate = useNavigate();
+    const router = useRouter();
 
     const loadData = useCallback(
         (page, total) => {
@@ -133,7 +133,7 @@ function useResearchProblemContent({
     // update url
     useEffect(() => {
         if (updateURL) {
-            navigate(
+            router.push(
                 `${
                     slug
                         ? reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
@@ -147,7 +147,7 @@ function useResearchProblemContent({
                 { replace: true },
             );
         }
-    }, [researchProblemId, sort, classesFilter, navigate, updateURL, slug]);
+    }, [researchProblemId, sort, classesFilter, updateURL, slug]);
 
     useEffect(() => {
         loadData(0);

@@ -1,7 +1,7 @@
+import Link from 'components/NextJsMigration/Link';
 import { reverse } from 'named-urls';
 import { getLinkByEntityType } from 'utils';
 import ROUTES from 'constants/routes.js';
-import { Link } from 'react-router-dom';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -20,7 +20,7 @@ function StatementCard({ statement }) {
                     <div className="px-3">
                         <DescriptionTooltip classes={statement.subject.classes} id={statement.subject.id} _class={statement.subject._class}>
                             {getLinkByEntityType(statement.subject._class, statement.subject.id) ? (
-                                <Link to={getLinkByEntityType(statement.subject._class, statement.subject.id)}>{statement.subject.label}</Link>
+                                <Link href={getLinkByEntityType(statement.subject._class, statement.subject.id)}>{statement.subject.label}</Link>
                             ) : (
                                 statement.subject.label
                             )}
@@ -29,7 +29,7 @@ function StatementCard({ statement }) {
                 </div>
                 <div className="col-sm">
                     <DescriptionTooltip id={statement.predicate.id} _class={statement.predicate._class}>
-                        <Link to={reverse(ROUTES.PROPERTY, { id: statement.predicate.id })}>{statement.predicate.label}</Link>
+                        <Link href={reverse(ROUTES.PROPERTY, { id: statement.predicate.id })}>{statement.predicate.label}</Link>
                     </DescriptionTooltip>
                 </div>
                 <div className="col-sm">{statement.object.label}</div>

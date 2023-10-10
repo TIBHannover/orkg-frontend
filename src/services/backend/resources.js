@@ -1,3 +1,6 @@
+'use client';
+
+import env from 'components/NextJsMigration/env';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { MISC } from 'constants/graphSettings';
 import { url } from 'constants/misc';

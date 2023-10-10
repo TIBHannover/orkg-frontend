@@ -1,10 +1,10 @@
+import Link from 'components/NextJsMigration/Link';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import useList from 'components/List/hooks/useList';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Alert, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
@@ -43,7 +43,7 @@ const PublishModal = ({ id, show, toggle, listId }) => {
                         />
                     </FormGroup>
                 ) : (
-                    <Link to={reverse(ROUTES.LIST, { id: publishedId })} onClick={toggle}>
+                    <Link href={reverse(ROUTES.LIST, { id: publishedId })} onClick={toggle}>
                         View the published list
                     </Link>
                 )}

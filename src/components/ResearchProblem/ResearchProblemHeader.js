@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Badge, Row, Col } from 'reactstrap';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
@@ -13,7 +14,6 @@ import AuthorsBox from 'components/TopAuthors/AuthorsBox';
 import FeaturedMark from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import { NavLink, Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
@@ -24,8 +24,8 @@ import CheckClasses from 'components/CheckClasses/CheckClasses';
 import { CLASSES } from 'constants/graphSettings';
 import TitleBar from 'components/TitleBar/TitleBar';
 import SuperResearchProblemBox from 'components/ResearchProblem/SuperResearchProblemBox/SuperResearchProblemBox';
-import ResearchFieldsBox from './ResearchFieldBox/ResearchFieldsBox';
-import Contributors from './Contributors';
+import ResearchFieldsBox from 'components/ResearchProblem/ResearchFieldBox/ResearchFieldsBox';
+import Contributors from 'components/ResearchProblem/Contributors';
 
 const ResearchProblemHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -113,7 +113,7 @@ const ResearchProblemHeader = ({ id }) => {
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu end>
-                                        <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
+                                        <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>
@@ -152,7 +152,7 @@ const ResearchProblemHeader = ({ id }) => {
                                     {subProblems.map(subfield => (
                                         <Link
                                             key={`index${subfield.id}`}
-                                            to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                            href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
                                                 researchProblemId: subfield.id,
                                                 slug: subfield.label,
                                             })}

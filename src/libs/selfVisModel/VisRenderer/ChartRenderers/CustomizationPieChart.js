@@ -9,7 +9,7 @@ import {
     addYAxisSelector,
     createValueEditor,
     initializeFromCustomizer,
-} from './HelperFunctions';
+} from 'libs/selfVisModel/VisRenderer/ChartRenderers/HelperFunctions';
 
 class CustomizationPieChart extends Component {
     constructor(props) {

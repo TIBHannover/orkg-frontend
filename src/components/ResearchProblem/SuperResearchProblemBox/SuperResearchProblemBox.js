@@ -1,5 +1,5 @@
+import Link from 'components/NextJsMigration/Link';
 import ROUTES from 'constants/routes';
-import { Link } from 'react-router-dom';
 import { reverseWithSlug } from 'utils';
 import PropTypes from 'prop-types';
 
@@ -18,7 +18,7 @@ const SuperResearchProblemBox = ({ isLoading, superProblems }) => (
                         {superProblems.map(superProblem => (
                             <li key={`suprp${superProblem.id}`}>
                                 <Link
-                                    to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                    href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
                                         researchProblemId: superProblem.id,
                                         slug: superProblem.label,
                                     })}

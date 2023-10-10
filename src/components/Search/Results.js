@@ -1,11 +1,11 @@
+import Link from 'components/NextJsMigration/Link';
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import ContentLoader from 'react-content-loader';
-import { Link } from 'react-router-dom';
 import { CLASSES } from 'constants/graphSettings';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { getResourceLink } from 'utils';
-import ItemMetadata from './ItemMetadata';
+import ItemMetadata from 'components/Search/ItemMetadata';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
@@ -68,7 +68,7 @@ const Results = props => (
                     <ListGroup>
                         {props.items.map((item, index) => (
                             <StyledListGroupItem rounded={props.hasNextPage.toString()} key={`result-${index}`} className="pt-1 pb-2">
-                                <Link to={item.customRoute ?? getResourceLink(props.class, item.id)}>{item.label}</Link>
+                                <Link href={item.customRoute ?? getResourceLink(props.class, item.id)}>{item.label}</Link>
                                 <ItemMetadata
                                     item={item}
                                     showClasses={props.showClasses}

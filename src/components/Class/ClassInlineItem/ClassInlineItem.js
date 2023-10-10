@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faCheck, faPen, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
@@ -10,7 +11,6 @@ import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { InputGroup } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -72,7 +72,7 @@ const ClassInlineItem = ({ classObject, editMode, noValueMessage, displayButtonO
                 <>
                     {isSavingChange && 'Saving...'}
                     {!isSavingChange && classObject && (
-                        <Link to={reverse(ROUTES.CLASS, { id: classObject.id })}>
+                        <Link href={reverse(ROUTES.CLASS, { id: classObject.id })}>
                             <DescriptionTooltip id={classObject.id} _class={ENTITIES.CLASS}>
                                 {classObject.label}
                             </DescriptionTooltip>

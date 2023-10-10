@@ -7,7 +7,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { Cookies } from 'react-cookie';
 import PropTypes from 'prop-types';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 
 const cookies = new Cookies();
 

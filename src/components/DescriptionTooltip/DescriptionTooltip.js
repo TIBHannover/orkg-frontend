@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faClipboard, faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -6,7 +7,6 @@ import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 import { Fragment, useEffect, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Button, Table } from 'reactstrap';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
@@ -123,7 +123,7 @@ const DescriptionTooltip = props => {
                                 {props.showURL && (
                                     <div>
                                         <Tippy content={`Go to ${renderTypeLabel()} page`}>
-                                            <Link to={getLinkByEntityType(props._class, props.id)} target="_blank">
+                                            <Link href={getLinkByEntityType(props._class, props.id)} target="_blank">
                                                 <Icon icon={faLink} size="xs" />
                                             </Link>
                                         </Tippy>
@@ -137,7 +137,7 @@ const DescriptionTooltip = props => {
                                 <td>
                                     {props.classes.map((c, index) => (
                                         <Fragment key={index}>
-                                            <Link to={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
+                                            <Link href={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
                                                 {c}
                                             </Link>
                                             {index + 1 < props.classes.length && ','}

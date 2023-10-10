@@ -1,5 +1,5 @@
+import Link from 'components/NextJsMigration/Link';
 import { Row, Col } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes.js';
@@ -25,7 +25,7 @@ function DiagramCard({ diagram }) {
         <DiagramCardStyled className="list-group-item">
             <Row>
                 <Col sm={12}>
-                    {diagram && <Link to={reverse(ROUTES.DIAGRAM, { id: diagram.id })}>{diagram.label ? diagram.label : <em>No title</em>}</Link>}
+                    {diagram && <Link href={reverse(ROUTES.DIAGRAM, { id: diagram.id })}>{diagram.label ? diagram.label : <em>No title</em>}</Link>}
                     <br />
                     <small>{diagram.id}</small>
                 </Col>

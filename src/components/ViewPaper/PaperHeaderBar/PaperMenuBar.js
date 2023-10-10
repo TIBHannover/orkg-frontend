@@ -1,10 +1,10 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTimes, faEllipsisV, faExternalLinkAlt, faComments } from '@fortawesome/free-solid-svg-icons';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import { useSelector } from 'react-redux';
@@ -45,7 +45,6 @@ function PaperMenuBar(props) {
                     <Icon icon={faPen} /> Edit
                 </RequireAuthentication>
             )}
-
             {props.editMode && (
                 <Button
                     className="flex-shrink-0"
@@ -58,7 +57,6 @@ function PaperMenuBar(props) {
                     <Icon icon={faTimes} /> Stop editing
                 </Button>
             )}
-
             <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
                 <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                     <Icon icon={faEllipsisV} />
@@ -69,12 +67,11 @@ function PaperMenuBar(props) {
                     </RequireAuthentication>
                     <DropdownItem divider />
                     <DropdownItem onClick={() => props.toggle('showGraphModal')}>View graph</DropdownItem>
-                    <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
+                    <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                         View resource
                     </DropdownItem>
                 </DropdownMenu>
             </ButtonDropdown>
-
             <PreventModal
                 isOpen={isOpenPWCModal}
                 toggle={() => setIsOpenPWCModal(v => !v)}
@@ -95,9 +92,7 @@ function PaperMenuBar(props) {
                     </>
                 }
             />
-
             <Publish showDialog={showPublishDialog} toggle={() => setShowPublishDialog(v => !v)} />
-
             {isOpenDiscussionModal && <DiscussionModal entityId={id} toggle={() => setIsOpenDiscussionModal(v => !v)} refreshCount={refreshCount} />}
         </>
     );

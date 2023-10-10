@@ -1,7 +1,7 @@
 /**
  * Services file for CMS service
  */
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import { submitGetRequest } from 'network';
 import qs from 'qs';
 

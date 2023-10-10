@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState, useEffect, useCallback } from 'react';
 import { getResourcesByClass } from 'services/backend/resources';
 import { Table, Input, FormGroup, Label, Form } from 'reactstrap';
@@ -6,7 +7,6 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import { debounce } from 'lodash';
 import ROUTES from 'constants/routes.js';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 
@@ -107,12 +107,12 @@ const ClassInstances = props => {
                                 <tr key={instance.id}>
                                     <td>
                                         <DescriptionTooltip id={instance.id} _class={instance._class} classes={instance.classes}>
-                                            <Link to={`${reverse(ROUTES.RESOURCE, { id: instance.id })}?noRedirect`}>{instance.id}</Link>
+                                            <Link href={`${reverse(ROUTES.RESOURCE, { id: instance.id })}?noRedirect`}>{instance.id}</Link>
                                         </DescriptionTooltip>
                                     </td>
                                     <td>
                                         <DescriptionTooltip id={instance.id} _class={instance._class} classes={instance.classes}>
-                                            <Link to={`${reverse(ROUTES.RESOURCE, { id: instance.id })}?noRedirect`}>{instance.label}</Link>
+                                            <Link href={`${reverse(ROUTES.RESOURCE, { id: instance.id })}?noRedirect`}>{instance.label}</Link>
                                         </DescriptionTooltip>
                                     </td>
                                     <td>{instance.shared}</td>
@@ -132,9 +132,7 @@ const ClassInstances = props => {
                     </Table>
                 </div>
             )}
-
             {isLoading && loadingIndicator}
-
             {totalElements === 0 && !isLoading && (
                 <div className="text-center mb-2">
                     {searchQuery ? (

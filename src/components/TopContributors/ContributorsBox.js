@@ -5,7 +5,7 @@ import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import pluralize from 'pluralize';
-import ContributorsModal from './ContributorsModal';
+import ContributorsModal from 'components/TopContributors/ContributorsModal';
 
 const ContributorsBox = ({ researchFieldId }) => {
     const { contributors, isLoading } = useContributors({ researchFieldId, pageSize: 5, initialSort: 'top' });

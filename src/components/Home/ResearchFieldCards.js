@@ -1,7 +1,8 @@
+import Link from 'components/NextJsMigration/Link';
 import { useEffect, useState, useRef } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faStream } from '@fortawesome/free-solid-svg-icons';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 import { getResearchFieldsStats } from 'services/backend/stats';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { CLASSES, RESOURCES } from 'constants/graphSettings';
@@ -12,7 +13,6 @@ import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
 import { reverseWithSlug } from 'utils';
 
@@ -146,7 +146,7 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                     {selectedResearchField.id !== RESOURCES.RESEARCH_FIELD_MAIN && (
                         <Button
                             tag={Link}
-                            to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                            href={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
                                 researchFieldId: selectedResearchField.id,
                                 slug: selectedResearchField.label,
                             })}

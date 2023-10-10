@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faPen, faPuzzlePiece, faSpinner, faTags } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
@@ -13,7 +14,6 @@ import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { CSSTransition } from 'react-transition-group';
 import { Button, InputGroup } from 'reactstrap';
@@ -140,7 +140,7 @@ const ClassesItem = props => {
                                     {classes?.map((c, index) => (
                                         <Fragment key={c.id}>
                                             <DescriptionTooltip id={c.id} _class={ENTITIES.CLASS} disabled={!preferences.showDescriptionTooltips}>
-                                                <Link target="_blank" to={reverse(ROUTES.CLASS, { id: c.id })}>
+                                                <Link target="_blank" href={reverse(ROUTES.CLASS, { id: c.id })}>
                                                     {c.label}
                                                 </Link>
                                             </DescriptionTooltip>
@@ -203,7 +203,7 @@ const ClassesItem = props => {
                             {usedTemplates?.map((t, index) => (
                                 <Fragment key={t.id}>
                                     <TemplateTooltip id={t.id}>
-                                        <Link target="_blank" to={reverse(ROUTES.TEMPLATE, { id: t.id })}>
+                                        <Link target="_blank" href={reverse(ROUTES.TEMPLATE, { id: t.id })}>
                                             {t.label}
                                         </Link>
                                     </TemplateTooltip>

@@ -10,7 +10,7 @@ import useGraphView from 'components/GraphView/hooks/useGraphView';
 import PropTypes from 'prop-types';
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { GraphCanvas, lightTheme, useSelection } from 'reagraph';
-import RobotoFont from 'components/GraphView/roboto-medium-webfont.woff';
+// import RobotoFont from 'components/GraphView/roboto-medium-webfont.woff';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES } from 'constants/graphSettings';
 import Tippy from '@tippyjs/react';
@@ -234,7 +234,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                                   }
                                 : {}
                         }
-                        labelFontUrl={RobotoFont}
+                        // labelFontUrl={RobotoFont}
                         renderNode={renderedNode => <Node renderedNode={renderedNode} toggleExpandNode={toggleExpandNode} collapsed={collapsed} />}
                         contextMenu={({ data, onClose }) => (
                             <ContextMenu

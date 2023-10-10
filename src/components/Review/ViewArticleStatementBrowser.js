@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { PropertyStyle, StatementsGroupStyle, ValueItemStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import ROUTES from 'constants/routes';
 import { cloneDeep, orderBy } from 'lodash';
@@ -5,7 +6,6 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { ListGroup } from 'reactstrap';
 
 /**
@@ -50,7 +50,7 @@ const ViewArticleStatementBrowser = ({ id }) => {
                             <PropertyStyle className="col-4" tabIndex="0">
                                 <div>
                                     <div className="propertyLabel">
-                                        <Link to={reverse(ROUTES.PROPERTY, { id: property.id })} target="_blank">
+                                        <Link href={reverse(ROUTES.PROPERTY, { id: property.id })} target="_blank">
                                             {property.label}
                                         </Link>
                                     </div>
@@ -62,7 +62,7 @@ const ViewArticleStatementBrowser = ({ id }) => {
                                         property.values.map(value => (
                                             <ValueItemStyle key={value.id}>
                                                 {value._class === 'resource' ? (
-                                                    <Link to={`${reverse(ROUTES.RESOURCE, { id: value.id })}?noRedirect`}>{value.label}</Link>
+                                                    <Link href={`${reverse(ROUTES.RESOURCE, { id: value.id })}?noRedirect`}>{value.label}</Link>
                                                 ) : (
                                                     value.label
                                                 )}

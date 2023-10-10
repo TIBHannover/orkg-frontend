@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState, forwardRef } from 'react';
 import { Container, Button, ListGroup, FormGroup, Label, Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -6,7 +7,6 @@ import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import ROUTES from 'constants/routes';
-import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import { SubTitle } from 'components/styled';
 import { stringifySort } from 'utils';
@@ -113,7 +113,6 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
             >
                 Papers
             </TitleBar>
-
             <Container className="p-0">
                 {papers.length > 0 && (
                     <ListGroup className={boxShadow ? 'box' : ''}>
@@ -158,7 +157,7 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
                             There are no {visibilityText} papers for this research field, yet
                             <br />
                             <br />
-                            <Link to={ROUTES.ADD_PAPER}>
+                            <Link href={ROUTES.ADD_PAPER}>
                                 <Button size="sm" color="primary " className="me-3">
                                     Add paper
                                 </Button>

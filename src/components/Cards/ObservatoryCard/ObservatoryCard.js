@@ -1,10 +1,10 @@
+import Link from 'components/NextJsMigration/Link';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import useObservatoryStats from 'components/Observatory/hooks/useObservatoryStats';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { Card, CardBody } from 'reactstrap';
 import { getOrganizationLogoUrl } from 'services/backend/organizations';
 import styled from 'styled-components';
@@ -38,7 +38,7 @@ function ObservatoryCard(props) {
     return (
         <ObservatoryCardStyled className="col-6 mb-4">
             <Card className="h-100">
-                <Link to={reverse(ROUTES.OBSERVATORY, { id: props.observatory.display_id })} style={{ textDecoration: 'none' }}>
+                <Link href={reverse(ROUTES.OBSERVATORY, { id: props.observatory.display_id })} style={{ textDecoration: 'none' }}>
                     <CardBody>
                         {props.observatory.organization_ids.map(oId => (
                             <span key={oId} style={{ marginLeft: '10px' }}>

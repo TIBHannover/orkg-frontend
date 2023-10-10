@@ -1,25 +1,33 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import useParams from 'components/NextJsMigration/useParams';
 import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import REGEX from 'constants/regex';
 import { getClassById } from 'services/backend/classes';
-import { getArrayParamFromQueryString, getParamFromQueryString, getLinkByEntityType, getEntityTypeByID } from 'utils';
+import { getLinkByEntityType, getEntityTypeByID } from 'utils';
 import { useSelector } from 'react-redux';
-import { isString } from 'lodash';
+import { isEmpty, isString } from 'lodash';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import dotProp from 'dot-prop-immutable';
+import useRouter from 'components/NextJsMigration/useRouter';
+import useSearchParams from 'components/NextJsMigration/useSearchParams';
 
 export const useFilters = () => {
     const { searchTerm } = useParams();
-    const location = useLocation();
-    const navigate = useNavigate();
+    const searchParams = useSearchParams();
+    const router = useRouter();
     const user = useSelector(state => state.auth.user);
     // ensure the array format is accepted by the autocomplete component
-    const selectedFiltersStrings = getArrayParamFromQueryString(decodeURIComponent(location.search), 'types').map(filter => ({ id: filter }));
+    const selectedFiltersStrings = !isEmpty(searchParams.get('types'))
+        ? searchParams
+              .get('types')
+              ?.split(',')
+              ?.map(filter => ({ id: filter }))
+        : [];
+
     const [selectedFilters, setSelectedFilters] = useState(selectedFiltersStrings || DEFAULT_FILTERS);
     const [value, setValue] = useState(searchTerm ?? '');
-    const [createdBy, setCreatedBy] = useState(getParamFromQueryString(location.search, 'createdBy'));
+    const [createdBy, setCreatedBy] = useState(!isEmpty(searchParams.get('createdBy')) ? searchParams.get('createdBy') : null);
     const [isLoadingFilterClasses, setIsLoadingFilterClasses] = useState(true);
 
     const submitSearch = useCallback(
@@ -33,7 +41,7 @@ export const useFilters = () => {
 
             if (isString(_query) && _query.length >= REGEX.MINIMUM_LENGTH_PATTERN && getEntityTypeByID(_query)) {
                 const id = _query.substring(1);
-                navigate(getLinkByEntityType(getEntityTypeByID(_query), id));
+                router.push(getLinkByEntityType(getEntityTypeByID(_query), id));
             } else {
                 const _selectedFilters = createdBy
                     ? selectedFilters
@@ -46,7 +54,7 @@ export const useFilters = () => {
                           .map(sf => sf.id)
                           .join(',')
                     : selectedFilters.map(sf => sf.id).join(',');
-                navigate(
+                router.push(
                     `${reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(_query) })}?types=${_selectedFilters}&createdBy=${createdBy ?? ''}`,
                 );
             }
@@ -85,7 +93,7 @@ export const useFilters = () => {
 
     useEffect(() => {
         setIsLoadingFilterClasses(true);
-        const _selectedFilters = getArrayParamFromQueryString(decodeURIComponent(location.search), 'types');
+        const _selectedFilters = !isEmpty(searchParams.get('types')) ? searchParams.get('types')?.split(',') : [];
         if (!_selectedFilters || _selectedFilters.length === 0) {
             setIsLoadingFilterClasses(false);
         } else {
@@ -101,7 +109,7 @@ export const useFilters = () => {
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location.search, searchTerm]);
+    }, [searchTerm, searchParams]);
 
     return {
         user,

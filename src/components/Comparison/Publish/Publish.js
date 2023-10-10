@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
@@ -13,13 +14,12 @@ import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Select from 'react-select';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import { reverse } from 'named-urls';
-import { Link } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { slugify, getPublicUrl } from 'utils';
 import styled from 'styled-components';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { MISC } from 'constants/graphSettings';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import usePublish from 'components/Comparison/hooks/usePublish';
 import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
@@ -118,7 +118,7 @@ function Publish(props) {
                     <Alert color="info">
                         You are publishing a new version of a published comparison. The comparison you are about to publish will be marked as a new
                         version of the{' '}
-                        <Link target="_blank" to={reverse(ROUTES.COMPARISON, { comparisonId: comparisonResource.hasPreviousVersion.id })}>
+                        <Link target="_blank" href={reverse(ROUTES.COMPARISON, { comparisonId: comparisonResource.hasPreviousVersion.id })}>
                             original comparison{' '}
                         </Link>
                         {comparisonResource.hasPreviousVersion.created_by !== MISC.UNKNOWN_ID && (

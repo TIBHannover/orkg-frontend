@@ -2,7 +2,7 @@ import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
 import AuthorsContentLoader from 'components/TopAuthors/AuthorsContentLoader';
 import PropTypes from 'prop-types';
 import { Alert, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import useTopAuthors from './hooks/useTopAuthors';
+import useTopAuthors from 'components/TopAuthors/hooks/useTopAuthors';
 
 const ComparisonAuthorsModel = ({ comparisonId, toggle }) => {
     const { authors, isLoading, isLast, loadNext } = useTopAuthors({

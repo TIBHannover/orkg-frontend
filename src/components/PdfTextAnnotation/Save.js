@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Modal, ModalBody, ModalHeader, Alert, Input, ModalFooter, Button, FormGroup, Label, ButtonGroup, InputGroup } from 'reactstrap';
@@ -7,7 +8,6 @@ import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
 import { CLASSES, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { Cite } from '@citation-js/core';
@@ -197,7 +197,7 @@ const Save = props => {
                 ) : (
                     <Alert color="success">
                         Annotations successfully saved{' '}
-                        <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: paperId })}>click here to view the paper</Link>
+                        <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: paperId })}>click here to view the paper</Link>
                     </Alert>
                 )}
             </ModalBody>

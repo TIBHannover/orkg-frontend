@@ -8,7 +8,7 @@ import { ThemeContext } from 'styled-components';
 import toArray from 'lodash/toArray';
 import { useSelector } from 'react-redux';
 import Tooltip from 'components/Utils/Tooltip';
-import AbstractAnnotator from './AbstractAnnotator';
+import AbstractAnnotator from 'components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotator';
 
 function AbstractAnnotatorView(props) {
     const ranges = useSelector(state => state.viewPaper.ranges);

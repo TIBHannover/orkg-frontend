@@ -1,12 +1,12 @@
+import Link from 'components/NextJsMigration/Link';
 import PropTypes from 'prop-types';
 import { Alert, Button } from 'reactstrap';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { MISC } from 'constants/graphSettings';
-import env from '@beam-australia/react-env';
-import { StyledActivity } from './styled';
+import env from 'components/NextJsMigration/env';
+import { StyledActivity } from 'components/ViewPaper/ProvenanceBox/styled';
 
 const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, hasNextPageContributors, handleLoadMoreContributors }) => (
     <div>
@@ -35,7 +35,7 @@ const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, h
                                     {version.created_by?.id !== MISC.UNKNOWN_ID ? (
                                         <>
                                             <Link
-                                                to={reverse(ROUTES.USER_PROFILE, {
+                                                href={reverse(ROUTES.USER_PROFILE, {
                                                     userId: version.created_by.id,
                                                 })}
                                             >
@@ -82,7 +82,7 @@ const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, h
                         Added by{' '}
                         {createdBy ? (
                             <Link
-                                to={reverse(ROUTES.USER_PROFILE, {
+                                href={reverse(ROUTES.USER_PROFILE, {
                                     userId: createdBy.id,
                                 })}
                             >

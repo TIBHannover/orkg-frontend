@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'components/NextJsMigration/Link';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -13,8 +13,8 @@ import { CardBadge } from 'components/styled';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { truncate } from 'lodash';
-import Thumbnail from './Thumbnail';
-import Versions from './Versions';
+import Thumbnail from 'components/Cards/ComparisonCard/Thumbnail';
+import Versions from 'components/Cards/ComparisonCard/Versions';
 
 const ComparisonCardStyled = styled.li`
     &:last-child {
@@ -47,7 +47,7 @@ const ComparisonCard = props => {
                 )}
                 <div className="d-flex flex-column">
                     <div className="mb-2">
-                        <Link to={reverse(ROUTES.COMPARISON, { comparisonId: props.comparison.id })}>
+                        <Link href={reverse(ROUTES.COMPARISON, { comparisonId: props.comparison.id })}>
                             {props.comparison.label ? props.comparison.label : <em>No title</em>}
                         </Link>
                         {props.showBadge && (

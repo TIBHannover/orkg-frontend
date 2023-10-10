@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Cite } from '@citation-js/core';
@@ -10,7 +11,6 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Textarea from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
 import { Button, ButtonGroup, FormGroup, Input, InputGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
@@ -290,7 +290,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                 </ModalBody>
                 <ModalFooter className="d-flex">
                     <div className="flex-grow-1">
-                        <Link to={reverse(ROUTES.CONTENT_TYPE_NEW_NO_TYPE)} target="_blank">
+                        <Link href={reverse(ROUTES.CONTENT_TYPE_NEW_NO_TYPE)} target="_blank">
                             <Button color="light">Create new</Button>
                         </Link>
                     </div>

@@ -2,6 +2,7 @@ import { faCheck, faPen, faQuestionCircle, faSpinner, faTable, faTimes, faTrash 
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import RDFDataCube from 'components/RDFDataCube/RDFDataCube';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import InfoTippy from 'components/StatementBrowser/ValueItem/ValueItemOptions/InfoTippy';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import PropTypes from 'prop-types';
@@ -9,6 +10,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
+import { updateList } from 'services/backend/lists';
 import { deleteStatementById } from 'services/backend/statements';
 import {
     checkIfIsList,
@@ -18,8 +20,6 @@ import {
     setIsHelpModalOpen,
     toggleEditValue,
 } from 'slices/statementBrowserSlice';
-import { updateList } from 'services/backend/lists';
-import InfoTippy from 'components/StatementBrowser/ValueItem/ValueItemOptions/InfoTippy';
 
 const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
     const value = useSelector(state => state.statementBrowser.values.byId[id]);

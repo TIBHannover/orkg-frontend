@@ -1,11 +1,12 @@
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
+import useParams from 'components/NextJsMigration/useParams';
 import { Button, Input, InputGroup } from 'reactstrap';
 
 const HelpCenterSearchInput = () => {
-    const navigate = useNavigate();
+    const router = useRouter();
     const params = useParams();
     const [value, setValue] = useState(params.searchQuery ?? '');
 
@@ -16,7 +17,7 @@ const HelpCenterSearchInput = () => {
     };
 
     const handleSearch = () => {
-        navigate(reverse(ROUTES.HELP_CENTER_SEARCH, { searchQuery: encodeURIComponent(value) }));
+        router.push(reverse(ROUTES.HELP_CENTER_SEARCH, { searchQuery: encodeURIComponent(value) }));
     };
 
     return (

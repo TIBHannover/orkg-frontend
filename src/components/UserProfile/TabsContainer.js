@@ -3,15 +3,16 @@ import Items from 'components/UserProfile/Items';
 import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
-import { useParams, useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
+import useParams from 'components/NextJsMigration/useParams';
 import ROUTES from 'constants/routes.js';
 
 function TabsContainer({ currentUserId, userId }) {
     const params = useParams();
     const { activeTab } = params;
-    const navigate = useNavigate();
+    const router = useRouter();
     const onTabChange = key => {
-        navigate(
+        router.push(
             `${reverse(ROUTES.USER_PROFILE_TABS, {
                 userId,
                 activeTab: key,

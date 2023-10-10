@@ -1,6 +1,6 @@
 import Tabs from 'rc-tabs';
 import PropTypes from 'prop-types';
-import { ORKGTabsStyle } from './styled';
+import { ORKGTabsStyle } from 'components/Tabs/styled';
 
 const ORKGTabs = ({ style, className, ...props }) => (
     <ORKGTabsStyle disablePadding={true} className={className} style={style}>

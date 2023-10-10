@@ -1,5 +1,5 @@
+import Link from 'components/NextJsMigration/Link';
 import { Input } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -16,8 +16,8 @@ import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import pluralize from 'pluralize';
-import Authors from './Authors';
-import Paths from './Paths';
+import Authors from 'components/Cards/PaperCard/Authors';
+import Paths from 'components/Cards/PaperCard/Paths';
 
 const PaperCardStyled = styled.div`
     &.selected {
@@ -69,7 +69,7 @@ const PaperCard = props => {
                     <div className="mb-2">
                         <Link
                             target={props.linkTarget ? props.linkTarget : undefined}
-                            to={
+                            href={
                                 props.route ||
                                 reverse(props.contribution?.id ? ROUTES.VIEW_PAPER_CONTRIBUTION : ROUTES.VIEW_PAPER, {
                                     resourceId: props.paper.id,
@@ -135,7 +135,6 @@ const PaperCard = props => {
                     </div>
                 </div>
             </div>
-
             <div className="col-md-3 d-flex align-items-end flex-column p-0">
                 <div className="flex-grow-1 mb-1">
                     <div className="d-none d-md-flex align-items-end justify-content-end">

@@ -1,12 +1,12 @@
-import { useRef } from 'react';
 import { StatementsGroupStyle } from 'components/StatementBrowser/styled';
+import TemplateComponentProperty from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/Property/TemplateComponentProperty';
+import TemplateComponentValue from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/Value/TemplateComponentValue';
+import ItemTypes from 'constants/dndTypes';
 import PropTypes from 'prop-types';
+import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';
-import ItemTypes from 'constants/dndTypes';
 import { handleSortableHoverReactDnd } from 'utils';
-import TemplateComponentValue from './Value/TemplateComponentValue';
-import TemplateComponentProperty from './Property/TemplateComponentProperty';
 
 function PropertyShape(props) {
     const editMode = useSelector(state => state.templateEditor.editMode);

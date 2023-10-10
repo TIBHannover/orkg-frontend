@@ -1,5 +1,5 @@
+import Link from 'components/NextJsMigration/Link';
 import { FormGroup, Label, Input, ListGroup, Button } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -81,7 +81,7 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
                         <div className="text-center mt-2">
                             <Button
                                 tag={Link}
-                                to={
+                                href={
                                     researchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN
                                         ? `${reverseWithSlug(ROUTES.RESEARCH_FIELD, {
                                               researchFieldId,

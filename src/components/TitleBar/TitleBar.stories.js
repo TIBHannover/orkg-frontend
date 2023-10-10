@@ -1,7 +1,7 @@
+import Link from 'components/NextJsMigration/Link';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
 import { Button, Container } from 'reactstrap';
 
 export default {
@@ -33,7 +33,7 @@ export const WithButtonGroup = Template.bind({});
 WithButtonGroup.args = {
     ...Default.args,
     buttonGroup: (
-        <Button component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm flex-shrink-0" to="https://orkg.org">
+        <Button component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm flex-shrink-0" href="https://orkg.org">
             <Icon icon={faPlus} /> Create paper
         </Button>
     ),

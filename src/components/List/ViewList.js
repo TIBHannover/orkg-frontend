@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import Tippy from '@tippyjs/react';
 import { SectionStyled } from 'components/ArticleBuilder/styled';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
@@ -14,7 +15,7 @@ import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMa
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import useParams from 'components/NextJsMigration/useParams';
 import { Alert, Button, Container, ListGroup, ListGroupItem } from 'reactstrap';
 import { historyModalToggled } from 'slices/listSlice';
 import ListEntryAmount from 'components/List/ListEntryAmount/ListEntryAmount';
@@ -54,7 +55,7 @@ const ViewList = ({ isEmbedded }) => {
             {newVersionAvailable && (
                 <Alert color="warning" fade={false} className="box border-0">
                     Warning: a newer version of this list is available.{' '}
-                    <Link to={reverse(ROUTES.LIST, { id: latestVersionId })}>View latest version</Link>
+                    <Link href={reverse(ROUTES.LIST, { id: latestVersionId })}>View latest version</Link>
                 </Alert>
             )}
             <main>
@@ -138,7 +139,6 @@ const ViewList = ({ isEmbedded }) => {
                     </section>
                 </SectionStyled>
             </main>
-
             <ComparisonPopup />
         </Container>
     );

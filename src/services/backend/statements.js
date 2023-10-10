@@ -4,7 +4,7 @@ import { flatten } from 'lodash';
 import { submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
 import { filterObjectOfStatementsByPredicateAndClass, filterStatementsBySubjectId, getPropertyShapeData, sortMethod } from 'utils';
-import { getResource } from './resources';
+import { getResource } from 'services/backend/resources';
 
 export const statementsUrl = `${url}statements/`;
 

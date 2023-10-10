@@ -3,10 +3,10 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { toggleAuthDialog, updateAuth } from 'slices/authSlice';
 import { signInWithEmailAndPassword, getUserInformation } from 'services/backend/users';
-import { useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
 import { Cookies } from 'react-cookie';
 import { checkCookie } from 'utils';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import { useDispatch } from 'react-redux';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
@@ -19,7 +19,7 @@ const SignIn = props => {
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState(null);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const router = useRouter();
     const { trackEvent } = useMatomo();
     const signIn = async e => {
         e.preventDefault();
@@ -56,7 +56,7 @@ const SignIn = props => {
                 setLoading(false);
                 trackEvent({ category: 'authentication', action: 'sign-in' });
                 if (redirectRoute) {
-                    navigate(redirectRoute);
+                    router.push(redirectRoute);
                 }
             })
             .catch(e => {

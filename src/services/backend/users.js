@@ -1,6 +1,6 @@
 import { url } from 'constants/misc';
 import { submitGetRequest, submitPutRequest, submitPostRequest, submitDeleteRequest } from 'network';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 
 export const userUrl = `${url}user/`;
 export const authenticationUrl = env('BACKEND_URL');

@@ -1,4 +1,4 @@
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import { plugins } from '@citation-js/core';
 import { MatomoProvider, createInstance } from '@jonkoops/matomo-tracker-react';
 import App from 'App';
@@ -7,9 +7,6 @@ import { MathJaxContext } from 'better-react-mathjax';
 import MATH_JAX_CONFIG from 'constants/mathJax';
 import REGEX from 'constants/regex';
 import 'fast-text-encoding/text.min';
-import 'jspdf/dist/polyfills.es.js';
-import 'react-app-polyfill/ie9';
-import 'react-app-polyfill/stable';
 import { CookiesProvider } from 'react-cookie';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';

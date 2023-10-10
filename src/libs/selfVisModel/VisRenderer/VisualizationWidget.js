@@ -3,10 +3,10 @@ import { Button } from 'reactstrap';
 import styled, { keyframes } from 'styled-components';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import PropTypes from 'prop-types';
-import VisualizationSelector from './VisualizationSelector';
-import AbstractRenderer from './AbstractRenderer';
-import AbstractCustomizationWidget from './AbstractCustomizationWidget';
-import TableInput from './tableInput';
+import VisualizationSelector from 'libs/selfVisModel/VisRenderer/VisualizationSelector';
+import AbstractRenderer from 'libs/selfVisModel/VisRenderer/AbstractRenderer';
+import AbstractCustomizationWidget from 'libs/selfVisModel/VisRenderer/AbstractCustomizationWidget';
+import TableInput from 'libs/selfVisModel/VisRenderer/tableInput';
 
 export default class VisualizationWidget extends Component {
     constructor(props) {

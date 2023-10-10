@@ -2,26 +2,26 @@ import TableCell from 'components/ContributionEditor/TableCell';
 import TableHeaderColumn from 'components/ContributionEditor/TableHeaderColumn';
 import TableHeaderColumnFirst from 'components/ContributionEditor/TableHeaderColumnFirst';
 import TableHeaderRow from 'components/ContributionEditor/TableHeaderRow';
+import useRouter from 'components/NextJsMigration/useRouter';
+import useSearchParams from 'components/NextJsMigration/useSearchParams';
 import ROUTES from 'constants/routes';
 import { sortBy, uniq, without } from 'lodash';
-import qs from 'qs';
 import { useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 
 const useContributionEditor = () => {
-    const location = useLocation();
-    const navigate = useNavigate();
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const getContributionIds = useCallback(() => {
-        const { contributions } = qs.parse(location.search, { comma: true, ignoreQueryPrefix: true });
+        const contributions = searchParams.get('contributions')?.split(',') ?? []; // TODO use getAll() and don't split by comma, but provide multiple values for the same key (contribution=R1&contribution=R2)
         const contributionIds = contributions && !Array.isArray(contributions) ? [contributions] : contributions;
         return without(uniq(contributionIds), undefined, null, '') ?? [];
-    }, [location.search]);
+    }, [searchParams]);
 
-    const { hasPreviousVersion } = qs.parse(location.search, { ignoreQueryPrefix: true });
+    const hasPreviousVersion = searchParams.get('hasPreviousVersion');
 
     const handleAddContributions = ids => {
         const idsQueryString = [...getContributionIds(), ...ids].join(',');
-        navigate(
+        router.push(
             `${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''}`,
         );
     };
@@ -30,7 +30,7 @@ const useContributionEditor = () => {
         const idsQueryString = getContributionIds()
             .filter(_id => _id !== id)
             .join(',');
-        navigate(
+        router.push(
             `${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''}`,
         );
     };

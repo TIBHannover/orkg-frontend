@@ -1,8 +1,8 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { Modal, ModalHeader, ModalBody, Button, Table } from 'reactstrap';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faGithub, faGitlab, faFirefox } from '@fortawesome/free-brands-svg-icons';
@@ -32,7 +32,7 @@ const CodeURLsTooltip = ({ urls, title, id }) => {
             <Modal isOpen={showModal} toggle={() => setShowModal(v => !v)} size="lg">
                 <ModalHeader toggle={() => setShowModal(v => !v)}>
                     {' '}
-                    <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: id })} style={{ textDecoration: 'none' }}>
+                    <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: id })} style={{ textDecoration: 'none' }}>
                         {title}
                     </Link>
                 </ModalHeader>
@@ -57,7 +57,6 @@ const CodeURLsTooltip = ({ urls, title, id }) => {
                     </Table>
                 </ModalBody>
             </Modal>
-
             <Button className="p-0" color="link" onClick={() => setShowModal(v => !v)}>
                 <Icon icon={faGithub} color="#e86161" className="icon ms-2 me-2" />
             </Button>

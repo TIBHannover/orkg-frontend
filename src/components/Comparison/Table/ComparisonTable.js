@@ -14,7 +14,7 @@ import { useFlexLayout, useTable } from 'react-table';
 import { useSticky } from 'react-table-sticky';
 import { useMedia } from 'react-use';
 import { Alert } from 'reactstrap';
-import { ReactTableWrapper } from '../styled';
+import { ReactTableWrapper } from 'components/Comparison/styled';
 
 const ComparisonTable = props => {
     const filterControlData = useSelector(state => state.comparison.filterControlData);

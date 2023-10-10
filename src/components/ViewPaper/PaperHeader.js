@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faCalendar, faCheckCircle, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
@@ -14,7 +15,6 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { Button, Alert } from 'reactstrap';
 import { getAltMetrics } from 'services/altmetric/index';
 import { loadPaper } from 'slices/viewPaperSlice';
@@ -75,7 +75,7 @@ const PaperHeader = props => {
                 <Alert color="warning" className="mt-1 container d-flex">
                     <div className="flex-grow-1">
                         A published version of this paper is available.{' '}
-                        <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: viewPaper.hasVersion.id })}>View published version</Link>
+                        <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: viewPaper.hasVersion.id })}>View published version</Link>
                     </div>
                 </Alert>
             )}
@@ -97,9 +97,7 @@ const PaperHeader = props => {
                     </div>
                 )}
             </div>
-
             <div className="clearfix" />
-
             {(viewPaper.publicationMonth?.label || viewPaper.publicationYear?.label) && (
                 <span className="badge bg-light me-2">
                     <Icon icon={faCalendar} /> {viewPaper.publicationMonth?.label ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''}{' '}
@@ -117,7 +115,7 @@ const PaperHeader = props => {
                             Published in:{' '}
                             <Link
                                 style={{ color: '#60687a', fontStyle: 'italic' }}
-                                to={reverse(ROUTES.VENUE_PAGE, { venueId: viewPaper.publishedIn.id })}
+                                href={reverse(ROUTES.VENUE_PAGE, { venueId: viewPaper.publishedIn.id })}
                             >
                                 {viewPaper.publishedIn.label}
                             </Link>
@@ -176,7 +174,6 @@ const PaperHeader = props => {
                     </Tippy>
                 )}
             </div>
-
             {isOpenEditModal && (
                 <EditPaperModal
                     paperData={{

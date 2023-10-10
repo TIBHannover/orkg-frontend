@@ -5,16 +5,18 @@ import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import REGEX from 'constants/regex';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import useParams from 'components/NextJsMigration/useParams';
 import { Form, Input, Button, InputGroup } from 'reactstrap';
 import { isString } from 'lodash';
-import { getArrayParamFromQueryString, getParamFromQueryString, getLinkByEntityType, getEntityTypeByID } from 'utils';
+import { getLinkByEntityType, getEntityTypeByID } from 'utils';
+import useRouter from 'components/NextJsMigration/useRouter';
+import useSearchParams from 'components/NextJsMigration/useSearchParams';
 
 const SearchForm = ({ placeholder, onSearch = null }) => {
     const [value, setValue] = useState('');
     const { searchTerm: urlSearchQuery } = useParams();
-    const navigate = useNavigate();
-    const location = useLocation();
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
     useEffect(() => {
         const decodedValue = isString(urlSearchQuery) ? decodeURIComponent(urlSearchQuery) : urlSearchQuery;
@@ -32,10 +34,10 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
         if (isString(value) && value.length >= REGEX.MINIMUM_LENGTH_PATTERN && getEntityTypeByID(value)) {
             const id = value.substring(1);
             setValue('');
-            route = navigate(getLinkByEntityType(getEntityTypeByID(value), id));
+            route = router.push(getLinkByEntityType(getEntityTypeByID(value), id));
         } else if (isString(value) && value) {
-            const types = getArrayParamFromQueryString(location.search, 'types');
-            const createdBy = getParamFromQueryString(location.search, 'createdBy');
+            const types = searchParams.get('types')?.split(',');
+            const createdBy = searchParams.get('createdBy');
             route = `${reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) })}?types=${`${
                 types?.length > 0 ? types.join(',') : ''
             }`}&createdBy=${createdBy ?? ''}
@@ -43,7 +45,7 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
         }
         onSearch && onSearch();
 
-        return route ? navigate(route) : null;
+        return route ? router.push(route) : null;
     };
 
     return (

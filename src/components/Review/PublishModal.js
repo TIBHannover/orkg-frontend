@@ -2,6 +2,8 @@ import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import Link from 'components/NextJsMigration/Link';
+import usePathname from 'components/NextJsMigration/usePathname';
 import Tooltip from 'components/Utils/Tooltip';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
@@ -10,7 +12,6 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Alert, Button, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { createLiteral } from 'services/backend/literals';
@@ -28,6 +29,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
     const [shouldAssignDoi, setShouldAssignDoi] = useState(false);
     const [doi, setDoi] = useState(null);
     const [description, setDescription] = useState('');
+    const pathname = usePathname();
     const { title } = useSelector(state => state.review.paper);
     const researchField = useSelector(state => state.review.researchField);
 
@@ -35,9 +37,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
     const { trackEvent } = useMatomo();
 
     const getUrl = () =>
-        `${window.location.protocol}//${window.location.host}${window.location.pathname
-            .replace(reverse(ROUTES.REVIEW, { id }), '')
-            .replace(/\/$/, '')}`;
+        `${window.location.protocol}//${window.location.host}${pathname.replace(reverse(ROUTES.REVIEW, { id }), '').replace(/\/$/, '')}`;
 
     const handlePublish = async () => {
         if (shouldAssignDoi && (!description || description.trim() === '')) {
@@ -171,7 +171,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                                 </InputGroup>
                             </FormGroup>
                         )}
-                        <Link to={reverse(ROUTES.REVIEW, { id: publishedId })} onClick={toggle}>
+                        <Link href={reverse(ROUTES.REVIEW, { id: publishedId })} onClick={toggle}>
                             View the published article
                         </Link>
                     </>

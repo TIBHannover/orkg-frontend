@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faAngleDoubleLeft, faAngleDoubleRight, faCalendar, faClock, faPen, faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import EditTitleModal from 'components/UserSettings/DraftComparisons/EditTitleModal';
@@ -7,7 +8,6 @@ import moment from 'moment';
 import { reverse } from 'named-urls';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Alert, Button, ButtonGroup, ListGroup, ListGroupItem } from 'reactstrap';
 import Confirm from 'components/Confirmation/Confirmation';
@@ -87,13 +87,12 @@ const DraftComparisons = () => {
                     comparison. Click <em>Actions...</em> in the right top of the page, finally click on <em>Save as draft</em>
                 </Alert>
             </div>
-
             {(draftComparisons.length > 0 || isLoading) && (
                 <ListGroup className="mb-3 box">
                     {draftComparisons.map(draftComparison => (
                         <ListGroupItem key={draftComparison.id} className="d-flex justify-content-between align-items-center px-4 py-3">
                             <div>
-                                <Link to={reverse(ROUTES.COMPARISON_NOT_PUBLISHED) + draftComparison.url}>{draftComparison.label}</Link> <br />
+                                <Link href={reverse(ROUTES.COMPARISON_NOT_PUBLISHED) + draftComparison.url}>{draftComparison.label}</Link> <br />
                                 <small>
                                     <Icon icon={faCalendar} /> {moment(draftComparison.created_at).format('DD MMMM YYYY')}{' '}
                                     <Icon icon={faClock} className="ms-2 me-1" />
@@ -140,9 +139,7 @@ const DraftComparisons = () => {
                     )}
                 </ListGroup>
             )}
-
             {draftComparisons.length === 0 && !isLoading && <Alert color="info">You have no saved draft comparisons yet</Alert>}
-
             {isOpenEditModal && (
                 <EditTitleModal
                     isOpen={isOpenEditModal}

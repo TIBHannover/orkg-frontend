@@ -1,5 +1,5 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState, useEffect, memo } from 'react';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes.js';
@@ -44,7 +44,7 @@ const Thumbnail = props => {
     return (
         <>
             {!isLoading && thumbnail && (
-                <Link to={reverse(ROUTES.VISUALIZATION, { id: props.visualization.id })}>
+                <Link href={reverse(ROUTES.VISUALIZATION, { id: props.visualization.id })}>
                     <Tippy content={props.visualization.label}>
                         <ResourceItem key={thumbnail.figureId}>
                             <GDCVisualizationRenderer disableInteractivity={true} height="50px" width="160px" model={thumbnail} />

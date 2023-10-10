@@ -2,6 +2,7 @@ import { faCalendar, faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
+import Link from 'components/NextJsMigration/Link';
 import ROUTES from 'constants/routes.js';
 import { downloadJPG, downloadPDF } from 'libs/googleChartDownloadFunctions';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
@@ -9,7 +10,6 @@ import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
     Badge,
     Button,
@@ -62,7 +62,7 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                 <div className="d-flex">
                     <h5>{data.label ?? 'No Title'}</h5>
                     <Tippy content="Go to resource page">
-                        <Link target="_blank" className="ms-2 resourceLink" to={`${reverse(ROUTES.RESOURCE, { id: data.id })}?noRedirect`}>
+                        <Link target="_blank" className="ms-2 resourceLink" href={`${reverse(ROUTES.RESOURCE, { id: data.id })}?noRedirect`}>
                             <Icon icon={faLink} className="text-primary" />
                         </Link>
                     </Tippy>

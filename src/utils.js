@@ -7,7 +7,7 @@ import { unescape } from 'he';
 import { reverse } from 'named-urls';
 import qs from 'qs';
 import { Cookies } from 'react-cookie';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import slugifyString from 'slugify';
 import { LOCATION_CHANGE as LOCATION_CHANGE_RFH } from 'redux-first-history';
 import { getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';

@@ -1,9 +1,9 @@
 import { Modal, ModalHeader } from 'reactstrap';
 import PropTypes from 'prop-types';
 import Joi from 'joi';
-import CategoricalFilterRule from './CategoricalFilterRule.js';
-import OrdinalFilterRule from './OrdinalFilterRule.js';
-import TextFilterRule from './TextFilterRule.js';
+import CategoricalFilterRule from 'components/Comparison/Filters/CategoricalFilterRule.js';
+import OrdinalFilterRule from 'components/Comparison/Filters/OrdinalFilterRule.js';
+import TextFilterRule from 'components/Comparison/Filters/TextFilterRule.js';
 
 function FilterModal(props) {
     const { data, updateRulesOfProperty, showFilterDialog, toggleFilterDialog } = props;

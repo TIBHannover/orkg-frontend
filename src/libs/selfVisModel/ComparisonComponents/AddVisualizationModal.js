@@ -16,8 +16,8 @@ import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import { activatedContributionsToList } from 'components/Comparison/hooks/helpers';
-import HelpVideoModal from './HelpVideoModal';
-import PublishVisualization from './PublishVisualization';
+import HelpVideoModal from 'libs/selfVisModel/ComparisonComponents/HelpVideoModal';
+import PublishVisualization from 'libs/selfVisModel/ComparisonComponents/PublishVisualization';
 
 const TabButtons = styled.div`
     border-bottom: 2px solid ${props => props.theme.lightDarker};

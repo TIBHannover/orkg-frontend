@@ -9,8 +9,8 @@ import Completion from 'components/PdfTextAnnotation/ProgressBar';
 import { discardChanges } from 'slices/pdfTextAnnotationSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import Help from './Help';
-import Save from './Save';
+import Help from 'components/PdfTextAnnotation/Help';
+import Save from 'components/PdfTextAnnotation/Save';
 
 const SideBarStyled = styled.div`
     height: calc(100vh - 73px);

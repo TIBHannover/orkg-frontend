@@ -5,6 +5,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import DBPEDIA_LOGO from 'assets/img/sameas/dbpedia.png';
 import PropTypes from 'prop-types';
 import { getAbstractByURI } from 'services/dbpedia';
+import Image from 'components/NextJsMigration/Image';
 
 class DbpediaAbstract extends Component {
     constructor(props) {
@@ -58,7 +59,7 @@ class DbpediaAbstract extends Component {
             <div>
                 <h2 className="h5 mt-2 float-start">Abstract from DBpedia</h2>
                 <a href={this.props.externalResource} target="_blank" rel="noopener noreferrer">
-                    <img alt="DBpedia logo" src={DBPEDIA_LOGO} style={{ height: 40, float: 'right' }} />
+                    <Image alt="DBpedia logo" src={DBPEDIA_LOGO} style={{ height: 40, float: 'right' }} />
                 </a>
                 <div className="clearfix" />
 

@@ -1,9 +1,9 @@
+import Link from 'components/NextJsMigration/Link';
 import { createRef, Component } from 'react';
 import { Badge, Container, Navbar, Button, ButtonGroup } from 'reactstrap';
 import { faChevronDown, faChevronUp, faTimes, faTrash, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { loadComparisonFromLocalStorage, removeFromComparison } from 'slices/viewPaperSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Cookies } from 'react-cookie';
 import ROUTES from 'constants/routes.js';
@@ -13,7 +13,17 @@ import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { reverse } from 'named-urls';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import Tippy from '@tippyjs/react';
-import { ComparisonBoxButton, ComparisonBox, Header, List, ContributionItem, Title, Number, Remove, StartComparison } from './styled';
+import {
+    ComparisonBoxButton,
+    ComparisonBox,
+    Header,
+    List,
+    ContributionItem,
+    Title,
+    Number,
+    Remove,
+    StartComparison,
+} from 'components/ComparisonPopup/styled';
 
 const cookies = new Cookies();
 
@@ -220,7 +230,7 @@ class ComparisonPopup extends Component {
                                                 </div>
                                                 <div className="flex-grow-1 text-break">
                                                     <Title
-                                                        to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
+                                                        href={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                                                             resourceId: byId[contributionId].paperId,
                                                             contributionId,
                                                         })}
@@ -243,7 +253,7 @@ class ComparisonPopup extends Component {
                                 <div className="w-100 text-center">
                                     <ConditionalWrapper
                                         condition={contributionAmount > 1}
-                                        wrapper={children => <Link to={comparisonUrl}>{children}</Link>}
+                                        wrapper={children => <Link href={comparisonUrl}>{children}</Link>}
                                     >
                                         <Tippy disabled={contributionAmount > 1} content="Please select at least two contributions">
                                             <span>

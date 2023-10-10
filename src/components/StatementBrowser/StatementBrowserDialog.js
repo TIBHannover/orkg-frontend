@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { Component } from 'react';
 import { Modal, ModalHeader, ModalBody, Button } from 'reactstrap';
 import { connect } from 'react-redux';
@@ -6,7 +7,6 @@ import Statements from 'components/StatementBrowser/StatementBrowser';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { updateSettings } from 'slices/statementBrowserSlice';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import { ENTITIES } from 'constants/graphSettings';
@@ -60,7 +60,7 @@ class StatementBrowserDialog extends Component {
                             style={{ right: 45, position: 'absolute', top: 12 }}
                             title={`Go to ${this.props.type} page`}
                             className="ms-2"
-                            to={`${reverse(route, { id: this.props.id })}?noRedirect`}
+                            href={`${reverse(route, { id: this.props.id })}?noRedirect`}
                             target="_blank"
                             rel="noopener noreferrer"
                         >

@@ -1,10 +1,10 @@
+import Link from 'components/NextJsMigration/Link';
 import { Alert, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { useState } from 'react';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { createResource } from 'services/backend/resources';
 import { createResourceData } from 'services/similarity/index';
@@ -52,7 +52,7 @@ const SaveDraft = ({ isOpen, toggle }) => {
                 ) : (
                     <Alert color="success">
                         Draft comparison saved successfully.{' '}
-                        <Link to={reverse(ROUTES.USER_SETTINGS, { tab: 'draft-comparisons' })}>View draft comparisons</Link>
+                        <Link href={reverse(ROUTES.USER_SETTINGS, { tab: 'draft-comparisons' })}>View draft comparisons</Link>
                     </Alert>
                 )}
             </ModalBody>

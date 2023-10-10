@@ -1,5 +1,5 @@
 import { submitGetRequest } from 'network';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 
 const url = env('ORCID_API_URL');
 

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import PWC_LOGO from 'assets/img/poweredby/papers-with-code.png';
+import Image from 'components/NextJsMigration/Image';
 
 const PWCProvenanceBoxStyled = styled.div`
     border: 2px solid ${props => props.theme.light};
@@ -20,7 +21,7 @@ export default function PWCProvenanceBox() {
             <a href="https://paperswithcode.com/" target="_blank" rel="noopener noreferrer" className="text-center">
                 <PWCProvenanceBoxStyled>
                     <small>Data originally imported from</small>
-                    <img className="py-2 w-100" src={PWC_LOGO} alt="papers with code logo" style={{ maxWidth: 200, maxHeight: 60 }} />
+                    <Image className="py-2 w-100" src={PWC_LOGO} alt="papers with code logo" style={{ maxWidth: 200, maxHeight: 60 }} />
                 </PWCProvenanceBoxStyled>
             </a>
         </div>

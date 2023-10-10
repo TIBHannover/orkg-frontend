@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { CLASSES } from 'constants/graphSettings';
@@ -5,7 +6,6 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Badge, Button } from 'reactstrap';
 
 const AUTHOR_LIMIT = 15;
@@ -19,7 +19,7 @@ const AuthorBadges = ({ authors }) => {
                 author.classes && author.classes.includes(CLASSES.AUTHOR) ? (
                     <Link
                         key={index}
-                        to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
+                        href={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
                         target="_blank"
                         rel="author"
                         typeof="foaf:Person"
@@ -32,7 +32,7 @@ const AuthorBadges = ({ authors }) => {
                 ) : (
                     <Link
                         key={index}
-                        to={reverse(ROUTES.AUTHOR_LITERAL, { authorString: encodeURIComponent(author.label) })}
+                        href={reverse(ROUTES.AUTHOR_LITERAL, { authorString: encodeURIComponent(author.label) })}
                         target="_blank"
                         rel="author"
                         typeof="foaf:Person"

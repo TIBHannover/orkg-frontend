@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import 'assets/scss/DefaultLayout.scss';
 import { ToastContainer, Slide } from 'react-toastify';
 import { Alert, Button } from 'reactstrap';
@@ -8,12 +8,11 @@ import Footer from 'components/Layout/Footer';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
-import useOnLocationChange from 'components/Layout/hooks/useOnLocationChange';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
-import { useLocation } from 'react-router-dom';
 import ROUTES from 'constants/routes';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
+import usePathname from 'components/NextJsMigration/usePathname';
 
 const StyledBody = styled.div`
     display: flex;
@@ -96,10 +95,10 @@ CloseToastButton.propTypes = {
 };
 
 export default function DefaultLayout(props) {
-    const location = useLocation();
-    const showFooter = location.pathname !== ROUTES.PDF_TEXT_ANNOTATION && location.pathname !== ROUTES.PDF_ANNOTATION;
+    const pathname = usePathname();
+    const showFooter = pathname !== ROUTES.PDF_TEXT_ANNOTATION && pathname !== ROUTES.PDF_ANNOTATION;
     const [cookies, setCookie] = useCookies(['cookieInfoDismissed']);
-    const [visible, setVisible] = useState(!cookies.cookieInfoDismissed);
+    const [visible, setVisible] = useState(false);
     const { trackPageView } = useMatomo();
 
     const onDismissCookieInfo = () => {
@@ -107,12 +106,16 @@ export default function DefaultLayout(props) {
         setVisible(false);
     };
 
-    useOnLocationChange(() =>
+    useEffect(() => {
         setTimeout(() => {
             // Track page view
             trackPageView();
-        }, 1000),
-    );
+        }, 1000);
+    }, [pathname, trackPageView]);
+
+    useEffect(() => {
+        setVisible(!cookies.cookieInfoDismissed);
+    }, [cookies.cookieInfoDismissed]);
 
     return (
         <StyledBody className="body">

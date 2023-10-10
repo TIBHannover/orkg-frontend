@@ -1,5 +1,5 @@
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import fetch from 'cross-fetch';
 
 export const geonamesUrl = env('GEONAMES_API_SEARCH_URL');

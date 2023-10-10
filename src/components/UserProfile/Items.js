@@ -13,7 +13,7 @@ import { find, flatten, groupBy } from 'lodash';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
 import { Button, ListGroup } from 'reactstrap';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
@@ -34,7 +34,7 @@ const Items = props => {
     const [page, setPage] = useState(0);
     const [resources, setResources] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
-    const navigate = useNavigate();
+    const router = useRouter();
 
     const loadItems = useCallback(
         p => {
@@ -126,7 +126,7 @@ const Items = props => {
 
     const comparePapers = () => {
         const contributionIds = flatten(resources.filter(r => selectedItems.includes(r.id))?.map(c => c.contributions?.map(c => c.id)));
-        navigate(`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionIds.join(',')}`);
+        router.push(`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionIds.join(',')}`);
     };
 
     useEffect(() => {

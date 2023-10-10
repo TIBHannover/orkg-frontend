@@ -1,4 +1,4 @@
-const env = require('@beam-australia/react-env');
+import env from 'components/NextJsMigration/env';
 
 const grobidUrl = env('GROBID_URL');
 

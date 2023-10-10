@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useEffect, useState } from 'react';
 import { Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Card, CardFooter } from 'reactstrap';
 import { getParentResearchFields, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
@@ -5,7 +6,6 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleRight, faAngleDoubleDown, faSpinner, faHome } from '@fortawesome/free-solid-svg-icons';
 import { PREDICATES } from 'constants/graphSettings';
 import ContentLoader from 'react-content-loader';
-import { Link, NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
@@ -69,7 +69,9 @@ function Breadcrumbs(props) {
             );
         }
         return (
-            <Link to={index === 0 ? reverse(ROUTES.HOME) : reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}>
+            <Link
+                href={index === 0 ? reverse(ROUTES.HOME) : reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}
+            >
                 {children}
             </Link>
         );
@@ -85,9 +87,9 @@ function Breadcrumbs(props) {
         }
         return (
             <StyledDropdownItem
-                tag={NavLink}
+                tag={Link}
                 key={`rf-${field.id}`}
-                to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}
+                href={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}
                 className="text-primary"
             >
                 {children}

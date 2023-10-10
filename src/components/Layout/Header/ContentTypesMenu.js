@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { supportedContentTypes } from 'components/ContentType/types';
@@ -6,7 +7,6 @@ import { upperFirst } from 'lodash';
 import { reverse } from 'named-urls';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
-import { NavLink as RouterNavLink } from 'react-router-dom';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -27,7 +27,7 @@ const ContentTypesMenu = ({ closeMenu }) => (
         </DropdownToggle>
         <DropdownMenu>
             {supportedContentTypes.map(({ id, label }) => (
-                <DropdownItem key={id} tag={RouterNavLink} end to={reverse(ROUTES.CONTENT_TYPES, { type: id })} onClick={closeMenu}>
+                <DropdownItem key={id} tag={Link} end href={reverse(ROUTES.CONTENT_TYPES, { type: id })} onClick={closeMenu}>
                     {upperFirst(pluralize(label || '', 0, false))}
                 </DropdownItem>
             ))}

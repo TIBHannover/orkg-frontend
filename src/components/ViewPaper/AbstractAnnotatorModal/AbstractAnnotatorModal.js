@@ -13,9 +13,9 @@ import { guid } from 'utils';
 import toArray from 'lodash/toArray';
 import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
-import AbstractRangesList from './AbstractRangesList';
-import AbstractAnnotatorView from './AbstractAnnotatorView';
-import AbstractInputView from './AbstractInputView';
+import AbstractRangesList from 'components/ViewPaper/AbstractAnnotatorModal/AbstractRangesList';
+import AbstractAnnotatorView from 'components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotatorView';
+import AbstractInputView from 'components/ViewPaper/AbstractAnnotatorModal/AbstractInputView';
 
 const AnimationContainer = styled(CSSTransition)`
     &.fadeIn-enter {

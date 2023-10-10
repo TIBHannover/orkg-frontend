@@ -1,8 +1,8 @@
 import { render, screen, fireEvent, waitFor, waitForElementToBeRemoved } from 'testUtils';
 import { ENTITIES } from 'constants/graphSettings';
 import selectEvent from 'react-select-event';
-import StatementBrowser from '../StatementBrowser';
-import { statementBrowser1P7V } from '../ValueItem/__mocks__/StatementBrowserDataValueItem';
+import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
+import { statementBrowser1P7V } from 'components/StatementBrowser/ValueItem/__mocks__/StatementBrowserDataValueItem';
 
 jest.mock(
     'react-flip-move',

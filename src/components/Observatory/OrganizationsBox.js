@@ -1,7 +1,7 @@
+import Link from 'components/NextJsMigration/Link';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import { Link } from 'react-router-dom';
 import AddOrganization from 'components/Observatory/AddOrganization';
 import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
@@ -45,7 +45,6 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
                     </Button>
                 )}
             </h5>
-
             {!isLoadingOrganizations ? (
                 <div className="mb-4 mt-4">
                     {organizations.length > 0 ? (
@@ -53,7 +52,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
                             {organizations.map((organization, index) => (
                                 <div key={`c${index}`} className="mb-3 pl-2 py-2 rounded border text-center position-relative">
                                     <Link
-                                        to={reverse(ROUTES.ORGANIZATION, {
+                                        href={reverse(ROUTES.ORGANIZATION, {
                                             type: capitalize(ORGANIZATIONS_MISC.GENERAL),
                                             id: organization.display_id,
                                         })}
