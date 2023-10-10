@@ -1,7 +1,7 @@
+import Link from 'components/NextJsMigration/Link';
 import { Col } from 'reactstrap';
 import styled from 'styled-components';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import CountUp from 'react-countup';
 
@@ -47,7 +47,7 @@ const ColoredStatsBox = props => (
         <ConditionalWrapper
             condition={props.link}
             wrapper={children => (
-                <Link className="flex-grow-1" to={props.link}>
+                <Link className="flex-grow-1" href={props.link}>
                     {children}
                 </Link>
             )}

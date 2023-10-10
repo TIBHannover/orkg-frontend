@@ -1,8 +1,8 @@
+import Link from 'components/NextJsMigration/Link';
 import { Component } from 'react';
 import { Card, CardTitle, CardText, Row, Col, CardBody, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
@@ -51,7 +51,7 @@ class FeaturedComparisonsItem extends Component {
 
         return (
             <Col sm="6" className="mb-4">
-                <Link style={{ textDecoration: 'none' }} to={reverse(ROUTES.COMPARISON, { comparisonId: this.props.id })}>
+                <Link style={{ textDecoration: 'none' }} href={reverse(ROUTES.COMPARISON, { comparisonId: this.props.id })}>
                     <Comparison>
                         <ComparisonBody>
                             <Row>

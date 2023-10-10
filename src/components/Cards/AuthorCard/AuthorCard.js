@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faFile, faGraduationCap, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -7,7 +8,6 @@ import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Badge, FormGroup, Input, Label, ListGroup, ListGroupItem } from 'reactstrap';
 import { getAuthorsByLabel } from 'services/semanticScholar';
@@ -44,7 +44,7 @@ function AuthorCard({ author, paperAmount = null, papers = null, isVisibleGoogle
         <>
             <div className="d-flex justify-content-between">
                 {!isString(author) && (
-                    <Link to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })} target="_blank">
+                    <Link href={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })} target="_blank">
                         {author.label}
                     </Link>
                 )}
@@ -84,7 +84,7 @@ function AuthorCard({ author, paperAmount = null, papers = null, isVisibleGoogle
                 {paperAmount && <span className="text-muted ms-1">{paperAmount}</span>}
                 {papers &&
                     papers.map((paper, index) => (
-                        <Link key={index} to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.paper_id })} target="_blank">
+                        <Link key={index} href={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.paper_id })} target="_blank">
                             <Badge color="light" size="sm" className="ms-1">
                                 <Icon icon={faFile} className="text-primary" /> {moment.localeData().ordinal(paper.author_index + 1)} author
                                 {paper.paper_year ? ` - ${paper.paper_year}` : ''}

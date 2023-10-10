@@ -5,7 +5,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import ContributorCard from 'components/Cards/ContributorCard/ContributorCard';
 import PropTypes from 'prop-types';
-import ContributorsDropdownFilter from './ContributorsDropdownFilter';
+import ContributorsDropdownFilter from 'components/TopContributors/ContributorsDropdownFilter';
 
 const ContributorsModal = ({ researchFieldId, openModal, setOpenModal, initialSort = 'top', initialIncludeSubFields = true }) => {
     const { contributors, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useContributors({

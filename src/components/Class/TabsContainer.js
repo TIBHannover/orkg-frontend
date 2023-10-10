@@ -7,16 +7,17 @@ import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
+import useParams from 'components/NextJsMigration/useParams';
 import { Col, Container, Row } from 'reactstrap';
 
 function TabsContainer({ id, label, uri, editMode, setLabel }) {
     const { activeTab } = useParams();
     const [reloadTree, setReloadTree] = useState(false);
-    const navigate = useNavigate();
+    const router = useRouter();
 
     const onTabChange = key => {
-        navigate(
+        router.push(
             `${reverse(ROUTES.CLASS_TABS, {
                 id,
                 activeTab: key,

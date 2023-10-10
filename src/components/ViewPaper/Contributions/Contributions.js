@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import ContentLoader from 'react-content-loader';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import useParams from 'components/NextJsMigration/useParams';
 import { Alert, Col, FormGroup, Row } from 'reactstrap';
 
 const Contributions = props => {
@@ -31,7 +31,7 @@ const Contributions = props => {
         handleChangeContributionLabel,
         handleCreateContribution,
         toggleDeleteContribution,
-        navigate,
+        router,
     } = useContributions({
         paperId: resourceId,
         contributionId,
@@ -40,13 +40,12 @@ const Contributions = props => {
     const isAddingContribution = useSelector(state => state.viewPaper.isAddingContribution);
 
     const onTabChange = key => {
-        navigate({
-            pathname: reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
+        router.push(
+            `${reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                 resourceId,
                 contributionId: key,
-            }),
-            search: props.enableEdit ? `?isEditMode=${props.enableEdit}` : null,
-        });
+            })}${props.enableEdit ? `?isEditMode=${props.enableEdit}` : ''}`,
+        );
     };
 
     const { fetchAbstract, isLoading: isLoadingAbstract, abstract } = useFetchAbstract();

@@ -1,15 +1,14 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { Form, FormGroup, Input, Label, Alert, FormFeedback } from 'reactstrap';
 import { toggleAuthDialog, updateAuth } from 'slices/authSlice';
-import { Link } from 'react-router-dom';
 import { registerWithEmailAndPassword, signInWithEmailAndPassword, getUserInformation } from 'services/backend/users';
 import { useDispatch } from 'react-redux';
 import { getErrorMessage, checkCookie } from 'utils';
 import ROUTES_CMS from 'constants/routesCms';
 import ROUTES from 'constants/routes';
 import { Cookies } from 'react-cookie';
-import env from '@beam-australia/react-env';
-import InfoSheet from 'assets/pdf/infosheet-data-protection.pdf';
+import env from 'components/NextJsMigration/env';
 import { reverse } from 'named-urls';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
@@ -159,7 +158,7 @@ export default function SignUp() {
                     />{' '}
                     <Label check for="termsConditionIsChecked" className="mb-0">
                         I accept the{' '}
-                        <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.TERMS_OF_USE })} target="_blank">
+                        <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.TERMS_OF_USE })} target="_blank">
                             Special Conditions ORKG
                         </Link>
                     </Label>
@@ -173,11 +172,11 @@ export default function SignUp() {
                     />{' '}
                     <Label check for="dataProtectionIsChecked" className="mb-0">
                         I agree to the processing of my personal data provided here by Technische Informationsbibliothek (TIB). In accordance with the{' '}
-                        <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })} target="_blank">
+                        <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })} target="_blank">
                             data protection declaration
                         </Link>{' '}
                         as well as the{' '}
-                        <a href={InfoSheet} target="_blank" rel="noopener noreferrer">
+                        <a href="/files/infosheet-data-protection.pdf" target="_blank" rel="noopener noreferrer">
                             info sheet data protection
                         </a>
                         , the data is processed exclusively by TIB in order to provide services of our platform.

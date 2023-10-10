@@ -1,4 +1,4 @@
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import { faMastodon } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';

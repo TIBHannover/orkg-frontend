@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import { openAuthDialog, toggleAuthDialog } from 'slices/authSlice';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
-import ForgotPassword from './ForgotPassword';
-import SignIn from './SignIn';
-import SignUp from './SignUp';
+import ForgotPassword from 'components/Authentication/ForgotPassword';
+import SignIn from 'components/Authentication/SignIn';
+import SignUp from 'components/Authentication/SignUp';
 
 const AnimationContainer = styled(CSSTransition)`
     &.fadeIn-enter {

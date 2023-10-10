@@ -441,7 +441,8 @@ export const statementBrowserSlice = createSlice({
                 state.keyToKeepStateOnLocationChange === match(ROUTES.CLASS)(payload.location.pathname)?.params?.id ||
                 state.keyToKeepStateOnLocationChange === match(ROUTES.CLASS_TABS)(payload.location.pathname)?.params?.id ||
                 state.keyToKeepStateOnLocationChange === match(ROUTES.VIEW_PAPER)(payload.location.pathname)?.params?.resourceId ||
-                state.keyToKeepStateOnLocationChange === match(ROUTES.VIEW_PAPER_CONTRIBUTION)(payload.location.pathname)?.params?.contributionId
+                state.keyToKeepStateOnLocationChange === match(ROUTES.VIEW_PAPER_CONTRIBUTION)(payload.location.pathname)?.params?.contributionId ||
+                state.keyToKeepStateOnLocationChange === match(ROUTES.PROPERTY)(payload.location.pathname)?.params?.id
             ) {
                 return state;
             }

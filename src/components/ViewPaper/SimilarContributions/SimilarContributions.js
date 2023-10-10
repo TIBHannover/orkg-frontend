@@ -1,10 +1,10 @@
+import Link from 'components/NextJsMigration/Link';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { Col, Row } from 'reactstrap';
 import styled from 'styled-components';
-import useSimilarContributions from './hooks/useSimilarContributions';
+import useSimilarContributions from 'components/ViewPaper/SimilarContributions/hooks/useSimilarContributions';
 
 const CardsContainer = styled(Row)`
     display: flex;
@@ -100,7 +100,7 @@ const SimilarContributions = ({ contributionId }) => {
                                     <CardWrapper key={`sim${index}`} lg={4} className="mt-2 justify-content-center">
                                         <Card
                                             key={`s${contribution.contributionId}`}
-                                            to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
+                                            href={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                                                 resourceId: contribution.paperId,
                                                 contributionId: contribution.contributionId,
                                             })}
@@ -139,7 +139,7 @@ const SimilarContributions = ({ contributionId }) => {
                 {similarContributions.length > 0 && (
                     <Link
                         className="clearfix"
-                        to={`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionId},${similarContributions
+                        href={`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionId},${similarContributions
                             .slice(0, 3)
                             .map(s => s.contributionId)
                             .join(',')}`}

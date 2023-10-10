@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useState, memo } from 'react';
 import classNames from 'classnames';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import styled from 'styled-components';
 
 const ButtonsContainer = styled.div`

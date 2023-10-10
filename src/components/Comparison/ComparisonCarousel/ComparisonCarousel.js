@@ -14,7 +14,7 @@ import useRelatedResources from 'components/Comparison/ComparisonCarousel/Relate
 import RelatedResource from 'components/Comparison/ComparisonCarousel/RelatedResources/RelatedResource';
 import RelatedFigure from 'components/Comparison/ComparisonCarousel/RelatedResources/RelatedFigure';
 import StyledSlider from 'components/ResearchProblem/Benchmarks/styled';
-import SingleVisualizationComponent from './SingleVisualizationComponent';
+import SingleVisualizationComponent from 'components/Comparison/ComparisonCarousel/SingleVisualizationComponent';
 
 function ComparisonCarousel() {
     const dispatch = useDispatch();

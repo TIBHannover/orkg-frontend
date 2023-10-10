@@ -1,4 +1,5 @@
-import env from '@beam-australia/react-env';
+import Link from 'components/NextJsMigration/Link';
+import env from 'components/NextJsMigration/env';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -13,12 +14,11 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Cookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
 import { getResourceLink, reverseWithSlug } from 'utils';
-import useValueItem from './hooks/useValueItem';
-import ValueDatatype from './ValueDatatype/ValueDatatype';
-import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
+import useValueItem from 'components/StatementBrowser/ValueItem/hooks/useValueItem';
+import ValueDatatype from 'components/StatementBrowser/ValueItem/ValueDatatype/ValueDatatype';
+import ValueItemOptions from 'components/StatementBrowser/ValueItem/ValueItemOptions/ValueItemOptions';
 
 const cookies = new Cookies();
 
@@ -77,7 +77,7 @@ const ValueItem = props => {
                                         <>
                                             {!props.enableEdit && resource?.classes?.includes(CLASSES.PROBLEM) ? (
                                                 <Link
-                                                    to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                                    href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
                                                         researchProblemId: existingResourceId,
                                                         slug: resource.label,
                                                     })}
@@ -137,7 +137,7 @@ const ValueItem = props => {
                                     )}
 
                                     {resource && value._class !== ENTITIES.LITERAL && resourcesAsLinks && (
-                                        <Link className="objectLabel" to={getResourceLink(value._class, value.resourceId)}>
+                                        <Link className="objectLabel" href={getResourceLink(value._class, value.resourceId)}>
                                             {value._class === ENTITIES.CLASS && <div className="typeCircle">C</div>}
                                             {value._class === ENTITIES.PREDICATE && <div className="typeCircle">P</div>}
                                             {value.label || <i>No label</i>}

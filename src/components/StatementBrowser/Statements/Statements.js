@@ -24,8 +24,8 @@ import {
     setInitialPath,
     updateSettings,
 } from 'slices/statementBrowserSlice';
-import ItemPreviewFactory from '../ValueItem/ItemPreviewFactory/ItemPreviewFactory';
-import StatementMenuHeader from './StatementMenuHeader/StatementMenuHeader';
+import ItemPreviewFactory from 'components/StatementBrowser/ValueItem/ItemPreviewFactory/ItemPreviewFactory';
+import StatementMenuHeader from 'components/StatementBrowser/Statements/StatementMenuHeader/StatementMenuHeader';
 
 const Statements = props => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);

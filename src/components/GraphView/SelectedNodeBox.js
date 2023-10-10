@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -8,7 +9,6 @@ import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { Fragment } from 'react';
-import { Link } from 'react-router-dom';
 import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
 import { getResourceLink } from 'utils';
@@ -30,7 +30,7 @@ const SelectedNodeBox = ({ nodes, selectedNode, getExpandButtonLabel, toggleExpa
             <div className="d-flex align-items-center">
                 <h2 className="h4 m-0 me-2">{selectedNode.data._class === ENTITIES.RESOURCE ? 'Resource' : 'Literal'}</h2>
                 {selectedNode.data._class === ENTITIES.RESOURCE && (
-                    <Link to={`${reverse(ROUTES.RESOURCE, { id: selectedNode.id })}?noRedirect`} target="_blank">
+                    <Link href={`${reverse(ROUTES.RESOURCE, { id: selectedNode.id })}?noRedirect`} target="_blank">
                         <Tippy content="View resource">
                             <Icon icon={faExternalLinkAlt} />
                         </Tippy>
@@ -54,7 +54,7 @@ const SelectedNodeBox = ({ nodes, selectedNode, getExpandButtonLabel, toggleExpa
                         <span>
                             {selectedNode.data.classes.map((c, index) => (
                                 <Fragment key={index}>
-                                    <Link to={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
+                                    <Link href={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
                                         {c}
                                     </Link>
                                     {index + 1 < selectedNode.data.classes.length && ','}

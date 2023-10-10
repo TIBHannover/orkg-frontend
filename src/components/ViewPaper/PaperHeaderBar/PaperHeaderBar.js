@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { CSSTransition } from 'react-transition-group';
 import { useSelector } from 'react-redux';
-import PaperMenuBar from './PaperMenuBar';
+import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 
 const PaperHeaderBarContainer = styled.div`
     position: fixed;

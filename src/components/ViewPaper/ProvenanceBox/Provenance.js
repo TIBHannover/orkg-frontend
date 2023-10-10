@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -6,7 +7,6 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
@@ -15,7 +15,7 @@ import { MISC } from 'constants/graphSettings';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import capitalize from 'capitalize';
 import { getOrganizationLogoUrl } from 'services/backend/organizations';
-import { StyledItemProvenanceBox } from './styled';
+import { StyledItemProvenanceBox } from 'components/ViewPaper/ProvenanceBox/styled';
 
 const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contributors, createdBy, isLoadingProvenance, isLoadingContributors }) => {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
@@ -35,7 +35,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                                 </div>
                                 {observatoryInfo.display_id && (
                                     <Link
-                                        to={reverse(ROUTES.OBSERVATORY, {
+                                        href={reverse(ROUTES.OBSERVATORY, {
                                             id: observatoryInfo.display_id,
                                         })}
                                     >
@@ -53,7 +53,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                                     </div>
                                 )}
                                 <Link
-                                    to={reverse(ROUTES.ORGANIZATION, {
+                                    href={reverse(ROUTES.ORGANIZATION, {
                                         type: capitalize(ORGANIZATIONS_MISC.GENERAL),
                                         id: organizationInfo.display_id,
                                     })}
@@ -89,7 +89,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                         </div>
                         <UserAvatar userId={createdBy.id} />
                         <Link
-                            to={reverse(ROUTES.USER_PROFILE, {
+                            href={reverse(ROUTES.USER_PROFILE, {
                                 userId: createdBy.id,
                             })}
                             className="ms-2"
@@ -110,7 +110,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                             .map((contributor, index) => (
                                 <div key={`cntbrs-${contributor.id}${index}`}>
                                     <Link
-                                        to={reverse(ROUTES.USER_PROFILE, {
+                                        href={reverse(ROUTES.USER_PROFILE, {
                                             userId: contributor.created_by.id,
                                         })}
                                     >

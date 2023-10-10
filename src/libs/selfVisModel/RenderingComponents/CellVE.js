@@ -18,7 +18,7 @@ import {
     ContributionCellInput,
     ValueCellInput,
     TippyContainer,
-} from './styledComponents';
+} from 'libs/selfVisModel/RenderingComponents/styledComponents';
 
 const CellVE = props => {
     const [selfVisModel] = useState(new SelfVisDataModel());

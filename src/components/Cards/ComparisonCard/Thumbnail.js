@@ -1,5 +1,5 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState, useEffect, memo } from 'react';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes.js';
@@ -68,7 +68,7 @@ const Thumbnail = props => {
     return (
         <>
             {!isLoading && thumbnail && thumbnail.src && (
-                <Link to={`${reverse(ROUTES.COMPARISON, { comparisonId: props.id })}#${props.figures[0].id}`}>
+                <Link href={`${reverse(ROUTES.COMPARISON, { comparisonId: props.id })}#${props.figures[0].id}`}>
                     <Tippy content={props.figures[0].label}>
                         <ResourceItem key={props.figures[0].id}>
                             <ThumbnailImg src={thumbnail.src} alt={props.figures[0].label} />
@@ -77,7 +77,7 @@ const Thumbnail = props => {
                 </Link>
             )}
             {!isLoading && thumbnail && !thumbnail.src && (
-                <Link to={reverse(ROUTES.COMPARISON, { comparisonId: props.id })}>
+                <Link href={reverse(ROUTES.COMPARISON, { comparisonId: props.id })}>
                     <Tippy content={props.visualizations[0].label}>
                         <ResourceItem key={thumbnail.figureId}>
                             <GDCVisualizationRenderer disableInteractivity={true} height="50px" width="160px" model={thumbnail} />

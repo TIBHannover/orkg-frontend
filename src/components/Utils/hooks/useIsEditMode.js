@@ -1,19 +1,30 @@
+import usePathname from 'components/NextJsMigration/usePathname';
+import useRouter from 'components/NextJsMigration/useRouter';
+import useSearchParams from 'components/NextJsMigration/useSearchParams';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
 import { firstLoad, openAuthDialog } from 'slices/authSlice';
 
 const useIsEditMode = () => {
-    const [searchParams, setSearchParams] = useSearchParams({});
-    let isEditMode = searchParams.get('isEditMode') === 'true';
     const [openedAuthDialog, setOpenedAuthDialog] = useState(false);
     const user = useSelector(state => state.auth.user);
     const dispatch = useDispatch();
 
+    // using a rather complex method to set the search params: https://github.com/vercel/next.js/discussions/47583]
+    // since useSearchParams is read-only
+
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
+
+    let isEditMode = searchParams.get('isEditMode') === 'true';
+
     const toggleIsEditMode = () => {
-        searchParams.set('isEditMode', !isEditMode);
-        // from react-router@6.4 we can use searchParams from the function argument: https://stackoverflow.com/a/70330406
-        setSearchParams(searchParams);
+        const current = new URLSearchParams(Array.from(searchParams.entries()));
+        current.set('isEditMode', !isEditMode);
+        const search = current.toString();
+        const query = search ? `?${search}` : '';
+        router.push(`${pathname}${query}`);
     };
 
     if (isEditMode) {

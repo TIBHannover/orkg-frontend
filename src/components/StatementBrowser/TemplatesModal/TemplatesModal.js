@@ -17,7 +17,7 @@ import useTemplatesRecommendation from 'components/ViewPaper/hooks/useTemplatesR
 import Tooltip from 'components/Utils/Tooltip';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
-import useTemplates from './hooks/useTemplates';
+import useTemplates from 'components/StatementBrowser/TemplatesModal/hooks/useTemplates';
 
 const AnimationContainer = styled(CSSTransition)`
     &.zoom-enter {

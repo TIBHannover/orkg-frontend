@@ -1,8 +1,8 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { Alert } from 'reactstrap';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import HistoryModal from 'components/Comparison/HistoryModal/HistoryModal';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -16,7 +16,7 @@ const NewerVersionWarning = ({ versions, showViewHistory, comparisonId }) => {
                 Warning: a newer version of this comparison is available.{' '}
                 {versions?.length > 0 && (
                     <>
-                        <Link to={reverse(ROUTES.COMPARISON, { comparisonId: versions[0].id })}>View latest version</Link>
+                        <Link href={reverse(ROUTES.COMPARISON, { comparisonId: versions[0].id })}>View latest version</Link>
                     </>
                 )}
             </div>

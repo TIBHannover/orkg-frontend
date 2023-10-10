@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { Button, Input, Modal, ModalBody, ModalHeader, FormGroup, Label } from 'reactstrap';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -7,9 +8,8 @@ import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import useEditResource from './hooks/useEditResource';
+import useEditResource from 'components/EditResourceDialog/hooks/useEditResource';
 
 const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate, showResourceLink, fixedClasses }) => {
     const { classes, label, isLoading, setIsLoading, handleChangeClasses, setLabel } = useEditResource(resource);
@@ -36,7 +36,7 @@ const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate, showResourc
                     <Link
                         style={{ right: 45, position: 'absolute', top: 12 }}
                         className="ms-2"
-                        to={`${reverse(ROUTES.RESOURCE, { id: resource?.id })}?noRedirect`}
+                        href={`${reverse(ROUTES.RESOURCE, { id: resource?.id })}?noRedirect`}
                         target="_blank"
                         rel="noopener noreferrer"
                     >

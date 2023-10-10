@@ -8,7 +8,7 @@ import {
     MetaMapperSelectorSimple,
     ValueCell,
     TippyContainer,
-} from './styledComponents';
+} from 'libs/selfVisModel/RenderingComponents/styledComponents';
 
 export default function CellRenderer(props) {
     return (

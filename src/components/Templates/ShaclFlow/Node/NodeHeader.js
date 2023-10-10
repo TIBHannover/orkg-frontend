@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
@@ -5,7 +6,6 @@ import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const NodeHeaderStyled = styled.div`
@@ -22,7 +22,7 @@ function NodeHeader({ label, id }) {
                 </div>
             </ConditionalWrapper>{' '}
             <Tippy content="Go to template page">
-                <Link target="_blank" to={reverse(ROUTES.TEMPLATE, { id })}>
+                <Link target="_blank" href={reverse(ROUTES.TEMPLATE, { id })}>
                     <Icon icon={faLink} color="#fff" />
                 </Link>
             </Tippy>

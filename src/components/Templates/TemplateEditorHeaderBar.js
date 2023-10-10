@@ -2,7 +2,7 @@ import { faDiagramProject, faPen, faSave, faSpinner } from '@fortawesome/free-so
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Title } from 'components/EditModeHeader/EditModeHeader';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import useParams from 'components/NextJsMigration/useParams';
 import { CSSTransition } from 'react-transition-group';
 import { Button, ButtonGroup, Container } from 'reactstrap';
 import { saveTemplate, setDiagramMode, setEditMode } from 'slices/templateEditorSlice';

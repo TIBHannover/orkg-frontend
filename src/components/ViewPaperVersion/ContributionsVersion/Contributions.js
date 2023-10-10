@@ -2,7 +2,8 @@ import { Alert, Col, FormGroup, Row, ListGroup, Button } from 'reactstrap';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
-import { useParams, useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
+import useParams from 'components/NextJsMigration/useParams';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
@@ -12,8 +13,8 @@ import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip
 import { ENTITIES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
-import useContributions from './hooks/useContributions';
-import Breadcrumbs from '../BreadCrumbs';
+import useContributions from 'components/ViewPaperVersion/ContributionsVersion/hooks/useContributions';
+import Breadcrumbs from 'components/ViewPaperVersion/BreadCrumbs';
 
 const Contributions = props => {
     const { resourceId, contributionId } = useParams();
@@ -25,10 +26,10 @@ const Contributions = props => {
             contributions: props.contributions,
             paperStatements: props.paperStatements,
         });
-    const navigate = useNavigate();
+    const router = useRouter();
 
     const onTabChange = key => {
-        navigate(
+        router.push(
             reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                 resourceId,
                 contributionId: key,

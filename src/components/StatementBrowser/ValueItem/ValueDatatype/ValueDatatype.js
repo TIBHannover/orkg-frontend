@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { Badge } from 'reactstrap';
 import DATA_TYPES from 'constants/DataTypes';
 import { useSelector } from 'react-redux';
@@ -6,7 +7,6 @@ import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { reverse } from 'named-urls';
-import { Link } from 'react-router-dom';
 
 function ValueDatatype(props) {
     const preferences = useSelector(state => state.statementBrowser.preferences);
@@ -27,7 +27,7 @@ function ValueDatatype(props) {
                             props.value.classes
                                 .map(c => (
                                     <DescriptionTooltip key={c} id={c} _class={ENTITIES.CLASS} disabled={!preferences.showDescriptionTooltips}>
-                                        <Link target="_blank" style={{ color: '#60687a' }} to={reverse(ROUTES.CLASS, { id: c })}>
+                                        <Link target="_blank" style={{ color: '#60687a' }} href={reverse(ROUTES.CLASS, { id: c })}>
                                             {c}
                                         </Link>
                                     </DescriptionTooltip>

@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Confirm from 'components/Confirmation/Confirmation';
@@ -8,7 +9,6 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
 import { getContributorInformationById } from 'services/backend/contributors';
@@ -52,7 +52,7 @@ const Comment = ({ comment, entityId, setComments, refreshCount }) => {
             <div className="bg-light py-2 px-3 flex-grow-1 rounded">
                 <div className="d-flex justify-content-between">
                     <small className="text-muted">
-                        <Link to={reverse(ROUTES.USER_PROFILE, { userId: comment.created_by })} target="_blank" className="fw-bold text-black">
+                        <Link href={reverse(ROUTES.USER_PROFILE, { userId: comment.created_by })} target="_blank" className="fw-bold text-black">
                             {username}
                         </Link>{' '}
                         {moment(comment.created_at).fromNow()}

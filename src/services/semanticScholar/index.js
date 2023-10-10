@@ -1,4 +1,4 @@
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import { submitGetRequest } from 'network';
 
 export const semanticScholarUrl = env('SEMANTIC_SCHOLAR_URL');

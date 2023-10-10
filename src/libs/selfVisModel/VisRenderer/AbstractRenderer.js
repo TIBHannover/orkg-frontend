@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import PropTypes from 'prop-types';
-import AbstractChartRenderer from './ChartRenderers/AbstractChartRenderer';
+import AbstractChartRenderer from 'libs/selfVisModel/VisRenderer/ChartRenderers/AbstractChartRenderer';
 
 export default class AbstractRenderer extends Component {
     constructor(props) {

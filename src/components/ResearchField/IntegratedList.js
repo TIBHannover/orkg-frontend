@@ -1,14 +1,14 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import CardFactory from 'components/Cards/CardFactory/CardFactory';
+import useSearchParams from 'components/NextJsMigration/useSearchParams';
 import useResearchFieldContent from 'components/ResearchField/hooks/useResearchFieldContent';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
+import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
-import qs from 'qs';
 import ContentLoader from 'react-content-loader';
-import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Container, FormGroup, Input, Label, ListGroup } from 'reactstrap';
 
@@ -23,8 +23,7 @@ const DEFAULT_CLASSES_FILTER = [
 ];
 
 const IntegratedList = ({ id, slug, boxShadow }) => {
-    const location = useLocation();
-    const params = qs.parse(location.search, { ignoreQueryPrefix: true });
+    const searchParams = useSearchParams();
 
     const {
         items,
@@ -43,12 +42,12 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
     } = useResearchFieldContent({
         researchFieldId: id,
         slug,
-        initialSort: params.sort ?? 'combined',
+        initialSort: searchParams.get('sort') ?? 'combined',
         initialClassFilterOptions: DEFAULT_CLASSES_FILTER,
-        initClassesFilter: params.classesFilter
-            ? DEFAULT_CLASSES_FILTER.filter(i => params.classesFilter.split(',').includes(i.id))
+        initClassesFilter: searchParams.get('classesFilter')
+            ? DEFAULT_CLASSES_FILTER.filter(i => searchParams.get('classesFilter')?.split(',').includes(i.id))
             : DEFAULT_CLASSES_FILTER,
-        initialIncludeSubFields: params.classesFilter ? Boolean(params.includeSubFields === 'true') : true,
+        initialIncludeSubFields: searchParams.get('classesFilter') ? Boolean(searchParams.get('includeSubFields') === 'true') : true,
         updateURL: true,
     });
 

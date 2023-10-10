@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useEffect, useState } from 'react';
 import { Modal, ModalHeader, ModalBody, Alert, Col, Row } from 'reactstrap';
 import { getHelpArticles, getHelpArticle } from 'services/cms';
@@ -5,7 +6,6 @@ import usePage from 'components/Page/usePage';
 import { CmsPage } from 'components/styled';
 import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes';
-import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import { setIsHelpModalOpen } from 'slices/statementBrowserSlice';
@@ -57,7 +57,6 @@ const SBEditorHelpModal = () => {
             <ModalHeader toggle={() => dispatch(setIsHelpModalOpen({ isOpen: !isHelpModalOpen }))}>
                 {helpCenterArticleId && !isLoadingPage && page ? page?.title : 'ORKG Content editor help'}{' '}
             </ModalHeader>
-
             <ModalBody>
                 {!helpCenterArticleId && (
                     <p>
@@ -96,7 +95,7 @@ const SBEditorHelpModal = () => {
                                     <Link
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        to={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
+                                        href={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                             id: article.id,
                                             slug: article.title,
                                         })}

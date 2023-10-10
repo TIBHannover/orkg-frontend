@@ -1,6 +1,6 @@
+import Link from 'components/NextJsMigration/Link';
 import { Component } from 'react';
 import { Row, Col } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -25,7 +25,7 @@ class ShortRecord extends Component {
             <StyledShortRecord className="list-group-item px-4 py-3">
                 <Row>
                     <Col sm={12}>
-                        <Link to={this.props.href}>{this.props.header ? this.props.header : <i>No label</i>}</Link>
+                        <Link href={this.props.href}>{this.props.header ? this.props.header : <i>No label</i>}</Link>
                         <br />
                         <small>{this.props.children}</small>
                     </Col>

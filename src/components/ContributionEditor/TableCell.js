@@ -4,7 +4,7 @@ import { Item, ItemInner } from 'components/Comparison/Table/Cells/TableCell';
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import { useSelector } from 'react-redux';
 import FlipMove from 'react-flip-move';
 

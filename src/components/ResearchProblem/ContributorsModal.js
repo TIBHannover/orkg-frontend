@@ -5,7 +5,7 @@ import { faAward } from '@fortawesome/free-solid-svg-icons';
 import ContributorCard from 'components/Cards/ContributorCard/ContributorCard';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
-import useResearchProblemContributors from './hooks/useResearchProblemContributors';
+import useResearchProblemContributors from 'components/ResearchProblem/hooks/useResearchProblemContributors';
 
 const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
     const { contributors, isLoading, isLoadingFailed } = useResearchProblemContributors({

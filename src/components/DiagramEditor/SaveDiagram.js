@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useEffect, useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Alert } from 'reactstrap';
 import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
@@ -5,7 +6,7 @@ import PropTypes from 'prop-types';
 import { createResource } from 'services/backend/resources';
 import { createResourceData } from 'services/similarity/index';
 import { toast } from 'react-toastify';
-import { useNavigate, Link } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
@@ -16,7 +17,7 @@ import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagram, diagramResource }) {
     const [value, setValue] = useState(diagramResource?.label ?? '');
     const [isSaving, setIsSaving] = useState(false);
-    const navigate = useNavigate();
+    const router = useRouter();
     const save = async () => {
         setIsSaving(true);
         const sResource = await createResource(value, [CLASSES.DIAGRAM]);
@@ -28,7 +29,7 @@ function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagra
                 if (diagramResource?.id) {
                     await createResourceStatement(sResource.id, PREDICATES.HAS_PREVIOUS_VERSION, diagramResource?.id);
                 }
-                navigate(reverse(ROUTES.DIAGRAM, { id: sResource.id }));
+                router.push(reverse(ROUTES.DIAGRAM, { id: sResource.id }));
                 toast.success('Diagram published successfully');
                 setIsSaving(false);
                 setIsSaveDiagramModalOpen(false);
@@ -51,7 +52,7 @@ function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagra
                 {diagramResource?.id && (
                     <Alert color="info">
                         You are publishing a new version of the diagram. The diagram you are about to save will be marked as a new version of the{' '}
-                        <Link target="_blank" to={reverse(ROUTES.DIAGRAM, { id: diagramResource?.id })}>
+                        <Link target="_blank" href={reverse(ROUTES.DIAGRAM, { id: diagramResource?.id })}>
                             original diagram
                         </Link>
                         {diagramResource?.created_by !== MISC.UNKNOWN_ID && (

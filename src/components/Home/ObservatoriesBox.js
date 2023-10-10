@@ -1,5 +1,5 @@
+import Link from 'components/NextJsMigration/Link';
 import ObservatoriesCarousel from 'components/ObservatoriesCarousel/ObservatoriesCarousel';
-import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
 import Tippy from '@tippyjs/react';
@@ -20,7 +20,7 @@ const ObservatoriesBox = ({ researchFieldId }) => {
                 <Tippy content="Observatories organize research contributions in a particular research field and are curated by research organizations active in the respective field.">
                     <span>Observatories</span>
                 </Tippy>
-                <Link to={ROUTES.OBSERVATORIES}>
+                <Link href={ROUTES.OBSERVATORIES}>
                     <span style={{ fontSize: '0.9rem', float: 'right', marginTop: 2, marginBottom: 15 }}>More observatories</span>
                 </Link>
             </h2>

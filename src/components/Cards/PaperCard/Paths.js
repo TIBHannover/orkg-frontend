@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -6,7 +7,6 @@ import { faRoute, faAnglesRight, faChevronCircleUp, faChevronCircleDown } from '
 import { ENTITIES } from 'constants/graphSettings';
 import { Fragment, useState } from 'react';
 import { getLinkByEntityType } from 'utils';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const StyledPaths = styled.div`
@@ -56,7 +56,7 @@ function Paths({ paths }) {
                             <Fragment key={i}>
                                 <DescriptionTooltip classes={entity.classes} id={entity.id} _class={entity._class}>
                                     <Link
-                                        to={getLinkByEntityType(entity._class, entity.id)}
+                                        href={getLinkByEntityType(entity._class, entity.id)}
                                         className={entity._class === ENTITIES.PREDICATE ? 'position-relative ps-1' : 'position-relative'}
                                     >
                                         {entity._class === ENTITIES.PREDICATE && <div className="typeCircle position-absolute">P</div>}

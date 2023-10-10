@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
@@ -7,7 +8,6 @@ import moment from 'moment';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { getAltMetrics } from 'services/altmetric/index';
 
 const PaperVersionHeader = () => {
@@ -39,9 +39,7 @@ const PaperVersionHeader = () => {
                     </div>
                 )}
             </div>
-
             <div className="clearfix" />
-
             {(viewPaper.publicationMonth?.label || viewPaper.publicationYear?.label) && (
                 <span className="badge bg-light me-2">
                     <Icon icon={faCalendar} className="text-primary" />{' '}
@@ -59,7 +57,7 @@ const PaperVersionHeader = () => {
                             Published in:{' '}
                             <Link
                                 style={{ color: '#60687a', fontStyle: 'italic' }}
-                                to={reverse(ROUTES.VENUE_PAGE, { venueId: viewPaper.publishedIn.id })}
+                                href={reverse(ROUTES.VENUE_PAGE, { venueId: viewPaper.publishedIn.id })}
                             >
                                 {viewPaper.publishedIn.label}
                             </Link>

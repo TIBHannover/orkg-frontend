@@ -7,7 +7,7 @@ import { createLiteral } from 'services/backend/literals';
 import { getComparison, createResourceData } from 'services/similarity/index';
 import { useSelector, useDispatch } from 'react-redux';
 import { reverse } from 'named-urls';
-import { useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
 import { filterObjectOfStatementsByPredicateAndClass, getPublicUrl, getErrorMessage, getComparisonData, addAuthorsToStatements } from 'utils';
 import { setDoi } from 'slices/comparisonSlice';
 import { getComparisonURLConfig, getPropertyObjectFromData, activatedContributionsToList } from 'components/Comparison/hooks/helpers';
@@ -21,7 +21,7 @@ function usePublish() {
     const comparisonResource = useSelector(state => state.comparison.comparisonResource);
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
+    const router = useRouter();
     const [assignDOI, setAssignDOI] = useState(false);
     const [title, setTitle] = useState(comparisonResource && comparisonResource.label ? comparisonResource.label : '');
     const [description, setDescription] = useState(comparisonResource && comparisonResource.description ? comparisonResource.description : '');
@@ -194,7 +194,7 @@ function usePublish() {
                         publishDOI(createdComparison.id);
                     }
                     setIsLoading(false);
-                    navigate(reverse(ROUTES.COMPARISON, { comparisonId: createdComparison.id }));
+                    router.push(reverse(ROUTES.COMPARISON, { comparisonId: createdComparison.id }));
                 } else {
                     throw Error('Please enter a title, description and creator(s)');
                 }

@@ -5,9 +5,9 @@ import { orderBy } from 'lodash';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
 import { getChildrenByID, getHierarchyByID } from 'services/backend/classes';
-import AnimatedTree, { motion } from './styled';
+import AnimatedTree, { motion } from 'components/Class/styled';
 
 const treeify = (arr, arrChildren) => {
     const tree = [];
@@ -42,7 +42,7 @@ function TreeView({ id, label, reloadTree, ...props }) {
         setSelectedNodeId(id);
     }, [id]);
 
-    const navigate = useNavigate();
+    const router = useRouter();
     const SORT_NODES_BY = 'label';
 
     /** Navigate to the clicked class */
@@ -52,7 +52,7 @@ function TreeView({ id, label, reloadTree, ...props }) {
             props.onSelect(info, o);
         } else if (info.length) {
             // The selected node doesn't have info so the user stays on the same page
-            navigate(
+            router.push(
                 `${reverse(ROUTES.CLASS_TABS, {
                     id: info[0],
                     activeTab: 'information',

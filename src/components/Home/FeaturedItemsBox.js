@@ -5,8 +5,8 @@ import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import Tabs from 'react-responsive-tabs';
-import { ResponsiveTabs } from './styled';
-import FeaturedItems from './FeaturedItems';
+import { ResponsiveTabs } from 'components/Home/styled';
+import FeaturedItems from 'components/Home/FeaturedItems';
 
 const DEFAULT_CLASSES_FILTER = [
     {

@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { Fragment, useState } from 'react';
 import { Button, ListGroup, Alert, Badge } from 'reactstrap';
 import { reverse } from 'named-urls';
@@ -6,7 +7,6 @@ import moment from 'moment';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar, faArrowsAltV, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import StatementList from 'components/ConfirmBulkImport/StatementList';
 import Tippy from '@tippyjs/react';
@@ -55,7 +55,6 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
             {hasValidationErrors && (
                 <Alert color="warning">Some provided data types are not matching cell values. Please check papers with a warning icon</Alert>
             )}
-
             <div className="w-100 text-end">
                 {showContributions.length === 0 ? (
                     <Button size="sm" color="secondary" className="mb-2" onClick={handleExpandAll}>
@@ -67,7 +66,6 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
                     </Button>
                 )}
             </div>
-
             <ListGroup>
                 {papers.map((paper, i) => (
                     <Fragment key={i}>
@@ -81,7 +79,7 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
                                     {hasValidationErrorsForPaper(i) && <Icon icon={faExclamationTriangle} className="text-warning me-2" />}
 
                                     {existingPaperIds[i] && (
-                                        <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: existingPaperIds[i] })} target="_blank">
+                                        <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: existingPaperIds[i] })} target="_blank">
                                             {paper.title ? paper.title : <i>No title</i>}
                                         </Link>
                                     )}

@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { CardTitle } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -6,12 +7,11 @@ import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes.js';
 import { StyledGravatar, StyledDotGravatar, ContributorsAvatars } from 'components/styled';
 import Tippy from '@tippyjs/react';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
-import ContributorsModal from './ContributorsModal';
-import useResearchProblemContributors from './hooks/useResearchProblemContributors';
+import ContributorsModal from 'components/ResearchProblem/ContributorsModal';
+import useResearchProblemContributors from 'components/ResearchProblem/hooks/useResearchProblemContributors';
 
 const Contributors = ({ researchProblemId }) => {
     const { contributors, isLoading, isLoadingFailed } = useResearchProblemContributors({
@@ -42,7 +42,7 @@ const Contributors = ({ researchProblemId }) => {
                                     </>
                                 }
                             >
-                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.user.id })}>
+                                <Link href={reverse(ROUTES.USER_PROFILE, { userId: contributor.user.id })}>
                                     <StyledGravatar className="rounded-circle" md5={contributor.user.gravatar_id} size={48} />
                                 </Link>
                             </Tippy>

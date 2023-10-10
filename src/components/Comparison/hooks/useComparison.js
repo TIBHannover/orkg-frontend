@@ -21,29 +21,23 @@ import {
     setHiddenGroups,
     setIsEmbeddedMode,
 } from 'slices/comparisonSlice';
-import {
-    filterObjectOfStatementsByPredicateAndClass,
-    getArrayParamFromQueryString,
-    getParamFromQueryString,
-    getErrorMessage,
-    getComparisonData,
-    asyncLocalStorage,
-    addAuthorsToStatements,
-} from 'utils';
-import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import { filterObjectOfStatementsByPredicateAndClass, getErrorMessage, getComparisonData, asyncLocalStorage, addAuthorsToStatements } from 'utils';
+import useParams from 'components/NextJsMigration/useParams';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
-import { uniq, without } from 'lodash';
+import { isEmpty, uniq, without } from 'lodash';
 import ROUTES from 'constants/routes.js';
 import qs from 'qs';
 import { useSelector, useDispatch } from 'react-redux';
-import { getComparisonConfiguration, generateFilterControlData } from './helpers';
+import { getComparisonConfiguration, generateFilterControlData } from 'components/Comparison/hooks/helpers';
+import useRouter from 'components/NextJsMigration/useRouter';
+import useSearchParams from 'components/NextJsMigration/useSearchParams';
 
 const DEFAULT_COMPARISON_METHOD = 'path';
 
 function useComparison({ id, isEmbeddedMode = false }) {
-    const { search } = useLocation();
-    const navigate = useNavigate();
+    const searchParams = useSearchParams();
+    const router = useRouter();
     const params = useParams();
     const comparisonId = id || params.comparisonId;
     const hiddenGroupsStorageName = comparisonId ? `comparison-${comparisonId}-hidden-rows` : null;
@@ -212,7 +206,7 @@ function useComparison({ id, isEmbeddedMode = false }) {
                 encode: false,
             },
         );
-        navigate(`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?${qParams}`);
+        router.push(`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?${qParams}`);
     };
 
     useEffect(() => {
@@ -234,12 +228,10 @@ function useComparison({ id, isEmbeddedMode = false }) {
      * Parse previous version from query param
      */
     useEffect(() => {
-        if (!comparisonId && qs.parse(search, { ignoreQueryPrefix: true })?.hasPreviousVersion) {
-            getResource(qs.parse(search, { ignoreQueryPrefix: true }).hasPreviousVersion).then(prevVersion =>
-                dispatch(setHasPreviousVersion(prevVersion)),
-            );
+        if (!comparisonId && searchParams.has('hasPreviousVersion')) {
+            getResource(searchParams.get('hasPreviousVersion')).then(prevVersion => dispatch(setHasPreviousVersion(prevVersion)));
         }
-    }, [comparisonId, dispatch, search]);
+    }, [comparisonId, dispatch, searchParams]);
 
     /**
      * Get research field of the first contribution if no research field is found
@@ -268,19 +260,30 @@ function useComparison({ id, isEmbeddedMode = false }) {
             // Update browser title
             document.title = 'Comparison - ORKG';
 
-            dispatch(setConfigurationAttribute({ attribute: 'responseHash', value: getParamFromQueryString(search, 'response_hash') }));
+            dispatch(setConfigurationAttribute({ attribute: 'responseHash', value: searchParams.get('response_hash') }));
             dispatch(
                 setConfigurationAttribute({
                     attribute: 'comparisonType',
-                    value: getParamFromQueryString(search, 'type') ?? DEFAULT_COMPARISON_METHOD,
+                    value: searchParams.get('type') ?? DEFAULT_COMPARISON_METHOD,
                 }),
             );
-            dispatch(setConfigurationAttribute({ attribute: 'transpose', value: getParamFromQueryString(search, 'transpose', true) }));
-            const contributionsIDs = without(uniq(getArrayParamFromQueryString(search, 'contributions')), undefined, null, '') ?? [];
+            dispatch(setConfigurationAttribute({ attribute: 'transpose', value: searchParams.get('transpose') === 'true' }));
+            const contributionsIDs =
+                without(
+                    uniq(!isEmpty(searchParams.get('contributions')) ? searchParams.get('contributions')?.split(',') : []),
+                    undefined,
+                    null,
+                    '',
+                ) ?? [];
             dispatch(setConfigurationAttribute({ attribute: 'contributionsList', value: contributionsIDs }));
-            dispatch(setConfigurationAttribute({ attribute: 'predicatesList', value: getArrayParamFromQueryString(search, 'properties') }));
+            dispatch(
+                setConfigurationAttribute({
+                    attribute: 'predicatesList',
+                    value: !isEmpty(searchParams.get('properties')) ? searchParams.get('properties')?.split(',') : [],
+                }),
+            );
         }
-    }, [comparisonId, dispatch, loadComparisonMetaData, search]);
+    }, [comparisonId, dispatch, loadComparisonMetaData, searchParams]);
 
     /**
      * Update comparison if:

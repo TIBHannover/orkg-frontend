@@ -37,7 +37,7 @@ const ContextMenu = ({ getExpandButtonLabel, toggleExpandNode, onClose, fetchInc
                                   </>
                               ),
                               onClick: () => {
-                                  window.open(`${reverse(ROUTES.RESOURCE, { id: data.id })}?noRedirect`, '_blank');
+                                  window?.open(`${reverse(ROUTES.RESOURCE, { id: data.id })}?noRedirect`, '_blank');
                                   onClose();
                               },
                           },

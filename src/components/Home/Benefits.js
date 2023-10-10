@@ -1,16 +1,17 @@
 import { openAuthDialog } from 'slices/authSlice';
-import { ReactComponent as IconCited } from 'assets/img/benefits/cited.svg';
-import { ReactComponent as IconCommunity } from 'assets/img/benefits/community.svg';
-import { ReactComponent as IconContribute } from 'assets/img/benefits/contribute.svg';
-import { ReactComponent as IconConvince } from 'assets/img/benefits/convince.svg';
-import { ReactComponent as IconFeedback } from 'assets/img/benefits/feedback.svg';
-import { ReactComponent as IconReputation } from 'assets/img/benefits/reputation.svg';
-import { ReactComponent as IconVisibility } from 'assets/img/benefits/visibility.svg';
+import IconCited from 'assets/img/benefits/cited.svg';
+import IconCommunity from 'assets/img/benefits/community.svg';
+import IconContribute from 'assets/img/benefits/contribute.svg';
+import IconConvince from 'assets/img/benefits/convince.svg';
+import IconFeedback from 'assets/img/benefits/feedback.svg';
+import IconReputation from 'assets/img/benefits/reputation.svg';
+import IconVisibility from 'assets/img/benefits/visibility.svg';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselItem } from 'reactstrap';
 import { CarouselIndicatorsStyled } from 'components/styled';
 import styled from 'styled-components';
+import Image from 'components/NextJsMigration/Image';
 
 const CarouselContainer = styled.div`
     width: 100%;
@@ -110,25 +111,6 @@ export default function Benefits() {
         setActiveIndex(newIndex);
     };
 
-    const slides = () =>
-        ITEMS.map((item, index) => (
-            <CarouselItem onExiting={() => setAnimating(true)} onExited={() => setAnimating(false)} className="pb-1 mb-4" key={`fp${index}`}>
-                <ObservatoryCardStyled className="">
-                    <Card style={{ border: 0, minHeight: 250 }}>
-                        <CardBody className="pt-0 mb-0 d-flex justify-content-center align-items-center flex-column">
-                            <CardTitle tag="h5" className="pt-0 d-flex">
-                                <item.Icon className="flex-shrink-0" style={{ width: 50 }} />
-                                <div className="align-items-center d-flex">{item.title}</div>
-                            </CardTitle>
-                            <CardSubtitle tag="h6" className="mb-1 text-muted">
-                                {item.description}
-                            </CardSubtitle>
-                        </CardBody>
-                    </Card>
-                </ObservatoryCardStyled>
-            </CarouselItem>
-        ));
-
     return (
         <>
             <div className="d-flex align-items-center pt-3 ps-3 pe-3 pb-0">
@@ -154,7 +136,30 @@ export default function Benefits() {
             <div>
                 <CarouselContainer>
                     <Carousel activeIndex={activeIndex} next={next} previous={previous}>
-                        {slides()}
+                        {ITEMS.map((item, index) => (
+                            <CarouselItem
+                                onExiting={() => setAnimating(true)}
+                                onExited={() => setAnimating(false)}
+                                className="pb-1 mb-4"
+                                key={`fp${index}`}
+                            >
+                                <ObservatoryCardStyled className="">
+                                    <Card style={{ border: 0, minHeight: 250 }}>
+                                        <CardBody className="pt-0 mb-0 d-flex justify-content-center align-items-center flex-column">
+                                            <CardTitle tag="h5" className="pt-0 d-flex">
+                                                <div className="flex-shrink-0" style={{ width: 50 }}>
+                                                    <Image src={item.Icon} />
+                                                </div>
+                                                <div className="align-items-center d-flex">{item.title}</div>
+                                            </CardTitle>
+                                            <CardSubtitle tag="h6" className="mb-1 text-muted">
+                                                {item.description}
+                                            </CardSubtitle>
+                                        </CardBody>
+                                    </Card>
+                                </ObservatoryCardStyled>
+                            </CarouselItem>
+                        ))}
 
                         <CarouselIndicatorsStyled items={ITEMS} activeIndex={activeIndex} onClickHandler={goToIndex} />
                     </Carousel>

@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState, useEffect } from 'react';
 import { CardTitle } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -7,10 +8,9 @@ import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes.js';
 import { StyledGravatar, StyledDotGravatar, ContributorsAvatars } from 'components/styled';
 import Tippy from '@tippyjs/react';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import MembersModal from './MembersModal';
+import MembersModal from 'components/Organization/MembersModal';
 
 const Members = ({ organizationsId }) => {
     const [members, setMembers] = useState([]);
@@ -45,7 +45,7 @@ const Members = ({ organizationsId }) => {
                     {members.slice(0, 18).map((member /* 18 perfect for the container width */) => (
                         <div key={`contributor${member.id}`}>
                             <Tippy offset={[0, 20]} placement="bottom" content={<>{member.display_name}</>}>
-                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: member.id })}>
+                                <Link href={reverse(ROUTES.USER_PROFILE, { userId: member.id })}>
                                     <StyledGravatar className="rounded-circle" md5={member.gravatar_id} size={48} />
                                 </Link>
                             </Tippy>

@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
@@ -7,13 +8,12 @@ import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlis
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { CardBadge } from 'components/styled';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import Thumbnail from './Thumbnail';
-import useVisualizationResearchField from './hooks/useVisualizationResearchField';
+import Thumbnail from 'components/Cards/VisualizationCard/Thumbnail';
+import useVisualizationResearchField from 'components/Cards/VisualizationCard/hooks/useVisualizationResearchField';
 
 const VisualizationCardStyled = styled.div`
     a {
@@ -52,7 +52,7 @@ const VisualizationCard = props => {
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
                         <Link
-                            to={
+                            href={
                                 props.visualization.comparisonId
                                     ? `${reverse(ROUTES.COMPARISON, { comparisonId: props.visualization.comparisonId })}#Vis${props.visualization.id}`
                                     : reverse(ROUTES.VISUALIZATION, { id: props.visualization.id })

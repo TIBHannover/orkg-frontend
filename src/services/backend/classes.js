@@ -1,3 +1,5 @@
+'use client';
+
 import { url } from 'constants/misc';
 import { submitPostRequest, submitGetRequest, submitPatchRequest, submitDeleteRequest, submitPutRequest } from 'network';
 import qs from 'qs';

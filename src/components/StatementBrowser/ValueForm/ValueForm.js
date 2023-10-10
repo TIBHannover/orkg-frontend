@@ -13,7 +13,7 @@ import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataType
 import Tippy from '@tippyjs/react';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
-import useValueForm from './hooks/useValueForm';
+import useValueForm from 'components/StatementBrowser/ValueForm/hooks/useValueForm';
 
 const ValueForm = props => {
     const editMode = Boolean(props.id);

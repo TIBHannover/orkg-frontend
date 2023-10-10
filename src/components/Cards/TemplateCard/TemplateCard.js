@@ -1,5 +1,5 @@
+import Link from 'components/NextJsMigration/Link';
 import { Row, Col } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes.js';
@@ -24,7 +24,7 @@ const TemplateCard = ({ template }) => (
     <TemplateCardStyled className="list-group-item list-group-item-action">
         <Row>
             <Col sm={12}>
-                {template && <Link to={reverse(ROUTES.TEMPLATE, { id: template.id })}>{template.label ? template.label : <em>No title</em>}</Link>}
+                {template && <Link href={reverse(ROUTES.TEMPLATE, { id: template.id })}>{template.label ? template.label : <em>No title</em>}</Link>}
                 <br />
                 <small>{template.id}</small>
             </Col>

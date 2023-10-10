@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useContext, useCallback } from 'react';
 import Select, { components } from 'react-select';
 import DATA_TYPES, { getConfigByType } from 'constants/DataTypes';
@@ -7,7 +8,6 @@ import { ThemeContext } from 'styled-components';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 
@@ -17,7 +17,7 @@ const TypeTooltipContent = ({ valueClass, entity, switchEntityType }) => (
         {valueClass && entity === ENTITIES.RESOURCE && (
             <div>
                 Only instances of{' '}
-                <Link target="_blank" to={reverse(ROUTES.CLASS, { id: valueClass.id })}>
+                <Link target="_blank" href={reverse(ROUTES.CLASS, { id: valueClass.id })}>
                     {valueClass.label}
                 </Link>{' '}
                 are valid.

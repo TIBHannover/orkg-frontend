@@ -1,6 +1,7 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import Link from 'components/NextJsMigration/Link';
 import hideOnEsc from 'components/Tippy/hideOnEsc';
 import useContributor from 'components/hooks/useContributor';
 import { MISC } from 'constants/graphSettings';
@@ -8,7 +9,6 @@ import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import Gravatar from 'react-gravatar';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const StyledGravatar = styled(Gravatar)`
@@ -56,7 +56,7 @@ const UserAvatar = ({ userId, size, appendToTooltip, showDisplayName, linkTarget
                     plugins={[hideOnEsc]}
                 >
                     <StyledUserAvatar tabIndex="0">
-                        <Link to={reverse(ROUTES.USER_PROFILE, { userId })} target={linkTarget}>
+                        <Link href={reverse(ROUTES.USER_PROFILE, { userId })} target={linkTarget}>
                             {!isLoadingContributor && (
                                 <>
                                     <StyledGravatar className="rounded-circle" md5={contributor?.gravatar_id ?? 'example@example.com'} size={size} />

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getUserInformation } from 'services/backend/users';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import { Cookies } from 'react-cookie';
 
 const initialState = {

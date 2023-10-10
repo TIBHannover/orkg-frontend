@@ -1,8 +1,8 @@
+import Link from 'components/NextJsMigration/Link';
 import { Label, ListGroup, Alert, Input } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle, ValueItemStyle } from 'components/StatementBrowser/styled';
 import { reverse } from 'named-urls';
-import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 
 export default function BioassaySelectItem(props) {
@@ -19,7 +19,7 @@ export default function BioassaySelectItem(props) {
                                 <PropertyStyle className="col-4" tabIndex="0">
                                     <div className="propertyLabel">
                                         <Label className=" mr-2">
-                                            <Link className="text-dark" target="_blank" to={reverse(ROUTES.PROPERTY, { id: labelKey.property.id })}>
+                                            <Link className="text-dark" target="_blank" href={reverse(ROUTES.PROPERTY, { id: labelKey.property.id })}>
                                                 {labelKey.property.label}
                                             </Link>
                                         </Label>
@@ -31,7 +31,7 @@ export default function BioassaySelectItem(props) {
                                             <ValueItemStyle key={`p${resource.id}`} className="suggested_value d-flex">
                                                 <div className="flex-grow-1">
                                                     <Label>
-                                                        <Link target="_blank" to={`${reverse(ROUTES.RESOURCE, { id: resource.id })}?noRedirect`}>
+                                                        <Link target="_blank" href={`${reverse(ROUTES.RESOURCE, { id: resource.id })}?noRedirect`}>
                                                             {resource.label}
                                                         </Link>
                                                     </Label>

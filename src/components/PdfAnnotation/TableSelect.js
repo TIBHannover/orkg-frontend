@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import ExtractionModal from './ExtractionModal';
-import useTableSelect from './hooks/useTableSelect';
+import ExtractionModal from 'components/PdfAnnotation/ExtractionModal';
+import useTableSelect from 'components/PdfAnnotation/hooks/useTableSelect';
 
 const TableSelectContainer = styled.div`
     &.enable-table-select {

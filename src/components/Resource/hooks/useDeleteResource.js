@@ -2,11 +2,11 @@ import { useState } from 'react';
 import Confirm from 'components/Confirmation/Confirmation';
 import { deleteResource as deleteResourceNetwork } from 'services/backend/resources';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
 import ROUTES from 'constants/routes.js';
 
 function useDeleteResource({ resourceId, redirect = false }) {
-    const navigate = useNavigate();
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
 
     const deleteResource = async () => {
@@ -22,7 +22,7 @@ function useDeleteResource({ resourceId, redirect = false }) {
                 toast.success('Resource deleted successfully');
 
                 if (redirect) {
-                    navigate(ROUTES.RESOURCES);
+                    router.push(ROUTES.RESOURCES);
                 }
             } catch (err) {
                 toast.error(

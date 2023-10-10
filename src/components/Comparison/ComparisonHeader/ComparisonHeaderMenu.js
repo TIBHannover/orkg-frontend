@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState, useEffect } from 'react';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, Alert } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -15,7 +16,6 @@ import Publish from 'components/Comparison/Publish/Publish';
 import { ComparisonTypeButton } from 'components/Comparison/styled';
 import { uniq, without } from 'lodash';
 import ROUTES from 'constants/routes.js';
-import { useNavigate, NavLink, useSearchParams } from 'react-router-dom';
 import { openAuthDialog } from 'slices/authSlice';
 import { CSVLink } from 'react-csv';
 import PropTypes from 'prop-types';
@@ -26,7 +26,7 @@ import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
 import AddVisualizationModal from 'libs/selfVisModel/ComparisonComponents/AddVisualizationModal';
 import { reverse } from 'named-urls';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     setConfigurationAttribute,
@@ -47,6 +47,9 @@ import QualityReportModal from 'components/Comparison/QualityReportModal/Quality
 import WriteFeedback from 'components/Comparison/QualityReportModal/WriteFeedback';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import GraphViewModal from 'components/GraphView/GraphViewModal';
+import useRouter from 'components/NextJsMigration/useRouter';
+import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import Image from 'components/NextJsMigration/Image';
 
 const ComparisonHeaderMenu = props => {
     const dispatch = useDispatch();
@@ -69,8 +72,8 @@ const ComparisonHeaderMenu = props => {
     const contributionsList = useSelector(state => activatedContributionsToList(state.comparison.contributions));
 
     const [, setCookie] = useCookies();
-    const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [dropdownDensityOpen, setDropdownDensityOpen] = useState(false);
@@ -127,7 +130,7 @@ const ComparisonHeaderMenu = props => {
         });
 
         if (isConfirmed) {
-            navigate(
+            router.push(
                 `${reverse(ROUTES.CONTRIBUTION_EDITOR)}?contributions=${contributionsList.join(',')}${
                     comparisonResource?.hasPreviousVersion ? `&hasPreviousVersion=${comparisonResource?.hasPreviousVersion.id}` : ''
                 }`,
@@ -184,7 +187,6 @@ const ComparisonHeaderMenu = props => {
     return (
         <>
             <Breadcrumbs researchFieldId={comparisonResource?.researchField ? comparisonResource?.researchField.id : null} />
-
             <TitleBar
                 buttonGroup={
                     contributionsList.length > 1 &&
@@ -290,7 +292,7 @@ const ComparisonHeaderMenu = props => {
                                                             onClick={() => handleChangeType('merge')}
                                                             active={comparisonType !== 'path'}
                                                         >
-                                                            <img src={IntelligentMerge} alt="Intelligent merge example" />
+                                                            <Image src={IntelligentMerge} alt="Intelligent merge example" />
                                                         </ComparisonTypeButton>
 
                                                         <ComparisonTypeButton
@@ -299,7 +301,7 @@ const ComparisonHeaderMenu = props => {
                                                             onClick={() => handleChangeType('path')}
                                                             active={comparisonType === 'path'}
                                                         >
-                                                            <img src={ExactMatch} alt="Exact match example" />
+                                                            <Image src={ExactMatch} alt="Exact match example" />
                                                         </ComparisonTypeButton>
                                                     </div>
                                                 </DropdownMenu>
@@ -412,7 +414,7 @@ const ComparisonHeaderMenu = props => {
                                         <>
                                             <DropdownItem divider />
                                             <DropdownItem onClick={() => setIsOpenGraphViewModal(true)}>View graph</DropdownItem>
-                                            <DropdownItem tag={NavLink} to={`${reverse(ROUTES.RESOURCE, { id: comparisonResource.id })}?noRedirect`}>
+                                            <DropdownItem tag={Link} href={`${reverse(ROUTES.RESOURCE, { id: comparisonResource.id })}?noRedirect`}>
                                                 View resource
                                             </DropdownItem>
                                         </>
@@ -429,7 +431,6 @@ const ComparisonHeaderMenu = props => {
             >
                 Comparison
             </TitleBar>
-
             {!isLoadingVersions && hasNextVersion && (
                 <NewerVersionWarning versions={versions} comparisonId={comparisonResource?.id || comparisonResource?.hasPreviousVersion?.id} />
             )}
@@ -467,9 +468,7 @@ const ComparisonHeaderMenu = props => {
                 DOI={comparisonResource?.doi}
                 comparisonId={comparisonResource?.id}
             />
-
             {showSaveDraftDialog && <SaveDraft isOpen={showSaveDraftDialog} toggle={() => setShowSaveDraftDialog(v => !v)} comparisonUrl="" />}
-
             <AddVisualizationModal />
             <SelectProperties showPropertiesDialog={showPropertiesDialog} togglePropertiesDialog={() => setShowPropertiesDialog(v => !v)} />
             <Share showDialog={showShareDialog} toggle={() => setShowShareDialog(v => !v)} />

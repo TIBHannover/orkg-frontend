@@ -1,4 +1,5 @@
-import env from '@beam-australia/react-env';
+import Link from 'components/NextJsMigration/Link';
+import env from 'components/NextJsMigration/env';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -16,7 +17,6 @@ import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { Fragment, memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
 import { contributionUpdated, fetchTemplatesOfClassIfNeeded, paperUpdated } from 'slices/contributionEditorSlice';
@@ -84,7 +84,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                                     Instance of:{' '}
                                     {contribution.classes?.map((c, index) => (
                                         <Fragment key={c}>
-                                            <Link target="_blank" to={reverse(ROUTES.CLASS, { id: c })}>
+                                            <Link target="_blank" href={reverse(ROUTES.CLASS, { id: c })}>
                                                 {c}
                                             </Link>
                                             {index + 1 !== contribution.classes.length && ', '}
@@ -98,7 +98,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                                             {usedTemplates?.map((t, index) => (
                                                 <Fragment key={t.id}>
                                                     <TemplateTooltip id={t.id}>
-                                                        <Link target="_blank" to={reverse(ROUTES.TEMPLATE, { id: t.id })}>
+                                                        <Link target="_blank" href={reverse(ROUTES.TEMPLATE, { id: t.id })}>
                                                             {t.label}
                                                         </Link>
                                                     </TemplateTooltip>
@@ -129,7 +129,6 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                     </Tippy>
                 </Delete>
             </ItemHeaderInner>
-
             {isOpenContributionModal && (
                 <EditResourceDialog
                     resource={contribution}
@@ -140,7 +139,6 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                     fixedClasses={[CLASSES.CONTRIBUTION]}
                 />
             )}
-
             {isOpenEditModal && (
                 <EditPaperModal paperData={data} afterUpdate={handleUpdatePaper} toggle={v => setIsOpenEditModal(!v)} isPaperLinkVisible />
             )}

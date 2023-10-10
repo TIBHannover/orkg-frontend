@@ -1,6 +1,6 @@
 import { Alert } from 'reactstrap';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';

@@ -1,3 +1,4 @@
+import validationSchema from 'components/StatementBrowser/ValueForm/helpers/validationSchema';
 import { getConfigByClassId, getConfigByType } from 'constants/DataTypes';
 import { CLASSES, ENTITIES, MISC, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { useCallback, useState } from 'react';
@@ -23,7 +24,6 @@ import {
     updateValueLabel,
 } from 'slices/statementBrowserSlice';
 import { guid } from 'utils';
-import validationSchema from '../helpers/validationSchema';
 
 const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     const dispatch = useDispatch();

@@ -1,4 +1,6 @@
-import env from '@beam-australia/react-env';
+'use client';
+
+import env from 'components/NextJsMigration/env';
 
 export const url = `${env('BACKEND_URL')}api/`;
 export const DEFAULT_COMPARISON_METHOD = 'path';

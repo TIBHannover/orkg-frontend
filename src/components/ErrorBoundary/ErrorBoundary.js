@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import withMatomo from 'components/Matomo/withMatomo';
 import { detect } from 'detect-browser';
-import ErrorFallback from './ErrorFallback';
+import ErrorFallback from 'components/ErrorBoundary/ErrorFallback';
 
 class ErrorBoundary extends Component {
     static getDerivedStateFromError(error) {

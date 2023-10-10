@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
@@ -6,7 +7,7 @@ import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
 import Select, { components } from 'react-select';
 import { Alert, Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
@@ -67,7 +68,7 @@ const Time = styled.div`
 const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => {
     const [selectedVersion1, setSelectedVersion1] = useState(null);
     const [selectedVersion2, setSelectedVersion2] = useState(null);
-    const navigate = useNavigate();
+    const router = useRouter();
     const options = versions.map((version, index) => ({
         label: `Version ${versions.length - index}`,
         value: version.id,
@@ -75,7 +76,7 @@ const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => 
     }));
 
     const handleCompare = () => {
-        navigate(reverse(routeDiff, { oldId: selectedVersion1.value, newId: selectedVersion2.value }));
+        router.push(reverse(routeDiff, { oldId: selectedVersion1.value, newId: selectedVersion2.value }));
     };
 
     return (
@@ -153,7 +154,7 @@ const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => 
                                         )}{' '}
                                         <br />
                                         {id !== version.id && (
-                                            <Link onClick={toggle} to={version.link}>
+                                            <Link onClick={toggle} href={version.link}>
                                                 View this version
                                             </Link>
                                         )}

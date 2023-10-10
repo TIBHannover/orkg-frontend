@@ -1,14 +1,14 @@
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { Navigate } from 'react-router-dom';
+import redirect from 'components/NextJsMigration/redirect';
 
 /**
  * Component to check if classes of the resource and the route are valid, and makes a redirect to resource page if not
  */
 const ClassRedirect = ({ classes = [], targetClass, resourceId }) => {
     if (classes && !classes.includes(targetClass) && targetClass) {
-        return <Navigate to={{ pathname: `${reverse(ROUTES.RESOURCE, { id: resourceId })}?noRedirect`, state: { status: 301 } }} />;
+        return redirect(`${reverse(ROUTES.RESOURCE, { id: resourceId })}?noRedirect`);
     }
 
     return null;

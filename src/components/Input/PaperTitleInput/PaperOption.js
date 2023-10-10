@@ -1,8 +1,8 @@
+import Link from 'components/NextJsMigration/Link';
 import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { components } from 'react-select';
 import { Badge } from 'reactstrap';
 
@@ -23,7 +23,7 @@ const PaperOption = ({ children, ...innerProps }) => {
                 {isOrkgResource && (
                     <Tippy content="Open existing ORKG entity">
                         <span className="ms-auto">
-                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: innerProps?.data?.id })} target="_blank">
+                            <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: innerProps?.data?.id })} target="_blank">
                                 <Badge onClick={e => e.stopPropagation()} color="light" className="px-2">
                                     {innerProps?.data?.id}
                                 </Badge>

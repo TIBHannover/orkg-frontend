@@ -3,7 +3,7 @@
  * https://gitlab.com/TIBHannover/orkg/annotation
  */
 
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import { submitPostRequest } from 'network';
 
 export const annotationServiceUrl = env('ANNOTATION_SERVICE_URL');

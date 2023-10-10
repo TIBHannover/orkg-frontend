@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitForElementToBeRemoved } from 'testUtils';
-import ValueItem from '../ValueItem';
-import { statementBrowser1QBDataset } from '../__mocks__/StatementBrowserDataValueItem';
+import ValueItem from 'components/StatementBrowser/ValueItem/ValueItem';
+import { statementBrowser1QBDataset } from 'components/StatementBrowser/ValueItem/__mocks__/StatementBrowserDataValueItem';
 
 jest.mock(
     'react-flip-move',

@@ -1,8 +1,8 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState, useEffect } from 'react';
 import { Container, ListGroup } from 'reactstrap';
 import { getAllObservatoriesByOrganizationId } from 'services/backend/organizations';
 import ContentLoader from 'react-content-loader';
-import { Link } from 'react-router-dom';
 import Dotdotdot from 'react-dotdotdot';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -45,7 +45,7 @@ const Observatories = ({ organizationsId }) => {
                         {observatories.map((observatory, index) => (
                             <div key={`c${index}`} className="list-group-item pe-2 p-3">
                                 <div>
-                                    <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}>{observatory.name}</Link>
+                                    <Link href={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}>{observatory.name}</Link>
                                 </div>
                                 <Dotdotdot clamp={3}>
                                     <small className="text-muted">{observatory.description}</small>

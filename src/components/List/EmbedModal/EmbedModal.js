@@ -6,7 +6,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import { toast } from 'react-toastify';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import ROUTES from 'constants/routes';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Tippy from '@tippyjs/react';

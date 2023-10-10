@@ -13,7 +13,7 @@ import ConfirmationTooltip from 'components/StatementBrowser/ConfirmationTooltip
 import Tippy from '@tippyjs/react';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
-import useTableCellForm from './hooks/useTableCellForm';
+import useTableCellForm from 'components/ContributionEditor/TableCellForm/hooks/useTableCellForm';
 
 const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
     const refContainer = useRef(null);

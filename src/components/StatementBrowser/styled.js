@@ -91,9 +91,7 @@ export const StyledButton = styled(Button)`
     }
 `;
 
-export const StyledDropdownToggle = styled(DropdownToggle).withConfig({
-    shouldForwardProp: prop => !['disableBorderRadiusLeft', 'disableBorderRadiusRight'].includes(prop),
-})`
+export const StyledDropdownToggle = styled(DropdownToggle)`
     border-top-left-radius: ${props => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
     border-bottom-left-radius: ${props => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
     border-top-right-radius: ${props => (props.disableBorderRadiusRight ? '0' : '4px !important')};

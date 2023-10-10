@@ -1,6 +1,6 @@
 import { submitGetRequest } from 'network';
 import qs from 'qs';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 
 export const olsBaseUrl = env('OLS_BASE_URL');
 

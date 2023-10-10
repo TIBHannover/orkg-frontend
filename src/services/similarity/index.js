@@ -5,7 +5,7 @@
 
 import { submitPostRequest, submitGetRequest } from 'network';
 import qs from 'qs';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 
 export const similarityServiceUrl = env('SIMILARITY_SERVICE_URL');
 export const comparisonUrl = `${similarityServiceUrl}compare/`;
