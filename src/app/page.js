@@ -17,10 +17,7 @@ import HelpTour from 'components/Home/HelpTour';
 import MastodonTimeline from 'components/Home/MastodonTimeline';
 
 export default function Home() {
-    const { selectedResearchField, handleFieldSelect, researchFields, isLoadingFields } = useResearchFieldSelector({
-        id: RESOURCES.RESEARCH_FIELD_MAIN,
-        label: 'Main',
-    });
+    const { selectedFieldId, selectedFieldLabel, researchFields, isLoadingFields } = useResearchFieldSelector();
 
     return (
         <Container style={{ marginTop: env('IS_TESTING_SERVER') === 'true' ? -20 : -70 }}>
@@ -38,19 +35,19 @@ export default function Home() {
                 <Col md="12">
                     <div className="box rounded-3 p-3" id="research-field-cards">
                         <ResearchFieldCards
-                            selectedResearchField={selectedResearchField}
-                            handleFieldSelect={handleFieldSelect}
+                            selectedFieldLabel={selectedFieldLabel}
+                            selectedFieldId={selectedFieldId}
                             researchFields={researchFields}
                             isLoading={isLoadingFields}
                         />
                     </div>
                 </Col>
             </Row>
-            {selectedResearchField.id !== RESOURCES.RESEARCH_FIELD_MAIN && <div className="h4 mt-4 mb-2 ps-3">{selectedResearchField.label}</div>}
+            {selectedFieldId !== RESOURCES.RESEARCH_FIELD_MAIN && <div className="h4 mt-4 mb-2 ps-3">{selectedFieldLabel}</div>}
             <Row>
                 <Col md="8">
                     <div className="mt-3 mt-md-0 d-flex flex-column">
-                        <FeaturedItemsBox researchFieldId={selectedResearchField.id} researchFieldLabel={selectedResearchField.label} />
+                        <FeaturedItemsBox researchFieldId={selectedFieldId} researchFieldLabel={selectedFieldLabel} />
                     </div>
                 </Col>
                 <Col md="4">
@@ -74,15 +71,15 @@ export default function Home() {
                     </div>
 
                     <div className="mt-3 d-flex flex-column">
-                        <ObservatoriesBox researchFieldId={selectedResearchField.id} />
+                        <ObservatoriesBox researchFieldId={selectedFieldId} />
                     </div>
 
                     <div className="mt-3 d-flex flex-column">
-                        <ContributorsBox researchFieldId={selectedResearchField.id} />
+                        <ContributorsBox researchFieldId={selectedFieldId} />
                     </div>
 
                     <div className="mt-3 d-flex flex-column">
-                        <LastUpdatesBox researchFieldId={selectedResearchField.id} />
+                        <LastUpdatesBox researchFieldId={selectedFieldId} />
                     </div>
                 </Col>
             </Row>

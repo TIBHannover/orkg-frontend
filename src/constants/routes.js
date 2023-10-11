@@ -1,5 +1,6 @@
 const routes = {
     HOME: '/',
+    HOME_WITH_RESEARCH_FIELD: '/home/:researchFieldId/:slug',
     USER_SETTINGS: '/settings/:tab',
     USER_SETTINGS_DEFAULT: '/settings',
     USER_PROFILE: '/u/:userId',

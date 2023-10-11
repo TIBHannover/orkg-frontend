@@ -36,6 +36,7 @@ import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizations
 import UserTooltip from 'components/Layout/Header/UserTooltip';
 import SearchForm from 'components/Layout/Header/SearchForm';
 import AddNew from 'components/Layout/Header/AddNew';
+import { match } from 'path-to-regexp';
 import Image from 'components/NextJsMigration/Image';
 import usePathname from 'components/NextJsMigration/usePathname';
 import loadImage from 'components/NextJsMigration/loadImage';
@@ -192,7 +193,7 @@ const Header = () => {
     const [isOpenViewMenu, setIsOpenViewMenu] = useState(false);
     const [logoutTimeoutId, setLogoutTimeoutId] = useState(null);
     const pathname = usePathname();
-    const isHomePath = pathname === ROUTES.HOME;
+    const isHomePath = pathname === ROUTES.HOME || !!match(ROUTES.HOME_WITH_RESEARCH_FIELD)(pathname);
     const [isTransparentNavbar, setIsTransparentNavbar] = useState(isHomePath);
     const [isHomePage, setIsHomePage] = useState(isHomePath);
     const user = useSelector(state => state.auth.user);
@@ -237,7 +238,7 @@ const Header = () => {
                 if (isTransparentNavbar) {
                     setIsTransparentNavbar(false);
                 }
-            } else if (!isTransparentNavbar && pathname === ROUTES.HOME) {
+            } else if (!isTransparentNavbar && isHomePage) {
                 setIsTransparentNavbar(true);
             }
         };
@@ -543,7 +544,8 @@ const Header = () => {
 
                 <Authentication />
             </StyledNavbar>
-            {pathname === ROUTES.HOME && <Jumbotron />}
+
+            {isHomePage && <Jumbotron />}
         </StyledTopBar>
     );
 };

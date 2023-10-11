@@ -15,11 +15,12 @@ import ROUTES from 'constants/routes';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { Button } from 'reactstrap';
 import { reverseWithSlug } from 'utils';
+import useRouter from 'components/NextJsMigration/useRouter';
 
 /* Bootstrap card column is not working correctly working with vertical alignment,
 thus used custom styling here */
 
-const Card = styled.div`
+const Card = styled(Link)`
     cursor: pointer;
     background: #e86161 !important;
     color: #fff !important;
@@ -103,19 +104,20 @@ const ShowMore = styled(Card)`
 
 const MAX_FIELDS = 30;
 
-const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, researchFields, isLoading }) => {
+const ResearchFieldCards = ({ selectedFieldId, selectedFieldLabel, researchFields, isLoading }) => {
     const [stats, setStats] = useState(null);
     const rfAutocompleteRef = useRef(null);
     const [showMoreFields, setShowMoreFields] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
+        const fetchResearchFieldsStats = () =>
+            getResearchFieldsStats().then(results => {
+                setStats(results);
+            });
+
         fetchResearchFieldsStats();
     }, []);
-
-    const fetchResearchFieldsStats = () =>
-        getResearchFieldsStats().then(results => {
-            setStats(results);
-        });
 
     return (
         <>
@@ -132,9 +134,21 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                             onItemSelected={selected => {
                                 // blur the field allows to focus and open the menu again
                                 rfAutocompleteRef.current && rfAutocompleteRef.current.blur();
-                                handleFieldSelect(selected);
+                                router.push(
+                                    reverseWithSlug(ROUTES.HOME_WITH_RESEARCH_FIELD, {
+                                        researchFieldId: selected.id,
+                                        slug: selected.value,
+                                    }),
+                                );
                             }}
-                            value={selectedResearchField.id !== RESOURCES.RESEARCH_FIELD_MAIN ? selectedResearchField : null}
+                            value={
+                                selectedFieldId !== RESOURCES.RESEARCH_FIELD_MAIN
+                                    ? {
+                                          id: selectedFieldId,
+                                          label: selectedFieldLabel,
+                                      }
+                                    : null
+                            }
                             allowCreate={false}
                             ols={false}
                             autoLoadOption={true}
@@ -143,12 +157,12 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                             innerRef={rfAutocompleteRef}
                         />
                     </div>
-                    {selectedResearchField.id !== RESOURCES.RESEARCH_FIELD_MAIN && (
+                    {selectedFieldId !== RESOURCES.RESEARCH_FIELD_MAIN && (
                         <Button
                             tag={Link}
                             href={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                                researchFieldId: selectedResearchField.id,
-                                slug: selectedResearchField.label,
+                                researchFieldId: selectedFieldId,
+                                slug: selectedFieldLabel,
                             })}
                             color="light"
                             size="sm"
@@ -160,12 +174,13 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                 </div>
             </div>
             <hr className="mt-3 mb-1" />
-            {RESOURCES.RESEARCH_FIELD_MAIN !== selectedResearchField.id && (
+            {RESOURCES.RESEARCH_FIELD_MAIN !== selectedFieldId && (
                 <>
-                    <Breadcrumbs backgroundWhite researchFieldId={selectedResearchField.id} onFieldClick={handleFieldSelect} disableLastField />
+                    <Breadcrumbs backgroundWhite researchFieldId={selectedFieldId} route={ROUTES.HOME_WITH_RESEARCH_FIELD} disableLastField />
                     <hr className="mt-1 mb-1" />
                 </>
             )}
+
             {!isLoading && stats && researchFields.length > 0 && (
                 <div className="mt-3">
                     <div>
@@ -175,9 +190,13 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                                     <Card
                                         role="button"
                                         disabled={has(stats, field.id) && stats[field.id] === 0}
-                                        onClick={() => handleFieldSelect(field)}
+                                        to={reverseWithSlug(ROUTES.HOME_WITH_RESEARCH_FIELD, {
+                                            researchFieldId: field.id,
+                                            slug: field.label,
+                                        })}
                                     >
-                                        <CardTitle className="card-title m-0 text-center">{field.label}</CardTitle>
+                                        <CardTitle className="card-title m-0 text-center"> {field.label}</CardTitle>
+
                                         <PaperAmount>{has(stats, field.id) ? stats[field.id] : 0} papers</PaperAmount>
                                     </Card>
                                 </AnimationContainer>
@@ -189,7 +208,10 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                                         <Card
                                             role="button"
                                             disabled={has(stats, field.id) && stats[field.id] === 0}
-                                            onClick={() => handleFieldSelect(field)}
+                                            to={reverseWithSlug(ROUTES.HOME_WITH_RESEARCH_FIELD, {
+                                                researchFieldId: field.id,
+                                                slug: field.label,
+                                            })}
                                         >
                                             <CardTitle className="card-title m-0 text-center">{field.label}</CardTitle>
                                             <PaperAmount>{has(stats, field.id) ? stats[field.id] : 0} papers</PaperAmount>
@@ -207,7 +229,7 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                     </div>
                 </div>
             )}
-            {selectedResearchField.id !== RESOURCES.RESEARCH_FIELD_MAIN && <ArrowCards />}
+            {selectedFieldId !== RESOURCES.RESEARCH_FIELD_MAIN && <ArrowCards />}
             {isLoading && (
                 <div className="mt-3">
                     <div>
@@ -233,9 +255,9 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
 };
 
 ResearchFieldCards.propTypes = {
-    selectedResearchField: PropTypes.object,
+    selectedFieldId: PropTypes.string,
+    selectedFieldLabel: PropTypes.string,
     researchFields: PropTypes.array,
-    handleFieldSelect: PropTypes.func,
     isLoading: PropTypes.bool.isRequired,
 };
 
