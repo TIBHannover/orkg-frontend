@@ -325,7 +325,7 @@ function Publish(props) {
                                 </FormGroup>
                                 <FormGroup>
                                     <Label for="conference">
-                                        <Tooltip message="Select a conference">
+                                        <Tooltip message="If this comparison is part of a conference submission, select the conference. Only selected conferences are supported">
                                             Conference <span className="text-muted fst-italic">(optional)</span>
                                         </Tooltip>
                                     </Label>
