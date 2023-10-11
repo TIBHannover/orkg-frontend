@@ -1,6 +1,6 @@
 import Link from 'components/NextJsMigration/Link';
 import { useEffect, useState } from 'react';
-import { Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Card, CardFooter } from 'reactstrap';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Card, CardFooter } from 'reactstrap';
 import { getParentResearchFields, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleRight, faAngleDoubleDown, faSpinner, faHome } from '@fortawesome/free-solid-svg-icons';
@@ -60,22 +60,17 @@ function Breadcrumbs(props) {
         }
     };
 
-    const renderLink = (field, children, index) => {
-        if (props.onFieldClick) {
-            return (
-                <Button className="p-0" color="link" onClick={() => props.onFieldClick(field)}>
-                    {children}
-                </Button>
-            );
-        }
-        return (
-            <Link
-                href={index === 0 ? reverse(ROUTES.HOME) : reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}
-            >
-                {children}
-            </Link>
-        );
-    };
+    const renderLink = (field, children, index) => (
+        <Link
+            href={
+                index === 0
+                    ? reverse(ROUTES.HOME)
+                    : reverseWithSlug(props.route ? props.route : ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })
+            }
+        >
+            {children}
+        </Link>
+    );
 
     const renderDropdownItem = (field, children) => {
         if (props.onFieldClick) {
@@ -172,11 +167,13 @@ Breadcrumbs.propTypes = {
     disableLastField: PropTypes.bool,
     onFieldClick: PropTypes.func,
     backgroundWhite: PropTypes.bool,
+    route: PropTypes.string,
 };
 
 Breadcrumbs.defaultProps = {
     disableLastField: false,
     backgroundWhite: false,
+    route: null,
 };
 
 export default Breadcrumbs;
