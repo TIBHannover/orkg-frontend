@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.125.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.124.0...v0.125.0) - 2023-10-11
+
+### Changes
+
+- refactor: prepare file structure for NextJS, create wrapper components [`#1197`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1197)
+- Fix delivery of enviroment variables file [`#1210`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1210)
+
+---
 ## [v0.124.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.123.0...v0.124.0) - 2023-10-05
 
 ### Changes
