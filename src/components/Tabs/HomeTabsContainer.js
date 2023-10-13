@@ -2,21 +2,34 @@ import Tabs from 'components/Tabs/Tabs';
 import Items from 'components/UserProfile/Items';
 import { CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import propTypes from 'prop-types';
 
 function HomeTabsContainer({ researchFieldId, researchFieldLabel }) {
     const params = useParams();
-    const { activeTab, id } = params;
+
+    const { activeTab, id, slug } = params;
     const navigate = useNavigate();
+
     const onTabChange = key => {
-        navigate(
-            `${reverse(ROUTES.HOME_TABS, {
-                activeTab: key,
-            })}`,
-        );
+        if (researchFieldId && slug) {
+            navigate(
+                `${`${reverse(ROUTES.HOME_TABS_WITH_RESEARCH_FIELD, {
+                    researchFieldId,
+                    slug,
+                    activeTab: key,
+                })}`}`,
+            );
+        } else {
+            navigate(
+                `${`${reverse(ROUTES.HOME_TABS, {
+                    activeTab: key,
+                })}`}`,
+            );
+        }
     };
+
     const items = [
         {
             label: 'Comparisons',
