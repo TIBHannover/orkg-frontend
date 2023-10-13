@@ -9,7 +9,7 @@ import { updatePropertyShapes } from 'slices/templateEditorSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
-import ValidationRules from '../ValidationRules/ValidationRules';
+import ValidationRules from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/ValidationRules/ValidationRules';
 
 const TemplateComponentValue = props => {
     const [cardinality, setCardinality] = useState(!props.minCount && !props.maxCount ? '0,*' : 'range');

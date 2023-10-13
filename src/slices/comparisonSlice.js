@@ -165,7 +165,9 @@ export const comparisonSlice = createSlice({
         builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
             const matchComparison = match(ROUTES.COMPARISON);
             const parsedPayload = matchComparison(payload.location.pathname);
-            if (parsedPayload && parsedPayload.params?.comparisonId === state.comparisonResource.id) {
+            const isReviewPage = !!match(ROUTES.REVIEW)(payload.location.pathname);
+
+            if ((parsedPayload && parsedPayload.params?.comparisonId === state.comparisonResource.id) || isReviewPage) {
                 // when it's the same comparison  (just the hash changed) do not init
                 return state;
             }

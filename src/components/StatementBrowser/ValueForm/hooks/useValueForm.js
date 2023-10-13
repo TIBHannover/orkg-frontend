@@ -1,34 +1,39 @@
-import { useState, useCallback } from 'react';
+import validationSchema from 'components/StatementBrowser/ValueForm/helpers/validationSchema';
+import { getConfigByClassId, getConfigByType } from 'constants/DataTypes';
+import { CLASSES, ENTITIES, MISC, PREDICATES, RESOURCES } from 'constants/graphSettings';
+import { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { createClass } from 'services/backend/classes';
+import { createList, updateList } from 'services/backend/lists';
+import { createLiteral, updateLiteral } from 'services/backend/literals';
+import { createPredicate } from 'services/backend/predicates';
+import { createResource, getResource, updateResource } from 'services/backend/resources';
+import { createResourceStatement, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import {
+    checkIfIsList,
     createValueAction as createValue,
-    getPropertyShapesByResourceIDAndPredicateID,
     fetchTemplatesOfClassIfNeeded,
+    fillStatements,
+    getPropertyShapesByResourceIDAndPredicateID,
+    getSubjectIdByValue,
     getValueClass,
     isLiteral,
-    fillStatements,
-    getSubjectIdByValue,
     setIsAddingValue,
     setSavingValue,
     updateValueLabel,
 } from 'slices/statementBrowserSlice';
-import { createResourceStatement } from 'services/backend/statements';
-import { createResource, getResource, updateResource } from 'services/backend/resources';
-import { createLiteral, updateLiteral } from 'services/backend/literals';
-import { createClass } from 'services/backend/classes';
-import { createPredicate } from 'services/backend/predicates';
-import { getConfigByType, getConfigByClassId } from 'constants/DataTypes';
-import { useDispatch, useSelector } from 'react-redux';
 import { guid } from 'utils';
-import { toast } from 'react-toastify';
-import { ENTITIES, CLASSES, MISC, RESOURCES } from 'constants/graphSettings';
-import validationSchema from '../helpers/validationSchema';
 
 const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     const dispatch = useDispatch();
     const editMode = Boolean(valueId);
     const value = useSelector(state => (valueId ? state.statementBrowser.values.byId[valueId] : null));
     const property = useSelector(state => state.statementBrowser.properties.byId[editMode ? value.propertyId : propertyId]);
+    const values = useSelector(state => state.statementBrowser.values);
     const subjectId = useSelector(state => (editMode ? getSubjectIdByValue(state, valueId) : resourceId));
+    const isList = useSelector(state => checkIfIsList({ state, propertyId }));
+
     // refactoring: Can be replaced with the id class
     const valueClass = useSelector(state =>
         getValueClass(getPropertyShapesByResourceIDAndPredicateID(state, subjectId, property?.existingPredicateId)),
@@ -241,7 +246,11 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                 if (!value.selected || value.external) {
                     switch (entityType) {
                         case ENTITIES.RESOURCE:
-                            apiCall = createResource(value.label, valueClass ? [valueClass.id] : []);
+                            if (newEntity.datatype === 'list') {
+                                apiCall = createList({ label: value.label });
+                            } else {
+                                apiCall = createResource(value.label, valueClass ? [valueClass.id] : []);
+                            }
                             break;
                         case ENTITIES.PREDICATE:
                             apiCall = createPredicate(value.label);
@@ -263,8 +272,25 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                     apiCall = Promise.resolve(newEntity);
                 }
                 await apiCall
-                    .then(response => {
+                    .then(async response => {
                         newEntity = response;
+                        if (isList) {
+                            await updateList({
+                                id: resourceId,
+                                elements: [...property.valueIds.map(id => values.byId[id].resourceId), newEntity.id],
+                            });
+                            // fetch the just created statement to get the ID (the statement ID is not returned when updating the list)
+                            // this method might fail if in the mean time another statement is created
+                            const statements = await getStatementsBySubjectAndPredicate({
+                                subjectId: resourceId,
+                                predicateId: PREDICATES.HAS_LIST_ELEMENT,
+                                page: 0,
+                                items: 1,
+                                sortBy: 'created_at',
+                                desc: true,
+                            });
+                            return statements?.[0];
+                        }
                         return createResourceStatement(resourceId, property?.existingPredicateId, newEntity.id);
                     })
                     .then(newS => {

@@ -1,6 +1,6 @@
+import Link from 'components/NextJsMigration/Link';
 import { Badge } from 'reactstrap';
 import ROUTES from 'constants/routes';
-import { Link } from 'react-router-dom';
 import { reverseWithSlug } from 'utils';
 import PropTypes from 'prop-types';
 
@@ -19,7 +19,7 @@ const AuthorsBox = ({ isLoading, researchFields }) => (
                         {researchFields.map(researchField => (
                             <li key={`rf${researchField.field.id}`}>
                                 <Link
-                                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                    href={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
                                         researchFieldId: researchField.field.id,
                                         slug: researchField.field.label,
                                     })}

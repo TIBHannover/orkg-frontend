@@ -1,8 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getStatementsByObjectAndPredicate, getStatementsByPredicateAndLiteral, getStatementsBySubjects } from 'services/backend/statements';
-import { find, intersection } from 'lodash';
+import {
+    getStatementsByObject,
+    getStatementsByObjectAndPredicate,
+    getStatementsByPredicateAndLiteral,
+    getStatementsBySubjects,
+} from 'services/backend/statements';
+import { find, flatten, intersection } from 'lodash';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
-import { getDataBasedOnType } from 'utils';
+import { addAuthorsToStatementBundle, getDataBasedOnType } from 'utils';
 
 function useAuthorWorks({ authorId, authorString }) {
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
@@ -21,7 +26,7 @@ function useAuthorWorks({ authorId, authorString }) {
             if (authorId) {
                 result = await getStatementsByObjectAndPredicate({
                     objectId: authorId,
-                    predicateId: PREDICATES.HAS_AUTHOR,
+                    predicateId: PREDICATES.HAS_LIST_ELEMENT,
                     page: p,
                     items: pageSize,
                     sortBy: 'created_at',
@@ -31,7 +36,7 @@ function useAuthorWorks({ authorId, authorString }) {
             } else {
                 result = await getStatementsByPredicateAndLiteral({
                     literal: authorString,
-                    predicateId: PREDICATES.HAS_AUTHOR,
+                    predicateId: PREDICATES.HAS_LIST_ELEMENT,
                     page: p,
                     items: pageSize,
                     sortBy: 'created_at',
@@ -39,6 +44,9 @@ function useAuthorWorks({ authorId, authorString }) {
                     returnContent: false,
                 });
             }
+            const subjectPromises = result.content.map(list => getStatementsByObject({ id: list.subject.id }));
+            const subjects = await Promise.all(subjectPromises);
+            result.content = flatten(subjects);
             const filteredResult = result.content.filter(
                 item =>
                     intersection(item.subject.classes, [CLASSES.PAPER, CLASSES.COMPARISON, CLASSES.VISUALIZATION, CLASSES.SMART_REVIEW]).length > 0,
@@ -49,10 +57,11 @@ function useAuthorWorks({ authorId, authorString }) {
                 return getStatementsBySubjects({
                     ids: filteredResult.map(s => s.subject.id),
                 })
+                    .then(statements => addAuthorsToStatementBundle(statements))
                     .then(statements => {
                         const items = statements.map(itemStatements => {
                             const itemSubject = find(
-                                result.content.map(p => p.subject),
+                                result.content.map(_p => _p.subject),
                                 { id: itemStatements.id },
                             );
                             return getDataBasedOnType(itemSubject, itemStatements.statements);
@@ -64,7 +73,7 @@ function useAuthorWorks({ authorId, authorString }) {
                         setTotalElements(result.totalElements);
                         setPage(p + 1);
                     })
-                    .catch(error => {
+                    .catch(() => {
                         setWorks([]);
                         setIsNextPageLoading(false);
                         setHasNextPage(false);
@@ -74,9 +83,11 @@ function useAuthorWorks({ authorId, authorString }) {
             setIsNextPageLoading(false);
             setHasNextPage(false);
             setIsLastPageReached(true);
+            return Promise.resolve();
         },
         [authorId, authorString],
     );
+
     // reset resources when the authorId has changed
     useEffect(() => {
         setWorks([]);

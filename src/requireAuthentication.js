@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Container } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { firstLoad } from 'slices/authSlice';
-import Unauthorized from 'pages/Unauthorized';
+import Unauthorized from 'components/Unauthorized/Unauthorized';
 
 export default function requireAuthentication(Component) {
     function AuthenticatedComponent(props) {

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
 import { find } from 'lodash';
 import { PREDICATES } from 'constants/graphSettings';
-import { getPaperData } from 'utils';
+import { addAuthorsToStatementBundle, getPaperData } from 'utils';
 
 function useVenuePapers({ venueId }) {
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
@@ -31,6 +31,7 @@ function useVenuePapers({ venueId }) {
                     return getStatementsBySubjects({
                         ids: result.content.map(p => p.subject.id),
                     })
+                        .then(statements => addAuthorsToStatementBundle(statements))
                         .then(statements => {
                             const items = statements.map(itemStatements => {
                                 const itemSubject = find(

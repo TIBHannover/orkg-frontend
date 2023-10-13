@@ -1,12 +1,12 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Table, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getLinkByEntityType } from 'utils';
-import { Link } from 'react-router-dom';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import usePropertyStatements from './hooks/usePropertyStatements';
+import usePropertyStatements from 'components/Property/PropertyStatements/hooks/usePropertyStatements';
 
 const PropertyStatements = ({ propertyId }) => {
     const { statements, isLoading, hasNextPage, totalElements, handleLoadMore } = usePropertyStatements({
@@ -27,7 +27,6 @@ const PropertyStatements = ({ propertyId }) => {
             <Button color="secondary" size="sm" className="mt-5" onClick={() => setShowPropertyStatements(!showPropertyStatements)}>
                 {!showPropertyStatements ? 'Show' : 'Hide'} property usage
             </Button>
-
             <Collapse isOpen={showPropertyStatements}>
                 {statements.length > 0 && (
                     <div>
@@ -53,7 +52,7 @@ const PropertyStatements = ({ propertyId }) => {
                                                 _class={statement.subject._class}
                                             >
                                                 {getLinkByEntityType(statement.subject._class, statement.subject.id) ? (
-                                                    <Link to={getLinkByEntityType(statement.subject._class, statement.subject.id)}>
+                                                    <Link href={getLinkByEntityType(statement.subject._class, statement.subject.id)}>
                                                         {statement.subject.label}
                                                     </Link>
                                                 ) : (
@@ -69,7 +68,7 @@ const PropertyStatements = ({ propertyId }) => {
                                                 _class={statement.object._class}
                                             >
                                                 {getLinkByEntityType(statement.object._class, statement.object.id) ? (
-                                                    <Link to={getLinkByEntityType(statement.object._class, statement.object.id)}>
+                                                    <Link href={getLinkByEntityType(statement.object._class, statement.object.id)}>
                                                         {statement.object.label}
                                                     </Link>
                                                 ) : (

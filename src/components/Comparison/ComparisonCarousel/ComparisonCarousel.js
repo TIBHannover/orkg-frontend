@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getVisualization } from 'services/similarity/index';
 import ContentLoader from 'react-content-loader';
-import { getVisualizationData } from 'utils';
+import { addAuthorsToStatementBundle, getVisualizationData } from 'utils';
 import { useSelector, useDispatch } from 'react-redux';
 import { setIsOpenVisualizationModal, setUseReconstructedDataInVisualization } from 'slices/comparisonSlice';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
@@ -14,7 +14,7 @@ import useRelatedResources from 'components/Comparison/ComparisonCarousel/Relate
 import RelatedResource from 'components/Comparison/ComparisonCarousel/RelatedResources/RelatedResource';
 import RelatedFigure from 'components/Comparison/ComparisonCarousel/RelatedResources/RelatedFigure';
 import StyledSlider from 'components/ResearchProblem/Benchmarks/styled';
-import SingleVisualizationComponent from './SingleVisualizationComponent';
+import SingleVisualizationComponent from 'components/Comparison/ComparisonCarousel/SingleVisualizationComponent';
 
 function ComparisonCarousel() {
     const dispatch = useDispatch();
@@ -103,13 +103,15 @@ function ComparisonCarousel() {
                 // Get the reconstruction model from the comparison service
                 const reconstructionModelsCalls = Promise.all(visualizations.map(v => getVisualization(v.id).catch(() => false)));
                 // Get the meta data for each visualization
-                const visObjectCalls = getStatementsBySubjects({ ids: visualizations.map(v => v.id) }).then(visualizationsStatements => {
-                    const vis = visualizationsStatements.map(visualizationStatements => {
-                        const resourceSubject = find(visualizations, { id: visualizationStatements.id });
-                        return getVisualizationData(resourceSubject, visualizationStatements.statements);
+                const visObjectCalls = getStatementsBySubjects({ ids: visualizations.map(v => v.id) })
+                    .then(statements => addAuthorsToStatementBundle(statements))
+                    .then(visualizationsStatements => {
+                        const vis = visualizationsStatements.map(visualizationStatements => {
+                            const resourceSubject = find(visualizations, { id: visualizationStatements.id });
+                            return getVisualizationData(resourceSubject, visualizationStatements.statements);
+                        });
+                        return vis;
                     });
-                    return vis;
-                });
                 Promise.all([visObjectCalls, reconstructionModelsCalls]).then(([visObjects, reconstructionModels]) => {
                     // zip the result
                     const _visObjects = visObjects.map(v => ({ ...v, reconstructionModel: reconstructionModels.find(r => r.orkgOrigin === v.id) }));

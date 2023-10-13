@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { Alert } from 'reactstrap';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import PropTypes from 'prop-types';
-import CustomizationColumnChart from './ChartRenderers/CustomizationColumnChart';
-import CustomizationBarChart from './ChartRenderers/CustomizationBarChart';
-import CustomizationScatterChart from './ChartRenderers/CustomizationScatterChart';
-import CustomizationLineChart from './ChartRenderers/CustomizationLineChart';
-import CustomizationPieChart from './ChartRenderers/CustomizationPieChart';
+import CustomizationColumnChart from 'libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationColumnChart';
+import CustomizationBarChart from 'libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationBarChart';
+import CustomizationScatterChart from 'libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationScatterChart';
+import CustomizationLineChart from 'libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationLineChart';
+import CustomizationPieChart from 'libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationPieChart';
 
 export default class AbstractCustomizationWidget extends Component {
     constructor(props) {

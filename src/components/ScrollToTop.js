@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
 import ROUTES from 'constants/routes.js';
 import { match } from 'path-to-regexp';
-import { useLocation } from 'react-router-dom';
 import { usePrevious } from 'react-use';
+import usePathname from 'components/NextJsMigration/usePathname';
 
 /* Scrolls browser window to top when new page is visited,
 but preserves scroll position when previous page is visited */
 const ScrollToTop = props => {
-    const location = useLocation();
-    const prevPathname = usePrevious(location.pathname);
+    const pathname = usePathname();
+    const prevPathname = usePrevious(pathname);
 
     useEffect(() => {
         const excludePages = [
@@ -23,7 +23,7 @@ const ScrollToTop = props => {
 
         for (const page of excludePages) {
             const matchPage = match(page);
-            if (matchPage(location.pathname) && matchPage(prevPathname)) {
+            if (matchPage(pathname) && matchPage(prevPathname)) {
                 preventScrollTop = true;
                 break;
             }
@@ -31,7 +31,7 @@ const ScrollToTop = props => {
         if (!preventScrollTop) {
             window.scrollTo(0, 0);
         }
-    }, [location.pathname, prevPathname]);
+    }, [pathname, prevPathname]);
 
     return props.children;
 };

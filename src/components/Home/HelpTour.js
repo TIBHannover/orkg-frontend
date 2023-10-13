@@ -5,7 +5,7 @@ import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { Button } from 'reactstrap';
 import Tippy from '@tippyjs/react';
 import { useState } from 'react';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import { Steps } from 'intro.js-react';
 
 const HelpButton = styled.div`
@@ -221,7 +221,7 @@ const HelpTour = () => {
             <HelpButton id="helpIcon" woochat={env('CHATWOOT_WEBSITE_TOKEN')}>
                 <Tippy
                     visible={isTooltipVisible}
-                    appendTo={document.body}
+                    appendTo={typeof window !== 'undefined' ? document.body : null}
                     interactive
                     content={
                         <div className="p-1">

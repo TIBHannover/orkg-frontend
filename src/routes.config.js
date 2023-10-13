@@ -1,90 +1,95 @@
 /* eslint-disable react/prop-types */
 import { lazy } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
-import ResourceDetails from 'pages/Resources/Resource';
-import AddPaper from 'pages/AddPaper';
-import AuthorPage from 'pages/AuthorPage';
-import VenuePage from 'pages/VenuePage';
-import AddResource from 'pages/Resources/AddResource';
-import Comparison from 'pages/Comparisons/Comparison';
-import ComparisonDiff from 'pages/Comparisons/ComparisonDiff';
-import Home from 'pages/Home';
-import Changelog from 'pages/Changelog/Changelog';
-import NotFound from 'pages/NotFound';
-import Papers from 'pages/Papers/Papers';
-import Comparisons from 'pages/Comparisons/Comparisons';
-import Visualizations from 'pages/Visualizations/Visualizations';
-import Visualization from 'pages/Visualizations/Visualization';
-import ClassDetails from 'pages/Classes/ClassDetails';
-import Classes from 'pages/Classes/Classes';
-import AddClass from 'pages/Classes/AddClass';
-import Properties from 'pages/Properties/Properties';
-import AddProperty from 'pages/Properties/AddProperty';
-import PropertyDetails from 'pages/Properties/Property';
-import Templates from 'pages/Templates/Templates';
-import ImportSHACL from 'pages/Templates/ImportSHACL';
-import Template from 'pages/Templates/Template';
+import { Navigate } from 'react-router-dom';
+import useParams from 'components/NextJsMigration/useParams';
+import ResourceDetails from 'app/resource/[id]/[[...activeTab]]/page';
+import AddPaper from 'app/add-paper/page';
+import AuthorPage from 'app/author/[authorId]/page';
+import VenuePage from 'app/venue/[venueId]/page';
+import AddResource from 'app/addResource/page';
+import Comparison from 'app/comparison/[[...comparisonId]]/page';
+import ComparisonDiff from 'app/comparison/diff/[oldId]/[newId]/page';
+import Home from 'app/page';
+import Changelog from 'app/changelog/page';
+import NotFound from 'app/not-found';
+import Papers from 'app/papers/page';
+import Comparisons from 'app/comparisons/page';
+import Visualizations from 'app/visualizations/page';
+import Visualization from 'app/visualization/[id]/page';
+import ClassDetails from 'app/class/[id]/[[...activeTab]]/page';
+import Classes from 'app/classes/page';
+import AddClass from 'app/addClass/page';
+import Properties from 'app/properties/page';
+import AddProperty from 'app/addProperty/page';
+import PropertyDetails from 'app/property/[id]/page';
+import Templates from 'app/templates/page';
+import ImportSHACL from 'app/template/ImportSHACL/page';
+import Template from 'app/template/[id]/[[...activeTab]]/page';
 import ROUTES from 'constants/routes';
-import RedirectShortLinks from 'pages/RedirectShortLinks';
-import ResearchField from 'pages/ResearchFields/ResearchField';
-import ResearchFields from 'pages/ResearchFields/ResearchFields';
-import Resources from 'pages/Resources/Resources';
-import Organizations from 'pages/Organizations/Organizations';
-import Observatories from 'pages/Observatories/Observatories';
-import Organization from 'pages/Organizations/Organization';
-import AddOrganization from 'pages/Organizations/AddOrganization';
-import AddObservatory from 'pages/Observatories/AddObservatory';
-import Observatory from 'pages/Observatories/Observatory';
-import SearchResults from 'pages/Search';
-import Stats from 'pages/Stats';
-import UserSettings from 'pages/UserSettings';
-import UserProfile from 'pages/UserProfile';
-import Data from 'pages/Data';
-import Contribution from 'pages/Contribution';
-import CsvImport from 'pages/CsvImport';
-import Review from 'pages/Reviews/Review';
-import Reviews from 'pages/Reviews/Reviews';
-import ReviewNew from 'pages/Reviews/ReviewNew';
-import ReviewDiff from 'pages/Reviews/ReviewDiff';
-import Tools from 'pages/Tools';
-import AddComparison from 'pages/AddComparison';
+import RedirectShortLinks from 'app/c/[shortCode]/page';
+import ResearchField from 'app/field/[researchFieldId]/[[...slug]]/page';
+import ResearchFields from 'app/fields/page';
+import Resources from 'app/resources/page';
+import Organizations from 'app/organizations/[id]/page';
+import Observatories from 'app/observatories/[[...researchFieldId]]/page';
+import Organization from 'app/organization/[type]/[id]/page';
+import AddOrganization from 'app/addOrganization/[type]/page';
+import AddObservatory from 'app/organizations/[id]/addObservatory/page';
+import Observatory from 'app/observatory/[id]/page';
+import SearchResults from 'app/search/[searchTerm]/page';
+import Stats from 'app/stats/page';
+import UserSettings from 'app/settings/[[...tab]]/page';
+import UserProfile from 'app/u/[userId]/[[...activeTab]]/page';
+import Data from 'app/data/page';
+import Contribution from 'app/contribution/[id]/page';
+import CsvImport from 'app/csv-import/page';
+import Review from 'app/review/[id]/page';
+import Reviews from 'app/reviews/page';
+import ReviewNew from 'app/review/new/page';
+import ReviewDiff from 'app/review/diff/[oldId]/[newId]/page';
+import Tools from 'app/tools/page';
+import AddComparison from 'app/add-comparison/page';
 import requireAuthentication from 'requireAuthentication';
-import Benchmarks from 'pages/Benchmarks/Benchmarks';
-import Benchmark from 'pages/Benchmarks/Benchmark';
+import Benchmarks from 'app/benchmarks/page';
+import Benchmark from 'app/benchmark/[datasetId]/problem/[problemId]/page';
 import { reverse } from 'named-urls';
-import ContributionEditor from 'pages/ContributionEditor';
-import Page from 'pages/Page';
-import About from 'pages/About';
-import HelpCenter from 'pages/HelpCenter/HelpCenter';
-import HelpCenterCategory from 'pages/HelpCenter/HelpCenterCategory';
-import HelpCenterArticle from 'pages/HelpCenter/HelpCenterArticle';
-import HelpCenterSearch from 'pages/HelpCenter/HelpCenterSearch';
-import WebinarMay11 from 'pages/WebinarMay11';
-import CheckPaperVersion from 'pages/Papers/CheckPaperVersion';
-import Lists from 'pages/Lists/Lists';
-import ListNew from 'pages/Lists/ListNew';
-import List from 'pages/Lists/List';
-import ListDiff from 'pages/Lists/ListDiff';
-import ContentTypeNew from 'pages/ContentType/ContentTypeNew';
-import ContentType from 'pages/ContentType/ContentType';
-import ContentTypes from 'pages/ContentType/ContentTypes';
-import Diagrams from 'pages/Diagrams/Diagrams';
-import Diagram from 'pages/Diagrams/Diagram';
-import ConferenceDetails from 'pages/Conferences/ConferenceDetails';
-import AddConference from 'pages/Conferences/AddConference';
-import ResearchProblem from 'pages/ResearchProblem';
-import AuthorLiteral from 'pages/AuthorLiteral';
-import TemplateNew from 'pages/Templates/TemplateNew';
+import ContributionEditor from 'app/contribution-editor/page';
+import Page from 'app/page/[url]/page';
+import About from 'app/about/[id]/[[...slug]]/page';
+import HelpCenter from 'app/help-center/page';
+import HelpCenterCategory from 'app/help-center/category/[id]/page';
+import HelpCenterArticle from 'app/help-center/article/[id]/[slug]/page';
+import HelpCenterSearch from 'app/help-center/search/[searchQuery]/page';
+import WebinarMay11 from 'app/webinar-may-11/page';
+import CheckPaperVersion from 'app/paper/[resourceId]/[[...contributionId]]/page';
+import Lists from 'app/lists/page';
+import ListNew from 'app/list/new/page';
+import List from 'app/list/[id]/[[...embed]]/page';
+import ListDiff from 'app/list/diff/[oldId]/[newId]/page';
+import ContentTypeNew from 'app/content-type/[type]/new/page';
+import ContentType from 'app/content-type/[type]/[id]/page';
+import ContentTypes from 'app/content-type/[type]/page';
+import Diagrams from 'app/diagrams/page';
+import Diagram from 'app/diagram/[[...id]]/page';
+import ConferenceDetails from 'app/event-series/[id]/page';
+import AddConference from 'app/organizations/[id]/addEvent/page';
+import ResearchProblem from 'app/problem/[researchProblemId]/[[...slug]]/page';
+import AuthorLiteral from 'app/author-literal/[authorString]/page';
+import TemplateNew from 'app/template/page';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
-const PdfTextAnnotation = lazy(() => import('pages/PdfTextAnnotation')); // for dependency "react-pdf-highlighter" ~1.16MB
-const PdfAnnotation = lazy(() => import('pages/PdfAnnotation')); // for dependency "handsontable" ~887.4KB
-const FeaturedComparisons = lazy(() => import('pages/FeaturedComparisons')); // for dependency @fontawesome/free-solid-svg-icons used to show icons
+const PdfTextAnnotation = lazy(() => import('app/pdf-text-annotation/page')); // for dependency "react-pdf-highlighter" ~1.16MB
+const PdfAnnotation = lazy(() => import('app/pdf-annotation/page')); // for dependency "handsontable" ~887.4KB
+const FeaturedComparisons = lazy(() => import('app/featured-comparisons/page')); // for dependency @fontawesome/free-solid-svg-icons used to show icons
 
 const routes = [
     {
         path: ROUTES.HOME,
+        element: Home,
+    },
+    {
+        path: ROUTES.HOME_WITH_RESEARCH_FIELD,
         element: Home,
     },
     {
@@ -245,6 +250,7 @@ const routes = [
         path: ROUTES.RESEARCH_FIELD_NO_SLUG,
         element: ResearchField,
     },
+
     {
         path: ROUTES.RESEARCH_FIELDS,
         element: ResearchFields,

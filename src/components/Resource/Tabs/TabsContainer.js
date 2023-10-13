@@ -5,19 +5,20 @@ import ObjectStatements from 'components/Resource/Tabs/ObjectStatements';
 import PreviewFactory from 'components/Resource/Tabs/Preview/PreviewFactory/PreviewFactory';
 import { CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
-import { useNavigate, useParams } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
+import useParams from 'components/NextJsMigration/useParams';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes.js';
-import ResourceUsage from './ResourceUsage';
-import Trend from './Trend';
+import ResourceUsage from 'components/Resource/Tabs/ResourceUsage';
+import Trend from 'components/Resource/Tabs/Trend';
 
 function TabsContainer({ id, classes, editMode }) {
     const { activeTab } = useParams();
 
-    const navigate = useNavigate();
+    const router = useRouter();
 
     const onTabChange = key => {
-        navigate(
+        router.push(
             `${reverse(ROUTES.RESOURCE_TABS, {
                 id,
                 activeTab: key,

@@ -1,10 +1,10 @@
+import Link from 'components/NextJsMigration/Link';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { removeContribution } from 'slices/comparisonSlice';
 import { Contribution, Delete } from 'components/Comparison/styled';
 import { memo } from 'react';
@@ -19,7 +19,7 @@ const ContributionCell = ({ contribution }) => {
     return (
         <>
             <Link
-                to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
+                href={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                     resourceId: contribution.paperId,
                     contributionId: contribution.id,
                 })}
@@ -30,7 +30,6 @@ const ContributionCell = ({ contribution }) => {
             <Contribution>
                 {contribution.contributionLabel} {contribution.year && `- ${contribution.year}`}
             </Contribution>
-
             {isEditing && !isEmbeddedMode && contributions.filter(_contribution => _contribution.active).length > 2 && (
                 <Delete onClick={() => dispatch(removeContribution(contribution.id))}>
                     <Icon icon={faTimes} />

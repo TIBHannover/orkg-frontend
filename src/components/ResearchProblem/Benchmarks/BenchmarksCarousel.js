@@ -1,12 +1,12 @@
+import Link from 'components/NextJsMigration/Link';
 import { faArrowCircleLeft, faArrowCircleRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import StyledSlider from './styled';
+import StyledSlider from 'components/ResearchProblem/Benchmarks/styled';
 
 const BenchmarkCarouselCardStyled = styled.div`
     display: flex !important;
@@ -83,7 +83,7 @@ function BenchmarksCarousel(props) {
                     return (
                         <BenchmarkCarouselCardStyled key={benchmark.id} className={marginClasses}>
                             <Link
-                                to={reverse(ROUTES.BENCHMARK, { datasetId: benchmark.id, problemId: props.problemId })}
+                                href={reverse(ROUTES.BENCHMARK, { datasetId: benchmark.id, problemId: props.problemId })}
                                 className="d-flex box rounded m-2 p-3 flex-grow-1"
                                 style={{ textDecoration: 'none', flex: 1 }}
                             >

@@ -6,8 +6,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import Handsontable from 'handsontable';
 import { isString } from 'lodash';
 import { registerAllModules } from 'handsontable/registry';
-import EditorComponent from './EditorComponent';
-import useTableEditor from './hooks/useTableEditor';
+import EditorComponent from 'components/PdfAnnotation/EditorComponent';
+import useTableEditor from 'components/PdfAnnotation/hooks/useTableEditor';
 
 // register Handsontable's modules
 registerAllModules();

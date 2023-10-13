@@ -24,6 +24,7 @@ const initialState = {
     id: null,
     list: {},
     authorResources: [],
+    authorListResource: {},
     sections: [],
     versions: [],
     contentTypes: {},

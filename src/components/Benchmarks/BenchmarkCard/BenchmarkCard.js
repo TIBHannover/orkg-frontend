@@ -1,5 +1,5 @@
+import Link from 'components/NextJsMigration/Link';
 import { Card, CardBody } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -32,7 +32,7 @@ function BenchmarkCard(props) {
     return (
         <BenchmarkCardStyled className="col-md-3 mb-4">
             <Link
-                to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
                     researchProblemId: props.benchmark.research_problem.id,
                     slug: props.benchmark.research_problem.label,
                 })}

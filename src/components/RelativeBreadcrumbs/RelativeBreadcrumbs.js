@@ -1,5 +1,5 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes.js';
@@ -139,7 +139,7 @@ const RelativeBreadcrumbs = ({ researchField }) => {
                                     {parentResearchFields.map((field, index) => (
                                         <span key={field.id}>
                                             <Link
-                                                to={
+                                                href={
                                                     index === 0
                                                         ? reverse(ROUTES.HOME)
                                                         : reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })
@@ -157,7 +157,7 @@ const RelativeBreadcrumbs = ({ researchField }) => {
                         </TippyContentStyled>
                     }
                 >
-                    <Link to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}>
+                    <Link href={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}>
                         <Icon size="sm" icon={faEllipsisH} className="ms-2 me-1" />
                     </Link>
                 </Tippy>
@@ -167,7 +167,7 @@ const RelativeBreadcrumbs = ({ researchField }) => {
                 <Tippy content={researchField.label} disabled={researchField.label?.length <= 18}>
                     <Link
                         className="text-decoration-none"
-                        to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}
+                        href={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}
                     >
                         <div className="truncate">{researchField.label}</div>
                     </Link>

@@ -1,25 +1,26 @@
-import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { Alert, Button, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { createLiteralStatement, createResourceStatement, getStatementsBundleBySubject } from 'services/backend/statements';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
-import { createResource } from 'services/backend/resources';
-import { createLiteral } from 'services/backend/literals';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { createResourceData } from 'services/similarity';
-import { toast } from 'react-toastify';
-import { reverse } from 'named-urls';
-import routes from 'constants/routes';
-import { Link } from 'react-router-dom';
-import { setVersions } from 'slices/reviewSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import Tooltip from 'components/Utils/Tooltip';
-import { generateDoi } from 'services/backend/misc';
-import ROUTES from 'constants/routes';
-import CopyToClipboard from 'react-copy-to-clipboard';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import Link from 'components/NextJsMigration/Link';
+import usePathname from 'components/NextJsMigration/usePathname';
+import Tooltip from 'components/Utils/Tooltip';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { Alert, Button, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { createLiteral } from 'services/backend/literals';
+import { generateDoi } from 'services/backend/misc';
+import { createResource } from 'services/backend/resources';
+import { createLiteralStatement, createResourceStatement, getStatementsBundleBySubject } from 'services/backend/statements';
+import { createResourceData } from 'services/similarity';
+import { setVersions } from 'slices/reviewSlice';
+import { getAuthorsInList } from 'utils';
 
 const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +29,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
     const [shouldAssignDoi, setShouldAssignDoi] = useState(false);
     const [doi, setDoi] = useState(null);
     const [description, setDescription] = useState('');
+    const pathname = usePathname();
     const { title } = useSelector(state => state.review.paper);
     const researchField = useSelector(state => state.review.researchField);
 
@@ -35,9 +37,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
     const { trackEvent } = useMatomo();
 
     const getUrl = () =>
-        `${window.location.protocol}//${window.location.host}${window.location.pathname
-            .replace(reverse(ROUTES.REVIEW, { id }), '')
-            .replace(/\/$/, '')}`;
+        `${window.location.protocol}//${window.location.host}${pathname.replace(reverse(ROUTES.REVIEW, { id }), '').replace(/\/$/, '')}`;
 
     const handlePublish = async () => {
         if (shouldAssignDoi && (!description || description.trim() === '')) {
@@ -51,17 +51,6 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                 id,
             });
             const paperTitle = statements.find(statement => statement.subject.id === id).subject.label;
-            const authors = statements
-                .filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR)
-                .map(authorStatement => ({
-                    ...authorStatement,
-                    orcid:
-                        statements.find(
-                            statement => statement.subject.id === authorStatement.object.id && statement.predicate.id === PREDICATES.HAS_ORCID,
-                        )?.object?.label || null,
-                }))
-                .map(author => ({ creator: author.object.label, orcid: author.orcid }))
-                .reverse();
             const versionResource = await createResource(paperTitle, [CLASSES.SMART_REVIEW_PUBLISHED]);
             const updateMessageLiteral = await createLiteral(updateMessage);
 
@@ -74,6 +63,10 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
 
             if (shouldAssignDoi) {
                 try {
+                    const authors = getAuthorsInList({ resourceId: id, statements }).map(author => ({
+                        creator: author.label,
+                        orcid: author.orcid || null,
+                    }));
                     const doiResponse = await generateDoi({
                         type: 'Review',
                         resource_type: 'Preprint',
@@ -84,14 +77,14 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                         authors,
                         url: `${getUrl()}${reverse(ROUTES.REVIEW, { id: versionResource.id })}`,
                     });
-                    setDoi(doiResponse.data.attributes.doi);
-                    const doiLiteral = await createLiteral(doiResponse.data.attributes.doi);
+                    setDoi(doiResponse.doi);
+                    const doiLiteral = await createLiteral(doiResponse.doi);
                     createResourceStatement(versionResource.id, PREDICATES.HAS_DOI, doiLiteral.id);
                     toast.success('DOI has been registered successfully');
                     setIsLoading(false);
                 } catch (e) {
                     toast.error('Error publishing a DOI');
-                    console.log(e);
+                    console.error(e);
                     setIsLoading(false);
                 }
             }
@@ -178,7 +171,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                                 </InputGroup>
                             </FormGroup>
                         )}
-                        <Link to={reverse(routes.REVIEW, { id: publishedId })} onClick={toggle}>
+                        <Link href={reverse(ROUTES.REVIEW, { id: publishedId })} onClick={toggle}>
                             View the published article
                         </Link>
                     </>

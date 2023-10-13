@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faCalendar, faCheckCircle, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
@@ -14,11 +15,11 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { Button, Alert } from 'reactstrap';
 import { getAltMetrics } from 'services/altmetric/index';
 import { loadPaper } from 'slices/viewPaperSlice';
 import EditPaperModal from 'components/PaperForm/EditPaperModal';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 
 const PaperHeader = props => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -66,6 +67,7 @@ const PaperHeader = props => {
         setIsOpenEditModal(false);
     };
     const hasDoi = viewPaper.doi && viewPaper.doi.label?.startsWith('10.');
+    const isMetadataDisabled = viewPaper.verified && !isCurationAllowed;
 
     return (
         <>
@@ -73,7 +75,7 @@ const PaperHeader = props => {
                 <Alert color="warning" className="mt-1 container d-flex">
                     <div className="flex-grow-1">
                         A published version of this paper is available.{' '}
-                        <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: viewPaper.hasVersion.id })}>View published version</Link>
+                        <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: viewPaper.hasVersion.id })}>View published version</Link>
                     </div>
                 </Alert>
             )}
@@ -95,9 +97,7 @@ const PaperHeader = props => {
                     </div>
                 )}
             </div>
-
             <div className="clearfix" />
-
             {(viewPaper.publicationMonth?.label || viewPaper.publicationYear?.label) && (
                 <span className="badge bg-light me-2">
                     <Icon icon={faCalendar} /> {viewPaper.publicationMonth?.label ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''}{' '}
@@ -115,7 +115,7 @@ const PaperHeader = props => {
                             Published in:{' '}
                             <Link
                                 style={{ color: '#60687a', fontStyle: 'italic' }}
-                                to={reverse(ROUTES.VENUE_PAGE, { venueId: viewPaper.publishedIn.id })}
+                                href={reverse(ROUTES.VENUE_PAGE, { venueId: viewPaper.publishedIn.id })}
                             >
                                 {viewPaper.publishedIn.label}
                             </Link>
@@ -133,19 +133,38 @@ const PaperHeader = props => {
                     </div>
                 )}
             </div>
-            <div className="d-flex">
-                <div className="flex-grow-1">
+            <div className="d-flex justify-content-between">
+                <div className="d-flex">
                     {props.editMode && (
-                        <Button color="secondary" size="sm" className="mt-2" style={{ marginLeft: 'auto' }} onClick={() => setIsOpenEditModal(true)}>
-                            <Icon icon={faPen} /> Edit metadata
-                        </Button>
-                    )}{' '}
+                        <ConditionalWrapper
+                            condition={isMetadataDisabled}
+                            wrapper={children => (
+                                <Tippy content="The metadata cannot be edited because the correctness is manually verified by a human curator">
+                                    {children}
+                                </Tippy>
+                            )}
+                        >
+                            <div>
+                                <Button
+                                    disabled={isMetadataDisabled}
+                                    color="secondary"
+                                    size="sm"
+                                    className="mt-2 me-2"
+                                    onClick={() => setIsOpenEditModal(true)}
+                                >
+                                    <Icon icon={faPen} /> Edit metadata
+                                </Button>
+                            </div>
+                        </ConditionalWrapper>
+                    )}
+
                     {showDeleteButton && (
-                        <Button color="danger" size="sm" className="mt-2" style={{ marginLeft: 'auto' }} onClick={deletePapers}>
+                        <Button color="danger" size="sm" className="mt-2" onClick={deletePapers}>
                             <Icon icon={faTrash} /> Delete paper
                         </Button>
                     )}
                 </div>
+
                 {viewPaper.verified && (
                     <Tippy content="The paper metadata was verified by an ORKG curator">
                         <div className="mt-3 justify-content-end">
@@ -155,7 +174,6 @@ const PaperHeader = props => {
                     </Tippy>
                 )}
             </div>
-
             {isOpenEditModal && (
                 <EditPaperModal
                     paperData={{
@@ -168,6 +186,7 @@ const PaperHeader = props => {
                         researchField: viewPaper.researchField,
                         url: viewPaper.url,
                         isVerified: viewPaper.verified,
+                        authorListResource: viewPaper.authorListResource,
                     }}
                     afterUpdate={handleUpdatePaper}
                     isOpen={isOpenEditModal}

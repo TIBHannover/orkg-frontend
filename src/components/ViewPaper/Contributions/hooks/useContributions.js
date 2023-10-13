@@ -8,7 +8,7 @@ import Confirm from 'components/Confirmation/Confirmation';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
-import { useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
 import {
     selectContribution,
     setPaperContributions,
@@ -27,7 +27,7 @@ const useContributions = ({ paperId, contributionId }) => {
     const [isLoadingContributionFailed, setLoadingContributionFailed] = useState(false);
 
     const [, setContributions] = useState([]);
-    const navigate = useNavigate();
+    const router = useRouter();
 
     useEffect(() => {
         if (contributions?.length && (selectedContributionId !== contributionId || !contributionId)) {
@@ -95,11 +95,11 @@ const useContributions = ({ paperId, contributionId }) => {
             .then(statement => {
                 dispatch(setPaperContributions([...contributions, { ...statement.object, statementId: statement.id }]));
                 dispatch(setIsAddingContribution(false));
-                navigate(
-                    reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
+                router.push(
+                    `${reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                         resourceId: paperId,
                         contributionId: statement.object.id,
-                    }),
+                    })}?isEditMode=true`,
                 );
                 toast.success('Contribution created successfully');
             })
@@ -122,7 +122,7 @@ const useContributions = ({ paperId, contributionId }) => {
             dispatch(setIsDeletingContribution({ id: contributionId, status: true }));
             deleteStatementById(statementId)
                 .then(() => {
-                    navigate(
+                    router.push(
                         reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                             resourceId: paperId,
                             contributionId: newContributions[0].id,
@@ -149,7 +149,7 @@ const useContributions = ({ paperId, contributionId }) => {
         handleChangeContributionLabel,
         handleCreateContribution,
         toggleDeleteContribution,
-        navigate,
+        router,
     };
 };
 

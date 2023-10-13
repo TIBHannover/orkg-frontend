@@ -7,11 +7,11 @@ import { createLiteral } from 'services/backend/literals';
 import { getComparison, createResourceData } from 'services/similarity/index';
 import { useSelector, useDispatch } from 'react-redux';
 import { reverse } from 'named-urls';
-import { useNavigate } from 'react-router-dom';
-import { filterObjectOfStatementsByPredicateAndClass, getPublicUrl, getErrorMessage, getComparisonData } from 'utils';
+import useRouter from 'components/NextJsMigration/useRouter';
+import { filterObjectOfStatementsByPredicateAndClass, getPublicUrl, getErrorMessage, getComparisonData, addAuthorsToStatements } from 'utils';
 import { setDoi } from 'slices/comparisonSlice';
 import { getComparisonURLConfig, getPropertyObjectFromData, activatedContributionsToList } from 'components/Comparison/hooks/helpers';
-import { saveAuthors } from 'components/Input/AuthorsInput/helpers';
+import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
 import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import { getConferencesSeries, getConferenceById } from 'services/backend/conferences-series';
@@ -21,7 +21,7 @@ function usePublish() {
     const comparisonResource = useSelector(state => state.comparison.comparisonResource);
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
+    const router = useRouter();
     const [assignDOI, setAssignDOI] = useState(false);
     const [title, setTitle] = useState(comparisonResource && comparisonResource.label ? comparisonResource.label : '');
     const [description, setDescription] = useState(comparisonResource && comparisonResource.description ? comparisonResource.description : '');
@@ -83,7 +83,8 @@ function usePublish() {
             return;
         }
         const fetchData = async () => {
-            const statements = await getStatementsBySubject({ id: comparisonResource.hasPreviousVersion.id });
+            let statements = await getStatementsBySubject({ id: comparisonResource.hasPreviousVersion.id });
+            statements = await addAuthorsToStatements(statements);
             const comparisonData = getComparisonData(statements[0].subject, statements);
             setTitle(comparisonData.label);
             setDescription(comparisonData.description);
@@ -181,7 +182,7 @@ function usePublish() {
                         },
                     };
                     const createdComparison = await createObject(comparisonObject);
-                    await saveAuthors(comparisonCreators, createdComparison.id);
+                    await createAuthorsList({ authors: comparisonCreators, resourceId: createdComparison.id });
                     await createResourceData({
                         resourceId: createdComparison.id,
                         data: { url: `${comparisonURLConfig}&response_hash=${response_hash}` },
@@ -193,7 +194,7 @@ function usePublish() {
                         publishDOI(createdComparison.id);
                     }
                     setIsLoading(false);
-                    navigate(reverse(ROUTES.COMPARISON, { comparisonId: createdComparison.id }));
+                    router.push(reverse(ROUTES.COMPARISON, { comparisonId: createdComparison.id }));
                 } else {
                     throw Error('Please enter a title, description and creator(s)');
                 }
@@ -201,6 +202,7 @@ function usePublish() {
                 publishDOI(id);
             }
         } catch (error) {
+            console.log(error);
             toast.error(`Error publishing a comparison : ${getErrorMessage(error)}`);
             setIsLoading(false);
         }
@@ -209,7 +211,7 @@ function usePublish() {
     const publishDOI = async comparisonId => {
         try {
             if (id && comparisonResource?.authors.length === 0) {
-                await saveAuthors(comparisonCreators, id);
+                await createAuthorsList({ authors: comparisonCreators, resourceId: id });
             }
             // Load ORCID of curators
             let comparisonCreatorsORCID = comparisonCreators.map(async curator => {
@@ -229,12 +231,12 @@ function usePublish() {
                     subject: researchField ? researchField.label : '',
                     description,
                     related_resources: contributionsList,
-                    authors: comparisonCreatorsORCID.map(c => ({ creator: c.label, orcid: c.orcid })),
+                    authors: comparisonCreatorsORCID.map(c => ({ creator: c.label, orcid: c.orcid || null })),
                     url: `${getPublicUrl()}${reverse(ROUTES.COMPARISON, { comparisonId })}`,
                 })
                     .then(doiResponse => {
-                        dispatch(setDoi(doiResponse.data.attributes.doi));
-                        createLiteral(doiResponse.data.attributes.doi).then(doiLiteral => {
+                        dispatch(setDoi(doiResponse.doi));
+                        createLiteral(doiResponse.doi).then(doiLiteral => {
                             createResourceStatement(comparisonId, PREDICATES.HAS_DOI, doiLiteral.id);
                             setIsLoading(false);
                             toast.success('DOI has been registered successfully');

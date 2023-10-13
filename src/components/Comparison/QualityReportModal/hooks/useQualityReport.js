@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { getPropertyObjectFromData } from 'components/Comparison/hooks/helpers';
 import FEEDBACK_QUESTIONS from 'components/Comparison/QualityReportModal/FeedbackQuestions';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
@@ -9,7 +10,6 @@ import { toast } from 'react-toastify';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { getResourceData } from 'services/similarity';
 import ROUTES from 'constants/routes';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 
 const useQualityReport = () => {
@@ -76,7 +76,7 @@ const useQualityReport = () => {
                     performEvaluation: () => {
                         const passing = propertiesWithoutDescription.length === 0;
                         return {
-                            passing: false,
+                            passing,
                             evaluation: passing ? (
                                 'All properties have a human-readable description.'
                             ) : (
@@ -85,7 +85,7 @@ const useQualityReport = () => {
                                     <ul>
                                         {propertiesWithoutDescription.map((property, index) => (
                                             <li key={index}>
-                                                <Link to={reverse(ROUTES.PROPERTY, { id: property.id })} target="_blank">
+                                                <Link href={reverse(ROUTES.PROPERTY, { id: property.id })} target="_blank">
                                                     {property.label}
                                                 </Link>
                                             </li>
@@ -103,7 +103,7 @@ const useQualityReport = () => {
                     performEvaluation: () => {
                         const passing = !!comparisonResource?.doi;
                         return {
-                            passing: false,
+                            passing,
                             evaluation: passing
                                 ? `The comparison is published with the following DOI ${comparisonResource?.doi}.`
                                 : 'The comparison is not published with a DOI.',
@@ -176,7 +176,7 @@ const useQualityReport = () => {
                                     <ul>
                                         {resourcesWithTooLongLabels.map((resource, index) => (
                                             <li key={index}>
-                                                <Link to={reverse(ROUTES.RESOURCE, { id: resource.resourceId })} target="_blank">
+                                                <Link href={reverse(ROUTES.RESOURCE, { id: resource.resourceId })} target="_blank">
                                                     {resource.label}
                                                 </Link>
                                             </li>

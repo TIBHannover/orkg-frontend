@@ -7,6 +7,7 @@ import { groupBy } from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Row } from 'reactstrap';
+import Image from 'components/NextJsMigration/Image';
 
 const WikidataDescription = ({ externalResource }) => {
     const [statementsByProperty, setStatementsByProperty] = useState({});
@@ -49,7 +50,7 @@ const WikidataDescription = ({ externalResource }) => {
             <div className="d-flex justify-content-between">
                 <h2 className="h5">Statements from Wikidata</h2>
                 <a href={externalResource} target="_blank" rel="noopener noreferrer">
-                    <img alt="Wikidata logo" src={WIKIDATA_LOGO} style={{ height: 40 }} />
+                    <Image alt="Wikidata logo" src={WIKIDATA_LOGO} style={{ height: 40 }} />
                 </a>
             </div>
 

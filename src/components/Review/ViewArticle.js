@@ -1,4 +1,4 @@
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -8,6 +8,8 @@ import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFie
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
+import Link from 'components/NextJsMigration/Link';
+import useParams from 'components/NextJsMigration/useParams';
 import Acknowledgements from 'components/Review/Acknowledgements';
 import SectionDataTable from 'components/Review/DataTable/SectionOntology';
 import MarkdownRenderer from 'components/Review/MarkdownRenderer';
@@ -21,7 +23,6 @@ import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
 import { Alert, Button, Container } from 'reactstrap';
 import { toggleHistoryModal as toggleHistoryModalAction } from 'slices/reviewSlice';
 
@@ -34,6 +35,7 @@ const ViewArticle = () => {
     const isPublished = useSelector(state => state.review.isPublished);
     const versions = useSelector(state => state.review.versions);
     const researchField = useSelector(state => state.review.researchField);
+    const doi = useSelector(state => state.review.doi);
     const dispatch = useDispatch();
     const latestVersionId = versions?.[0]?.id;
     const newVersionAvailable = isPublished && latestVersionId !== id;
@@ -61,7 +63,7 @@ const ViewArticle = () => {
                 {newVersionAvailable && (
                     <Alert color="warning" fade={false} className="box">
                         Warning: a newer version of this article is available.{' '}
-                        <Link to={reverse(ROUTES.REVIEW, { id: latestVersionId })}>View latest version</Link>
+                        <Link href={reverse(ROUTES.REVIEW, { id: latestVersionId })}>View latest version</Link>
                     </Alert>
                 )}
                 <main>
@@ -83,10 +85,20 @@ const ViewArticle = () => {
                                 </div>
                                 <div className="my-3">
                                     <Alert color="info" fade={false} className="d-none d-print-block">
-                                        Read the full and interactive version of this article on the ORKG website: <Link to={url}>{url}</Link>
+                                        Read the full and interactive version of this article on the ORKG website: <Link href={url}>{url}</Link>
                                     </Alert>
                                     <ResearchFieldBadge researchField={researchField} />
                                     <AuthorBadges authors={authors} />{' '}
+                                    {doi && (
+                                        <div className="mb-1">
+                                            <small>
+                                                DOI:{' '}
+                                                <a href={`https://doi.org/${doi}`} target="_blank" rel="noopener noreferrer">
+                                                    https://doi.org/{doi}
+                                                </a>
+                                            </small>
+                                        </div>
+                                    )}
                                 </div>
                             </header>
                             {sections.map(section => {
@@ -113,7 +125,7 @@ const ViewArticle = () => {
                                                         <Link
                                                             target="_blank"
                                                             className="ms-2"
-                                                            to={reverse(ROUTES.COMPARISON, {
+                                                            href={reverse(ROUTES.COMPARISON, {
                                                                 comparisonId: section.contentLink.objectId,
                                                             })}
                                                         >
@@ -130,7 +142,7 @@ const ViewArticle = () => {
                                                             <>
                                                                 <div className="mt-3 mb-2">
                                                                     <Link
-                                                                        to={
+                                                                        href={
                                                                             section.type.id === CLASSES.RESOURCE_SECTION
                                                                                 ? `${reverse(ROUTES.RESOURCE, {
                                                                                       id: section.contentLink.objectId,

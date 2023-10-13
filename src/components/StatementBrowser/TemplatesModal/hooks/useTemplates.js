@@ -6,7 +6,7 @@ import { getResearchProblems, getResearchFields, getCommonClasses } from 'slices
 import { uniqBy, differenceBy, debounce } from 'lodash';
 import { getResourcesByClass } from 'services/backend/resources';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
-import useUsedTemplates from './useUsedTemplates';
+import useUsedTemplates from 'components/StatementBrowser/TemplatesModal/hooks/useUsedTemplates';
 
 const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => {
     const filterOptions = [

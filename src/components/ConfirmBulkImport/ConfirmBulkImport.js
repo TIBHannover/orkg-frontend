@@ -1,6 +1,6 @@
+import Link from 'components/NextJsMigration/Link';
 import { useEffect } from 'react';
 import { Alert, Button, Modal, ModalHeader, ModalBody, ModalFooter, Progress } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
@@ -62,7 +62,7 @@ const ConfirmBulkImport = props => {
                     <>
                         <Alert color="success">Import successful, {createdContributions.length} papers are imported</Alert>
                         The imported papers can be viewed in the contribution editor <br />
-                        <Button tag={Link} to={comparisonUrl} target="_blank" color="primary" className="mt-3">
+                        <Button tag={Link} href={comparisonUrl} target="_blank" color="primary" className="mt-3">
                             Contribution editor
                         </Button>
                     </>

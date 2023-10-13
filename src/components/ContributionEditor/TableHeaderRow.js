@@ -9,7 +9,7 @@ import { deleteProperty, updateProperty, canDeletePropertyAction } from 'slices/
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import { Button } from 'reactstrap';
 import { ENTITIES } from 'constants/graphSettings';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
 
 const TableHeaderRow = ({ property }) => {

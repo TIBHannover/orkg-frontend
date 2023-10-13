@@ -1,7 +1,7 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { Button } from 'reactstrap';
 import ROUTES from 'constants/routes.js';
-import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
 import AddResearchProblem from 'components/Observatory/AddResearchProblem';
@@ -13,7 +13,7 @@ import { reverseWithSlug } from 'utils';
 import Tippy from '@tippyjs/react';
 import { useSelector } from 'react-redux';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
-import ResearchProblemsModal from './ResearchProblemsModal';
+import ResearchProblemsModal from 'components/ResearchProblemsBox/ResearchProblemsModal';
 
 const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
     const { problems, isLoading, totalElements, setProblems, deleteResearchProblem, setTotalElements } = useResearchProblems({
@@ -51,7 +51,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
                         {problems.slice(0, 5).map(rp => (
                             <li key={`rp${rp.id}`}>
                                 <Tippy content={rp.label} disabled={rp.label?.length <= 70}>
-                                    <Link to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>
+                                    <Link href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>
                                         {truncate(rp.label, { length: 70 })}
                                     </Link>
                                 </Tippy>{' '}

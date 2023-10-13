@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState, useEffect } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
@@ -14,13 +15,13 @@ import { getPublicUrl, filterObjectOfStatementsByPredicateAndClass, getErrorMess
 import { getStatementsBySubject, createResourceStatement, deleteStatementById, getStatementsBundleBySubject } from 'services/backend/statements';
 import { createResourceData } from 'services/similarity/index';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { uniqBy, flatten } from 'lodash';
 import { AuthorTag } from 'components/Input/AuthorsInput/styled';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
 
 function Publish(props) {
     const [isLoading, setIsLoading] = useState(false);
@@ -103,14 +104,12 @@ function Publish(props) {
                                 },
                             ],
                         }),
-                        [PREDICATES.HAS_AUTHOR]: viewPaper.authors.map(author => ({
-                            '@id': author.id,
-                        })),
                     },
                 },
             };
 
             const createdPaper = await createObject(paperObj);
+            await createAuthorsList({ authors: viewPaper.authors, resourceId: createdPaper.id });
             generateDoi({
                 type: CLASSES.PAPER,
                 resource_type: CLASSES.DATASET,
@@ -121,13 +120,13 @@ function Publish(props) {
                 // we send only one contribution id because we want to create a DOI for the whole paper and not for each contribution.
                 // the backend will fetch the paper original DOI
                 related_sources: viewPaper.contributions?.[0] ? [viewPaper.contributions[0].id] : [''],
-                authors: contributors.map(creator => ({ ...creator.display_name, orcid: '' })),
+                authors: contributors.map(creator => ({ ...creator.display_name, orcid: null })),
                 url: `${getPublicUrl()}${reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaper.id })}`,
             })
                 .then(async doiResponse => {
                     // The followed model:
                     // https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Modeling-of-persistent-identification-of-ORKG-papers
-                    const doiLiteral = await createLiteral(doiResponse.data.attributes.doi);
+                    const doiLiteral = await createLiteral(doiResponse.doi);
                     const apiCalls = [createResourceStatement(createdPaper.id, PREDICATES.HAS_DOI, doiLiteral.id)];
                     if (viewPaper.hasVersion) {
                         await deleteStatementById(viewPaper.hasVersion.statementId);
@@ -141,7 +140,7 @@ function Publish(props) {
                         }),
                     );
                     await Promise.all(apiCalls);
-                    setDataCiteDoi(doiResponse.data.attributes.doi);
+                    setDataCiteDoi(doiResponse.doi);
                     setCreatedPaperId(createdPaper.id);
                     setIsLoading(false);
                     toast.success('DOI has been registered successfully');
@@ -178,7 +177,7 @@ function Publish(props) {
                     {createdPaperId && dataCiteDoi && (
                         <>
                             DOI is assigned successfully.{' '}
-                            <Link target="_blank" to={reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaperId })}>
+                            <Link target="_blank" href={reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaperId })}>
                                 View published version
                             </Link>
                         </>

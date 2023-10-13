@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import useParams from 'components/NextJsMigration/useParams';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
-import { getArrayParamFromQueryString, getParamFromQueryString } from 'utils';
 import { getClassById, getClasses } from 'services/backend/classes';
 import { getResources, getResourcesByClass } from 'services/backend/resources';
 import { getPredicates } from 'services/backend/predicates';
@@ -9,9 +8,11 @@ import { getPaperByDOI } from 'services/backend/misc';
 import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
-import { getStatementsByPredicateAndLiteral } from 'services/backend/statements';
+import { getStatementsByObject, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { isEmpty } from 'lodash';
 
 const IGNORED_CLASSES = [CLASSES.CONTRIBUTION, CLASSES.CONTRIBUTION_DELETED, CLASSES.PAPER_DELETED, CLASSES.COMPARISON_DRAFT];
 
@@ -19,7 +20,7 @@ const itemsPerFilter = 10;
 
 export const useSearch = () => {
     const { searchTerm } = useParams();
-    const location = useLocation();
+    const searchParams = useSearchParams();
 
     const [results, setResults] = useState({});
     const [selectedFilters, setSelectedFilters] = useState([]);
@@ -79,7 +80,7 @@ export const useSearch = () => {
                     q: searchQuery,
                     id: filterType,
                     returnContent: true,
-                    creator: getParamFromQueryString(location.search, 'createdBy') ?? undefined,
+                    creator: !isEmpty(searchParams.get('createdBy')) ? searchParams.get('createdBy') : undefined,
                 });
             }
 
@@ -94,23 +95,27 @@ export const useSearch = () => {
 
             // try to find an author by literal
             if (filterType === CLASSES.AUTHOR) {
-                const authorLiteral = await getStatementsByPredicateAndLiteral({
+                const listStatements = await getStatementsByPredicateAndLiteral({
                     literal: searchQuery,
-                    predicateId: PREDICATES.HAS_AUTHOR,
+                    predicateId: PREDICATES.HAS_LIST_ELEMENT,
                     items: 1,
                     returnContent: true,
                 });
-
-                if (authorLiteral.length > 0) {
-                    resultsResponse.push({
-                        label: searchQuery,
-                        // id: authorLiteral[0].subject.id,
-                        class: CLASSES.AUTHOR,
-                        customRoute: reverse(ROUTES.AUTHOR_LITERAL, { authorString: encodeURIComponent(searchQuery) }),
-                    });
+                const statements = listStatements.length > 0 ? await getStatementsByObject({ id: listStatements[0].subject.id }) : null;
+                if (statements) {
+                    const hasAuthorsStatements = statements.find(statement => statement.predicate.id === PREDICATES.HAS_AUTHORS);
+                    if (hasAuthorsStatements) {
+                        resultsResponse.push({
+                            label: searchQuery,
+                            // id: authorLiteral[0].subject.id,
+                            class: CLASSES.AUTHOR,
+                            customRoute: reverse(ROUTES.AUTHOR_LITERAL, { authorString: encodeURIComponent(searchQuery) }),
+                        });
+                    }
                 }
             }
         } catch (e) {
+            console.error(e);
             toast.error('Something went wrong while loading search results.');
         }
 
@@ -129,12 +134,10 @@ export const useSearch = () => {
     useEffect(() => {
         const getResultsForFilters = () => {
             setIsLoadingFilterClasses(true);
-            const _selectedFilters = getArrayParamFromQueryString(decodeURIComponent(location.search), 'types');
+            const _selectedFilters = !isEmpty(searchParams.get('types')) ? searchParams.get('types')?.split(',') : [];
             if (!_selectedFilters || _selectedFilters.length === 0) {
                 setIsLoadingFilterClasses(false);
-                const _classes = getParamFromQueryString(location.search, 'createdBy')
-                    ? DEFAULT_FILTERS.filter(df => df.isCreatedByActive)
-                    : DEFAULT_FILTERS;
+                const _classes = searchParams.get('createdBy') ? DEFAULT_FILTERS.filter(df => df.isCreatedByActive) : DEFAULT_FILTERS;
                 setSelectedFilters(_classes);
                 for (const filter of _classes) {
                     loadMoreResults(filter.id);
@@ -163,7 +166,7 @@ export const useSearch = () => {
         setIsLastPageReached({});
         getResultsForFilters();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location.search, searchTerm]);
+    }, [searchTerm, searchParams]);
 
     return { searchTerm, selectedFilters, results, isNextPageLoading, hasNextPage, isLoading, loadMoreResults, currentPage };
 };

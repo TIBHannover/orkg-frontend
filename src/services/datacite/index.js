@@ -1,4 +1,4 @@
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 
 export const getCitationByDOI = (DOI, style = '', header = 'text/x-bibliography') => {
     let headers = '';

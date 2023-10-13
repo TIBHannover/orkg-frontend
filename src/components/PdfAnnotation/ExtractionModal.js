@@ -1,15 +1,23 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
-import TableEditor from './TableEditor';
-import ExtractReferencesModal from './ExtractReferencesModal';
-import useExtractionModal from './hooks/useExtractionModal';
-import useTableEditor from './hooks/useTableEditor';
+import ExtractReferencesModal from 'components/PdfAnnotation/ExtractReferencesModal';
+import useExtractionModal from 'components/PdfAnnotation/hooks/useExtractionModal';
+import useTableEditor from 'components/PdfAnnotation/hooks/useTableEditor';
+// import dynamic from 'next/dynamic';
+
+// CRA-CODE
+import TableEditor from 'components/PdfAnnotation/TableEditor';
+
+// NEXT-CODE
+// const TableEditor = dynamic(() => import('components/PdfAnnotation/TableEditor'), {
+//     ssr: false,
+// });
 
 const ExtractionModal = props => {
     const [
@@ -105,11 +113,10 @@ const ExtractionModal = props => {
                 {importedData && (
                     <ModalBody>
                         The imported papers can be viewed in the following comparison: <br />
-                        <Link to={comparisonUrl}>{comparisonUrl}</Link>
+                        <Link href={comparisonUrl}>{comparisonUrl}</Link>
                     </ModalBody>
                 )}
             </Modal>
-
             <ExtractReferencesModal
                 clearImportError={clearImportError}
                 isOpen={extractReferencesModalOpen}

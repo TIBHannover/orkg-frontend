@@ -1,4 +1,4 @@
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import { upperFirst } from 'lodash';
 import { submitGetRequest } from 'network';
 

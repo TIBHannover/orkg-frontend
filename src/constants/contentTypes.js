@@ -1,4 +1,4 @@
-import { CLASSES } from './graphSettings';
+import { CLASSES } from 'constants/graphSettings';
 
 // Content types are the classes where featured/unlisted flags are supported
 const contentTypes = [

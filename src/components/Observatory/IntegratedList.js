@@ -9,8 +9,7 @@ import { CLASSES } from 'constants/graphSettings';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { useLocation } from 'react-router';
-import qs from 'qs';
+import useSearchParams from 'components/NextJsMigration/useSearchParams';
 
 const DEFAULT_CLASSES_FILTER = [
     { id: CLASSES.PAPER, label: 'Paper' },
@@ -23,17 +22,16 @@ const DEFAULT_CLASSES_FILTER = [
 ];
 
 const IntegratedList = ({ id, slug, boxShadow }) => {
-    const location = useLocation();
-    const params = qs.parse(location.search, { ignoreQueryPrefix: true });
+    const searchParams = useSearchParams();
 
     const { items, sort, isLoading, hasNextPage, isLastPageReached, totalElements, page, classesFilter, handleLoadMore, setClassesFilter, setSort } =
         useObservatoryContent({
             observatoryId: id,
             slug,
-            initialSort: params.sort ?? 'combined',
+            initialSort: searchParams.get('sort') ?? 'combined',
             initialClassFilterOptions: DEFAULT_CLASSES_FILTER,
-            initClassesFilter: params.classesFilter
-                ? DEFAULT_CLASSES_FILTER.filter(i => params.classesFilter.split(',').includes(i.id))
+            initClassesFilter: searchParams.get('classesFilter')
+                ? DEFAULT_CLASSES_FILTER.filter(i => searchParams.get('classesFilter')?.split(',').includes(i.id))
                 : DEFAULT_CLASSES_FILTER,
             updateURL: true,
         });

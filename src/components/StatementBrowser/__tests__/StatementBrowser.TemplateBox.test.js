@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from 'testUtils';
 import { ENTITIES } from 'constants/graphSettings';
-import StatementBrowser from '../StatementBrowser';
+import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 
 jest.mock(
     'react-flip-move',

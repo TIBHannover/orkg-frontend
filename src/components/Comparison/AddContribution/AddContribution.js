@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState, useEffect, useCallback } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, FormGroup, Input, Label, ListGroup, ListGroupItem, InputGroup, Alert } from 'reactstrap';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
@@ -8,7 +9,6 @@ import ContentLoader from 'react-content-loader';
 import { getPaperByDOI } from 'services/backend/misc';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import styled from 'styled-components';
@@ -153,7 +153,6 @@ export default function AddContribution(props) {
         if (paper.contributions.length > 0) {
             paper.contributions.map(contribution => {
                 if (e.target.checked && !selectedContributions.includes(contribution.id)) {
-                    // setSelectedContributions(prev => [...prev, contribution.id]);
                     newSelectedContributions = [...newSelectedContributions, contribution.id];
                 } else if (!e.target.checked) {
                     newSelectedContributions = [...newSelectedContributions.filter(i => i !== contribution.id)];
@@ -243,7 +242,7 @@ export default function AddContribution(props) {
                                                     <Link
                                                         title="View the paper page"
                                                         target="_blank"
-                                                        to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.id })}
+                                                        href={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.id })}
                                                     >
                                                         <Icon icon={faExternalLinkAlt} />
                                                     </Link>

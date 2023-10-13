@@ -57,6 +57,9 @@ const SentenceWarning = styled(Icon)`
 `;
 
 const updateHash = highlight => {
+    if (!document?.location?.hash) {
+        return;
+    }
     document.location.hash = `annotation-${highlight.id}`;
 };
 

@@ -1,17 +1,14 @@
 /**
  * Get Facebook sharer link
  */
-export const getFacebookSharerLink = () =>
-    `https://www.facebook.com/sharer/sharer.php?u=${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+export const getFacebookSharerLink = ({ shareUrl }) => `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
 
 /**
  * Get Twitter SharerLink
  */
-export const getTwitterSharerLink = title =>
-    `https://twitter.com/share?url=${window.location.protocol}//${window.location.host}${window.location.pathname}&via=orkg_org&text=${title}`;
+export const getTwitterSharerLink = ({ shareUrl, title }) => `https://twitter.com/share?url=${shareUrl}&via=orkg_org&text=${title}`;
 
 /**
  * Get LinkedIn sharer link
  */
-export const getLinkedInSharerLink = () =>
-    `https://www.linkedin.com/sharing/share-offsite/?url=${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+export const getLinkedInSharerLink = ({ shareUrl }) => `https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`;

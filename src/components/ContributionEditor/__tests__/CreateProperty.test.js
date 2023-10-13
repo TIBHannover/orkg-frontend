@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from 'testUtils';
-import CreateProperty from '../CreateProperty';
+import CreateProperty from 'components/ContributionEditor/CreateProperty';
 
 const setup = () => {
     render(<CreateProperty />);

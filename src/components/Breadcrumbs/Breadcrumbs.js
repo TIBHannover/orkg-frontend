@@ -1,11 +1,11 @@
+import Link from 'components/NextJsMigration/Link';
 import { useEffect, useState } from 'react';
-import { Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Card, CardFooter } from 'reactstrap';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Card, CardFooter } from 'reactstrap';
 import { getParentResearchFields, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleRight, faAngleDoubleDown, faSpinner, faHome } from '@fortawesome/free-solid-svg-icons';
 import { PREDICATES } from 'constants/graphSettings';
 import ContentLoader from 'react-content-loader';
-import { Link, NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
@@ -60,20 +60,17 @@ function Breadcrumbs(props) {
         }
     };
 
-    const renderLink = (field, children, index) => {
-        if (props.onFieldClick) {
-            return (
-                <Button className="p-0" color="link" onClick={() => props.onFieldClick(field)}>
-                    {children}
-                </Button>
-            );
-        }
-        return (
-            <Link to={index === 0 ? reverse(ROUTES.HOME) : reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}>
-                {children}
-            </Link>
-        );
-    };
+    const renderLink = (field, children, index) => (
+        <Link
+            href={
+                index === 0
+                    ? reverse(ROUTES.HOME)
+                    : reverseWithSlug(props.route ? props.route : ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })
+            }
+        >
+            {children}
+        </Link>
+    );
 
     const renderDropdownItem = (field, children) => {
         if (props.onFieldClick) {
@@ -85,9 +82,9 @@ function Breadcrumbs(props) {
         }
         return (
             <StyledDropdownItem
-                tag={NavLink}
+                tag={Link}
                 key={`rf-${field.id}`}
-                to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}
+                href={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}
                 className="text-primary"
             >
                 {children}
@@ -170,11 +167,13 @@ Breadcrumbs.propTypes = {
     disableLastField: PropTypes.bool,
     onFieldClick: PropTypes.func,
     backgroundWhite: PropTypes.bool,
+    route: PropTypes.string,
 };
 
 Breadcrumbs.defaultProps = {
     disableLastField: false,
     backgroundWhite: false,
+    route: null,
 };
 
 export default Breadcrumbs;

@@ -22,6 +22,7 @@ const initialState = {
     articleResource: null,
     paper: {},
     authorResources: [],
+    authorListResource: {},
     contributionId: 0,
     sections: [],
     versions: [],
@@ -35,6 +36,7 @@ const initialState = {
     references: [],
     usedReferences: {},
     statements: [],
+    doi: null,
 };
 
 export const reviewSlice = createSlice({
@@ -46,6 +48,7 @@ export const reviewSlice = createSlice({
             state.articleResource = payload.articleResource;
             state.paper = payload.paper;
             state.authorResources = payload.authorResources;
+            state.authorListResource = payload.authorListResource;
             state.contributionId = payload.contributionId;
             state.sections = payload.sections;
             state.versions = payload.versions;
@@ -54,6 +57,7 @@ export const reviewSlice = createSlice({
             state.isPublished = payload.isPublished;
             state.statements = payload.statements;
             state.references = payload.references;
+            state.doi = payload.doi;
         },
         setIsLoading: (state, { payload }) => {
             state.isLoading = payload;
@@ -169,6 +173,9 @@ export const reviewSlice = createSlice({
         setUsedReferences: (state, { payload: { references, sectionId } }) => {
             state.usedReferences[sectionId] = references;
         },
+        setAuthorListResource: (state, { payload }) => {
+            state.authorListResource = payload.authorListResource;
+        },
     },
     extraReducers: builder => {
         builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
@@ -207,6 +214,7 @@ export const {
     referenceDeleted,
     referenceUpdated,
     setUsedReferences,
+    setAuthorListResource,
 } = reviewSlice.actions;
 
 export default reviewSlice.reducer;

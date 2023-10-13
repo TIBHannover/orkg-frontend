@@ -1,7 +1,7 @@
 import { clone } from 'lodash';
-import MachineReadableRepresentation from './MachineReadableRepresentation';
-import DataForChart from './VisRenderer/googleDataWrapper';
-import { validateCellMapping } from './ValidateCellMapping';
+import MachineReadableRepresentation from 'libs/selfVisModel/MachineReadableRepresentation';
+import DataForChart from 'libs/selfVisModel/VisRenderer/googleDataWrapper';
+import { validateCellMapping } from 'libs/selfVisModel/ValidateCellMapping';
 
 export default class SelfVisDataMode {
     static instance;

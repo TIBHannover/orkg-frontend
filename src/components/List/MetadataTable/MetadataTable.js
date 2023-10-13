@@ -1,6 +1,6 @@
+import Link from 'components/NextJsMigration/Link';
 import PropTypes from 'prop-types';
 import { Card, Table } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -18,7 +18,7 @@ function MetadataTable({ title = '', authors = [], publicationMonth = null, publ
                             <strong>Title:</strong>{' '}
                             {contentTypeId ? (
                                 <Tippy content="Entry will be linked to ORKG resource">
-                                    <Link target="_blank" to={`${reverse(ROUTES.RESOURCE, { id: contentTypeId })}?noRedirect`}>
+                                    <Link target="_blank" href={`${reverse(ROUTES.RESOURCE, { id: contentTypeId })}?noRedirect`}>
                                         {title} <Icon icon={faExternalLinkAlt} />
                                     </Link>
                                 </Tippy>

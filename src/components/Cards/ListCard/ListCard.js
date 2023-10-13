@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'components/NextJsMigration/Link';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -6,7 +6,7 @@ import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import Authors from 'components/Cards/PaperCard/Authors';
-import useCardData from 'components/Cards/ReviewCard/hooks/useCardData';
+import useCardData from 'components/Cards/hooks/useCardData';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
@@ -31,6 +31,7 @@ const ListCard = ({ versions, showBadge, showCurationFlags }) => {
         id: versions[0]?.id,
         initResearchField: versions[0]?.researchField,
         initAuthors: versions[0]?.authors,
+        isList: true,
     });
 
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
@@ -54,7 +55,7 @@ const ListCard = ({ versions, showBadge, showCurationFlags }) => {
                 )}
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
-                        <Link to={reverse(ROUTES.LIST, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
+                        <Link href={reverse(ROUTES.LIST, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
                         {showBadge && (
                             <div className="d-inline-block ms-2">
                                 <CardBadge color="primary">List</CardBadge>
@@ -78,7 +79,7 @@ const ListCard = ({ versions, showBadge, showCurationFlags }) => {
                             {versions.map((version, index) => (
                                 <span key={version.id}>
                                     <Tippy content={version.description}>
-                                        <Link to={reverse(ROUTES.LIST, { id: version.id })}>Version {versions.length - index}</Link>
+                                        <Link href={reverse(ROUTES.LIST, { id: version.id })}>Version {versions.length - index}</Link>
                                     </Tippy>{' '}
                                     {index < versions.length - 1 && ' • '}
                                 </span>
@@ -87,7 +88,6 @@ const ListCard = ({ versions, showBadge, showCurationFlags }) => {
                     )}
                 </div>
             </div>
-
             <div className="col-md-3 d-flex align-items-end flex-column p-0">
                 <div className="flex-grow-1 mb-1">
                     <div className="d-none d-md-flex align-items-end justify-content-end">

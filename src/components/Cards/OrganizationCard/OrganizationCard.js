@@ -1,5 +1,5 @@
+import Link from 'components/NextJsMigration/Link';
 import { Card, CardBody, CardTitle } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
@@ -36,9 +36,9 @@ const StyledOrganizationCard = styled.div`
 function OrganizationCard(props) {
     return (
         <div className="col-4 mb-3">
-            <Link to={reverse(ROUTES.ORGANIZATION, { type: props.type, id: props.organization.display_id })}>
+            <Link href={reverse(ROUTES.ORGANIZATION, { type: props.type, id: props.organization.display_id })}>
                 <StyledOrganizationCard className="card h-100">
-                    <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { type: props.type, id: props.organization.display_id })}>
+                    <Link className="logoContainer" href={reverse(ROUTES.ORGANIZATION, { type: props.type, id: props.organization.display_id })}>
                         <img className="mx-auto p-2" src={getOrganizationLogoUrl(props.organization?.id)} alt={`${props.organization.name} logo`} />
                     </Link>
                     <CardBody>

@@ -1,15 +1,15 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState, useEffect } from 'react';
 import { Button } from 'reactstrap';
 import { getProblemsByOrganizationId } from 'services/backend/organizations';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
-import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverseWithSlug } from 'utils';
 import { truncate } from 'lodash';
-import InternalServerError from 'pages/InternalServerError';
-import NotFound from 'pages/NotFound';
-import ResearchProblemsModal from './ResearchProblemsModal';
+import InternalServerError from 'app/error';
+import NotFound from 'app/not-found';
+import ResearchProblemsModal from 'components/Conference/ResearchProblemsModal';
 
 const ResearchProblemBox = ({ id }) => {
     const [error, setError] = useState(null);
@@ -42,7 +42,7 @@ const ResearchProblemBox = ({ id }) => {
                     {problems.slice(0, 5).map(rp => (
                         <li key={`p${rp.id}`}>
                             <Tippy content={rp.label} disabled={rp.label?.length <= 70}>
-                                <Link to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>
+                                <Link href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>
                                     {truncate(rp.label, { length: 70 })}
                                 </Link>
                             </Tippy>

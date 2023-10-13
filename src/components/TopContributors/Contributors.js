@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { CardTitle } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -7,12 +8,11 @@ import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes.js';
 import { StyledGravatar, StyledDotGravatar, ContributorsAvatars } from 'components/styled';
 import Tippy from '@tippyjs/react';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
-import ContributorsModal from './ContributorsModal';
-import ContributorsDropdownFilter from './ContributorsDropdownFilter';
+import ContributorsModal from 'components/TopContributors/ContributorsModal';
+import ContributorsDropdownFilter from 'components/TopContributors/ContributorsDropdownFilter';
 
 const Contributors = ({ researchFieldId }) => {
     const { contributors, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useContributors({
@@ -73,7 +73,7 @@ const Contributors = ({ researchFieldId }) => {
                                     </div>
                                 }
                             >
-                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
+                                <Link href={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
                                     <StyledGravatar className="rounded-circle" md5={contributor.gravatar_id} size={48} />
                                 </Link>
                             </Tippy>

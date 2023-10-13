@@ -1,5 +1,5 @@
+import Link from 'components/NextJsMigration/Link';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
 
 export const ComparisonBoxButton = styled(Button)`

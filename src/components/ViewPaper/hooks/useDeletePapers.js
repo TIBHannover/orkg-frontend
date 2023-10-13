@@ -4,12 +4,12 @@ import Confirm from 'components/Confirmation/Confirmation';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { updateResourceClasses } from 'services/backend/resources';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
 import ROUTES from 'constants/routes.js';
 import pluralize from 'pluralize';
 
 function useDeletePapers({ paperIds, redirect = false, finishLoadingCallback = () => {} }) {
-    const navigate = useNavigate();
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
 
     const deletePapers = async () => {
@@ -46,7 +46,7 @@ function useDeletePapers({ paperIds, redirect = false, finishLoadingCallback = (
             toast.success(`Successfully deleted ${pluralize('paper', paperIds.length, true)}`);
 
             if (redirect) {
-                navigate(ROUTES.HOME);
+                router.push(ROUTES.HOME);
             }
         }
     };

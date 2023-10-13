@@ -3,9 +3,9 @@ import { Alert, ButtonGroup, Button } from 'reactstrap';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import Tippy, { useSingleton } from '@tippyjs/react';
 import PropTypes from 'prop-types';
-import CellRenderer from './CellRenderer';
-import DropDownMapperSelector from './DropdownMapperSelector';
-import CheckboxSelector from './CheckBoxSelector';
+import CellRenderer from 'libs/selfVisModel/RenderingComponents/CellRenderer';
+import DropDownMapperSelector from 'libs/selfVisModel/RenderingComponents/DropdownMapperSelector';
+import CheckboxSelector from 'libs/selfVisModel/RenderingComponents/CheckBoxSelector';
 
 const CellSelector = props => {
     const [selfVisModel] = useState(new SelfVisDataModel());

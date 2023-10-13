@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { InputGroup } from 'reactstrap';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
@@ -8,7 +9,6 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowsAlt, faPen, faTrash, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
-import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { useSelector } from 'react-redux';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
@@ -34,7 +34,7 @@ function TemplateComponentProperty(props) {
             {!isEditing ? (
                 <div className="propertyLabel">
                     {props.property?.id ? (
-                        <Link to={reverse(ROUTES.PROPERTY, { id: props.property.id })} target="_blank" className="text-dark">
+                        <Link href={reverse(ROUTES.PROPERTY, { id: props.property.id })} target="_blank" className="text-dark">
                             <DescriptionTooltip id={props.property.id} _class={ENTITIES.PREDICATE}>
                                 {props.property.label}
                             </DescriptionTooltip>
@@ -100,7 +100,7 @@ TemplateComponentProperty.propTypes = {
     property: PropTypes.object.isRequired,
     handleDeletePropertyShape: PropTypes.func.isRequired,
     handlePropertiesSelect: PropTypes.func.isRequired,
-    dragRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })]),
+    dragRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
 };
 
 export default TemplateComponentProperty;

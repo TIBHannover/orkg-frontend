@@ -4,6 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import WIKIPEDIA_LOGO from 'assets/img/sameas/wikipedia.png';
 import PropTypes from 'prop-types';
+import Image from 'components/NextJsMigration/Image';
 
 class WikipediaSummary extends Component {
     constructor(props) {
@@ -67,7 +68,7 @@ class WikipediaSummary extends Component {
             <div>
                 <h2 className="h5 mt-2 float-start">Summary from Wikipedia</h2>
                 <a href={this.props.externalResource} target="_blank" rel="noopener noreferrer">
-                    <img alt="DBpedia logo" src={WIKIPEDIA_LOGO} style={{ height: 50, float: 'right' }} />
+                    <Image alt="DBpedia logo" src={WIKIPEDIA_LOGO} style={{ height: 50, float: 'right' }} />
                 </a>
                 <div className="clearfix" />
 

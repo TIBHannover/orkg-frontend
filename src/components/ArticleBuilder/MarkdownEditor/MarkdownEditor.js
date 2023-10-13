@@ -24,7 +24,7 @@ import React, { useEffect, useState } from 'react';
 import Textarea from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
 import { ButtonGroup } from 'reactstrap';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import { getResource, getResources } from 'services/backend/resources';

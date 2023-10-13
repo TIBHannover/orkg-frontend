@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faExternalLinkAlt, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
@@ -7,7 +8,6 @@ import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Alert, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 // TODO: accepted paper data as props:
@@ -35,7 +35,7 @@ const CreateContributionModal = ({ isOpen, toggle, paperId, onCreateContribution
                         {paperTitle && (
                             <Alert color="info" fade={false}>
                                 You are about to add a contribution to the paper{' '}
-                                <Link target="_blank" to={reverse(ROUTES.VIEW_PAPER, { resourceId: paperId })}>
+                                <Link target="_blank" href={reverse(ROUTES.VIEW_PAPER, { resourceId: paperId })}>
                                     {paperTitle} <Icon icon={faExternalLinkAlt} />
                                 </Link>
                             </Alert>

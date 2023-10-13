@@ -6,13 +6,13 @@ import useDiff from 'components/DiffView/useDiff';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import qs from 'qs';
 import { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import ReactDiffViewer from 'react-diff-viewer';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useLocation } from 'react-use';
+import useRouter from 'components/NextJsMigration/useRouter';
+import useParams from 'components/NextJsMigration/useParams';
 import { Alert, Button } from 'reactstrap';
+import useSearchParams from 'components/NextJsMigration/useSearchParams';
 
 const DiffView = ({ type, diffRoute, getData }) => {
     const { oldId, newId } = useParams();
@@ -24,9 +24,9 @@ const DiffView = ({ type, diffRoute, getData }) => {
     const [fullWidth, setFullWidth] = useState(false);
     const [hasFailed, setHasFailed] = useState(false);
     const { isOldIdHigherThanNewId } = useDiff();
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { switchedVersions } = qs.parse(location.search, { ignoreQueryPrefix: true });
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const switchedVersions = searchParams.get('switchedVersions');
 
     useEffect(() => {
         document.title = `Compare ${type} versions - ORKG`;
@@ -38,7 +38,7 @@ const DiffView = ({ type, diffRoute, getData }) => {
         }
 
         if (isOldIdHigherThanNewId({ oldId, newId })) {
-            navigate(`${reverse(diffRoute, { oldId: newId, newId: oldId })}?switchedVersions=true`);
+            router.push(`${reverse(diffRoute, { oldId: newId, newId: oldId })}?switchedVersions=true`);
             return;
         }
 
@@ -58,10 +58,10 @@ const DiffView = ({ type, diffRoute, getData }) => {
         };
 
         getContent();
-    }, [oldId, newId, isOldIdHigherThanNewId, navigate, diffRoute, getData]);
+    }, [oldId, newId, isOldIdHigherThanNewId, diffRoute, getData]);
 
     const handleDismiss = () => {
-        navigate(reverse(diffRoute, { oldId, newId }));
+        router.push(reverse(diffRoute, { oldId, newId }));
     };
 
     const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 20px)' } : {};

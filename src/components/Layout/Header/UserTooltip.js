@@ -1,4 +1,5 @@
-import env from '@beam-australia/react-env';
+import Link from 'components/NextJsMigration/Link';
+import env from 'components/NextJsMigration/env';
 import ROUTES from 'constants/routes.js';
 import greetingTime from 'greeting-time';
 import { reverse } from 'named-urls';
@@ -6,11 +7,12 @@ import { useEffect, useRef, useState } from 'react';
 import { Cookies } from 'react-cookie';
 import Gravatar from 'react-gravatar';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
 import { Button, ButtonGroup, Row } from 'reactstrap';
 import { resetAuth } from 'slices/authSlice';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'react-toastify';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.dark};
@@ -70,7 +72,7 @@ const UserTooltip = () => {
     const [isVisibleTooltip, setIsVisibleTooltip] = useState(false);
     const userPopup = useRef(null);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const router = useRouter();
     const greeting = greetingTime(new Date());
 
     useEffect(() => {
@@ -99,7 +101,8 @@ const UserTooltip = () => {
         cookies.remove('token', { path: env('PUBLIC_URL') });
         cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
         setIsVisibleTooltip(false);
-        navigate('/', { state: { signedOut: true } });
+        toast.success('You have been signed out successfully');
+        router.push('/');
     };
 
     return (
@@ -137,7 +140,7 @@ const UserTooltip = () => {
                     >
                         <Row>
                             <div className="col-3 text-center">
-                                <Link onClick={() => setIsVisibleTooltip(false)} to={reverse(ROUTES.USER_PROFILE, { userId: user.id })}>
+                                <Link onClick={() => setIsVisibleTooltip(false)} href={reverse(ROUTES.USER_PROFILE, { userId: user.id })}>
                                     <StyledGravatar
                                         className="rounded-circle"
                                         style={{ border: '3px solid #fff' }}
@@ -156,7 +159,7 @@ const UserTooltip = () => {
                                         color="secondary"
                                         onClick={() => setIsVisibleTooltip(false)}
                                         tag={Link}
-                                        to={reverse(ROUTES.USER_PROFILE, { userId: user.id })}
+                                        href={reverse(ROUTES.USER_PROFILE, { userId: user.id })}
                                     >
                                         Profile
                                     </Button>
@@ -165,7 +168,7 @@ const UserTooltip = () => {
                                         className="text-nowrap"
                                         onClick={() => setIsVisibleTooltip(false)}
                                         tag={Link}
-                                        to={reverse(ROUTES.USER_SETTINGS_DEFAULT)}
+                                        href={reverse(ROUTES.USER_SETTINGS_DEFAULT)}
                                     >
                                         My account
                                     </Button>

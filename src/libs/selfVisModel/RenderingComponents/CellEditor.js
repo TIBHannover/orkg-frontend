@@ -4,8 +4,8 @@ import { Alert } from 'reactstrap';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import Tippy, { useSingleton } from '@tippyjs/react';
 import PropTypes from 'prop-types';
-import CellVE from './CellVE';
-import DropDownMapperSelector from './DropdownMapperSelector';
+import CellVE from 'libs/selfVisModel/RenderingComponents/CellVE';
+import DropDownMapperSelector from 'libs/selfVisModel/RenderingComponents/DropdownMapperSelector';
 
 const CellEditor = props => {
     const [selfVisModel] = useState(new SelfVisDataModel());

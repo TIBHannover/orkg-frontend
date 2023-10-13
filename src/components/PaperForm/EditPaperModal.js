@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -9,7 +10,6 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { Button, FormGroup, Input, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 const EditPaperModal = ({ paperData, toggle, afterUpdate = null, isPaperLinkVisible = false }) => {
@@ -46,7 +46,7 @@ const EditPaperModal = ({ paperData, toggle, afterUpdate = null, isPaperLinkVisi
             <ModalHeader toggle={toggle} cssModule={{ 'modal-title': 'modal-title w-100 d-flex justify-content-between' }}>
                 <span>Edit paper</span>
                 {isPaperLinkVisible && (
-                    <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: paperData?.paper?.id })} target="_blank">
+                    <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: paperData?.paper?.id })} target="_blank">
                         <Button color="link" className="p-0">
                             Open paper <Icon icon={faExternalLinkAlt} className="me-1" />
                         </Button>

@@ -1,5 +1,5 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faFile, faChartBar, faPaperclip, faCodeBranch } from '@fortawesome/free-solid-svg-icons';
@@ -72,7 +72,7 @@ const Versions = props => {
                 {props.versions.slice(1).map((version, index) => (
                     <span key={version.id}>
                         <Tippy content={<VersionTooltip version={version} />}>
-                            <Link to={reverse(ROUTES.COMPARISON, { comparisonId: version.id })}>
+                            <Link href={reverse(ROUTES.COMPARISON, { comparisonId: version.id })}>
                                 Version {moment(version.created_at).format('DD-MM-YYYY')}
                             </Link>
                         </Tippy>{' '}

@@ -1,16 +1,22 @@
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
+import { createAuthorsList, updateAuthorsList } from 'components/Input/AuthorsInput/helpers';
+import { AuthorTag } from 'components/Input/AuthorsInput/styled';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { authorsUpdated } from 'slices/listSlice';
-import { updateAuthors } from 'components/Input/AuthorsInput/helpers';
+import { toast } from 'react-toastify';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { authorsUpdated, listLoaded } from 'slices/listSlice';
 
 const EditAuthorsModal = props => {
     const { show, toggle } = props;
     const [authors, setAuthors] = useState([]);
+    const [isSaving, setIsSaving] = useState(false);
     const authorResources = useSelector(state => state.list.authorResources);
+    const authorListResource = useSelector(state => state.list.authorListResource);
     const list = useSelector(state => state.list.list);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -26,21 +32,41 @@ const EditAuthorsModal = props => {
     };
 
     const handleSave = async () => {
-        const _authors = await updateAuthors({ prevAuthors: authorResources, newAuthors: authors, resourceId: list.id });
-        dispatch(authorsUpdated(_authors));
-        toggle();
+        try {
+            setIsSaving(true);
+            let _authors = [];
+            if (authorListResource?.id) {
+                _authors = await updateAuthorsList({ prevAuthors: authorResources, newAuthors: authors, listId: authorListResource?.id });
+            } else {
+                const newList = await createAuthorsList({ authors, resourceId: list.id });
+                _authors = newList?.authors;
+                dispatch(listLoaded({ authorListResource: newList.list }));
+            }
+            dispatch(authorsUpdated(_authors));
+            setIsSaving(false);
+            toggle();
+            toast.success('Authors saved successfully');
+        } catch {
+            toast.error('An error occurred while saving the authors');
+        }
     };
 
     return (
         <Modal isOpen={show} toggle={toggle}>
             <ModalHeader toggle={toggle}>List authors</ModalHeader>
             <ModalBody>
-                <AuthorsInput value={authors} handler={onChange} />
+                {isSaving &&
+                    authors.map((author, index) => (
+                        <AuthorTag key={`creator${index}`}>
+                            <div className="name"> {author.label} </div>
+                        </AuthorTag>
+                    ))}
+                {!isSaving && <AuthorsInput value={authors} handler={onChange} />}
             </ModalBody>
             <ModalFooter>
-                <Button color="primary" onClick={handleSave}>
+                <ButtonWithLoading isLoading={isSaving} loadingMessage="Saving" color="primary" onClick={handleSave}>
                     Save
-                </Button>
+                </ButtonWithLoading>
             </ModalFooter>
         </Modal>
     );

@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { TransitionGroup } from 'react-transition-group';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
 import useProvenance from 'components/ViewPaper/hooks/useProvenance';
 import useTimeline from 'components/ViewPaper/hooks/useTimeline';
 import { uniqBy, orderBy } from 'lodash';
-import Provenance from './Provenance';
-import Timeline from './Timeline';
-import { AnimationContainer, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
+import Provenance from 'components/ViewPaper/ProvenanceBox/Provenance';
+import Timeline from 'components/ViewPaper/ProvenanceBox/Timeline';
+import { AnimationContainer, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from 'components/ViewPaper/ProvenanceBox/styled';
 
 const ProvenanceBox = () => {
     const { paperResource, isLoadingProvenance, observatoryInfo, organizationInfo, createdBy, versions } = useProvenance();

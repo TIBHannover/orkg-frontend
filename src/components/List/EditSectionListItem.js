@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faBars, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Confirm from 'components/Confirmation/Confirmation';
@@ -9,7 +10,6 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { SortableElement, sortableHandle } from 'react-sortable-hoc';
 import { Button, ListGroupItem } from 'reactstrap';
 import { deleteListEntry, listEntryUpdated } from 'slices/listSlice';
@@ -89,7 +89,7 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
                             </Button>
                         ) : (
                             <Link
-                                to={`${reverse(ROUTES.CONTENT_TYPE, { id: contentType.id, type: contentTypeClass })}?isEditMode=true`}
+                                href={`${reverse(ROUTES.CONTENT_TYPE, { id: contentType.id, type: contentTypeClass })}?isEditMode=true`}
                                 target="_blank"
                             >
                                 <Button color="secondary" className="px-2 py-0">

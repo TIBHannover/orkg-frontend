@@ -1,9 +1,9 @@
+import Link from 'components/NextJsMigration/Link';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { faBinoculars, faPen, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { MISC } from 'constants/graphSettings';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
@@ -27,7 +27,7 @@ function ProvenanceBox({ item, editMode }) {
                 <Badge color="light" className="me-2 mt-2">
                     <Icon icon={faUsers} /> Organization
                     <span className="ms-1">
-                        <Link to={reverse(ROUTES.ORGANIZATION, { id: provenance.organization.display_id })}>{provenance.organization.name}</Link>
+                        <Link href={reverse(ROUTES.ORGANIZATION, { id: provenance.organization.display_id })}>{provenance.organization.name}</Link>
                     </span>
                 </Badge>
             )}
@@ -35,7 +35,7 @@ function ProvenanceBox({ item, editMode }) {
                 <Badge color="light" className="me-2 mt-2">
                     <Icon icon={faBinoculars} /> Observatory
                     <span className="ms-1">
-                        <Link to={reverse(ROUTES.OBSERVATORY, { id: provenance.display_id })}>{provenance.name}</Link>
+                        <Link href={reverse(ROUTES.OBSERVATORY, { id: provenance.display_id })}>{provenance.name}</Link>
                     </span>
                 </Badge>
             )}
@@ -47,7 +47,6 @@ function ProvenanceBox({ item, editMode }) {
             {editMode && isCurationAllowed && (
                 <StatementActionButton title="Edit provenance" icon={faPen} action={() => setShowAssignObservatory(v => !v)} />
             )}
-
             <ObservatoryModal
                 callBack={updateCallBack}
                 showDialog={showAssignObservatory}

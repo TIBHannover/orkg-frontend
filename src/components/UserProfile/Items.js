@@ -16,9 +16,18 @@ import { useNavigate } from 'react-router-dom';
 import { Button, ListGroup, ListGroupItem } from 'reactstrap';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getComparisonData, getListData, getVisualizationData, getPaperData, getReviewData, groupVersionsOfComparisons } from 'utils';
+import {
+    getComparisonData,
+    getListData,
+    getVisualizationData,
+    getPaperData,
+    getReviewData,
+    groupVersionsOfComparisons,
+    addAuthorsToStatementBundle,
+} from 'utils';
 import FeaturedItems from 'components/Home/FeaturedItems';
 import PropTypes from 'prop-types';
+import useRouter from 'components/NextJsMigration/useRouter';
 
 const Items = props => {
     const pageSize = 25;
@@ -27,7 +36,7 @@ const Items = props => {
     const [page, setPage] = useState(0);
     const [resources, setResources] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
-    const navigate = useNavigate();
+    const router = useRouter();
 
     const loadItems = useCallback(
         p => {
@@ -51,6 +60,7 @@ const Items = props => {
                 getStatementsBySubjects({
                     ids: result.content.map(c => c.id),
                 })
+                    .then(statements => addAuthorsToStatementBundle(statements))
                     .then(resourcesStatements => {
                         let newResources = resourcesStatements.map(resourceStatements => {
                             const resourceSubject = find(result.content, { id: resourceStatements.id });
@@ -118,7 +128,7 @@ const Items = props => {
 
     const comparePapers = () => {
         const contributionIds = flatten(resources.filter(r => selectedItems.includes(r.id))?.map(c => c.contributions?.map(c => c.id)));
-        navigate(`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionIds.join(',')}`);
+        router.push(`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionIds.join(',')}`);
     };
 
     useEffect(() => {

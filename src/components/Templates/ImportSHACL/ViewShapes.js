@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import Tippy from '@tippyjs/react';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { ENTITIES } from 'constants/graphSettings';
@@ -5,7 +6,6 @@ import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { Fragment } from 'react';
-import { Link } from 'react-router-dom';
 import pluralize from 'pluralize';
 import { AccordionBody, AccordionHeader, AccordionItem, Badge, Table } from 'reactstrap';
 
@@ -47,7 +47,7 @@ const ViewShapes = ({ data }) => (
                                 <tr>
                                     <th scope="row">Existing template</th>
                                     <td>
-                                        <Link target="_blank" to={reverse(ROUTES.TEMPLATE, { id: nodesShape.existingTemplateId })}>
+                                        <Link target="_blank" href={reverse(ROUTES.TEMPLATE, { id: nodesShape.existingTemplateId })}>
                                             {nodesShape.existingTemplateId}
                                         </Link>
                                     </td>
@@ -60,7 +60,7 @@ const ViewShapes = ({ data }) => (
                                 <td>
                                     {nodesShape.targetClass.id ? (
                                         <DescriptionTooltip id={nodesShape.targetClass.id} _class={ENTITIES.CLASS}>
-                                            <Link target="_blank" to={reverse(ROUTES.CLASS, { id: nodesShape.targetClass.id })}>
+                                            <Link target="_blank" href={reverse(ROUTES.CLASS, { id: nodesShape.targetClass.id })}>
                                                 {nodesShape.targetClass.label}
                                             </Link>
                                         </DescriptionTooltip>
@@ -88,7 +88,7 @@ const ViewShapes = ({ data }) => (
                                         <>
                                             {nodesShape.templatePredicate?.id ? (
                                                 <DescriptionTooltip id={nodesShape.templatePredicate.id} _class={ENTITIES.PREDICATE}>
-                                                    <Link target="_blank" to={reverse(ROUTES.PROPERTY, { id: nodesShape.templatePredicate.id })}>
+                                                    <Link target="_blank" href={reverse(ROUTES.PROPERTY, { id: nodesShape.templatePredicate.id })}>
                                                         {nodesShape.templatePredicate.label}
                                                     </Link>
                                                 </DescriptionTooltip>
@@ -109,7 +109,7 @@ const ViewShapes = ({ data }) => (
                                                     <Fragment key={researchField.id}>
                                                         {researchField?.id ? (
                                                             <DescriptionTooltip id={researchField.id} _class={ENTITIES.RESOURCE}>
-                                                                <Link target="_blank" to={reverse(ROUTES.RESOURCE, { id: researchField.id })}>
+                                                                <Link target="_blank" href={reverse(ROUTES.RESOURCE, { id: researchField.id })}>
                                                                     {researchField.label}
                                                                 </Link>
                                                             </DescriptionTooltip>
@@ -133,7 +133,7 @@ const ViewShapes = ({ data }) => (
                                                     <Fragment key={researchProblem.id}>
                                                         {researchProblem?.id ? (
                                                             <DescriptionTooltip id={researchProblem.id} _class={ENTITIES.RESOURCE}>
-                                                                <Link target="_blank" to={reverse(ROUTES.RESOURCE, { id: researchProblem.id })}>
+                                                                <Link target="_blank" href={reverse(ROUTES.RESOURCE, { id: researchProblem.id })}>
                                                                     {researchProblem.label}
                                                                 </Link>
                                                             </DescriptionTooltip>
@@ -168,7 +168,7 @@ const ViewShapes = ({ data }) => (
                                     <td>
                                         {propertyShape.property?.id ? (
                                             <DescriptionTooltip id={propertyShape.property.id} _class={ENTITIES.PREDICATE}>
-                                                <Link target="_blank" to={reverse(ROUTES.PROPERTY, { id: propertyShape.property.id })}>
+                                                <Link target="_blank" href={reverse(ROUTES.PROPERTY, { id: propertyShape.property.id })}>
                                                     {propertyShape.property.label}
                                                 </Link>
                                             </DescriptionTooltip>
@@ -181,7 +181,7 @@ const ViewShapes = ({ data }) => (
                                             <>
                                                 {propertyShape.range.id ? (
                                                     <DescriptionTooltip id={propertyShape.range.id} _class={ENTITIES.CLASS}>
-                                                        <Link target="_blank" to={reverse(ROUTES.CLASS, { id: propertyShape.range.id })}>
+                                                        <Link target="_blank" href={reverse(ROUTES.CLASS, { id: propertyShape.range.id })}>
                                                             {propertyShape.range.label}
                                                         </Link>
                                                     </DescriptionTooltip>

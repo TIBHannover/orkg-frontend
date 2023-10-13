@@ -5,7 +5,7 @@ import AuthorsContentLoader from 'components/TopAuthors/AuthorsContentLoader';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { Alert, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import useResearchProblemAuthors from './hooks/useTopAuthors';
+import useResearchProblemAuthors from 'components/TopAuthors/hooks/useTopAuthors';
 
 const ResearchProblemAuthorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
     const { authors, isLoading, isLast, loadNext } = useResearchProblemAuthors({

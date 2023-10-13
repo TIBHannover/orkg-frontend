@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { Button } from 'reactstrap';
-import { useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
 import { SearchStyled, InputStyled, SearchButtonStyled } from 'components/styled';
 
 const HeaderSearchButton = ({ placeholder, type, userId }) => {
@@ -14,7 +14,7 @@ const HeaderSearchButton = ({ placeholder, type, userId }) => {
     const [value, setValue] = useState('');
     const refContainer = useRef(null);
     const refInput = useRef(null);
-    const navigate = useNavigate();
+    const router = useRouter();
 
     useEffect(() => {
         if (isSearchOpen && refInput.current) {
@@ -42,7 +42,7 @@ const HeaderSearchButton = ({ placeholder, type, userId }) => {
     };
 
     const goToResults = () => {
-        navigate(`${reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) })}?types=${type ?? ''}&createdBy=${userId ?? ''}`);
+        router.push(`${reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) })}?types=${type ?? ''}&createdBy=${userId ?? ''}`);
     };
 
     return isSearchOpen ? (

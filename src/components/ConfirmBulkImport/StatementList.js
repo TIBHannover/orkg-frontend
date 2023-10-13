@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -6,7 +7,6 @@ import { getConfigByType } from 'constants/DataTypes';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { Badge, ListGroup } from 'reactstrap';
 
 const ListStatements = ({ property, idToLabel, values, validationErrors = [] }) => (
@@ -16,7 +16,7 @@ const ListStatements = ({ property, idToLabel, values, validationErrors = [] }) 
                 <div>
                     <span className="propertyLabel">
                         {idToLabel[property] ? (
-                            <Link to={reverse(ROUTES.PROPERTY, { id: property })} target="_blank">
+                            <Link href={reverse(ROUTES.PROPERTY, { id: property })} target="_blank">
                                 {idToLabel[property]}
                             </Link>
                         ) : (
@@ -34,7 +34,7 @@ const ListStatements = ({ property, idToLabel, values, validationErrors = [] }) 
                             <div className="d-inline">
                                 {'@id' in value && idToLabel[value['@id']] && (
                                     <>
-                                        <Link to={`${reverse(ROUTES.RESOURCE, { id: value['@id'] })}?noRedirect`} target="_blank">
+                                        <Link href={`${reverse(ROUTES.RESOURCE, { id: value['@id'] })}?noRedirect`} target="_blank">
                                             {idToLabel[value['@id']]}
                                         </Link>
                                         <Badge color="light" className="ms-2">

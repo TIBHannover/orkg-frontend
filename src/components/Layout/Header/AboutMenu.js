@@ -1,9 +1,9 @@
+import Link from 'components/NextJsMigration/Link';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { NavLink as RouterNavLink } from 'react-router-dom';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import { getAboutPageCategories, getAboutPages } from 'services/cms';
 import { reverseWithSlug } from 'utils';
@@ -11,6 +11,7 @@ import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { groupBy, get } from 'lodash';
 import ContentLoader from 'react-content-loader';
+import usePathname from 'components/NextJsMigration/usePathname';
 
 const StyledButtonDropdown = styled(UncontrolledButtonDropdown)`
     @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
@@ -26,6 +27,7 @@ const AboutMenu = ({ closeMenu }) => {
     const [items, setItems] = useState([]);
     const [categories, setCategories] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const pathname = usePathname();
 
     useEffect(() => {
         const getItems = async () => {
@@ -46,7 +48,6 @@ const AboutMenu = ({ closeMenu }) => {
                     </ContentLoader>
                 </DropdownItem>
             )}
-
             {!isLoading &&
                 categories.map(category => {
                     const subItems = items[category.id];
@@ -54,10 +55,11 @@ const AboutMenu = ({ closeMenu }) => {
                         return items.main.map(({ id, title }) => (
                             <DropdownItem
                                 key={id}
-                                tag={RouterNavLink}
+                                tag={Link}
                                 exact
-                                to={reverseWithSlug(ROUTES.ABOUT, { id, slug: title })}
+                                href={reverseWithSlug(ROUTES.ABOUT, { id, slug: title })}
                                 onClick={() => closeMenu()}
+                                active={pathname === reverseWithSlug(ROUTES.ABOUT, { id, slug: title })}
                             >
                                 {title}
                             </DropdownItem>
@@ -67,22 +69,22 @@ const AboutMenu = ({ closeMenu }) => {
                         <StyledButtonDropdown key={category.attributes.label} direction="right" className="w-100 nav inNavbar">
                             <DropdownToggle
                                 onClick={() => (subItems.length > 0 ? null : closeMenu())}
-                                to={reverse(ROUTES.ABOUT_NO_SLUG_ID, {})}
-                                tag={subItems.length > 0 ? 'button' : RouterNavLink}
+                                href={reverse(ROUTES.ABOUT_NO_SLUG_ID, {})}
+                                tag={subItems.length > 0 ? 'button' : Link}
                                 className="dropdown-item w-100"
                             >
                                 {category.attributes.label}{' '}
                                 {subItems.length > 0 && <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />}
                             </DropdownToggle>
-
                             {subItems.length > 0 && (
                                 <DropdownMenu>
                                     {subItems.map(({ id, attributes: { title } }) => (
                                         <DropdownItem
                                             key={id}
-                                            tag={RouterNavLink}
+                                            tag={Link}
                                             end
-                                            to={reverseWithSlug(ROUTES.ABOUT, { id, slug: title })}
+                                            href={reverseWithSlug(ROUTES.ABOUT, { id, slug: title })}
+                                            active={pathname === reverseWithSlug(ROUTES.ABOUT, { id, slug: title })}
                                             onClick={() => closeMenu()}
                                         >
                                             {title}

@@ -13,7 +13,7 @@ import {
     getStatementsBySubject,
     updateStatement,
 } from 'services/backend/statements';
-import { updateAuthors } from 'components/Input/AuthorsInput/helpers';
+import { updateAuthorsList } from 'components/Input/AuthorsInput/helpers';
 
 const useEditPaper = ({ paperData, afterUpdate }) => {
     const [title, setTitle] = useState('');
@@ -34,6 +34,8 @@ const useEditPaper = ({ paperData, afterUpdate }) => {
         setIsLoadingEdit(true);
         const paper = await getResource(id);
         const paperStatements = await getStatementsBySubject({ id });
+        const authorList = paperStatements.find(_statement => _statement.predicate.id === PREDICATES.HAS_AUTHORS);
+        const authorStatements = await getStatementsBySubject({ id: authorList?.object?.id, sortBy: 'index', desc: false });
         const _isVerified = await getIsVerified(id).catch(() => false);
 
         const data = {
@@ -58,14 +60,9 @@ const useEditPaper = ({ paperData, afterUpdate }) => {
                     statementId: property.id === PREDICATES.HAS_RESEARCH_FIELD || property.id === PREDICATES.HAS_VENUE ? statementId : undefined,
                 };
             }
-            if (property.id === PREDICATES.HAS_AUTHOR) {
-                data.authors.push({
-                    ...object,
-                    statementId,
-                });
-            }
         }
-        data.authors.reverse();
+        data.authors = authorStatements.map(statement => statement.object);
+        data.authorListResource = authorList?.object;
         setIsLoadingEdit(false);
         return data;
     };
@@ -135,7 +132,11 @@ const useEditPaper = ({ paperData, afterUpdate }) => {
             updateResource(paperId, title);
 
             // authors
-            updatedData.authors = await updateAuthors({ prevAuthors: paperData.authors, newAuthors: authors, resourceId: paperId });
+            updatedData.authors = await updateAuthorsList({
+                prevAuthors: paperData.authors,
+                newAuthors: authors,
+                listId: paperData?.authorListResource?.id,
+            });
 
             if (publishedIn?.statementId && publishedIn?.id) {
                 // update venue

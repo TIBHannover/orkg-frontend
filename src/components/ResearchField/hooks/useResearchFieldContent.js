@@ -3,10 +3,10 @@ import ROUTES from 'constants/routes.js';
 import { find, flatten } from 'lodash';
 import { reverse } from 'named-urls';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
 import { getContentByResearchFieldIdAndClasses } from 'services/backend/researchFields';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate, reverseWithSlug } from 'utils';
+import { addAuthorsToStatementBundle, getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate, reverseWithSlug } from 'utils';
 
 function useResearchFieldContent({
     researchFieldId,
@@ -28,7 +28,7 @@ function useResearchFieldContent({
     const [classesFilter, setClassesFilter] = useState(initClassesFilter);
     const [totalElements, setTotalElements] = useState(0);
     const [includeSubFields, setIncludeSubFields] = useState(initialIncludeSubFields);
-    const navigate = useNavigate();
+    const router = useRouter();
 
     const loadData = useCallback(
         (page, total) => {
@@ -83,6 +83,7 @@ function useResearchFieldContent({
                     getStatementsBySubjects({
                         ids: result.content.map(p => p.id),
                     })
+                        .then(statements => addAuthorsToStatementBundle(statements))
                         .then(contentsStatements => {
                             const dataObjects = contentsStatements.map(statements => {
                                 const resourceSubject = find(result.content, {
@@ -138,7 +139,7 @@ function useResearchFieldContent({
     // update url
     useEffect(() => {
         if (updateURL) {
-            navigate(
+            router.push(
                 `${
                     slug
                         ? reverseWithSlug(ROUTES.RESEARCH_FIELD, {
@@ -152,7 +153,7 @@ function useResearchFieldContent({
                 { replace: true },
             );
         }
-    }, [researchFieldId, sort, includeSubFields, classesFilter, navigate, updateURL, slug]);
+    }, [researchFieldId, sort, includeSubFields, classesFilter, updateURL, slug]);
 
     useEffect(() => {
         loadData(0);

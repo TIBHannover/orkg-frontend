@@ -6,8 +6,8 @@ import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import pluralize from 'pluralize';
-import ResearchProblemAuthorsModal from './ResearchProblemAuthorsModal';
-import useResearchProblemAuthors from './hooks/useTopAuthors';
+import ResearchProblemAuthorsModal from 'components/TopAuthors/ResearchProblemAuthorsModal';
+import useResearchProblemAuthors from 'components/TopAuthors/hooks/useTopAuthors';
 
 const AuthorsBox = ({ researchProblemId }) => {
     const { authors, isLoading } = useResearchProblemAuthors({ researchProblemId, pageSize: 4 });

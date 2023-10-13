@@ -1,6 +1,6 @@
-import html from './paper.html';
-import './paper.css';
-import img from './logo.png';
+import html from 'src/views/paper.html';
+import 'src/views/paper.css';
+import img from 'src/views/logo.png';
 
 const dictionary = {
     add: {
@@ -17,38 +17,35 @@ const dictionary = {
     },
 };
 
-export const getPaperByDoi = doi => {
+export const getItemByDoi = doi => {
     // http://localhost:8000/api/widgets/?doi=10.1007/s00799-015-0158-y
-    const url = process.env.BACKEND_URL + 'widgets/?doi=' + encodeURIComponent(doi);
+    const url = `${process.env.BACKEND_URL}widgets/?doi=${encodeURIComponent(doi)}`;
     return new Promise((resolve, reject) => {
         fetch(url)
             .then(response => {
                 if (!response.ok) {
-                    reject({
-                        error: new Error(`Error response. (${response.status}) ${response.statusText}`),
-                        statusCode: response.status,
-                        statusText: response.statusText,
-                    });
+                    const error = new Error(`Error response. (${response.status}) ${response.statusText}`);
+                    error.statusCode = response.status;
+                    error.statusText = response.statusText;
+                    reject(error);
                 } else {
-                    const json = response.json();
-                    if (json.then) {
-                        json.then(resolve).catch(reject);
-                    } else {
-                        return resolve(json);
-                    }
+                    const jsonPromise = response.json(); // Storing the promise
+                    jsonPromise.then(resolve).catch(reject); // Resolving or rejecting based on the promise
                 }
             })
-            .catch(reject);
+            .catch(error => {
+                reject(error); // Rejecting with the caught error
+            });
     });
 };
 
 export function show(params) {
     const locations = document.getElementsByClassName('orkg-widget');
-    let language = params.language;
+    let { language } = params;
     if (!['en', 'de'].includes(params.language)) {
         language = 'en';
     }
-    for (let i = 0; i < locations.length; i++) {
+    for (let i = 0; i < locations.length; i += 1) {
         // convert plain HTML string into DOM elements
         const temporary = document.createElement('div');
         temporary.innerHTML = html;
@@ -59,19 +56,29 @@ export function show(params) {
 
         // Paper DOI
         const doi = ORKGWidget.getAttribute('data-doi');
-        getPaperByDoi(doi)
+        getItemByDoi(doi)
             .then(result => {
-                temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary['open'][language];
-                temporary.getElementsByClassName('orkg-widget-text-statements')[0].textContent = dictionary['numStatements'][language];
-                temporary.getElementsByClassName('orkg-widget-statements')[0].textContent = result.num_statements;
-                temporary.getElementsByClassName('orkg-widget-link')[0].href = process.env.FRONTEND_SERVER_URL + 'paper/' + result.id;
+                temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary.open[language];
+                temporary.getElementsByClassName('orkg-widget-text-statements')[0].textContent = dictionary.numStatements[language];
+                let url = `${process.env.FRONTEND_SERVER_URL}paper/${result.id}`;
+                if (result.class === 'Paper') {
+                    temporary.getElementsByClassName('orkg-widget-statements')[0].textContent = result.num_statements;
+                } else if (result.class === 'Comparison') {
+                    url = `${process.env.FRONTEND_SERVER_URL}comparison/${result.id}`;
+                    temporary.getElementsByClassName('orkg-widget-description')[0].style.display = 'none';
+                } else {
+                    url = `${process.env.FRONTEND_SERVER_URL}resource/${result.id}`;
+                    temporary.getElementsByClassName('orkg-widget-description')[0].style.display = 'none';
+                }
+                temporary.getElementsByClassName('orkg-widget-link')[0].href = url;
                 while (temporary.children.length > 0) {
                     ORKGWidget.appendChild(temporary.children[0]);
                 }
             })
-            .catch(error => {
-                temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary['add'][language];
-                temporary.getElementsByClassName('orkg-widget-link')[0].href = process.env.FRONTEND_SERVER_URL + 'add-paper?entry=' + doi;
+            .catch(() => {
+                temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary.add[language];
+
+                temporary.getElementsByClassName('orkg-widget-link')[0].href = `${process.env.FRONTEND_SERVER_URL}add-paper?entry=${doi}`;
                 const elem = temporary.getElementsByClassName('orkg-widget-description')[0];
                 elem.parentNode.removeChild(elem);
                 while (temporary.children.length > 0) {

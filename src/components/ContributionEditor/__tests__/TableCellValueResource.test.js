@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from 'testUtils';
-import TableCellValueResource from '../TableCellValueResource';
+import TableCellValueResource from 'components/ContributionEditor/TableCellValueResource';
 
 const setup = () => {
     const label = 'resource label';

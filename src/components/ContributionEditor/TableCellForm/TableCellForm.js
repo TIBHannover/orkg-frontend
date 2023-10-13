@@ -13,7 +13,7 @@ import ConfirmationTooltip from 'components/StatementBrowser/ConfirmationTooltip
 import Tippy from '@tippyjs/react';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
-import useTableCellForm from './hooks/useTableCellForm';
+import useTableCellForm from 'components/ContributionEditor/TableCellForm/hooks/useTableCellForm';
 
 const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
     const refContainer = useRef(null);
@@ -200,7 +200,15 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                     closeForm?.(false);
                                 }}
                                 onNewItemSelected={label => {
-                                    dispatch(addValue(entityType, { label, selected: false }, valueClass, contributionId, propertyId));
+                                    dispatch(
+                                        addValue(
+                                            entityType,
+                                            { label, selected: false, datatype: getDataType() },
+                                            valueClass,
+                                            contributionId,
+                                            propertyId,
+                                        ),
+                                    );
                                     closeForm?.(false);
                                 }}
                                 ols={!valueClass}
@@ -255,6 +263,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                             valueType={inputDataType}
                             setValueType={handleSetValueType}
                             menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
+                            syncBackend={true}
                         />
                     </InputGroup>
                 </span>

@@ -2,7 +2,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert } from 'react
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
-import { generateGraphMLFile, generateJSONFile } from './helpers';
+import { generateGraphMLFile, generateJSONFile } from 'components/DiagramEditor/helpers';
 
 function ExportDiagram({ isExportDiagramModalOpen, setIsExportDiagramModalOpen, diagram, diagramResource }) {
     return (

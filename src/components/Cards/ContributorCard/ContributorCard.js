@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'components/NextJsMigration/Link';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Gravatar from 'react-gravatar';
@@ -16,12 +16,12 @@ const StyledGravatar = styled(Gravatar)`
 const ContributorCard = ({ contributor, showStatsDetails = false, options }) => (
     <div>
         <div className="d-flex flex-row">
-            <Link className="justify-content-center align-self-center" to={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
+            <Link className="justify-content-center align-self-center" href={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
                 <StyledGravatar className="rounded-circle" style={{ border: '3px solid #fff' }} md5={contributor.gravatar_id} size={50} />
             </Link>
             <div className="d-flex justify-content-center" style={{ marginLeft: '10px', flexDirection: 'column' }}>
                 <div>
-                    <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>{contributor.display_name}</Link>
+                    <Link href={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>{contributor.display_name}</Link>
                 </div>
                 {contributor.subTitle && (
                     <div>

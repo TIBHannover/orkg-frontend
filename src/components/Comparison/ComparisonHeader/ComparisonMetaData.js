@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
@@ -12,7 +13,7 @@ import ROUTES from 'constants/routes.js';
 import moment from 'moment';
 import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
 import { Alert, Badge } from 'reactstrap';
 
 const ComparisonMetaData = () => {
@@ -24,13 +25,13 @@ const ComparisonMetaData = () => {
     const isFailedLoadingResult = useSelector(state => state.comparison.isFailedLoadingResult);
     const errors = useSelector(state => state.comparison.errors);
     const contributionsList = useSelector(state => state.comparison.configuration.contributionsList);
-    const navigate = useNavigate();
+    const router = useRouter();
 
     /**
      * Is case of an error the user can go to the previous link in history
      */
     const handleGoBack = () => {
-        navigate(-1);
+        router.push(-1);
     };
 
     const isDoubleBlind =
@@ -89,14 +90,13 @@ const ComparisonMetaData = () => {
                                     >
                                         Go back
                                     </span>{' '}
-                                    or <Link to={ROUTES.HOME}>go to the homepage</Link>.
+                                    or <Link href={ROUTES.HOME}>go to the homepage</Link>.
                                 </>
                             )}
                         </Alert>
                     )}
                 </div>
             )}
-
             {!!comparisonResource.id && !isFailedLoadingMetadata && !isFailedLoadingResult && (
                 <div className="pt-2 pb-3">
                     <div className="p-0 d-flex align-items-start">

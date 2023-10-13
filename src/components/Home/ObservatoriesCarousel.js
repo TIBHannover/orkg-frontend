@@ -1,6 +1,6 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { Carousel, CarouselItem, Card, CardBody, CardFooter, CardTitle, CardSubtitle } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import Dotdotdot from 'react-dotdotdot';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -85,7 +85,7 @@ function ObservatoriesCarousel(props) {
             <CarouselItem onExiting={() => setAnimating(true)} onExited={() => setAnimating(false)} className="pb-1 mb-4" key={`fp${observatory.id}`}>
                 <ObservatoryCardStyled className="">
                     <Card style={{ border: 0 }}>
-                        <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })} style={{ textDecoration: 'none' }}>
+                        <Link href={reverse(ROUTES.OBSERVATORY, { id: observatory.id })} style={{ textDecoration: 'none' }}>
                             <CardBody className="pt-0 mb-0">
                                 <CardTitle tag="h5">{observatory.name}</CardTitle>
                                 <CardSubtitle tag="h6" style={{ height: '20px' }} className="mb-1 text-muted">
@@ -96,7 +96,7 @@ function ObservatoriesCarousel(props) {
                         <div className="mt-3 mb-3 ps-2 pe-2">
                             <Link
                                 className="text-center d-flex"
-                                to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}
+                                href={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}
                                 style={{ textDecoration: 'none', height: '80px', width: '100%', overflow: 'hidden' }}
                             >
                                 {observatory.orgs.slice(0, 2).map(
@@ -119,7 +119,7 @@ function ObservatoriesCarousel(props) {
                             <div className="float-end" style={{ height: '25px' }}>
                                 {observatory.members.slice(0, 5).map(contributor => (
                                     <Tippy key={`contributor${contributor.id}`} content={contributor.display_name}>
-                                        <Link className="ms-1" to={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
+                                        <Link className="ms-1" href={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
                                             <StyledGravatar className="rounded-circle" md5={contributor.gravatar_id} size={24} />
                                         </Link>
                                     </Tippy>

@@ -91,9 +91,7 @@ export const StyledButton = styled(Button)`
     }
 `;
 
-export const StyledDropdownToggle = styled(DropdownToggle).withConfig({
-    shouldForwardProp: prop => !['disableBorderRadiusLeft', 'disableBorderRadiusRight'].includes(prop),
-})`
+export const StyledDropdownToggle = styled(DropdownToggle)`
     border-top-left-radius: ${props => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
     border-bottom-left-radius: ${props => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
     border-top-right-radius: ${props => (props.disableBorderRadiusRight ? '0' : '4px !important')};
@@ -108,7 +106,9 @@ export const StyledDropdownToggle = styled(DropdownToggle).withConfig({
     }
 `;
 
-export const ValueItemStyle = styled(ListGroupItem)`
+export const ValueItemStyle = styled.li.attrs({
+    className: 'list-group-item', // refs are not passed correctly by reactstrap, so instead of using ListGroupItem, we manually apply the class
+})`
     background-color: #fff;
     overflow-wrap: anywhere;
     padding: 8px 0px !important;

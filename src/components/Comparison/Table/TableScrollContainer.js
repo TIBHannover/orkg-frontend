@@ -6,7 +6,7 @@ import { ScrollSync } from 'react-scroll-sync';
 import useResizeObserver from 'use-resize-observer';
 import PropTypes from 'prop-types';
 import { useMedia } from 'react-use';
-import { ClickableScrollButton, ReactTableWrapper, ScrollButton } from '../styled';
+import { ClickableScrollButton, ReactTableWrapper, ScrollButton } from 'components/Comparison/styled';
 
 const SCROLL_AMOUNT = 500;
 

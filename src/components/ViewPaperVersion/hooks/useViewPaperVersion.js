@@ -2,8 +2,8 @@ import { useEffect, useState, useCallback } from 'react';
 import { getStatementsBundleBySubject } from 'services/backend/statements';
 import { getResource } from 'services/backend/resources';
 import { useDispatch } from 'react-redux';
-import { loadPaper, setPaperAuthors } from 'slices/viewPaperSlice';
-import { getPaperDataViewPaper, filterObjectOfStatementsByPredicateAndClass, filterSubjectOfStatementsByPredicateAndClass } from 'utils';
+import { loadPaper } from 'slices/viewPaperSlice';
+import { getPaperDataViewPaper, filterSubjectOfStatementsByPredicateAndClass } from 'utils';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { getVisualization } from 'services/similarity';
 import { uniqBy } from 'lodash';
@@ -15,24 +15,6 @@ const useViewPaperVersion = ({ paperId }) => {
     const dispatch = useDispatch();
     const [contributions, setContributions] = useState([]);
     const [paperStatements, setPaperStatements] = useState([]);
-
-    const setAuthorsORCID = useCallback(
-        (pStatements, pId) => {
-            let authorsArray = [];
-            const paperAuthors = filterObjectOfStatementsByPredicateAndClass(pStatements, PREDICATES.HAS_AUTHOR, false, null, pId);
-            for (const author of paperAuthors) {
-                const orcid = pStatements.find(s => s.subject.id === author.id && s.predicate.id === PREDICATES.HAS_ORCID);
-                if (orcid) {
-                    authorsArray.push({ ...author, orcid: orcid.object.label });
-                } else {
-                    authorsArray.push({ ...author, orcid: '' });
-                }
-            }
-            authorsArray = authorsArray.length ? authorsArray.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [];
-            dispatch(setPaperAuthors(authorsArray));
-        },
-        [dispatch],
-    );
 
     const loadPaperData = useCallback(() => {
         setIsLoading(true);
@@ -54,14 +36,10 @@ const useViewPaperVersion = ({ paperId }) => {
                     );
                     setContributions(uniqBy(contributionsNodes, 'id').reverse());
                 });
-                const pStatements = await getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD] });
-                const paperData = getPaperDataViewPaper(
-                    paperResource,
-                    pStatements.statements?.filter(s => s.subject.id === paperId),
-                );
+                const pStatements = await getStatementsBundleBySubject({ id: paperId, maxLevel: 3, blacklist: [CLASSES.RESEARCH_FIELD] });
+                const paperData = getPaperDataViewPaper(paperResource, pStatements.statements);
                 const livePaperId = await getOriginalPaperId(paperId);
                 dispatch(loadPaper({ ...paperData, originalPaperId: livePaperId }));
-                setAuthorsORCID(pStatements.statements, paperId);
                 setIsLoading(false);
                 document.title = paperData.paperResource.label;
             })
@@ -69,7 +47,7 @@ const useViewPaperVersion = ({ paperId }) => {
                 setIsLoadingFailed(true);
                 setIsLoading(false);
             });
-    }, [dispatch, paperId, setAuthorsORCID]);
+    }, [dispatch, paperId]);
 
     useEffect(() => {
         loadPaperData();

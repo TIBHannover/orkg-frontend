@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import AddPropertyView from './AddPropertyView';
-import useAddProperty from './hooks/useAddProperty';
+import AddPropertyView from 'components/StatementBrowser/AddProperty/AddPropertyView';
+import useAddProperty from 'components/StatementBrowser/AddProperty/hooks/useAddProperty';
 
 const AddProperty = props => {
     const {

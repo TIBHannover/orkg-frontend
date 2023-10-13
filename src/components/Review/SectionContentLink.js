@@ -15,6 +15,7 @@ import { toast } from 'react-toastify';
 import { Alert, Button } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 import { getStatementsByObjectAndPredicate, getStatementsBySubjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
+import { addAuthorsToStatements, getPaperData } from 'utils';
 
 const SectionContentLink = props => {
     const dispatch = useDispatch();
@@ -89,19 +90,17 @@ const SectionContentLink = props => {
             (await getStatementsBySubjects({ ids: paperIds })).flatMap(({ statements }) => statements),
             'subject.id',
         );
-
         for (const statements of Object.values(statementsByPaper)) {
+            const statementsWithAuthors = await addAuthorsToStatements(statements);
             const paper = statements[0]?.subject;
             if (paper) {
+                const paperData = getPaperData(paper, statementsWithAuthors);
                 const bibJson = {
-                    id: paper.id,
-                    title: paper.label,
-                    author: statements
-                        .filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR)
-                        .map(statement => ({ name: statement.object.label })),
-                    year: statements?.find(statement => statement.predicate.id === PREDICATES.HAS_PUBLICATION_YEAR)?.object?.label,
+                    id: paperData.id,
+                    title: paperData.label,
+                    author: paperData.authors?.map(author => ({ name: author.label })),
+                    year: paperData.publicationYear?.label,
                 };
-
                 const parsedReference = await Cite.async(bibJson);
                 const parsedReferenceData = parsedReference?.data?.[0];
                 if (!parsedReferenceData) {
@@ -111,7 +110,6 @@ const SectionContentLink = props => {
                 const bibtex = parsedReference.format('bibtex'); // use the paper ID as key, so we can identify it to add in the _usedReferences later
                 parsedReferenceData.id = paper.id; // set citation-label, later used to get the citation key
                 const isExistingReference = references.find(reference => reference?.parsedReference?.id === paper.id);
-
                 if (!isExistingReference) {
                     dispatch(createReference({ contributionId, bibtex, parsedReference: parsedReferenceData }));
                 }

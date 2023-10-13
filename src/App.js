@@ -15,7 +15,7 @@ import { useRoutes } from 'react-router-dom';
 import { detect } from 'detect-browser';
 import ScrollToTop from 'components/ScrollToTop';
 import { Alert } from 'reactstrap';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import { Helmet } from 'react-helmet';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
 

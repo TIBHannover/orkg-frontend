@@ -1,5 +1,5 @@
 import { render, screen } from 'testUtils';
-import App from './App';
+import App from 'App';
 
 jest.mock('d3-hierarchy', () => ({
     stratify: jest.fn().mockImplementation(() => [jest.fn(), jest.fn(), jest.fn()]),
@@ -11,11 +11,6 @@ jest.mock('d3-hierarchy', () => ({
         treeMock.separation = separationMock; // Assign the separation mock function to the tree mock
         return treeMock;
     }),
-}));
-
-jest.mock('react-dnd', () => ({
-    useDrag: jest.fn().mockImplementation(() => [jest.fn(), jest.fn(), jest.fn()]),
-    useDrop: jest.fn().mockImplementation(() => [jest.fn(), jest.fn(), jest.fn()]),
 }));
 
 window.scrollTo = jest.fn();

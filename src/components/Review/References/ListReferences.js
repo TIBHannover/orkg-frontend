@@ -1,7 +1,7 @@
 import { Cite } from '@citation-js/core';
+import useParams from 'components/NextJsMigration/useParams';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import { Alert } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -27,7 +27,7 @@ const ListReferences = () => {
     const usedReferences = useSelector(state => state.review.usedReferences);
     const isEditing = useSelector(state => state.review.isEditing);
     const [bibliography, setBibliography] = useState(null);
-    const location = useLocation();
+    const params = useParams();
     const [error, setError] = useState(false);
 
     useEffect(() => {
@@ -57,7 +57,8 @@ const ListReferences = () => {
                     format: 'html',
                     template: 'apa',
                     lang: 'en-US',
-                    prepend: data => `<li  class="${location.hash === `#reference${data.id}` ? 'blink-figure' : ''}" id="reference${data.id}">`,
+                    prepend: data =>
+                        `<li  class="${window?.location?.hash === `#reference${data.id}` ? 'blink-figure' : ''}" id="reference${data.id}">`,
                     append: () => '</li>',
                 });
 
@@ -68,7 +69,7 @@ const ListReferences = () => {
             }
         };
         parseBibtex();
-    }, [bibliography, location.hash, usedReferences]);
+    }, [bibliography, params, usedReferences]);
 
     return (
         <>

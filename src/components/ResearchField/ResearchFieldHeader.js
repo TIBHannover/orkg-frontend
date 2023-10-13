@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Badge } from 'reactstrap';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
@@ -8,7 +9,6 @@ import { faPen, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
 import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
 import Contributors from 'components/TopContributors/Contributors';
-import { NavLink, Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import { useSelector } from 'react-redux';
 import ROUTES from 'constants/routes.js';
@@ -102,7 +102,7 @@ const ResearchFieldHeader = ({ id }) => {
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu end>
-                                        <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
+                                        <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>
@@ -138,7 +138,7 @@ const ResearchFieldHeader = ({ id }) => {
                                     {_subResearchFields.map(subfield => (
                                         <Link
                                             key={`index${subfield.id}`}
-                                            to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                            href={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
                                                 researchFieldId: subfield.id,
                                                 slug: subfield.label,
                                             })}

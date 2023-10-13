@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import theme from 'assets/scss/ThemeVariables';
 import { ThemeProvider } from 'styled-components';
-import NewClassConfirmationModal from './NewClassConfirmationModal';
+import NewClassConfirmationModal from 'components/ConfirmationModal/NewClassConfirmationModal';
 
 const confirm = props =>
     new Promise(resolve => {

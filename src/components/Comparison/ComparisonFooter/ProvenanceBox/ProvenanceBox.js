@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { Row, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -5,7 +6,6 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 import useCreator from 'components/Comparison/hooks/useCreator';
 import useProvenance from 'components/Comparison/hooks/useProvenance';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import styled from 'styled-components';
@@ -82,9 +82,9 @@ function ProvenanceBox() {
                                 </p>
                                 <h4 className="mb-3">
                                     {observatory?.metadata ? (
-                                        <Link to={reverse(ROUTES.EVENT_SERIES, { id: observatory.display_id })}>{observatory.name}</Link>
+                                        <Link href={reverse(ROUTES.EVENT_SERIES, { id: observatory.display_id })}>{observatory.name}</Link>
                                     ) : (
-                                        <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}>{observatory.name}</Link>
+                                        <Link href={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}>{observatory.name}</Link>
                                     )}
                                 </h4>
                             </>
@@ -112,7 +112,7 @@ function ProvenanceBox() {
                             <StyledOrganizationCard className="card h-100 border-0">
                                 <Link
                                     className="logoContainer"
-                                    to={reverse(ROUTES.ORGANIZATION, {
+                                    href={reverse(ROUTES.ORGANIZATION, {
                                         type: ORGANIZATIONS_TYPES.find(t => t.id === observatory.organization.type)?.label,
                                         id: observatory.organization.display_id,
                                     })}

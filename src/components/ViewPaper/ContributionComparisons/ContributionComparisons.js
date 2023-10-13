@@ -4,7 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import useContributionComparison from './hooks/useContributionComparison';
+import useContributionComparison from 'components/ViewPaper/ContributionComparisons/hooks/useContributionComparison';
 
 const Title = styled.div`
     font-size: 18px;

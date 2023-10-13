@@ -3,10 +3,16 @@ import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getResource } from 'services/backend/resources';
-import { getStatementsBundleBySubject, getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
+import {
+    getStatementsBundleBySubject,
+    getStatementsByObjectAndPredicate,
+    getStatementsBySubjectAndPredicate,
+    getStatementsBySubjects,
+} from 'services/backend/statements';
 import { getResourceData } from 'services/similarity';
 import { countBy, orderBy } from 'lodash';
 import { Cite } from '@citation-js/core';
+import { filterObjectOfStatementsByPredicateAndClass, getAuthorsInList } from 'utils';
 
 const useLoad = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -24,13 +30,77 @@ const useLoad = () => {
         setIsLoading(false);
     };
 
+    const getVersions = async paperId => {
+        const statements = await getStatementsByObjectAndPredicate({ objectId: paperId, predicateId: PREDICATES.HAS_PAPER });
+        const ids = statements.map(version => version.subject.id);
+
+        if (ids.length === 0) {
+            return [];
+        }
+        const versionsStatements = await getStatementsBySubjects({ ids });
+
+        return versionsStatements
+            .map(versionSubject => ({
+                ...versionSubject.statements.find(
+                    statement =>
+                        statement.subject.classes.includes(CLASSES.SMART_REVIEW_PUBLISHED) && statement.predicate.id === PREDICATES.DESCRIPTION,
+                ),
+            }))
+            .map(statement => ({
+                id: statement.subject.id,
+                date: statement.subject.created_at,
+                description: statement.object.label,
+                creator: statement.object.created_by,
+            }));
+    };
+
+    const getObjectsByPredicateAndSubject = (statements, predicateId, subjectId) =>
+        statements
+            .filter(statement => statement.predicate.id === predicateId && statement.subject.id === subjectId)
+            .map(statement => statement.object);
+
+    const getStatementsBySubjectId = (statements, subjectId) => statements.filter(statement => statement.subject.id === subjectId);
+
+    const getStatementsByPredicateAndSubject = (statements, predicateId, subjectId) =>
+        statements.filter(statement => statement.subject.id === subjectId && statement.predicate.id === predicateId);
+
+    const getAllContributors = statements => {
+        if (statements.length === 0) {
+            return [];
+        }
+        const contributors = statements
+            .flatMap(statement => [statement.subject.created_by, statement.object.created_by, statement.created_by])
+            .filter(contributor => contributor !== MISC.UNKNOWN_ID);
+
+        const statementAmountPerContributor = countBy(contributors);
+        const contributorsWithPercentage = Object.keys(statementAmountPerContributor).map(contributorId => ({
+            id: contributorId,
+            percentage: Math.round((statementAmountPerContributor[contributorId] / contributors.length) * 100),
+        }));
+
+        return orderBy(contributorsWithPercentage, 'percentage', 'desc');
+    };
+
+    const getReferences = async (statements, contributionId) => {
+        const referenceStatements = statements.filter(
+            statement => statement.subject.id === contributionId && statement.predicate.id === PREDICATES.HAS_REFERENCE,
+        );
+        const parseReferences = referenceStatements.map(reference => Cite.async(reference.object.label).catch(e => console.error(e)));
+
+        return (await Promise.all(parseReferences)).map((parsedReference, index) => ({
+            parsedReference: parsedReference?.data?.[0] ?? {},
+            literal: referenceStatements[index].object,
+            statementId: referenceStatements[index].id,
+        }));
+    };
+
     const getArticleById = useCallback(async id => {
-        let paperResource = await getResource(id).catch(e => {});
+        let paperResource = await getResource(id).catch(() => {});
         let isPublished = false;
         let articleResource = null;
         if (!paperResource) {
             notFound();
-            return;
+            return null;
         }
 
         let paperStatements = [];
@@ -38,11 +108,11 @@ const useLoad = () => {
 
         // for published articles
         if (paperResource.classes.includes(CLASSES.SMART_REVIEW_PUBLISHED)) {
-            const resourceData = await getResourceData(id).catch(e => {});
+            const resourceData = await getResourceData(id).catch(() => {});
             if (!resourceData) {
-                console.log('no resource data found');
+                console.error('no resource data found');
                 notFound();
-                return;
+                return null;
             }
             const {
                 data: { rootResource, statements },
@@ -59,29 +129,31 @@ const useLoad = () => {
                 });
                 paperStatements = statements;
             } catch (e) {
-                console.log('error while bundle fetching statements', e);
+                console.error('error while bundle fetching statements', e);
                 failed();
-                return;
+                return null;
             }
         }
 
         // get all published versions for this article
         const versions = await getVersions(paperResource.id);
 
+        const doiStatements = await getStatementsBySubjectAndPredicate({ subjectId: paramId, predicateId: PREDICATES.HAS_DOI });
+        const doi = doiStatements?.[0]?.object?.label ?? null;
         const contributionResources = getObjectsByPredicateAndSubject(paperStatements, PREDICATES.HAS_CONTRIBUTION, id);
 
         if (contributionResources.length === 0) {
-            console.log('no contributions found');
+            console.error('no contributions found');
             notFound();
-            return;
+            return null;
         }
 
         const contributionResource = contributionResources.find(statement => statement.classes.includes(CLASSES.CONTRIBUTION_SMART_REVIEW));
 
         if (!contributionResource) {
-            console.log('no contribution with class "CONTRIBUTION_REVIEW" found');
+            console.error('no contribution with class "CONTRIBUTION_REVIEW" found');
             notFound();
-            return;
+            return null;
         }
 
         // get the research field
@@ -97,26 +169,38 @@ const useLoad = () => {
             };
         }
 
-        const authorStatements = getStatementsByPredicateAndSubject(paperStatements, PREDICATES.HAS_AUTHOR, id);
         const sectionResources = getObjectsByPredicateAndSubject(paperStatements, PREDICATES.HAS_SECTION, contributionResource.id);
         for (const [index, section] of sectionResources.entries()) {
             const sectionStatements = getStatementsBySubjectId(paperStatements, section.id);
             sectionResources[index].statements = sectionStatements;
         }
-        const authorResources = [];
-        // add the orcid and statement id to the author statements
-        for (const author of authorStatements) {
-            const orcidStatements = getStatementsBySubjectId(paperStatements, author.id);
-            let orcid = null;
-            if (orcidStatements.length) {
-                const orcidStatement = orcidStatements.find(statement => statement.predicate.id === PREDICATES.HAS_ORCID);
-                orcid = orcidStatement ? orcidStatement.object.label : '';
+
+        // legacy code check for when authors were still stored without lists, using PREDICATES.HAS_AUTHOR directly
+        const authorStatements = getStatementsByPredicateAndSubject(paperStatements, PREDICATES.HAS_AUTHOR, id);
+
+        let authorResources = [];
+        let authorListResource = {};
+
+        if (authorStatements.length === 0) {
+            authorResources = getAuthorsInList({ resourceId: paperResource.id, statements: paperStatements });
+            authorListResource = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHORS, false)?.[0];
+        } else {
+            // legacy author code
+            for (const author of authorStatements) {
+                const orcidStatements = getStatementsBySubjectId(paperStatements, author.id);
+                let orcid = null;
+                if (orcidStatements.length) {
+                    const orcidStatement = orcidStatements.find(statement => statement.predicate.id === PREDICATES.HAS_ORCID);
+                    orcid = orcidStatement ? orcidStatement.object.label : '';
+                }
+                authorResources.push({
+                    ...author.object,
+                    statementId: author.id,
+                    orcid: orcid || undefined,
+                });
             }
-            authorResources.push({
-                ...author.object,
-                statementId: author.id,
-                orcid: orcid || undefined,
-            });
+            authorResources = authorResources.reverse();
+            // end legacy code
         }
 
         const sections = [];
@@ -195,7 +279,8 @@ const useLoad = () => {
                 title: paperResource.label,
             },
             contributionId: contributionResource.id,
-            authorResources: authorResources.reverse(),
+            authorResources,
+            authorListResource,
             sections: sections.reverse(),
             isPublished,
             versions,
@@ -203,38 +288,9 @@ const useLoad = () => {
             statements: paperStatements,
             contributors,
             references,
+            doi,
         };
     }, []);
-
-    const getReferences = async (statements, contributionId) => {
-        const referenceStatements = statements.filter(
-            statement => statement.subject.id === contributionId && statement.predicate.id === PREDICATES.HAS_REFERENCE,
-        );
-        const parseReferences = referenceStatements.map(reference => Cite.async(reference.object.label).catch(e => console.log(e)));
-
-        return (await Promise.all(parseReferences)).map((parsedReference, index) => ({
-            parsedReference: parsedReference?.data?.[0] ?? {},
-            literal: referenceStatements[index].object,
-            statementId: referenceStatements[index].id,
-        }));
-    };
-
-    const getAllContributors = statements => {
-        if (statements.length === 0) {
-            return [];
-        }
-        const contributors = statements
-            .flatMap(statement => [statement.subject.created_by, statement.object.created_by, statement.created_by])
-            .filter(contributor => contributor !== MISC.UNKNOWN_ID);
-
-        const statementAmountPerContributor = countBy(contributors);
-        const contributorsWithPercentage = Object.keys(statementAmountPerContributor).map(contributorId => ({
-            id: contributorId,
-            percentage: Math.round((statementAmountPerContributor[contributorId] / contributors.length) * 100),
-        }));
-
-        return orderBy(contributorsWithPercentage, 'percentage', 'desc');
-    };
 
     const load = useCallback(
         async id => {
@@ -247,40 +303,6 @@ const useLoad = () => {
         },
         [dispatch, getArticleById],
     );
-
-    const getVersions = async paperId => {
-        const statements = await getStatementsByObjectAndPredicate({ objectId: paperId, predicateId: PREDICATES.HAS_PAPER });
-        const ids = statements.map(version => version.subject.id);
-
-        if (ids.length === 0) {
-            return [];
-        }
-        const versionsStatements = await getStatementsBySubjects({ ids });
-
-        return versionsStatements
-            .map(versionSubject => ({
-                ...versionSubject.statements.find(
-                    statement =>
-                        statement.subject.classes.includes(CLASSES.SMART_REVIEW_PUBLISHED) && statement.predicate.id === PREDICATES.DESCRIPTION,
-                ),
-            }))
-            .map(statement => ({
-                id: statement.subject.id,
-                date: statement.subject.created_at,
-                description: statement.object.label,
-                creator: statement.object.created_by,
-            }));
-    };
-
-    const getObjectsByPredicateAndSubject = (statements, predicateId, subjectId) =>
-        statements
-            .filter(statement => statement.predicate.id === predicateId && statement.subject.id === subjectId)
-            .map(statement => statement.object);
-
-    const getStatementsBySubjectId = (statements, subjectId) => statements.filter(statement => statement.subject.id === subjectId);
-
-    const getStatementsByPredicateAndSubject = (statements, predicateId, subjectId) =>
-        statements.filter(statement => statement.subject.id === subjectId && statement.predicate.id === predicateId);
 
     return { load, isLoading, isNotFound, getArticleById, getVersions, hasFailed };
 };

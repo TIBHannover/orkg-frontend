@@ -1,6 +1,6 @@
+import Link from 'components/NextJsMigration/Link';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import capitalize from 'capitalize';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
@@ -42,7 +42,7 @@ const OrganizationBanner = () => {
 
     return (
         <OrganizationBannerStyled>
-            <Link to={link} className="text-center">
+            <Link href={link} className="text-center">
                 <img
                     className="p-2"
                     src={getOrganizationLogoUrl(observatory.organization?.id)}

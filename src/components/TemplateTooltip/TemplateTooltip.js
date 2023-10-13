@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -6,7 +7,6 @@ import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { getTemplateById } from 'services/backend/statements';
 import format from 'string-format';
 import styled from 'styled-components';
@@ -68,7 +68,7 @@ const TemplateTooltip = props => {
                         <div className="flex-grow-1">{template.label}</div>
                         <div>
                             <Tippy content="Go to template page">
-                                <Link target="_blank" className="ms-2" to={reverse(ROUTES.TEMPLATE, { id: template.id })}>
+                                <Link target="_blank" className="ms-2" href={reverse(ROUTES.TEMPLATE, { id: template.id })}>
                                     <Icon icon={faLink} />
                                 </Link>
                             </Tippy>
@@ -94,7 +94,7 @@ const TemplateTooltip = props => {
                                 <div>
                                     <b>Target class:</b>
                                     <p>
-                                        <LinkStyled target="_blank" to={reverse(ROUTES.CLASS, { id: template.class?.id })}>
+                                        <LinkStyled target="_blank" href={reverse(ROUTES.CLASS, { id: template.class?.id })}>
                                             <i>
                                                 <span className="typeCircle">C</span> {template.class?.label}
                                             </i>
@@ -132,7 +132,7 @@ const TemplateTooltip = props => {
                                                 .map(propertyShape => <li key={`t-${propertyShape.property.id}`}>{propertyShape.property.label}</li>)}
                                     </ul>
                                     {template.propertyShapes && template.propertyShapes.length > 7 && (
-                                        <Link target="_blank" className="ms-2 mb-2 d-block" to={reverse(ROUTES.TEMPLATE, { id: template.id })}>
+                                        <Link target="_blank" className="ms-2 mb-2 d-block" href={reverse(ROUTES.TEMPLATE, { id: template.id })}>
                                             + {(template.propertyShapes?.length ?? 0) - 5} more
                                         </Link>
                                     )}

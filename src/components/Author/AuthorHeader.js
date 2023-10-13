@@ -1,17 +1,17 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { Button, Container, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import NotFound from 'pages/NotFound';
+import NotFound from 'app/not-found';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faOrcid, faLinkedin, faGoogle, faResearchgate } from '@fortawesome/free-brands-svg-icons';
 import { faExternalLinkAlt, faEllipsisV, faGlobe, faSpinner, faPen } from '@fortawesome/free-solid-svg-icons';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import useAuthor from './hooks/useAuthor';
+import useAuthor from 'components/Author/hooks/useAuthor';
 
 const AuthorHeader = ({ authorId }) => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -47,7 +47,7 @@ const AuthorHeader = ({ authorId }) => {
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu end>
-                                        <DropdownItem tag={NavLink} end to={`${reverse(ROUTES.RESOURCE, { id: authorId })}?noRedirect`}>
+                                        <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id: authorId })}?noRedirect`}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>

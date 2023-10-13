@@ -8,7 +8,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import PropTypes from 'prop-types';
-import useAddValue from './hooks/useAddValue';
+import useAddValue from 'components/StatementBrowser/AddValue/hooks/useAddValue';
 
 const AddValue = props => {
     const { modal, property, setModal, isBlankNode, entityType, dialogResourceId, dialogResourceLabel, createBlankNode } = useAddValue({

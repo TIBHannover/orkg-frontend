@@ -2,11 +2,11 @@ import { useState } from 'react';
 import Confirm from 'components/Confirmation/Confirmation';
 import { deletePredicate as deletePredicateNetwork } from 'services/backend/predicates';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
 import ROUTES from 'constants/routes.js';
 
 function useDeleteProperty({ propertyId, redirect = false }) {
-    const navigate = useNavigate();
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
 
     const deleteProperty = async () => {
@@ -22,7 +22,7 @@ function useDeleteProperty({ propertyId, redirect = false }) {
                 toast.success('Property deleted successfully');
 
                 if (redirect) {
-                    navigate(ROUTES.PROPERTIES);
+                    router.push(ROUTES.PROPERTIES);
                 }
             } catch (err) {
                 toast.error(

@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { faClipboard, faGear, faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -13,7 +14,6 @@ import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import NativeListener from 'react-native-listener';
-import { Link } from 'react-router-dom';
 import { components } from 'react-select';
 import { AsyncPaginate, withAsyncPaginate } from 'react-select-async-paginate';
 import Creatable from 'react-select/creatable';
@@ -600,9 +600,9 @@ function Autocomplete(props) {
      *
      */
     const handleCopyClick = () => {
-        if (navigator.clipboard && props.value && props.value.label) {
-            navigator.clipboard.writeText(props.value.label);
-            toast.success('Value copied');
+        if (navigator.clipboard && props.value && props.value.id) {
+            navigator.clipboard.writeText(props.value.id);
+            toast.success('ID copied to clipboard');
         }
     };
 
@@ -692,7 +692,7 @@ function Autocomplete(props) {
             </components.Menu>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [selectedOntologies.map(o => o.id).join(','), inputValue],
+        [selectedOntologies.map(o => o.id).join(','), inputValue, props.ols],
     );
 
     const Option = useCallback(({ children, ...innerProps }) => {
@@ -795,15 +795,15 @@ function Autocomplete(props) {
                     )}
                     {props.copyValueButton && props.value && props.value.id && (
                         <>
-                            <Button disabled={!props.value || !props.value.label} onClick={handleCopyClick} outline>
-                                <Tippy content="Copy the label to clipboard">
+                            <Button disabled={!props.value || !props.value.id} onClick={handleCopyClick} outline>
+                                <Tippy content="Copy the id to clipboard">
                                     <span>
                                         <Icon icon={faClipboard} size="sm" />
                                     </span>
                                 </Tippy>
                             </Button>
                             {props.linkButton && (
-                                <Link target="_blank" to={props.linkButton} className="btn btn-sm btn-outline-secondary align-items-center d-flex">
+                                <Link target="_blank" href={props.linkButton} className="btn btn-sm btn-outline-secondary align-items-center d-flex">
                                     <Tippy content={props.linkButtonTippy}>
                                         <span>
                                             <Icon icon={faLink} size="sm" />
@@ -918,7 +918,7 @@ Autocomplete.propTypes = {
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.array]),
     cssClasses: PropTypes.string,
     theme: PropTypes.object.isRequired,
-    innerRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })]),
+    innerRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
     autoLoadOption: PropTypes.bool, // Used to loadOptions by default
     openMenuOnFocus: PropTypes.bool, // whether the menu is opened when the Select is focused
     eventListener: PropTypes.bool, // Used to capture the events in handsontable

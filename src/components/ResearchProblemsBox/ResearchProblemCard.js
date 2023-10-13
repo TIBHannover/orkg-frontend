@@ -1,8 +1,8 @@
+import Link from 'components/NextJsMigration/Link';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import ROUTES from 'constants/routes.js';
-import { Link } from 'react-router-dom';
 import { reverseWithSlug } from 'utils';
 import PropTypes from 'prop-types';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
@@ -26,7 +26,7 @@ const ResearchProblemCard = props => {
                 </div>
             </div>
             <div className="flex-grow-1">
-                <Link to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: props.problem.id, slug: props.problem.label })}>
+                <Link href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: props.problem.id, slug: props.problem.label })}>
                     {props.problem.label}
                 </Link>{' '}
                 <small>

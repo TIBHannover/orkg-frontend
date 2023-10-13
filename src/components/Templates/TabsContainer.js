@@ -11,7 +11,8 @@ import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import useRouter from 'components/NextJsMigration/useRouter';
+import useParams from 'components/NextJsMigration/useParams';
 import { Badge, Container } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -31,12 +32,12 @@ function TabsContainer({ id }) {
     const targetClassId = useSelector(state => state.templateEditor.class?.id);
     const isSaving = useSelector(state => state.templateEditor.isSaving);
     const isLoading = useSelector(state => state.templateEditor.isLoading);
-    const navigate = useNavigate();
+    const router = useRouter();
 
     const { countInstances, isLoading: isLoadingCount } = useCountInstances(targetClassId);
 
     const onTabChange = key => {
-        navigate(
+        router.push(
             reverse(ROUTES.TEMPLATE_TABS, {
                 id,
                 activeTab: key,

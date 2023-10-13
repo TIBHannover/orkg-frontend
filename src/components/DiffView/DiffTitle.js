@@ -1,6 +1,6 @@
+import Link from 'components/NextJsMigration/Link';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
 
 const DiffTitle = ({ data }) => (
@@ -13,7 +13,7 @@ const DiffTitle = ({ data }) => (
                 </span>
             )}
         </span>{' '}
-        <Button color="light" size="sm" tag={Link} to={data.route ?? ''}>
+        <Button color="light" size="sm" tag={Link} href={data.route ?? ''}>
             {data.buttonText}
         </Button>
     </div>

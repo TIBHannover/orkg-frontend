@@ -1,18 +1,18 @@
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
+import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
+import Tooltip from 'components/Utils/Tooltip';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup, Alert } from 'reactstrap';
-import { createLiteralStatement, createResourceStatement } from 'services/backend/statements';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { Alert, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
-import Tooltip from 'components/Utils/Tooltip';
-import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
-import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import { createLiteralStatement, createResourceStatement } from 'services/backend/statements';
 import { addVisualization } from 'services/similarity';
-import { saveAuthors } from 'components/Input/AuthorsInput/helpers';
-import { toast } from 'react-toastify';
-import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 function PublishVisualization(props) {
     const [isLoading, setIsLoading] = useState(false);
@@ -90,7 +90,8 @@ function PublishVisualization(props) {
                         const predicateId = PREDICATES.DESCRIPTION;
                         const literalDescription = await createLiteral(description || '');
                         await createLiteralStatement(backendReferenceResource, predicateId, literalDescription.id);
-                        await saveAuthors(visualizationCreators, backendReferenceResource);
+                        await createAuthorsList({ authors: visualizationCreators, resourceId: backendReferenceResource });
+
                         const reconstructionModel = createReconstructionModel(backendReferenceResource);
                         await createReconstructionModelInBackend(backendReferenceResource, reconstructionModel);
                         setIsLoading(false);

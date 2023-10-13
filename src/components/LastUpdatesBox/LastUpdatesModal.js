@@ -1,14 +1,14 @@
+import Link from 'components/NextJsMigration/Link';
 import ContentLoader from 'react-content-loader';
 import useTopChangelog from 'components/LastUpdatesBox/hooks/useTopChangelog';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
 import { getResourceLink, getResourceTypeLabel } from 'utils';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
-import { StyledActivity } from './styled';
+import { StyledActivity } from 'components/LastUpdatesBox/styled';
 
 const LastUpdatesBox = ({ researchFieldId, openModal, setOpenModal }) => {
     const { activities, isLoading } = useTopChangelog({ researchFieldId, pageSize: 30 });
@@ -25,7 +25,7 @@ const LastUpdatesBox = ({ researchFieldId, openModal, setOpenModal }) => {
                                 <div className="action">
                                     {activity.profile?.id ? (
                                         <>
-                                            <Link to={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>
+                                            <Link href={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>
                                                 {activity.profile.display_name}
                                             </Link>
                                         </>
@@ -34,7 +34,7 @@ const LastUpdatesBox = ({ researchFieldId, openModal, setOpenModal }) => {
                                     )}{' '}
                                     added
                                     {` a ${getResourceTypeLabel(activity.classes?.length > 0 ? activity.classes[0] : '')} `}
-                                    <Link to={getResourceLink(activity.classes?.length > 0 ? activity.classes[0] : '', activity.id)}>
+                                    <Link href={getResourceLink(activity.classes?.length > 0 ? activity.classes[0] : '', activity.id)}>
                                         {' '}
                                         {truncate(activity.label, { length: 50 })}
                                     </Link>

@@ -4,8 +4,8 @@ import TemplateHeader from 'components/StatementBrowser/Template/TemplateHeader/
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { setDoneAnimation } from 'slices/statementBrowserSlice';
-import { AddPropertyWrapper, AnimationContainer } from './styled';
-import PropertySuggestions from './PropertySuggestions';
+import { AddPropertyWrapper, AnimationContainer } from 'components/StatementBrowser/Template/styled';
+import PropertySuggestions from 'components/StatementBrowser/Template/PropertySuggestions';
 
 const Template = props => {
     const dispatch = useDispatch();

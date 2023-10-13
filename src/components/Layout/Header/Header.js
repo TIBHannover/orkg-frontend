@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useState, useEffect } from 'react';
 import {
     Button,
@@ -11,10 +12,9 @@ import {
     NavbarToggler,
     Badge,
 } from 'reactstrap';
-import { Link, NavLink as RouterNavLink, useLocation } from 'react-router-dom';
 import Jumbotron from 'components/Home/Jumbotron';
-import { ReactComponent as Logo } from 'assets/img/logo.svg';
-import { ReactComponent as LogoWhite } from 'assets/img/logo_white.svg';
+import Logo from 'assets/img/logo.svg';
+import LogoWhite from 'assets/img/logo_white.svg';
 import { FontAwesomeIcon, FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faUser, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
@@ -25,7 +25,7 @@ import { openAuthDialog, updateAuth, resetAuth } from 'slices/authSlice';
 import { getUserInformation } from 'services/backend/users';
 import styled, { createGlobalStyle } from 'styled-components';
 import { reverse } from 'named-urls';
-import env from '@beam-australia/react-env';
+import env from 'components/NextJsMigration/env';
 import { toast } from 'react-toastify';
 import HomeBannerBg from 'assets/img/graph-background.svg';
 import { scrollbarWidth } from '@xobotyi/scrollbar-width';
@@ -36,6 +36,10 @@ import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizations
 import UserTooltip from 'components/Layout/Header/UserTooltip';
 import SearchForm from 'components/Layout/Header/SearchForm';
 import AddNew from 'components/Layout/Header/AddNew';
+import { match } from 'path-to-regexp';
+import Image from 'components/NextJsMigration/Image';
+import usePathname from 'components/NextJsMigration/usePathname';
+import loadImage from 'components/NextJsMigration/loadImage';
 
 const cookies = new Cookies();
 
@@ -109,7 +113,7 @@ const StyledTopBar = styled.div`
 
     &.home-page {
         // For the background
-        background: #5f6474 url(${HomeBannerBg});
+        background: #5f6474 url(${loadImage(HomeBannerBg)});
         background-position-x: 0%, 0%;
         background-position-y: 0%, 0%;
         background-size: auto, auto;
@@ -188,8 +192,8 @@ const Header = () => {
     const [isOpenAboutMenu, setIsOpenAboutMenu] = useState(false);
     const [isOpenViewMenu, setIsOpenViewMenu] = useState(false);
     const [logoutTimeoutId, setLogoutTimeoutId] = useState(null);
-    const location = useLocation();
-    const isHomePath = location.pathname === ROUTES.HOME;
+    const pathname = usePathname();
+    const isHomePath = pathname === ROUTES.HOME || !!match(ROUTES.HOME_WITH_RESEARCH_FIELD)(pathname);
     const [isTransparentNavbar, setIsTransparentNavbar] = useState(isHomePath);
     const [isHomePage, setIsHomePage] = useState(isHomePath);
     const user = useSelector(state => state.auth.user);
@@ -234,7 +238,7 @@ const Header = () => {
                 if (isTransparentNavbar) {
                     setIsTransparentNavbar(false);
                 }
-            } else if (!isTransparentNavbar && location.pathname === ROUTES.HOME) {
+            } else if (!isTransparentNavbar && isHomePage) {
                 setIsTransparentNavbar(true);
             }
         };
@@ -249,7 +253,7 @@ const Header = () => {
                 setLogoutTimeoutId(null);
             }
         };
-    }, [dispatch, isTransparentNavbar, location.pathname, logoutTimeoutId, user]);
+    }, [dispatch, isTransparentNavbar, pathname, logoutTimeoutId, user]);
 
     useEffect(() => {
         const tokenExpired = () => {
@@ -318,9 +322,9 @@ const Header = () => {
             >
                 <GlobalStyle scrollbarWidth={scrollbarWidth(true)} cookieInfoDismissed={cookieInfoDismissed} />
 
-                <StyledLink to={ROUTES.HOME} className="me-4 p-0" onClick={closeMenu}>
-                    {!isTransparentNavbar && <Logo />}
-                    {isTransparentNavbar && <LogoWhite />}
+                <StyledLink href={ROUTES.HOME} className="me-4 p-0" onClick={closeMenu}>
+                    {!isTransparentNavbar && <Image src={Logo} alt="Logo ORKG" />}
+                    {isTransparentNavbar && <Image src={LogoWhite} alt="Logo ORKG in light colors" />}
                 </StyledLink>
 
                 <NavbarToggler onClick={toggleNavBar} />
@@ -333,21 +337,28 @@ const Header = () => {
                                 View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                             </DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.COMPARISONS} onClick={closeMenu}>
+                                <DropdownItem tag={Link} end href={ROUTES.COMPARISONS} onClick={closeMenu} active={pathname === ROUTES.COMPARISONS}>
                                     Comparisons
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.PAPERS} onClick={closeMenu}>
+                                <DropdownItem tag={Link} end href={ROUTES.PAPERS} onClick={closeMenu} active={pathname === ROUTES.PAPERS}>
                                     Papers
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.VISUALIZATIONS} onClick={closeMenu}>
+                                <DropdownItem
+                                    tag={Link}
+                                    end
+                                    href={ROUTES.VISUALIZATIONS}
+                                    onClick={closeMenu}
+                                    active={pathname === ROUTES.VISUALIZATIONS}
+                                >
                                     Visualizations
                                 </DropdownItem>
                                 <DropdownItem
-                                    tag={RouterNavLink}
+                                    tag={Link}
                                     end
-                                    to={ROUTES.REVIEWS}
+                                    href={ROUTES.REVIEWS}
                                     onClick={closeMenu}
                                     className="d-flex justify-content-between"
+                                    active={pathname === ROUTES.REVIEWS}
                                 >
                                     Reviews{' '}
                                     <small className="ms-2">
@@ -355,35 +366,43 @@ const Header = () => {
                                     </small>
                                 </DropdownItem>
                                 <DropdownItem
-                                    tag={RouterNavLink}
+                                    tag={Link}
                                     end
-                                    to={ROUTES.LISTS}
+                                    href={ROUTES.LISTS}
                                     onClick={closeMenu}
                                     className="d-flex justify-content-between"
+                                    active={pathname === ROUTES.LISTS}
                                 >
                                     Lists{' '}
                                     <small className="ms-2">
                                         <Badge color="info">Beta</Badge>
                                     </small>
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.BENCHMARKS} onClick={closeMenu}>
+                                <DropdownItem tag={Link} end href={ROUTES.BENCHMARKS} onClick={closeMenu} active={pathname === ROUTES.BENCHMARKS}>
                                     Benchmarks
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.RESEARCH_FIELDS} onClick={closeMenu}>
+                                <DropdownItem
+                                    tag={Link}
+                                    end
+                                    href={ROUTES.RESEARCH_FIELDS}
+                                    onClick={closeMenu}
+                                    active={pathname === ROUTES.RESEARCH_FIELDS}
+                                >
                                     Research fields
                                 </DropdownItem>
-                                {/** <DropdownItem tag={RouterNavLink} end to={ROUTES.DIAGRAMS} onClick={closeMenu}>
+                                {/** <DropdownItem tag={Link} end to={ROUTES.DIAGRAMS} onClick={closeMenu}>
                                     Diagrams
                                 </DropdownItem> */}
                                 <ContentTypesMenu closeMenu={closeMenu} />
 
                                 <DropdownItem divider />
                                 <DropdownItem
-                                    tag={RouterNavLink}
+                                    tag={Link}
                                     end
-                                    to={ROUTES.OBSERVATORIES}
+                                    href={ROUTES.OBSERVATORIES}
                                     onClick={closeMenu}
                                     className="d-flex justify-content-between"
+                                    active={pathname === ROUTES.OBSERVATORIES}
                                 >
                                     Observatories{' '}
                                     <small className="ms-2">
@@ -391,20 +410,20 @@ const Header = () => {
                                     </small>
                                 </DropdownItem>
                                 <DropdownItem
-                                    tag={RouterNavLink}
+                                    tag={Link}
                                     end
-                                    to={reverse(ROUTES.ORGANIZATIONS, {
-                                        type: ORGANIZATIONS_TYPES.find(o => o.id === ORGANIZATIONS_MISC.GENERAL).label,
+                                    href={reverse(ROUTES.ORGANIZATIONS, {
+                                        id: ORGANIZATIONS_TYPES.find(o => o.id === ORGANIZATIONS_MISC.GENERAL).label,
                                     })}
                                     onClick={closeMenu}
                                 >
                                     Organizations
                                 </DropdownItem>
                                 <DropdownItem
-                                    tag={RouterNavLink}
+                                    tag={Link}
                                     end
-                                    to={reverse(ROUTES.ORGANIZATIONS, {
-                                        type: ORGANIZATIONS_TYPES.find(o => o.id === ORGANIZATIONS_MISC.EVENT).label,
+                                    href={reverse(ROUTES.ORGANIZATIONS, {
+                                        id: ORGANIZATIONS_TYPES.find(o => o.id === ORGANIZATIONS_MISC.EVENT).label,
                                     })}
                                     onClick={closeMenu}
                                 >
@@ -414,13 +433,13 @@ const Header = () => {
 
                                 <DropdownItem header>Advanced views</DropdownItem>
 
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.RESOURCES} onClick={closeMenu}>
+                                <DropdownItem tag={Link} end href={ROUTES.RESOURCES} onClick={closeMenu} active={pathname === ROUTES.RESOURCES}>
                                     Resources
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.PROPERTIES} onClick={closeMenu}>
+                                <DropdownItem tag={Link} end href={ROUTES.PROPERTIES} onClick={closeMenu} active={pathname === ROUTES.PROPERTIES}>
                                     Properties
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.CLASSES} onClick={closeMenu}>
+                                <DropdownItem tag={Link} end href={ROUTES.CLASSES} onClick={closeMenu} active={pathname === ROUTES.CLASSES}>
                                     Classes
                                 </DropdownItem>
                             </DropdownMenu>
@@ -432,41 +451,44 @@ const Header = () => {
                                 Tools <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                             </DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.TOOLS} onClick={closeMenu}>
+                                <DropdownItem tag={Link} end href={ROUTES.TOOLS} onClick={closeMenu} active={pathname === ROUTES.TOOLS}>
                                     Tools overview
                                 </DropdownItem>
                                 <DropdownItem divider />
                                 <DropdownItem header>Data entry</DropdownItem>
                                 <DropdownItem
-                                    tag={RouterNavLink}
+                                    tag={Link}
                                     end
-                                    to={ROUTES.CONTRIBUTION_EDITOR}
+                                    href={ROUTES.CONTRIBUTION_EDITOR}
                                     onClick={e => requireAuthentication(e, ROUTES.CONTRIBUTION_EDITOR)}
+                                    active={pathname === ROUTES.CONTRIBUTION_EDITOR}
                                 >
                                     Contribution editor
                                 </DropdownItem>
                                 <DropdownItem
-                                    tag={RouterNavLink}
+                                    tag={Link}
                                     end
-                                    to={ROUTES.CSV_IMPORT}
+                                    href={ROUTES.CSV_IMPORT}
                                     onClick={e => requireAuthentication(e, ROUTES.CSV_IMPORT)}
+                                    active={pathname === ROUTES.CSV_IMPORT}
                                 >
                                     CSV import
                                 </DropdownItem>
                                 <DropdownItem
-                                    tag={RouterNavLink}
+                                    tag={Link}
                                     end
-                                    to={ROUTES.PDF_ANNOTATION}
+                                    href={ROUTES.PDF_ANNOTATION}
                                     onClick={e => requireAuthentication(e, ROUTES.PDF_ANNOTATION)}
+                                    active={pathname === ROUTES.PDF_ANNOTATION}
                                 >
                                     Survey table import
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.TEMPLATES} onClick={closeMenu}>
+                                <DropdownItem tag={Link} end href={ROUTES.TEMPLATES} onClick={closeMenu} active={pathname === ROUTES.TEMPLATES}>
                                     Templates
                                 </DropdownItem>
                                 <DropdownItem divider />
                                 <DropdownItem header>Data export</DropdownItem>
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.DATA} onClick={closeMenu}>
+                                <DropdownItem tag={Link} end href={ROUTES.DATA} onClick={closeMenu} active={pathname === ROUTES.DATA}>
                                     Data Access
                                 </DropdownItem>
                             </DropdownMenu>
@@ -480,7 +502,7 @@ const Header = () => {
                             <DropdownMenu>
                                 <AboutMenu closeMenu={closeMenu} />
                                 <DropdownItem divider />
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.HELP_CENTER} onClick={closeMenu}>
+                                <DropdownItem tag={Link} end href={ROUTES.HELP_CENTER} onClick={closeMenu} active={pathname === ROUTES.HELP_CENTER}>
                                     Help center
                                 </DropdownItem>
                                 <DropdownItem
@@ -493,7 +515,7 @@ const Header = () => {
                                     GitLab <Icon size="sm" icon={faExternalLinkAlt} />
                                 </DropdownItem>
                                 <DropdownItem divider />
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.STATS} onClick={closeMenu}>
+                                <DropdownItem tag={Link} end href={ROUTES.STATS} onClick={closeMenu} active={pathname === ROUTES.STATS}>
                                     Statistics
                                 </DropdownItem>
                             </DropdownMenu>
@@ -523,7 +545,7 @@ const Header = () => {
                 <Authentication />
             </StyledNavbar>
 
-            {location.pathname === ROUTES.HOME && <Jumbotron />}
+            {isHomePage && <Jumbotron />}
         </StyledTopBar>
     );
 };

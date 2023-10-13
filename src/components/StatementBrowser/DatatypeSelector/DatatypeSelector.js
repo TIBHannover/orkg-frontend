@@ -1,3 +1,4 @@
+import Link from 'components/NextJsMigration/Link';
 import { useContext, useCallback } from 'react';
 import Select, { components } from 'react-select';
 import DATA_TYPES, { getConfigByType } from 'constants/DataTypes';
@@ -7,7 +8,6 @@ import { ThemeContext } from 'styled-components';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 
@@ -17,7 +17,7 @@ const TypeTooltipContent = ({ valueClass, entity, switchEntityType }) => (
         {valueClass && entity === ENTITIES.RESOURCE && (
             <div>
                 Only instances of{' '}
-                <Link target="_blank" to={reverse(ROUTES.CLASS, { id: valueClass.id })}>
+                <Link target="_blank" href={reverse(ROUTES.CLASS, { id: valueClass.id })}>
                     {valueClass.label}
                 </Link>{' '}
                 are valid.
@@ -102,6 +102,9 @@ const DatatypeSelector = props => {
         }),
     };
 
+    // lists are not supported when changes are not synced with the backend
+    const availableDataTypes = !props.syncBackend ? DATA_TYPES.filter(dataType => dataType.type !== 'list') : DATA_TYPES;
+
     return (
         <>
             <ConditionalWrapper
@@ -126,7 +129,7 @@ const DatatypeSelector = props => {
                     classNamePrefix="react-select-dark"
                     value={getConfigByType(props.valueType)}
                     components={{ Option: CustomOption }}
-                    options={!props.entity ? DATA_TYPES : DATA_TYPES.filter(dt => dt._class === props.entity)}
+                    options={!props.entity ? availableDataTypes : availableDataTypes.filter(dt => dt._class === props.entity)}
                     onChange={v => props.setValueType(v.type)}
                     getOptionValue={({ type }) => type}
                     getOptionLabel={({ name }) => name}
@@ -150,6 +153,7 @@ DatatypeSelector.propTypes = {
     menuPortalTarget: PropTypes.object,
     isDisabled: PropTypes.bool,
     valueClass: PropTypes.object,
+    syncBackend: PropTypes.bool.isRequired,
 };
 
 DatatypeSelector.defaultProps = {
