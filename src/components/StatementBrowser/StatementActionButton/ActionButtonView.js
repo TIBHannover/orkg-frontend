@@ -34,12 +34,12 @@ export const OptionButtonStyled = styled.span`
             width: ${({ wrappersize }) => handleIconWrapperSize(wrappersize)};
         }
 
-        :hover {
+        &:hover {
             background-color: ${props => props.theme.secondary};
             color: #fff;
         }
 
-        :focus {
+        &:focus {
             box-shadow: 0 0 0 0.2rem rgba(203, 206, 209, 0.5);
         }
     }
