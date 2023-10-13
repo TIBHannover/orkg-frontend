@@ -94,7 +94,7 @@ const PaperForm = ({
                 setAuthors(parseResult.paperAuthors);
                 setPublicationMonth(parseResult.paperPublicationMonth);
                 setPublicationYear(parseResult.paperPublicationYear);
-                setPublishedIn(parseResult.publishedIn);
+                setPublishedIn({ label: parseResult.publishedIn });
                 setUrl(parseResult.url);
                 setIsMetadataExpanded(true);
                 toast.success('Data successfully fetched');
@@ -142,7 +142,7 @@ const PaperForm = ({
             setTitle(paper.label);
             setAuthors(paper?.authors?.length > 0 ? paper.authors.map(author => ({ label: author.name })) : []);
             setPublicationYear(paper.year || '');
-            setPublishedIn(paper.venue || '');
+            setPublishedIn({ label: paper.venue || '' });
             setUrl(paper.externalIds?.ArXiv ? `https://arxiv.org/abs/${paper.externalIds?.ArXiv}` : '');
             toast.success('Data successfully fetched');
         }
