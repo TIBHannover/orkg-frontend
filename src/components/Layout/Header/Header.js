@@ -69,15 +69,6 @@ const GlobalStyle = createGlobalStyle`
     
 `;
 
-const StyledLink = styled(Link)`
-    :focus {
-        outline: none;
-    }
-    ::-moz-focus-inner {
-        border: 0;
-    }
-`;
-
 const StyledTopBar = styled.div`
     @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
         .navbar-collapse {
@@ -322,10 +313,10 @@ const Header = () => {
             >
                 <GlobalStyle scrollbarWidth={scrollbarWidth(true)} cookieInfoDismissed={cookieInfoDismissed} />
 
-                <StyledLink href={ROUTES.HOME} className="me-4 p-0" onClick={closeMenu}>
+                <Link href={ROUTES.HOME} className="me-4 p-0" onClick={closeMenu}>
                     {!isTransparentNavbar && <Image src={Logo} alt="Logo ORKG" />}
                     {isTransparentNavbar && <Image src={LogoWhite} alt="Logo ORKG in light colors" />}
-                </StyledLink>
+                </Link>
 
                 <NavbarToggler onClick={toggleNavBar} />
 

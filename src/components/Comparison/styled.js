@@ -138,7 +138,7 @@ export const ReactTableWrapper = styled.div`
         .tr {
             flex: 1 0 auto;
             display: inline-flex;
-            :last-child {
+            &:last-child {
                 .td {
                     border-bottom: 0;
                 }

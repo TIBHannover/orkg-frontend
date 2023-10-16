@@ -46,7 +46,7 @@ const PartnerLogoCol = styled(Col)`
 `;
 
 const TwitterLink = styled.a`
-    :hover {
+    &:hover {
         color: #00acee;
     }
 `;
