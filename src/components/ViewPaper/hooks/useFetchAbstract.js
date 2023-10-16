@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAbstractByDoi } from 'services/semanticScholar';
+import { getAbstractByDoi, getAbstractByTitle } from 'services/semanticScholar';
 import { setAbstract, setIsAbstractFetched } from 'slices/viewPaperSlice';
+
+const removeLineBreaks = text => text.replace(/(\r\n|\n|\r)/gm, ' ');
 
 const useFetchAbstract = () => {
     const abstract = useSelector(state => state.viewPaper.abstract);
@@ -24,17 +26,33 @@ const useFetchAbstract = () => {
             if (!title && !_doi) {
                 return;
             }
+
             setIsLoading(true);
-            try {
-                let fetchedAbstract = await getAbstractByDoi(_doi);
-                // remove line breaks from the abstract
-                fetchedAbstract = fetchedAbstract?.replace(/(\r\n|\n|\r)/gm, ' ');
-                dispatch(setAbstract(fetchedAbstract));
-            } catch (e) {
-                console.error(e);
-            } finally {
-                setIsLoading(false);
+            let _abstract = null;
+
+            // try to fetch abstract by DOI
+            if (_doi) {
+                try {
+                    _abstract = await getAbstractByDoi(_doi);
+                } catch (e) {
+                    console.error(e);
+                }
             }
+
+            // try to fetch abstract by title is no abstract was found by DOI
+            if (!_abstract) {
+                try {
+                    _abstract = await getAbstractByTitle(title);
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+
+            if (_abstract) {
+                dispatch(setAbstract(removeLineBreaks(_abstract)));
+            }
+
+            setIsLoading(false);
         }
     };
 

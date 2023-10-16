@@ -26,6 +26,7 @@ const AddProperty = props => {
                 toggleConfirmNewProperty={toggleConfirmNewProperty}
                 setShowAddProperty={setShowAddProperty}
                 newProperties={newProperties}
+                key={showAddProperty}
             />
             <ConfirmPropertyModal />
         </>

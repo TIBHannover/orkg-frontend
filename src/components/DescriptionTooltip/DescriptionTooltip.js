@@ -100,25 +100,27 @@ const DescriptionTooltip = props => {
                             <td>{renderTypeLabel()} id</td>
                             <td className="d-flex">
                                 <div className="flex-grow-1">
-                                    <span>{props.id}</span>
-                                    <CopyToClipboard
-                                        text={props.id}
-                                        onCopy={() => {
-                                            toast.dismiss();
-                                            toast.success('ID copied to clipboard');
-                                        }}
-                                    >
-                                        <Button
-                                            title="Click to copy id"
-                                            onClick={e => e.stopPropagation()}
-                                            className="py-0 px-0 ms-1"
-                                            size="sm"
-                                            color="link"
-                                            style={{ verticalAlign: 'middle' }}
+                                    <span>{props.id ?? <em>{`${renderTypeLabel()} doesn't exist yet`}</em>}</span>
+                                    {props.id && (
+                                        <CopyToClipboard
+                                            text={props.id}
+                                            onCopy={() => {
+                                                toast.dismiss();
+                                                toast.success('ID copied to clipboard');
+                                            }}
                                         >
-                                            <Icon icon={faClipboard} size="xs" />
-                                        </Button>
-                                    </CopyToClipboard>
+                                            <Button
+                                                title="Click to copy id"
+                                                onClick={e => e.stopPropagation()}
+                                                className="py-0 px-0 ms-1"
+                                                size="sm"
+                                                color="link"
+                                                style={{ verticalAlign: 'middle' }}
+                                            >
+                                                <Icon icon={faClipboard} size="xs" />
+                                            </Button>
+                                        </CopyToClipboard>
+                                    )}
                                 </div>
                                 {props.showURL && (
                                     <div>

@@ -13,6 +13,8 @@ import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataType
 import Tippy from '@tippyjs/react';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
+import SmartResourceLabelCheck from 'components/SmartSuggestions/SmartResourceLabelCheck';
+import SmartLiteralTypeCheck from 'components/SmartSuggestions/SmartLiteralTypeCheck';
 import useValueForm from 'components/StatementBrowser/ValueForm/hooks/useValueForm';
 
 const ValueForm = props => {
@@ -198,6 +200,9 @@ const ValueForm = props => {
                         }}
                     />
                 )}
+
+                {entityType === ENTITIES.RESOURCE && <SmartResourceLabelCheck label={inputValue} />}
+                {entityType === ENTITIES.LITERAL && <SmartLiteralTypeCheck label={inputValue} />}
 
                 <StyledButton
                     outline

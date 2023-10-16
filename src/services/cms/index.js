@@ -2,7 +2,7 @@
  * Services file for CMS service
  */
 import env from 'components/NextJsMigration/env';
-import { submitGetRequest } from 'network';
+import { submitGetRequest, submitPostRequest } from 'network';
 import qs from 'qs';
 
 export const url = env('CMS_URL');
@@ -111,3 +111,12 @@ export const getNewsCards = ({ limit = 10, sort = 'created_at' }) => {
     );
     return submitGetRequest(`${url}news-cards?${query}`).catch(() => []);
 };
+
+export const createFeedback = ({ llmTask, type, options, comments, inputData, outputData }) =>
+    submitPostRequest(
+        `${url}feedbacks`,
+        { 'Content-Type': 'application/json' },
+        { data: { llmTask, type, options, comments, inputData, outputData } },
+        true,
+        false,
+    );

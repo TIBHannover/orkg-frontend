@@ -203,3 +203,7 @@ export const classifyPaper = async ({ smartSuggestionInputText, topN = 5 }) => {
     );
     return payload;
 };
+export const getLlmResponse = async ({ taskName, placeholders }) =>
+    submitPostRequest(`${nlpServiceUrl}tools/text/chatgpt`, { 'Content-Type': 'application/json' }, { task_name: taskName, placeholders }).then(
+        response => response?.payload.arguments,
+    );

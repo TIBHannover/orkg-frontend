@@ -190,6 +190,7 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
         dialogResourceId,
         dialogResourceLabel,
         createBlankNode,
+        valueClass,
     };
 };
 
