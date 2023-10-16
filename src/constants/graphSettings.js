@@ -83,6 +83,8 @@ export const PREDICATES = {
     HAS_QUALITY_REVIEW: 'hasQualityReview',
     HAS_LIST_ELEMENT: 'hasListElement',
     QUALITY_FEEDBACK: 'qualityFeedback',
+    RESULT: 'RESULT',
+    MATERIAL: 'MATERIAL',
 };
 
 export const CLASSES = {

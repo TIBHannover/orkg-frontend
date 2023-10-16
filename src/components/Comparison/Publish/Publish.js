@@ -24,6 +24,7 @@ import usePublish from 'components/Comparison/hooks/usePublish';
 import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ResearchFieldInput from 'components/Input/ResearchFieldInput/ResearchFieldInput';
+import SmartDescriptivenessCheck from 'components/SmartSuggestions/SmartDescriptivenessCheck';
 
 const StyledCustomInput = styled(Input)`
     margin-right: 0;
@@ -218,14 +219,17 @@ function Publish(props) {
                             <Label for="description">
                                 <Tooltip message="Describe the goal and what is being compared">Description</Tooltip>
                             </Label>
-                            <Input
-                                type="textarea"
-                                name="description"
-                                value={description}
-                                disabled={Boolean(id)}
-                                id="description"
-                                onChange={e => setDescription(e.target.value)}
-                            />
+                            <div className="position-relative">
+                                <Input
+                                    type="textarea"
+                                    name="description"
+                                    value={description}
+                                    disabled={Boolean(id)}
+                                    id="description"
+                                    onChange={e => setDescription(e.target.value)}
+                                />
+                                <SmartDescriptivenessCheck value={description} />
+                            </div>
                         </FormGroup>
                         <FormGroup>
                             <Label for="research-field">

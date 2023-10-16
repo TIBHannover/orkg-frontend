@@ -5,11 +5,13 @@ import TemplatesModal from 'components/ContributionEditor/TemplatesModal/Templat
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES } from 'constants/graphSettings';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Button, InputGroup } from 'reactstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, ButtonGroup, InputGroup } from 'reactstrap';
 import { isString } from 'lodash';
 import { StyledButton } from 'components/StatementBrowser/styled';
 import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
+import SmartPropertySuggestions from 'components/SmartSuggestions/SmartPropertySuggestions';
+import SmartPropertyGuidelinesCheck from 'components/SmartSuggestions/SmartPropertyGuidelinesCheck';
 
 export const CreateProperty = () => {
     const [isCreating, setIsCreating] = useState(false);
@@ -17,7 +19,10 @@ export const CreateProperty = () => {
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
     const [isTemplatesModalOpen, setIsTemplatesModalOpen] = useState(false);
     const [propertyLabel, setPropertyLabel] = useState('');
+
     const dispatch = useDispatch();
+    const properties = useSelector(state => state.contributionEditor.properties);
+    const propertyLabels = Object.values(properties).map(property => property.label);
 
     const handleCreate = ({ id, label }) => {
         dispatch(
@@ -53,9 +58,13 @@ export const CreateProperty = () => {
             )}
             {!isCreating ? (
                 <>
-                    <Button color="secondary" size="sm" onClick={() => setIsCreating(true)}>
-                        <Icon icon={faPlusCircle} /> Add property
-                    </Button>
+                    <ButtonGroup>
+                        <Button color="secondary" size="sm" onClick={() => setIsCreating(true)}>
+                            <Icon icon={faPlusCircle} /> Add property
+                        </Button>
+                        <SmartPropertySuggestions properties={propertyLabels} handleCreate={handleCreate} />
+                    </ButtonGroup>
+
                     <Button color="secondary" size="sm" onClick={() => setIsTemplatesModalOpen(true)} className="ms-1">
                         <Icon className="me-1" icon={faPuzzlePiece} /> Templates
                     </Button>
@@ -68,7 +77,7 @@ export const CreateProperty = () => {
                     )}
                 </>
             ) : (
-                <div style={{ maxWidth: 300 }}>
+                <div style={{ maxWidth: 400 }}>
                     <InputGroup size="sm">
                         <Autocomplete
                             entityType={ENTITIES.PREDICATE}
@@ -82,6 +91,7 @@ export const CreateProperty = () => {
                             menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
                             allowCreate
                         />
+                        <SmartPropertyGuidelinesCheck label={inputValue} />
                         <StyledButton outline onClick={() => setIsCreating(false)}>
                             Cancel
                         </StyledButton>

@@ -25,6 +25,9 @@ export const getAbstractByDoi = async doi => {
     return result;
 };
 
+export const getAbstractByTitle = async title =>
+    getPapersByTitle({ title, limit: 1, fields: ['abstract'] }).then((data, reject) => data?.data?.[0]?.abstract ?? reject);
+
 export const getAuthorsByLabel = ({ label, limit }) =>
     submitGetRequest(
         `${semanticScholarUrl}graph/v1/author/search?query=${encodeURIComponent(label)}&fields=name,aliases,url,citationCount,hIndex&limit=${limit}`,

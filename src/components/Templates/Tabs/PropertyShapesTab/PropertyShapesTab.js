@@ -161,6 +161,7 @@ const PropertyShapesTab = () => {
                             handlePropertySelect={handleSelectNewProperty}
                             toggleConfirmNewProperty={toggleConfirmNewProperty}
                             setShowAddProperty={setShowAddProperty}
+                            key={showAddProperty}
                         />
                     </>
                 )}
