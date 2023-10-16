@@ -3,6 +3,18 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.126.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.125.0...v0.126.0) - 2023-10-16
+
+### Changes
+
+- feat: integrate ChatGPT Smart suggestions for six use cases [`#1205`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1205)
+- fix: broken CSS pseudo class selector [`#1213`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1213)
+- fix(PaperForm): store venue when automatically fetched [`#1214`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1214)
+- Resolve "Publishing comparison tables" [`#1211`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1211)
+- feat(Home): connect research fields homepage to browser [`#1187`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1187)
+- Use the entrypoint mechanism provided by Nginx [`#1209`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1209)
+
+---
 ## [v0.125.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.124.0...v0.125.0) - 2023-10-11
 
 ### Changes
