@@ -14,24 +14,22 @@ import styled from 'styled-components';
 import { reverse } from 'named-urls';
 import Image from 'components/NextJsMigration/Image';
 
-const TippyStyle = styled.div`
-    flex-shrink: 0;
+const LabelStyled = styled.span`
     @media (max-width: ${props => props.theme.gridBreakpoints.lg}) {
-        .label {
-            display: none;
-        }
+        display: none;
     }
-    .tippy-box[data-theme~='addNew'] {
+`;
+
+const TippyStyled = styled(Tippy)`
+    &.tippy-box {
         background: #fff !important;
-    }
-    .tippy-box[data-theme~='addNew'] .tippy-content {
-        background-color: #fff !important;
-        padding: 0 !important;
-        border: 1px solid #d9d9d9 !important;
-        border-radius: 4px !important;
-    }
-    .tippy-box[data-theme~='addNew'] {
         box-shadow: 0 0 8px rgba(0, 0, 0, 0.125) !important;
+        .tippy-content {
+            background-color: #fff !important;
+            padding: 0 !important;
+            border: 1px solid #d9d9d9 !important;
+            border-radius: 4px !important;
+        }
     }
 `;
 
@@ -92,67 +90,64 @@ const AddNew = ({ isHomePageStyle, onAdd = null }) => {
     };
 
     return (
-        <TippyStyle>
-            <Tippy
-                interactive={true}
-                animateFill={true}
-                arrow={false}
-                plugins={[animateFill]}
-                interactiveBorder={30}
-                placement="bottom"
-                trigger="click"
-                onCreate={instance => (refTippyInstance.current = instance)}
-                theme="addNew"
-                maxWidth="470px"
-                offset={[0, 0]}
-                content={
-                    <div>
-                        <ToolContainer onClick={handleClickMenuItem} href={ROUTES.ADD_COMPARISON} className="d-flex p-2">
-                            <ImgContainer>
-                                <Image src={ContributionEditor} style={{ width: '90%', height: 'auto' }} alt="Contribution editor preview" />
-                            </ImgContainer>
-                            <TextContainer className="ps-2 pe-2">
-                                <Header>Comparison</Header>
-                                <p className="m-0">
-                                    Create an overview of state-of-the-art literature for a particular topic by adding multiple contributions
-                                    simultaneously.
-                                </p>
-                            </TextContainer>
-                        </ToolContainer>
-                        <RequireAuthentication onClick={handleClickMenuItem} component={ToolContainer} href={ROUTES.ADD_PAPER} className="d-flex p-2">
-                            <ImgContainer>
-                                <Image src={AddPaperWizard} style={{ width: '90%', height: 'auto' }} alt="Add paper wizard preview" />
-                            </ImgContainer>
-                            <TextContainer className="ps-2 pe-2">
-                                <Header>Paper</Header>
-                                <p className="m-0">The add paper form guides you to the process of generating structured data for your paper.</p>
-                            </TextContainer>
-                        </RequireAuthentication>
-                        <RequireAuthentication
-                            onClick={handleClickMenuItem}
-                            component={ToolContainer}
-                            href={reverse(ROUTES.CONTENT_TYPE_NEW_NO_TYPE)}
-                            className="d-flex p-2"
-                        >
-                            <ImgContainer>
-                                <FontAwesomeIcon className="text-secondary" icon={faEllipsisH} style={{ fontSize: 40 }} />
-                            </ImgContainer>
-                            <TextContainer className="ps-2 pe-2">
-                                <Header>Other</Header>
-                                <p className="m-0">Add other artifacts, such as datasets, software or general resources.</p>
-                            </TextContainer>
-                        </RequireAuthentication>
-                    </div>
-                }
-            >
-                <div className="mx-2 mb-2 mb-md-0" id="tour-add-paper">
-                    <Button color={!isHomePageStyle ? 'primary' : 'light'}>
-                        <FontAwesomeIcon className="me-1" icon={faPlus} />
-                        <span className="label">Add new</span>
-                    </Button>
+        <TippyStyled
+            interactive={true}
+            animateFill={true}
+            arrow={false}
+            plugins={[animateFill]}
+            interactiveBorder={30}
+            placement="bottom"
+            trigger="click"
+            onCreate={instance => (refTippyInstance.current = instance)}
+            maxWidth="470px"
+            offset={[0, 0]}
+            content={
+                <div>
+                    <ToolContainer onClick={handleClickMenuItem} href={ROUTES.ADD_COMPARISON} className="d-flex p-2">
+                        <ImgContainer>
+                            <Image src={ContributionEditor} style={{ width: '90%', height: 'auto' }} alt="Contribution editor preview" />
+                        </ImgContainer>
+                        <TextContainer className="ps-2 pe-2">
+                            <Header>Comparison</Header>
+                            <p className="m-0">
+                                Create an overview of state-of-the-art literature for a particular topic by adding multiple contributions
+                                simultaneously.
+                            </p>
+                        </TextContainer>
+                    </ToolContainer>
+                    <RequireAuthentication onClick={handleClickMenuItem} component={ToolContainer} href={ROUTES.ADD_PAPER} className="d-flex p-2">
+                        <ImgContainer>
+                            <Image src={AddPaperWizard} style={{ width: '90%', height: 'auto' }} alt="Add paper wizard preview" />
+                        </ImgContainer>
+                        <TextContainer className="ps-2 pe-2">
+                            <Header>Paper</Header>
+                            <p className="m-0">The add paper form guides you to the process of generating structured data for your paper.</p>
+                        </TextContainer>
+                    </RequireAuthentication>
+                    <RequireAuthentication
+                        onClick={handleClickMenuItem}
+                        component={ToolContainer}
+                        href={reverse(ROUTES.CONTENT_TYPE_NEW_NO_TYPE)}
+                        className="d-flex p-2"
+                    >
+                        <ImgContainer>
+                            <FontAwesomeIcon className="text-secondary" icon={faEllipsisH} style={{ fontSize: 40 }} />
+                        </ImgContainer>
+                        <TextContainer className="ps-2 pe-2">
+                            <Header>Other</Header>
+                            <p className="m-0">Add other artifacts, such as datasets, software or general resources.</p>
+                        </TextContainer>
+                    </RequireAuthentication>
                 </div>
-            </Tippy>
-        </TippyStyle>
+            }
+        >
+            <div className="mx-2 mb-2 mb-md-0 flex-shrink-0" id="tour-add-paper">
+                <Button color={!isHomePageStyle ? 'primary' : 'light'}>
+                    <FontAwesomeIcon className="me-1" icon={faPlus} />
+                    <LabelStyled>Add new</LabelStyled>
+                </Button>
+            </div>
+        </TippyStyled>
     );
 };
 

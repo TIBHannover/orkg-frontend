@@ -14,7 +14,7 @@ import styled from 'styled-components';
 import { getLinkByEntityType, getResourceLink } from 'utils';
 
 const TippyStyle = styled(Tippy)`
-    &.tippy-box[data-theme~='descriptionTooltip'] .tippy-content {
+    &.tippy-box .tippy-content {
         padding: 0 !important;
         table {
             border-collapse: collapse;
@@ -91,7 +91,6 @@ const DescriptionTooltip = props => {
 
     return (
         <TippyStyle
-            theme="descriptionTooltip"
             onTrigger={onTrigger}
             content={
                 <Table className="rounded mb-0">

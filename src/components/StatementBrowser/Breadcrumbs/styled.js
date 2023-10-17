@@ -28,7 +28,7 @@ export const BreadcrumbItem = styled.li`
         color: #000;
     }
 
-    :last-of-type {
+    &:last-of-type {
         background: #e86161;
         color: #fff;
         max-width: 100%;
