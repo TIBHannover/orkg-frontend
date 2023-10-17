@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.126.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.126.0...v0.126.1) - 2023-10-17
+
+### Changes
+
+- style(Tippy): Text in hover popup is difficult to read [`#1216`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1216)
+
+---
 ## [v0.126.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.125.0...v0.126.0) - 2023-10-16
 
 ### Changes
