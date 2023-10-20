@@ -1,7 +1,7 @@
 import qs from 'qs';
 import { getArrayParamFromQueryString, getParamFromQueryString } from 'utils';
 import { isEmpty, uniq, without, flattenDepth, groupBy, flatten, last, find } from 'lodash';
-import { DEFAULT_COMPARISON_METHOD } from 'constants/misc';
+import { DEFAULT_COMPARISON_METHOD, LICENSE_URL } from 'constants/misc';
 import rdf from 'rdf';
 
 // returns the position of the first differing character between
@@ -262,7 +262,7 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
     gds.add(new rdf.Triple(ds, dcterms('description'), new rdf.Literal(metadata.description ? metadata.description : 'Description')));
     gds.add(new rdf.Triple(ds, dcterms('creator'), new rdf.Literal(metadata.creator ? metadata.creator : 'Creator')));
     gds.add(new rdf.Triple(ds, dcterms('date'), new rdf.Literal(metadata.date ? metadata.date : 'Date')));
-    gds.add(new rdf.Triple(ds, dcterms('license'), new rdf.NamedNode('https://creativecommons.org/licenses/by-sa/4.0/')));
+    gds.add(new rdf.Triple(ds, dcterms('license'), new rdf.NamedNode(LICENSE_URL)));
     gds.add(new rdf.Triple(ds, rdf.rdfsns('label'), new rdf.Literal('Comparison - ORKG')));
     gds.add(new rdf.Triple(ds, cubens('structure'), dsd));
     // DataStructureDefinition
