@@ -15,6 +15,7 @@ import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
 import useRouter from 'components/NextJsMigration/useRouter';
 import { Alert, Badge } from 'reactstrap';
+import { LICENSE_URL } from 'constants/misc';
 
 const ComparisonMetaData = () => {
     const comparisonResource = useSelector(state => state.comparison.comparisonResource);
@@ -50,6 +51,7 @@ const ComparisonMetaData = () => {
             })),
             datePublished: comparisonResource.createdAt ? moment(comparisonResource.createdAt).format('DD MMMM YYYY') : '',
             about: comparisonResource.researchField?.label,
+            license: LICENSE_URL,
             '@type': 'ScholarlyArticle',
         },
         '@context': 'https://schema.org',

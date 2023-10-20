@@ -18,6 +18,7 @@ import useParams from 'components/NextJsMigration/useParams';
 import VisibilitySensor from 'react-visibility-sensor';
 import { Container } from 'reactstrap';
 import GraphViewModal from 'components/GraphView/GraphViewModal';
+import { LICENSE_URL } from 'constants/misc';
 
 const ViewPaper = () => {
     const { resourceId } = useParams();
@@ -55,6 +56,7 @@ const ViewPaper = () => {
                 viewPaper?.publicationYear ? viewPaper?.publicationYear?.label : ''
             }`,
             about: viewPaper?.researchField?.label,
+            license: LICENSE_URL,
             '@type': 'ScholarlyArticle',
         },
         '@context': 'https://schema.org',

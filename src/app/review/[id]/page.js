@@ -40,6 +40,7 @@ import useLoad from 'components/Review/hooks/useLoad';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { SubTitle } from 'components/styled';
 import { CLASSES } from 'constants/graphSettings';
+import { LICENSE_URL } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
@@ -158,6 +159,7 @@ const Review = () => {
             })),
             datePublished: publicationDate,
             about: researchField?.label,
+            license: LICENSE_URL,
             '@type': 'ScholarlyArticle',
         },
         '@context': 'https://schema.org',
