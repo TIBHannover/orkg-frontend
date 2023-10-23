@@ -3,7 +3,6 @@
 import { Container, Row, Col } from 'reactstrap';
 import ResearchFieldCards from 'components/Home/ResearchFieldCards';
 import ObservatoriesBox from 'components/Home/ObservatoriesBox';
-import FeaturedItemsBox from 'components/Home/FeaturedItemsBox';
 import LastUpdatesBox from 'components/LastUpdatesBox/LastUpdatesBox';
 import Benefits from 'components/Home/Benefits';
 import News from 'components/Home/News';
@@ -15,6 +14,7 @@ import env from 'components/NextJsMigration/env';
 import HomeAlerts from 'components/HomeAlerts/HomeAlerts';
 import HelpTour from 'components/Home/HelpTour';
 import MastodonTimeline from 'components/Home/MastodonTimeline';
+import HomeTabsContainer from 'components/Tabs/HomeTabsContainer';
 
 export default function Home() {
     const { selectedFieldId, selectedFieldLabel, researchFields, isLoadingFields } = useResearchFieldSelector();
@@ -46,8 +46,8 @@ export default function Home() {
             {selectedFieldId !== RESOURCES.RESEARCH_FIELD_MAIN && <div className="h4 mt-4 mb-2 ps-3">{selectedFieldLabel}</div>}
             <Row>
                 <Col md="8">
-                    <div className="mt-3 mt-md-0 d-flex flex-column">
-                        <FeaturedItemsBox researchFieldId={selectedFieldId} researchFieldLabel={selectedFieldLabel} />
+                    <div className="mt-3">
+                        <HomeTabsContainer researchFieldId={selectedFieldId} researchFieldLabel={selectedFieldLabel} />
                     </div>
                 </Col>
                 <Col md="4">
