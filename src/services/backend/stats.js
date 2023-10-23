@@ -80,10 +80,9 @@ export const getTopContributors = async ({
     };
 };
 
-export const getChangelogs = ({ researchFieldId = null, page = 0, items = 9999, sortBy = 'createdAt', desc = true }) => {
-    const sort = sortBy ? `${sortBy},${desc ? 'desc' : 'asc'}` : null;
+export const getChangelogs = ({ researchFieldId = null, page = 0, items = 9999 }) => {
     const params = qs.stringify(
-        { page, size: items, sort },
+        { page, size: items },
         {
             skipNulls: true,
         },

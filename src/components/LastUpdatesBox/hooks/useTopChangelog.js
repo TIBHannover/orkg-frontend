@@ -3,7 +3,7 @@ import { getChangelogs } from 'services/backend/stats';
 import { orderBy } from 'lodash';
 import { RESOURCES } from 'constants/graphSettings';
 
-function useTopChangelog({ researchFieldId, pageSize = 30, sortBy = 'createdAt', desc = true }) {
+function useTopChangelog({ researchFieldId, pageSize = 30 }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
@@ -18,8 +18,6 @@ function useTopChangelog({ researchFieldId, pageSize = 30, sortBy = 'createdAt',
                 researchFieldId: researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN ? null : researchFieldId,
                 page,
                 items: pageSize,
-                sortBy: researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN ? null : sortBy,
-                desc,
             })
                 .then(result => {
                     setActivities(prevResources => orderBy([...prevResources, ...(result.content || [])], ['created_at'], ['desc']));
@@ -37,7 +35,7 @@ function useTopChangelog({ researchFieldId, pageSize = 30, sortBy = 'createdAt',
                     console.log(error);
                 });
         },
-        [researchFieldId, pageSize, sortBy, desc],
+        [researchFieldId, pageSize],
     );
 
     // reset resources when the researchFieldId has changed
