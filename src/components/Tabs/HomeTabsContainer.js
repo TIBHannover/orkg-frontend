@@ -1,31 +1,32 @@
+import FeaturedItems from 'components/Home/FeaturedItems';
+import useSearchParams from 'components/NextJsMigration/useSearchParams';
 import Tabs from 'components/Tabs/Tabs';
-import Items from 'components/UserProfile/Items';
 import { CLASSES } from 'constants/graphSettings';
-import { reverse } from 'named-urls';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
 import propTypes from 'prop-types';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function HomeTabsContainer({ researchFieldId, researchFieldLabel }) {
     const params = useParams();
-
-    const { activeTab, id, slug } = params;
+    const searchParams = useSearchParams();
+    const { slug } = params;
     const navigate = useNavigate();
 
-    const onTabChange = key => {
+    const onTabChange = tab => {
         if (researchFieldId && slug) {
             navigate(
-                `${`${reverse(ROUTES.HOME_TABS_WITH_RESEARCH_FIELD, {
+                `${`${reverse(ROUTES.HOME_WITH_RESEARCH_FIELD, {
                     researchFieldId,
                     slug,
-                    activeTab: key,
-                })}`}`,
+                })}`}?tab=${tab}`,
             );
         } else {
             navigate(
-                `${`${reverse(ROUTES.HOME_TABS, {
-                    activeTab: key,
-                })}`}`,
+                `${`${reverse(ROUTES.HOME, {
+                    researchFieldId,
+                    slug,
+                })}`}?tab=${tab}`,
             );
         }
     };
@@ -33,71 +34,23 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }) {
     const items = [
         {
             label: 'Comparisons',
-            key: 'comparisons',
-            children: (
-                <Items
-                    filterLabel="comparisons"
-                    filterClass={CLASSES.COMPARISON}
-                    id={id}
-                    researchFieldLabel={researchFieldLabel}
-                    researchFieldId={researchFieldId}
-                />
-            ),
+            classId: CLASSES.COMPARISON,
         },
         {
             label: 'Papers',
-            key: 'papers',
-            children: (
-                <Items
-                    filterLabel="papers"
-                    filterClass={CLASSES.PAPER}
-                    id={id}
-                    researchFieldLabel={researchFieldLabel}
-                    researchFieldId={researchFieldId}
-                />
-            ),
+            classId: CLASSES.PAPER,
         },
         {
             label: 'Visualizations',
-            key: 'visualizations',
-            children: (
-                <Items
-                    filterLabel="visualizations"
-                    filterClass={CLASSES.VISUALIZATION}
-                    id={id}
-                    showDelete={false}
-                    researchFieldLabel={researchFieldLabel}
-                    researchFieldId={researchFieldId}
-                />
-            ),
+            classId: CLASSES.VISUALIZATION,
         },
         {
             label: 'Reviews',
-            key: 'reviews',
-            children: (
-                <Items
-                    filterLabel="reviews"
-                    filterClass={CLASSES.SMART_REVIEW_PUBLISHED}
-                    id={id}
-                    showDelete={false}
-                    researchFieldLabel={researchFieldLabel}
-                    researchFieldId={researchFieldId}
-                />
-            ),
+            classId: CLASSES.SMART_REVIEW_PUBLISHED,
         },
         {
             label: 'Lists',
-            key: 'lists',
-            children: (
-                <Items
-                    filterLabel="lists"
-                    filterClass={CLASSES.LITERATURE_LIST_PUBLISHED}
-                    id={id}
-                    showDelete={false}
-                    researchFieldLabel={researchFieldLabel}
-                    researchFieldId={researchFieldId}
-                />
-            ),
+            classId: CLASSES.LITERATURE_LIST_PUBLISHED,
         },
     ];
 
@@ -107,8 +60,14 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }) {
             getPopupContainer={trigger => trigger.parentNode}
             destroyInactiveTabPane={true}
             onChange={onTabChange}
-            activeKey={activeTab ?? 'comparisons'}
-            items={items}
+            activeKey={searchParams.get('tab') ?? 'comparisons'}
+            items={items.map(({ label, classId }) => ({
+                label,
+                key: label.toLowerCase(),
+                children: (
+                    <FeaturedItems researchFieldLabel={researchFieldLabel} researchFieldId={researchFieldId} classId={classId} classLabel={label} />
+                ),
+            }))}
         />
     );
 }

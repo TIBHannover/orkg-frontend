@@ -193,8 +193,7 @@ const Header = () => {
     const [isOpenViewMenu, setIsOpenViewMenu] = useState(false);
     const [logoutTimeoutId, setLogoutTimeoutId] = useState(null);
     const pathname = usePathname();
-    const isHomePath =
-        pathname === ROUTES.HOME || !!match(ROUTES.HOME_WITH_RESEARCH_FIELD)(pathname) || !!match(ROUTES.HOME_TABS_WITH_RESEARCH_FIELD)(pathname);
+    const isHomePath = pathname === ROUTES.HOME || !!match(ROUTES.HOME_WITH_RESEARCH_FIELD)(pathname);
     const [isTransparentNavbar, setIsTransparentNavbar] = useState(isHomePath);
     const [isHomePage, setIsHomePage] = useState(isHomePath);
     const user = useSelector(state => state.auth.user);

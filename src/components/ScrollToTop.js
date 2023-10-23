@@ -28,7 +28,7 @@ const ScrollToTop = props => {
                 break;
             }
         }
-        if (!preventScrollTop) {
+        if (!preventScrollTop && pathname !== prevPathname) {
             window.scrollTo(0, 0);
         }
     }, [pathname, prevPathname]);

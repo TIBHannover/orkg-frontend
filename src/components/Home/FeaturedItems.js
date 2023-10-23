@@ -3,7 +3,7 @@ import { FormGroup, Label, Input, ListGroup, Button } from 'reactstrap';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { RESOURCES } from 'constants/graphSettings';
+import { CLASSES, RESOURCES } from 'constants/graphSettings';
 import ContentLoader from 'react-content-loader';
 import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import useResearchFieldContent from 'components/ResearchField/hooks/useResearchFieldContent';
@@ -18,14 +18,22 @@ const ListGroupStyled = styled(ListGroup)`
     }
 `;
 
-const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) => {
+const FeaturedItems = ({ researchFieldId, researchFieldLabel, classId, classLabel }) => {
     const { items, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useResearchFieldContent({
         researchFieldId,
         initialSort: 'combined',
-        initialClassFilterOptions: [{ id: featuredClass, label: featuredClass }],
-        initClassesFilter: [{ id: featuredClass, label: featuredClass }],
+        initialClassFilterOptions: [{ id: classId, label: classId }],
+        initClassesFilter: [{ id: classId, label: classId }],
         initialIncludeSubFields: true,
     });
+
+    const contentTypeLink = {
+        [CLASSES.COMPARISON]: ROUTES.COMPARISONS,
+        [CLASSES.PAPER]: ROUTES.PAPERS,
+        [CLASSES.VISUALIZATION]: ROUTES.VISUALIZATIONS,
+        [CLASSES.SMART_REVIEW_PUBLISHED]: ROUTES.REVIEWS,
+        [CLASSES.LITERATURE_LIST_PUBLISHED]: ROUTES.LISTS,
+    }[classId];
 
     return (
         <div className="pt-2 pb-3">
@@ -53,7 +61,7 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
                             bsSize="sm"
                             type="select"
                             name="sort"
-                            id={`sort${featuredClass}`}
+                            id={`sort${classId}`}
                             disabled={isLoading}
                         >
                             <option value="combined">Top recent</option>
@@ -86,8 +94,8 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
                                         ? `${reverseWithSlug(ROUTES.RESEARCH_FIELD, {
                                               researchFieldId,
                                               slug: researchFieldLabel,
-                                          })}?sort=${sort}&includeSubFields=${includeSubFields}&classesFilter=${featuredClass}`
-                                        : featuredClass.link
+                                          })}?sort=${sort}&includeSubFields=${includeSubFields}&classesFilter=${classId}`
+                                        : contentTypeLink
                                 }
                                 color="primary"
                                 size="sm"
@@ -99,7 +107,7 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
                     </>
                 ) : (
                     <div className="text-center mt-4 mb-4">
-                        {sort === 'featured' ? `No featured ${featuredClass} found` : `There are no ${featuredClass} for this research field, yet`}
+                        {sort === 'featured' ? `No featured ${classLabel} found` : `There are no ${classLabel} for this research field, yet`}
                     </div>
                 ))}
             {isLoading && (
@@ -125,11 +133,12 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
 FeaturedItems.propTypes = {
     researchFieldId: PropTypes.string.isRequired,
     researchFieldLabel: PropTypes.string,
-    featuredClass: PropTypes.shape({
+    classId: PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string,
         link: PropTypes.string,
     }).isRequired,
+    classLabel: PropTypes.string.isRequired,
 };
 
 export default FeaturedItems;

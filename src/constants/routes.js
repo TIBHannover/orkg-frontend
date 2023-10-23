@@ -1,7 +1,5 @@
 const routes = {
     HOME: '/',
-    HOME_TABS: '/home/tabs/:activeTab',
-    HOME_TABS_WITH_RESEARCH_FIELD: '/home/:researchFieldId/:slug/tabs/:activeTab',
     HOME_WITH_RESEARCH_FIELD: '/home/:researchFieldId/:slug',
     USER_SETTINGS: '/settings/:tab',
     USER_SETTINGS_DEFAULT: '/settings',
