@@ -93,6 +93,14 @@ const routes = [
         element: Home,
     },
     {
+        path: ROUTES.HOME_TABS,
+        element: Home,
+    },
+    {
+        path: ROUTES.HOME_TABS_WITH_RESEARCH_FIELD,
+        element: Home,
+    },
+    {
         path: ROUTES.RESOURCES,
         element: Resources,
     },
