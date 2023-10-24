@@ -161,6 +161,8 @@ export const convertPdf = form =>
         body: form,
     });
 
+export const extractMetadataPdf = form => submitPostRequest(`${nlpServiceUrl}tools/pdf/sci-kg-tex/extract`, {}, form, false, false);
+
 export const getRecommendedPredicates = async ({ title, abstract }) => {
     const { payload } = await submitPostRequest(
         `${nlpServiceUrl}clustering/predicates`,
