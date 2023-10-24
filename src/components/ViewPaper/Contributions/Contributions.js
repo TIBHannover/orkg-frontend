@@ -88,7 +88,7 @@ const Contributions = props => {
                         activeKey={selectedContributionId}
                         destroyInactiveTabPane={true}
                         onChange={onTabChange}
-                        items={contributions.map(contribution => ({
+                        items={contributions?.map(contribution => ({
                             label: (
                                 <ContributionTab
                                     handleChangeContributionLabel={handleChangeContributionLabel}

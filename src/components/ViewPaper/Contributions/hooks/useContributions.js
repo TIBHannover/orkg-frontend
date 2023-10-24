@@ -48,7 +48,7 @@ const useContributions = ({ paperId, contributionId }) => {
         const handleSelectContribution = cId => {
             setIsLoading(true);
             // get the contribution label
-            const contributionResource = contributions.find(c => c.id === selectedContributionId);
+            const contributionResource = contributions?.find(c => c.id === selectedContributionId);
             if (contributionResource) {
                 setLoadingContributionFailed(false);
                 dispatch(
