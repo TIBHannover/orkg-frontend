@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.127.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.126.1...v0.127.0) - 2023-10-24
+
+### Changes
+
+- Resolve "Integrate the Sck-KG-Tex endpoint in frontend" [`#1212`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1212)
+- fix: Remove sorting for research field changelog endpoint [`#1220`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1220)
+- legal: update license to CC0 [`#1219`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1219)
+
+---
 ## [v0.126.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.126.0...v0.126.1) - 2023-10-17
 
 ### Changes
