@@ -54,13 +54,14 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }) {
         },
     ];
 
+    const activeKey = items.map(i => i.label.toLowerCase()).includes(searchParams.get('tab')) ? searchParams.get('tab') : 'comparisons';
+
     return (
         <Tabs
             className="box rounded"
             getPopupContainer={trigger => trigger.parentNode}
-            destroyInactiveTabPane={true}
             onChange={onTabChange}
-            activeKey={searchParams.get('tab') ?? 'comparisons'}
+            activeKey={activeKey}
             items={items.map(({ label, classId }) => ({
                 label,
                 key: label.toLowerCase(),
