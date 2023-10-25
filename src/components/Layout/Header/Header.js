@@ -225,11 +225,11 @@ const Header = () => {
         };
 
         const handleScroll = () => {
-            if (window.pageYOffset > 0) {
+            if (window.scrollY > 0) {
                 if (isTransparentNavbar) {
                     setIsTransparentNavbar(false);
                 }
-            } else if (!isTransparentNavbar && isHomePage) {
+            } else if (!isTransparentNavbar && isHomePath) {
                 setIsTransparentNavbar(true);
             }
         };
