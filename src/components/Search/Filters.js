@@ -1,12 +1,13 @@
-import { Input, InputGroup, Button, Label, FormGroup } from 'reactstrap';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
-import { ENTITIES } from 'constants/graphSettings';
-import useFilters from 'components/Search/hooks/useFilters';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
+import useFilters from 'components/Search/hooks/useFilters';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
+import { ENTITIES } from 'constants/graphSettings';
+import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
+import { isString } from 'lodash';
+import { Button, FormGroup, Input, InputGroup, Label } from 'reactstrap';
 
 const Filters = () => {
     const { user, value, selectedFilters, createdBy, isLoadingFilterClasses, setValue, setCreatedBy, toggleFilter, submitSearch } = useFilters();
@@ -17,6 +18,13 @@ const Filters = () => {
     } catch (e) {
         decodedValue = value;
     }
+
+    const handleSubmitSearch = _value => {
+        if (isString(_value) && _value) {
+            submitSearch(_value);
+        }
+    };
+
     return (
         <FormGroup>
             <Label for="searchQuery">Search query</Label>
@@ -27,9 +35,9 @@ const Filters = () => {
                     placeholder="Search..."
                     id="searchQuery"
                     name="value"
-                    onKeyDown={e => e.key === 'Enter' && submitSearch(value)}
+                    onKeyDown={e => e.key === 'Enter' && handleSubmitSearch(value)}
                 />
-                <Button onClick={() => submitSearch(value)} color="secondary" className="ps-2 pe-2">
+                <Button onClick={() => handleSubmitSearch(value)} color="secondary" className="ps-2 pe-2">
                     <FontAwesomeIcon icon={faSearch} />
                 </Button>
             </InputGroup>
