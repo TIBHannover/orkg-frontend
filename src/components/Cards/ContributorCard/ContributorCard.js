@@ -13,6 +13,25 @@ const StyledGravatar = styled(Gravatar)`
     cursor: pointer;
 `;
 
+const STATS = [
+    {
+        key: 'comparisons',
+        label: 'Comparison',
+    },
+    {
+        key: 'papers',
+        label: 'Paper',
+    },
+    {
+        key: 'visualizations',
+        label: 'Visualization',
+    },
+    {
+        key: 'problems',
+        label: 'Problem',
+    },
+];
+
 const ContributorCard = ({ contributor, showStatsDetails = false, options }) => (
     <div>
         <div className="d-flex flex-row">
@@ -53,19 +72,13 @@ const ContributorCard = ({ contributor, showStatsDetails = false, options }) => 
                     ))}
                 </small>
                 {showStatsDetails && (
-                    <>
-                        <br />
-
-                        <ul className="list-group list-group-horizontal-md mt-2 d-flex">
-                            <li className="list-group-item p-0 ps-1 pe-2">{pluralize('paper', contributor.papers, true)}</li>
-                            <li className="list-group-item p-0 ps-1 pe-2">{pluralize('contribution', contributor.contributions, true)}</li>
-                            <li className="list-group-item p-0 ps-1 pe-2">{pluralize('comparison', contributor.comparisons, true)}</li>
-                            <li className="list-group-item p-0 ps-1 pe-2 ">{pluralize('visualization', contributor.visualizations, true)}</li>
-                            <li className="list-group-item p-0 ps-1 pe-2">{pluralize('research problem', contributor.problems, true)}</li>
-                        </ul>
-
-                        <div className="p-0 mb-0 mt-2">{pluralize('total contribution', contributor.total, true)}</div>
-                    </>
+                    <ul className="list-group list-group-horizontal-md mt-2 d-flex text-center">
+                        {STATS.map(stat => (
+                            <li key={stat.key} className="list-group-item p-0 px-3 d-flex flex-column align-items-center">
+                                <span className="h5 m-0"> {contributor[stat.key]}</span> <span>{pluralize(stat.label, contributor[stat.key])}</span>
+                            </li>
+                        ))}
+                    </ul>
                 )}
             </div>
         </div>
