@@ -1,14 +1,12 @@
 import Link from 'components/NextJsMigration/Link';
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faStream } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
-import { getResearchFieldsStats } from 'services/backend/stats';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { CLASSES, RESOURCES } from 'constants/graphSettings';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { resourcesUrl } from 'services/backend/resources';
-import { has } from 'lodash';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
@@ -104,20 +102,11 @@ const ShowMore = styled(Card)`
 
 const MAX_FIELDS = 30;
 
-const ResearchFieldCards = ({ selectedFieldId, selectedFieldLabel, researchFields, isLoading }) => {
-    const [stats, setStats] = useState(null);
+const ResearchFieldCards = ({ selectedFieldId, selectedFieldLabel, researchFields, researchFieldStats, isLoading, isLoadingStats }) => {
     const rfAutocompleteRef = useRef(null);
     const [showMoreFields, setShowMoreFields] = useState(false);
     const router = useRouter();
-
-    useEffect(() => {
-        const fetchResearchFieldsStats = () =>
-            getResearchFieldsStats().then(results => {
-                setStats(results);
-            });
-
-        fetchResearchFieldsStats();
-    }, []);
+    const researchFieldsSliced = showMoreFields ? researchFields : researchFields.slice(0, MAX_FIELDS);
 
     return (
         <>
@@ -181,46 +170,37 @@ const ResearchFieldCards = ({ selectedFieldId, selectedFieldLabel, researchField
                 </>
             )}
 
-            {!isLoading && stats && researchFields.length > 0 && (
+            {!isLoading && researchFields.length > 0 && (
                 <div className="mt-3">
                     <div>
                         <TransitionGroup id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap" exit={false}>
-                            {researchFields.slice(0, MAX_FIELDS).map(field => (
+                            {researchFieldsSliced?.map((field, index) => (
                                 <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
                                     <Card
-                                        role="button"
-                                        disabled={has(stats, field.id) && stats[field.id] === 0}
+                                        disabled={researchFieldStats?.[index]?.total === 0}
                                         to={reverseWithSlug(ROUTES.HOME_WITH_RESEARCH_FIELD, {
                                             researchFieldId: field.id,
                                             slug: field.label,
                                         })}
                                     >
                                         <CardTitle className="card-title m-0 text-center"> {field.label}</CardTitle>
-
-                                        <PaperAmount>{has(stats, field.id) ? stats[field.id] : 0} papers</PaperAmount>
+                                        <PaperAmount>
+                                            {!isLoadingStats ? (
+                                                <>
+                                                    {researchFieldStats?.[index]?.papers ?? 0} papers -{' '}
+                                                    {researchFieldStats?.[index]?.comparisons ?? 0} comparison
+                                                </>
+                                            ) : (
+                                                'Loading...'
+                                            )}
+                                        </PaperAmount>
                                     </Card>
                                 </AnimationContainer>
                             ))}
-                            {researchFields.length > MAX_FIELDS &&
-                                showMoreFields &&
-                                researchFields.slice(MAX_FIELDS).map(field => (
-                                    <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
-                                        <Card
-                                            role="button"
-                                            disabled={has(stats, field.id) && stats[field.id] === 0}
-                                            to={reverseWithSlug(ROUTES.HOME_WITH_RESEARCH_FIELD, {
-                                                researchFieldId: field.id,
-                                                slug: field.label,
-                                            })}
-                                        >
-                                            <CardTitle className="card-title m-0 text-center">{field.label}</CardTitle>
-                                            <PaperAmount>{has(stats, field.id) ? stats[field.id] : 0} papers</PaperAmount>
-                                        </Card>
-                                    </AnimationContainer>
-                                ))}
+
                             {researchFields.length > MAX_FIELDS && (
                                 <AnimationContainer classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
-                                    <ShowMore role="button" onClick={() => setShowMoreFields(v => !v)}>
+                                    <ShowMore role="button" onClick={() => setShowMoreFields(v => !v)} as="div">
                                         {showMoreFields ? 'Show less fields' : 'Show more fields...'}
                                     </ShowMore>
                                 </AnimationContainer>
@@ -258,7 +238,9 @@ ResearchFieldCards.propTypes = {
     selectedFieldId: PropTypes.string,
     selectedFieldLabel: PropTypes.string,
     researchFields: PropTypes.array,
+    researchFieldStats: PropTypes.array,
     isLoading: PropTypes.bool.isRequired,
+    isLoadingStats: PropTypes.bool.isRequired,
 };
 
 export default ResearchFieldCards;

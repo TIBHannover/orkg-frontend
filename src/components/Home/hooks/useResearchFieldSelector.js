@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { PREDICATES, RESOURCES } from 'constants/graphSettings';
+import { getFieldChildren } from 'services/backend/researchFields';
+import { RESOURCES } from 'constants/graphSettings';
+import { getResearchFieldsStatsWithSubfields } from 'services/backend/stats';
 import { useParams } from 'react-router-dom';
 import { getResource } from 'services/backend/resources';
 
@@ -9,7 +10,16 @@ function useResearchFieldSelector() {
     const selectedFieldId = params.researchFieldId ?? RESOURCES.RESEARCH_FIELD_MAIN;
     const [selectedFieldLabel, setSelectedFieldLabel] = useState('');
     const [researchFields, setResearchFields] = useState([]);
+    const [researchFieldStats, setResearchFieldStats] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingStats, setIsLoadingStats] = useState(true);
+
+    const getFieldStats = async fields => {
+        setIsLoadingStats(true);
+        const stats = await Promise.all(fields.map(field => getResearchFieldsStatsWithSubfields(field.id)));
+        setResearchFieldStats(stats);
+        setIsLoadingStats(false);
+    };
 
     useEffect(() => {
         if (!selectedFieldId) {
@@ -23,10 +33,12 @@ function useResearchFieldSelector() {
             setSelectedFieldLabel(fieldResource.label);
 
             // get sub fields
-            getStatementsBySubjectAndPredicate({ subjectId: selectedFieldId, predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD })
-                .then(res => {
+            getFieldChildren({ fieldId: selectedFieldId })
+                .then(async fields => {
                     // sort research fields alphabetically
-                    setResearchFields(res.map(elm => elm.object).sort((a, b) => a.label.localeCompare(b.label)));
+                    const _fields = fields.map(field => field.resource).sort((a, b) => a.label.localeCompare(b.label));
+                    setResearchFields(_fields);
+                    getFieldStats(_fields);
                     setIsLoading(false);
                 })
                 .catch(e => {
@@ -34,10 +46,11 @@ function useResearchFieldSelector() {
                     console.error(e);
                 });
         };
+
         handleFieldSelect();
     }, [selectedFieldId]);
 
-    return { researchFields, selectedFieldId, selectedFieldLabel, isLoadingFields: isLoading };
+    return { researchFields, researchFieldStats, selectedFieldId, selectedFieldLabel, isLoadingFields: isLoading, isLoadingStats };
 }
 
 export default useResearchFieldSelector;

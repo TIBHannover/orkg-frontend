@@ -17,7 +17,7 @@ import MastodonTimeline from 'components/Home/MastodonTimeline';
 import HomeTabsContainer from 'components/Tabs/HomeTabsContainer';
 
 export default function Home() {
-    const { selectedFieldId, selectedFieldLabel, researchFields, isLoadingFields } = useResearchFieldSelector();
+    const { selectedFieldId, selectedFieldLabel, researchFields, researchFieldStats, isLoadingFields, isLoadingStats } = useResearchFieldSelector();
 
     return (
         <Container style={{ marginTop: env('IS_TESTING_SERVER') === 'true' ? -20 : -70 }}>
@@ -38,7 +38,9 @@ export default function Home() {
                             selectedFieldLabel={selectedFieldLabel}
                             selectedFieldId={selectedFieldId}
                             researchFields={researchFields}
+                            researchFieldStats={researchFieldStats}
                             isLoading={isLoadingFields}
+                            isLoadingStats={isLoadingStats}
                         />
                     </div>
                 </Col>

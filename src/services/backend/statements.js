@@ -152,7 +152,6 @@ export const getStatementsBySubjectAndPredicate = ({ subjectId, predicateId, pag
             skipNulls: true,
         },
     );
-
     return submitGetRequest(`${statementsUrl}subject/${subjectId}/predicate/${predicateId}/?${params}`).then(res => res.content);
 };
 
