@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from 'testUtils';
+import { render, screen, fireEvent, waitFor } from 'testUtils';
 import TableHeaderRow from 'components/ContributionEditor/TableHeaderRow';
 
 const setup = () => {
@@ -15,10 +15,10 @@ describe('TableHeaderRow', () => {
         expect(screen.getByRole('button', { name: /property label/i })).toBeInTheDocument();
     });
 
-    it('should open statement browser on property click', () => {
+    it('should open statement browser on property click', async () => {
         setup();
         fireEvent.click(screen.getByRole('button', { name: /property label/i }));
-        expect(screen.getByRole('heading', { name: /view existing property/i })).toBeInTheDocument();
+        await waitFor(() => expect(screen.getByRole('heading', { name: /view existing property/i })).toBeInTheDocument());
     });
 
     it('should show autocomplete on property edit', () => {

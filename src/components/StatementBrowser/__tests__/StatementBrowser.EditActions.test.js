@@ -28,9 +28,9 @@ const setup = (
 
 const clickOnEditValueButton = async (screen, valueId) => {
     const editButton = screen.getByTestId(valueId);
-    expect(editButton).toBeInTheDocument();
+    await waitFor(() => expect(editButton).toBeInTheDocument());
     fireEvent.click(editButton);
-    expect(screen.getByRole('button', { name: 'Done' })).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Done' })).toBeInTheDocument());
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
 };
 

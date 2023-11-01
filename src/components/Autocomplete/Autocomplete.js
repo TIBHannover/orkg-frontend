@@ -410,9 +410,7 @@ function Autocomplete(props) {
                         options = [...options, ...data.options];
                         hasMore = hasMore || data.hasMore;
                     }
-                } catch (e) {
-                    console.log(e);
-                }
+                } catch (e) {}
             }
             return {
                 options,

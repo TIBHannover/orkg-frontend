@@ -105,7 +105,7 @@ const EditPaperModal = ({ paperData, toggle, afterUpdate = null, isPaperLinkVisi
 
 EditPaperModal.propTypes = {
     toggle: PropTypes.func.isRequired,
-    paperData: PropTypes.object.isRequired,
+    paperData: PropTypes.object,
     afterUpdate: PropTypes.func,
     isPaperLinkVisible: PropTypes.bool,
 };

@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from 'testUtils';
+import { render, screen, fireEvent, waitFor } from 'testUtils';
 import selectEvent from 'react-select-event';
 import TableCellValueCreate from 'components/ContributionEditor/TableCellValueCreate';
 

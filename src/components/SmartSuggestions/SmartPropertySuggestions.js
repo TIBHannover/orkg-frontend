@@ -130,7 +130,7 @@ export const SmartPropertySuggestions = ({ properties, handleCreate, isDisabled 
 };
 
 SmartPropertySuggestions.propTypes = {
-    properties: PropTypes.object.isRequired,
+    properties: PropTypes.array.isRequired,
     handleCreate: PropTypes.func.isRequired,
     isDisabled: PropTypes.bool,
 };

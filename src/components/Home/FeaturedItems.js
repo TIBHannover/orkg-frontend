@@ -133,11 +133,7 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, classId, classLabe
 FeaturedItems.propTypes = {
     researchFieldId: PropTypes.string.isRequired,
     researchFieldLabel: PropTypes.string,
-    classId: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        label: PropTypes.string,
-        link: PropTypes.string,
-    }).isRequired,
+    classId: PropTypes.string.isRequired,
     classLabel: PropTypes.string.isRequired,
 };
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ORKGTabsStyle } from 'components/Tabs/styled';
 
 const ORKGTabs = ({ style, className, ...props }) => (
-    <ORKGTabsStyle disablePadding={true} className={className} style={style}>
+    <ORKGTabsStyle className={className} style={style}>
         <Tabs {...props} getPopupContainer={trigger => trigger.parentNode} />
     </ORKGTabsStyle>
 );
