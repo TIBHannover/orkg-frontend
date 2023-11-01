@@ -14,9 +14,9 @@ const setup = paperTitle => {
     render(<TableHeaderColumn paper={paper} contribution={contribution} />);
 };
 describe('TableHeaderColumn', () => {
-    it('should show the paper and contribution title in the header', () => {
+    it('should show the paper and contribution title in the header', async () => {
         setup('paper title');
-        expect(screen.queryByRole('button', { name: /paper title/i })).toBeInTheDocument();
+        await waitFor(() => expect(screen.queryByRole('button', { name: /paper title/i })).toBeInTheDocument());
         expect(screen.queryByText(/contribution title/i)).toBeInTheDocument();
     });
 
@@ -26,8 +26,8 @@ describe('TableHeaderColumn', () => {
         await waitFor(() => expect(screen.getByRole('heading', { name: /edit paper/i })).toBeInTheDocument());
     });
 
-    it('should set "no title" when no paper title is provided', () => {
+    it('should set "no title" when no paper title is provided', async () => {
         setup('');
-        expect(screen.queryByRole('button', { name: /no title/i })).toBeInTheDocument();
+        await waitFor(() => expect(screen.queryByRole('button', { name: /no title/i })).toBeInTheDocument());
     });
 });

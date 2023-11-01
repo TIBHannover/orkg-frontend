@@ -27,13 +27,13 @@ const setup = (
 
 const clickOnDeleteValueButton = async sc => {
     const deleteButton = sc.getByRole('button', { name: 'Delete value' });
-    expect(deleteButton).toBeInTheDocument();
+    await waitFor(() => expect(deleteButton).toBeInTheDocument());
     fireEvent.click(deleteButton);
 };
 
 const clickOnDeletePropertyButton = async sc => {
     const deleteButton = sc.getByRole('button', { name: 'Delete property' });
-    expect(deleteButton).toBeInTheDocument();
+    await waitFor(() => expect(deleteButton).toBeInTheDocument());
     fireEvent.click(deleteButton);
 };
 

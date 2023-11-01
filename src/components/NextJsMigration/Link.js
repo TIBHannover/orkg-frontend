@@ -6,7 +6,7 @@ import { forwardRef } from 'react';
 import { Link as LinkReactRouter } from 'react-router-dom';
 
 // CRA-CODE
-const Link = forwardRef(function Link({ href, children, ...props }, ref) {
+const Link = forwardRef(function Link({ href, children, end, ...props }, ref) {
     return (
         <LinkReactRouter ref={ref} to={href} {...props}>
             {children}

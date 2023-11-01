@@ -10,7 +10,7 @@ const TableHeaderColumnFirst = () => {
 
     return (
         <Properties>
-            <PropertiesInner transpose={false} className="first d-flex justify-content-between align-items-start">
+            <PropertiesInner $transpose={false} className="first d-flex justify-content-between align-items-start">
                 Properties
                 <Tippy content="Every change you make is automatically saved">
                     <div>
