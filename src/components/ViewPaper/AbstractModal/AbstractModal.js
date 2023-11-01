@@ -1,4 +1,5 @@
 import Tooltip from 'components/Utils/Tooltip';
+import TitleWarningAlert from 'components/ViewPaper/AbstractModal/TitleWarningAlert';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -37,6 +38,7 @@ const AbstractModal = ({ toggle }) => {
         <Modal isOpen toggle={toggle} size="lg">
             <ModalHeader toggle={toggle}>Abstract</ModalHeader>
             <ModalBody>
+                <TitleWarningAlert />
                 <Alert color="info">
                     Paper abstracts are only used to generate better suggestions and are not stored in the ORKG. After reloading the page, the
                     abstract will be lost

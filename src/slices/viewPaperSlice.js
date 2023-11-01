@@ -35,6 +35,7 @@ const initialState = {
     doi: {},
     abstract: '',
     isAbstractFetched: false,
+    fetchAbstractTitle: '',
     researchField: {},
     verified: false,
     publishedIn: {},
@@ -95,6 +96,9 @@ export const viewPaperSlice = createSlice({
         },
         setIsAbstractFetched: (state, { payload }) => {
             state.isAbstractFetched = payload;
+        },
+        setFetchAbstractTitle: (state, { payload }) => {
+            state.fetchAbstractTitle = payload;
         },
         setSelectedContributionId: (state, { payload }) => {
             state.selectedContributionId = payload;
@@ -178,6 +182,7 @@ export const {
     removeFromComparison,
     setAbstract,
     setIsAbstractFetched,
+    setFetchAbstractTitle,
     setSelectedContributionId,
     setNerResources,
     setNerProperties,
