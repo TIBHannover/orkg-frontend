@@ -9,6 +9,8 @@ export const getStats = (extra = []) => submitGetRequest(`${statsUrl}?extra=${ex
 
 export const getResearchFieldsStats = () => submitGetRequest(`${statsUrl}fields`);
 
+export const getResearchFieldsStatsWithSubfields = fieldId => submitGetRequest(`${statsUrl}research-fields/${fieldId}?includeSubfields=true`);
+
 export const getComparisonsCountByObservatoryId = id => submitGetRequest(`${statsUrl}${encodeURIComponent(id)}/observatoryComparisonsCount`);
 
 /**

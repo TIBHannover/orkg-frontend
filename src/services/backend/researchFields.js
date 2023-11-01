@@ -4,6 +4,7 @@ import { submitGetRequest } from 'network';
 import qs from 'qs';
 
 export const fieldsUrl = `${url}research-fields/`;
+export const researchFieldUrl = `${url}research-fields/`;
 
 export const getResearchProblemsByResearchFieldIdCountingPapers = ({ id, page = 0, items = 1 }) => {
     const params = qs.stringify(
@@ -90,3 +91,5 @@ export const getContributorsByResearchFieldId = ({ id, page = 0, items = 9999, s
         })),
     }));
 };
+
+export const getFieldChildren = ({ fieldId }) => submitGetRequest(`${researchFieldUrl}${fieldId}/children`).then(res => res.content);
