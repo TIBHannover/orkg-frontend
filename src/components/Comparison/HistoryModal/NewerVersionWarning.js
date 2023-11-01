@@ -11,12 +11,13 @@ import { faHistory } from '@fortawesome/free-solid-svg-icons';
 const NewerVersionWarning = ({ versions, showViewHistory, comparisonId }) => {
     const [isOpenHistoryModal, setIsOpenHistoryModal] = useState(false);
     return (
-        <Alert color="warning" className="container d-flex box">
+        <Alert color="warning" fade={false} className="container d-flex box">
             <div className="flex-grow-1">
                 Warning: a newer version of this comparison is available.{' '}
                 {versions?.length > 0 && (
                     <>
-                        <Link href={reverse(ROUTES.COMPARISON, { comparisonId: versions[0].id })}>View latest version</Link>
+                        <Link href={reverse(ROUTES.COMPARISON, { comparisonId: versions[0].id })}>View latest version</Link> or{' '}
+                        <Link href={reverse(ROUTES.COMPARISON_DIFF, { oldId: comparisonId, newId: versions[0].id })}>compare to latest version</Link>.
                     </>
                 )}
             </div>

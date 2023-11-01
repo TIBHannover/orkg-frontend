@@ -55,7 +55,8 @@ const ViewList = ({ isEmbedded }) => {
             {newVersionAvailable && (
                 <Alert color="warning" fade={false} className="box border-0">
                     Warning: a newer version of this list is available.{' '}
-                    <Link href={reverse(ROUTES.LIST, { id: latestVersionId })}>View latest version</Link>
+                    <Link href={reverse(ROUTES.LIST, { id: latestVersionId })}>View latest version</Link> or{' '}
+                    <Link href={reverse(ROUTES.LIST_DIFF, { oldId: id, newId: latestVersionId })}>compare to latest version</Link>.
                 </Alert>
             )}
             <main>
