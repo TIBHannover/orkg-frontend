@@ -3,6 +3,20 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.128.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.127.0...v0.128.0) - 2023-11-01
+
+### Changes
+
+- feat(Home): use new research field hierarchy endpoints for the front-page [`#1218`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1218)
+- fix(CI/CD): Failing tests [`#1227`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1227)
+- feat(HelpCenterSearch): make Strapi search case insensitive [`#1226`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1226)
+- fix: Top contributors 'all time' is empty [`#1221`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1221)
+- fix(ViewPaper): publishing a paper doesn't work [`#1224`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1224)
+- fix(Search): Clicking search button with empty search string [`#1223`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1223)
+- fix(Header): sometimes missing correct style (transparent) [`#1222`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1222)
+- feat(Home): replace 'react-responsive-tabs' with custom tabs [`#1190`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1190)
+
+---
 ## [v0.127.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.126.1...v0.127.0) - 2023-10-24
 
 ### Changes
