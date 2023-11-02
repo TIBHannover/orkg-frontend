@@ -63,7 +63,8 @@ const ViewArticle = () => {
                 {newVersionAvailable && (
                     <Alert color="warning" fade={false} className="box">
                         Warning: a newer version of this article is available.{' '}
-                        <Link href={reverse(ROUTES.REVIEW, { id: latestVersionId })}>View latest version</Link>
+                        <Link href={reverse(ROUTES.REVIEW, { id: latestVersionId })}>View latest version</Link> or{' '}
+                        <Link href={reverse(ROUTES.REVIEW_DIFF, { oldId: id, newId: latestVersionId })}>compare to latest version</Link>.
                     </Alert>
                 )}
                 <main>
