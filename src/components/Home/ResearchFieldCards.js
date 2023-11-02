@@ -14,6 +14,7 @@ import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { Button } from 'reactstrap';
 import { reverseWithSlug } from 'utils';
 import useRouter from 'components/NextJsMigration/useRouter';
+import pluralize from 'pluralize';
 
 /* Bootstrap card column is not working correctly working with vertical alignment,
 thus used custom styling here */
@@ -187,8 +188,8 @@ const ResearchFieldCards = ({ selectedFieldId, selectedFieldLabel, researchField
                                         <PaperAmount>
                                             {!isLoadingStats ? (
                                                 <>
-                                                    {researchFieldStats?.[index]?.papers ?? 0} papers -{' '}
-                                                    {researchFieldStats?.[index]?.comparisons ?? 0} comparison
+                                                    {pluralize('paper', researchFieldStats?.[index]?.papers ?? 0, true)} -{' '}
+                                                    {pluralize('comparison', researchFieldStats?.[index]?.comparisons ?? 0, true)}
                                                 </>
                                             ) : (
                                                 'Loading...'
