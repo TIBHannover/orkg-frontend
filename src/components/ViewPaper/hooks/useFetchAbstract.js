@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAbstractByDoi, getAbstractByTitle } from 'services/semanticScholar';
-import { setAbstract, setIsAbstractFetched } from 'slices/viewPaperSlice';
+import { setAbstract, setFetchAbstractTitle, setIsAbstractFetched } from 'slices/viewPaperSlice';
 
 const removeLineBreaks = text => text.replace(/(\r\n|\n|\r)/gm, ' ');
 
@@ -42,7 +42,9 @@ const useFetchAbstract = () => {
             // try to fetch abstract by title is no abstract was found by DOI
             if (!_abstract) {
                 try {
-                    _abstract = await getAbstractByTitle(title);
+                    const fetchResult = await getAbstractByTitle(title);
+                    _abstract = fetchResult?.abstract;
+                    dispatch(setFetchAbstractTitle(fetchResult?.title));
                 } catch (e) {
                     console.error(e);
                 }

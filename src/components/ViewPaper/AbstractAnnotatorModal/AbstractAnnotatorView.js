@@ -9,6 +9,7 @@ import toArray from 'lodash/toArray';
 import { useSelector } from 'react-redux';
 import Tooltip from 'components/Utils/Tooltip';
 import AbstractAnnotator from 'components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotator';
+import TitleWarningAlert from 'components/ViewPaper/AbstractModal/TitleWarningAlert';
 
 function AbstractAnnotatorView(props) {
     const ranges = useSelector(state => state.viewPaper.ranges);
@@ -19,6 +20,8 @@ function AbstractAnnotatorView(props) {
 
     return (
         <div className="ps-2 pe-2">
+            <TitleWarningAlert />
+
             {abstract && !props.isAnnotationLoading && !props.isAnnotationFailedLoading && (
                 <div>
                     {rangesClasses.length > 0 && (

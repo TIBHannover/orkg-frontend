@@ -26,7 +26,7 @@ export const getAbstractByDoi = async doi => {
 };
 
 export const getAbstractByTitle = async title =>
-    getPapersByTitle({ title, limit: 1, fields: ['abstract'] }).then((data, reject) => data?.data?.[0]?.abstract ?? reject);
+    getPapersByTitle({ title, limit: 1, fields: ['abstract', 'title'] }).then((data, reject) => data?.data?.[0] ?? reject);
 
 export const getAuthorsByLabel = ({ label, limit }) =>
     submitGetRequest(
