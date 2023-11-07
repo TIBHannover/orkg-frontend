@@ -22,7 +22,7 @@ const CardStyled = styled.div`
     }
 `;
 
-const ListCard = ({ versions, showBadge, showCurationFlags }) => {
+const ListCard = ({ versions, showBadge = false, showCurationFlags = true }) => {
     const {
         researchField,
         authors,
@@ -104,11 +104,6 @@ ListCard.propTypes = {
     versions: PropTypes.array.isRequired,
     showBadge: PropTypes.bool.isRequired,
     showCurationFlags: PropTypes.bool.isRequired,
-};
-
-ListCard.defaultProps = {
-    showBadge: false,
-    showCurationFlags: true,
 };
 
 export default ListCard;

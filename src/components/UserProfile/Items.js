@@ -27,7 +27,7 @@ import {
     addAuthorsToStatementBundle,
 } from 'utils';
 
-const Items = props => {
+const Items = ({ showDelete = false, filterClass, filterLabel, userId }) => {
     const pageSize = 25;
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
@@ -41,12 +41,12 @@ const Items = props => {
             setIsLoading(true);
 
             getResourcesByClass({
-                id: props.filterClass,
+                id: filterClass,
                 page: p,
                 items: pageSize,
                 sortBy: 'created_at',
                 desc: true,
-                creator: props.userId,
+                creator: userId,
             }).then(result => {
                 // Resources
                 if (result.totalElements === 0) {
@@ -62,32 +62,32 @@ const Items = props => {
                     .then(resourcesStatements => {
                         let newResources = resourcesStatements.map(resourceStatements => {
                             const resourceSubject = find(result.content, { id: resourceStatements.id });
-                            if (props.filterClass === CLASSES.PAPER) {
+                            if (filterClass === CLASSES.PAPER) {
                                 return getPaperData(resourceSubject, resourceStatements.statements);
                             }
-                            if (props.filterClass === CLASSES.COMPARISON) {
+                            if (filterClass === CLASSES.COMPARISON) {
                                 return getComparisonData(resourceSubject, resourceStatements.statements);
                             }
-                            if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
+                            if (filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
                                 return getReviewData(resourceSubject, resourceStatements.statements);
                             }
-                            if (props.filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
+                            if (filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
                                 return getListData(resourceSubject, resourceStatements.statements);
                             }
-                            if (props.filterClass === CLASSES.VISUALIZATION) {
+                            if (filterClass === CLASSES.VISUALIZATION) {
                                 return getVisualizationData(resourceSubject, resourceStatements.statements);
                             }
                             return resourceSubject;
                         });
-                        if (props.filterClass === CLASSES.COMPARISON) {
+                        if (filterClass === CLASSES.COMPARISON) {
                             setResources(prevResources =>
                                 groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...newResources]),
                             );
-                        } else if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
+                        } else if (filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
                             const groupedByPaper = groupBy(newResources, 'paperId');
                             newResources = Object.keys(groupedByPaper).map(paperId => [...groupedByPaper[paperId]]);
                             setResources(prevResources => [...prevResources, ...newResources]);
-                        } else if (props.filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
+                        } else if (filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
                             const groupedByPaper = groupBy(newResources, 'paperId');
                             newResources = Object.keys(groupedByPaper).map(paperId => [...groupedByPaper[paperId]]);
                             setResources(prevResources => [...prevResources, ...newResources]);
@@ -107,7 +107,7 @@ const Items = props => {
                     });
             });
         },
-        [props.filterClass, props.userId],
+        [filterClass, userId],
     );
 
     const finishLoadingCallback = () => {
@@ -142,7 +142,7 @@ const Items = props => {
         setResources([]);
         setHasNextPage(false);
         setPage(0);
-    }, [props.userId]);
+    }, [userId]);
 
     useEffect(() => {
         loadItems(0);
@@ -173,13 +173,13 @@ const Items = props => {
             {resources.length > 0 && (
                 <ListGroup flush className="rounded">
                     {resources.map(resource => {
-                        if (props.filterClass === CLASSES.PAPER) {
+                        if (filterClass === CLASSES.PAPER) {
                             const paperId = resource.id;
                             const selected = selectedItems.includes(paperId);
 
                             return (
                                 <PaperCard
-                                    selectable={props.showDelete}
+                                    selectable={showDelete}
                                     selected={selected}
                                     onSelect={() => handleSelect(paperId)}
                                     paper={{ title: resource.label, ...resource }}
@@ -187,20 +187,20 @@ const Items = props => {
                                 />
                             );
                         }
-                        if (props.filterClass === CLASSES.COMPARISON) {
+                        if (filterClass === CLASSES.COMPARISON) {
                             return <ComparisonCard comparison={{ ...resource }} key={`pc${resource.id}`} />;
                         }
-                        if (props.filterClass === CLASSES.NODE_SHAPE) {
+                        if (filterClass === CLASSES.NODE_SHAPE) {
                             return <TemplateCard template={resource} key={`pc${resource.id}`} />;
                         }
 
-                        if (props.filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
+                        if (filterClass === CLASSES.SMART_REVIEW_PUBLISHED) {
                             return <ReviewCard key={resource[0]?.id} versions={resource} showBadge={false} showCurationFlags={true} />;
                         }
-                        if (props.filterClass === CLASSES.VISUALIZATION) {
+                        if (filterClass === CLASSES.VISUALIZATION) {
                             return <VisualizationCard visualization={resource} showBadge={false} showCurationFlags={true} key={`pc${resource.id}`} />;
                         }
-                        if (props.filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
+                        if (filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
                             return <ListCard versions={resource} showBadge={false} showCurationFlags={true} />;
                         }
 
@@ -215,7 +215,7 @@ const Items = props => {
                             role="button"
                             tabIndex={0}
                         >
-                            View more {props.filterLabel}
+                            View more {filterLabel}
                         </div>
                     )}
                 </ListGroup>
@@ -225,21 +225,21 @@ const Items = props => {
 
             {resources.length === 0 && !isLoading && (
                 <div className="p-5 text-center mt-4 mb-4">
-                    This user hasn't added any {props.filterLabel} to ORKG yet
+                    This user hasn't added any {filterLabel} to ORKG yet
                     <br />
                 </div>
             )}
 
             {selectedItems.length > 0 && (
                 <>
-                    {props.filterClass === CLASSES.PAPER && (
+                    {filterClass === CLASSES.PAPER && (
                         <Button size="sm" color="secondary" className="mt-2 me-2" onClick={comparePapers}>
-                            Compare selected {props.filterLabel} ({selectedItems.length})
+                            Compare selected {filterLabel} ({selectedItems.length})
                         </Button>
                     )}
 
                     <Button size="sm" color="danger" className="mt-2" onClick={deletePapers}>
-                        Delete selected {props.filterLabel} ({selectedItems.length})
+                        Delete selected {filterLabel} ({selectedItems.length})
                     </Button>
                 </>
             )}
@@ -254,7 +254,4 @@ Items.propTypes = {
     showDelete: PropTypes.bool,
 };
 
-Items.defaultProps = {
-    showDelete: false,
-};
 export default Items;

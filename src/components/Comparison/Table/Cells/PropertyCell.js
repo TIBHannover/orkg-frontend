@@ -52,7 +52,7 @@ const FilterButton = styled(Button)`
     }
 `;
 
-const PropertyCell = ({ id, label, property, similar, group, grouped = false, groupId }) => {
+const PropertyCell = ({ id, label, property, similar, group, grouped = false, groupId = null }) => {
     const [showStatementBrowser, setShowStatementBrowser] = useState(false);
     const [showFilterDialog, setShowFilterDialog] = useState(false);
     const dispatch = useDispatch();
@@ -160,12 +160,6 @@ PropertyCell.propTypes = {
     group: PropTypes.bool,
     grouped: PropTypes.bool,
     groupId: PropTypes.string,
-};
-
-PropertyCell.defaultProps = {
-    label: PropTypes.string.isRequired,
-    similar: PropTypes.array,
-    groupId: null,
 };
 
 export default PropertyCell;

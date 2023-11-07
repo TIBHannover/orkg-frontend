@@ -2,7 +2,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 
-const Authors = ({ authors, maxAuthors }) =>
+const Authors = ({ authors, maxAuthors = 5 }) =>
     authors?.length > 0 && (
         <>
             <Icon size="sm" icon={faUser} />{' '}
@@ -22,10 +22,6 @@ Authors.propTypes = {
         }),
     ),
     maxAuthors: PropTypes.number,
-};
-
-Authors.defaultProps = {
-    maxAuthors: 5,
 };
 
 export default Authors;

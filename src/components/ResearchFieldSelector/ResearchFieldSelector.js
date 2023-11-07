@@ -61,10 +61,10 @@ const ResearchFieldSelector = ({
     researchFields,
     updateResearchField,
     researchFieldStats,
-    insideModal,
-    showPreviouslySelected,
-    title,
-    abstract,
+    insideModal = false,
+    showPreviouslySelected = true,
+    title = '',
+    abstract = '',
 }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [loadingId, setLoadingId] = useState(null);
@@ -306,17 +306,10 @@ ResearchFieldSelector.propTypes = {
     researchFields: PropTypes.array,
     updateResearchField: PropTypes.func,
     researchFieldStats: PropTypes.object,
-    insideModal: PropTypes.bool.isRequired,
-    showPreviouslySelected: PropTypes.bool.isRequired,
+    insideModal: PropTypes.bool,
+    showPreviouslySelected: PropTypes.bool,
     title: PropTypes.string,
     abstract: PropTypes.string,
-};
-
-ResearchFieldSelector.defaultProps = {
-    insideModal: false,
-    showPreviouslySelected: true,
-    title: '',
-    abstract: '',
 };
 
 export default ResearchFieldSelector;

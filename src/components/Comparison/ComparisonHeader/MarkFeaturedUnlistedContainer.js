@@ -3,17 +3,17 @@ import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlis
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import PropTypes from 'prop-types';
 
-const MarkFeaturedUnlistedContainer = props => {
+const MarkFeaturedUnlistedContainer = ({ id, unlisted, featured, size = 'xs' }) => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
-        resourceId: props.id,
-        unlisted: props.unlisted,
-        featured: props.featured,
+        resourceId: id,
+        unlisted,
+        featured,
     });
     return (
         <>
-            <MarkFeatured size={props.size} featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+            <MarkFeatured size={size} featured={isFeatured} handleChangeStatus={handleChangeStatus} />
             <div className="d-inline-block ms-1">
-                <MarkUnlisted size={props.size} unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                <MarkUnlisted size={size} unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
             </div>
         </>
     );
@@ -24,10 +24,6 @@ MarkFeaturedUnlistedContainer.propTypes = {
     featured: PropTypes.bool,
     unlisted: PropTypes.bool,
     size: PropTypes.string,
-};
-
-MarkFeaturedUnlistedContainer.defaultProps = {
-    size: 'xs',
 };
 
 export default MarkFeaturedUnlistedContainer;

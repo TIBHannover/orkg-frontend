@@ -10,7 +10,6 @@ import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions
 import StatementItemWrapper from 'components/StatementBrowser/StatementItem/StatementItemWrapper';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import { ENTITIES } from 'constants/graphSettings';
 import { isArray } from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
@@ -27,7 +26,24 @@ import {
 import ItemPreviewFactory from 'components/StatementBrowser/ValueItem/ItemPreviewFactory/ItemPreviewFactory';
 import StatementMenuHeader from 'components/StatementBrowser/Statements/StatementMenuHeader/StatementMenuHeader';
 
-const Statements = props => {
+const Statements = ({
+    openExistingResourcesInDialog = false,
+    initialSubjectId = null,
+    initialSubjectLabel = null,
+    propertiesAsLinks = false,
+    resourcesAsLinks = false,
+    keyToKeepStateOnLocationChange = null,
+    renderTemplateBox = false,
+    propertySuggestionsComponent: propertySuggestionsComponentProp = null,
+    syncBackend: syncBackendProp,
+    initOnLocationChange,
+    rootNodeType,
+    initialPath,
+    newStore,
+    canEditSharedRootLevel,
+    enableEdit,
+    showExternalDescriptions,
+}) => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const level = useSelector(state => state.statementBrowser.level);
     const suggestedProperties = useSelector(state => getSuggestedProperties(state, selectedResource));
@@ -35,63 +51,63 @@ const Statements = props => {
     const dispatch = useDispatch();
 
     // If the resource exist, all changes are synced to the backend automatically
-    const syncBackend = !props.syncBackend ? !!resource.isExistingValue : props.syncBackend;
+    const syncBackend = !syncBackendProp ? !!resource.isExistingValue : syncBackendProp;
 
     useEffect(() => {
-        if (props.initialSubjectId) {
-            if (props.newStore) {
+        if (initialSubjectId) {
+            if (newStore) {
                 dispatch(
                     initializeWithoutContribution({
-                        resourceId: props.initialSubjectId,
-                        label: props.initialSubjectLabel,
-                        rootNodeType: props.rootNodeType,
+                        resourceId: initialSubjectId,
+                        label: initialSubjectLabel,
+                        rootNodeType,
                     }),
                 );
             } else {
                 dispatch(
                     initializeWithResource({
-                        resourceId: props.initialSubjectId,
-                        label: props.initialSubjectLabel,
+                        resourceId: initialSubjectId,
+                        label: initialSubjectLabel,
                     }),
                 );
             }
             dispatch(
                 updateSettings({
-                    openExistingResourcesInDialog: props.openExistingResourcesInDialog,
-                    propertiesAsLinks: props.propertiesAsLinks,
-                    resourcesAsLinks: props.resourcesAsLinks,
-                    initOnLocationChange: props.initOnLocationChange,
-                    keyToKeepStateOnLocationChange: props.keyToKeepStateOnLocationChange,
+                    openExistingResourcesInDialog,
+                    propertiesAsLinks,
+                    resourcesAsLinks,
+                    initOnLocationChange,
+                    keyToKeepStateOnLocationChange,
                 }),
             );
 
-            dispatch(setInitialPath(props.initialPath));
+            dispatch(setInitialPath(initialPath));
         } else {
             dispatch(
                 updateSettings({
-                    initOnLocationChange: props.initOnLocationChange,
-                    keyToKeepStateOnLocationChange: props.keyToKeepStateOnLocationChange,
+                    initOnLocationChange,
+                    keyToKeepStateOnLocationChange,
                 }),
             );
         }
     }, [
         dispatch,
-        props.initOnLocationChange,
-        props.initialSubjectId,
-        props.initialSubjectLabel,
-        props.keyToKeepStateOnLocationChange,
-        props.newStore,
-        props.openExistingResourcesInDialog,
-        props.propertiesAsLinks,
-        props.resourcesAsLinks,
-        props.rootNodeType,
-        props.initialPath,
+        initOnLocationChange,
+        initialSubjectId,
+        initialSubjectLabel,
+        keyToKeepStateOnLocationChange,
+        newStore,
+        openExistingResourcesInDialog,
+        propertiesAsLinks,
+        resourcesAsLinks,
+        rootNodeType,
+        initialPath,
     ]);
 
     const statements = () => {
         let propertyIds = [];
         let shared = 1;
-        const propertySuggestionsComponent = props.propertySuggestionsComponent || <PropertySuggestions />;
+        const propertySuggestionsComponent = propertySuggestionsComponentProp || <PropertySuggestions />;
         if (resource && selectedResource) {
             propertyIds = resource && isArray(resource.propertyIds) ? resource.propertyIds : [];
             shared = resource?.shared ?? 0;
@@ -99,7 +115,7 @@ const Statements = props => {
 
         return (
             <ConditionalWrapper
-                condition={!props.resourcesAsLinks && resource?.classes}
+                condition={!resourcesAsLinks && resource?.classes}
                 wrapper={children => (
                     <ItemPreviewFactory id={selectedResource} classes={resource?.classes}>
                         {children}
@@ -108,9 +124,9 @@ const Statements = props => {
             >
                 <div>
                     <Row>
-                        <Col lg={props.propertySuggestionsComponent ? 9 : 12}>
+                        <Col lg={propertySuggestionsComponentProp ? 9 : 12}>
                             <ClassesItem
-                                enableEdit={(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit}
+                                enableEdit={(shared <= 1 || (canEditSharedRootLevel && level === 0)) && enableEdit}
                                 syncBackend={syncBackend}
                             />
                             <ListGroup tag="div" className="listGroupEnlarge">
@@ -121,21 +137,19 @@ const Statements = props => {
                                                 propertyIds.map((propertyId, index) => (
                                                     <StatementItemWrapper
                                                         key={`statement-p${propertyId}r${selectedResource}`}
-                                                        enableEdit={
-                                                            (shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit
-                                                        }
-                                                        openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+                                                        enableEdit={(shared <= 1 || (canEditSharedRootLevel && level === 0)) && enableEdit}
+                                                        openExistingResourcesInDialog={openExistingResourcesInDialog}
                                                         isLastItem={propertyIds.length === index + 1}
                                                         isFirstItem={index === 0}
                                                         resourceId={selectedResource}
                                                         propertyId={propertyId}
                                                         syncBackend={syncBackend}
-                                                        renderTemplateBox={props.renderTemplateBox}
+                                                        renderTemplateBox={renderTemplateBox}
                                                     />
                                                 ))}
                                         </FlipMove>
 
-                                        {!resource.isFailedFetching && propertyIds.length === 0 && <NoData enableEdit={props.enableEdit} />}
+                                        {!resource.isFailedFetching && propertyIds.length === 0 && <NoData enableEdit={enableEdit} />}
                                         {resource.isFailedFetching && propertyIds.length === 0 && <NotFound />}
                                     </>
                                 ) : (
@@ -144,13 +158,13 @@ const Statements = props => {
                                     </StyledStatementItem>
                                 )}
 
-                                {(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit && (
+                                {(shared <= 1 || (canEditSharedRootLevel && level === 0)) && enableEdit && (
                                     <AddProperty resourceId={selectedResource} syncBackend={syncBackend} />
                                 )}
                             </ListGroup>
                         </Col>
-                        {(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) &&
-                            props.enableEdit &&
+                        {(shared <= 1 || (canEditSharedRootLevel && level === 0)) &&
+                            enableEdit &&
                             suggestedProperties.length > 0 &&
                             propertySuggestionsComponent}
                     </Row>
@@ -175,9 +189,9 @@ const Statements = props => {
         <>
             {resource && (
                 <StatementMenuHeader
-                    enableEdit={props.enableEdit}
-                    canEdit={resource?.shared <= 1 || (props.canEditSharedRootLevel && level === 0)}
-                    syncBackend={props.syncBackend}
+                    enableEdit={enableEdit}
+                    canEdit={resource?.shared <= 1 || (canEditSharedRootLevel && level === 0)}
+                    syncBackend={syncBackendProp}
                     resource={resource}
                 />
             )}
@@ -186,7 +200,7 @@ const Statements = props => {
                 {level !== 0 && <Breadcrumbs />}
                 {elements}
 
-                {props.showExternalDescriptions && <SameAsStatements />}
+                {showExternalDescriptions && <SameAsStatements />}
             </>
         </>
     );
@@ -214,25 +228,6 @@ Statements.propTypes = {
     keyToKeepStateOnLocationChange: PropTypes.string,
     renderTemplateBox: PropTypes.bool,
     canEditSharedRootLevel: PropTypes.bool.isRequired,
-};
-
-Statements.defaultProps = {
-    enableEdit: false,
-    openExistingResourcesInDialog: false,
-    initialSubjectId: null,
-    initialSubjectLabel: null,
-    syncBackend: false,
-    newStore: false,
-    propertiesAsLinks: false,
-    resourcesAsLinks: false,
-    initOnLocationChange: true,
-    showExternalDescriptions: true,
-    keyToKeepStateOnLocationChange: null,
-    rootNodeType: ENTITIES.RESOURCE,
-    renderTemplateBox: false,
-    initialPath: [],
-    canEditSharedRootLevel: true,
-    propertySuggestionsComponent: null,
 };
 
 export default Statements;

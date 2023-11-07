@@ -4,7 +4,7 @@ import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { AddContribution } from 'components/ContributionTabs/styled';
 import Tippy from '@tippyjs/react';
 
-const AddContributionButton = ({ onClick, disabled }) => (
+const AddContributionButton = ({ onClick, disabled = false }) => (
     <AddContribution disabled={disabled} color="link" onClick={onClick}>
         <Tippy content="Add contribution">
             <span>
@@ -17,10 +17,6 @@ const AddContributionButton = ({ onClick, disabled }) => (
 AddContributionButton.propTypes = {
     onClick: PropTypes.func.isRequired,
     disabled: PropTypes.bool.isRequired,
-};
-
-AddContributionButton.defaultProps = {
-    disabled: false,
 };
 
 export default AddContributionButton;

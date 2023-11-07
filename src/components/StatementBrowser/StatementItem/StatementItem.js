@@ -19,8 +19,7 @@ import useStatementItem from 'components/StatementBrowser/StatementItem/hooks/us
 import SortableValueItem from 'components/StatementBrowser/StatementItem/SortableValueItem';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 
-// eslint-disable-next-line react/display-name
-const StatementItem = forwardRef((props, ref) => {
+const StatementItem = forwardRef(({ resourceId = null, showValueHelp = false, id, syncBackend, enableEdit, inTemplate }, ref) => {
     const {
         propertiesAsLinks,
         propertyOptionsClasses,
@@ -33,15 +32,15 @@ const StatementItem = forwardRef((props, ref) => {
         handleChange,
         handleDeleteStatement,
     } = useStatementItem({
-        propertyId: props.id,
-        resourceId: props.resourceId,
-        syncBackend: props.syncBackend,
+        propertyId: id,
+        resourceId,
+        syncBackend,
     });
 
     const preferences = useSelector(state => state.statementBrowser.preferences);
 
     return (
-        <StatementsGroupStyle ref={ref} className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'} list-group-item`}>
+        <StatementsGroupStyle ref={ref} className={`${inTemplate ? 'inTemplate' : 'noTemplate'} list-group-item`}>
             <div className="row gx-0">
                 <PropertyStyle className={`col-4 ${property.isEditing ? 'editingLabel' : ''}`} tabIndex="0">
                     {!property.isEditing ? (
@@ -65,7 +64,7 @@ const StatementItem = forwardRef((props, ref) => {
                                 {!property.isSaving && !property.existingPredicateId && predicateLabel}
                                 {property.isSaving && 'Saving...'}
                             </div>
-                            {props.enableEdit && (
+                            {enableEdit && (
                                 <div className={propertyOptionsClasses}>
                                     {!property.isSaving && (
                                         <StatementActionButton
@@ -76,7 +75,7 @@ const StatementItem = forwardRef((props, ref) => {
                                                     : "This property can not be changes because it's required by the template"
                                             }
                                             icon={faPen}
-                                            action={() => dispatch(toggleEditPropertyLabel({ id: props.id }))}
+                                            action={() => dispatch(toggleEditPropertyLabel({ id }))}
                                             testId={`change-property-${property.existingPredicateId}`}
                                         />
                                     )}
@@ -138,14 +137,14 @@ const StatementItem = forwardRef((props, ref) => {
                                     placeholder={predicateLabel}
                                     onChange={(selectedOption, a) => {
                                         handleChange(selectedOption, a);
-                                        dispatch(toggleEditPropertyLabel({ id: props.id }));
+                                        dispatch(toggleEditPropertyLabel({ id }));
                                     }}
                                     onKeyDown={e => e.keyCode === 27 && e.target.blur()}
                                     disableBorderRadiusRight
                                     allowCreate
                                     defaultOptions={defaultProperties}
                                     onBlur={() => {
-                                        dispatch(toggleEditPropertyLabel({ id: props.id }));
+                                        dispatch(toggleEditPropertyLabel({ id }));
                                     }}
                                 />
                             </InputGroup>
@@ -162,7 +161,7 @@ const StatementItem = forwardRef((props, ref) => {
                                         key={valueId}
                                         condition={property.existingPredicateId === PREDICATES.HAS_LIST_ELEMENT}
                                         wrapper={children => (
-                                            <SortableValueItem index={index} id={valueId} enableEdit={props.enableEdit} propertyId={props.id}>
+                                            <SortableValueItem index={index} id={valueId} enableEdit={enableEdit} propertyId={id}>
                                                 {children}
                                             </SortableValueItem>
                                         )}
@@ -170,28 +169,26 @@ const StatementItem = forwardRef((props, ref) => {
                                         <ValueItem
                                             value={value}
                                             id={valueId}
-                                            enableEdit={props.enableEdit}
-                                            syncBackend={props.syncBackend}
-                                            propertyId={props.id}
+                                            enableEdit={enableEdit}
+                                            syncBackend={syncBackend}
+                                            propertyId={id}
                                             property={property}
                                             contextStyle="Template"
                                             index={index}
                                             valueIds={property.valueIds}
-                                            showHelp={!!(props.showValueHelp && index === 0)}
-                                            subjectId={props.resourceId}
+                                            showHelp={!!(showValueHelp && index === 0)}
+                                            subjectId={resourceId}
                                             shouldDisableValueItemStyle={property.existingPredicateId === PREDICATES.HAS_LIST_ELEMENT}
                                         />
                                     </ConditionalWrapper>
                                 );
                             })}
-                        {!props.enableEdit && property.valueIds.length === 0 && (
+                        {!enableEdit && property.valueIds.length === 0 && (
                             <div className="pt-2">
                                 <small>No values</small>
                             </div>
                         )}
-                        {props.enableEdit && (
-                            <AddValue isDisabled={!canAddValue} propertyId={props.id} resourceId={props.resourceId} syncBackend={props.syncBackend} />
-                        )}
+                        {enableEdit && <AddValue isDisabled={!canAddValue} propertyId={id} resourceId={resourceId} syncBackend={syncBackend} />}
                     </ListGroup>
                 </ValuesStyle>
             </div>
@@ -207,10 +204,5 @@ StatementItem.propTypes = {
     resourceId: PropTypes.string,
     inTemplate: PropTypes.bool,
 };
-
-StatementItem.defaultProps = {
-    resourceId: null,
-    showValueHelp: false,
-};
-
+StatementItem.displayName = 'StatementItem';
 export default StatementItem;

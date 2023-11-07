@@ -49,8 +49,7 @@ const TitleStyled = styled.h1`
     }
 `;
 
-const StepContainer = props => {
-    const { step, title, topLine, bottomLine, active, children } = props;
+const StepContainer = ({ step, title, topLine = false, bottomLine = false, active = false, children = null }) => {
     const activeClasses = active ? 'active' : '';
     const topClasses = classNames({
         top: true,
@@ -88,13 +87,6 @@ StepContainer.propTypes = {
     bottomLine: PropTypes.bool,
     active: PropTypes.bool,
     children: PropTypes.node,
-};
-
-StepContainer.defaultProps = {
-    topLine: false,
-    bottomLine: false,
-    active: false,
-    children: null,
 };
 
 export default StepContainer;

@@ -38,9 +38,9 @@ function OrganizationCard(props) {
         <div className="col-4 mb-3">
             <Link href={reverse(ROUTES.ORGANIZATION, { type: props.type, id: props.organization.display_id })}>
                 <StyledOrganizationCard className="card h-100">
-                    <Link className="logoContainer" href={reverse(ROUTES.ORGANIZATION, { type: props.type, id: props.organization.display_id })}>
+                    <div className="logoContainer">
                         <img className="mx-auto p-2" src={getOrganizationLogoUrl(props.organization?.id)} alt={`${props.organization.name} logo`} />
-                    </Link>
+                    </div>
                     <CardBody>
                         <CardTitle className="text-center">{props.organization.name}</CardTitle>
                     </CardBody>

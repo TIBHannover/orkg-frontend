@@ -16,7 +16,7 @@ import { MarkdownContainer } from 'components/ArticleBuilder/MarkdownEditor/styl
  * and configures the markdown to HTML parser
  */
 /* TODO: secure ADD_ATTR */
-const MarkdownRenderer = ({ text, id }) => {
+const MarkdownRenderer = ({ text = null, id }) => {
     const contributionId = useSelector(state => state.review.contributionId);
     const references = useSelector(state => state.review.references);
     const [fetchedDois, setFetchedDois] = useState([]);
@@ -104,10 +104,6 @@ const MarkdownRenderer = ({ text, id }) => {
 MarkdownRenderer.propTypes = {
     text: PropTypes.string,
     id: PropTypes.string,
-};
-
-MarkdownRenderer.defaultProps = {
-    text: null,
 };
 
 export default MarkdownRenderer;

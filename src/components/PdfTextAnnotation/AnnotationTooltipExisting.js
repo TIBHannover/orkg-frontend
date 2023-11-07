@@ -23,12 +23,12 @@ const DeleteIcon = styled(Icon)`
     color: #f87474;
 `;
 
-const AnnotationTooltipExisting = props => {
+const AnnotationTooltipExisting = ({ type = null, id = null, deleteAnnotation }) => {
     const { findByType } = useOntology();
 
-    const label = upperFirst(findByType(props.type).label);
+    const label = upperFirst(findByType(type).label);
 
-    if (!props.type) {
+    if (!type) {
         return;
     }
 
@@ -36,7 +36,7 @@ const AnnotationTooltipExisting = props => {
         <Container onClick={e => e.stopPropagation()}>
             <span className="pe-3">{label}</span>
             <IconWrapper>
-                <DeleteIcon icon={faTrash} onClick={() => props.deleteAnnotation(props.id)} />
+                <DeleteIcon icon={faTrash} onClick={() => deleteAnnotation(id)} />
             </IconWrapper>
         </Container>
     );
@@ -46,11 +46,6 @@ AnnotationTooltipExisting.propTypes = {
     deleteAnnotation: PropTypes.func.isRequired,
     type: PropTypes.string,
     id: PropTypes.string,
-};
-
-AnnotationTooltipExisting.defaultProps = {
-    type: null,
-    id: null,
 };
 
 export default AnnotationTooltipExisting;

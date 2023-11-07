@@ -25,7 +25,15 @@ const ButtonsContainer = styled.div`
     display: ${props => (props.displayButtonOnHover ? 'none' : 'inline-block')};
 `;
 
-const ClassInlineItem = ({ classObject, editMode, noValueMessage, displayButtonOnHover, ...props }) => {
+const ClassInlineItem = ({
+    classObject,
+    editMode,
+    noValueMessage = 'Not defined',
+    displayButtonOnHover = true,
+    showParentFieldForCreate = true,
+    onDelete,
+    onChange,
+}) => {
     const classAutocompleteRef = useRef(null);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const [isChangingValue, setIsChangingValue] = useState(null);
@@ -43,16 +51,16 @@ const ClassInlineItem = ({ classObject, editMode, noValueMessage, displayButtonO
         setIsSavingChange(true);
         if (action === 'select-option') {
             setValue(selected);
-            await props.onChange(selected);
+            await onChange(selected);
         } else if (action === 'create-option') {
             const newClass = await ConfirmClass({
                 label: selected.label,
-                showParentField: props.showParentFieldForCreate,
+                showParentField: showParentFieldForCreate,
             });
             if (newClass) {
                 _selected.id = newClass.id;
                 setValue(_selected);
-                await props.onChange(_selected);
+                await onChange(_selected);
             }
             // blur the field allows to focus and open the menu again
             if (classAutocompleteRef.current) {
@@ -60,7 +68,7 @@ const ClassInlineItem = ({ classObject, editMode, noValueMessage, displayButtonO
             }
         } else if (action === 'clear') {
             setValue(selected);
-            await props.onChange(selected);
+            await onChange(selected);
         }
         setIsSavingChange(false);
         setValue(classObject);
@@ -87,7 +95,7 @@ const ClassInlineItem = ({ classObject, editMode, noValueMessage, displayButtonO
                         )}
                         {classObject && editMode && isCurationAllowed && (
                             <span className="ms-2">
-                                {props.onChange && (
+                                {onChange && (
                                     <StatementActionButton
                                         title="Change class"
                                         icon={faPen}
@@ -97,7 +105,7 @@ const ClassInlineItem = ({ classObject, editMode, noValueMessage, displayButtonO
                                         isDisabled={isSavingChange}
                                     />
                                 )}
-                                {props.onDelete && (
+                                {onDelete && (
                                     <StatementActionButton
                                         title="Remove class"
                                         icon={faTrash}
@@ -110,7 +118,7 @@ const ClassInlineItem = ({ classObject, editMode, noValueMessage, displayButtonO
                                                 icon: faCheck,
                                                 action: async () => {
                                                     setIsSavingDelete(true);
-                                                    await props.onDelete();
+                                                    await onDelete();
                                                     setIsSavingDelete(false);
                                                 },
                                             },
@@ -175,12 +183,6 @@ ClassInlineItem.propTypes = {
     noValueMessage: PropTypes.string,
     displayButtonOnHover: PropTypes.bool,
     showParentFieldForCreate: PropTypes.bool,
-};
-
-ClassInlineItem.defaultProps = {
-    displayButtonOnHover: true,
-    showParentFieldForCreate: true,
-    noValueMessage: 'Not defined',
 };
 
 export default ClassInlineItem;

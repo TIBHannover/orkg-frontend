@@ -22,7 +22,7 @@ const ReviewCardStyled = styled.div`
     }
 `;
 
-const ReviewCard = ({ versions, showCurationFlags, showBadge }) => {
+const ReviewCard = ({ versions, showCurationFlags = true, showBadge = false }) => {
     const {
         researchField,
         authors,
@@ -102,13 +102,8 @@ const ReviewCard = ({ versions, showCurationFlags, showBadge }) => {
 
 ReviewCard.propTypes = {
     versions: PropTypes.array.isRequired,
-    showBadge: PropTypes.bool.isRequired,
-    showCurationFlags: PropTypes.bool.isRequired,
-};
-
-ReviewCard.defaultProps = {
-    showBadge: false,
-    showCurationFlags: true,
+    showBadge: PropTypes.bool,
+    showCurationFlags: PropTypes.bool,
 };
 
 export default ReviewCard;

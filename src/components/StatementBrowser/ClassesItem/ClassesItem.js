@@ -52,7 +52,7 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
-const ClassesItem = props => {
+const ClassesItem = ({ enableEdit = false, syncBackend = false }) => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const [editMode, setEditMode] = useState(false);
@@ -111,12 +111,12 @@ const ClassesItem = props => {
             dispatch(removeEmptyPropertiesOfClass({ resourceId: selectedResource, classId: action.removedValue?.id }));
         }
         const newClasses = !selected ? [] : selected;
-        dispatch(updateResourceClasses({ resourceId: selectedResource, classes: newClasses?.map(c => c.id) ?? [], syncBackend: props.syncBackend }))
+        dispatch(updateResourceClasses({ resourceId: selectedResource, classes: newClasses?.map(c => c.id) ?? [], syncBackend }))
             .then(() => {
                 setClasses(newClasses);
                 setIsSaving(false);
                 toast.dismiss();
-                if (props.syncBackend) {
+                if (syncBackend) {
                     toast.success('Resource classes updated successfully');
                 }
             })
@@ -155,7 +155,7 @@ const ClassesItem = props => {
                                     <i>Loading ...</i>
                                 </div>
                             )}
-                            {props.enableEdit && editMode && (
+                            {enableEdit && editMode && (
                                 <div className="flex-grow-1 ms-1 ">
                                     <InputGroup size="sm">
                                         <AutoComplete
@@ -187,9 +187,7 @@ const ClassesItem = props => {
                                     </InputGroup>
                                 </div>
                             )}
-                            {props.enableEdit && !editMode && (
-                                <StatementActionButton title="Edit classes" icon={faPen} action={() => setEditMode(true)} />
-                            )}
+                            {enableEdit && !editMode && <StatementActionButton title="Edit classes" icon={faPen} action={() => setEditMode(true)} />}
                         </ClassesStyle>
                     )}
                 </div>
@@ -227,11 +225,6 @@ const ClassesItem = props => {
 ClassesItem.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
-};
-
-ClassesItem.defaultProps = {
-    enableEdit: false,
-    syncBackend: false,
 };
 
 export default ClassesItem;

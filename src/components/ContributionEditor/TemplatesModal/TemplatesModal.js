@@ -37,9 +37,9 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
-const TemplatesModal = props => {
+const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsTemplatesModalOpen = undefined }) => {
     const [source, target] = useSingleton();
-    const isTemplatesModalOpen = useSelector(state => props.isTemplatesModalOpen ?? state.statementBrowser.isTemplatesModalOpen);
+    const isTemplatesModalOpen = useSelector(state => isTemplatesModalOpenProp ?? state.statementBrowser.isTemplatesModalOpen);
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
     const onlyFeatured = true;
     const {
@@ -74,13 +74,11 @@ const TemplatesModal = props => {
             <Modal
                 size="lg"
                 isOpen={isTemplatesModalOpen}
-                toggle={() =>
-                    props.setIsTemplatesModalOpen?.(!isTemplatesModalOpen) ?? dispatch(setIsTemplateModalOpen({ isOpen: !isTemplatesModalOpen }))
-                }
+                toggle={() => setIsTemplatesModalOpen?.(!isTemplatesModalOpen) ?? dispatch(setIsTemplateModalOpen({ isOpen: !isTemplatesModalOpen }))}
             >
                 <ModalHeader
                     toggle={() =>
-                        props.setIsTemplatesModalOpen?.(!isTemplatesModalOpen) ?? dispatch(setIsTemplateModalOpen({ isOpen: !isTemplatesModalOpen }))
+                        setIsTemplatesModalOpen?.(!isTemplatesModalOpen) ?? dispatch(setIsTemplateModalOpen({ isOpen: !isTemplatesModalOpen }))
                     }
                 >
                     Template gallery
@@ -260,11 +258,6 @@ const TemplatesModal = props => {
 TemplatesModal.propTypes = {
     isTemplatesModalOpen: PropTypes.bool,
     setIsTemplatesModalOpen: PropTypes.func,
-};
-
-TemplatesModal.defaultProps = {
-    isTemplatesModalOpen: undefined,
-    setIsTemplatesModalOpen: undefined,
 };
 
 export default TemplatesModal;

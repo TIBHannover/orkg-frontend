@@ -12,7 +12,7 @@ import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { Badge } from 'reactstrap';
 
-function ProvenanceBox({ item, editMode }) {
+function ProvenanceBox({ item, editMode = false }) {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
     const { observatoryId, organizationId, provenance, updateCallBack } = useProvenance({ orgId: item.organization_id, obsId: item.observatory_id });
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
@@ -64,7 +64,4 @@ ProvenanceBox.propTypes = {
     editMode: PropTypes.bool.isRequired,
 };
 
-ProvenanceBox.defaultProps = {
-    editMode: false,
-};
 export default ProvenanceBox;

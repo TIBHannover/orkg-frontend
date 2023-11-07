@@ -32,7 +32,17 @@ TypeTooltipContent.propTypes = {
     switchEntityType: PropTypes.bool,
 };
 
-const DatatypeSelector = props => {
+const DatatypeSelector = ({
+    disableBorderRadiusLeft = false,
+    disableBorderRadiusRight = true,
+    syncBackend,
+    entity,
+    valueType,
+    setValueType,
+    valueClass,
+    menuPortalTarget = null,
+    isDisabled = false,
+}) => {
     // const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const theme = useContext(ThemeContext);
 
@@ -58,11 +68,11 @@ const DatatypeSelector = props => {
             ...provided,
             height: '100% !important',
             minHeight: 'calc(1.5em + 0.5rem + 2px)',
-            borderTopLeftRadius: props.disableBorderRadiusLeft ? 0 : undefined,
-            borderBottomLeftRadius: props.disableBorderRadiusLeft ? 0 : undefined,
-            borderTopRightRadius: props.disableBorderRadiusRight ? 0 : undefined,
-            borderBottomRightRadius: props.disableBorderRadiusRight ? 0 : undefined,
-            ...(props.disableBorderRadiusRight ? { borderRight: 0 } : {}),
+            borderTopLeftRadius: disableBorderRadiusLeft ? 0 : undefined,
+            borderBottomLeftRadius: disableBorderRadiusLeft ? 0 : undefined,
+            borderTopRightRadius: disableBorderRadiusRight ? 0 : undefined,
+            borderBottomRightRadius: disableBorderRadiusRight ? 0 : undefined,
+            ...(disableBorderRadiusRight ? { borderRight: 0 } : {}),
             backgroundColor: theme.light,
             color: theme.secondaryDarker,
         }),
@@ -103,20 +113,20 @@ const DatatypeSelector = props => {
     };
 
     // lists are not supported when changes are not synced with the backend
-    const availableDataTypes = !props.syncBackend ? DATA_TYPES.filter(dataType => dataType.type !== 'list') : DATA_TYPES;
+    const availableDataTypes = !syncBackend ? DATA_TYPES.filter(dataType => dataType.type !== 'list') : DATA_TYPES;
 
     return (
         <>
             <ConditionalWrapper
-                condition={props.isDisabled}
+                condition={isDisabled}
                 wrapper={children => (
                     <Tippy
                         interactive
                         content={
                             <TypeTooltipContent
-                                switchEntityType={props.entity && DATA_TYPES.filter(dt => dt._class === props.entity).length <= 1}
-                                entity={getConfigByType(props.valueType)._class}
-                                valueClass={props.valueClass}
+                                switchEntityType={entity && DATA_TYPES.filter(dt => dt._class === entity).length <= 1}
+                                entity={getConfigByType(valueType)._class}
+                                valueClass={valueClass}
                             />
                         }
                     >
@@ -127,16 +137,16 @@ const DatatypeSelector = props => {
                 <Select
                     styles={customStyles}
                     classNamePrefix="react-select-dark"
-                    value={getConfigByType(props.valueType)}
+                    value={getConfigByType(valueType)}
                     components={{ Option: CustomOption }}
-                    options={!props.entity ? availableDataTypes : availableDataTypes.filter(dt => dt._class === props.entity)}
-                    onChange={v => props.setValueType(v.type)}
+                    options={!entity ? availableDataTypes : availableDataTypes.filter(dt => dt._class === entity)}
+                    onChange={v => setValueType(v.type)}
                     getOptionValue={({ type }) => type}
                     getOptionLabel={({ name }) => name}
                     isClearable={false}
-                    menuPortalTarget={props.menuPortalTarget}
+                    menuPortalTarget={menuPortalTarget}
                     inputId="datatypeSelector"
-                    isDisabled={props.isDisabled}
+                    isDisabled={isDisabled}
                 />
             </ConditionalWrapper>
             <SelectGlobalStyle />
@@ -154,14 +164,6 @@ DatatypeSelector.propTypes = {
     isDisabled: PropTypes.bool,
     valueClass: PropTypes.object,
     syncBackend: PropTypes.bool.isRequired,
-};
-
-DatatypeSelector.defaultProps = {
-    disableBorderRadiusLeft: false,
-    disableBorderRadiusRight: true,
-    menuPortalTarget: null,
-    isDisabled: false,
-    valueClass: null,
 };
 
 export default DatatypeSelector;

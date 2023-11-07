@@ -10,10 +10,10 @@ import { createLiteral } from 'services/backend/literals';
 import { createLiteralStatement } from 'services/backend/statements';
 import { getErrorMessage } from 'utils';
 
-function CreateClassModal(props) {
-    const isURI = new RegExp(REGEX.URL).test(props.label.trim());
-    const [uri, setUri] = useState(props.uri ? props.uri : isURI ? props.label.trim() : '');
-    const [label, setLabel] = useState(isURI ? '' : props.label.trim());
+function CreateClassModal({ label: newLabel, uri: newUri, onClose, showParentField = true }) {
+    const isURI = new RegExp(REGEX.URL).test(newLabel.trim());
+    const [uri, setUri] = useState(newUri || (isURI ? newLabel.trim() : ''));
+    const [label, setLabel] = useState(isURI ? '' : newLabel.trim());
     const [parentClass, setParentClass] = useState(null);
     const [errors, setErrors] = useState(null);
     const [description, setDescription] = useState('');
@@ -33,7 +33,7 @@ function CreateClassModal(props) {
                     if (parentClass) {
                         await setParentClassByID(newClass.id, parentClass.id);
                     }
-                    props.onClose(newClass);
+                    onClose(newClass);
                     setErrors(null);
                 } catch (error) {
                     setErrors(error);
@@ -53,8 +53,8 @@ function CreateClassModal(props) {
     };
 
     return (
-        <Modal isOpen toggle={() => props.onClose(false)} size="lg">
-            <ModalHeader toggle={() => props.onClose(false)}>Are you sure you need a new class?</ModalHeader>
+        <Modal isOpen toggle={() => onClose(false)} size="lg">
+            <ModalHeader toggle={() => onClose(false)}>Are you sure you need a new class?</ModalHeader>
             <ModalBody>
                 <p>Often there are existing classes that you can use as well. It is better to use existing classes than new ones.</p>
                 <FormGroup>
@@ -81,7 +81,7 @@ function CreateClassModal(props) {
                         </FormText>
                     </small>
                 </FormGroup>
-                {props.showParentField && (
+                {showParentField && (
                     <FormGroup>
                         <Label for="URIInput">
                             Subclass of <span className="text-muted fst-italic">(optional)</span>
@@ -116,7 +116,7 @@ function CreateClassModal(props) {
                 </FormGroup>
             </ModalBody>
             <ModalFooter>
-                <Button color="light" onClick={() => props.onClose(false)}>
+                <Button color="light" onClick={() => onClose(false)}>
                     Cancel
                 </Button>
                 <Button color="primary" onClick={handleConfirm}>
@@ -132,10 +132,6 @@ CreateClassModal.propTypes = {
     label: PropTypes.string.isRequired,
     uri: PropTypes.string,
     showParentField: PropTypes.bool,
-};
-
-CreateClassModal.defaultProps = {
-    showParentField: true,
 };
 
 export default CreateClassModal;

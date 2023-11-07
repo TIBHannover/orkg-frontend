@@ -16,14 +16,14 @@ const Image = styled.img`
     border: 0;
 `;
 
-const ImageAsFigure = props => {
-    const label = props.children;
+const ImageAsFigure = ({ type, children }) => {
+    const label = children;
     const labelToText = renderToString(label);
     if (!labelToText) {
         return '';
     }
 
-    if (props.type === ENTITIES.LITERAL && labelToText.match(new RegExp(REGEX.IMAGE_URL))) {
+    if (type === ENTITIES.LITERAL && labelToText.match(new RegExp(REGEX.IMAGE_URL))) {
         // we found a image regex:
         return (
             <ImageContainer>
@@ -40,11 +40,6 @@ const ImageAsFigure = props => {
 ImageAsFigure.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.node]).isRequired,
     type: PropTypes.oneOf([ENTITIES.RESOURCE, ENTITIES.LITERAL]),
-    options: PropTypes.object.isRequired,
-};
-
-ImageAsFigure.defaultProps = {
-    options: { inModal: false },
 };
 
 export default ImageAsFigure;

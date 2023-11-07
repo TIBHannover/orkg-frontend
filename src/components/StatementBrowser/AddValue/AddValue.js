@@ -11,15 +11,15 @@ import PropTypes from 'prop-types';
 import useAddValue from 'components/StatementBrowser/AddValue/hooks/useAddValue';
 import SmartValueSuggestions from 'components/SmartSuggestions/SmartValueSuggestions';
 
-const AddValue = props => {
+const AddValue = ({ isDisabled = false, propertyId, resourceId, syncBackend }) => {
     const { modal, property, setModal, isBlankNode, entityType, dialogResourceId, dialogResourceLabel, createBlankNode, valueClass } = useAddValue({
-        resourceId: props.resourceId,
-        propertyId: props.propertyId,
-        syncBackend: props.syncBackend,
+        resourceId,
+        propertyId,
+        syncBackend,
     });
 
     const [showAddValue, setShowAddValue] = useState(false);
-    const isAddingValue = useSelector(state => state.statementBrowser.properties.byId[props.propertyId].isAddingValue ?? false);
+    const isAddingValue = useSelector(state => state.statementBrowser.properties.byId[propertyId].isAddingValue ?? false);
     const paperTitle = useSelector(state => state.viewPaper.paperResource.label);
     const abstract = useSelector(state => state.viewPaper.abstract);
 
@@ -42,8 +42,8 @@ const AddValue = props => {
                     !templateIsLoading && !isAddingValue ? ( // Show loading indicator if the template is still loading
                         <>
                             <StatementActionButton
-                                isDisabled={props.isDisabled}
-                                title={!props.isDisabled ? 'Add value' : 'This property reached the maximum number of values set by template'}
+                                isDisabled={isDisabled}
+                                title={!isDisabled ? 'Add value' : 'This property reached the maximum number of values set by template'}
                                 icon={faPlus}
                                 action={() => {
                                     if (isBlankNode && entityType !== ENTITIES.LITERAL) {
@@ -61,8 +61,8 @@ const AddValue = props => {
                                     <SmartValueSuggestions
                                         paperTitle={paperTitle}
                                         abstract={abstract}
-                                        propertyId={props.propertyId}
-                                        resourceId={props.resourceId}
+                                        propertyId={propertyId}
+                                        resourceId={resourceId}
                                         classId={valueClass?.id ?? null}
                                     />
                                 )}
@@ -76,9 +76,9 @@ const AddValue = props => {
                     <ValueForm
                         setShowAddValue={setShowAddValue}
                         showAddValue={showAddValue}
-                        propertyId={props.propertyId}
-                        resourceId={props.resourceId}
-                        syncBackend={props.syncBackend}
+                        propertyId={propertyId}
+                        resourceId={resourceId}
+                        syncBackend={syncBackend}
                     />
                 )}
             </ValueItemStyle>
@@ -92,10 +92,6 @@ AddValue.propTypes = {
     resourceId: PropTypes.string,
     syncBackend: PropTypes.bool.isRequired,
     isDisabled: PropTypes.bool.isRequired,
-};
-
-AddValue.defaultProps = {
-    isDisabled: false,
 };
 
 export default AddValue;

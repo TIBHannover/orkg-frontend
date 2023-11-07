@@ -14,22 +14,29 @@ import { useState } from 'react';
 import SmartPropertySuggestions from 'components/SmartSuggestions/SmartPropertySuggestions';
 import { useSelector } from 'react-redux';
 
-const AddPropertyView = props => {
+const AddPropertyView = ({
+    inTemplate = false,
+    newProperties = [],
+    isDisabled = false,
+    isLoading = false,
+    showAddProperty,
+    setShowAddProperty,
+    handlePropertySelect,
+    toggleConfirmNewProperty,
+}) => {
     const [inputValue, setInputValue] = useState('');
     const properties = useSelector(state => state.statementBrowser.properties.byId);
     const propertyLabels = Object.values(properties).map(property => property.label);
 
     return (
-        <AddPropertyStyle className={props.inTemplate ? 'inTemplate' : 'mt-3'}>
+        <AddPropertyStyle className={inTemplate ? 'inTemplate' : 'mt-3'}>
             <AddPropertyContentStyle
-                onClick={() =>
-                    !props.isLoading && props.inTemplate && !props.showAddProperty && !props.isDisabled ? props.setShowAddProperty(true) : undefined
-                }
-                className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'} ${props.showAddProperty ? 'col-12 large' : ''}`}
+                onClick={() => (!isLoading && inTemplate && !showAddProperty && !isDisabled ? setShowAddProperty(true) : undefined)}
+                className={`${inTemplate ? 'inTemplate' : 'noTemplate'} ${showAddProperty ? 'col-12 large' : ''}`}
             >
-                {props.isLoading || !props.showAddProperty ? (
+                {isLoading || !showAddProperty ? (
                     <ConditionalWrapper
-                        condition={props.isDisabled}
+                        condition={isDisabled}
                         wrapper={children => (
                             <Tippy content="This resource uses strict template">
                                 <span>{children}</span>
@@ -38,19 +45,19 @@ const AddPropertyView = props => {
                     >
                         <ButtonGroup>
                             <ButtonWithLoading
-                                color={props.inTemplate ? 'light' : 'secondary'}
-                                disabled={props.isDisabled || props.isLoading}
-                                onClick={() => (!props.isLoading && !props.inTemplate ? props.setShowAddProperty(true) : undefined)}
-                                style={props.inTemplate && props.isDisabled ? { opacity: '1', color: '#21252975' } : undefined}
+                                color={inTemplate ? 'light' : 'secondary'}
+                                disabled={isDisabled || isLoading}
+                                onClick={() => (!isLoading && !inTemplate ? setShowAddProperty(true) : undefined)}
+                                style={inTemplate && isDisabled ? { opacity: '1', color: '#21252975' } : undefined}
                                 size="sm"
-                                isLoading={props.isLoading}
+                                isLoading={isLoading}
                             >
                                 <Icon className="icon" size="sm" icon={faPlus} /> Add property
                             </ButtonWithLoading>
                             <SmartPropertySuggestions
-                                disabled={props.isDisabled}
+                                disabled={isDisabled}
                                 properties={propertyLabels}
-                                handleCreate={({ id, label }) => props.handlePropertySelect({ id, value: label })}
+                                handleCreate={({ id, label }) => handlePropertySelect({ id, value: label })}
                             />
                         </ButtonGroup>
                     </ConditionalWrapper>
@@ -65,15 +72,15 @@ const AddPropertyView = props => {
                                 entityType={ENTITIES.PREDICATE}
                                 cssClasses="form-control-sm"
                                 placeholder="Select or type to enter a property"
-                                onItemSelected={props.handlePropertySelect}
-                                onNewItemSelected={props.toggleConfirmNewProperty}
+                                onItemSelected={handlePropertySelect}
+                                onNewItemSelected={toggleConfirmNewProperty}
                                 onKeyDown={e => {
                                     if (e.keyCode === 27) {
                                         // escape
-                                        props.setShowAddProperty(false);
+                                        setShowAddProperty(false);
                                     }
                                 }}
-                                additionalData={props.newProperties}
+                                additionalData={newProperties}
                                 disableBorderRadiusRight
                                 allowCreate
                                 defaultOptions={defaultProperties}
@@ -83,7 +90,7 @@ const AddPropertyView = props => {
                                 value={inputValue}
                             />
                             <SmartPropertyGuidelinesCheck label={inputValue} />
-                            <StyledButton className="w-auto" outline onClick={() => props.setShowAddProperty(false)}>
+                            <StyledButton className="w-auto" outline onClick={() => setShowAddProperty(false)}>
                                 Cancel
                             </StyledButton>
                         </InputGroup>
@@ -103,13 +110,6 @@ AddPropertyView.propTypes = {
     newProperties: PropTypes.array,
     isDisabled: PropTypes.bool,
     isLoading: PropTypes.bool,
-};
-
-AddPropertyView.defaultProps = {
-    inTemplate: false,
-    newProperties: [],
-    isDisabled: false,
-    isLoading: false,
 };
 
 export default AddPropertyView;

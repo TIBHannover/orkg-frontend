@@ -22,7 +22,7 @@ const DEFAULT_CLASSES_FILTER = [
     */
 ];
 
-const IntegratedList = ({ id, slug, boxShadow }) => {
+const IntegratedList = ({ id, slug, boxShadow = false }) => {
     const searchParams = useSearchParams();
 
     const {
@@ -206,10 +206,6 @@ IntegratedList.propTypes = {
     id: PropTypes.string.isRequired,
     slug: PropTypes.string,
     boxShadow: PropTypes.bool,
-};
-
-IntegratedList.defaultProps = {
-    boxShadow: false,
 };
 
 export default IntegratedList;

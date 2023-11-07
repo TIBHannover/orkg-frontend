@@ -22,7 +22,15 @@ import ValueItemOptions from 'components/StatementBrowser/ValueItem/ValueItemOpt
 
 const cookies = new Cookies();
 
-const ValueItem = props => {
+const ValueItem = ({
+    contextStyle = 'StatementBrowser',
+    showHelp = false,
+    shouldDisableValueItemStyle = false,
+    propertyId,
+    syncBackend,
+    id,
+    enableEdit,
+}) => {
     const {
         resource,
         value,
@@ -34,16 +42,16 @@ const ValueItem = props => {
         handleExistingResourceClick,
         handleResourceClick,
         formattedLabel,
-    } = useValueItem({ valueId: props.id, propertyId: props.propertyId, syncBackend: props.syncBackend, contextStyle: props.contextStyle });
+    } = useValueItem({ valueId: id, propertyId, syncBackend, contextStyle });
 
-    const [isTooltipVisible, setIsTooltipVisible] = useState(props.showHelp && value._class === ENTITIES.RESOURCE);
+    const [isTooltipVisible, setIsTooltipVisible] = useState(showHelp && value._class === ENTITIES.RESOURCE);
 
     const resourcesAsLinks = useSelector(state => state.statementBrowser.resourcesAsLinks);
     const preferences = useSelector(state => state.statementBrowser.preferences);
     const existingResourceId = resource ? resource.existingResourceId : false;
     let handleOnClick = null;
 
-    if (value._class !== ENTITIES.LITERAL && (existingResourceId || props.contextStyle !== 'StatementBrowser') && openExistingResourcesInDialog) {
+    if (value._class !== ENTITIES.LITERAL && (existingResourceId || contextStyle !== 'StatementBrowser') && openExistingResourcesInDialog) {
         handleOnClick = handleExistingResourceClick;
     } else if (value._class !== ENTITIES.LITERAL) {
         handleOnClick = handleResourceClick;
@@ -54,12 +62,12 @@ const ValueItem = props => {
         setIsTooltipVisible(false);
     };
 
-    const Wrapper = !props.shouldDisableValueItemStyle ? ValueItemStyle : 'div';
+    const Wrapper = !shouldDisableValueItemStyle ? ValueItemStyle : 'div';
 
     return (
         <>
             <Wrapper>
-                {!value.isEditing || !props.enableEdit ? (
+                {!value.isEditing || !enableEdit ? (
                     <div>
                         {!value.isSaving && (
                             <DescriptionTooltip
@@ -75,7 +83,7 @@ const ValueItem = props => {
                                 <span tabIndex="0">
                                     {resource && !resource.isFetching && value._class !== ENTITIES.LITERAL && !resourcesAsLinks && (
                                         <>
-                                            {!props.enableEdit && resource?.classes?.includes(CLASSES.PROBLEM) ? (
+                                            {!enableEdit && resource?.classes?.includes(CLASSES.PROBLEM) ? (
                                                 <Link
                                                     href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
                                                         researchProblemId: existingResourceId,
@@ -158,10 +166,10 @@ const ValueItem = props => {
                         )}
                         {(preferences.showInlineDataTypes || value.classes?.includes(CLASSES.CSVW_TABLE)) && <ValueDatatype value={value} />}
                         {value.isSaving && 'Saving...'}
-                        <ValueItemOptions id={props.id} enableEdit={props.enableEdit} syncBackend={props.syncBackend} handleOnClick={handleOnClick} />
+                        <ValueItemOptions id={id} enableEdit={enableEdit} syncBackend={syncBackend} handleOnClick={handleOnClick} />
                     </div>
                 ) : (
-                    <ValueForm id={props.id} syncBackend={props.syncBackend} />
+                    <ValueForm id={id} syncBackend={syncBackend} />
                 )}
             </Wrapper>
 
@@ -171,8 +179,8 @@ const ValueItem = props => {
                     toggleModal={() => setModal(prev => !prev)}
                     id={dialogResourceId}
                     label={dialogResourceLabel}
-                    newStore={Boolean(props.contextStyle === 'StatementBrowser' || existingResourceId)}
-                    enableEdit={props.enableEdit && props.contextStyle !== 'StatementBrowser' && !existingResourceId}
+                    newStore={Boolean(contextStyle === 'StatementBrowser' || existingResourceId)}
+                    enableEdit={enableEdit && contextStyle !== 'StatementBrowser' && !existingResourceId}
                 />
             ) : (
                 ''
@@ -189,12 +197,6 @@ ValueItem.propTypes = {
     contextStyle: PropTypes.string.isRequired,
     showHelp: PropTypes.bool,
     shouldDisableValueItemStyle: PropTypes.bool,
-};
-
-ValueItem.defaultProps = {
-    contextStyle: 'StatementBrowser',
-    showHelp: false,
-    shouldDisableValueItemStyle: false,
 };
 
 export default ValueItem;

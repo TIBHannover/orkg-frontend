@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
-const ClassesBadgesFilter = props => {
+const ClassesBadgesFilter = ({ disabled = false, classesFilter, setClassesFilter, initialClassFilterOptions }) => {
     const handleSelect = value => {
         if (value.length < 1) {
             toast.dismiss();
             toast.info('At least one type should be selected');
         } else {
-            props.setClassesFilter(value);
+            setClassesFilter(value);
         }
     };
 
@@ -88,9 +88,9 @@ const ClassesBadgesFilter = props => {
     return (
         <div className="me-1" style={{ width: '180px' }}>
             <Select
-                value={props.classesFilter}
+                value={classesFilter}
                 onChange={handleSelect}
-                options={props.initialClassFilterOptions}
+                options={initialClassFilterOptions}
                 className="focus-primary"
                 classNamePrefix="react-select"
                 placeholder=""
@@ -101,7 +101,7 @@ const ClassesBadgesFilter = props => {
                 openMenuOnClick={true}
                 getOptionValue={({ id }) => id}
                 isClearable={false}
-                isDisabled={props.disabled}
+                isDisabled={disabled}
                 styles={customStyles}
                 blurInputOnSelect={true}
             />
@@ -115,10 +115,6 @@ ClassesBadgesFilter.propTypes = {
     setClassesFilter: PropTypes.func.isRequired,
     classesFilter: PropTypes.array.isRequired,
     disabled: PropTypes.bool,
-};
-
-ClassesBadgesFilter.defaultProps = {
-    disabled: false,
 };
 
 export default ClassesBadgesFilter;

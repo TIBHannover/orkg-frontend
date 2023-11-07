@@ -46,19 +46,19 @@ export const OptionButtonStyled = styled.span`
 `;
 
 /* Tippy doesn't work when reference element is disabled, so adding span around the button       fixes it  */
-const ActionButtonView = forwardRef((props, ref) => (
+const ActionButtonView = forwardRef(({ size = 'xs', iconSpin = false, isDisabled, action, title, icon, testId }, ref) => (
     <OptionButtonStyled ref={ref} tabIndex="0" className="me-2">
         <Button
             className="p-0"
-            wrappersize={props.size}
-            disabled={props.isDisabled}
+            wrappersize={size}
+            disabled={isDisabled}
             color="link"
-            onClick={props.action}
-            aria-label={isString(props.title) ? props.title : props.title.toString()}
-            data-testid={props.testId}
+            onClick={action}
+            aria-label={isString(title) ? title : title.toString()}
+            data-testid={testId}
         >
             <span className="icon-wrapper">
-                <Icon size={props.size} icon={props.icon} spin={props.iconSpin} />
+                <Icon size={size} icon={icon} spin={iconSpin} />
             </span>
         </Button>
     </OptionButtonStyled>
@@ -67,16 +67,11 @@ const ActionButtonView = forwardRef((props, ref) => (
 ActionButtonView.propTypes = {
     title: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
     icon: PropTypes.object.isRequired,
-    iconSpin: PropTypes.bool.isRequired,
-    size: PropTypes.oneOf(['xs', 'sm', 'lg']).isRequired,
+    iconSpin: PropTypes.bool,
+    size: PropTypes.oneOf(['xs', 'sm', 'lg']),
     action: PropTypes.func,
     isDisabled: PropTypes.bool,
     testId: PropTypes.string,
 };
-
-ActionButtonView.defaultProps = {
-    size: 'xs',
-    iconSpin: false,
-};
-
+ActionButtonView.displayName = 'ActionButtonView';
 export default ActionButtonView;

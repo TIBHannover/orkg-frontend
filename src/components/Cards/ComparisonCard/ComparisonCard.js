@@ -22,20 +22,20 @@ const ComparisonCardStyled = styled.li`
     }
 `;
 
-const ComparisonCard = props => {
+const ComparisonCard = ({ comparison, rounded, showHistory = true, showBreadcrumbs = true, showBadge = false, showCurationFlags = true }) => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
-        resourceId: props.comparison.id,
-        unlisted: props.comparison?.unlisted,
-        featured: props.comparison?.featured,
+        resourceId: comparison.id,
+        unlisted: comparison?.unlisted,
+        featured: comparison?.featured,
     });
     return (
         <ComparisonCardStyled
             style={{ flexWrap: 'wrap' }}
-            rounded={props.rounded}
-            className={`list-group-item d-flex py-3 pe-4 ${props.showCurationFlags ? ' ps-3  ' : ' ps-4  '}`}
+            rounded={rounded}
+            className={`list-group-item d-flex py-3 pe-4 ${showCurationFlags ? ' ps-3  ' : ' ps-4  '}`}
         >
             <div className="col-md-9 d-flex p-0">
-                {props.showCurationFlags && (
+                {showCurationFlags && (
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
                         <div>
                             <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
@@ -47,58 +47,57 @@ const ComparisonCard = props => {
                 )}
                 <div className="d-flex flex-column">
                     <div className="mb-2">
-                        <Link href={reverse(ROUTES.COMPARISON, { comparisonId: props.comparison.id })}>
-                            {props.comparison.label ? props.comparison.label : <em>No title</em>}
+                        <Link href={reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })}>
+                            {comparison.label ? comparison.label : <em>No title</em>}
                         </Link>
-                        {props.showBadge && (
+                        {showBadge && (
                             <div className="d-inline-block ms-2">
                                 <CardBadge color="primary">Comparison</CardBadge>
                             </div>
                         )}
                     </div>
                     <div className="d-inline-block d-md-none mt-1 me-1">
-                        {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.comparison.researchField} />}
+                        {showBreadcrumbs && <RelativeBreadcrumbs researchField={comparison.researchField} />}
                     </div>
 
                     <div className="mb-1">
                         <small>
-                            <Icon size="sm" icon={faFile} className="me-1" /> {props.comparison.contributions?.length} Contributions
-                            <Icon size="sm" icon={faChartBar} className="ms-2 me-1" /> {props.comparison.visualizations?.length} Visualizations
-                            {(props.comparison.resources?.length > 0 || props.comparison.figures?.length > 0) && (
+                            <Icon size="sm" icon={faFile} className="me-1" /> {comparison.contributions?.length} Contributions
+                            <Icon size="sm" icon={faChartBar} className="ms-2 me-1" /> {comparison.visualizations?.length} Visualizations
+                            {(comparison.resources?.length > 0 || comparison.figures?.length > 0) && (
                                 <>
                                     <Icon size="sm" icon={faPaperclip} className="ms-2 me-1" />{' '}
-                                    {props.comparison.resources.length + props.comparison.resources.length} attachments
+                                    {comparison.resources.length + comparison.resources.length} attachments
                                 </>
                             )}
-                            {props.comparison.created_at && (
+                            {comparison.created_at && (
                                 <>
-                                    <Icon size="sm" icon={faCalendar} className="ms-2 me-1" />{' '}
-                                    {moment(props.comparison.created_at).format('DD-MM-YYYY')}
+                                    <Icon size="sm" icon={faCalendar} className="ms-2 me-1" /> {moment(comparison.created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
                         </small>
                     </div>
 
-                    {props.comparison.description && (
+                    {comparison.description && (
                         <div>
-                            <small className="text-muted">{truncate(props.comparison.description, { length: 200 })}</small>
+                            <small className="text-muted">{truncate(comparison.description, { length: 200 })}</small>
                         </div>
                     )}
-                    {props.showHistory && props.comparison.versions && props.comparison.versions.length > 1 && (
-                        <Versions versions={props.comparison.versions} id={props.comparison.id} />
+                    {showHistory && comparison.versions && comparison.versions.length > 1 && (
+                        <Versions versions={comparison.versions} id={comparison.id} />
                     )}
                 </div>
             </div>
             <div className="col-md-3 d-flex align-items-end flex-column p-0">
                 <div className="flex-grow-1 mb-1">
                     <div className="d-none d-md-flex align-items-end justify-content-end">
-                        <RelativeBreadcrumbs researchField={props.comparison.researchField} />
+                        <RelativeBreadcrumbs researchField={comparison.researchField} />
                     </div>
                     <div className="d-none d-md-flex align-items-end justify-content-end mt-1">
-                        <Thumbnail figures={props.comparison.figures} visualizations={props.comparison.visualizations} id={props.comparison.id} />
+                        <Thumbnail figures={comparison.figures} visualizations={comparison.visualizations} id={comparison.id} />
                     </div>
                 </div>
-                <UserAvatar userId={props.comparison.created_by} />
+                <UserAvatar userId={comparison.created_by} />
             </div>
         </ComparisonCardStyled>
     );
@@ -125,15 +124,9 @@ ComparisonCard.propTypes = {
     }).isRequired,
     rounded: PropTypes.string,
     showHistory: PropTypes.bool,
-    showBreadcrumbs: PropTypes.bool.isRequired,
-    showBadge: PropTypes.bool.isRequired,
-    showCurationFlags: PropTypes.bool.isRequired,
+    showBreadcrumbs: PropTypes.bool,
+    showBadge: PropTypes.bool,
+    showCurationFlags: PropTypes.bool,
 };
 
-ComparisonCard.defaultProps = {
-    showHistory: true,
-    showBreadcrumbs: true,
-    showBadge: false,
-    showCurationFlags: true,
-};
 export default ComparisonCard;

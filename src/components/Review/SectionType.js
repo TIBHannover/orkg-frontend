@@ -17,8 +17,7 @@ Option.propTypes = {
     children: PropTypes.string.isRequired,
 };
 
-const SectionType = props => {
-    const { type, isDisabled, disabledTooltip } = props;
+const SectionType = ({ sectionId, type, isDisabled = false, disabledTooltip = 'The type of this section cannot be changed' }) => {
     const [editMode, setEditMode] = useState(false);
     const [options, setOptions] = useState([]);
     const [typeValue, setTypeValue] = useState({
@@ -90,7 +89,7 @@ const SectionType = props => {
 
         dispatch(
             updateSectionType({
-                sectionId: props.sectionId,
+                sectionId,
                 type: selected.value,
             }),
         );
@@ -138,11 +137,6 @@ SectionType.propTypes = {
     type: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool,
     disabledTooltip: PropTypes.string,
-};
-
-SectionType.defaultProps = {
-    isDisabled: false,
-    disabledTooltip: 'The type of this section cannot be changed',
 };
 
 export default SectionType;

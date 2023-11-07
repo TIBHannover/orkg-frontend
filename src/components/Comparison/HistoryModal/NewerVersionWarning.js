@@ -8,7 +8,7 @@ import HistoryModal from 'components/Comparison/HistoryModal/HistoryModal';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faHistory } from '@fortawesome/free-solid-svg-icons';
 
-const NewerVersionWarning = ({ versions, showViewHistory, comparisonId }) => {
+const NewerVersionWarning = ({ versions, showViewHistory = true, comparisonId }) => {
     const [isOpenHistoryModal, setIsOpenHistoryModal] = useState(false);
     return (
         <Alert color="warning" fade={false} className="container d-flex box">
@@ -44,10 +44,6 @@ NewerVersionWarning.propTypes = {
     comparisonId: PropTypes.string,
     showViewHistory: PropTypes.bool,
     versions: PropTypes.array,
-};
-
-NewerVersionWarning.defaultProps = {
-    showViewHistory: true,
 };
 
 export default NewerVersionWarning;

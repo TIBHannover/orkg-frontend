@@ -36,15 +36,15 @@ export const LinkStyled = styled(Link)`
     }
 `;
 
-const TemplateTooltip = props => {
+const TemplateTooltip = ({ children, id, extraContent, disabled = false }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
     const [template, setTemplate] = useState({});
 
     const onTrigger = () => {
-        if (!isLoaded && props.id) {
+        if (!isLoaded && id) {
             setIsLoading(true);
-            getTemplateById(props.id)
+            getTemplateById(id)
                 .then(_template => {
                     if (_template) {
                         setTemplate(_template);
@@ -138,7 +138,7 @@ const TemplateTooltip = props => {
                                     )}
                                 </div>
                             )}
-                            {props.extraContent && props.extraContent}
+                            {extraContent}
                         </>
                     ) : (
                         'Loading ...'
@@ -147,11 +147,11 @@ const TemplateTooltip = props => {
             }
             delay={[500, 0]}
             appendTo={document.body}
-            disabled={props.disabled}
+            disabled={disabled}
             interactive={true}
             arrow={true}
         >
-            <span tabIndex="0">{props.children}</span>
+            <span tabIndex="0">{children}</span>
         </Tippy>
     );
 };
@@ -161,10 +161,6 @@ TemplateTooltip.propTypes = {
     id: PropTypes.string,
     disabled: PropTypes.bool.isRequired,
     extraContent: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-};
-
-TemplateTooltip.defaultProps = {
-    disabled: false,
 };
 
 export default TemplateTooltip;

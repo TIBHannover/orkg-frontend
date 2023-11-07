@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import AddPropertyView from 'components/StatementBrowser/AddProperty/AddPropertyView';
 import useAddProperty from 'components/StatementBrowser/AddProperty/hooks/useAddProperty';
 
-const AddProperty = props => {
+const AddProperty = ({ inTemplate = false, resourceId, syncBackend }) => {
     const {
         showAddProperty,
         newProperties,
@@ -12,14 +12,14 @@ const AddProperty = props => {
         toggleConfirmNewProperty,
         ConfirmPropertyModal,
     } = useAddProperty({
-        resourceId: props.resourceId,
-        syncBackend: props.syncBackend,
+        resourceId,
+        syncBackend,
     });
 
     return (
         <>
             <AddPropertyView
-                inTemplate={props.inTemplate}
+                inTemplate={inTemplate}
                 isDisabled={!canAddProperty}
                 showAddProperty={showAddProperty}
                 handlePropertySelect={handlePropertySelect}
@@ -37,10 +37,6 @@ AddProperty.propTypes = {
     resourceId: PropTypes.string.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     inTemplate: PropTypes.bool,
-};
-
-AddProperty.defaultProps = {
-    inTemplate: false,
 };
 
 export default AddProperty;

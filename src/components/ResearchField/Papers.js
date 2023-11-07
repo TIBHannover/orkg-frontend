@@ -26,7 +26,7 @@ SortButton.propTypes = {
     sort: PropTypes.string.isRequired,
 };
 
-const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
+const Papers = ({ id, boxShadow = false, showBreadcrumbs = true }) => {
     const {
         papers,
         sort,
@@ -199,11 +199,6 @@ Papers.propTypes = {
     id: PropTypes.string.isRequired,
     boxShadow: PropTypes.bool,
     showBreadcrumbs: PropTypes.bool,
-};
-
-Papers.defaultProps = {
-    boxShadow: false,
-    showBreadcrumbs: true,
 };
 
 export default Papers;
