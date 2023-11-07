@@ -23,10 +23,11 @@ const IframeFullWidth = styled.iframe`
 `;
 
 // Plugin for video previews of TIB AV portal, Youtube, Dailymotion and Vimeo
-const Video = props => {
+
+const Video = ({ children, type, options = { inModal: false } }) => {
     const [showVideoDialog, setShowVideoDialog] = useState(false);
 
-    const label = props.children;
+    const label = children;
     const labelToText = renderToString(label);
 
     if (!labelToText) {
@@ -34,7 +35,7 @@ const Video = props => {
     }
 
     if (
-        props.type === 'literal' &&
+        type === 'literal' &&
         (labelToText.match(new RegExp(REGEX.TIB_URL)) ||
             labelToText.match(new RegExp(REGEX.YOUTUBE_URL)) ||
             labelToText.match(new RegExp(REGEX.DAILYMOTION_URL)) ||
@@ -56,7 +57,7 @@ const Video = props => {
         } else if (labelToText.match(new RegExp(REGEX.VIMEO_URL))) {
             providerUrl = 'https://player.vimeo.com/video/';
         }
-        if (!props.options.inModal) {
+        if (!options.inModal) {
             return (
                 <VideoContainer>
                     <IframeFullWidth title="Video" scrolling="no" src={`${providerUrl}${videoId}`} allowFullScreen />
@@ -94,10 +95,6 @@ Video.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
     type: PropTypes.oneOf([ENTITIES.RESOURCE, ENTITIES.LITERAL]),
     options: PropTypes.object.isRequired,
-};
-
-Video.defaultProps = {
-    options: { inModal: false },
 };
 
 export default Video;

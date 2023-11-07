@@ -9,8 +9,7 @@ import ROUTES from 'constants/routes.js';
 import useImportBulkData from 'components/ConfirmBulkImport/useImportBulkData';
 import PaperList from 'components/ConfirmBulkImport/PaperList';
 
-const ConfirmBulkImport = props => {
-    const { data, isOpen, toggle, onFinish } = props;
+const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish = () => {} }) => {
     const { papers, existingPaperIds, idToLabel, isLoading, createdContributions, makePaperList, handleImport, validationErrors } = useImportBulkData(
         {
             data,
@@ -84,10 +83,6 @@ ConfirmBulkImport.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     onFinish: PropTypes.func,
-};
-
-ConfirmBulkImport.defaultProps = {
-    onFinish: () => {},
 };
 
 export default ConfirmBulkImport;

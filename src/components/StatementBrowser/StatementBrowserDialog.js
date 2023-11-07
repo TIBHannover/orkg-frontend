@@ -1,5 +1,5 @@
 import Link from 'components/NextJsMigration/Link';
-import { Component } from 'react';
+import { useState } from 'react';
 import { Modal, ModalHeader, ModalBody, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -11,83 +11,88 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import { ENTITIES } from 'constants/graphSettings';
 
-class StatementBrowserDialog extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            // clone the original value of openExistingResourcesInDialog
-            previousOpenExistingResourcesInDialog: Boolean(JSON.stringify(props.openExistingResourcesInDialog)),
-        };
-    }
+const StatementBrowserDialog = ({
+    openExistingResourcesInDialog,
+    show,
+    toggleModal,
+    label,
+    id,
+    newStore = true,
+    enableEdit = false,
+    syncBackend = false,
+    type = ENTITIES.RESOURCE,
+    initialPath = [],
+    showExternalDescriptions = true,
+    canEditSharedRootLevel = true,
+    onCloseModal = () => {},
+}) => {
+    // clone the original value of openExistingResourcesInDialog
+    const [previousOpenExistingResourcesInDialog] = useState(Boolean(JSON.stringify(openExistingResourcesInDialog)));
 
-    render() {
-        let route = ROUTES.RESOURCE;
-        switch (this.props.type) {
-            case ENTITIES.PREDICATE:
-                route = ROUTES.PROPERTY;
-                break;
-            case 'property':
-                route = ROUTES.PROPERTY;
-                break;
-            case ENTITIES.CLASS:
-                route = ROUTES.CLASS;
-                break;
-            default:
-                route = ROUTES.RESOURCE;
-                break;
-        }
-        return (
-            <Modal
-                isOpen={this.props.show}
-                toggle={this.props.toggleModal}
-                size="lg"
-                onExit={() => {
-                    this.props.onCloseModal();
-                    // return the original value of openExistingResourcesInDialog
-                    this.props.updateSettings({
-                        openExistingResourcesInDialog: this.state.previousOpenExistingResourcesInDialog,
-                    });
-                }}
-            >
-                <ModalHeader toggle={this.props.toggleModal}>
-                    <span style={{ marginRight: 170, display: 'inline-block' }}>
-                        {this.props.newStore
-                            ? `View existing ${this.props.type}: ${this.props.label}`
-                            : `View ${this.props.type}: ${this.props.label}`}
-                    </span>
-                    {this.props.newStore && (
-                        <Link
-                            style={{ right: 45, position: 'absolute', top: 12 }}
-                            title={`Go to ${this.props.type} page`}
-                            className="ms-2"
-                            href={`${reverse(route, { id: this.props.id })}?noRedirect`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <Button color="link" className="p-0">
-                                Open {this.props.type} <Icon icon={faExternalLinkAlt} className="me-1" />
-                            </Button>
-                        </Link>
-                    )}
-                </ModalHeader>
-                <ModalBody>
-                    <Statements
-                        rootNodeType={this.props.type === ENTITIES.RESOURCE ? ENTITIES.RESOURCE : ENTITIES.PREDICATE}
-                        enableEdit={this.props.enableEdit}
-                        syncBackend={this.props.syncBackend}
-                        initialSubjectId={this.props.id}
-                        initialSubjectLabel={this.props.label}
-                        initialPath={this.props.initialPath}
-                        openExistingResourcesInDialog={false}
-                        newStore={this.props.newStore}
-                        showExternalDescriptions={this.props.showExternalDescriptions}
-                        canEditSharedRootLevel={this.props.canEditSharedRootLevel}
-                    />
-                </ModalBody>
-            </Modal>
-        );
+    let route = ROUTES.RESOURCE;
+    switch (type) {
+        case ENTITIES.PREDICATE:
+            route = ROUTES.PROPERTY;
+            break;
+        case 'property':
+            route = ROUTES.PROPERTY;
+            break;
+        case ENTITIES.CLASS:
+            route = ROUTES.CLASS;
+            break;
+        default:
+            route = ROUTES.RESOURCE;
+            break;
     }
-}
+    return (
+        <Modal
+            isOpen={show}
+            toggle={toggleModal}
+            size="lg"
+            onExit={() => {
+                onCloseModal();
+                // return the original value of openExistingResourcesInDialog
+                updateSettings({
+                    openExistingResourcesInDialog: previousOpenExistingResourcesInDialog,
+                });
+            }}
+        >
+            <ModalHeader toggle={toggleModal}>
+                <span style={{ marginRight: 170, display: 'inline-block' }}>
+                    {newStore ? `View existing ${type}: ${label}` : `View ${type}: ${label}`}
+                </span>
+                {newStore && (
+                    <Link
+                        style={{ right: 45, position: 'absolute', top: 12 }}
+                        title={`Go to ${type} page`}
+                        className="ms-2"
+                        href={`${reverse(route, { id })}?noRedirect`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <Button color="link" className="p-0">
+                            Open {type} <Icon icon={faExternalLinkAlt} className="me-1" />
+                        </Button>
+                    </Link>
+                )}
+            </ModalHeader>
+            <ModalBody>
+                <Statements
+                    rootNodeType={type === ENTITIES.RESOURCE ? ENTITIES.RESOURCE : ENTITIES.PREDICATE}
+                    enableEdit={enableEdit}
+                    syncBackend={syncBackend}
+                    initialSubjectId={id}
+                    initialSubjectLabel={label}
+                    initialPath={initialPath}
+                    openExistingResourcesInDialog={false}
+                    newStore={newStore}
+                    showExternalDescriptions={showExternalDescriptions}
+                    canEditSharedRootLevel={canEditSharedRootLevel}
+                />
+            </ModalBody>
+        </Modal>
+    );
+};
 
 StatementBrowserDialog.propTypes = {
     label: PropTypes.string.isRequired,
@@ -109,17 +114,6 @@ StatementBrowserDialog.propTypes = {
         }),
     ),
     canEditSharedRootLevel: PropTypes.bool.isRequired,
-};
-
-StatementBrowserDialog.defaultProps = {
-    newStore: true,
-    enableEdit: false,
-    syncBackend: false,
-    type: ENTITIES.RESOURCE,
-    initialPath: [],
-    showExternalDescriptions: true,
-    canEditSharedRootLevel: true,
-    onCloseModal: () => {},
 };
 
 const mapStateToProps = state => ({ openExistingResourcesInDialog: state.statementBrowser.openExistingResourcesInDialog });

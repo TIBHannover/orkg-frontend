@@ -1,5 +1,5 @@
-import Link from 'components/NextJsMigration/Link';
 import { useState, useEffect } from 'react';
+import Link from 'components/NextJsMigration/Link';
 import { reverse } from 'named-urls';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faFile, faChartBar, faPaperclip, faCodeBranch } from '@fortawesome/free-solid-svg-icons';
@@ -62,14 +62,14 @@ VersionTooltip.propTypes = {
     version: PropTypes.object,
 };
 
-const Versions = props => {
+const Versions = ({ id, versions }) => {
     const [isOpenHistoryModal, setIsOpenHistoryModal] = useState(false);
 
     return (
         <div>
             <small>
                 <Icon size="sm" icon={faCodeBranch} className="me-1" /> Versions:{' '}
-                {props.versions.slice(1).map((version, index) => (
+                {versions.slice(1).map(version => (
                     <span key={version.id}>
                         <Tippy content={<VersionTooltip version={version} />}>
                             <Link href={reverse(ROUTES.COMPARISON, { comparisonId: version.id })}>
@@ -88,7 +88,7 @@ const Versions = props => {
                     View history
                 </div>
                 {isOpenHistoryModal && (
-                    <HistoryModal comparisonId={props.id} toggle={() => setIsOpenHistoryModal(v => !v)} showDialog={isOpenHistoryModal} />
+                    <HistoryModal comparisonId={id} toggle={() => setIsOpenHistoryModal(v => !v)} showDialog={isOpenHistoryModal} />
                 )}
             </small>
         </div>
@@ -98,10 +98,6 @@ const Versions = props => {
 Versions.propTypes = {
     id: PropTypes.string.isRequired,
     versions: PropTypes.array,
-};
-
-Versions.defaultProps = {
-    showHistory: true,
 };
 
 export default Versions;

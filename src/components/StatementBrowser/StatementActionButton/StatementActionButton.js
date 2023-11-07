@@ -4,7 +4,21 @@ import PropTypes from 'prop-types';
 import ActionButtonView from 'components/StatementBrowser/StatementActionButton/ActionButtonView';
 import ConfirmationTooltip from 'components/StatementBrowser/ConfirmationTooltip/ConfirmationTooltip';
 
-const StatementActionButton = props => {
+const StatementActionButton = ({
+    iconSpin = false,
+    requireConfirmation = false,
+    interactive = false,
+    appendTo = 'parent',
+    action = () => {},
+    onVisibilityChange,
+    title,
+    testId,
+    icon,
+    isDisabled,
+    confirmationButtons,
+    confirmationMessage,
+    iconSize,
+}) => {
     const tippy = useRef(null);
     const confirmButtonRef = useRef(null);
 
@@ -13,14 +27,14 @@ const StatementActionButton = props => {
     };
 
     const onShow = () => {
-        if (props.onVisibilityChange) {
-            props.onVisibilityChange(true);
+        if (onVisibilityChange) {
+            onVisibilityChange(true);
         }
     };
 
     const onHide = () => {
-        if (props.onVisibilityChange) {
-            props.onVisibilityChange(false);
+        if (onVisibilityChange) {
+            onVisibilityChange(false);
         }
     };
 
@@ -30,25 +44,25 @@ const StatementActionButton = props => {
 
     const handleClick = e => {
         e.stopPropagation();
-        if (!props.requireConfirmation) {
-            props.action();
+        if (!requireConfirmation) {
+            action();
         }
     };
 
     const tippyChildren = (
         <ActionButtonView
-            title={props.title}
-            icon={props.icon}
-            iconSpin={props.iconSpin}
+            title={title}
+            icon={icon}
+            iconSpin={iconSpin}
             action={handleClick}
-            isDisabled={props.isDisabled}
-            size={props.iconSize}
-            testId={props.testId}
+            isDisabled={isDisabled}
+            size={iconSize}
+            testId={testId}
         />
     );
 
-    return props.requireConfirmation && !props.isDisabled ? (
-        <Tippy trigger="mouseenter" content={props.title}>
+    return requireConfirmation && !isDisabled ? (
+        <Tippy trigger="mouseenter" content={title}>
             <Tippy
                 onShown={onShown}
                 onShow={onShow}
@@ -56,14 +70,9 @@ const StatementActionButton = props => {
                 onCreate={tippyInst => (tippy.current = tippyInst)}
                 interactive={true}
                 trigger="click"
-                appendTo={props.appendTo}
+                appendTo={appendTo}
                 content={
-                    <ConfirmationTooltip
-                        message={props.confirmationMessage}
-                        closeTippy={closeTippy}
-                        ref={confirmButtonRef}
-                        buttons={props.confirmationButtons}
-                    />
+                    <ConfirmationTooltip message={confirmationMessage} closeTippy={closeTippy} ref={confirmButtonRef} buttons={confirmationButtons} />
                 }
             >
                 {tippyChildren}
@@ -71,7 +80,7 @@ const StatementActionButton = props => {
         </Tippy>
     ) : (
         <>
-            <Tippy appendTo={props.appendTo} hideOnClick={false} interactive={props.interactive} trigger="mouseenter" content={props.title}>
+            <Tippy appendTo={appendTo} hideOnClick={false} interactive={interactive} trigger="mouseenter" content={title}>
                 {tippyChildren}
             </Tippy>
         </>
@@ -99,14 +108,6 @@ StatementActionButton.propTypes = {
             action: PropTypes.func,
         }),
     ),
-};
-
-StatementActionButton.defaultProps = {
-    iconSpin: false,
-    requireConfirmation: false,
-    interactive: false,
-    appendTo: 'parent',
-    action: () => {},
 };
 
 export default StatementActionButton;

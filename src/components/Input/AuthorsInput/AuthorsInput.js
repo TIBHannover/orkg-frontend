@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 import { Button, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import getPersonFullNameByORCID from 'services/ORCID/index';
 
-function AuthorsInput(props) {
+function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabled, value }) {
     const [showAuthorForm, setShowAuthorForm] = useState(false);
     const [authorInput, setAuthorInput] = useState('');
     const [authorAutocompleteLabel, setAuthorAutocompleteLabel] = useState('');
@@ -46,13 +46,12 @@ function AuthorsInput(props) {
                             label: authorFullName,
                             id: authorFullName,
                             orcid,
-                            statementId:
-                                editMode && props.value[editIndex] && props.value[editIndex].statementId ? props.value[editIndex].statementId : '',
+                            statementId: editMode && value[editIndex] && value[editIndex].statementId ? value[editIndex].statementId : '',
                         };
                         if (editMode) {
-                            props.handler([...props.value.slice(0, editIndex), newAuthor, ...props.value.slice(editIndex + 1)]);
+                            handler([...value.slice(0, editIndex), newAuthor, ...value.slice(editIndex + 1)]);
                         } else {
-                            props.handler([...props.value, newAuthor]);
+                            handler([...value, newAuthor]);
                         }
 
                         setAuthorNameLoading(false);
@@ -62,7 +61,7 @@ function AuthorsInput(props) {
                     })
                     .catch(() => {
                         setAuthorNameLoading(false);
-                        toast.error(`Invalid ORCID ID. Please enter the ${props.itemLabel} name`);
+                        toast.error(`Invalid ORCID ID. Please enter the ${itemLabel} name`);
                     });
             } else {
                 const newAuthor = {
@@ -71,53 +70,53 @@ function AuthorsInput(props) {
                     id: _authorInput.id ? _authorInput.id : _authorInput.label, // ID if the Author resource Exist
                     ...(!_authorInput.id ? { __isNew__: true } : {}),
                     orcid: '',
-                    statementId: editMode && props.value[editIndex] && props.value[editIndex].statementId ? props.value[editIndex].statementId : '',
+                    statementId: editMode && value[editIndex] && value[editIndex].statementId ? value[editIndex].statementId : '',
                 };
                 if (editMode) {
-                    props.handler([...props.value.slice(0, editIndex), newAuthor, ...props.value.slice(editIndex + 1)]);
+                    handler([...value.slice(0, editIndex), newAuthor, ...value.slice(editIndex + 1)]);
                 } else {
-                    props.handler([...props.value, newAuthor]);
+                    handler([...value, newAuthor]);
                 }
                 setAuthorInput('');
                 setEditMode(false);
                 setShowAuthorForm(v => !v);
             }
         } else {
-            toast.error(`Please enter the ${props.itemLabel} name`);
+            toast.error(`Please enter the ${itemLabel} name`);
         }
     };
 
     const removeAuthor = key => {
-        props.handler(props.value.filter(a => a.id !== key));
+        handler(value.filter(a => a.id !== key));
     };
 
     const editAuthor = key => {
         setEditIndex(key);
-        setAuthorInput({ ...props.value[key], label: props.value[key].orcid ? props.value[key].orcid : props.value[key].label });
+        setAuthorInput({ ...value[key], label: value[key].orcid ? value[key].orcid : value[key].label });
         setEditMode(true);
         setShowAuthorForm(v => !v);
     };
 
     const handleUpdate = ({ dragIndex, hoverIndex }) => {
-        props.handler(arrayMove(props.value, dragIndex, hoverIndex));
+        handler(arrayMove(value, dragIndex, hoverIndex));
     };
 
     return (
         <div className=" clearfix">
             <GlobalStyle />
             <div>
-                {props.value.length > 0 && (
-                    <AuthorTags onClick={props.value.length === 0 && !props.isDisabled ? () => setShowAuthorForm(v => !v) : undefined}>
-                        {props.value.map((author, index) => (
+                {value.length > 0 && (
+                    <AuthorTags onClick={value.length === 0 && !isDisabled ? () => setShowAuthorForm(v => !v) : undefined}>
+                        {value.map((author, index) => (
                             <SortableAuthorItem
                                 key={`author-${index}`}
                                 author={author}
                                 authorIndex={index}
-                                itemLabel={props.itemLabel}
+                                itemLabel={itemLabel}
                                 editAuthor={() => editAuthor(index)}
                                 removeAuthor={() => removeAuthor(author.id)}
                                 handleUpdate={handleUpdate}
-                                isDisabled={props.isDisabled}
+                                isDisabled={isDisabled}
                             />
                         ))}
                     </AuthorTags>
@@ -125,8 +124,8 @@ function AuthorsInput(props) {
             </div>
             <div>
                 <AddAuthor
-                    disabled={props.isDisabled}
-                    id={props.buttonId}
+                    disabled={isDisabled}
+                    id={buttonId}
                     color="light"
                     className="w-100"
                     onClick={() => {
@@ -136,15 +135,15 @@ function AuthorsInput(props) {
                         setShowAuthorForm(v => !v);
                     }}
                 >
-                    <Icon icon={faPlus} className="me-2" /> Add {props.itemLabel}
+                    <Icon icon={faPlus} className="me-2" /> Add {itemLabel}
                 </AddAuthor>
             </div>
             <Modal onOpened={() => inputRef?.current?.focus()} isOpen={showAuthorForm} toggle={() => setShowAuthorForm(v => !v)}>
-                <ModalHeader>{editMode ? `Edit ${props.itemLabel}` : `Add ${props.itemLabel}`}</ModalHeader>
+                <ModalHeader>{editMode ? `Edit ${itemLabel}` : `Add ${itemLabel}`}</ModalHeader>
                 <ModalBody>
                     <FormGroup>
                         <Label for="authorInput">
-                            Enter {props.itemLabel} name <b>or</b> ORCID <Icon color="#A6CE39" icon={faOrcid} />
+                            Enter {itemLabel} name <b>or</b> ORCID <Icon color="#A6CE39" icon={faOrcid} />
                         </Label>
                         <Autocomplete
                             entityType={ENTITIES.RESOURCE}
@@ -181,11 +180,6 @@ AuthorsInput.propTypes = {
     itemLabel: PropTypes.string,
     buttonId: PropTypes.string,
     isDisabled: PropTypes.bool,
-};
-
-AuthorsInput.defaultProps = {
-    itemLabel: 'author',
-    buttonId: null,
 };
 
 export default AuthorsInput;

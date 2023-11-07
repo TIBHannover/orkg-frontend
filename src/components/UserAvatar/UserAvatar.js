@@ -42,7 +42,7 @@ const StyledSpinnerGravatar = styled.div`
     background-color: ${props => props.theme.lightDarker};
 `;
 
-const UserAvatar = ({ userId, size, appendToTooltip, showDisplayName, linkTarget }) => {
+const UserAvatar = ({ userId, size = 28, appendToTooltip = '', showDisplayName = false, linkTarget = '_self' }) => {
     const { contributor, isLoadingContributor } = useContributor({ userId });
 
     return (
@@ -82,13 +82,6 @@ UserAvatar.propTypes = {
     appendToTooltip: PropTypes.string,
     showDisplayName: PropTypes.bool,
     linkTarget: PropTypes.string,
-};
-
-UserAvatar.defaultProps = {
-    size: 28,
-    appendToTooltip: '',
-    showDisplayName: false,
-    linkTarget: '_self',
 };
 
 export default UserAvatar;

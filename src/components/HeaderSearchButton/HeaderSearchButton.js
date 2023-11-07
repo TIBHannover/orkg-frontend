@@ -9,7 +9,7 @@ import { Button } from 'reactstrap';
 import useRouter from 'components/NextJsMigration/useRouter';
 import { SearchStyled, InputStyled, SearchButtonStyled } from 'components/styled';
 
-const HeaderSearchButton = ({ placeholder, type, userId }) => {
+const HeaderSearchButton = ({ placeholder = '', type, userId }) => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [value, setValue] = useState('');
     const refContainer = useRef(null);
@@ -70,10 +70,6 @@ HeaderSearchButton.propTypes = {
     placeholder: PropTypes.string,
     type: PropTypes.string,
     userId: PropTypes.string,
-};
-
-HeaderSearchButton.defaultProps = {
-    placeholder: '',
 };
 
 export default HeaderSearchButton;

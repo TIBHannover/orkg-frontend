@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import useEditResource from 'components/EditResourceDialog/hooks/useEditResource';
 
-const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate, showResourceLink, fixedClasses }) => {
+const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate = null, showResourceLink = false, fixedClasses }) => {
     const { classes, label, isLoading, setIsLoading, handleChangeClasses, setLabel } = useEditResource(resource);
 
     const handleSave = async () => {
@@ -90,11 +90,6 @@ EditResourceDialog.propTypes = {
     fixedClasses: PropTypes.array,
     afterUpdate: PropTypes.func,
     showResourceLink: PropTypes.bool,
-};
-
-EditResourceDialog.defaultProps = {
-    afterUpdate: null,
-    showResourceLink: false,
 };
 
 export default EditResourceDialog;

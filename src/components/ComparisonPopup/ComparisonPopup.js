@@ -29,17 +29,17 @@ const cookies = new Cookies();
 
 const ComparisonPopupStyled = styled.div`
     &&& {
-        bottom: ${props => (props.cookieInfoDismissed ? '0px' : '50px')};
+        bottom: ${props => (props.$cookieInfoDismissed ? '0px' : '50px')};
     }
 
     @media (min-width: 481px) and (max-width: 1100px) {
         &&& {
-            bottom: ${props => (props.cookieInfoDismissed ? '0px' : '70px')};
+            bottom: ${props => (props.$cookieInfoDismissed ? '0px' : '70px')};
         }
     }
     @media (max-width: 480px) {
         &&& {
-            bottom: ${props => (props.cookieInfoDismissed ? '0px' : '120px')};
+            bottom: ${props => (props.$cookieInfoDismissed ? '0px' : '120px')};
         }
     }
 `;
@@ -148,7 +148,7 @@ class ComparisonPopup extends Component {
 
         return (
             <ComparisonPopupStyled
-                cookieInfoDismissed={cookieInfoDismissed}
+                $cookieInfoDismissed={cookieInfoDismissed}
                 ref={node => (this.comparisonPopup.current = node)}
                 className="fixed-bottom p-0 offset-sm-2 offset-md-8"
                 style={{ width: '340px', zIndex: '1000' }}

@@ -24,9 +24,8 @@ const HighlightWrapper = styled.div`
         }
     }
 `;
-const Highlight = props => {
+const Highlight = ({ position, isScrolledTo, type = null }) => {
     const DEFAULT_HIGHLIGHT_COLOR = '#FFE28F';
-    const { position, isScrolledTo, type } = props;
 
     const { rects } = position;
     const { classes } = useOntology();
@@ -46,10 +45,6 @@ Highlight.propTypes = {
     position: PropTypes.object.isRequired,
     isScrolledTo: PropTypes.bool.isRequired,
     type: PropTypes.string,
-};
-
-Highlight.defaultProps = {
-    type: null,
 };
 
 export default Highlight;

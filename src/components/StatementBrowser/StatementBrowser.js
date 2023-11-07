@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 const StatementBrowser = props => {
     const [store, setStore] = useState(null);
     const auth = useSelector(state => state.auth);
-    const { newStore } = props;
+    const { newStore = false } = props;
 
     useEffect(() => {
         if (newStore) {
@@ -39,10 +39,6 @@ const StatementBrowser = props => {
 
 StatementBrowser.propTypes = {
     newStore: PropTypes.bool,
-};
-
-StatementBrowser.defaultProps = {
-    newStore: false,
 };
 
 export default StatementBrowser;

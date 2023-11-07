@@ -47,15 +47,15 @@ const TippyStyle = styled(Tippy)`
     }
 `;
 
-const DescriptionTooltip = props => {
+const DescriptionTooltip = ({ disabled = false, showURL = false, id, _class, classes, children, extraContent }) => {
     const [description, setDescription] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
 
     const onTrigger = () => {
-        if (!isLoaded && props._class !== ENTITIES.LITERAL && props.id) {
+        if (!isLoaded && _class !== ENTITIES.LITERAL && id) {
             setIsLoading(true);
-            getStatementsBySubjectAndPredicate({ subjectId: props.id, predicateId: PREDICATES.DESCRIPTION })
+            getStatementsBySubjectAndPredicate({ subjectId: id, predicateId: PREDICATES.DESCRIPTION })
                 .then(descriptionStatement => {
                     if (descriptionStatement.length) {
                         setDescription(descriptionStatement[0].object.label);
@@ -72,10 +72,10 @@ const DescriptionTooltip = props => {
 
     useEffect(() => {
         setIsLoaded(false);
-    }, [props?.id]);
+    }, [id]);
 
     const renderTypeLabel = () => {
-        switch (props._class) {
+        switch (_class) {
             case ENTITIES.PREDICATE:
                 return 'Property';
             case ENTITIES.RESOURCE:
@@ -99,10 +99,10 @@ const DescriptionTooltip = props => {
                             <td>{renderTypeLabel()} id</td>
                             <td className="d-flex">
                                 <div className="flex-grow-1">
-                                    <span>{props.id ?? <em>{`${renderTypeLabel()} doesn't exist yet`}</em>}</span>
-                                    {props.id && (
+                                    <span>{id ?? <em>{`${renderTypeLabel()} doesn't exist yet`}</em>}</span>
+                                    {id && (
                                         <CopyToClipboard
-                                            text={props.id}
+                                            text={id}
                                             onCopy={() => {
                                                 toast.dismiss();
                                                 toast.success('ID copied to clipboard');
@@ -121,10 +121,10 @@ const DescriptionTooltip = props => {
                                         </CopyToClipboard>
                                     )}
                                 </div>
-                                {props.showURL && (
+                                {showURL && (
                                     <div>
                                         <Tippy content={`Go to ${renderTypeLabel()} page`}>
-                                            <Link href={getLinkByEntityType(props._class, props.id)} target="_blank">
+                                            <Link href={getLinkByEntityType(_class, id)} target="_blank">
                                                 <Icon icon={faLink} size="xs" />
                                             </Link>
                                         </Tippy>
@@ -132,22 +132,22 @@ const DescriptionTooltip = props => {
                                 )}
                             </td>
                         </tr>
-                        {props.classes?.length > 0 && (
+                        {classes?.length > 0 && (
                             <tr>
                                 <td>Instance of</td>
                                 <td>
-                                    {props.classes.map((c, index) => (
+                                    {classes.map((c, index) => (
                                         <Fragment key={index}>
                                             <Link href={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
                                                 {c}
                                             </Link>
-                                            {index + 1 < props.classes.length && ','}
+                                            {index + 1 < classes.length && ','}
                                         </Fragment>
                                     ))}
                                 </td>
                             </tr>
                         )}
-                        {props._class !== ENTITIES.LITERAL && (
+                        {_class !== ENTITIES.LITERAL && (
                             <tr>
                                 <td>Description</td>
                                 <td>
@@ -166,18 +166,18 @@ const DescriptionTooltip = props => {
                                 </td>
                             </tr>
                         )}
-                        {props.extraContent && props.extraContent}
+                        {extraContent}
                     </tbody>
                 </Table>
             }
             delay={[500, 0]}
             appendTo={document.body}
-            disabled={props.disabled}
+            disabled={disabled}
             interactive={true}
             arrow={true}
         >
             <span tabIndex="0" title="">
-                {props.children}
+                {children}
             </span>
         </TippyStyle>
     );
@@ -191,11 +191,6 @@ DescriptionTooltip.propTypes = {
     extraContent: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     disabled: PropTypes.bool.isRequired,
     showURL: PropTypes.bool.isRequired,
-};
-
-DescriptionTooltip.defaultProps = {
-    disabled: false,
-    showURL: false,
 };
 
 export default DescriptionTooltip;

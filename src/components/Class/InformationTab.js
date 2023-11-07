@@ -18,7 +18,7 @@ import { deleteParentByID, getChildrenByID, getParentByID, setParentClassByID } 
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getErrorMessage } from 'utils';
 
-function InformationTab({ id, label, uri, editMode, callBackToReloadTree, showStatementsBrowser, setLabel }) {
+function InformationTab({ id, label, uri, editMode, callBackToReloadTree, showStatementsBrowser = true, setLabel }) {
     const [template, setTemplate] = useState(null);
     const [parent, setParent] = useState(null);
     const [children, setChildren] = useState([]);
@@ -265,10 +265,6 @@ InformationTab.propTypes = {
     callBackToReloadTree: PropTypes.func,
     showStatementsBrowser: PropTypes.bool,
     setLabel: PropTypes.func,
-};
-
-InformationTab.defaultProps = {
-    showStatementsBrowser: true,
 };
 
 export default InformationTab;

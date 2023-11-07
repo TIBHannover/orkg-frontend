@@ -1,11 +1,10 @@
 import { useContext } from 'react';
 import Select from 'react-select';
-// import { useSelector } from 'react-redux';
 import { ThemeContext } from 'styled-components';
 import PropTypes from 'prop-types';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
-const SearchFieldSelector = props => {
+const SearchFieldSelector = ({ disableBorderRadiusLeft = false, disableBorderRadiusRight = true, options, value, setValue }) => {
     const theme = useContext(ThemeContext);
 
     const customStyles = {
@@ -19,11 +18,11 @@ const SearchFieldSelector = props => {
         }),
         control: provided => ({
             ...provided,
-            borderTopLeftRadius: props.disableBorderRadiusLeft ? 0 : undefined,
-            borderBottomLeftRadius: props.disableBorderRadiusLeft ? 0 : undefined,
-            borderTopRightRadius: props.disableBorderRadiusRight ? 0 : undefined,
-            borderBottomRightRadius: props.disableBorderRadiusRight ? 0 : undefined,
-            ...(props.disableBorderRadiusRight ? { borderRight: 0 } : {}),
+            borderTopLeftRadius: disableBorderRadiusLeft ? 0 : undefined,
+            borderBottomLeftRadius: disableBorderRadiusLeft ? 0 : undefined,
+            borderTopRightRadius: disableBorderRadiusRight ? 0 : undefined,
+            borderBottomRightRadius: disableBorderRadiusRight ? 0 : undefined,
+            ...(disableBorderRadiusRight ? { borderRight: 0 } : {}),
             backgroundColor: theme.light,
             color: theme.secondaryDarker,
         }),
@@ -68,9 +67,9 @@ const SearchFieldSelector = props => {
             <Select
                 styles={customStyles}
                 classNamePrefix="react-select-dark"
-                value={props.value}
-                options={props.options}
-                onChange={v => props.setValue(v)}
+                value={value}
+                options={options}
+                onChange={v => setValue(v)}
                 getOptionValue={({ id }) => id}
                 getOptionLabel={({ label }) => `By ${label}`}
                 isClearable={false}
@@ -86,11 +85,6 @@ SearchFieldSelector.propTypes = {
     options: PropTypes.array,
     disableBorderRadiusLeft: PropTypes.bool,
     disableBorderRadiusRight: PropTypes.bool,
-};
-
-SearchFieldSelector.defaultProps = {
-    disableBorderRadiusLeft: false,
-    disableBorderRadiusRight: true,
 };
 
 export default SearchFieldSelector;

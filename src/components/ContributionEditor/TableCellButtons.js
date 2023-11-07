@@ -24,7 +24,7 @@ const ButtonsContainer = styled.div`
     }
 `;
 
-const TableCellButtons = ({ onEdit, onDelete, backgroundColor, style, value }) => {
+const TableCellButtons = ({ onEdit = null, onDelete = null, backgroundColor, style = {}, value }) => {
     const [disableHover, setDisableHover] = useState(false);
     const dispatch = useDispatch();
     const buttonClasses = classNames({
@@ -97,12 +97,6 @@ TableCellButtons.propTypes = {
     backgroundColor: PropTypes.string.isRequired,
     style: PropTypes.object,
     value: PropTypes.object,
-};
-
-TableCellButtons.defaultProps = {
-    style: {},
-    onEdit: null,
-    onDelete: null,
 };
 
 export default memo(TableCellButtons);

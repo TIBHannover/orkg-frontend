@@ -47,23 +47,23 @@ const cookies = new Cookies();
 const GlobalStyle = createGlobalStyle`
     body.modal-open {
         #main-navbar, #paperHeaderBar {
-            right: ${props => props.scrollbarWidth}px
+            right: ${props => props.$scrollbarWidth}px
         }
         #helpIcon {
-            padding-right: ${props => props.scrollbarWidth}px
+            padding-right: ${props => props.$scrollbarWidth}px
         }
         .woot-widget-bubble, .woot-widget-holder {
-            margin-right: ${props => props.scrollbarWidth}px
+            margin-right: ${props => props.$scrollbarWidth}px
         }
     }
     @media (min-width: 481px) and (max-width: 1100px) {
         .woot-widget-bubble.woot-elements--right{
-            bottom: ${props => (!props.cookieInfoDismissed ? '80px' : '14px')}
+            bottom: ${props => (!props.$cookieInfoDismissed ? '80px' : '14px')}
         }
     }  
     @media (max-width: 480px) {
         .woot-widget-bubble.woot-elements--right{
-            bottom: ${props => (!props.cookieInfoDismissed ? '150px' : '14px')}
+            bottom: ${props => (!props.$cookieInfoDismissed ? '150px' : '14px')}
         }
     }  
     
@@ -311,7 +311,7 @@ const Header = () => {
                 container={!isTransparentNavbar ? true : 'sm'}
                 style={{ display: 'flex', width: '100%', transition: 'width 1s ease-in-out' }}
             >
-                <GlobalStyle scrollbarWidth={scrollbarWidth(true)} cookieInfoDismissed={cookieInfoDismissed} />
+                <GlobalStyle $scrollbarWidth={scrollbarWidth(true)} $cookieInfoDismissed={cookieInfoDismissed} />
 
                 <Link href={ROUTES.HOME} className="me-4 p-0" onClick={closeMenu}>
                     {!isTransparentNavbar && <Image src={Logo} alt="Logo ORKG" />}

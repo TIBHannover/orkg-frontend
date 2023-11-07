@@ -45,7 +45,14 @@ const StyledListGroupItem = styled(ListGroupItem)`
     }
 `;
 
-export default function AddContribution(props) {
+export default function AddContribution({
+    showDialog,
+    toggle,
+    allowCreate = false,
+    onCreateContribution = () => {},
+    onCreatePaper = () => {},
+    onAddContributions,
+}) {
     const [searchPaper, setSearchPaper] = useState('');
     const [currentPage, setCurrentPage] = useState(0);
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
@@ -173,8 +180,8 @@ export default function AddContribution(props) {
     }, [searchPaper]);
 
     return (
-        <Modal isOpen={props.showDialog} toggle={props.toggle} size="lg">
-            <ModalHeader toggle={props.toggle}>Add contribution</ModalHeader>
+        <Modal isOpen={showDialog} toggle={toggle} size="lg">
+            <ModalHeader toggle={toggle}>Add contribution</ModalHeader>
             <ModalBody>
                 <FormGroup>
                     <Label for="title">Paper title or DOI</Label>
@@ -210,10 +217,10 @@ export default function AddContribution(props) {
                         <div>
                             <div className="text-center mt-4 mb-4">
                                 There are no results, please try a different search term{' '}
-                                {props.allowCreate && (
+                                {allowCreate && (
                                     <>
                                         or{' '}
-                                        <Button color="light" size="sm" onClick={() => props.onCreatePaper(searchPaper)}>
+                                        <Button color="light" size="sm" onClick={() => onCreatePaper(searchPaper)}>
                                             Add new paper
                                         </Button>
                                     </>
@@ -225,7 +232,7 @@ export default function AddContribution(props) {
                         <>
                             <Alert color="info">
                                 Select the contributions you want to add{' '}
-                                {props.allowCreate && (
+                                {allowCreate && (
                                     <>
                                         or you click on <Icon icon={faPlusCircle} className="text-primary" /> if you want to create a new contribution
                                         for an existing paper
@@ -248,15 +255,10 @@ export default function AddContribution(props) {
                                                     </Link>
                                                 </span>
                                             </Tippy>
-                                            {props.allowCreate && (
+                                            {allowCreate && (
                                                 <Tippy content="Create new contribution for this paper">
                                                     <span className="ms-2">
-                                                        <Button
-                                                            color="link"
-                                                            className="p-0"
-                                                            size="lg"
-                                                            onClick={() => props.onCreateContribution(paper.id)}
-                                                        >
+                                                        <Button color="link" className="p-0" size="lg" onClick={() => onCreateContribution(paper.id)}>
                                                             <Icon icon={faPlusCircle} />
                                                         </Button>
                                                     </span>
@@ -305,9 +307,9 @@ export default function AddContribution(props) {
                 </div>
             </ModalBody>
             <ModalFooter className="d-flex">
-                {props.allowCreate && (
+                {allowCreate && (
                     <div className="flex-grow-1">
-                        <Button color="light" onClick={() => props.onCreatePaper(searchPaper)}>
+                        <Button color="light" onClick={() => onCreatePaper(searchPaper)}>
                             Add new paper
                         </Button>
                     </div>
@@ -317,9 +319,9 @@ export default function AddContribution(props) {
                     color="primary"
                     className="float-end"
                     onClick={() => {
-                        props.onAddContributions(selectedContributions);
+                        onAddContributions(selectedContributions);
                         setSelectedContributions([]);
-                        props.toggle();
+                        toggle();
                     }}
                 >
                     Add {pluralize('contribution', selectedContributions.length, false)}
@@ -336,10 +338,4 @@ AddContribution.propTypes = {
     allowCreate: PropTypes.bool,
     onCreateContribution: PropTypes.func,
     onCreatePaper: PropTypes.func,
-};
-
-AddContribution.defaultProps = {
-    allowCreate: false,
-    onCreateContribution: () => {},
-    onCreatePaper: () => {},
 };

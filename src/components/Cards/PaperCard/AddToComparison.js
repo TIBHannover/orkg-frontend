@@ -33,7 +33,7 @@ Option.propTypes = {
     children: PropTypes.string.isRequired,
 };
 
-const AddToComparison = ({ contributionId, paper, showLabel }) => {
+const AddToComparison = ({ contributionId, paper, showLabel = false }) => {
     const dispatch = useDispatch();
     const inputCheckboxRef = useRef();
     const comparison = useSelector(state => state.viewPaper.comparison);
@@ -166,11 +166,7 @@ const AddToComparison = ({ contributionId, paper, showLabel }) => {
 AddToComparison.propTypes = {
     contributionId: PropTypes.string,
     paper: PropTypes.object.isRequired,
-    showLabel: PropTypes.bool.isRequired,
-};
-
-AddToComparison.defaultProps = {
-    showLabel: false,
+    showLabel: PropTypes.bool,
 };
 
 export default AddToComparison;

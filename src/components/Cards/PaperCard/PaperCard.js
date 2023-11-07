@@ -25,35 +25,52 @@ const PaperCardStyled = styled.div`
     }
 `;
 
-const PaperCard = props => {
-    const showActionButtons = props.showAddToComparison || props.selectable || props.showCurationFlags;
+const PaperCard = ({
+    paper,
+    contribution,
+    onSelect,
+    paths,
+    selectable = false,
+    linkTarget = '_self',
+    selected = false,
+    showBreadcrumbs = true,
+    showCreator = true,
+    showAddToComparison = true,
+    showBadge = false,
+    showCurationFlags = true,
+    isListGroupItem = true,
+    description = null,
+    showContributionCount = false,
+    route = null,
+}) => {
+    const showActionButtons = showAddToComparison || selectable || showCurationFlags;
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
-        resourceId: props.paper.id,
-        unlisted: props.paper?.unlisted,
-        featured: props.paper?.featured,
+        resourceId: paper.id,
+        unlisted: paper?.unlisted,
+        featured: paper?.featured,
     });
 
     return (
         <PaperCardStyled
-            className={`${props.isListGroupItem ? 'list-group-item' : ''} d-flex pe-4 ${showActionButtons ? ' ps-3  ' : ' ps-4  '} ${
-                props.selected ? 'selected' : ''
+            className={`${isListGroupItem ? 'list-group-item' : ''} d-flex pe-4 ${showActionButtons ? ' ps-3  ' : ' ps-4  '} ${
+                selected ? 'selected' : ''
             } py-3`}
             style={{ flexWrap: 'wrap' }}
         >
             <div className="col-md-9 d-flex p-0">
                 {showActionButtons && (
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
-                        {props.selectable && (
+                        {selectable && (
                             <div>
-                                <Input type="checkbox" id={`${props.paper.id}input`} onChange={props.onSelect} checked={props.selected} />
+                                <Input type="checkbox" id={`${paper.id}input`} onChange={onSelect} checked={selected} />
                             </div>
                         )}
-                        {!props.selectable && props.showAddToComparison && !!props.paper.contributions?.length && (
+                        {!selectable && showAddToComparison && !!paper.contributions?.length && (
                             <div>
-                                <AddToComparison paper={props.paper} contributionId={props.contribution?.id} />
+                                <AddToComparison paper={paper} contributionId={contribution?.id} />
                             </div>
                         )}
-                        {props.showCurationFlags && (
+                        {showCurationFlags && (
                             <>
                                 <div>
                                     <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
@@ -68,19 +85,19 @@ const PaperCard = props => {
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
                         <Link
-                            target={props.linkTarget ? props.linkTarget : undefined}
+                            target={linkTarget || undefined}
                             href={
-                                props.route ||
-                                reverse(props.contribution?.id ? ROUTES.VIEW_PAPER_CONTRIBUTION : ROUTES.VIEW_PAPER, {
-                                    resourceId: props.paper.id,
-                                    contributionId: props.contribution?.id ?? undefined,
+                                route ||
+                                reverse(contribution?.id ? ROUTES.VIEW_PAPER_CONTRIBUTION : ROUTES.VIEW_PAPER, {
+                                    resourceId: paper.id,
+                                    contributionId: contribution?.id ?? undefined,
                                 })
                             }
                         >
-                            {props.paper.title ? props.paper.title : <em>No title</em>}
+                            {paper.title ? paper.title : <em>No title</em>}
                         </Link>
-                        {props.contribution && <span className="text-muted"> - {props.contribution.title}</span>}
-                        {props.showBadge && (
+                        {contribution && <span className="text-muted"> - {contribution.title}</span>}
+                        {showBadge && (
                             <div className="d-inline-block ms-2">
                                 <CardBadge color="primary">Paper</CardBadge>
                             </div>
@@ -88,11 +105,11 @@ const PaperCard = props => {
                     </div>
                     <div>
                         <div className="d-inline-block d-md-none mt-1 me-1">
-                            {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.paper.researchField} />}
+                            {showBreadcrumbs && <RelativeBreadcrumbs researchField={paper.researchField} />}
                         </div>
                     </div>
                     {/* Show Loading Dynamic data indicator if we are loading */}
-                    {props.paper.isLoading && (
+                    {paper.isLoading && (
                         <div>
                             <span>Loading</span>
                             <ContentLoader
@@ -112,24 +129,22 @@ const PaperCard = props => {
                     )}
                     <div className="mb-1">
                         <small>
-                            {props.showContributionCount && (
+                            {showContributionCount && (
                                 <div className="d-inline-block me-1">
                                     <Icon size="sm" icon={faFile} className="me-1" />
-                                    {pluralize('contribution', props.paper.contributions?.length, true)}
+                                    {pluralize('contribution', paper.contributions?.length, true)}
                                 </div>
                             )}
-                            <Authors authors={props.paper.authors} />
-                            {(props.paper.publicationMonth || props.paper.publicationYear) && (
-                                <Icon size="sm" icon={faCalendar} className="ms-2 me-1" />
-                            )}
-                            {props.paper.publicationMonth && props.paper.publicationMonth.label > 0
-                                ? moment(props.paper.publicationMonth.label, 'M').format('MMMM')
+                            <Authors authors={paper.authors} />
+                            {(paper.publicationMonth || paper.publicationYear) && <Icon size="sm" icon={faCalendar} className="ms-2 me-1" />}
+                            {paper.publicationMonth && paper.publicationMonth.label > 0
+                                ? moment(paper.publicationMonth.label, 'M').format('MMMM')
                                 : ''}{' '}
-                            {props.paper.publicationYear?.label ?? null}
+                            {paper.publicationYear?.label ?? null}
                         </small>
-                        {props.description?.label && (
+                        {description?.label && (
                             <p className="mb-0 mt-1 w-100 pt-0" style={{ lineHeight: 1.2, whiteSpace: 'pre-line' }}>
-                                <small className="text-muted">{props.description?.label}</small>
+                                <small className="text-muted">{description?.label}</small>
                             </p>
                         )}
                     </div>
@@ -138,15 +153,15 @@ const PaperCard = props => {
             <div className="col-md-3 d-flex align-items-end flex-column p-0">
                 <div className="flex-grow-1 mb-1">
                     <div className="d-none d-md-flex align-items-end justify-content-end">
-                        {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.paper.researchField} />}
+                        {showBreadcrumbs && <RelativeBreadcrumbs researchField={paper.researchField} />}
                     </div>
                 </div>
-                {props.showCreator && <UserAvatar userId={props.paper.created_by} />}
+                {showCreator && <UserAvatar userId={paper.created_by} />}
             </div>
-            {props.paths?.length > 0 && (
+            {paths?.length > 0 && (
                 <div className={`${showActionButtons ? 'ps-4' : 'ps-5'} mb-1`}>
                     <small>
-                        <Paths paths={props.paths} />
+                        <Paths paths={paths} />
                     </small>
                 </div>
             )}
@@ -177,34 +192,18 @@ PaperCard.propTypes = {
     }),
     selectable: PropTypes.bool,
     selected: PropTypes.bool,
-    showBreadcrumbs: PropTypes.bool.isRequired,
-    showCreator: PropTypes.bool.isRequired,
-    showAddToComparison: PropTypes.bool.isRequired,
-    showBadge: PropTypes.bool.isRequired,
-    showCurationFlags: PropTypes.bool.isRequired,
+    showBreadcrumbs: PropTypes.bool,
+    showCreator: PropTypes.bool,
+    showAddToComparison: PropTypes.bool,
+    showBadge: PropTypes.bool,
+    showCurationFlags: PropTypes.bool,
     onSelect: PropTypes.func,
-    isListGroupItem: PropTypes.bool.isRequired,
+    isListGroupItem: PropTypes.bool,
     description: PropTypes.object,
     linkTarget: PropTypes.string,
-    showContributionCount: PropTypes.bool.isRequired,
+    showContributionCount: PropTypes.bool,
     route: PropTypes.string,
     paths: PropTypes.array,
-};
-
-PaperCard.defaultProps = {
-    selectable: false,
-    linkTarget: '_self',
-    selected: false,
-    showBreadcrumbs: true,
-    showCreator: true,
-    showAddToComparison: true,
-    showBadge: false,
-    showCurationFlags: true,
-    isListGroupItem: true,
-    onChange: () => {},
-    description: null,
-    showContributionCount: false,
-    route: null,
 };
 
 export default PaperCard;

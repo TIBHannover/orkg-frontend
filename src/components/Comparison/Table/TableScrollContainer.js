@@ -10,7 +10,7 @@ import { ClickableScrollButton, ReactTableWrapper, ScrollButton } from 'componen
 
 const SCROLL_AMOUNT = 500;
 
-const TableScrollContainer = ({ children, className }) => {
+const TableScrollContainer = ({ children, className = '' }) => {
     const [showBackButton, setShowBackButton] = useState(false);
     const [showNextButton, setShowNextButton] = useState(false);
     const scrollContainerBody = useRef(null);
@@ -85,10 +85,6 @@ const TableScrollContainer = ({ children, className }) => {
 TableScrollContainer.propTypes = {
     children: PropTypes.node.isRequired,
     className: PropTypes.string,
-};
-
-TableScrollContainer.defaultProps = {
-    className: '',
 };
 
 export default TableScrollContainer;

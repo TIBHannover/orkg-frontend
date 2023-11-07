@@ -9,7 +9,7 @@ import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { Badge } from 'reactstrap';
 
-const ItemMetadata = ({ item, showClasses, showCreatedAt, showCreatedBy, showProvenance, editMode }) => (
+const ItemMetadata = ({ editMode = false, showClasses = false, showCreatedAt = false, showCreatedBy = false, showProvenance = false, item }) => (
     <div className="d-flex">
         <div className="flex-grow-1">
             {showCreatedAt && (
@@ -62,14 +62,6 @@ ItemMetadata.propTypes = {
     showCreatedAt: PropTypes.bool,
     showCreatedBy: PropTypes.bool,
     showProvenance: PropTypes.bool,
-};
-
-ItemMetadata.defaultProps = {
-    editMode: false,
-    showClasses: false,
-    showCreatedAt: false,
-    showCreatedBy: false,
-    showProvenance: false,
 };
 
 export default ItemMetadata;

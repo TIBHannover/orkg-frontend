@@ -30,7 +30,7 @@ const Label = styled.div`
     padding-left: 28px;
 `;
 
-const TemplateButton = props => {
+const TemplateButton = ({ addMode = true, label = '', id, classId }) => {
     const [isSaving, setIsSaving] = useState(false);
     const ref = useRef(null);
     const dispatch = useDispatch();
@@ -40,20 +40,20 @@ const TemplateButton = props => {
 
         dispatch(
             fillContributionsWithTemplate({
-                templateID: props.id,
+                templateID: id,
             }),
         ).then(() => {
             toast.success('Template added successfully');
             ref.current?.removeAttribute('disabled');
             setIsSaving(false);
         });
-    }, [dispatch, props.id]);
+    }, [dispatch, id]);
 
     const deleteTemplate = useCallback(() => {
         setIsSaving(true);
         // Remove the properties related to the template if they have no values
-        dispatch(removeEmptyPropertiesOfClass({ classId: props.classId }));
-        dispatch(removeClassFromContributionResource({ classId: props.classId }))
+        dispatch(removeEmptyPropertiesOfClass({ classId }));
+        dispatch(removeClassFromContributionResource({ classId }))
             .then(() => {
                 ref.current?.removeAttribute('disabled');
                 setIsSaving(false);
@@ -70,28 +70,28 @@ const TemplateButton = props => {
     }, []);
 
     return (
-        <TemplateTooltip id={props.id}>
+        <TemplateTooltip id={id}>
             <span tabIndex="0">
                 <Button
                     innerRef={ref}
                     onClick={() => {
                         ref.current.setAttribute('disabled', 'disabled');
-                        if (props.addMode) {
+                        if (addMode) {
                             addTemplate();
                         } else {
                             deleteTemplate();
                         }
                     }}
                     size="sm"
-                    color={props.addMode ? 'light' : 'danger'}
+                    color={addMode ? 'light' : 'danger'}
                     className="me-2 mb-2 position-relative px-3 rounded-pill border-0"
                 >
-                    <IconWrapper addMode={props.addMode}>
-                        {!isSaving && props.addMode && <Icon size="sm" icon={faPlus} />}
-                        {!isSaving && !props.addMode && <Icon size="sm" icon={faTimes} />}
+                    <IconWrapper addMode={addMode}>
+                        {!isSaving && addMode && <Icon size="sm" icon={faPlus} />}
+                        {!isSaving && !addMode && <Icon size="sm" icon={faTimes} />}
                         {isSaving && <Icon icon={faSpinner} spin />}
                     </IconWrapper>
-                    <Label>{props.label}</Label>
+                    <Label>{label}</Label>
                 </Button>
             </span>
         </TemplateTooltip>
@@ -104,11 +104,6 @@ TemplateButton.propTypes = {
     id: PropTypes.string.isRequired,
     classId: PropTypes.string,
     tippyTarget: PropTypes.object,
-};
-
-TemplateButton.defaultProps = {
-    addMode: true,
-    label: '',
 };
 
 export default TemplateButton;

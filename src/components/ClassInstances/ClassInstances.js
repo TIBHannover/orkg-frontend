@@ -10,7 +10,7 @@ import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 
-const ClassInstances = props => {
+const ClassInstances = ({ title = 'class', classId }) => {
     const pageSize = 25;
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
@@ -26,7 +26,7 @@ const ClassInstances = props => {
             setIsLoading(true);
 
             getResourcesByClass({
-                id: props.classId,
+                id: classId,
                 page: _page,
                 items: pageSize,
                 q: _searchQuery,
@@ -40,7 +40,7 @@ const ClassInstances = props => {
                 setIsLastPageReached(result.last);
             });
         }, 500),
-        [props.classId],
+        [classId],
     );
 
     // reset resources when the id has changed
@@ -49,7 +49,7 @@ const ClassInstances = props => {
         setHasNextPage(false);
         setIsLastPageReached(false);
         setPage(0);
-    }, [props.classId]);
+    }, [classId]);
 
     useEffect(() => {
         loadInstances(0, searchQuery);
@@ -120,7 +120,7 @@ const ClassInstances = props => {
                             ))}
                             {!isLoading && hasNextPage && (
                                 <tr style={{ cursor: 'pointer' }} className="text-center" onClick={!isLoading ? handleLoadMore : undefined}>
-                                    <td colSpan="3">{`View more ${props.title} instances`}</td>
+                                    <td colSpan="3">{`View more ${title} instances`}</td>
                                 </tr>
                             )}
                             {!hasNextPage && isLastPageReached && page !== 0 && (
@@ -140,7 +140,7 @@ const ClassInstances = props => {
                             No result found for the term: <i>{searchQuery}</i>.
                         </>
                     ) : (
-                        `This ${props.title} has no instances yet`
+                        `This ${title} has no instances yet`
                     )}
                 </div>
             )}
@@ -153,7 +153,4 @@ ClassInstances.propTypes = {
     title: PropTypes.string,
 };
 
-ClassInstances.defaultProps = {
-    title: 'class',
-};
 export default ClassInstances;

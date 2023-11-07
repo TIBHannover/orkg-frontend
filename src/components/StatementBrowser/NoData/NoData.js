@@ -1,11 +1,11 @@
 import { StyledStatementItem } from 'components/StatementBrowser/styled';
 import PropTypes from 'prop-types';
 
-const NoData = props => (
+const NoData = ({ enableEdit = false }) => (
     <StyledStatementItem className="mb-0 rounded">
         No data yet
         <br />
-        {props.enableEdit ? (
+        {enableEdit ? (
             <span style={{ fontSize: '0.875rem' }}>Start by using a template or adding property from below</span>
         ) : (
             <span style={{ fontSize: '0.875rem' }}>Please contribute by editing</span>
@@ -16,10 +16,6 @@ const NoData = props => (
 
 NoData.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
-};
-
-NoData.defaultProps = {
-    enableEdit: false,
 };
 
 export default NoData;
