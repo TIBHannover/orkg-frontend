@@ -3,6 +3,17 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.129.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.128.0...v0.129.0) - 2023-11-08
+
+### Changes
+
+- StatementBrowser(Statement):removed default props and renamed syncBackend =&gt; syncBackendValue and propertySuggestionsComponent =&gt;  propertySuggestionsComponentStore [`#1217`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1217)
+- fix(ResearchFieldCards): ensure words are correctly pluralized [`#1230`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1230)
+- docs: update CONTRIBUTING and remove docs folder [`#1231`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1231)
+- feat(AbstractModal): show warning for fetching abstract by title [`#1228`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1228)
+- feat(Diff): show link to compare to latest version [`#1229`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1229)
+
+---
 ## [v0.128.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.127.0...v0.128.0) - 2023-11-01
 
 ### Changes
