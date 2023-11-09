@@ -3,11 +3,18 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
 import AuthorsContentLoader from 'components/TopAuthors/AuthorsContentLoader';
 import pluralize from 'pluralize';
-import PropTypes from 'prop-types';
 import { Alert, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import useResearchProblemAuthors from 'components/TopAuthors/hooks/useTopAuthors';
+import { Dispatch, SetStateAction } from 'react';
+import { ResearchProblemTopAuthor } from 'services/backend/problems';
 
-const ResearchProblemAuthorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
+type ResearchProblemAuthorsModalProps = {
+    researchProblemId: string;
+    openModal: boolean;
+    setOpenModal: Dispatch<SetStateAction<boolean>>;
+};
+
+const ResearchProblemAuthorsModal = ({ researchProblemId, openModal, setOpenModal }: ResearchProblemAuthorsModalProps) => {
     const { authors, isLoading, isLast, loadNext } = useResearchProblemAuthors({
         researchProblemId,
         pageSize: 5,
@@ -33,7 +40,8 @@ const ResearchProblemAuthorsModal = ({ researchProblemId, openModal, setOpenModa
                                 <div className="flex-grow-1">
                                     <AuthorCard
                                         author={author.author.value}
-                                        paperAmount={pluralize('paper', author.papers, true)}
+                                        // @ts-ignore
+                                        paperAmount={pluralize('paper', (author as ResearchProblemTopAuthor).papers, true)}
                                         isVisibleGoogleScholar
                                         isVisibleShowCitations
                                     />
@@ -43,7 +51,7 @@ const ResearchProblemAuthorsModal = ({ researchProblemId, openModal, setOpenModa
                     ))}
 
                     {!isLoading && !isLast && (
-                        <ListGroupItem className="py-2 text-center" action role="button" tabIndex="0" onClick={loadNext}>
+                        <ListGroupItem className="py-2 text-center" action role="button" tabIndex={0} onClick={loadNext}>
                             Load more...
                         </ListGroupItem>
                     )}
@@ -53,12 +61,6 @@ const ResearchProblemAuthorsModal = ({ researchProblemId, openModal, setOpenModa
             </ModalBody>
         </Modal>
     );
-};
-
-ResearchProblemAuthorsModal.propTypes = {
-    researchProblemId: PropTypes.string.isRequired,
-    openModal: PropTypes.bool.isRequired,
-    setOpenModal: PropTypes.func.isRequired,
 };
 
 export default ResearchProblemAuthorsModal;

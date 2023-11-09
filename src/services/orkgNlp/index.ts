@@ -12,11 +12,20 @@ import { getResources } from 'services/backend/resources';
 import { getParentResearchFields } from 'services/backend/statements';
 import { COMPUTER_SCIENCE_FIELDS_LIST, AGRICULTURE_FIELDS_LIST } from 'constants/nlpFieldLists';
 import fetch from 'cross-fetch';
+import { Resource } from 'services/backend/types';
+
+type NlpResponse<T> = {
+    timestamp: string;
+    uuid: string;
+    payload: T;
+};
 
 export const nlpServiceUrl = env('NLP_SERVICE_URL');
 
 // https://gitlab.com/TIBHannover/orkg/nlp/orkg-nlp-api/-/blob/main/app/__init__.py#L13
-export const SERVICE_MAPPING = {
+export const SERVICE_MAPPING: {
+    [key: string]: string;
+} = {
     PREDICATES_CLUSTERING: 'PREDICATES_CLUSTERING',
     BIOASSAYS_SEMANTIFICATION: 'BIOASSAYS_SEMANTIFICATION',
     CS_NER: 'CS_NER',
@@ -32,12 +41,14 @@ export const FIELDS_SERVICES_MAPPING = {
     [SERVICE_MAPPING.AGRI_NER]: AGRICULTURE_FIELDS_LIST,
 };
 
-export const determineActiveNERService = async field => {
+export const determineActiveNERService = async (field: string): Promise<string | null> => {
     if (!field) return null;
     let result = Object.keys(FIELDS_SERVICES_MAPPING).map(key => FIELDS_SERVICES_MAPPING[key].includes(field));
     if (result.indexOf(true) === -1) {
         const parentFields = await getParentResearchFields(field);
-        result = Object.keys(FIELDS_SERVICES_MAPPING).map(key => parentFields.some(_field => FIELDS_SERVICES_MAPPING[key].includes(_field.id)));
+        result = Object.keys(FIELDS_SERVICES_MAPPING).map(
+            key => parentFields.some((_field: { id: string }) => FIELDS_SERVICES_MAPPING[key].includes(_field.id)), // type of field should come from the function itself, so ': { id: string }' can be removed in the future
+        );
     }
     let activeNerService = null;
     try {
@@ -48,7 +59,13 @@ export const determineActiveNERService = async field => {
     return activeNerService;
 };
 
-export const classifySentence = async ({ sentence, labels }) => {
+type Classify = {
+    labels: string[];
+    scores: number[];
+    sequence: string;
+};
+
+export const classifySentence = async ({ sentence, labels }: { sentence: string; labels: string[] }): Promise<NlpResponse<Classify>> => {
     const { payload } = await submitPostRequest(
         `${nlpServiceUrl}tools/text/classify`,
         {
@@ -62,8 +79,12 @@ export const classifySentence = async ({ sentence, labels }) => {
     return payload;
 };
 
-export const summarizeText = ({ text, ratio }) => {
-    const { payload } = submitPostRequest(
+type Summarize = {
+    summary: string;
+};
+
+export const summarizeText = async ({ text, ratio }: { text: string; ratio: number }): Promise<NlpResponse<Summarize>> => {
+    const { payload } = await submitPostRequest(
         `${nlpServiceUrl}tools/text/summarize`,
         {
             'Content-Type': 'text/plain',
@@ -74,7 +95,9 @@ export const summarizeText = ({ text, ratio }) => {
     return payload;
 };
 
-export const PROPERTY_MAPPING = {
+export const PROPERTY_MAPPING: {
+    [key: string]: string;
+} = {
     RESEARCH_PROBLEM: PREDICATES.HAS_RESEARCH_PROBLEM,
     METHOD: PREDICATES.METHOD,
     LANGUAGE: PREDICATES.LANGUAGE,
@@ -84,26 +107,67 @@ export const PROPERTY_MAPPING = {
     DATASET: PREDICATES.HAS_DATASET,
 };
 
-export const getNerResults = async ({ title = '', abstract = '', service = SERVICE_MAPPING.CS_NER }) => {
-    let data = null;
+type CsNerResponse = {
+    annotations: {
+        title: {
+            concept: string;
+            entities: string[];
+        }[];
+        abstract: {
+            concept: string;
+            entities: string[];
+        }[];
+    };
+};
+
+type AgriNerResponse = {
+    annotations: {
+        concept: string;
+        entities: string[];
+    }[];
+};
+export const getNerResults = async ({
+    title = '',
+    abstract = '',
+    service = SERVICE_MAPPING.CS_NER,
+}: {
+    title: string;
+    abstract: string;
+    service: string;
+}) => {
+    let data: NlpResponse<CsNerResponse | AgriNerResponse> | null = null;
     let titleConcepts = null;
     let abstractConcepts = null;
     if (service === SERVICE_MAPPING.CS_NER) {
         data = await submitPostRequest(`${nlpServiceUrl}annotation/csner`, { 'Content-Type': 'application/json' }, { title, abstract });
-        titleConcepts = mapValues(keyBy(data.payload.annotations.title, 'concept'), 'entities');
-        abstractConcepts = mapValues(keyBy(data.payload.annotations.abstract, 'concept'), 'entities');
+        titleConcepts = mapValues(keyBy((data!.payload as CsNerResponse).annotations.title, 'concept'), 'entities');
+        abstractConcepts = mapValues(keyBy((data!.payload as CsNerResponse).annotations.abstract, 'concept'), 'entities');
     } else {
         data = await submitPostRequest(`${nlpServiceUrl}annotation/agriner`, { 'Content-Type': 'application/json' }, { title });
-        titleConcepts = mapValues(keyBy(data.payload.annotations, 'concept'), 'entities');
+        titleConcepts = mapValues(keyBy(data!.payload.annotations, 'concept'), 'entities');
     }
 
-    const mappedEntities = {};
-    const mappedResourcePromises = [];
+    const mappedEntities: {
+        [key: string]: {
+            id?: string;
+            label: string;
+            isExistingValue?: boolean;
+        }[];
+    } = {};
+    const mappedResourcePromises: {
+        type: string;
+        label: string;
+        data: Promise<Resource[]>;
+    }[] = [];
 
     for (const type of Object.keys(PROPERTY_MAPPING)) {
         const resources = uniq([...(titleConcepts?.[type] || []), ...(abstractConcepts?.[type] || [])]);
         mappedResourcePromises.push(
-            ...resources.map(resource => ({ type, label: resource, data: getResources({ q: resource, exact: true, returnContent: true }) })),
+            ...resources.map(resource => ({
+                type,
+                label: resource,
+                data: getResources({ q: resource, exact: true, returnContent: true }) as Promise<Resource[]>,
+            })),
         );
     }
 
@@ -126,8 +190,8 @@ export const getNerResults = async ({ title = '', abstract = '', service = SERVI
     }
 
     const propertyPromises = Object.keys(mappedEntities).map(propertyId => getPredicate(propertyId));
-    let properties = await Promise.all(propertyPromises);
-    properties = keyBy(
+    const properties = await Promise.all(propertyPromises);
+    const propertiesByKey = keyBy(
         properties.map(property => ({
             ...property,
             concept: Object.keys(PROPERTY_MAPPING).find(key => PROPERTY_MAPPING[key] === property.id),
@@ -136,34 +200,85 @@ export const getNerResults = async ({ title = '', abstract = '', service = SERVI
     );
     /**/
 
-    return { resources: mappedEntities, properties, response: data.payload.annotations };
+    return { resources: mappedEntities, properties: propertiesByKey, response: data?.payload.annotations };
 };
 
-export const saveFeedback = async ({ request, response, serviceName }) =>
+type FeedbackResponse = {
+    id: string;
+};
+export const saveFeedback = async ({
+    request,
+    response,
+    serviceName,
+}: {
+    request: object;
+    response: object;
+    serviceName: string;
+}): Promise<NlpResponse<FeedbackResponse>> =>
     submitPostRequest(
         `${nlpServiceUrl}feedback/`,
         { 'Content-Type': 'application/json' },
         { feedback: { request, response, service_name: serviceName } },
     );
 
-export const semantifyBioassays = text =>
+type BioassayResponse = {
+    labels: {
+        property: {
+            id: string;
+            label: string;
+        };
+        resources: {
+            id: string;
+            label: string;
+        }[];
+    }[];
+};
+export const semantifyBioassays = (text: string): Promise<NlpResponse<BioassayResponse>> =>
     submitPostRequest(`${nlpServiceUrl}clustering/bioassays/`, { 'Content-Type': 'application/json' }, { text });
 
-export const extractTable = form =>
-    fetch(`${nlpServiceUrl}tools/pdf/table/extract`, {
-        method: 'POST',
-        body: form,
-    });
+type extractTableResponse = {
+    table: {
+        [key: string]: string[];
+    };
+};
 
-export const convertPdf = form =>
+export const extractTable = (form: FormData): Promise<NlpResponse<extractTableResponse>> =>
+    submitPostRequest(`${nlpServiceUrl}tools/pdf/table/extract`, {}, form, false, false);
+
+export const convertPdf = (form: FormData): Promise<any> =>
     fetch(`${nlpServiceUrl}tools/pdf/convert`, {
         method: 'POST',
         body: form,
     });
 
-export const extractMetadataPdf = form => submitPostRequest(`${nlpServiceUrl}tools/pdf/sci-kg-tex/extract`, {}, form, false, false);
+type extractSciKgTexResponse = {
+    predicates: any[];
+    paper: {
+        title: string;
+        authors: {
+            label: string;
+        }[];
+        researchField: string;
+        contributions: {
+            name: string;
+            values: {
+                [key: string]: {
+                    text: string;
+                }[];
+            };
+        }[];
+    };
+};
+export const extractMetadataPdf = (form: FormData): Promise<NlpResponse<extractSciKgTexResponse>> =>
+    submitPostRequest(`${nlpServiceUrl}tools/pdf/sci-kg-tex/extract`, {}, form, false, false);
 
-export const getRecommendedPredicates = async ({ title, abstract }) => {
+type recommendedPredicatesResponse = {
+    predicates: {
+        id: string;
+        label: string;
+    }[];
+};
+export const getRecommendedPredicates = async ({ title, abstract }: { title: string; abstract: string }): Promise<recommendedPredicatesResponse> => {
     const { payload } = await submitPostRequest(
         `${nlpServiceUrl}clustering/predicates`,
         {
@@ -177,7 +292,22 @@ export const getRecommendedPredicates = async ({ title, abstract }) => {
     return payload;
 };
 
-export const getTemplateRecommendations = async ({ title, abstract, topN = 5 }) => {
+type recommendedTemplatesResponse = {
+    templates: {
+        id: string;
+        label: string;
+    }[];
+};
+
+export const getTemplateRecommendations = async ({
+    title,
+    abstract,
+    topN = 5,
+}: {
+    title: string;
+    abstract: string;
+    topN: number;
+}): Promise<recommendedTemplatesResponse> => {
     const { payload } = await submitPostRequest(
         `${nlpServiceUrl}nli/templates`,
         {
@@ -192,7 +322,20 @@ export const getTemplateRecommendations = async ({ title, abstract, topN = 5 }) 
     return payload;
 };
 
-export const classifyPaper = async ({ smartSuggestionInputText, topN = 5 }) => {
+type ClassifyResponse = {
+    annotations: {
+        research_field: string;
+        score: number;
+    }[];
+};
+
+export const classifyPaper = async ({
+    smartSuggestionInputText,
+    topN = 5,
+}: {
+    smartSuggestionInputText: string;
+    topN?: number;
+}): Promise<NlpResponse<ClassifyResponse>> => {
     const { payload } = await submitPostRequest(
         `${nlpServiceUrl}annotation/rfclf`,
         {
@@ -205,7 +348,16 @@ export const classifyPaper = async ({ smartSuggestionInputText, topN = 5 }) => {
     );
     return payload;
 };
-export const getLlmResponse = async ({ taskName, placeholders }) =>
+
+export const getLlmResponse = async ({
+    taskName,
+    placeholders,
+}: {
+    taskName: string;
+    placeholders: {
+        [key: string]: string;
+    };
+}): Promise<any> =>
     submitPostRequest(`${nlpServiceUrl}tools/text/chatgpt`, { 'Content-Type': 'application/json' }, { task_name: taskName, placeholders }).then(
         response => response?.payload.arguments,
     );

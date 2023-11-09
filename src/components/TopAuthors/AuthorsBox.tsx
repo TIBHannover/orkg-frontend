@@ -3,13 +3,17 @@ import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'react-content-loader';
-import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import pluralize from 'pluralize';
 import ResearchProblemAuthorsModal from 'components/TopAuthors/ResearchProblemAuthorsModal';
 import useResearchProblemAuthors from 'components/TopAuthors/hooks/useTopAuthors';
+import { ResearchProblemTopAuthor } from 'services/backend/problems';
 
-const AuthorsBox = ({ researchProblemId }) => {
+type AuthorsBoxProps = {
+    researchProblemId: string;
+};
+
+const AuthorsBox = ({ researchProblemId }: AuthorsBoxProps) => {
     const { authors, isLoading } = useResearchProblemAuthors({ researchProblemId, pageSize: 4 });
     const [openModal, setOpenModal] = useState(false);
 
@@ -23,7 +27,11 @@ const AuthorsBox = ({ researchProblemId }) => {
                     <div className="mt-2">
                         {authors.slice(0, 3).map((author, index) => (
                             <div className="pt-1 ps-2 pe-2" key={`rp${index}`}>
-                                <AuthorCard author={author.author.value} paperAmount={pluralize('paper', author.papers, true)} />
+                                <AuthorCard
+                                    author={author.author.value}
+                                    // @ts-ignore
+                                    paperAmount={pluralize('paper', (author as ResearchProblemTopAuthor).papers, true)}
+                                />
                                 {authors.slice(0, 3).length - 1 !== index && <hr className="mb-0 mt-1" />}
                             </div>
                         ))}
@@ -55,10 +63,6 @@ const AuthorsBox = ({ researchProblemId }) => {
             </div>
         </div>
     );
-};
-
-AuthorsBox.propTypes = {
-    researchProblemId: PropTypes.string.isRequired,
 };
 
 export default AuthorsBox;
