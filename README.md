@@ -112,6 +112,7 @@ We use [React](https://reactjs.org/) as frontend framework. Additionally, we use
 -   Run Prettier rules on commit for coding style consistency
 -   The [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format is used to automatically generate [our changelog](https://gitlab.com/TIBHannover/orkg/orkg-frontend/blob/master/CHANGELOG.md)
 -   We are transitioning to fully adhere to the [Airbnb JavaScript style guide](https://github.com/airbnb/javascript). Currently, some rules are displayed to warnings instead of errors because of the transition period. Please ensure your code does not contain any warnings before commiting.
+-   We are transitioning to TypeScript. We started with the [backend service folder](https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/tree/master/src/services/backend). When creating new components, consider doing this in TypeScript.
 
 Happy coding! 😁☕️
 

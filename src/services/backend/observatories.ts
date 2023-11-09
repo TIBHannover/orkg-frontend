@@ -4,6 +4,7 @@ import { url } from 'constants/misc';
 import { submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
 import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
+import { Contributor, Observatory, Organization, PaginatedResponse, Resource } from 'services/backend/types';
 
 export const observatoriesUrl = `${url}observatories/`;
 
@@ -15,7 +16,17 @@ export const observatoriesUrl = `${url}observatories/`;
  * @param {Number} size Number of items per page
  * @return {Object} List of observatories
  */
-export const getObservatories = ({ researchFieldId = null, q = null, page = 0, size = 9999 }) => {
+export const getObservatories = ({
+    researchFieldId = null,
+    q = null,
+    page = 0,
+    size = 9999,
+}: {
+    researchFieldId?: string | null;
+    q?: string | null;
+    page?: number;
+    size?: number;
+}): Promise<PaginatedResponse<Observatory>> => {
     const params = qs.stringify(
         { research_field: researchFieldId ? encodeURIComponent(researchFieldId) : null, q, page, size },
         {
@@ -25,7 +36,13 @@ export const getObservatories = ({ researchFieldId = null, q = null, page = 0, s
     return submitGetRequest(`${observatoriesUrl}?${params}`);
 };
 
-export const getResearchFieldOfObservatories = ({ page = 0, size = 9999 }) => {
+export const getResearchFieldOfObservatories = ({
+    page = 0,
+    size = 9999,
+}: {
+    page?: number;
+    size?: number;
+}): Promise<PaginatedResponse<{ id: string; label: string }>> => {
     const params = qs.stringify(
         { page, size },
         {
@@ -35,18 +52,26 @@ export const getResearchFieldOfObservatories = ({ page = 0, size = 9999 }) => {
     return submitGetRequest(`${observatoriesUrl}research-fields/?${params}`);
 };
 
-export const getObservatoryById = id => submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/`);
+export const getObservatoryById = (id: string): Promise<Observatory> => submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/`);
 
-export const updateObservatoryName = (id, value) =>
+export const updateObservatoryName = (id: string, value: string): Promise<Observatory> =>
     submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/name`, { 'Content-Type': 'application/json' }, { value });
 
-export const updateObservatoryDescription = (id, value) =>
+export const updateObservatoryDescription = (id: string, value: string): Promise<Observatory> =>
     submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/description`, { 'Content-Type': 'application/json' }, { value });
 
-export const updateObservatoryResearchField = (id, value) =>
+export const updateObservatoryResearchField = (id: string, value: string): Promise<Observatory> =>
     submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/research_field`, { 'Content-Type': 'application/json' }, { value });
 
-export const getUsersByObservatoryId = ({ id, page = 0, size = 9999 }) => {
+export const getUsersByObservatoryId = ({
+    id,
+    page = 0,
+    size = 9999,
+}: {
+    id: string;
+    page?: number;
+    size?: number;
+}): Promise<PaginatedResponse<Contributor>> => {
     const params = qs.stringify(
         { page, size },
         {
@@ -56,10 +81,10 @@ export const getUsersByObservatoryId = ({ id, page = 0, size = 9999 }) => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/users?${params}`);
 };
 
-export const addOrganizationToObservatory = (id, organization_id) =>
+export const addOrganizationToObservatory = (id: string, organization_id: string): Promise<Observatory> =>
     submitPutRequest(`${observatoriesUrl}add/${encodeURIComponent(id)}/organization`, { 'Content-Type': 'application/json' }, { organization_id });
 
-export const deleteOrganizationFromObservatory = (id, organization_id) =>
+export const deleteOrganizationFromObservatory = (id: string, organization_id: string): Promise<Observatory> =>
     submitPutRequest(`${observatoriesUrl}delete/${encodeURIComponent(id)}/organization`, { 'Content-Type': 'application/json' }, { organization_id });
 
 export const getContentByObservatoryIdAndClasses = ({
@@ -70,7 +95,15 @@ export const getContentByObservatoryIdAndClasses = ({
     desc = true,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
     classes = [],
-}) => {
+}: {
+    id: string;
+    page?: number;
+    items?: number;
+    sortBy?: string;
+    desc?: boolean;
+    visibility?: string;
+    classes?: string[];
+}): Promise<PaginatedResponse<Resource>> => {
     // Sort is not supported in this endpoint
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
@@ -82,14 +115,34 @@ export const getContentByObservatoryIdAndClasses = ({
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/class?${params}`);
 };
 
-export const createObservatory = (observatory_name, organization_id, description, research_field, display_id) =>
+export const createObservatory = (
+    observatory_name: string,
+    organization_id: string,
+    description: string,
+    research_field: string,
+    display_id: string,
+): Promise<Observatory> =>
     submitPostRequest(
         observatoriesUrl,
         { 'Content-Type': 'application/json' },
         { observatory_name, organization_id, description, research_field, display_id },
     );
 
-export const getObservatoryAndOrganizationInformation = (observatoryId, organizationId) => {
+export const getObservatoryAndOrganizationInformation = (
+    observatoryId: string,
+    organizationId: string,
+): Promise<{
+    id: string | null;
+    name: string | null;
+    display_id: string | null;
+    organization: {
+        id: string;
+        name: any;
+        logo: string;
+        display_id: any;
+        type: any;
+    } | null;
+} | null> => {
     if (observatoryId && observatoryId !== MISC.UNKNOWN_ID) {
         return getObservatoryById(observatoryId)
             .then(obsResponse => {

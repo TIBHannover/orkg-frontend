@@ -13,9 +13,38 @@ import { useDispatch, useSelector } from 'react-redux';
 import ReactFlow, { Background, Controls, MiniMap, ReactFlowProvider, applyEdgeChanges, applyNodeChanges } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { loadTemplateFlowByID } from 'services/backend/statements';
+import { getTemplateById, getTemplatesByClass } from 'services/backend/statements';
 import { setDiagramMode, setTemplateFlow } from 'slices/templateEditorSlice';
 import { convertTreeToFlat } from 'utils';
+
+/**
+ * Load template flow by ID
+ *
+ * @param {String} id template ID
+ * @param {Array} loadedNodes Set of templates {id: String, ...restOfProperties, neighbors}
+ */
+const loadTemplateFlowByID = (id, loadedNodes) => {
+    if (!loadedNodes.has(id)) {
+        loadedNodes.add(id);
+        return getTemplateById(id).then(t => {
+            const promises = t.propertyShapes
+                .filter(ps => ps.value)
+                .map(ps =>
+                    getTemplatesByClass(ps.value.id).then(templateIds => {
+                        if (templateIds.length) {
+                            return loadTemplateFlowByID(templateIds[0], loadedNodes);
+                        }
+                        return Promise.resolve([]);
+                    }),
+                );
+            return Promise.all(promises).then(neighborNodes => ({
+                ...t,
+                neighbors: neighborNodes,
+            }));
+        });
+    }
+    return Promise.resolve([]);
+};
 
 function ShaclFlowModal() {
     useAutoLayout({ direction: 'LR' });

@@ -42,13 +42,6 @@ function useExtractionModal(props) {
                 JSON.stringify({ page_number: props.pageNumber, region: [pxToPoint(y), pxToPoint(x), pxToPoint(y + h), pxToPoint(x + w)] }),
             );
             extractTable(form)
-                .then(response => {
-                    if (!response.ok) {
-                        console.log('err');
-                    } else {
-                        return response.json();
-                    }
-                })
                 .then(data => {
                     dispatch(
                         setTableData({

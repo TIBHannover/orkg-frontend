@@ -2,19 +2,10 @@ import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { url } from 'constants/misc';
 import { submitGetRequest } from 'network';
 import qs from 'qs';
+import { PaginatedResponse, Resource } from 'services/backend/types';
 
 export const fieldsUrl = `${url}research-fields/`;
 export const researchFieldUrl = `${url}research-fields/`;
-
-export const getResearchProblemsByResearchFieldIdCountingPapers = ({ id, page = 0, items = 1 }) => {
-    const params = qs.stringify(
-        { page, size: items },
-        {
-            skipNulls: true,
-        },
-    );
-    return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/problems?${params}`);
-};
 
 export const getContentByResearchFieldIdAndClasses = ({
     id,
@@ -25,7 +16,16 @@ export const getContentByResearchFieldIdAndClasses = ({
     subfields = true,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
     classes = [],
-}) => {
+}: {
+    id: string;
+    page?: number;
+    items?: number;
+    sortBy?: string;
+    desc?: boolean;
+    subfields?: boolean;
+    visibility?: string;
+    classes?: string[];
+}): Promise<PaginatedResponse<Resource>> => {
     // Sort is not supported in this endpoint
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
@@ -45,7 +45,15 @@ export const getPapersByResearchFieldId = ({
     desc = true,
     subfields = true,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
-}) => {
+}: {
+    id: string;
+    page?: number;
+    items?: number;
+    sortBy?: string;
+    desc?: boolean;
+    subfields?: boolean;
+    visibility?: string;
+}): Promise<PaginatedResponse<Resource>> => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
         { page, size: items, sort, visibility },
@@ -64,7 +72,15 @@ export const getResearchProblemsByResearchFieldId = ({
     desc = true,
     subfields = true,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
-}) => {
+}: {
+    id: string;
+    page?: number;
+    items?: number;
+    sortBy?: string;
+    desc?: boolean;
+    subfields?: boolean;
+    visibility?: string;
+}): Promise<PaginatedResponse<Resource>> => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
         { page, size: items, sort, visibility },
@@ -75,21 +91,5 @@ export const getResearchProblemsByResearchFieldId = ({
     return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}research-problems?${params}`);
 };
 
-// This endpoint is not used anymore!
-export const getContributorsByResearchFieldId = ({ id, page = 0, items = 9999, subfields = true }) => {
-    const params = qs.stringify(
-        { page, size: items },
-        {
-            skipNulls: true,
-        },
-    );
-    return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}contributors?${params}`).then(result => ({
-        ...result,
-        content: result.content.map(c => ({
-            profile: c,
-            counts: { total: null },
-        })),
-    }));
-};
-
-export const getFieldChildren = ({ fieldId }) => submitGetRequest(`${researchFieldUrl}${fieldId}/children`).then(res => res.content);
+export const getFieldChildren = ({ fieldId }: { fieldId: string }) =>
+    submitGetRequest(`${researchFieldUrl}${fieldId}/children`).then(res => res.content);

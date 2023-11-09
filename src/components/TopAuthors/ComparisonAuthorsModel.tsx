@@ -1,10 +1,15 @@
 import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
 import AuthorsContentLoader from 'components/TopAuthors/AuthorsContentLoader';
-import PropTypes from 'prop-types';
 import { Alert, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import useTopAuthors from 'components/TopAuthors/hooks/useTopAuthors';
+import { ComparisonTopAuthor } from 'services/backend/comparisons';
 
-const ComparisonAuthorsModel = ({ comparisonId, toggle }) => {
+type ComparisonAuthorsModelProps = {
+    comparisonId: string;
+    toggle: () => void;
+};
+
+const ComparisonAuthorsModel = ({ comparisonId, toggle }: ComparisonAuthorsModelProps) => {
     const { authors, isLoading, isLast, loadNext } = useTopAuthors({
         comparisonId,
         pageSize: 5,
@@ -23,16 +28,16 @@ const ComparisonAuthorsModel = ({ comparisonId, toggle }) => {
                         <ListGroupItem className="py-2 px-4" key={index}>
                             <AuthorCard
                                 author={author.author.value}
-                                papers={author.info}
+                                // @ts-ignore
+                                papers={(author as ComparisonTopAuthor).info}
                                 isVisibleGoogleScholar
                                 isVisibleShowCitations
-                                semanticScholarAuthors={author.semanticScholarAuthors}
                             />
                         </ListGroupItem>
                     ))}
 
                     {!isLoading && !isLast && (
-                        <ListGroupItem className="py-2 text-center" action role="button" tabIndex="0" onClick={loadNext}>
+                        <ListGroupItem className="py-2 text-center" action role="button" tabIndex={0} onClick={loadNext}>
                             Load more...
                         </ListGroupItem>
                     )}
@@ -43,11 +48,6 @@ const ComparisonAuthorsModel = ({ comparisonId, toggle }) => {
             </ModalBody>
         </Modal>
     );
-};
-
-ComparisonAuthorsModel.propTypes = {
-    comparisonId: PropTypes.string.isRequired,
-    toggle: PropTypes.func.isRequired,
 };
 
 export default ComparisonAuthorsModel;
