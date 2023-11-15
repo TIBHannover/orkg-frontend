@@ -9,7 +9,7 @@ export const classesUrl = `${url}classes/`;
 
 export const getClassById = (id: string): Promise<Class> => submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/`);
 
-export const createClass = ({ label, uri = null, id = null }: { label: string; uri?: string | null; id: string | null }): Promise<Class> =>
+export const createClass = (label: string, uri: string | null = null, id: string | null = null): Promise<Class> =>
     submitPostRequest(classesUrl, { 'Content-Type': 'application/json' }, { label, uri, id });
 
 export const updateClass = (id: string, label: string): Promise<Class> =>
