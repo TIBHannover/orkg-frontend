@@ -11,6 +11,7 @@ import StatementItemWrapper from 'components/StatementBrowser/StatementItem/Stat
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { isArray } from 'lodash';
+import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import FlipMove from 'react-flip-move';
@@ -35,14 +36,14 @@ const Statements = ({
     keyToKeepStateOnLocationChange = null,
     renderTemplateBox = false,
     propertySuggestionsComponent: propertySuggestionsComponentProp = null,
-    syncBackend: syncBackendProp,
-    initOnLocationChange,
-    rootNodeType,
-    initialPath,
-    newStore,
-    canEditSharedRootLevel,
-    enableEdit,
-    showExternalDescriptions,
+    syncBackend: syncBackendProp = false,
+    initOnLocationChange = true,
+    rootNodeType = ENTITIES.RESOURCE,
+    initialPath = [],
+    newStore = false,
+    canEditSharedRootLevel = true,
+    enableEdit = false,
+    showExternalDescriptions = true,
 }) => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const level = useSelector(state => state.statementBrowser.level);
