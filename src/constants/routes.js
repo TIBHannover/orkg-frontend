@@ -110,6 +110,7 @@ const legacyRoutes = {
     LITERATURE_LIST_EMBED: '/literature-list/:id/:embed',
     LITERATURE_LIST_NEW: '/literature-list/new',
     LITERATURE_LIST_DIFF: '/literature-list/diff/:oldId-:newId',
+    LEGACY_PREDICATE: '/predicate/:id',
 };
 const allRoutes = { ...routes, ...legacyRoutes };
 
