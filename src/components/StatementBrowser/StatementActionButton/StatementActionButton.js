@@ -90,7 +90,7 @@ const StatementActionButton = ({
 StatementActionButton.propTypes = {
     title: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
     icon: PropTypes.object.isRequired,
-    iconSpin: PropTypes.bool.isRequired,
+    iconSpin: PropTypes.bool,
     testId: PropTypes.string,
     iconSize: PropTypes.oneOf(['xs', 'sm', 'lg']),
     action: PropTypes.func,

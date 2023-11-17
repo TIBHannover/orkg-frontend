@@ -11,7 +11,6 @@ import StatementItemWrapper from 'components/StatementBrowser/StatementItem/Stat
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { isArray } from 'lodash';
-import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import FlipMove from 'react-flip-move';
@@ -36,14 +35,14 @@ const Statements = ({
     keyToKeepStateOnLocationChange = null,
     renderTemplateBox = false,
     propertySuggestionsComponent: propertySuggestionsComponentProp = null,
-    syncBackend: syncBackendProp = false,
-    initOnLocationChange = true,
-    rootNodeType = ENTITIES.RESOURCE,
-    initialPath = [],
-    newStore = false,
+    syncBackend: syncBackendProp,
+    initOnLocationChange,
+    rootNodeType,
+    initialPath,
+    newStore,
     canEditSharedRootLevel = true,
-    enableEdit = false,
-    showExternalDescriptions = true,
+    enableEdit,
+    showExternalDescriptions,
 }) => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const level = useSelector(state => state.statementBrowser.level);
@@ -208,7 +207,7 @@ const Statements = ({
 };
 
 Statements.propTypes = {
-    rootNodeType: PropTypes.string.isRequired,
+    rootNodeType: PropTypes.string,
     enableEdit: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
     initialSubjectId: PropTypes.string,
@@ -223,12 +222,12 @@ Statements.propTypes = {
     newStore: PropTypes.bool,
     propertiesAsLinks: PropTypes.bool,
     resourcesAsLinks: PropTypes.bool,
-    initOnLocationChange: PropTypes.bool.isRequired,
-    showExternalDescriptions: PropTypes.bool.isRequired,
+    initOnLocationChange: PropTypes.bool,
+    showExternalDescriptions: PropTypes.bool,
     propertySuggestionsComponent: PropTypes.node,
     keyToKeepStateOnLocationChange: PropTypes.string,
     renderTemplateBox: PropTypes.bool,
-    canEditSharedRootLevel: PropTypes.bool.isRequired,
+    canEditSharedRootLevel: PropTypes.bool,
 };
 
 export default Statements;

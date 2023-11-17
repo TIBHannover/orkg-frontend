@@ -113,7 +113,7 @@ StatementBrowserDialog.propTypes = {
             label: PropTypes.string.isRequired,
         }),
     ),
-    canEditSharedRootLevel: PropTypes.bool.isRequired,
+    canEditSharedRootLevel: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({ openExistingResourcesInDialog: state.statementBrowser.openExistingResourcesInDialog });
