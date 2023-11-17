@@ -531,6 +531,14 @@ const legacyRoutes = [
             return <Navigate to={reverse(ROUTES.LIST_DIFF, { oldId, newId })} replace />;
         },
     },
+    {
+        path: ROUTES.LEGACY_PREDICATE,
+        element: () => {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const { id } = useParams();
+            return <Navigate to={reverse(ROUTES.PROPERTY, { id })} replace />;
+        },
+    },
 ];
 
 const allRoutes = [
