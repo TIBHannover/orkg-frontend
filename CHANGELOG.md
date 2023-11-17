@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.129.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.129.1...v0.129.2) - 2023-11-17
+
+### Changes
+
+- fix: Add redirection for the legacy predicate/id route [`#1237`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1237)
+- fix(StatementBrowser): defaults props of Statements component [`#1236`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1236)
+- fix(StatementBrowser): defaults props of Statements component [`#1235`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1235)
+
+---
 ## [v0.129.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.129.0...v0.129.1) - 2023-11-15
 
 ### Changes
