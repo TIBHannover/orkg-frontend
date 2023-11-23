@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.129.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.129.2...v0.129.3) - 2023-11-23
+
+### Changes
+
+- refactor(Comparison): Sync with the new SimComp API [`#1078`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1078)
+
+---
 ## [v0.129.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.129.1...v0.129.2) - 2023-11-17
 
 ### Changes
