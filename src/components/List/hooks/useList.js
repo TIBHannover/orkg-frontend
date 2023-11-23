@@ -1,4 +1,5 @@
 import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
+import THING_TYPES from 'constants/thingTypes';
 import { countBy, orderBy } from 'lodash';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -13,9 +14,9 @@ import {
     getStatementsBySubject,
     getStatementsBySubjects,
 } from 'services/backend/statements';
-import { createResourceData, getResourceData } from 'services/similarity';
+import { createThing, getThing } from 'services/similarity';
 import { listLoaded, versionsSet } from 'slices/listSlice';
-import { filterObjectOfStatementsByPredicateAndClass, addAuthorsToStatements, getAuthorsInList, getPaperData } from 'utils';
+import { addAuthorsToStatements, filterObjectOfStatementsByPredicateAndClass, getAuthorsInList, getPaperData } from 'utils';
 
 const useList = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -93,7 +94,7 @@ const useList = () => {
 
         // for published lists
         if (listResource.classes.includes(CLASSES.LITERATURE_LIST_PUBLISHED)) {
-            const resourceData = await getResourceData(id).catch(() => {});
+            const resourceData = await getThing({ thingType: THING_TYPES.LIST, thingKey: id }).catch(e => {});
             if (!resourceData) {
                 console.error('no resource data found');
                 notFound();
@@ -284,10 +285,7 @@ const useList = () => {
             await createLiteralStatement(versionResource.id, PREDICATES.DESCRIPTION, updateMessageLiteral.id);
             await createResourceStatement(versionResource.id, PREDICATES.HAS_LIST, id);
 
-            await createResourceData({
-                resourceId: versionResource.id,
-                data: { rootResource: id, statements },
-            });
+            await createThing({ thingType: THING_TYPES.LIST, thingKey: versionResource.id, data: { rootResource: id, statements } });
 
             const versions = await getVersions(listId);
             dispatch(versionsSet(versions));

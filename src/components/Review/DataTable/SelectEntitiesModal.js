@@ -7,7 +7,7 @@ import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { flattenDeep, uniqBy } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SortableContainer, SortableElement, sortableHandle } from 'react-sortable-hoc';
 import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
@@ -61,7 +61,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                                         comparison.data[property].map(row =>
                                             row
                                                 .map(value => ({
-                                                    label: value.pathLabels?.[value.pathLabels?.length - 1],
+                                                    label: value.path_labels?.[value.path_labels?.length - 1],
                                                     id: value.path?.[value.path?.length - 1],
                                                     type: 'property',
                                                 }))

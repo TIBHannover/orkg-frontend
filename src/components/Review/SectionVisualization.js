@@ -1,10 +1,11 @@
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import { PREDICATES } from 'constants/graphSettings';
+import THING_TYPES from 'constants/thingTypes';
 import Visualization from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getVisualization } from 'services/similarity';
+import { getThing } from 'services/similarity';
 
 const SectionVisualization = ({ id }) => {
     const [data, setData] = useState(null);
@@ -15,7 +16,7 @@ const SectionVisualization = ({ id }) => {
     useEffect(() => {
         const getData = async () => {
             setIsLoading(true);
-            const _data = await getVisualization(id);
+            const _data = await getThing({ thingType: THING_TYPES.VISUALIZATION, thingKey: id });
             setData(_data);
             setIsLoading(false);
         };

@@ -25,7 +25,6 @@ export const stringComparePosition = (left, right) => {
  * @param {Array} comparisonStatements
  */
 export const getComparisonConfiguration = url => {
-    const response_hash = getParamFromQueryString(url.substring(url.indexOf('?')), 'response_hash') ?? null;
     const type = getParamFromQueryString(url.substring(url.indexOf('?')), 'type') ?? DEFAULT_COMPARISON_METHOD;
     const transpose = getParamFromQueryString(url.substring(url.indexOf('?')), 'transpose', true);
     const predicatesList = getArrayParamFromQueryString(url.substring(url.indexOf('?')), 'properties');
@@ -33,7 +32,6 @@ export const getComparisonConfiguration = url => {
         without(uniq(getArrayParamFromQueryString(url.substring(url.indexOf('?')), 'contributions')), undefined, null, '') ?? [];
 
     return {
-        responseHash: response_hash,
         comparisonType: type,
         transpose,
         predicatesList,
@@ -54,10 +52,10 @@ export const isPredicatesListCorrect = (propertyIds, _comparisonType) => {
     if (propertyIds.length === 0) {
         return true;
     }
-    if (_comparisonType === 'merge') {
+    if (_comparisonType === 'MERGE') {
         return propertyIds.every(element => !element.includes('/'));
     }
-    if (_comparisonType === 'path') {
+    if (_comparisonType === 'PATH') {
         return propertyIds.some(element => element.includes('/') || !element.match(/^P([0-9])+$/));
     }
     return true;
@@ -103,8 +101,12 @@ export const similarPropertiesByLabel = (propertyLabel, propertyData) => {
     const result = [];
     // flat property values and add similar but not equal labels
     flattenDepth(propertyData, 2).forEach((value, index) => {
-        if (value.pathLabels && value.pathLabels.length > 0 && value.pathLabels[value.pathLabels.length - 1] !== propertyLabel) {
-            result.push(value.pathLabels[value.pathLabels.length - 1]);
+        if (
+            value.path_labels &&
+            value.path_labels.length > 0 &&
+            value.path_labels[value.path_labels.length - 1]?.toLowerCase() !== propertyLabel?.toLowerCase()
+        ) {
+            result.push(value.path_labels[value.path_labels.length - 1]);
         }
     });
     return uniq(result);
@@ -163,21 +165,46 @@ export const activatedContributionsToList = contributionsData => {
     return activeContributions;
 };
 
-export function getComparisonURLConfig(comparisonState) {
+export function getComparisonURLFromConfig({
+    contributions = [],
+    predicates = [],
+    type = DEFAULT_COMPARISON_METHOD,
+    transpose = false,
+    hasPreviousVersion = null,
+}) {
     const params = qs.stringify(
         {
-            contributions: activatedContributionsToList(comparisonState.contributions).join(','),
-            properties: comparisonState.configuration.predicatesList.map(predicate => encodeURIComponent(predicate)).join(','),
-            type: comparisonState.configuration.comparisonType,
-            transpose: comparisonState.configuration.transpose,
-            response_hash: comparisonState.configuration.responseHash,
+            contributions,
+            properties: predicates.map(predicate => encodeURIComponent(predicate)),
+            type,
+            transpose,
+            hasPreviousVersion,
         },
         {
             skipNulls: true,
             encode: false,
+            arrayFormat: 'repeat',
         },
     );
     return `?${params}`;
+}
+
+export function getComparisonURLConfigOfReduxState(comparisonState) {
+    return getComparisonURLFromConfig({
+        contributions: activatedContributionsToList(comparisonState.contributions),
+        predicates: comparisonState.configuration.predicatesList,
+        type: comparisonState.configuration.comparisonType,
+        transpose: comparisonState.configuration.transpose,
+    });
+}
+
+export function getComparisonConfigObject(comparisonState) {
+    return {
+        contributions: activatedContributionsToList(comparisonState.contributions),
+        predicates: comparisonState.configuration.predicatesList.map(predicate => decodeURIComponent(predicate)),
+        type: comparisonState.configuration.comparisonType,
+        transpose: comparisonState.configuration.transpose,
+    };
 }
 
 // returns the part of the string preceding (but not including) the
@@ -230,8 +257,8 @@ export const groupArrayByDirectoryPrefix = strings => {
  */
 export const getPropertyObjectFromData = (data, value) => {
     const notEmptyCell = find(flatten(data[value.id]), v => v?.path?.length > 0);
-    return notEmptyCell && notEmptyCell.path?.length && notEmptyCell.pathLabels?.length
-        ? { id: last(notEmptyCell.path), label: last(notEmptyCell.pathLabels) }
+    return notEmptyCell && notEmptyCell.path?.length && notEmptyCell.path_labels?.length
+        ? { id: last(notEmptyCell.path), label: last(notEmptyCell.path_labels) }
         : value;
 };
 

@@ -1,7 +1,8 @@
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import InviteResearchersButton from 'components/Comparison/QualityReportModal/InviteResearchersButton';
 import feedbackQuestions from 'components/Comparison/QualityReportModal/FeedbackQuestions';
+import InviteResearchersButton from 'components/Comparison/QualityReportModal/InviteResearchersButton';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import THING_TYPES from 'constants/thingTypes';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -9,7 +10,7 @@ import { toast } from 'react-toastify';
 import { Alert, Input, Modal, ModalBody, ModalFooter, ModalHeader, Table } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 import { createResourceStatement } from 'services/backend/statements';
-import { createResourceData } from 'services/similarity/index';
+import { createThing } from 'services/similarity';
 
 const WriteFeedback = ({ toggle }) => {
     const [answers, setAnswers] = useState({});
@@ -39,7 +40,7 @@ const WriteFeedback = ({ toggle }) => {
         try {
             const feedbackResource = await createResource('feedback', [CLASSES.QUALITY_FEEDBACK]);
             createResourceStatement(comparisonId, PREDICATES.QUALITY_FEEDBACK, feedbackResource.id);
-            createResourceData({ resourceId: feedbackResource.id, data });
+            createThing({ thingType: THING_TYPES.QUALITY_REVIEW, thingKey: feedbackResource.id, data });
             setIsSubmitted(true);
         } catch (e) {
             toast.error('Something went wrong');

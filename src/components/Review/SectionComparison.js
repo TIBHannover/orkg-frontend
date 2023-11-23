@@ -29,7 +29,7 @@ const SectionComparison = ({ id, sectionId }) => {
     };
 
     const updateReferences = contributions => {
-        const paperIds = contributions.map(contribution => contribution.paperId);
+        const paperIds = contributions.map(contribution => contribution.paper_id);
         if (paperIds.length === 0) {
             return;
         }

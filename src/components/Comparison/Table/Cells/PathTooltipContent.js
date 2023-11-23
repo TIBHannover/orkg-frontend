@@ -2,20 +2,17 @@ import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 
 const PathTooltipContent = ({ data, cellDataValue, openStatementBrowser }) => {
-    const isEqualPaths = data?.length > 0 ? data[0].pathLabels?.length === data[0].path?.length : true;
+    const isEqualPaths = data?.length > 0 ? data[0].path_labels?.length === data[0].path?.length : true;
+    if (!isEqualPaths) {
+        return null;
+    }
 
     return (
         <tr>
             <td>Path</td>
             <td>
-                {data.pathLabels?.map((path, index) => {
-                    const resourceType = isEqualPaths
-                        ? index % 2 === 0
-                            ? ENTITIES.RESOURCE
-                            : ENTITIES.PREDICATE
-                        : index % 2 !== 0
-                        ? ENTITIES.RESOURCE
-                        : ENTITIES.PREDICATE;
+                {data.path_labels?.map((path, index) => {
+                    const resourceType = index % 2 === 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE;
                     return (
                         <span key={index}>
                             <span
@@ -23,11 +20,11 @@ const PathTooltipContent = ({ data, cellDataValue, openStatementBrowser }) => {
                                 onClick={() =>
                                     resourceType !== ENTITIES.PREDICATE
                                         ? openStatementBrowser(
-                                              data.path[isEqualPaths ? index : index + 1],
+                                              data.path[index],
                                               path,
                                               resourceType,
                                               resourceType === ENTITIES.RESOURCE
-                                                  ? data.pathLabels.slice(0, isEqualPaths ? index : index + 1).map((l, i) => ({
+                                                  ? data.path_labels.slice(0, index).map((l, i) => ({
                                                         id: cellDataValue.path[i],
                                                         label: l,
                                                         _class: i % 2 === 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE,
@@ -42,11 +39,11 @@ const PathTooltipContent = ({ data, cellDataValue, openStatementBrowser }) => {
                                         ? () =>
                                               resourceType !== ENTITIES.PREDICATE
                                                   ? openStatementBrowser(
-                                                        data.path[isEqualPaths ? index : index + 1],
+                                                        data.path[index],
                                                         path,
                                                         resourceType,
                                                         resourceType === ENTITIES.RESOURCE
-                                                            ? data.pathLabels.slice(0, isEqualPaths ? index : index + 1).map((l, i) => ({
+                                                            ? data.path_labels.slice(0, index).map((l, i) => ({
                                                                   id: cellDataValue.path[i],
                                                                   label: l,
                                                                   _class: i % 2 === 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE,
@@ -61,7 +58,7 @@ const PathTooltipContent = ({ data, cellDataValue, openStatementBrowser }) => {
                             >
                                 {path}
                             </span>
-                            {index !== data.pathLabels?.length - 1 && ' / '}
+                            {index !== data.path_labels?.length - 1 && ' / '}
                         </span>
                     );
                 })}

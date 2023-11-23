@@ -53,7 +53,7 @@ const ComparisonTable = props => {
                           }),
                   }))),
         ];
-        if (!transpose && comparisonType === 'path' && !isEditing) {
+        if (!transpose && comparisonType === 'PATH' && !isEditing) {
             let groups = omit(groupArrayByDirectoryPrefix(dataFrame.map(dO => dO.property.id)), '');
             groups = Object.keys(groups);
             const shownGroups = [];
@@ -104,28 +104,32 @@ const ComparisonTable = props => {
                 Header: () => <ColumnHeaderFirstColumn />,
                 accessor: 'property',
                 Cell: cell => (
-                    <RowHeader cell={cell.value} property={comparisonType === 'merge' ? cell.value : getPropertyObjectFromData(data, cell.value)} />
+                    <RowHeader cell={cell.value} property={comparisonType === 'MERGE' ? cell.value : getPropertyObjectFromData(data, cell.value)} />
                 ),
                 sticky: !isSmallScreen ? 'left' : undefined,
             },
             // remaining columns
-            ...(!transpose
-                ? contributions.filter(contribution => contribution.active)
-                : properties.filter(property => property.active && data[property.id])
-            ).map((headerData, index) => ({
-                id: headerData.id,
-                Header: column => (
-                    <ColumnHeader
-                        index={column.index}
-                        headerData={headerData}
-                        columnId={column.column.id}
-                        columnStyle={column.column.getHeaderProps()?.style}
-                        property={comparisonType === 'merge' ? headerData : getPropertyObjectFromData(data, headerData)}
-                    />
-                ),
-                accessor: d => d.values[index],
-                Cell: cell => <TableCell entities={cell.value} />,
-            })),
+            ...(!transpose ? contributions : properties.filter(property => property.active && data[property.id]))
+                .map((headerData, index) => {
+                    if (headerData.active) {
+                        return {
+                            id: headerData.id,
+                            Header: column => (
+                                <ColumnHeader
+                                    index={column.index}
+                                    headerData={headerData}
+                                    columnId={column.column.id}
+                                    columnStyle={column.column.getHeaderProps()?.style}
+                                    property={comparisonType === 'MERGE' ? headerData : getPropertyObjectFromData(data, headerData)}
+                                />
+                            ),
+                            accessor: d => d.values[index],
+                            Cell: cell => <TableCell entities={cell.value} />,
+                        };
+                    }
+                    return null;
+                })
+                .filter(Boolean),
         ];
     }, [comparisonType, contributions, data, filterControlData.length, isSmallScreen, properties, transpose]);
 

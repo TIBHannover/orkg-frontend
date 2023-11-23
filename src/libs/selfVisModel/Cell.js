@@ -98,8 +98,8 @@ export default class Cell {
         if (this.contributionAnchgorFlag === true) {
             this.contributionAnchor = data;
             this.positionContribAnchor = index;
-            this.label = `${data.contributionLabel}(${data.paperId})`; // << for now to keep string short
-            this.originalLabel = `${data.contributionLabel}(${data.paperId})`; // << for now to keep string short
+            this.label = `${data.label}(${data.paper_id})`; // << for now to keep string short
+            this.originalLabel = `${data.label}(${data.paper_id})`; // << for now to keep string short
         }
         if (this.propertyAnchorFlag === true) {
             this.propertyAnchor = data;

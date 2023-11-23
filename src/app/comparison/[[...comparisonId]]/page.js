@@ -1,25 +1,27 @@
 'use client';
 
-import { useEffect } from 'react';
-import { Alert, Container } from 'reactstrap';
-import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/Comparison';
-import ProvenanceBox from 'components/Comparison/ComparisonFooter/ProvenanceBox/ProvenanceBox';
-import ComparisonMetaData from 'components/Comparison/ComparisonHeader/ComparisonMetaData';
-import DataSources from 'components/Comparison/ComparisonFooter/DataSources';
-import { ContainerAnimated } from 'components/Comparison/styled';
-import useComparison from 'components/Comparison/hooks/useComparison';
 import PreviewVisualizationComparison from 'components/Comparison/ComparisonCarousel/ComparisonCarousel';
-import ComparisonHeaderMenu from 'components/Comparison/ComparisonHeader/ComparisonHeaderMenu';
+import DataSources from 'components/Comparison/ComparisonFooter/DataSources';
+import ProvenanceBox from 'components/Comparison/ComparisonFooter/ProvenanceBox/ProvenanceBox';
 import AppliedFilters from 'components/Comparison/ComparisonHeader/AppliedFilters';
-import useParams from 'components/NextJsMigration/useParams';
-import { useDispatch, useSelector } from 'react-redux';
-import { useCookies } from 'react-cookie';
-import { setConfigurationAttribute } from 'slices/comparisonSlice';
+import ComparisonHeaderMenu from 'components/Comparison/ComparisonHeader/ComparisonHeaderMenu';
+import ComparisonMetaData from 'components/Comparison/ComparisonHeader/ComparisonMetaData';
+import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
+import useComparison from 'components/Comparison/hooks/useComparison';
+import { ContainerAnimated } from 'components/Comparison/styled';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import useParams from 'components/NextJsMigration/useParams';
+import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { useEffect } from 'react';
+import { useCookies } from 'react-cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import { Alert, Container } from 'reactstrap';
+import { setConfigurationAttribute } from 'slices/comparisonSlice';
 
 const Comparison = () => {
     const { comparisonId } = useParams();
+    const searchParams = useSearchParams();
     const { comparisonResource, navigateToNewURL } = useComparison({ id: comparisonId });
     const isFailedLoadingMetadata = useSelector(state => state.comparison.isFailedLoadingMetadata);
     const isLoadingResult = useSelector(state => state.comparison.isLoadingResult);
@@ -29,7 +31,7 @@ const Comparison = () => {
     const isEditing = useSelector(state => state.comparison.isEditing);
     const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 100px)' } : {};
     const [cookies] = useCookies(['useFullWidthForComparisonTable']);
-    const isPublished = !!comparisonResource.id;
+    const isPublished = !!comparisonResource?.id || searchParams.get('noResource');
 
     const dispatch = useDispatch();
 

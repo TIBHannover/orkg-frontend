@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, FormGroup, Label } from 'reactstrap';
 import { getStatementsBySubject } from 'services/backend/statements';
-import { createShortLink, getComparison } from 'services/similarity/index';
 import { Cite } from '@citation-js/core';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -11,12 +10,13 @@ import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
 import Tooltip from 'components/Utils/Tooltip';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
-import { getComparisonURLConfig, activatedContributionsToList } from 'components/Comparison/hooks/helpers';
-import { setConfigurationAttribute, setShortLink, getMatrixOfComparison } from 'slices/comparisonSlice';
+import { getComparisonURLConfigOfReduxState, activatedContributionsToList } from 'components/Comparison/hooks/helpers';
+import { getMatrixOfComparison } from 'slices/comparisonSlice';
 import { PREDICATES } from 'constants/graphSettings';
 import { addAuthorsToStatements, getPublicUrl } from 'utils';
 import { clone } from 'lodash';
@@ -34,17 +34,14 @@ const ExportToLatex = ({ showDialog, toggle }) => {
     const [includeFootnote, setIncludeFootnote] = useState(true);
     const [latexTable, setLatexTable] = useState('');
     const [bibTexReferences, setBibTexReferences] = useState('');
-    const dispatch = useDispatch();
+
     const matrixData = useSelector(state => getMatrixOfComparison(state.comparison));
     const contributions = useSelector(state => state.comparison.contributions.filter(c => c.active));
     const { label, id, description } = useSelector(state => state.comparison.comparisonResource);
-    const shortLink = useSelector(state => state.comparison.shortLink);
-    const comparisonURLConfig = useSelector(state => getComparisonURLConfig(state.comparison));
-    const comparisonType = useSelector(state => state.comparison.configuration.comparisonType);
-    const responseHash = useSelector(state => state.comparison.configuration.responseHash);
+
     const transpose = useSelector(state => state.comparison.configuration.transpose);
     const contributionsList = useSelector(state => activatedContributionsToList(state.comparison.contributions));
-
+    const comparisonURLConfig = useSelector(state => getComparisonURLConfigOfReduxState(state.comparison));
     const generateLatex = async () => {
         setLatexTableLoading(true);
         if (matrixData.length === 0) {
@@ -64,7 +61,7 @@ const ExportToLatex = ({ showDialog, toggle }) => {
                 const conTitles = ['Title'];
                 transposedData[0].forEach((title, i) => {
                     if (i > 0) {
-                        newTitles.push(`\\textbf{\\cite{${contributions[i - 1].paperId}}} `);
+                        newTitles.push(`\\textbf{\\cite{${contributions[i - 1].paper_id}}} `);
                         conTitles.push(`${contributions[i - 1].id}`);
                     }
                 });
@@ -88,7 +85,7 @@ const ExportToLatex = ({ showDialog, toggle }) => {
                     const con = {};
                     contribution.forEach((item, j) => {
                         if (replaceTitles && j === 0) {
-                            item = `\\textbf{\\cite{${contributions[i - 1].paperId}}}`;
+                            item = `\\textbf{\\cite{${contributions[i - 1].paper_id}}}`;
                         }
                         con[`\\textit{${matrixData[0][j]}}`] = item !== 'undefined' ? item : '-';
                     });
@@ -130,51 +127,20 @@ const ExportToLatex = ({ showDialog, toggle }) => {
 
             // Add a persistent link to this page as a footnote
             if (includeFootnote) {
-                if (id && responseHash) {
+                if (id) {
                     const link = `${getPublicUrl()}${reverse(ROUTES.COMPARISON, { comparisonId: id })}`;
-                    dispatch(setShortLink(link));
                     _latexTable += `\n\\footnotetext{${link} [accessed ${moment().format('YYYY MMM DD')}]}`;
                     setLatexTable(_latexTable);
                     setLatexTableLoading(false);
                 } else {
-                    if (!shortLink) {
-                        let link = '';
-                        if (!responseHash) {
-                            const saveComparison = await getComparison({
-                                contributionIds: contributionsList,
-                                type: comparisonType,
-                                save_response: true,
-                            });
-                            link = `${getPublicUrl()}${reverse(ROUTES.COMPARISON)}${comparisonURLConfig}&response_hash=${
-                                saveComparison.response_hash
-                            }`;
-                            dispatch(setConfigurationAttribute({ attribute: 'responseHash', value: saveComparison.response_hash }));
-                        } else {
-                            link = `${getPublicUrl()}${reverse(ROUTES.COMPARISON)}${comparisonURLConfig}`;
-                        }
-                        return createShortLink({
-                            long_url: link,
-                        })
-                            .then(data => {
-                                const nshortLink = `${getPublicUrl()}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
-                                _latexTable += `\n\\footnotetext{${nshortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
-                                dispatch(setShortLink(nshortLink));
-                                setLatexTable(_latexTable);
-                                setLatexTableLoading(false);
-                            })
-                            .catch(e => {
-                                console.log(e);
-                                _latexTable += `\n\\footnotetext{${link}} [accessed ${moment().format('YYYY MMM DD')}]}`;
-                                setLatexTable(_latexTable);
-                                setLatexTableLoading(false);
-                            });
-                    }
-                    _latexTable += `\n\\footnotetext{${shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
+                    let link = '';
+                    link = `${getPublicUrl()}${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}${comparisonURLConfig}`;
+                    _latexTable += `\n\\footnotetext{${link}} [accessed ${moment().format('YYYY MMM DD')}]}`;
                     setLatexTable(_latexTable);
                     setLatexTableLoading(false);
                 }
             } else {
-                setLatexTable(latexTable);
+                setLatexTable(_latexTable);
                 setLatexTableLoading(false);
             }
         } else {
@@ -214,14 +180,14 @@ const ExportToLatex = ({ showDialog, toggle }) => {
             const contributionData = parsePaperStatements(paperStatements);
             const authors = contributionData.authors.map(a => ({ literal: a }));
             ref = new Cite({
-                id: contribution.paperId,
+                id: contribution.paper_id,
                 title: contribution.title,
                 author: authors.length > 0 ? authors : null,
                 issued: { 'date-parts': [[contributionData.publicationYear]] },
             });
         } else {
             ref = new Cite({
-                id: contribution.paperId,
+                id: contribution.paper_id,
                 title: contribution.title,
             });
         }
@@ -237,7 +203,7 @@ const ExportToLatex = ({ showDialog, toggle }) => {
         }
         const contributionsCalls = contributions.map(contribution =>
             // Fetch the data of each contribution
-            getStatementsBySubject({ id: contribution.paperId })
+            getStatementsBySubject({ id: contribution.paper_id })
                 .then(_statements => addAuthorsToStatements(_statements))
                 .then(paperStatements => {
                     const _contribution = clone(contribution);
@@ -274,13 +240,13 @@ const ExportToLatex = ({ showDialog, toggle }) => {
             };
             _contributions.forEach((contribution, i) => {
                 const _contribution = clone(contribution);
-                if (_contribution.paperId) {
-                    if (!paperIds.includes(_contribution.paperId)) {
-                        paperIds.push(_contribution.paperId);
+                if (_contribution.paper_id) {
+                    if (!paperIds.includes(_contribution.paper_id)) {
+                        paperIds.push(_contribution.paper_id);
                         _contribution.bibtex.options(bibtexOptions);
                         _contribution.bibtex = _contribution.bibtex.get();
                         const refID = _contribution.bibtex.substring(_contribution.bibtex.indexOf('{') + 1, _contribution.bibtex.indexOf(','));
-                        _contribution.bibtex = _contribution.bibtex.replace(refID, _contribution.paperId);
+                        _contribution.bibtex = _contribution.bibtex.replace(refID, _contribution.paper_id);
                         res.push(_contribution.bibtex);
                     }
                 } else {
@@ -308,10 +274,8 @@ const ExportToLatex = ({ showDialog, toggle }) => {
             toggle={toggle}
             size="lg"
             onOpened={() => {
-                if (!shortLink) {
-                    generateLatex();
-                    generateBibTex();
-                }
+                generateLatex();
+                generateBibTex();
             }}
         >
             <ModalHeader toggle={toggle}>LaTeX export</ModalHeader>

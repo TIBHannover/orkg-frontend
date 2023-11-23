@@ -1,21 +1,22 @@
-import { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import ROUTES from 'constants/routes.js';
-import { createResourceStatement, getStatementsBySubject, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { generateDoi, createObject } from 'services/backend/misc';
-import { createLiteral } from 'services/backend/literals';
-import { getComparison, createResourceData } from 'services/similarity/index';
-import { useSelector, useDispatch } from 'react-redux';
-import { reverse } from 'named-urls';
-import useRouter from 'components/NextJsMigration/useRouter';
-import { filterObjectOfStatementsByPredicateAndClass, getPublicUrl, getErrorMessage, getComparisonData, addAuthorsToStatements } from 'utils';
-import { setDoi } from 'slices/comparisonSlice';
-import { getComparisonURLConfig, getPropertyObjectFromData, activatedContributionsToList } from 'components/Comparison/hooks/helpers';
-import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
-import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
-import { getConferencesSeries, getConferenceById } from 'services/backend/conferences-series';
+import { activatedContributionsToList, getComparisonConfigObject, getPropertyObjectFromData } from 'components/Comparison/hooks/helpers';
+import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
+import useRouter from 'components/NextJsMigration/useRouter';
+import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
 import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
+import ROUTES from 'constants/routes.js';
+import THING_TYPES from 'constants/thingTypes';
+import { reverse } from 'named-urls';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { getConferenceById, getConferencesSeries } from 'services/backend/conferences-series';
+import { createLiteral } from 'services/backend/literals';
+import { createObject, generateDoi } from 'services/backend/misc';
+import { createResourceStatement, getStatementsBySubject, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+import { createThing } from 'services/similarity';
+import { setDoi } from 'slices/comparisonSlice';
+import { addAuthorsToStatements, filterObjectOfStatementsByPredicateAndClass, getComparisonData, getErrorMessage, getPublicUrl } from 'utils';
 
 function usePublish() {
     const comparisonResource = useSelector(state => state.comparison.comparisonResource);
@@ -36,10 +37,13 @@ function usePublish() {
     const [conference, setConference] = useState(null);
 
     const data = useSelector(state => state.comparison.data);
+    const contributions = useSelector(state => state.comparison.contributions);
+    const properties = useSelector(state => state.comparison.properties);
+
     const id = useSelector(state => state.comparison.comparisonResource.id);
-    const comparisonURLConfig = useSelector(state => getComparisonURLConfig(state.comparison));
+    const comparisonConfigObject = useSelector(state => getComparisonConfigObject(state.comparison));
     const comparisonType = useSelector(state => state.comparison.configuration.comparisonType);
-    const responseHash = useSelector(state => state.comparison.configuration.responseHash);
+
     const predicatesList = useSelector(state => state.comparison.configuration.predicatesList);
     const contributionsList = useSelector(state => activatedContributionsToList(state.comparison.contributions));
 
@@ -111,18 +115,6 @@ function usePublish() {
         try {
             if (!id) {
                 if (title && title.trim() !== '' && description && description.trim() !== '' && (!assignDOI || comparisonCreators?.length > 0)) {
-                    let response_hash;
-
-                    if (!responseHash) {
-                        const comparison = await getComparison({
-                            contributionIds: contributionsList,
-                            type: comparisonType,
-                            save_response: true,
-                        });
-                        response_hash = comparison.response_hash;
-                    } else {
-                        response_hash = responseHash;
-                    }
                     const comparisonObject = {
                         predicates: [],
                         resource: {
@@ -153,10 +145,10 @@ function usePublish() {
                                 [PREDICATES.COMPARE_CONTRIBUTION]: contributionsList.map(contributionID => ({
                                     '@id': contributionID,
                                 })),
-                                ...(comparisonType === 'merge' && {
+                                ...(comparisonType === 'MERGE' && {
                                     [PREDICATES.HAS_PROPERTY]: predicatesList.map(predicateID => {
                                         const property =
-                                            comparisonType === 'merge' ? predicateID : getPropertyObjectFromData(data, { id: predicateID });
+                                            comparisonType === 'MERGE' ? predicateID : getPropertyObjectFromData(data, { id: predicateID });
                                         return { '@id': property.id, '@type': ENTITIES.PREDICATE };
                                     }),
                                 }),
@@ -183,10 +175,13 @@ function usePublish() {
                     };
                     const createdComparison = await createObject(comparisonObject);
                     await createAuthorsList({ authors: comparisonCreators, resourceId: createdComparison.id });
-                    await createResourceData({
-                        resourceId: createdComparison.id,
-                        data: { url: `${comparisonURLConfig}&response_hash=${response_hash}` },
+                    await createThing({
+                        thingKey: createdComparison.id,
+                        thingType: THING_TYPES.COMPARISON,
+                        config: comparisonConfigObject,
+                        data: { contributions, predicates: properties, data },
                     });
+
                     trackEvent({ category: 'data-entry', action: 'publish-comparison' });
                     toast.success('Comparison saved successfully');
                     // Assign a DOI

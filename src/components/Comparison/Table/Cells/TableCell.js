@@ -61,10 +61,10 @@ const TableCell = ({ entities }) => {
 
     const onClickHandle = (date, index) => {
         openStatementBrowser(
-            date.resourceId,
+            date.id,
             date.label,
             null,
-            date.pathLabels.map((l, i) => ({
+            date.path_labels.map((l, i) => ({
                 id: entities[index].path[i],
                 label: l,
                 _class: isEqualPaths ? (i % 2 === 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE) : i % 2 !== 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE,
@@ -72,7 +72,7 @@ const TableCell = ({ entities }) => {
         );
     };
 
-    const isEqualPaths = entities?.length > 0 ? entities[0].pathLabels?.length === entities[0].path?.length : true;
+    const isEqualPaths = entities?.length > 0 ? entities[0].path_labels?.length === entities[0].path?.length : true;
 
     return (
         <>
@@ -83,20 +83,22 @@ const TableCell = ({ entities }) => {
                         entities.slice(0, !isExpanded ? MAX_ITEMS : entities?.length).map(
                             (entity, index) =>
                                 Object.keys(entity).length > 0 && (
-                                    <Fragment key={`value-${entity.resourceId}`}>
+                                    <Fragment key={`value-${entity.id}`}>
                                         {index > 0 && <ItemInnerSeparator cellPadding={cellPadding} />}
                                         <div style={{ padding: '0 5px' }}>
-                                            {entity.type === ENTITIES.RESOURCE ? (
+                                            {entity._class === ENTITIES.RESOURCE ? (
                                                 <span>
                                                     <DescriptionTooltip
-                                                        id={entity.resourceId}
-                                                        _class={entity.type}
+                                                        id={entity.id}
+                                                        _class={entity._class}
                                                         classes={entity.classes ?? []}
                                                         extraContent={
-                                                            entity.pathLabels?.length > 1 ? (
-                                                                <PathTooltipContent data={entity} cellDataValue={entity} />
-                                                            ) : (
-                                                                ''
+                                                            entity.path_labels?.length > 1 && (
+                                                                <PathTooltipContent
+                                                                    data={entity}
+                                                                    cellDataValue={entity}
+                                                                    openStatementBrowser={openStatementBrowser}
+                                                                />
                                                             )
                                                         }
                                                     >

@@ -83,7 +83,7 @@ const PropertyCell = ({ id, label, property, similar, group, grouped = false, gr
                             extraContent={
                                 similar && similar.length ? (
                                     <tr>
-                                        <td colSpan="2">This property is merged with: {similar.join(', ')}</td>
+                                        <td colSpan="2">This property is merged with: {similar?.join?.(', ')}</td>
                                     </tr>
                                 ) : (
                                     ''

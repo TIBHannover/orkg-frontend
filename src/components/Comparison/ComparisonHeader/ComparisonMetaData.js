@@ -70,7 +70,7 @@ const ComparisonMetaData = () => {
             {!!comparisonResource.id && <ShareLinkMarker typeOfLink="comparison" title={comparisonResource?.label} />}
             {!isLoadingMetadata && (isFailedLoadingResult || isFailedLoadingMetadata) && (
                 <div className="py-4">
-                    {isFailedLoadingResult && contributionsList.length < 2 ? (
+                    {!isFailedLoadingMetadata && contributionsList.length < 2 ? (
                         <>
                             <div className="clearfix" />
                             <Alert color="info">Please select a minimum of two research contributions to compare on.</Alert>

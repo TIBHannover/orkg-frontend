@@ -2,20 +2,20 @@
 
 import { useEffect, useState } from 'react';
 import { Container } from 'reactstrap';
-import { getLongLink } from 'services/similarity/index';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes.js';
+import useRouter from 'components/NextJsMigration/useRouter';
 import useParams from 'components/NextJsMigration/useParams';
 
 const RedirectShortLinks = () => {
-    const params = useParams();
-
+    const { shortCode } = useParams();
+    const router = useRouter();
     const [isLoading] = useState(true);
 
     useEffect(() => {
-        getLongLink(params.shortCode).then(data => {
-            window.location.href = data.long_url;
-            return null;
-        });
-    }, [params.shortCode]);
+        router.push(`${reverse(ROUTES.COMPARISON, { comparisonId: shortCode })}?noResource=true`);
+        return null;
+    }, [router, shortCode]);
 
     return (
         <>

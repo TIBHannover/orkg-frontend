@@ -6,11 +6,12 @@ import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import { PREDICATES } from 'constants/graphSettings';
 import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
-import { getVisualization } from 'services/similarity';
+import { getThing } from 'services/similarity';
 import Tippy from '@tippyjs/react';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { isEqual } from 'lodash';
+import THING_TYPES from 'constants/thingTypes';
 
 const ResourceItem = styled.div`
     overflow: hidden;
@@ -37,7 +38,7 @@ const Thumbnail = props => {
         const loadThumbnail = () => {
             if (props.visualizations?.length > 0) {
                 setIsLoading(true);
-                getVisualization(props.visualizations[0].id)
+                getThing({ thingType: THING_TYPES.VISUALIZATION, thingKey: props.visualizations[0].id })
                     .then(visualization => {
                         setThumbnail(visualization);
                         setIsLoading(false);

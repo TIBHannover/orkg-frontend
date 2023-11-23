@@ -1,55 +1,54 @@
-import Link from 'components/NextJsMigration/Link';
-import { useState, useEffect } from 'react';
-import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, Alert } from 'reactstrap';
+import { faChartBar, faChevronRight, faEllipsisV, faExternalLinkAlt, faPen, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPlus, faChartBar, faExternalLinkAlt, faChevronRight, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
-import ExportToLatex from 'components/Comparison/Export/ExportToLatex';
-import GeneratePdf from 'components/Comparison/Export/GeneratePdf';
-import SelectProperties from 'components/Comparison/SelectProperties';
-import AddContribution from 'components/Comparison/AddContribution/AddContribution';
-import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import ExportCitation from 'components/Comparison/Export/ExportCitation';
-import HistoryModal from 'components/Comparison/HistoryModal/HistoryModal';
-import useComparisonVersions from 'components/Comparison/hooks/useComparisonVersions';
-import NewerVersionWarning from 'components/Comparison/HistoryModal/NewerVersionWarning';
-import Publish from 'components/Comparison/Publish/Publish';
-import { ComparisonTypeButton } from 'components/Comparison/styled';
-import { uniq, without } from 'lodash';
-import ROUTES from 'constants/routes.js';
-import { openAuthDialog } from 'slices/authSlice';
-import { CSVLink } from 'react-csv';
-import PropTypes from 'prop-types';
-import { generateRdfDataVocabularyFile, activatedContributionsToList } from 'components/Comparison/hooks/helpers';
 import Tippy from '@tippyjs/react';
-import { useCookies } from 'react-cookie';
 import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
-import AddVisualizationModal from 'libs/selfVisModel/ComparisonComponents/AddVisualizationModal';
-import { reverse } from 'named-urls';
-import env from 'components/NextJsMigration/env';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-    setConfigurationAttribute,
-    setIsOpenVisualizationModal,
-    setUseReconstructedDataInVisualization,
-    getMatrixOfComparison,
-    setIsEditing,
-    setIsOpenFeedbackModal,
-} from 'slices/comparisonSlice';
-import Confirm from 'components/Confirmation/Confirmation';
-import SaveDraft from 'components/Comparison/SaveDraft/SaveDraft';
-import TitleBar from 'components/TitleBar/TitleBar';
-import Share from 'components/Comparison/Share';
-import pluralize from 'pluralize';
-import { SubTitle } from 'components/styled';
-import ComparisonAuthorsModel from 'components/TopAuthors/ComparisonAuthorsModel';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
+import AddContribution from 'components/Comparison/AddContribution/AddContribution';
+import ExportCitation from 'components/Comparison/Export/ExportCitation';
+import ExportToLatex from 'components/Comparison/Export/ExportToLatex';
+import GeneratePdf from 'components/Comparison/Export/GeneratePdf';
+import HistoryModal from 'components/Comparison/HistoryModal/HistoryModal';
+import NewerVersionWarning from 'components/Comparison/HistoryModal/NewerVersionWarning';
+import Publish from 'components/Comparison/Publish/Publish';
 import QualityReportModal from 'components/Comparison/QualityReportModal/QualityReportModal';
 import WriteFeedback from 'components/Comparison/QualityReportModal/WriteFeedback';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import SaveDraft from 'components/Comparison/SaveDraft/SaveDraft';
+import SelectProperties from 'components/Comparison/SelectProperties';
+import { activatedContributionsToList, generateRdfDataVocabularyFile } from 'components/Comparison/hooks/helpers';
+import useComparisonVersions from 'components/Comparison/hooks/useComparisonVersions';
+import { ComparisonTypeButton } from 'components/Comparison/styled';
+import Confirm from 'components/Confirmation/Confirmation';
 import GraphViewModal from 'components/GraphView/GraphViewModal';
+import Image from 'components/NextJsMigration/Image';
+import Link from 'components/NextJsMigration/Link';
+import env from 'components/NextJsMigration/env';
 import useRouter from 'components/NextJsMigration/useRouter';
 import useSearchParams from 'components/NextJsMigration/useSearchParams';
-import Image from 'components/NextJsMigration/Image';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import TitleBar from 'components/TitleBar/TitleBar';
+import ComparisonAuthorsModel from 'components/TopAuthors/ComparisonAuthorsModel';
+import { SubTitle } from 'components/styled';
+import ROUTES from 'constants/routes.js';
+import AddVisualizationModal from 'libs/selfVisModel/ComparisonComponents/AddVisualizationModal';
+import { uniq, without } from 'lodash';
+import { reverse } from 'named-urls';
+import pluralize from 'pluralize';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
+import { CSVLink } from 'react-csv';
+import { useDispatch, useSelector } from 'react-redux';
+import { Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import { openAuthDialog } from 'slices/authSlice';
+import {
+    getMatrixOfComparison,
+    setConfigurationAttribute,
+    setIsEditing,
+    setIsOpenFeedbackModal,
+    setIsOpenVisualizationModal,
+    setUseReconstructedDataInVisualization,
+} from 'slices/comparisonSlice';
 
 const ComparisonHeaderMenu = props => {
     const dispatch = useDispatch();
@@ -161,7 +160,7 @@ const ComparisonHeaderMenu = props => {
         }
     }, [comparisonResource.id, loadVersions]);
 
-    const isPublished = !!(comparisonResource?.id || responseHash);
+    const isPublished = !!comparisonResource?.id || searchParams.get('noResource');
     const publishedMessage = "Published comparisons cannot be edited, click 'Fetch live data' to reload the live comparison data";
 
     const handleAddContribution = async () => {
@@ -289,8 +288,8 @@ const ComparisonHeaderMenu = props => {
                                                         <ComparisonTypeButton
                                                             color="link"
                                                             className="p-0 m-1"
-                                                            onClick={() => handleChangeType('merge')}
-                                                            active={comparisonType !== 'path'}
+                                                            onClick={() => handleChangeType('MERGE')}
+                                                            active={comparisonType !== 'PATH'}
                                                         >
                                                             <Image src={IntelligentMerge} alt="Intelligent merge example" />
                                                         </ComparisonTypeButton>
@@ -298,8 +297,8 @@ const ComparisonHeaderMenu = props => {
                                                         <ComparisonTypeButton
                                                             color="link"
                                                             className="p-0 m-1"
-                                                            onClick={() => handleChangeType('path')}
-                                                            active={comparisonType === 'path'}
+                                                            onClick={() => handleChangeType('PATH')}
+                                                            active={comparisonType === 'PATH'}
                                                         >
                                                             <Image src={ExactMatch} alt="Exact match example" />
                                                         </ComparisonTypeButton>
@@ -381,7 +380,6 @@ const ComparisonHeaderMenu = props => {
                                             </DropdownItem>
                                         </span>
                                     </Tippy>
-                                    <DropdownItem onClick={() => setShowShareDialog(v => !v)}>Share link</DropdownItem>
                                     <DropdownItem divider />
                                     <Tippy disabled={!isPublished} content="A published comparison cannot be saved as draft">
                                         <span>
@@ -471,7 +469,6 @@ const ComparisonHeaderMenu = props => {
             {showSaveDraftDialog && <SaveDraft isOpen={showSaveDraftDialog} toggle={() => setShowSaveDraftDialog(v => !v)} comparisonUrl="" />}
             <AddVisualizationModal />
             <SelectProperties showPropertiesDialog={showPropertiesDialog} togglePropertiesDialog={() => setShowPropertiesDialog(v => !v)} />
-            <Share showDialog={showShareDialog} toggle={() => setShowShareDialog(v => !v)} />
             {isOpenTopAuthorsModal && (
                 <ComparisonAuthorsModel comparisonId={comparisonResource?.id} toggle={() => setIsOpenTopAuthorsModal(v => !v)} />
             )}

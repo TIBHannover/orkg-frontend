@@ -7,6 +7,7 @@ import usePathname from 'components/NextJsMigration/usePathname';
 import Tooltip from 'components/Utils/Tooltip';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
+import THING_TYPES from 'constants/thingTypes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
@@ -18,7 +19,7 @@ import { createLiteral } from 'services/backend/literals';
 import { generateDoi } from 'services/backend/misc';
 import { createResource } from 'services/backend/resources';
 import { createLiteralStatement, createResourceStatement, getStatementsBundleBySubject } from 'services/backend/statements';
-import { createResourceData } from 'services/similarity';
+import { createThing } from 'services/similarity';
 import { setVersions } from 'slices/reviewSlice';
 import { getAuthorsInList } from 'utils';
 
@@ -56,10 +57,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
 
             await createLiteralStatement(versionResource.id, PREDICATES.DESCRIPTION, updateMessageLiteral.id);
             await createResourceStatement(versionResource.id, PREDICATES.HAS_PAPER, id);
-            await createResourceData({
-                resourceId: versionResource.id,
-                data: { rootResource: id, statements },
-            });
+            await createThing({ thingType: THING_TYPES.REVIEW, thingKey: versionResource.id, data: { rootResource: id, statements } });
 
             if (shouldAssignDoi) {
                 try {

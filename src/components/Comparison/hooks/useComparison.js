@@ -1,39 +1,39 @@
-import { useEffect, useCallback } from 'react';
-import { getStatementsBySubject, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { getResource } from 'services/backend/resources';
-import { getComparison, getResourceData } from 'services/similarity/index';
-import {
-    setComparisonResource,
-    setResearchField,
-    setConfiguration,
-    setHasPreviousVersion,
-    setConfigurationAttribute,
-    setProperties,
-    setContributions,
-    setData,
-    setFilterControlData,
-    setIsFailedLoadingMetadata,
-    setIsLoadingMetadata,
-    setIsLoadingResult,
-    setIsFailedLoadingResult,
-    setErrors,
-    extendAndSortProperties,
-    setHiddenGroups,
-    setIsEmbeddedMode,
-} from 'slices/comparisonSlice';
-import { filterObjectOfStatementsByPredicateAndClass, getErrorMessage, getComparisonData, asyncLocalStorage, addAuthorsToStatements } from 'utils';
+import { generateFilterControlData, getComparisonURLFromConfig } from 'components/Comparison/hooks/helpers';
 import useParams from 'components/NextJsMigration/useParams';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
-import { reverse } from 'named-urls';
-import { isEmpty, uniq, without } from 'lodash';
-import ROUTES from 'constants/routes.js';
-import qs from 'qs';
-import { useSelector, useDispatch } from 'react-redux';
-import { getComparisonConfiguration, generateFilterControlData } from 'components/Comparison/hooks/helpers';
 import useRouter from 'components/NextJsMigration/useRouter';
 import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes.js';
+import THING_TYPES from 'constants/thingTypes';
+import { isEmpty, uniq, without } from 'lodash';
+import { reverse } from 'named-urls';
+import { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getResource } from 'services/backend/resources';
+import { getStatementsBySubject, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+import { getComparison, getThing } from 'services/similarity/index';
+import {
+    extendAndSortProperties,
+    setComparisonResource,
+    setConfiguration,
+    setConfigurationAttribute,
+    setContributions,
+    setData,
+    setErrors,
+    setFilterControlData,
+    setHasPreviousVersion,
+    setHiddenGroups,
+    setIsEmbeddedMode,
+    setIsFailedLoadingMetadata,
+    setIsFailedLoadingResult,
+    setIsLoadingMetadata,
+    setIsLoadingResult,
+    setProperties,
+    setResearchField,
+} from 'slices/comparisonSlice';
+import { addAuthorsToStatements, asyncLocalStorage, getComparisonData, getErrorMessage } from 'utils';
 
-const DEFAULT_COMPARISON_METHOD = 'path';
+const DEFAULT_COMPARISON_METHOD = 'PATH';
 
 function useComparison({ id, isEmbeddedMode = false }) {
     const searchParams = useSearchParams();
@@ -48,7 +48,6 @@ function useComparison({ id, isEmbeddedMode = false }) {
     const predicatesList = useSelector(state => state.comparison.configuration.predicatesList);
     const transpose = useSelector(state => state.comparison.configuration.transpose);
     const comparisonType = useSelector(state => state.comparison.configuration.comparisonType);
-    const responseHash = useSelector(state => state.comparison.configuration.responseHash);
     const contributions = useSelector(state => state.comparison.contributions);
     const isLoadingResult = useSelector(state => state.comparison.isLoadingResult);
     const data = useSelector(state => state.comparison.data);
@@ -64,60 +63,22 @@ function useComparison({ id, isEmbeddedMode = false }) {
             if (cId) {
                 dispatch(setIsLoadingMetadata(true));
                 // Get the comparison resource and comparison config
-                Promise.all([getResource(cId), getResourceData(cId)])
-                    .then(([_comparisonResource, configurationData]) => {
+                // Get the comparison resource
+                getResource(cId)
+                    .then(_comparisonResource => {
                         // Make sure that this resource is a comparison
                         if (!_comparisonResource.classes.includes(CLASSES.COMPARISON)) {
                             throw new Error(`The requested resource is not of class "${CLASSES.COMPARISON}".`);
                         }
-                        return [_comparisonResource, configurationData];
+                        return _comparisonResource;
                     })
-                    .then(([_comparisonResource, configurationData]) => {
+                    .then(_comparisonResource => {
                         // Get meta data and config of a comparison
                         getStatementsBySubject({ id: cId })
                             .then(statements => addAuthorsToStatements(statements))
                             .then(statements => {
                                 const comparisonObject = getComparisonData(_comparisonResource, statements);
                                 dispatch(setComparisonResource(comparisonObject));
-
-                                const { url } = configurationData.data;
-                                if (url) {
-                                    dispatch(setConfiguration(getComparisonConfiguration(url)));
-                                } else {
-                                    dispatch(
-                                        setConfigurationAttribute({
-                                            attribute: 'predicatesList',
-                                            value: filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_PROPERTY, false)?.map(
-                                                p => p.id,
-                                            ),
-                                        }),
-                                    );
-                                    const contributionsIDs =
-                                        without(
-                                            uniq(
-                                                filterObjectOfStatementsByPredicateAndClass(
-                                                    statements,
-                                                    PREDICATES.COMPARE_CONTRIBUTION,
-                                                    false,
-                                                    CLASSES.CONTRIBUTION,
-                                                )?.map(c => c.id) ?? [],
-                                            ),
-                                            undefined,
-                                            null,
-                                            '',
-                                        ) ?? [];
-                                    dispatch(setConfigurationAttribute({ attribute: 'contributionsList', value: contributionsIDs }));
-                                }
-                                if (
-                                    !filterObjectOfStatementsByPredicateAndClass(
-                                        statements,
-                                        PREDICATES.COMPARE_CONTRIBUTION,
-                                        false,
-                                        CLASSES.CONTRIBUTION,
-                                    )?.map(c => c.id)
-                                ) {
-                                    dispatch(setIsLoadingResult(false));
-                                }
                                 dispatch(setIsLoadingMetadata(false));
                                 dispatch(setIsFailedLoadingMetadata(false));
                             });
@@ -144,43 +105,66 @@ function useComparison({ id, isEmbeddedMode = false }) {
     /**
      * Call the comparison service to get the comparison result
      */
-    const getComparisonResult = useCallback(() => {
-        dispatch(setIsLoadingResult(true));
-        getComparison({ contributionIds: contributionsList, type: comparisonType, response_hash: responseHash, save_response: false })
-            .then(async comparisonData => {
-                // mocking function to allow for deletion of contributions via the url
-                comparisonData.contributions.forEach((contribution, index) => {
-                    if (contributionsList?.length > 0 && !contributionsList.includes(contribution.id)) {
-                        comparisonData.contributions[index].active = false;
-                    } else {
-                        comparisonData.contributions[index].active = true;
-                    }
+    const getComparisonResult = useCallback(
+        contributionsIDs => {
+            dispatch(setIsLoadingResult(true));
+            let simCompCall = null;
+            if (comparisonId) {
+                simCompCall = getThing({ thingType: THING_TYPES.COMPARISON, thingKey: comparisonId });
+            } else {
+                simCompCall = getComparison({
+                    contributionIds: contributionsIDs,
+                    type: searchParams.has('type') ? searchParams.get('type') : comparisonType,
                 });
+            }
 
-                comparisonData.properties = await dispatch(extendAndSortProperties(comparisonData, comparisonType));
+            simCompCall
+                .then(async _comparisonData => {
+                    let comparisonData;
+                    if (comparisonId) {
+                        comparisonData = _comparisonData.data;
+                        dispatch(
+                            setConfiguration({
+                                ..._comparisonData.config,
+                                comparisonType: _comparisonData.config.type,
+                                predicatesList: _comparisonData.config.predicates ?? [],
+                                contributionsList: _comparisonData.config.contributions,
+                            }),
+                        );
+                    } else {
+                        comparisonData = _comparisonData;
+                    }
+                    comparisonData.properties = comparisonData.predicates;
 
-                dispatch(setContributions(comparisonData.contributions));
-                dispatch(setProperties(comparisonData.properties));
-                dispatch(setData(comparisonData.data));
-                dispatch(
-                    setFilterControlData(generateFilterControlData(comparisonData.contributions, comparisonData.properties, comparisonData.data)),
-                );
-                dispatch(setIsLoadingResult(false));
-                dispatch(setIsFailedLoadingResult(false));
+                    // mocking function to allow for deletion of contributions via the url
+                    comparisonData.contributions.forEach((contribution, index) => {
+                        if (contributionsList?.length > 0 && !contributionsList.includes(contribution.id)) {
+                            comparisonData.contributions[index].active = false;
+                        } else {
+                            comparisonData.contributions[index].active = true;
+                        }
+                    });
 
-                if (comparisonData.response_hash) {
-                    dispatch(setConfigurationAttribute({ attribute: 'responseHash', value: comparisonData.response_hash }));
-                } else {
-                    dispatch(setConfigurationAttribute({ attribute: 'responseHash', value: responseHash }));
-                }
-            })
-            .catch(error => {
-                console.log(error);
-                dispatch(setErrors(getErrorMessage(error)));
-                dispatch(setIsLoadingResult(false));
-                dispatch(setIsFailedLoadingResult(true));
-            });
-    }, [comparisonType, contributionsList, responseHash, dispatch]);
+                    comparisonData.properties = await dispatch(extendAndSortProperties(comparisonData, comparisonType));
+
+                    dispatch(setContributions(comparisonData.contributions));
+                    dispatch(setProperties(comparisonData.properties));
+                    dispatch(setData(comparisonData.data));
+                    dispatch(
+                        setFilterControlData(generateFilterControlData(comparisonData.contributions, comparisonData.properties, comparisonData.data)),
+                    );
+                    dispatch(setIsLoadingResult(false));
+                    dispatch(setIsFailedLoadingResult(false));
+                })
+                .catch(error => {
+                    console.log(error);
+                    dispatch(setErrors(getErrorMessage(error)));
+                    dispatch(setIsLoadingResult(false));
+                    dispatch(setIsFailedLoadingResult(true));
+                });
+        },
+        [comparisonId, comparisonType, contributionsList, dispatch],
+    );
 
     /**
      * Update the URL
@@ -192,21 +176,14 @@ function useComparison({ id, isEmbeddedMode = false }) {
         _transpose = transpose,
         hasPreviousVersion = comparisonResource?.id || comparisonResource?.hasPreviousVersion?.id,
     }) => {
-        const qParams = qs.stringify(
-            {
-                contributions: _contributionsList.join(','),
-                properties: _predicatesList.map(predicate => encodeURIComponent(predicate)).join(','),
-                type: _comparisonType,
-                transpose: _transpose,
-                hasPreviousVersion,
-            },
-            {
-                skipNulls: true,
-                arrayFormat: 'comma',
-                encode: false,
-            },
-        );
-        router.push(`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?${qParams}`);
+        const qParams = getComparisonURLFromConfig({
+            contributions: _contributionsList,
+            predicates: _predicatesList.map(predicate => encodeURIComponent(predicate)),
+            type: _comparisonType,
+            transpose: _transpose,
+            hasPreviousVersion,
+        });
+        router.push(`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}${qParams}`);
     };
 
     useEffect(() => {
@@ -254,13 +231,13 @@ function useComparison({ id, isEmbeddedMode = false }) {
      * parse query params and set the configuration
      */
     useEffect(() => {
-        if (comparisonId !== undefined) {
+        if (comparisonId !== undefined && !searchParams.has('noResource')) {
             loadComparisonMetaData(comparisonId);
+            getComparisonResult();
         } else {
             // Update browser title
             document.title = 'Comparison - ORKG';
 
-            dispatch(setConfigurationAttribute({ attribute: 'responseHash', value: searchParams.get('response_hash') }));
             dispatch(
                 setConfigurationAttribute({
                     attribute: 'comparisonType',
@@ -268,34 +245,25 @@ function useComparison({ id, isEmbeddedMode = false }) {
                 }),
             );
             dispatch(setConfigurationAttribute({ attribute: 'transpose', value: searchParams.get('transpose') === 'true' }));
-            const contributionsIDs =
-                without(
-                    uniq(!isEmpty(searchParams.get('contributions')) ? searchParams.get('contributions')?.split(',') : []),
-                    undefined,
-                    null,
-                    '',
-                ) ?? [];
+            let parsedContributions = searchParams.getAll('contributions');
+            if (parsedContributions?.length === 1 && parsedContributions[0].includes(',')) {
+                parsedContributions = searchParams.get('contributions')?.split(',');
+            }
+            const contributionsIDs = without(uniq(!isEmpty(parsedContributions) ? parsedContributions : []), undefined, null, '') ?? [];
             dispatch(setConfigurationAttribute({ attribute: 'contributionsList', value: contributionsIDs }));
+            let parsedProperties = searchParams.getAll('properties');
+            if (parsedProperties?.length === 1 && parsedProperties[0].includes(',')) {
+                parsedProperties = searchParams.get('properties')?.split(',');
+            }
             dispatch(
                 setConfigurationAttribute({
                     attribute: 'predicatesList',
-                    value: !isEmpty(searchParams.get('properties')) ? searchParams.get('properties')?.split(',') : [],
+                    value: !isEmpty(parsedProperties) ? parsedProperties.map(p => decodeURIComponent(p)) : [],
                 }),
             );
+            getComparisonResult(contributionsIDs);
         }
     }, [comparisonId, dispatch, loadComparisonMetaData, searchParams]);
-
-    /**
-     * Update comparison if:
-     *  1/ Contribution list changed
-     *  2/ Comparison type changed
-     *  3/ Comparison id changed and is not undefined
-     */
-    useEffect(() => {
-        if (contributionsList?.length > 0) {
-            getComparisonResult();
-        }
-    }, [contributionsList?.length, getComparisonResult]);
 
     useEffect(() => {
         dispatch(setIsEmbeddedMode(isEmbeddedMode));

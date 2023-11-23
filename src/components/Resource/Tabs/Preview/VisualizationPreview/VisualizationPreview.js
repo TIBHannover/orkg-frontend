@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import THING_TYPES from 'constants/thingTypes';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
-import { getVisualization } from 'services/similarity';
-import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { Alert } from 'reactstrap';
+import { getThing } from 'services/similarity';
 
 function VisualizationPreview({ id }) {
     const [visualizationModelForGDC, setVisualizationModelForGDC] = useState(undefined);
@@ -12,7 +13,7 @@ function VisualizationPreview({ id }) {
 
     useEffect(() => {
         setIsLoading(true);
-        getVisualization(id)
+        getThing({ thingType: THING_TYPES.VISUALIZATION, thingKey: id })
             .then(model => {
                 setIsLoading(false);
                 setIsLoadingFailed(false);
