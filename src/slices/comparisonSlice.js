@@ -44,7 +44,6 @@ const initialState = {
     configuration: {
         transpose: false,
         comparisonType: DEFAULT_COMPARISON_METHOD,
-        responseHash: null,
         contributionsList: [],
         predicatesList: [],
         fullWidth: cookies.get('useFullWidthForComparisonTable') === 'true' ? cookies.get('useFullWidthForComparisonTable') : false,
@@ -255,9 +254,9 @@ export const extendAndSortProperties = (comparisonData, _comparisonType) => (dis
     const { predicatesList } = getState().comparison.configuration;
     if (predicatesList.length > 0) {
         // Create an extended version of propertyIds (ADD the IDs of similar properties)
-        // Only use this on the 'merge' method because the if it's used in 'path' method, it will show properties that are not activated
+        // Only use this on the 'MERGE' method because the if it's used in 'PATH' method, it will show properties that are not activated
         let extendedPropertyIds = predicatesList;
-        if (!isPredicatesListCorrect(predicatesList, _comparisonType) || _comparisonType === 'merge') {
+        if (!isPredicatesListCorrect(predicatesList, _comparisonType) || _comparisonType === 'MERGE') {
             extendedPropertyIds = extendPropertyIds(predicatesList, comparisonData.data);
         } else {
             extendedPropertyIds = predicatesList;

@@ -1,16 +1,17 @@
-import Link from 'components/NextJsMigration/Link';
-import { getPropertyObjectFromData } from 'components/Comparison/hooks/helpers';
 import FEEDBACK_QUESTIONS from 'components/Comparison/QualityReportModal/FeedbackQuestions';
+import { getPropertyObjectFromData } from 'components/Comparison/hooks/helpers';
+import Link from 'components/NextJsMigration/Link';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
+import THING_TYPES from 'constants/thingTypes';
 import { flattenDeep, isEmpty, reject, values } from 'lodash';
 import moment from 'moment';
+import { reverse } from 'named-urls';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { getResourceData } from 'services/similarity';
-import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
+import { getThing } from 'services/similarity';
 
 const useQualityReport = () => {
     const [issueRecommendations, setIssueRecommendations] = useState([]);
@@ -31,7 +32,10 @@ const useQualityReport = () => {
                 getStatementsBySubjectAndPredicate({ subjectId: version.id, predicateId: PREDICATES.QUALITY_FEEDBACK }),
             );
             const feedbackDataPromises = (await Promise.all(feedbackStatementsPromises)).reduce(
-                (acc, _feedbacks) => [...acc, ..._feedbacks.map(feedback => getResourceData(feedback.object.id))],
+                (acc, _feedbacks) => [
+                    ...acc,
+                    ..._feedbacks.map(feedback => getThing({ thingType: THING_TYPES.QUALITY_REVIEW, thingKey: feedback.object.id })),
+                ],
                 [],
             );
 

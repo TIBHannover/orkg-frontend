@@ -3,6 +3,7 @@ import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
 import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
 import Tooltip from 'components/Utils/Tooltip';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import THING_TYPES from 'constants/thingTypes';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
@@ -12,7 +13,7 @@ import { Alert, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHea
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
 import { createLiteralStatement, createResourceStatement } from 'services/backend/statements';
-import { addVisualization } from 'services/similarity';
+import { createThing } from 'services/similarity';
 
 function PublishVisualization(props) {
     const [isLoading, setIsLoading] = useState(false);
@@ -55,10 +56,7 @@ function PublishVisualization(props) {
 
     const createReconstructionModelInBackend = async (resourceId, model) => {
         try {
-            await addVisualization({
-                resourceId,
-                jsonData: model,
-            });
+            await createThing({ thingType: THING_TYPES.VISUALIZATION, thingKey: resourceId, data: model });
         } catch (error) {
             toast.error(`Error publishing a visualization : ${error.message}`);
         }

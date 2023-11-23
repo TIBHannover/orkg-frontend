@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getSimilarContribution } from 'services/similarity/index';
+import { getSimilarContribution } from 'services/similarity';
 import { getResource } from 'services/backend/resources';
 
 const useSimilarContributions = ({ contributionId }) => {
@@ -9,11 +9,11 @@ const useSimilarContributions = ({ contributionId }) => {
 
     useEffect(() => {
         setIsSimilarContributionsLoading(true);
-        getSimilarContribution(contributionId)
+        getSimilarContribution({ contributionId })
             .then(sContributions => {
                 const sContributionsData = sContributions.map(paper =>
                     // Fetch the data of each paper
-                    getResource(paper.paperId).then(paperResource => ({ ...paper, title: paperResource.label })),
+                    getResource(paper.paper_id).then(paperResource => ({ ...paper, title: paperResource.label })),
                 );
                 Promise.all(sContributionsData).then(results => {
                     setSimilarContributions(results);

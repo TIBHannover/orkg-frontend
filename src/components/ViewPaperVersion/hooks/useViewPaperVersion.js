@@ -1,13 +1,14 @@
-import { useEffect, useState, useCallback } from 'react';
-import { getStatementsBundleBySubject } from 'services/backend/statements';
-import { getResource } from 'services/backend/resources';
-import { useDispatch } from 'react-redux';
-import { loadPaper } from 'slices/viewPaperSlice';
-import { getPaperDataViewPaper, filterSubjectOfStatementsByPredicateAndClass } from 'utils';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
-import { getVisualization } from 'services/similarity';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import THING_TYPES from 'constants/thingTypes';
 import { uniqBy } from 'lodash';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { getOriginalPaperId } from 'services/backend/papers';
+import { getResource } from 'services/backend/resources';
+import { getStatementsBundleBySubject } from 'services/backend/statements';
+import { getThing } from 'services/similarity';
+import { loadPaper } from 'slices/viewPaperSlice';
+import { filterSubjectOfStatementsByPredicateAndClass, getPaperDataViewPaper } from 'utils';
 
 const useViewPaperVersion = ({ paperId }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +27,7 @@ const useViewPaperVersion = ({ paperId }) => {
                     return;
                 }
                 // Load the paper metadata but skip the research field and contribution data
-                getVisualization(paperId).then(async r => {
+                getThing({ thingType: THING_TYPES.PAPER_VERSION, thingKey: paperId }).then(async r => {
                     setPaperStatements(r.data.statements);
                     const contributionsNodes = filterSubjectOfStatementsByPredicateAndClass(
                         r.data.statements,

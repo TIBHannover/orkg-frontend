@@ -1,18 +1,19 @@
-import Link from 'components/NextJsMigration/Link';
-import { useEffect, useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Alert } from 'reactstrap';
-import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
-import PropTypes from 'prop-types';
-import { createResource } from 'services/backend/resources';
-import { createResourceData } from 'services/similarity/index';
-import { toast } from 'react-toastify';
-import useRouter from 'components/NextJsMigration/useRouter';
-import ROUTES from 'constants/routes.js';
-import { reverse } from 'named-urls';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { asyncLocalStorage } from 'utils';
-import { createResourceStatement } from 'services/backend/statements';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import Link from 'components/NextJsMigration/Link';
+import useRouter from 'components/NextJsMigration/useRouter';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
+import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes.js';
+import THING_TYPES from 'constants/thingTypes';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { Alert, Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { createResource } from 'services/backend/resources';
+import { createResourceStatement } from 'services/backend/statements';
+import { createThing } from 'services/similarity';
+import { asyncLocalStorage } from 'utils';
 
 function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagram, diagramResource }) {
     const [value, setValue] = useState(diagramResource?.label ?? '');
@@ -21,10 +22,7 @@ function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagra
     const save = async () => {
         setIsSaving(true);
         const sResource = await createResource(value, [CLASSES.DIAGRAM]);
-        createResourceData({
-            resourceId: sResource.id,
-            data: diagram,
-        })
+        createThing({ thingType: THING_TYPES.DIAGRAM, thingKey: sResource.id, data: diagram })
             .then(async () => {
                 if (diagramResource?.id) {
                     await createResourceStatement(sResource.id, PREDICATES.HAS_PREVIOUS_VERSION, diagramResource?.id);

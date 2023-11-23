@@ -1,59 +1,130 @@
 /**
  * Services file for the similarity service
- * https://gitlab.com/TIBHannover/orkg/orkg-similarity
+ * https://gitlab.com/TIBHannover/orkg/orkg-simcomp/
  */
 
 import { submitPostRequest, submitGetRequest } from 'network';
 import qs from 'qs';
 import env from 'components/NextJsMigration/env';
 
-export const similarityServiceUrl = env('SIMILARITY_SERVICE_URL');
-export const comparisonUrl = `${similarityServiceUrl}compare/`;
-export const similarityUrl = `${similarityServiceUrl}similar/`;
-export const visualizationServiceUrl = `${similarityServiceUrl}visualization/`;
-
-export const indexContribution = contributionId => submitGetRequest(`${similarityServiceUrl}internal/index/${contributionId}/`);
-
-export const createShortLink = data => submitPostRequest(`${similarityServiceUrl}shortener/`, { 'Content-Type': 'application/json' }, data);
-
-export const getLongLink = shortCode => submitGetRequest(`${similarityServiceUrl}shortener/${encodeURIComponent(shortCode)}/`);
+export const simCompServiceUrl = env('SIMILARITY_SERVICE_URL');
 
 /**
- * Get comparison result
+ * Index a contribution
  *
- * @param {Array[String]} contributionIds Contribution id
- * @param {String} type Method used to compare (path | merge)
- * @param {String} response_hash Response hash
- * @param {Boolean} save_response To return a response hash and save a copy of the result
+ * @param {String} contributionId Contribution id
  */
-export const getComparison = ({ contributionIds = [], type = null, response_hash = null, save_response = false }) => {
+export const indexContribution = contributionId => {
     const params = qs.stringify(
         {
-            contributions: contributionIds.join(','),
-            response_hash,
-            type,
-            save_response,
+            contribution_id: contributionId,
         },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${comparisonUrl}?${params}`);
+    return submitPostRequest(`${simCompServiceUrl}contribution/internal/index/?${params}`, { 'Content-Type': 'application/json' }, {});
 };
 
-export const getSimilarContribution = id => submitGetRequest(`${similarityUrl}${encodeURIComponent(id)}/`);
+/**
+ * Queries Similar Contributions
+ *
+ * @param {String} contributionId Contribution id
+ */
+export const getSimilarContribution = ({ contributionId, nbResults = 5 }) => {
+    const params = qs.stringify(
+        {
+            contribution_id: contributionId,
+            n_results: nbResults,
+        },
+        {
+            skipNulls: true,
+        },
+    );
+    return submitGetRequest(`${simCompServiceUrl}/contribution/similar/?${params}`).then(response => response.payload.contributions);
+};
 
-/* TODO: rename this in similarity service */
-export const getVisualization = resourceId =>
-    submitGetRequest(`${visualizationServiceUrl}?resourceId=${encodeURI(resourceId)}`, {
+/**
+ * Get comparison result
+ *
+ * @param {Array[String]} contributionIds Contribution id
+ * @param {String} type Method used to compare (PATH | MERGE)
+ * @param {String} format Response format (Available values : UNKNOWN, CSV, DATAFRAME, HTML, XML)
+ */
+export const getComparison = ({ contributionIds = [], type = null, format = null }) => {
+    const params = qs.stringify(
+        {
+            contributions: contributionIds,
+            type,
+            format,
+        },
+        {
+            skipNulls: true,
+            arrayFormat: 'repeat',
+        },
+    );
+    return submitGetRequest(`${simCompServiceUrl}contribution/compare/?${params}`).then(response => response.payload.comparison);
+};
+/**
+ * Get saved thing result
+ *
+ * @param {String} thingKey Key
+ * @param {String} thingType Type (Available values : UNKNOWN, COMPARISON, DIAGRAM, VISUALIZATION, DRAFT_COMPARISON, LIST, REVIEW, QUALITY_REVIEW, PAPER_VERSION, ANY)
+ */
+export const getThing = ({ thingType, thingKey }) => {
+    const params = qs.stringify(
+        {
+            thing_type: thingType,
+            thing_key: thingKey,
+        },
+        {
+            skipNulls: true,
+        },
+    );
+    return submitGetRequest(`${simCompServiceUrl}thing/?${params}`, {
+        'Content-Type': 'application/json',
+    }).then(response => response.payload.thing);
+};
+
+/**
+ * Create thing
+ *
+ * @param {String} thingKey Key
+ * @param {String} thingType Type (Available values : UNKNOWN, COMPARISON, DIAGRAM, VISUALIZATION, DRAFT_COMPARISON, LIST, REVIEW, QUALITY_REVIEW, PAPER_VERSION, ANY)
+ */
+export const createThing = ({ thingType = 'UNKNOWN', thingKey = '', config = {}, data = {} }) =>
+    submitPostRequest(
+        `${simCompServiceUrl}thing/`,
+        { 'Content-Type': 'application/json' },
+        {
+            thing_type: thingType,
+            thing_key: thingKey,
+            config,
+            data,
+        },
+    );
+
+/**
+ * Export thing result
+ *
+ * @param {String} format Response format (Available values : UNKNOWN, CSV, DATAFRAME, HTML, XML)
+ * @param {String} thingKey Key
+ * @param {Boolean} likeUI Like UI
+ * @param {String} thingType Type (Available values : UNKNOWN, COMPARISON, DIAGRAM, VISUALIZATION, DRAFT_COMPARISON, LIST, REVIEW, QUALITY_REVIEW, PAPER_VERSION, ANY)
+ */
+export const exportThing = ({ thingType, thingKey, format, likeUI }) => {
+    const params = qs.stringify(
+        {
+            thing_type: thingType,
+            thing_key: thingKey,
+            format,
+            likeUI,
+        },
+        {
+            skipNulls: true,
+        },
+    );
+    return submitGetRequest(`${simCompServiceUrl}thing/export/?${params}`, {
         'Content-Type': 'application/json',
     });
-export const addVisualization = data => submitPostRequest(`${visualizationServiceUrl}`, { 'Content-Type': 'application/json' }, data);
-
-export const getResourceData = resourceId => getVisualization(resourceId);
-
-export const createResourceData = ({ resourceId, data }) =>
-    addVisualization({
-        resourceId,
-        jsonData: data,
-    });
+};

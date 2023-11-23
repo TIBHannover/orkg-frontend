@@ -1,27 +1,28 @@
-import Link from 'components/NextJsMigration/Link';
-import { useState, useEffect } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert, InputGroup } from 'reactstrap';
-import { toast } from 'react-toastify';
-import ROUTES from 'constants/routes.js';
-import PropTypes from 'prop-types';
-import { generateDoi, createObject } from 'services/backend/misc';
-import { createLiteral } from 'services/backend/literals';
-import Tooltip from 'components/Utils/Tooltip';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { reverse } from 'named-urls';
-import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
-import { getContributorsByResourceId } from 'services/backend/resources';
-import { getPublicUrl, filterObjectOfStatementsByPredicateAndClass, getErrorMessage } from 'utils';
-import { getStatementsBySubject, createResourceStatement, deleteStatementById, getStatementsBundleBySubject } from 'services/backend/statements';
-import { createResourceData } from 'services/similarity/index';
-import { useSelector } from 'react-redux';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { uniqBy, flatten } from 'lodash';
-import { AuthorTag } from 'components/Input/AuthorsInput/styled';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
+import { AuthorTag } from 'components/Input/AuthorsInput/styled';
+import Link from 'components/NextJsMigration/Link';
+import Tooltip from 'components/Utils/Tooltip';
+import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes.js';
+import THING_TYPES from 'constants/thingTypes';
+import { flatten, uniqBy } from 'lodash';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { Alert, Button, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { createLiteral } from 'services/backend/literals';
+import { createObject, generateDoi } from 'services/backend/misc';
+import { getContributorsByResourceId } from 'services/backend/resources';
+import { createResourceStatement, deleteStatementById, getStatementsBundleBySubject, getStatementsBySubject } from 'services/backend/statements';
+import { createThing } from 'services/similarity';
+import { filterObjectOfStatementsByPredicateAndClass, getErrorMessage, getPublicUrl } from 'utils';
 
 function Publish(props) {
     const [isLoading, setIsLoading] = useState(false);
@@ -134,10 +135,7 @@ function Publish(props) {
                     }
                     apiCalls.push(createResourceStatement(viewPaper.paperResource.id, PREDICATES.HAS_PREVIOUS_VERSION, createdPaper.id));
                     apiCalls.push(
-                        createResourceData({
-                            resourceId: createdPaper.id,
-                            data: { statements: paperStatements },
-                        }),
+                        createThing({ thingType: THING_TYPES.PAPER_VERSION, thingKey: createdPaper.id, data: { statements: paperStatements } }),
                     );
                     await Promise.all(apiCalls);
                     setDataCiteDoi(doiResponse.doi);

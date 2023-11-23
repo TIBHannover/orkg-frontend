@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useState, useRef, useMemo } from 'react';
-import { useContextMenu } from 'react-contexify';
-import { DIAGRAM_CONTEXT_MENU_ID } from 'constants/misc';
-import { applyEdgeChanges, applyNodeChanges, addEdge } from 'reactflow';
-import { guid, asyncLocalStorage } from 'utils';
 import Confirm from 'components/Confirmation/Confirmation';
-import { getResourceData } from 'services/similarity/index';
-import { getResource } from 'services/backend/resources';
-import CustomNode from 'components/DiagramEditor/CustomNode';
-import CustomGroup from 'components/DiagramEditor/CustomGroup';
 import CustomEdge from 'components/DiagramEditor/CustomEdge';
+import CustomGroup from 'components/DiagramEditor/CustomGroup';
+import CustomNode from 'components/DiagramEditor/CustomNode';
+import { DIAGRAM_CONTEXT_MENU_ID } from 'constants/misc';
+import THING_TYPES from 'constants/thingTypes';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useContextMenu } from 'react-contexify';
+import { addEdge, applyEdgeChanges, applyNodeChanges } from 'reactflow';
+import { getResource } from 'services/backend/resources';
+import { getThing } from 'services/similarity';
+import { asyncLocalStorage, guid } from 'utils';
 
 function useDiagramEditor({ id }) {
     const { show } = useContextMenu({
@@ -356,7 +357,7 @@ function useDiagramEditor({ id }) {
     useEffect(() => {
         if (id) {
             setIsDataLoadedFromLocalStorage(false);
-            getResourceData(id).then(res => {
+            getThing({ thingType: THING_TYPES.DIAGRAM, thingKey: id }).then(res => {
                 setDiagram(res.data);
                 setNodes(res.data.nodes);
                 setEdges(res.data.edges);

@@ -20,15 +20,15 @@ const ContributionCell = ({ contribution }) => {
         <>
             <Link
                 href={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
-                    resourceId: contribution.paperId,
+                    resourceId: contribution.paper_id,
                     contributionId: contribution.id,
                 })}
             >
-                {contribution.title ? contribution.title : <em>No title</em>}
+                {contribution?.paper_label ?? <em>No title</em>}
             </Link>
             <br />
             <Contribution>
-                {contribution.contributionLabel} {contribution.year && `- ${contribution.year}`}
+                {contribution.label} {contribution.paper_year && `- ${contribution.paper_year}`}
             </Contribution>
             {isEditing && !isEmbeddedMode && contributions.filter(_contribution => _contribution.active).length > 2 && (
                 <Delete onClick={() => dispatch(removeContribution(contribution.id))}>

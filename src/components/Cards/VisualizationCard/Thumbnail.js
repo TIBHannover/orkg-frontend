@@ -1,13 +1,14 @@
-import Link from 'components/NextJsMigration/Link';
-import { useState, useEffect, memo } from 'react';
-import { reverse } from 'named-urls';
-import styled from 'styled-components';
-import ROUTES from 'constants/routes.js';
-import PropTypes from 'prop-types';
-import { getVisualization } from 'services/similarity';
 import Tippy from '@tippyjs/react';
+import ROUTES from 'constants/routes.js';
+import THING_TYPES from 'constants/thingTypes';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import { isEqual } from 'lodash';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
+import { memo, useEffect, useState } from 'react';
+import Link from 'components/NextJsMigration/Link';
+import { getThing } from 'services/similarity';
+import styled from 'styled-components';
 
 const ResourceItem = styled.div`
     overflow: hidden;
@@ -28,7 +29,7 @@ const Thumbnail = props => {
         const loadThumbnail = () => {
             if (props.visualization) {
                 setIsLoading(true);
-                getVisualization(props.visualization.id)
+                getThing({ thingType: THING_TYPES.VISUALIZATION, thingKey: props.visualization.id })
                     .then(visualization => {
                         setThumbnail(visualization);
                         setIsLoading(false);
