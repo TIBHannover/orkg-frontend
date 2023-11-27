@@ -164,6 +164,9 @@ export const getAuthorsInList = ({ resourceId, statements }) => {
         false,
     );
     const authorListId = authorList?.[0]?.id;
+    if (!authorListId) {
+        return [];
+    }
     const authors = filterObjectOfStatementsByPredicateAndClass(sortedStatements, PREDICATES.HAS_LIST_ELEMENT, false, null, authorListId);
 
     const authorsArray = [];
