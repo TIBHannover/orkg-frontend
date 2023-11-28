@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.129.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.129.3...v0.129.4) - 2023-11-28
+
+### Changes
+
+- fix(ViewPaper): Contributions are not loaded if they are not instance of Contribution class [`#1239`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1239)
+- fix(Review): ensure only Review authors are displayed [`#1238`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1238)
+
+---
 ## [v0.129.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.129.2...v0.129.3) - 2023-11-23
 
 ### Changes
