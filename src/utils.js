@@ -221,12 +221,7 @@ export const getPaperDataViewPaper = (paperResource, paperStatements) => {
     const authors = getAuthorsInList({ resourceId: paperResource.id, statements: paperStatements });
     const authorListResource = filterObjectOfStatementsByPredicateAndClass(paperStatementsFirstLevel, PREDICATES.HAS_AUTHORS, false)?.[0];
 
-    const contributions = filterObjectOfStatementsByPredicateAndClass(
-        paperStatementsFirstLevel,
-        PREDICATES.HAS_CONTRIBUTION,
-        false,
-        CLASSES.CONTRIBUTION,
-    );
+    const contributions = filterObjectOfStatementsByPredicateAndClass(paperStatementsFirstLevel, PREDICATES.HAS_CONTRIBUTION, false, null);
     const doi = filterObjectOfStatementsByPredicateAndClass(paperStatementsFirstLevel, PREDICATES.HAS_DOI, false);
     return {
         paperResource,
