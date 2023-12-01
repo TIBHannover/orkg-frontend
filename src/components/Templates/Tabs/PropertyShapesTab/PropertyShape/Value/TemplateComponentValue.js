@@ -1,23 +1,24 @@
-import { useState, useRef } from 'react';
-import { InputGroup, FormGroup, Label, Col, Input, FormText } from 'reactstrap';
-import { ValuesStyle } from 'components/StatementBrowser/styled';
-import DATA_TYPES from 'constants/DataTypes.js';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
-import { updatePropertyShapes } from 'slices/templateEditorSlice';
-import { useSelector, useDispatch } from 'react-redux';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import PropTypes from 'prop-types';
+import { ValuesStyle } from 'components/StatementBrowser/styled';
 import ValidationRules from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/ValidationRules/ValidationRules';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+import DATA_TYPES from 'constants/DataTypes.js';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
+import { useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Col, FormGroup, FormText, Input, InputGroup, Label } from 'reactstrap';
+import { updatePropertyShapes } from 'slices/templateEditorSlice';
 
 const TemplateComponentValue = props => {
     const [cardinality, setCardinality] = useState(!props.minCount && !props.maxCount ? '0,*' : 'range');
     const classAutocompleteRef = useRef(null);
+    const { isEditMode } = useIsEditMode();
 
     const dispatch = useDispatch();
     const propertyShapes = useSelector(state => state.templateEditor.propertyShapes);
-    const editMode = useSelector(state => state.templateEditor.editMode);
 
     const onChange = event => {
         const templatePropertyShapes = propertyShapes.map((item, j) => {
@@ -53,7 +54,7 @@ const TemplateComponentValue = props => {
                 <InputGroup size="sm">
                     <AutoComplete
                         entityType={ENTITIES.CLASS}
-                        placeholder={editMode ? 'Select or type to enter a class' : 'No Class'}
+                        placeholder={isEditMode ? 'Select or type to enter a class' : 'No Class'}
                         onChange={(selected, action) => {
                             // blur the field allows to focus and open the menu again
                             classAutocompleteRef.current && classAutocompleteRef.current.blur();
@@ -63,7 +64,7 @@ const TemplateComponentValue = props => {
                         autoLoadOption={true}
                         openMenuOnFocus={true}
                         allowCreate={true}
-                        isDisabled={!editMode}
+                        isDisabled={!isEditMode}
                         copyValueButton={true}
                         isClearable
                         defaultOptions={DATA_TYPES.filter(dt => dt.classId !== CLASSES.RESOURCE).map(dt => ({ label: dt.name, id: dt.classId }))}
@@ -82,7 +83,7 @@ const TemplateComponentValue = props => {
                         </Label>
                         <Col sm={9}>
                             <Input
-                                disabled={!editMode}
+                                disabled={!isEditMode}
                                 onChange={onChangeCardinality}
                                 value={cardinality}
                                 type="select"
@@ -107,7 +108,7 @@ const TemplateComponentValue = props => {
                                 </Label>
                                 <Col sm={9}>
                                     <Input
-                                        disabled={!editMode}
+                                        disabled={!isEditMode}
                                         onChange={onChange}
                                         bsSize="sm"
                                         value={props.minCount}
@@ -126,7 +127,7 @@ const TemplateComponentValue = props => {
                                 </Label>
                                 <Col sm={9}>
                                     <Input
-                                        disabled={!editMode}
+                                        disabled={!isEditMode}
                                         onChange={onChange}
                                         bsSize="sm"
                                         value={props.maxCount !== null ? props.maxCount : ''}
@@ -137,7 +138,7 @@ const TemplateComponentValue = props => {
                                         id="maxCountValueInput"
                                         placeholder="Maximum number of occurrences in the resource"
                                     />
-                                    {editMode && (
+                                    {isEditMode && (
                                         <FormText className="d-block">Clear the input field if there is no restriction (unbounded)</FormText>
                                     )}
                                 </Col>

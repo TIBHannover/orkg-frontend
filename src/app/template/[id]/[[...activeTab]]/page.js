@@ -1,37 +1,38 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
 import { faDiagramProject, faEllipsisV, faPen, faQuestionCircle, faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import NotFound from 'app/not-found';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { EditModeContainer, Title } from 'components/EditModeHeader/EditModeHeader';
+import ExportCitation from 'components/ExportCitation/ExportCitation';
+import Link from 'components/NextJsMigration/Link';
+import useParams from 'components/NextJsMigration/useParams';
+import useRouter from 'components/NextJsMigration/useRouter';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ItemMetadata from 'components/Search/ItemMetadata';
-import ExportCitation from 'components/ExportCitation/ExportCitation';
 import ShaclFlowModal from 'components/Templates/ShaclFlow/ShaclFlowModal';
 import TabsContainer from 'components/Templates/TabsContainer';
 import TemplateEditorHeaderBar from 'components/Templates/TemplateEditorHeaderBar';
-import useContributor from 'components/hooks/useContributor';
 import TitleBar from 'components/TitleBar/TitleBar';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+import useContributor from 'components/hooks/useContributor';
+import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useParams from 'components/NextJsMigration/useParams';
 import VisibilitySensor from 'react-visibility-sensor';
 import { Button, ButtonDropdown, ButtonGroup, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
-import { loadTemplate, saveTemplate, setDiagramMode, setEditMode } from 'slices/templateEditorSlice';
-import { CLASSES } from 'constants/graphSettings';
+import { loadTemplate, saveTemplate, setDiagramMode } from 'slices/templateEditorSlice';
 
 const Template = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
+    const { isEditMode: editMode, toggleIsEditMode } = useIsEditMode();
 
     const {
-        editMode,
         diagramMode,
         isSaving,
         isLoading,
@@ -88,7 +89,7 @@ const Template = () => {
                                     component={Button}
                                     color="secondary"
                                     size="sm"
-                                    onClick={() => dispatch(setEditMode(true))}
+                                    onClick={() => toggleIsEditMode(true)}
                                 >
                                     <Icon icon={faPen} /> Edit
                                 </RequireAuthentication>
@@ -113,7 +114,7 @@ const Template = () => {
                                         behavior: 'smooth',
                                         top: 0,
                                     });
-                                    const tID = await dispatch(saveTemplate());
+                                    const tID = await dispatch(saveTemplate(toggleIsEditMode));
                                     if (tID) {
                                         router.push(reverse(ROUTES.TEMPLATE, { id: tID }));
                                     }

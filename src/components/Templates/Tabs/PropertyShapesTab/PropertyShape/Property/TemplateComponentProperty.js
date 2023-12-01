@@ -1,17 +1,17 @@
+import { faArrowsAlt, faCheck, faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import Link from 'components/NextJsMigration/Link';
+import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import { PropertyStyle } from 'components/StatementBrowser/styled';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+import { ENTITIES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { InputGroup } from 'reactstrap';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { ENTITIES } from 'constants/graphSettings';
-import { PropertyStyle } from 'components/StatementBrowser/styled';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faArrowsAlt, faPen, faTrash, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import PropTypes from 'prop-types';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
-import { useSelector } from 'react-redux';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import styled from 'styled-components';
 
 const DragHandler = styled.div`
@@ -22,11 +22,11 @@ const DragHandler = styled.div`
 
 function TemplateComponentProperty(props) {
     const [isEditing, setIsEditing] = useState(false);
-    const editMode = useSelector(state => state.templateEditor.editMode);
+    const { isEditMode } = useIsEditMode();
 
     return (
         <PropertyStyle className="col-4" tabIndex="0">
-            {editMode && (
+            {isEditMode && (
                 <DragHandler ref={props.dragRef}>
                     <Icon icon={faArrowsAlt} />
                 </DragHandler>
@@ -43,7 +43,7 @@ function TemplateComponentProperty(props) {
                         props.property?.label
                     )}
 
-                    {editMode && (
+                    {isEditMode && (
                         <div className="propertyOptions">
                             <StatementActionButton title="Edit property" icon={faPen} action={() => setIsEditing(true)} />
                             <StatementActionButton

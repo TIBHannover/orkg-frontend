@@ -69,7 +69,7 @@ const TemplateNew = () => {
         }
         setIsLoading(false);
         if (templateResource) {
-            router.push(reverse(ROUTES.TEMPLATE, { id: templateResource.id }));
+            router.push(`${reverse(ROUTES.TEMPLATE, { id: templateResource.id })}?isEditMode=true`);
         }
     };
 

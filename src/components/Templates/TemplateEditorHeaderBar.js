@@ -1,11 +1,12 @@
 import { faDiagramProject, faPen, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Title } from 'components/EditModeHeader/EditModeHeader';
-import { useDispatch, useSelector } from 'react-redux';
 import useParams from 'components/NextJsMigration/useParams';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import { Button, ButtonGroup, Container } from 'reactstrap';
-import { saveTemplate, setDiagramMode, setEditMode } from 'slices/templateEditorSlice';
+import { saveTemplate, setDiagramMode } from 'slices/templateEditorSlice';
 import styled from 'styled-components';
 
 const PaperHeaderBarContainer = styled.div`
@@ -38,7 +39,7 @@ const AnimationContainer = styled(CSSTransition)`
 
 const TemplateEditorHeaderBar = () => {
     const dispatch = useDispatch();
-    const editMode = useSelector(state => state.templateEditor.editMode);
+    const { isEditMode, toggleIsEditMode } = useIsEditMode();
     const isSaving = useSelector(state => state.templateEditor.isSaving);
     const label = useSelector(state => state.templateEditor.label);
     const { id } = useParams();
@@ -47,9 +48,9 @@ const TemplateEditorHeaderBar = () => {
         <AnimationContainer in={true} appear={true} classNames="fade" timeout={500}>
             <PaperHeaderBarContainer>
                 <Container className="d-flex align-items-center py-2">
-                    {editMode && <Title>{id ? 'Edit mode' : 'Create template'}</Title>}
-                    {!editMode && <Title>Template: {label}</Title>}
-                    {editMode || isSaving ? (
+                    {isEditMode && <Title>{id ? 'Edit mode' : 'Create template'}</Title>}
+                    {!isEditMode && <Title>Template: {label}</Title>}
+                    {isEditMode || isSaving ? (
                         <ButtonGroup size="sm">
                             <Button
                                 className="float-start"
@@ -61,17 +62,17 @@ const TemplateEditorHeaderBar = () => {
                                         behavior: 'smooth',
                                         top: 0,
                                     });
-                                    dispatch(saveTemplate());
+                                    dispatch(saveTemplate(toggleIsEditMode));
                                 }}
                             >
                                 {isSaving && <Icon icon={faSpinner} spin />}
-                                {editMode && <Icon icon={faSave} />}
+                                {isEditMode && <Icon icon={faSave} />}
                                 {!isSaving ? ' Save' : ' Saving'}
                             </Button>
                         </ButtonGroup>
                     ) : (
                         <ButtonGroup size="sm">
-                            <Button className="float-end" color="secondary" size="sm" onClick={() => dispatch(setEditMode(true))}>
+                            <Button className="float-end" color="secondary" size="sm" onClick={() => toggleIsEditMode(true)}>
                                 <Icon icon={faPen} /> Edit
                             </Button>
                             <Button

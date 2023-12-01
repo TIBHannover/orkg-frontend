@@ -1,12 +1,13 @@
-import { FormGroup, Label, Col, Input, FormText } from 'reactstrap';
-import { updatePropertyShapes } from 'slices/templateEditorSlice';
-import { useSelector, useDispatch } from 'react-redux';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { Col, FormGroup, FormText, Input, Label } from 'reactstrap';
+import { updatePropertyShapes } from 'slices/templateEditorSlice';
 
 const ValidationRules = ({ id, value, minInclusive, maxInclusive, pattern }) => {
     const dispatch = useDispatch();
     const propertyShapes = useSelector(state => state.templateEditor.propertyShapes);
-    const editMode = useSelector(state => state.templateEditor.editMode);
+    const { isEditMode } = useIsEditMode();
 
     const onChange = event => {
         const newValidationRules = { minInclusive, maxInclusive, pattern, [event.target.name]: event.target.value };
@@ -29,7 +30,7 @@ const ValidationRules = ({ id, value, minInclusive, maxInclusive, pattern }) => 
                         </Label>
                         <Col sm={9}>
                             <Input
-                                disabled={!editMode}
+                                disabled={!isEditMode}
                                 bsSize="sm"
                                 type="text"
                                 name="pattern"
@@ -51,7 +52,7 @@ const ValidationRules = ({ id, value, minInclusive, maxInclusive, pattern }) => 
                         </Label>
                         <Col sm={9}>
                             <Input
-                                disabled={!editMode}
+                                disabled={!isEditMode}
                                 onChange={onChange}
                                 bsSize="sm"
                                 type="text"
@@ -68,7 +69,7 @@ const ValidationRules = ({ id, value, minInclusive, maxInclusive, pattern }) => 
                         </Label>
                         <Col sm={9}>
                             <Input
-                                disabled={!editMode}
+                                disabled={!isEditMode}
                                 onChange={onChange}
                                 bsSize="sm"
                                 value={maxInclusive}
