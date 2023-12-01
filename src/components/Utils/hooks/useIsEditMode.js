@@ -1,13 +1,11 @@
 import usePathname from 'components/NextJsMigration/usePathname';
 import useRouter from 'components/NextJsMigration/useRouter';
 import useSearchParams from 'components/NextJsMigration/useSearchParams';
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { firstLoad, openAuthDialog } from 'slices/authSlice';
 
 const useIsEditMode = () => {
-    const [openedAuthDialog, setOpenedAuthDialog] = useState(false);
-    const user = useSelector(state => state.auth.user);
+    const { dialogIsOpen, user } = useSelector(state => state.auth);
     const dispatch = useDispatch();
 
     // using a rather complex method to set the search params: https://github.com/vercel/next.js/discussions/47583]
@@ -19,9 +17,9 @@ const useIsEditMode = () => {
 
     let isEditMode = searchParams.get('isEditMode') === 'true';
 
-    const toggleIsEditMode = () => {
+    const toggleIsEditMode = (newValue = undefined) => {
         const current = new URLSearchParams(Array.from(searchParams.entries()));
-        current.set('isEditMode', !isEditMode);
+        current.set('isEditMode', newValue === undefined ? !isEditMode : newValue);
         const search = current.toString();
         const query = search ? `?${search}` : '';
         router.push(`${pathname}${query}`);
@@ -33,9 +31,8 @@ const useIsEditMode = () => {
             dispatch(firstLoad());
         } else if (user === null) {
             isEditMode = false;
-            if (!openedAuthDialog) {
+            if (!dialogIsOpen) {
                 dispatch(openAuthDialog({ action: 'signin', signInRequired: true }));
-                setOpenedAuthDialog(true);
             }
         }
     }

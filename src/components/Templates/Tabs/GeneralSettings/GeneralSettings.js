@@ -1,20 +1,21 @@
+import AutoComplete from 'components/Autocomplete/Autocomplete';
+import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
+import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
 import { useRef, useState } from 'react';
-import { FormGroup, Label, FormText, Input } from 'reactstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { FormGroup, FormText, Input, Label } from 'reactstrap';
 import {
-    updateLabel,
-    updateDescription,
-    updatePredicate,
     updateClass,
+    updateDescription,
+    updateLabel,
+    updatePredicate,
     updateResearchFields,
     updateResearchProblems,
 } from 'slices/templateEditorSlice';
-import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import { useSelector, useDispatch } from 'react-redux';
-import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
 
 export const MAX_DESCRIPTION_LENGTH = 350;
 
@@ -24,9 +25,10 @@ const GeneralSettings = () => {
     const predicateAutocompleteRef = useRef(null);
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
     const [propertyLabel, setPropertyLabel] = useState('');
+    const { isEditMode } = useIsEditMode();
 
     const dispatch = useDispatch();
-    const { label, description, predicate, class: clasS, editMode, researchProblems, researchFields } = useSelector(state => state.templateEditor);
+    const { label, description, predicate, class: clasS, researchProblems, researchFields } = useSelector(state => state.templateEditor);
 
     const handleChangeLabel = event => {
         dispatch(updateLabel(event.target.value));
@@ -89,7 +91,7 @@ const GeneralSettings = () => {
             )}
             <FormGroup className="mb-4">
                 <Label for="template-name">Name of template</Label>
-                <Input innerRef={inputRef} value={label} onChange={handleChangeLabel} disabled={!editMode} id="template-name" />
+                <Input innerRef={inputRef} value={label} onChange={handleChangeLabel} disabled={!isEditMode} id="template-name" />
             </FormGroup>
 
             <FormGroup className="mb-4">
@@ -98,13 +100,13 @@ const GeneralSettings = () => {
                 </Label>
                 <AutoComplete
                     entityType={ENTITIES.CLASS}
-                    placeholder={editMode ? 'Select or type to enter a class' : 'No Classes'}
+                    placeholder={isEditMode ? 'Select or type to enter a class' : 'No Classes'}
                     onChange={handleClassSelect}
                     value={clasS}
                     autoLoadOption={true}
                     openMenuOnFocus={true}
                     allowCreate={true}
-                    isDisabled={!editMode}
+                    isDisabled={!isEditMode}
                     copyValueButton={true}
                     isClearable
                     innerRef={classAutocompleteRef}
@@ -113,7 +115,7 @@ const GeneralSettings = () => {
                     linkButtonTippy="Go to class page"
                     inputId="target-class"
                 />
-                {editMode && <FormText>Specify the class of this template. If not specified, a class is generated automatically.</FormText>}
+                {isEditMode && <FormText>Specify the class of this template. If not specified, a class is generated automatically.</FormText>}
             </FormGroup>
             <FormGroup className="mb-4">
                 <Label for="template-description">Description</Label>
@@ -121,7 +123,7 @@ const GeneralSettings = () => {
                     type="textarea"
                     value={description}
                     onChange={handleChangeDescription}
-                    disabled={!editMode}
+                    disabled={!isEditMode}
                     id="template-description"
                     placeholder="Give a brief description of the template. E.g. what are the intended use cases?"
                     maxlength={MAX_DESCRIPTION_LENGTH}
@@ -145,19 +147,19 @@ const GeneralSettings = () => {
                         </Label>
                         <AutoComplete
                             entityType={ENTITIES.PREDICATE}
-                            placeholder={editMode ? 'Select or type to enter a property' : 'No Property'}
+                            placeholder={isEditMode ? 'Select or type to enter a property' : 'No Property'}
                             onChange={handlePropertySelect}
                             value={predicate}
                             autoLoadOption={true}
                             openMenuOnFocus={true}
                             allowCreate={true}
-                            isDisabled={!editMode}
+                            isDisabled={!isEditMode}
                             autoFocus={false}
                             isClearable
                             innerRef={predicateAutocompleteRef}
                             inputId="template-property"
                         />
-                        {editMode && (
+                        {isEditMode && (
                             <FormText>
                                 Specify the property of this template. This property is used to link the contribution to the template instance.
                             </FormText>
@@ -170,20 +172,20 @@ const GeneralSettings = () => {
                         <AutoComplete
                             entityType={ENTITIES.RESOURCE}
                             optionsClass={CLASSES.RESEARCH_FIELD}
-                            placeholder={editMode ? 'Select or type to enter a research field' : 'No research fields'}
+                            placeholder={isEditMode ? 'Select or type to enter a research field' : 'No research fields'}
                             onChange={handleResearchFieldSelect}
                             value={researchFields}
                             autoLoadOption={true}
                             openMenuOnFocus={true}
                             autoFocus={false}
                             allowCreate={false}
-                            isDisabled={!editMode}
+                            isDisabled={!isEditMode}
                             isClearable
                             isMulti
                             inputId="template-field"
                             ols={false}
                         />
-                        {editMode && <FormText>Specify the research fields that uses this template.</FormText>}
+                        {isEditMode && <FormText>Specify the research fields that uses this template.</FormText>}
                     </FormGroup>
                     <FormGroup className="mb-4">
                         <Label for="template-problems">
@@ -192,20 +194,20 @@ const GeneralSettings = () => {
                         <AutoComplete
                             entityType={ENTITIES.RESOURCE}
                             optionsClass={CLASSES.PROBLEM}
-                            placeholder={editMode ? 'Select or type to enter a research problem' : 'No research problem'}
+                            placeholder={isEditMode ? 'Select or type to enter a research problem' : 'No research problem'}
                             onChange={handleResearchProblemSelect}
                             value={researchProblems}
                             autoLoadOption={true}
                             openMenuOnFocus={true}
                             autoFocus={false}
                             allowCreate={false}
-                            isDisabled={!editMode}
+                            isDisabled={!isEditMode}
                             isClearable
                             isMulti
                             inputId="template-problems"
                             ols={false}
                         />
-                        {editMode && <FormText>Specify the research problems that uses this template.</FormText>}
+                        {isEditMode && <FormText>Specify the research problems that uses this template.</FormText>}
                     </FormGroup>
                 </fieldset>
             </>

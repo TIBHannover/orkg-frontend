@@ -1,16 +1,16 @@
 import { StatementsGroupStyle } from 'components/StatementBrowser/styled';
 import TemplateComponentProperty from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/Property/TemplateComponentProperty';
 import TemplateComponentValue from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/Value/TemplateComponentValue';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import ItemTypes from 'constants/dndTypes';
 import PropTypes from 'prop-types';
 import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { useSelector } from 'react-redux';
 import { handleSortableHoverReactDnd } from 'utils';
 
 function PropertyShape(props) {
-    const editMode = useSelector(state => state.templateEditor.editMode);
     const ref = useRef(null);
+    const { isEditMode } = useIsEditMode();
     const handleUpdate = ({ dragIndex, hoverIndex }) => {
         props.moveCard(dragIndex, hoverIndex);
     };
@@ -24,7 +24,7 @@ function PropertyShape(props) {
         collect: monitor => ({
             isDragging: monitor.isDragging(),
         }),
-        canDrag: () => editMode,
+        canDrag: () => isEditMode,
     });
     const opacity = isDragging ? 0 : 1;
 

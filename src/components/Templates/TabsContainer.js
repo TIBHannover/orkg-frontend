@@ -3,16 +3,17 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import useCountInstances from 'components/Class/hooks/useCountInstances';
 import ClassInstances from 'components/ClassInstances/ClassInstances';
 import LoadingOverlay from 'components/LoadingOverlay/LoadingOverlay';
+import useParams from 'components/NextJsMigration/useParams';
+import useRouter from 'components/NextJsMigration/useRouter';
 import Tabs from 'components/Tabs/Tabs';
 import Format from 'components/Templates/Tabs/Format/Format';
 import GeneralSettings from 'components/Templates/Tabs/GeneralSettings/GeneralSettings';
 import PropertyShapesTab from 'components/Templates/Tabs/PropertyShapesTab/PropertyShapesTab';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useParams from 'components/NextJsMigration/useParams';
 import { Badge, Container } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -32,16 +33,17 @@ function TabsContainer({ id }) {
     const targetClassId = useSelector(state => state.templateEditor.class?.id);
     const isSaving = useSelector(state => state.templateEditor.isSaving);
     const isLoading = useSelector(state => state.templateEditor.isLoading);
+    const { isEditMode } = useIsEditMode();
     const router = useRouter();
 
     const { countInstances, isLoading: isLoadingCount } = useCountInstances(targetClassId);
 
     const onTabChange = key => {
         router.push(
-            reverse(ROUTES.TEMPLATE_TABS, {
+            `${reverse(ROUTES.TEMPLATE_TABS, {
                 id,
                 activeTab: key,
-            }),
+            })}?isEditMode=${isEditMode}`,
         );
     };
 
@@ -100,20 +102,28 @@ function TabsContainer({ id }) {
                                 </div>
                             ),
                         },
-                        {
-                            label: (
-                                <>
-                                    Instances{' '}
-                                    {isLoadingCount ? <Icon icon={faSpinner} className="me-2" spin /> : <Badge pill>{countInstances}</Badge>}
-                                </>
-                            ),
-                            key: 'instances',
-                            children: (
-                                <div className="px-4 py-3">
-                                    <ClassInstances classId={targetClassId} title="template" />
-                                </div>
-                            ),
-                        },
+                        ...(targetClassId
+                            ? [
+                                  {
+                                      label: (
+                                          <>
+                                              Instances{' '}
+                                              {isLoadingCount ? (
+                                                  <Icon icon={faSpinner} className="me-2" spin />
+                                              ) : (
+                                                  <Badge pill>{countInstances}</Badge>
+                                              )}
+                                          </>
+                                      ),
+                                      key: 'instances',
+                                      children: (
+                                          <div className="px-4 py-3">
+                                              <ClassInstances classId={targetClassId} title="template" />
+                                          </div>
+                                      ),
+                                  },
+                              ]
+                            : []),
                     ]}
                 />
             </LoadingOverlay>

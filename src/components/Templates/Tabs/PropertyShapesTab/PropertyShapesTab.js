@@ -1,18 +1,19 @@
-import { useState, useCallback } from 'react';
-import { Row, Col, FormGroup, Input, Label } from 'reactstrap';
-import { useSelector, useDispatch } from 'react-redux';
+import arrayMove from 'array-move';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import { updatePropertyShapes, updateIsClosed } from 'slices/templateEditorSlice';
-import PropertyShape from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/PropertyShape';
 import AddPropertyView from 'components/StatementBrowser/AddProperty/AddPropertyView';
 import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
-import arrayMove from 'array-move';
+import PropertyShape from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/PropertyShape';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+import { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Col, FormGroup, Input, Label, Row } from 'reactstrap';
+import { updateIsClosed, updatePropertyShapes } from 'slices/templateEditorSlice';
 
 const PropertyShapesTab = () => {
     const [showAddProperty, setShowAddProperty] = useState(false);
     const dispatch = useDispatch();
     const propertyShapes = useSelector(state => state.templateEditor.propertyShapes);
-    const editMode = useSelector(state => state.templateEditor.editMode);
+    const { isEditMode } = useIsEditMode();
     const isClosedTemplate = useSelector(state => state.templateEditor.isClosed);
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
     const [propertyLabel, setPropertyLabel] = useState('');
@@ -154,7 +155,7 @@ const PropertyShapesTab = () => {
                         />
                     ))}
                 {propertyShapes && propertyShapes.length === 0 && <i>No properties specified.</i>}
-                {editMode && (
+                {isEditMode && (
                     <>
                         <AddPropertyView
                             showAddProperty={showAddProperty}
@@ -173,7 +174,7 @@ const PropertyShapesTab = () => {
                             id="switchIsClosedTemplate"
                             type="switch"
                             name="customSwitch"
-                            disabled={!editMode}
+                            disabled={!isEditMode}
                         />{' '}
                         <Label for="switchIsClosedTemplate" className="mb-0">
                             This template is strict (users cannot add additional properties themselves)

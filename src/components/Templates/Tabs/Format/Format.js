@@ -1,14 +1,14 @@
 import { FormGroup, Label, FormText, Input, Table } from 'reactstrap';
 import { updateHasLabelFormat, updateLabelFormat } from 'slices/templateEditorSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 
 const Format = () => {
     const dispatch = useDispatch();
     const propertyShapes = useSelector(state => state.templateEditor.propertyShapes);
-    const editMode = useSelector(state => state.templateEditor.editMode);
     const hasLabelFormat = useSelector(state => state.templateEditor.hasLabelFormat);
     const labelFormat = useSelector(state => state.templateEditor.labelFormat);
-
+    const { isEditMode } = useIsEditMode();
     const handleChangeLabelFormat = event => {
         dispatch(updateLabelFormat(event.target.value));
     };
@@ -27,7 +27,7 @@ const Format = () => {
                         id="switchHasLabelFormat"
                         type="switch"
                         name="customSwitch"
-                        disabled={!editMode}
+                        disabled={!isEditMode}
                     />{' '}
                     <Label for="switchHasLabelFormat" className="mb-0">
                         Show formatted text instead of resource label
@@ -41,7 +41,7 @@ const Format = () => {
                                 placeholder="{P123} to {P456}"
                                 value={labelFormat}
                                 onChange={handleChangeLabelFormat}
-                                disabled={!editMode}
+                                disabled={!isEditMode}
                                 id="formatted-label"
                             />
                             <FormText>

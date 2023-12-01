@@ -22,7 +22,6 @@ const initialState = {
     description: '',
     created_by: null,
     created_at: null,
-    editMode: false,
     diagramMode: false,
     researchFields: [],
     researchProblems: [],
@@ -71,9 +70,6 @@ export const templateEditorSlice = createSlice({
         },
         updateResearchFields: (state, { payload }) => {
             state.researchFields = payload;
-        },
-        setEditMode: (state, { payload }) => {
-            state.editMode = payload;
         },
         setDiagramMode: (state, { payload }) => {
             state.diagramMode = payload;
@@ -145,7 +141,6 @@ export const {
     updateClass,
     updateResearchProblems,
     updateResearchFields,
-    setEditMode,
     setDiagramMode,
     updatePropertyShapes,
     initTemplate,
@@ -178,16 +173,14 @@ export const loadTemplate = data => dispatch => {
         });
 };
 
-export const saveTemplate = () => async (dispatch, getState) => {
+export const saveTemplate = toggleIsEditMode => async (dispatch, getState) => {
     dispatch(setIsSaving(true));
-    dispatch(setEditMode(false));
     const data = getState().templateEditor;
 
     if (!data.label) {
         // Make the template label mandatory
         dispatch(setHasFailedSaving(true));
         dispatch(setIsSaving(false));
-        dispatch(setEditMode(true));
         toast.error('Please enter the name of template');
         return null;
     }
@@ -198,7 +191,6 @@ export const saveTemplate = () => async (dispatch, getState) => {
         if (templates.length > 0 && !templates.includes(data.templateID)) {
             dispatch(setHasFailedSaving(true));
             dispatch(setIsSaving(false));
-            dispatch(setEditMode(true));
             toast.error('The template of this class is already defined');
             return null;
         }
@@ -364,6 +356,7 @@ export const saveTemplate = () => async (dispatch, getState) => {
                     toast.success('Template created successfully');
                 }
                 dispatch(setIsSaving(false));
+                toggleIsEditMode(false);
                 dispatch(setTemplateId(templateResource));
                 dispatch(loadTemplate(templateResource)); // reload the template
                 return templateResource;
@@ -371,13 +364,13 @@ export const saveTemplate = () => async (dispatch, getState) => {
             .catch(() => {
                 dispatch(setHasFailedSaving(true));
                 dispatch(setIsSaving(false));
-                dispatch(setEditMode(true));
+                toggleIsEditMode(false);
                 toast.error('Template failed saving!');
             });
     } catch {
         dispatch(setHasFailedSaving(true));
         dispatch(setIsSaving(false));
-        dispatch(setEditMode(true));
+        toggleIsEditMode(false);
         toast.error('Template failed saving!');
         return Promise.reject();
     }
