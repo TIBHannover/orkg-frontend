@@ -25,6 +25,7 @@ import {
 } from 'slices/statementBrowserSlice';
 import ItemPreviewFactory from 'components/StatementBrowser/ValueItem/ItemPreviewFactory/ItemPreviewFactory';
 import StatementMenuHeader from 'components/StatementBrowser/Statements/StatementMenuHeader/StatementMenuHeader';
+import { ENTITIES } from 'constants/graphSettings';
 
 const Statements = ({
     openExistingResourcesInDialog = false,
@@ -35,14 +36,14 @@ const Statements = ({
     keyToKeepStateOnLocationChange = null,
     renderTemplateBox = false,
     propertySuggestionsComponent: propertySuggestionsComponentProp = null,
-    syncBackend: syncBackendProp,
-    initOnLocationChange,
-    rootNodeType,
+    syncBackend: syncBackendProp = false,
+    initOnLocationChange = true,
+    rootNodeType = ENTITIES.RESOURCE,
     initialPath,
-    newStore,
+    newStore = false,
     canEditSharedRootLevel = true,
-    enableEdit,
-    showExternalDescriptions,
+    enableEdit = false,
+    showExternalDescriptions = true,
 }) => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const level = useSelector(state => state.statementBrowser.level);
@@ -81,7 +82,7 @@ const Statements = ({
                 }),
             );
 
-            dispatch(setInitialPath(initialPath));
+            dispatch(setInitialPath(initialPath || []));
         } else {
             dispatch(
                 updateSettings({
