@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.130.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.129.4...v0.130.0) - 2023-12-04
+
+### Changes
+
+- fix(StatementBrowser): show external descriptions for 'same as' links [`#1240`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1240)
+- feat(TemplateEditor): Persist the edit mode after creating a new template [`#1225`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1225)
+
+---
 ## [v0.129.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.129.3...v0.129.4) - 2023-11-28
 
 ### Changes
