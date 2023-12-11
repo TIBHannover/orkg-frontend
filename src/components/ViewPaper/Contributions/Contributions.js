@@ -169,7 +169,6 @@ const Contributions = props => {
 };
 
 Contributions.propTypes = {
-    toggleEditMode: PropTypes.func.isRequired,
     enableEdit: PropTypes.bool.isRequired,
 };
 
