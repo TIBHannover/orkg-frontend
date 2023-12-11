@@ -73,7 +73,6 @@ const useViewPaper = ({ paperId }) => {
         showGraphModal,
         toggle,
         handleShowHeaderBar,
-        toggleIsEditMode,
         setShowGraphModal,
     };
 };

@@ -23,17 +23,7 @@ import { LICENSE_URL } from 'constants/misc';
 const ViewPaper = () => {
     const { resourceId } = useParams();
     const viewPaper = useSelector(state => state.viewPaper);
-    const {
-        isLoading,
-        isLoadingFailed,
-        showHeaderBar,
-        isEditMode,
-        showGraphModal,
-        toggle,
-        handleShowHeaderBar,
-        toggleIsEditMode,
-        setShowGraphModal,
-    } = useViewPaper({
+    const { isLoading, isLoadingFailed, showHeaderBar, isEditMode, showGraphModal, toggle, handleShowHeaderBar, setShowGraphModal } = useViewPaper({
         paperId: resourceId,
     });
 
@@ -129,7 +119,7 @@ const ViewPaper = () => {
                             <>
                                 <hr className="mt-3" />
 
-                                <Contributions enableEdit={isEditMode} toggleEditMode={toggleIsEditMode} />
+                                <Contributions enableEdit={isEditMode} />
 
                                 <ComparisonPopup />
                             </>

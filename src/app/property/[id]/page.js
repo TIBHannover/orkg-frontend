@@ -67,12 +67,12 @@ function Property() {
                                     className="float-end flex-shrink-0"
                                     color="secondary"
                                     size="sm"
-                                    onClick={toggleIsEditMode}
+                                    onClick={() => toggleIsEditMode()}
                                 >
                                     <Icon icon={faPen} /> Edit
                                 </RequireAuthentication>
                             ) : (
-                                <Button className="float-end flex-shrink-0" color="secondary-darker" size="sm" onClick={toggleIsEditMode}>
+                                <Button className="float-end flex-shrink-0" color="secondary-darker" size="sm" onClick={() => toggleIsEditMode()}>
                                     <Icon icon={faTimes} /> Stop editing
                                 </Button>
                             )

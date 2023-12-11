@@ -145,7 +145,7 @@ function Resource() {
                                     </RequireAuthentication>
                                 )}
                                 {isEditMode && (
-                                    <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={toggleIsEditMode}>
+                                    <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => toggleIsEditMode()}>
                                         <Icon icon={faTimes} /> Stop editing
                                     </Button>
                                 )}
