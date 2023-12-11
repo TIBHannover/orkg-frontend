@@ -81,12 +81,12 @@ function ContentType() {
                                         className="float-end"
                                         color="secondary"
                                         size="sm"
-                                        onClick={toggleIsEditMode}
+                                        onClick={() => toggleIsEditMode()}
                                     >
                                         <Icon icon={faPen} /> Edit
                                     </RequireAuthentication>
                                 ) : (
-                                    <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={toggleIsEditMode}>
+                                    <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => toggleIsEditMode()}>
                                         <Icon icon={faTimes} /> Stop editing
                                     </Button>
                                 )}
