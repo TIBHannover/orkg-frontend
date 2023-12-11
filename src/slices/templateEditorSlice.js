@@ -262,7 +262,6 @@ export const saveTemplate = toggleIsEditMode => async (dispatch, getState) => {
                             [PREDICATES.SHACL_PATH]: [
                                 {
                                     '@id': propertyShape.property.id,
-                                    '@type': ENTITIES.PREDICATE,
                                 },
                             ],
                             ...(propertyShape.value?.id && {
@@ -271,7 +270,6 @@ export const saveTemplate = toggleIsEditMode => async (dispatch, getState) => {
                                     : PREDICATES.SHACL_CLASS]: [
                                     {
                                         '@id': propertyShape.value.id,
-                                        '@type': ENTITIES.CLASS,
                                     },
                                 ],
                             }),

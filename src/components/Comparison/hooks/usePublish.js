@@ -149,7 +149,7 @@ function usePublish() {
                                     [PREDICATES.HAS_PROPERTY]: predicatesList.map(predicateID => {
                                         const property =
                                             comparisonType === 'MERGE' ? predicateID : getPropertyObjectFromData(data, { id: predicateID });
-                                        return { '@id': property.id, '@type': ENTITIES.PREDICATE };
+                                        return { '@id': property.id };
                                     }),
                                 }),
                                 ...(comparisonResource.hasPreviousVersion && {
