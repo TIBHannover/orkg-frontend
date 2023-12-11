@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.130.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.130.1...v0.130.2) - 2023-12-11
+
+### Changes
+
+- fix: editing of properties and classes [`#1244`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1244)
+- fix: Datasets and Software cannot be edited [`#1243`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1243)
+
+---
 ## [v0.130.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.130.0...v0.130.1) - 2023-12-11
 
 ### Changes
