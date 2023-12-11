@@ -1,5 +1,4 @@
 import { getPredicates } from 'services/backend/predicates';
-import { ENTITIES } from 'constants/graphSettings';
 
 async function convertExtractData2ContributionsStatements(collectedContribution) {
     const contributions = Promise.all(
@@ -23,7 +22,6 @@ async function convertExtractData2ContributionsStatements(collectedContribution)
                     }
                     values[propertyId].push({
                         '@id': v?.resourceURI[0] != null ? v?.resourceURI[0].split('/').pop() : null,
-                        '@type': v?.resourceURI[0] ? ENTITIES.RESOURCE : ENTITIES.LITERAL,
                         label: v?.resourceURI[0] ? v?.label || v?.textContent : undefined,
                         text: !v?.resourceURI[0] ? v?.label || v?.textContent : undefined,
                     });

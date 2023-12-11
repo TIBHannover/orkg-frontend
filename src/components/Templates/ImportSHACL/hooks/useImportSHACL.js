@@ -150,14 +150,12 @@ const useImportSHACL = () => {
                             [PREDICATES.SHACL_TARGET_CLASS]: [
                                 {
                                     '@id': targetClass.id,
-                                    '@type': ENTITIES.CLASS,
                                 },
                             ],
                             ...(templatePredicate && {
                                 [PREDICATES.TEMPLATE_OF_PREDICATE]: [
                                     {
                                         '@id': templatePredicate.id,
-                                        '@type': ENTITIES.PREDICATE,
                                     },
                                 ],
                             }),
@@ -166,7 +164,6 @@ const useImportSHACL = () => {
                                     .filter(researchField => researchField.id)
                                     .map(researchField => ({
                                         '@id': researchField?.id,
-                                        '@type': ENTITIES.RESOURCE,
                                     })),
                             }),
                             ...(nodesShape.researchProblems?.length > 0 && {
@@ -174,7 +171,6 @@ const useImportSHACL = () => {
                                     .filter(researchProblem => researchProblem.id)
                                     .map(researchProblem => ({
                                         '@id': researchProblem?.id,
-                                        '@type': ENTITIES.RESOURCE,
                                     })),
                             }),
                         },
@@ -202,7 +198,6 @@ const useImportSHACL = () => {
                                 [PREDICATES.SHACL_PATH]: [
                                     {
                                         '@id': predicate.id,
-                                        '@type': ENTITIES.PREDICATE,
                                     },
                                 ],
                                 ...(range?.id && {
@@ -211,7 +206,6 @@ const useImportSHACL = () => {
                                         : PREDICATES.SHACL_CLASS]: [
                                         {
                                             '@id': range.id,
-                                            '@type': ENTITIES.CLASS,
                                         },
                                     ],
                                 }),
