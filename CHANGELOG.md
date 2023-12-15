@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.131.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.130.2...v0.131.0) - 2023-12-15
+
+### Changes
+
+- feat(CodeValuePlugin): support TIB LDM URLs [`#1245`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1245)
+
+---
 ## [v0.130.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.130.1...v0.130.2) - 2023-12-11
 
 ### Changes
