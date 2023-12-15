@@ -18,6 +18,7 @@ const Link = props => {
             label.match(new RegExp(REGEX.DAILYMOTION_URL)) ||
             label.match(new RegExp(REGEX.VIMEO_URL)) ||
             label.match(new RegExp(REGEX.GITHUB_CODE_URL)) ||
+            label.match(new RegExp(REGEX.TIB_CODE_URL)) ||
             label.match(new RegExp(REGEX.IMAGE_URL));
         return label.match(supportedValues) && !excludeMatch;
     };

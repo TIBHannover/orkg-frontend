@@ -25,16 +25,21 @@ const Code = ({ children, type }) => {
     const label = children;
     const labelToText = renderToString(label);
     const isGithubUrl = labelToText && type === ENTITIES.LITERAL ? labelToText.match(new RegExp(REGEX.GITHUB_CODE_URL)) : false;
+    const isTibUrl = labelToText && type === ENTITIES.LITERAL ? labelToText.match(new RegExp(REGEX.TIB_CODE_URL)) : false;
     const isSupportedLanguage =
         labelToText && type === ENTITIES.LITERAL
             ? SUPPORTED_LANGUAGES.find(language => labelToText.toLowerCase().endsWith(`.${language.extension}`))
             : false;
-    const isCodeBlock = isGithubUrl && isSupportedLanguage;
+    const isCodeBlock = (isGithubUrl || isTibUrl) && isSupportedLanguage;
 
     useEffect(() => {
         const fetchCode = async () => {
-            const _code = await fetch(labelToText);
-            setCode(await _code.text());
+            try {
+                const _code = await fetch(labelToText);
+                setCode(await _code.text());
+            } catch (e) {
+                setCode(e.message);
+            }
         };
         if (isCodeBlock) {
             fetchCode();
@@ -45,7 +50,8 @@ const Code = ({ children, type }) => {
         return '';
     }
 
-    const codeToShow = !isShowAll ? `${code.split('\n').slice(0, 5).join('\n')}\n${code.split('\n').length > 5 && '...'}` : code;
+    const isCodeOverflowing = code.split('\n').length > 5;
+    const codeToShow = !isShowAll ? `${code.split('\n').slice(0, 5).join('\n')}\n${isCodeOverflowing ? '...' : ''}` : code;
 
     if (isCodeBlock) {
         return (
@@ -59,11 +65,13 @@ const Code = ({ children, type }) => {
                         {codeToShow}
                     </SyntaxHighlighter>
                 </CopyToClipboardButton>
-                <div>
-                    <Button size="sm" color="link" className="p-0" onClick={() => setIsShowAll(v => !v)}>
-                        {isShowAll ? 'Show less' : 'Show all'}
-                    </Button>
-                </div>
+                {isCodeOverflowing && (
+                    <div>
+                        <Button size="sm" color="link" className="p-0" onClick={() => setIsShowAll(v => !v)}>
+                            {isShowAll ? 'Show less' : 'Show all'}
+                        </Button>
+                    </div>
+                )}
             </>
         );
     }

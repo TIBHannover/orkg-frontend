@@ -8,6 +8,7 @@ const regex = {
     TIB_URL: /^(https?:)?\/\/av\.tib\.eu(\/(media|player)?(\?.*)?)\//,
     YOUTUBE_URL: /^(https?:)?\/\/(www.)?youtube\.com\/watch\?v=/,
     GITHUB_CODE_URL: /^(https):(\/\/(www.)?raw\.githubusercontent\.com[^"']*\.(?:r|py))$/i,
+    TIB_CODE_URL: /^(https):(\/\/(www.)?service\.tib\.eu[^"']*\.(?:r|py))$/i,
     DAILYMOTION_URL: /^(https?:)?\/\/(www.)?dailymotion\.com\/video\//,
     VIMEO_URL: /^(https?:)?\/\/(www.)?vimeo\.com\//,
     IMAGE_URL: /^(https):(\/\/[^"']*\.(?:png|jpg|jpeg|gif|svg))/i,
