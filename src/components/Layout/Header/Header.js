@@ -255,11 +255,11 @@ const Header = () => {
             dispatch(openAuthDialog({ action: 'signin' }));
             // logoutTimeoutId = null;
         };
-        if (!logoutTimeoutId && user) {
-            const token_expires_in = cookies.get('token_expires_in') ? cookies.get('token_expires_in') : null;
-            // Get the diffrence between token expiration time and now
-            const diff = new Date(token_expires_in) - Date.now();
-            // set timeout to autologout
+        if (!logoutTimeoutId && user && cookies.get('token_expires_in')) {
+            const tokenExpiresIn = cookies.get('token_expires_in');
+            // Get the difference between token expiration time and now
+            const diff = new Date(tokenExpiresIn) - Date.now();
+            // set timeout to auto logout
             setLogoutTimeoutId(setTimeout(tokenExpired, diff));
         }
     }, [dispatch, logoutTimeoutId, user]);
