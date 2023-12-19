@@ -1,13 +1,16 @@
-import Link from 'components/NextJsMigration/Link';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faPen } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ClassInlineItem from 'components/Class/ClassInlineItem/ClassInlineItem';
 import useCountInstances from 'components/Class/hooks/useCountInstances';
 import useEditClassLabel from 'components/Class/hooks/useEditClassLabel';
+import Link from 'components/NextJsMigration/Link';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
+import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { orderBy } from 'lodash';
+import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
@@ -18,7 +21,7 @@ import { deleteParentByID, getChildrenByID, getParentByID, setParentClassByID } 
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getErrorMessage } from 'utils';
 
-function InformationTab({ id, label, uri, editMode, callBackToReloadTree, showStatementsBrowser = true, setLabel }) {
+function InformationTab({ id, label, classObject, editMode, callBackToReloadTree, showStatementsBrowser = true, setLabel }) {
     const [template, setTemplate] = useState(null);
     const [parent, setParent] = useState(null);
     const [children, setChildren] = useState([]);
@@ -122,7 +125,7 @@ function InformationTab({ id, label, uri, editMode, callBackToReloadTree, showSt
                     <tr>
                         <th scope="row">URI</th>
                         <td>
-                            <i>{uri && uri !== 'null' ? <a href={uri}>{uri}</a> : 'Not Defined'}</i>
+                            <i>{classObject?.uri && classObject.uri !== 'null' ? <a href={classObject.uri}>{classObject.uri}</a> : 'Not Defined'}</i>
                         </td>
                     </tr>
                     <tr>
@@ -238,6 +241,22 @@ function InformationTab({ id, label, uri, editMode, callBackToReloadTree, showSt
                             )}
                         </td>
                     </tr>
+                    {classObject.created_by !== MISC.UNKNOWN_ID && (
+                        <tr>
+                            <th scope="row">Created by</th>
+                            <td>
+                                <span className="d-inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
+                                    <UserAvatar size={20} userId={classObject.created_by} showDisplayName={true} />
+                                </span>
+                            </td>
+                        </tr>
+                    )}
+                    <tr>
+                        <th scope="row">Created at</th>
+                        <td>
+                            <Icon size="sm" icon={faCalendar} className="me-1" /> {moment(classObject.created_at).format('DD MMMM YYYY - H:mm')}
+                        </td>
+                    </tr>
                 </tbody>
             </Table>
             {showStatementsBrowser && (
@@ -260,7 +279,7 @@ function InformationTab({ id, label, uri, editMode, callBackToReloadTree, showSt
 InformationTab.propTypes = {
     id: PropTypes.string.isRequired,
     label: PropTypes.string,
-    uri: PropTypes.string,
+    classObject: PropTypes.object,
     editMode: PropTypes.bool.isRequired,
     callBackToReloadTree: PropTypes.func,
     showStatementsBrowser: PropTypes.bool,

@@ -11,7 +11,7 @@ import useRouter from 'components/NextJsMigration/useRouter';
 import useParams from 'components/NextJsMigration/useParams';
 import { Col, Container, Row } from 'reactstrap';
 
-function TabsContainer({ id, label, uri, editMode, setLabel }) {
+function TabsContainer({ id, label, classObject, editMode, setLabel }) {
     const { activeTab } = useParams();
     const [reloadTree, setReloadTree] = useState(false);
     const router = useRouter();
@@ -45,7 +45,7 @@ function TabsContainer({ id, label, uri, editMode, setLabel }) {
                                 key: 'information',
                                 children: (
                                     <InformationTab
-                                        uri={uri}
+                                        classObject={classObject}
                                         id={id}
                                         label={label}
                                         editMode={editMode}
@@ -70,7 +70,7 @@ function TabsContainer({ id, label, uri, editMode, setLabel }) {
 TabsContainer.propTypes = {
     id: PropTypes.string.isRequired,
     label: PropTypes.string,
-    uri: PropTypes.string,
+    classObject: PropTypes.object,
     editMode: PropTypes.bool.isRequired,
     setLabel: PropTypes.func.isRequired,
 };
