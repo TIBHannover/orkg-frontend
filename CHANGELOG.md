@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.132.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.131.0...v0.132.0) - 2023-12-19
+
+### Changes
+
+- feat: Support extraction method for CSV import [`#1234`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1234)
+- fix: make sure that tokenExpire cookie exist before auto logout [`#1247`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1247)
+
+---
 ## [v0.131.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.130.2...v0.131.0) - 2023-12-15
 
 ### Changes
