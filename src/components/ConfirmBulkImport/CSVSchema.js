@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import REGEX from 'constants/regex';
 import moment from 'moment';
+import { EXTRACTION_METHODS } from 'constants/misc';
 
 export default function checkDataValidation(data) {
     const header = data && data[0];
@@ -28,6 +29,12 @@ export default function checkDataValidation(data) {
         research_field: header.indexOf('paper:research_field') !== -1 ? value[header.indexOf('paper:research_field')] : '',
         doi: header.indexOf('paper:doi') !== -1 ? value[header.indexOf('paper:doi')] : '',
         url: header.indexOf('paper:url') !== -1 ? value[header.indexOf('paper:url')] : '',
+        extraction_method:
+            header.indexOf('contribution:extraction_method') !== -1
+                ? value[header.indexOf('contribution:extraction_method')] !== ''
+                    ? value[header.indexOf('contribution:extraction_method')].toUpperCase()
+                    : EXTRACTION_METHODS.UNKNOWN
+                : EXTRACTION_METHODS.UNKNOWN,
     }));
 
     const paperSchema = Joi.object({
@@ -61,6 +68,13 @@ export default function checkDataValidation(data) {
         url: Joi.string().pattern(new RegExp(REGEX.URL)).allow('').messages({
             'string.pattern.base': 'URL must be a valid',
         }),
+        extraction_method: Joi.string()
+            .valid(EXTRACTION_METHODS.UNKNOWN, EXTRACTION_METHODS.MANUAL, EXTRACTION_METHODS.AUTOMATIC)
+            .required()
+            .messages({
+                'any.only':
+                    'The extraction method can be empty, or if a value is given, it must be one of the following: UNKNOWN, MANUAL, AUTOMATIC.',
+            }),
     });
 
     for (let i = 0; i < papersObjects.length; i++) {

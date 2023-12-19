@@ -27,6 +27,7 @@ export const ItemInner = styled.div`
     text-align: center;
     height: 100%;
     overflow-wrap: anywhere;
+    background-color: ${props => props.$backgroundColor};
 
     &:hover .create-button {
         display: block;

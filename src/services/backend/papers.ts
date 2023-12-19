@@ -24,6 +24,7 @@ type PaperData = {
         url: string;
         researchField: string;
         contributions: {
+            extraction_method: string,
             name: string;
         }[];
     };

@@ -9,6 +9,7 @@ import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import useRouter from 'components/NextJsMigration/useRouter';
+import { EXTRACTION_METHODS } from 'constants/misc';
 import {
     selectContribution,
     setPaperContributions,
@@ -16,6 +17,7 @@ import {
     setIsDeletingContribution,
     setIsSavingContribution,
     setSelectedContributionId,
+    setContributionExtractionMethod,
 } from 'slices/viewPaperSlice';
 
 const useContributions = ({ paperId, contributionId }) => {
@@ -88,6 +90,20 @@ const useContributions = ({ paperId, contributionId }) => {
         }
     };
 
+    const handleAutomaticContributionVerification = cId => {
+        dispatch(setContributionExtractionMethod({ id: cId, extractionMethod: EXTRACTION_METHODS.MANUAL }));
+        dispatch(setIsSavingContribution({ id: cId, status: true }));
+        updateResource(cId, undefined, null, EXTRACTION_METHODS.MANUAL)
+            .then(() => {
+                dispatch(setIsSavingContribution({ id: cId, status: false }));
+                toast.success('Contribution extraction method updated successfully.');
+            })
+            .catch(() => {
+                dispatch(setIsSavingContribution({ id: cId, status: false }));
+                toast.error('Something went wrong while verifying contribution.');
+            });
+    };
+
     const handleCreateContribution = () => {
         dispatch(setIsAddingContribution(true));
         createResource(`Contribution ${contributions.length + 1}`, [CLASSES.CONTRIBUTION])
@@ -146,6 +162,7 @@ const useContributions = ({ paperId, contributionId }) => {
         selectedContributionId,
         contributions,
         paperTitle: paperResource.label,
+        handleAutomaticContributionVerification,
         handleChangeContributionLabel,
         handleCreateContribution,
         toggleDeleteContribution,
