@@ -10,6 +10,7 @@ import { Cite } from '@citation-js/core';
 import { parseCiteResult } from 'utils';
 import { toast } from 'react-toastify';
 import DATA_TYPES, { checkDataTypeIsInValid, getSuggestionByValue } from 'constants/DataTypes';
+import { EXTRACTION_METHODS } from 'constants/misc';
 
 const PREDEFINED_COLUMNS = [
     'paper:title',
@@ -20,6 +21,7 @@ const PREDEFINED_COLUMNS = [
     'paper:url',
     'paper:research_field',
     'paper:published_in',
+    'contribution:extraction_method',
 ];
 
 const useImportBulkData = ({ data, onFinish }) => {
@@ -92,6 +94,7 @@ const useImportBulkData = ({ data, onFinish }) => {
             const url = getFirstValue(rowObject, 'paper:url');
             let researchField = getFirstValue(rowObject, 'paper:research_field', RESOURCES.RESEARCH_FIELD_MAIN);
             let publishedIn = getFirstValue(rowObject, 'paper:published_in');
+            const extractionMethod = getFirstValue(rowObject, 'contribution:extraction_method', EXTRACTION_METHODS.UNKNOWN).toUpperCase();
             let paperMetadata = null;
             if (doi) {
                 try {
@@ -137,7 +140,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                             _idToLabel[propertyId] = fetchedPredicate.label;
                             valueToId[property] = propertyId;
                         }
-                    } catch (e) {}
+                    } catch (e) { }
                 }
 
                 // no property id found
@@ -180,7 +183,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                                 if (resource) {
                                     _idToLabel[value] = resource.label;
                                 }
-                            } catch (e) {}
+                            } catch (e) { }
                         }
                         if (value in _idToLabel) {
                             valueObject = {
@@ -253,6 +256,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                 contributions: [
                     {
                         name: 'Contribution',
+                        extractionMethod,
                         values: contributionStatements,
                     },
                 ],
@@ -276,7 +280,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                 if (paper) {
                     return paper.id;
                 }
-            } catch (e) {}
+            } catch (e) { }
         }
 
         // if no paper is found, check if there is a paper with this title

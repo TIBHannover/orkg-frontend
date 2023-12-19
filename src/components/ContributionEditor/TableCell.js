@@ -7,14 +7,15 @@ import { memo, useState } from 'react';
 import env from 'components/NextJsMigration/env';
 import { useSelector } from 'react-redux';
 import FlipMove from 'react-flip-move';
+import { EXTRACTION_METHODS } from 'constants/misc';
 
 const TableCell = ({ values, contributionId, propertyId }) => {
     const [disableCreate, setDisableCreate] = useState(false);
     const contribution = useSelector(state => state.contributionEditor.contributions[contributionId] || '');
-
+    const backgroundColor = contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC ? '#ecf6f8' : '';
     return (
         <Item className="position-relative">
-            <ItemInner cellPadding={10}>
+            <ItemInner cellPadding={10} $backgroundColor={backgroundColor}>
                 <FlipMove duration={700} enterAnimation="accordionVertical" leaveAnimation="accordionVertical">
                     {values.map((value, index) => {
                         if (Object.keys(value).length === 0) {

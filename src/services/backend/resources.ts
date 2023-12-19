@@ -12,11 +12,11 @@ import { PaginatedResponse, Resource } from 'services/backend/types';
 
 export const resourcesUrl = `${url}resources/`;
 
-export const updateResource = (id: string, label?: string, classes: string[] | null = null): Promise<Resource> =>
+export const updateResource = (id: string, label?: string, classes: string[] | null = null, extractionMethod?: string): Promise<Resource> =>
     submitPutRequest(
         `${resourcesUrl}${id}`,
         { 'Content-Type': 'application/json' },
-        { ...(label ? { label } : null), ...(classes ? { classes } : null) },
+        { ...(label ? { label } : null), ...(classes ? { classes } : null), ...(extractionMethod ? { extraction_method: extractionMethod } : null) },
     );
 
 /* Can be replaced with updateResource */

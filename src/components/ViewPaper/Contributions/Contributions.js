@@ -18,6 +18,8 @@ import ContentLoader from 'react-content-loader';
 import { useSelector } from 'react-redux';
 import useParams from 'components/NextJsMigration/useParams';
 import { Alert, Col, FormGroup, Row } from 'reactstrap';
+import AutomaticContributionWarning from 'components/ViewPaper/Contributions/AutomaticContributionWarning';
+import { EXTRACTION_METHODS } from 'constants/misc';
 
 const Contributions = props => {
     const { resourceId, contributionId } = useParams();
@@ -28,6 +30,7 @@ const Contributions = props => {
         selectedContributionId,
         contributions,
         paperTitle,
+        handleAutomaticContributionVerification,
         handleChangeContributionLabel,
         handleCreateContribution,
         toggleDeleteContribution,
@@ -102,7 +105,17 @@ const Contributions = props => {
                             ),
                             key: contribution.id,
                             children: (
-                                <div className="p-4">
+                                <div
+                                    className="p-4"
+                                    style={{ backgroundColor: contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC ? '#ecf6f8' : '' }}
+                                >
+                                    {contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC && (
+                                        <AutomaticContributionWarning
+                                            contribution={contribution}
+                                            onVerifyHandler={handleAutomaticContributionVerification}
+                                            enableEdit={props.enableEdit}
+                                        />
+                                    )}
                                     {!isLoadingContributionFailed && (
                                         <div>
                                             <FormGroup>
