@@ -68,9 +68,15 @@ const DraftComparisons = () => {
 
         if (isConfirmed) {
             setIsLoading(true);
-            await deleteResource(id);
-            getDraftComparisons();
-            toast.success('Draft comparison has been deleted successfully');
+            try {
+                await deleteResource(id);
+                getDraftComparisons();
+                toast.success('Draft comparison has been deleted successfully');
+            } catch (e) {
+                setIsLoading(false);
+                console.error(e);
+                toast.error('Error deleting draft comparison');
+            }
         }
     };
 
