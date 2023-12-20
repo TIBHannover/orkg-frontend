@@ -14,6 +14,8 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import { useSelector } from 'react-redux';
 import { reverse } from 'named-urls';
 import { ORGANIZATIONS_TYPES, ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
+import { capitalize } from 'lodash';
+import pluralize from 'pluralize';
 
 const Organizations = () => {
     const params = useParams();
@@ -71,7 +73,7 @@ const Organizations = () => {
                     )
                 }
             >
-                View all {typeName}s
+                {capitalize(pluralize(typeName))}
             </TitleBar>
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5 clearfix">
                 {organizations.length > 0 && (

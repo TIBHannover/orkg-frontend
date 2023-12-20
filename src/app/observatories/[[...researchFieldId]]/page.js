@@ -64,7 +64,7 @@ const Observatories = () => {
 
     return (
         <>
-            <TitleBar>View all observatories</TitleBar>
+            <TitleBar>Observatories</TitleBar>
             <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
                 Observatories organize research contributions in a particular research field and are curated by research organizations active in the
                 respective field.{' '}

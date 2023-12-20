@@ -221,7 +221,7 @@ const Templates = () => {
                     </>
                 }
             >
-                View all templates
+                Templates
             </TitleBar>
             {infoContainerText && (
                 <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>

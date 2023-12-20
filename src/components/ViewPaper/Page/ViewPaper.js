@@ -85,7 +85,7 @@ const ViewPaper = () => {
                                 />
                             }
                         >
-                            View paper
+                            Paper
                         </TitleBar>
                     </VisibilitySensor>
 

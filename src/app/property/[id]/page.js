@@ -78,7 +78,7 @@ function Property() {
                             )
                         }
                     >
-                        Property view
+                        Property
                     </TitleBar>
                     <Container className="p-0 clearfix">
                         <EditModeHeader isVisible={isEditMode} />

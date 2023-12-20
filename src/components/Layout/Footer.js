@@ -101,7 +101,7 @@ const Footer = () => (
                         <hr className="me-5" />
                         <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
-                                <Link href={ROUTES.DATA}>Data Access</Link>
+                                <Link href={ROUTES.DATA}>Data access</Link>
                             </li>
                             <li>
                                 <Link href={ROUTES.CHANGELOG}>Changelog</Link>

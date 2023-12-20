@@ -480,7 +480,7 @@ const Header = () => {
                                 <DropdownItem divider />
                                 <DropdownItem header>Data export</DropdownItem>
                                 <DropdownItem tag={Link} end href={ROUTES.DATA} onClick={closeMenu} active={pathname === ROUTES.DATA}>
-                                    Data Access
+                                    Data access
                                 </DropdownItem>
                             </DropdownMenu>
                         </ButtonDropdown>

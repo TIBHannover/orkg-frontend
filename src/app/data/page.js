@@ -8,12 +8,12 @@ import TitleBar from 'components/TitleBar/TitleBar';
 
 const Data = () => {
     useEffect(() => {
-        document.title = 'Data Access - ORKG';
+        document.title = 'Data access - ORKG';
     }, []);
 
     return (
         <div>
-            <TitleBar>Data Access</TitleBar>
+            <TitleBar>Data access</TitleBar>
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <Row className="mb-4">
                     <Col sm="6" className="mt-4">
