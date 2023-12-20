@@ -17,7 +17,7 @@ type WidgetResponse = {
 };
 export const getPaperByDOI = (doi: string): Promise<WidgetResponse> => submitGetRequest(`${url}widgets/?doi=${encodeURIComponent(doi)}`);
 
-export const getPaperByTitle = (title: string): Promise<WidgetResponse> => submitGetRequest(`${url}widgets/?title=${title}`);
+export const getPaperByTitle = (title: string): Promise<WidgetResponse> => submitGetRequest(`${url}widgets/?title=${encodeURIComponent(title)}`);
 
 export const generateDoi = ({
     type,
