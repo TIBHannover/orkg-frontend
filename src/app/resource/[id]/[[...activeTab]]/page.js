@@ -160,7 +160,7 @@ function Resource() {
                             </>
                         }
                     >
-                        Resource view
+                        Resource
                     </TitleBar>
                     {isEditMode && preventEditCase?.warningOnEdit && preventEditCase.warningOnEdit}
                     <EditModeHeader isVisible={isEditMode} />

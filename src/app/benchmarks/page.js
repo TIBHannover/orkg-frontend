@@ -42,7 +42,7 @@ const Benchmarks = () => {
                     </div>
                 }
             >
-                View all benchmarks
+                Benchmarks
             </TitleBar>
             <Container className="box rounded p-4 clearfix">
                 <div className="row">

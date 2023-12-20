@@ -91,13 +91,8 @@ function ClassDetails() {
                                 )}
                             </>
                         }
-                        titleAddition="Class"
                     >
-                        {label || (
-                            <i>
-                                <small>No label</small>
-                            </i>
-                        )}
+                        Class
                     </TitleBar>
                     <TabsContainer id={id} editMode={isEditMode} uri={uri} label={label} key={keyInstances} setLabel={setLabel} />
                     <ImportCSVInstances

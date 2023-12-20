@@ -6,6 +6,7 @@ import usePaginate from 'components/hooks/usePaginate';
 import PropTypes from 'prop-types';
 import { Container, ListGroup } from 'reactstrap';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { capitalize } from 'lodash';
 
 const ListPage = ({
     label,
@@ -44,7 +45,7 @@ const ListPage = ({
                         </>
                     }
                 >
-                    View {label}
+                    {capitalize(label)}
                 </TitleBar>
             )}
             {infoContainerText && (
