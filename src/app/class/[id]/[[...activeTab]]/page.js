@@ -19,7 +19,7 @@ import { getClassById } from 'services/backend/classes';
 function ClassDetails() {
     const [error, setError] = useState(null);
     const [label, setLabel] = useState('');
-    const [uri, setURI] = useState('');
+    const [classObject, setClassObject] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [keyInstances, setKeyInstances] = useState(1);
     const [modalImportIsOpen, setModalImportIsOpen] = useState(false);
@@ -33,7 +33,7 @@ function ClassDetails() {
                 const responseJson = await getClassById(id);
                 document.title = `${responseJson.label} - Class - ORKG`;
                 setLabel(responseJson.label);
-                setURI(responseJson.uri);
+                setClassObject(responseJson);
                 setIsLoading(false);
                 setError(null);
             } catch (err) {
@@ -94,7 +94,7 @@ function ClassDetails() {
                     >
                         Class
                     </TitleBar>
-                    <TabsContainer id={id} editMode={isEditMode} uri={uri} label={label} key={keyInstances} setLabel={setLabel} />
+                    <TabsContainer id={id} editMode={isEditMode} classObject={classObject} label={label} key={keyInstances} setLabel={setLabel} />
                     <ImportCSVInstances
                         classId={id}
                         showDialog={modalImportIsOpen}
