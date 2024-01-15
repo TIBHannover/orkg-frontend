@@ -12,6 +12,8 @@ import { PaginatedResponse, Resource } from 'services/backend/types';
 
 export const resourcesUrl = `${url}resources/`;
 
+type SortByOptions = 'id' | 'label' | 'created_at' | 'created_by' | 'visibility';
+
 export const updateResource = (id: string, label?: string, classes: string[] | null = null, extractionMethod?: string): Promise<Resource> =>
     submitPutRequest(
         `${resourcesUrl}${id}`,
@@ -42,7 +44,7 @@ export const getResources = ({
 }: {
     page?: number;
     items?: number;
-    sortBy?: string;
+    sortBy?: SortByOptions;
     desc?: boolean;
     q?: string | null;
     exclude?: string | null;
