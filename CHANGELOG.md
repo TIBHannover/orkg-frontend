@@ -3,6 +3,17 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.133.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.132.0...v0.133.0) - 2024-01-15
+
+### Changes
+
+- fix: Ensure that only valid sorting parameters are used for /api/resources/ [`#1242`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1242)
+- feat(Class): Show the creator and creation date [`#1249`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1249)
+- fix: escape paper title when fetching paper by title [`#1252`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1252)
+- fix: make heading labels consistent [`#1251`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1251)
+- fix(DraftComparisons): show error message on failed deletion [`#1250`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1250)
+
+---
 ## [v0.132.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.131.0...v0.132.0) - 2023-12-19
 
 ### Changes
