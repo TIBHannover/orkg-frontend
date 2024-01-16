@@ -167,3 +167,17 @@ export type User = {
     observatory_id: string | null;
     is_curation_allowed: boolean;
 };
+
+export type Author = {
+    id: string;
+    name: string;
+    identifiers: {
+        orcid: string;
+        google_scholar: string;
+        research_gate: string;
+        linked_in: string;
+        wikidata: string;
+        web_of_science: string;
+        homepage: string;
+    }[];
+};
