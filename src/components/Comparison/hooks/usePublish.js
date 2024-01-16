@@ -10,13 +10,13 @@ import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { getComparison, publishComparisonDoi } from 'services/backend/comparisons';
 import { getConferenceById, getConferencesSeries } from 'services/backend/conferences-series';
-import { createLiteral } from 'services/backend/literals';
-import { createObject, generateDoi } from 'services/backend/misc';
-import { createResourceStatement, getStatementsBySubject, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+import { createObject } from 'services/backend/misc';
+import { getStatementsBySubject, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { createThing } from 'services/similarity';
 import { setDoi } from 'slices/comparisonSlice';
-import { addAuthorsToStatements, filterObjectOfStatementsByPredicateAndClass, getComparisonData, getErrorMessage, getPublicUrl } from 'utils';
+import { addAuthorsToStatements, filterObjectOfStatementsByPredicateAndClass, getComparisonData, getErrorMessage } from 'utils';
 
 function usePublish() {
     const comparisonResource = useSelector(state => state.comparison.comparisonResource);
@@ -56,9 +56,6 @@ function usePublish() {
     };
 
     useEffect(() => {
-        if (comparisonResource.hasPreviousVersion) {
-            return;
-        }
         setTitle(comparisonResource && comparisonResource.label ? comparisonResource.label : '');
         setDescription(comparisonResource && comparisonResource.description ? comparisonResource.description : '');
         setReferences(comparisonResource?.references && comparisonResource.references.length > 0 ? comparisonResource.references : ['']);
@@ -83,7 +80,7 @@ function usePublish() {
 
     // populate the publish model with metadata when republishing an existing comparison
     useEffect(() => {
-        if (!comparisonResource?.hasPreviousVersion?.id) {
+        if (!comparisonResource?.hasPreviousVersion?.id || comparisonResource?.id) {
             return;
         }
         const fetchData = async () => {
@@ -98,7 +95,7 @@ function usePublish() {
             setConference((await getConference(comparisonData.organization_id)) ?? null);
         };
         fetchData();
-    }, [comparisonResource?.hasPreviousVersion?.id]);
+    }, [comparisonResource?.hasPreviousVersion?.id, comparisonResource?.id]);
 
     useEffect(() => {
         const getConferencesList = () => {
@@ -109,12 +106,63 @@ function usePublish() {
         getConferencesList();
     }, []);
 
+    const publishDOI = async comparisonId => {
+        try {
+            if (id && comparisonResource?.authors.length === 0) {
+                await createAuthorsList({ authors: comparisonCreators, resourceId: id });
+            }
+            // Load ORCID of curators
+            let comparisonCreatorsORCID = comparisonCreators.map(async curator => {
+                if (!curator.orcid && curator._class === ENTITIES.RESOURCE) {
+                    const statements = await getStatementsBySubjectAndPredicate({ subjectId: curator.id, predicateId: PREDICATES.HAS_ORCID });
+                    return { ...curator, orcid: filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_ORCID, true)?.label };
+                }
+                return curator;
+            });
+            comparisonCreatorsORCID = await Promise.all(comparisonCreatorsORCID);
+            if (title && title.trim() !== '' && description && description.trim() !== '' && comparisonCreators?.length > 0) {
+                try {
+                    await publishComparisonDoi({
+                        id: comparisonId,
+                        subject: researchField ? researchField.label : '',
+                        description,
+                        authors: comparisonCreatorsORCID.map(creator => ({
+                            name: creator.label,
+                            ...(creator.orcid ? { identifiers: { orcid: creator.orcid } } : {}),
+                        })),
+                    });
+                    const doi = (await getComparison(comparisonId))?.identifiers.doi;
+                    dispatch(setDoi(doi));
+                    toast.success('DOI has been registered successfully');
+                } catch (e) {
+                    toast.error('Error publishing a DOI');
+                    console.error(e);
+                } finally {
+                    setIsLoading(false);
+                }
+            } else {
+                throw Error('Please enter a title, description and creator(s)');
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error(`Error publishing a comparison: ${error.message}`);
+            setIsLoading(false);
+        }
+    };
+
     const handleSubmit = async e => {
         e.preventDefault();
         setIsLoading(true);
         try {
             if (!id) {
-                if (title && title.trim() !== '' && description && description.trim() !== '' && (!assignDOI || comparisonCreators?.length > 0)) {
+                if (
+                    title &&
+                    title.trim() !== '' &&
+                    description &&
+                    description.trim() !== '' &&
+                    researchField?.id &&
+                    (!assignDOI || comparisonCreators?.length > 0)
+                ) {
                     const comparisonObject = {
                         predicates: [],
                         resource: {
@@ -191,7 +239,7 @@ function usePublish() {
                     setIsLoading(false);
                     router.push(reverse(ROUTES.COMPARISON, { comparisonId: createdComparison.id }));
                 } else {
-                    throw Error('Please enter a title, description and creator(s)');
+                    throw Error('Please enter a title, description, research field, and creator(s)');
                 }
             } else {
                 publishDOI(id);
@@ -199,55 +247,6 @@ function usePublish() {
         } catch (error) {
             console.log(error);
             toast.error(`Error publishing a comparison : ${getErrorMessage(error)}`);
-            setIsLoading(false);
-        }
-    };
-
-    const publishDOI = async comparisonId => {
-        try {
-            if (id && comparisonResource?.authors.length === 0) {
-                await createAuthorsList({ authors: comparisonCreators, resourceId: id });
-            }
-            // Load ORCID of curators
-            let comparisonCreatorsORCID = comparisonCreators.map(async curator => {
-                if (!curator.orcid && curator._class === ENTITIES.RESOURCE) {
-                    const statements = await getStatementsBySubjectAndPredicate({ subjectId: curator.id, predicateId: PREDICATES.HAS_ORCID });
-                    return { ...curator, orcid: filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_ORCID, true)?.label };
-                }
-                return curator;
-            });
-            comparisonCreatorsORCID = await Promise.all(comparisonCreatorsORCID);
-            if (title && title.trim() !== '' && description && description.trim() !== '' && comparisonCreators?.length > 0) {
-                generateDoi({
-                    type: 'Comparison',
-                    resource_type: 'Dataset',
-                    resource_id: comparisonId,
-                    title,
-                    subject: researchField ? researchField.label : '',
-                    description,
-                    related_resources: contributionsList,
-                    authors: comparisonCreatorsORCID.map(c => ({ creator: c.label, orcid: c.orcid || null })),
-                    url: `${getPublicUrl()}${reverse(ROUTES.COMPARISON, { comparisonId })}`,
-                })
-                    .then(doiResponse => {
-                        dispatch(setDoi(doiResponse.doi));
-                        createLiteral(doiResponse.doi).then(doiLiteral => {
-                            createResourceStatement(comparisonId, PREDICATES.HAS_DOI, doiLiteral.id);
-                            setIsLoading(false);
-                            toast.success('DOI has been registered successfully');
-                        });
-                    })
-                    .catch(error => {
-                        console.log('error', error);
-                        toast.error('Error publishing a DOI');
-                        setIsLoading(false);
-                    });
-            } else {
-                throw Error('Please enter a title, description and creator(s)');
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error(`Error publishing a comparison: ${error.message}`);
             setIsLoading(false);
         }
     };
