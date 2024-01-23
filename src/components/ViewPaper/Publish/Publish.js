@@ -3,13 +3,12 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
-import { AuthorTag } from 'components/Input/AuthorsInput/styled';
 import Link from 'components/NextJsMigration/Link';
 import Tooltip from 'components/Utils/Tooltip';
-import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import THING_TYPES from 'constants/thingTypes';
-import { flatten, uniqBy } from 'lodash';
+import { flatten } from 'lodash';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
@@ -19,35 +18,26 @@ import { toast } from 'react-toastify';
 import { Alert, Button, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { createLiteral } from 'services/backend/literals';
 import { createObject, generateDoi } from 'services/backend/misc';
-import { getContributorsByResourceId } from 'services/backend/resources';
-import { createResourceStatement, deleteStatementById, getStatementsBundleBySubject, getStatementsBySubject } from 'services/backend/statements';
+import {
+    createResourceStatement,
+    deleteStatementById,
+    getStatementsBundleBySubject,
+    getStatementsBySubject,
+    getStatementsBySubjectAndPredicate,
+} from 'services/backend/statements';
 import { createThing } from 'services/similarity';
 import { filterObjectOfStatementsByPredicateAndClass, getErrorMessage, getPublicUrl } from 'utils';
+import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
 
 function Publish(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [description, setDescription] = useState('');
     const [subject, setSubject] = useState(null);
-    const [contributors, setContributors] = useState([]);
+    const [creators, setCreators] = useState([]);
     const viewPaper = useSelector(state => state.viewPaper);
     const [dataCiteDoi, setDataCiteDoi] = useState('');
     const [createdPaperId, setCreatedPaperId] = useState('');
     const title = viewPaper.paperResource.label;
-
-    useEffect(() => {
-        const loadContributors = () => {
-            if (viewPaper.paperResource.id) {
-                getContributorsByResourceId({ id: viewPaper.paperResource.id, page: 0, size: 999 })
-                    .then(result => {
-                        const contributorsList = result.content.filter(c => c.id !== MISC.UNKNOWN_ID);
-                        setContributors(contributorsList ? uniqBy(contributorsList, 'id') : []);
-                    })
-                    .catch(() => {});
-            }
-        };
-
-        loadContributors();
-    }, [viewPaper.paperResource.id]);
 
     useEffect(() => {
         setSubject(viewPaper.researchField);
@@ -109,6 +99,14 @@ function Publish(props) {
                 },
             };
 
+            let paperCreatorsORCID = creators.map(async curator => {
+                if (!curator.orcid && curator._class === ENTITIES.RESOURCE) {
+                    const statements = await getStatementsBySubjectAndPredicate({ subjectId: curator.id, predicateId: PREDICATES.HAS_ORCID });
+                    return { ...curator, orcid: filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_ORCID, true)?.label };
+                }
+                return curator;
+            });
+            paperCreatorsORCID = await Promise.all(paperCreatorsORCID);
             const createdPaper = await createObject(paperObj);
             await createAuthorsList({ authors: viewPaper.authors, resourceId: createdPaper.id });
             generateDoi({
@@ -120,8 +118,8 @@ function Publish(props) {
                 description,
                 // we send only one contribution id because we want to create a DOI for the whole paper and not for each contribution.
                 // the backend will fetch the paper original DOI
-                related_sources: viewPaper.contributions?.[0] ? [viewPaper.contributions[0].id] : [''],
-                authors: contributors.map(creator => ({ creator: creator.display_name, orcid: null })),
+                related_resources: viewPaper.contributions?.[0] ? [viewPaper.contributions[0].id] : [''],
+                authors: paperCreatorsORCID.map(creator => ({ creator: creator.label, orcid: creator.orcid ? creator.orcid : null })),
                 url: `${getPublicUrl()}${reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaper.id })}`,
             })
                 .then(async doiResponse => {
@@ -245,13 +243,14 @@ function Publish(props) {
                             <Label for="Creator">
                                 <Tooltip message="The creator or creators of ORKG paper.">Creators</Tooltip>
                             </Label>
-                            {!dataCiteDoi &&
-                                viewPaper.paperResource.id &&
-                                contributors.map((creator, index) => (
-                                    <AuthorTag key={`creator${index}`}>
-                                        <div className="name"> {creator.display_name} </div>
-                                    </AuthorTag>
-                                ))}
+                            {!dataCiteDoi && viewPaper.paperResource.id && (
+                                <AuthorsInput
+                                    disabled={true}
+                                    itemLabel="creator"
+                                    handler={_creators => setCreators(_creators || [])}
+                                    value={creators}
+                                />
+                            )}
                         </FormGroup>
                     </>
                 )}
