@@ -15,6 +15,7 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import useContributions from 'components/ViewPaperVersion/ContributionsVersion/hooks/useContributions';
 import Breadcrumbs from 'components/ViewPaperVersion/BreadCrumbs';
+import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 
 const Contributions = props => {
     const { resourceId, contributionId } = useParams();
@@ -67,12 +68,12 @@ const Contributions = props => {
                         items={props.contributions.map(contribution => ({
                             label: (
                                 <ContributionTab
-                                    handleChangeContributionLabel={() => {}}
+                                    handleChangeContributionLabel={() => { }}
                                     isSelected={contribution.id === selectedContribution}
                                     canDelete={false}
                                     contribution={contribution}
                                     key={contribution.id}
-                                    toggleDeleteContribution={() => {}}
+                                    toggleDeleteContribution={() => { }}
                                     enableEdit={false}
                                 />
                             ),
@@ -126,7 +127,7 @@ const Contributions = props => {
                                                                                         {s.object.label}
                                                                                     </Button>
                                                                                 ) : (
-                                                                                    <>{s.object.label}</>
+                                                                                    <ValuePlugins type={ENTITIES.LITERAL}>{s.object.label}</ValuePlugins>
                                                                                 )}
                                                                             </ListGroup>
                                                                         ))}

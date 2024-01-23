@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { groupBy } from 'lodash';
+import { groupBy, uniqBy } from 'lodash';
 
 const useContributions = ({ paperId, contributionId, contributions, paperStatements }) => {
     const [selectedContribution, setSelectedContribution] = useState(contributionId);
@@ -28,7 +28,7 @@ const useContributions = ({ paperId, contributionId, contributions, paperStateme
     const showResourceStatements = useCallback(
         id => {
             const list = paperStatements.filter(st => st.subject.id === id);
-            setContributionData(groupBy(list, 'predicate.id'));
+            setContributionData(groupBy(uniqBy(list, 'object.id'), 'predicate.id'));
         },
         [paperStatements],
     );
