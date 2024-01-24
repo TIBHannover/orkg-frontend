@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.133.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.133.0...v0.133.1) - 2024-01-24
+
+### Changes
+
+- Resolved issue #1621: fixed chore task [`#1258`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1258)
+- Fix: Adding curators while publishing papers [`#1254`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1254)
+- chore(PublishComparison): migrate to new publish DOI endpoint [`#1253`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1253)
+
+---
 ## [v0.133.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.132.0...v0.133.0) - 2024-01-15
 
 ### Changes
