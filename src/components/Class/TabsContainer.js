@@ -11,7 +11,7 @@ import useRouter from 'components/NextJsMigration/useRouter';
 import useParams from 'components/NextJsMigration/useParams';
 import { Col, Container, Row } from 'reactstrap';
 
-function TabsContainer({ id, label, classObject, editMode, setLabel }) {
+function TabsContainer({ id, label, classObject, editMode }) {
     const { activeTab } = useParams();
     const [reloadTree, setReloadTree] = useState(false);
     const router = useRouter();
@@ -26,9 +26,9 @@ function TabsContainer({ id, label, classObject, editMode, setLabel }) {
     };
 
     return (
-        <Container className="mt-2 p-0">
-            <Row>
-                <Col md={6} className="box rounded p-0" style={{ background: '#fff' }}>
+        <Container className="mt-3 p-1">
+            <Row className="ps-2">
+                <Col md={6} className="box rounded" style={{ background: '#fff' }}>
                     <TabHeaderStyle className="rc-tabs-nav-wrap">Tree view</TabHeaderStyle>
                     <TreeView id={id} label={label} reloadTree={reloadTree} />
                 </Col>
@@ -50,7 +50,6 @@ function TabsContainer({ id, label, classObject, editMode, setLabel }) {
                                         label={label}
                                         editMode={editMode}
                                         callBackToReloadTree={() => setReloadTree(v => !v)}
-                                        setLabel={setLabel}
                                     />
                                 ),
                             },
@@ -72,7 +71,6 @@ TabsContainer.propTypes = {
     label: PropTypes.string,
     classObject: PropTypes.object,
     editMode: PropTypes.bool.isRequired,
-    setLabel: PropTypes.func.isRequired,
 };
 
 export default TabsContainer;
