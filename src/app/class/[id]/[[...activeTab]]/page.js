@@ -12,9 +12,13 @@ import ROUTES from 'constants/routes.js';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
 import { useEffect, useState } from 'react';
-import useParams from 'components/NextJsMigration/useParams';
-import { Button, Container } from 'reactstrap';
 import { getClassById } from 'services/backend/classes';
+import useParams from 'components/NextJsMigration/useParams';
+import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import EditableHeader from 'components/EditableHeader';
+import ItemMetadata from 'components/Search/ItemMetadata';
+import { ENTITIES } from 'constants/graphSettings';
+import { Button, Container } from 'reactstrap';
 
 function ClassDetails() {
     const [error, setError] = useState(null);
@@ -45,6 +49,10 @@ function ClassDetails() {
         };
         findClass();
     }, [id]);
+
+    const handleHeaderChange = val => {
+        setLabel(val);
+    };
 
     return (
         <>
@@ -94,6 +102,22 @@ function ClassDetails() {
                     >
                         Class
                     </TitleBar>
+                    <EditModeHeader isVisible={isEditMode} />
+                    <Container className={`box pt-4 pb-4 ps-4 pe-4 ${isEditMode ? 'rounded-bottom' : 'rounded'}`}>
+                        {!isEditMode ? (
+                            <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                {label || (
+                                    <i>
+                                        <small>No label</small>
+                                    </i>
+                                )}
+                            </h3>
+                        ) : (
+                            <EditableHeader id={id} value={label} onChange={handleHeaderChange} entityType={ENTITIES.CLASS} curatorsOnly={true} />
+                        )}
+
+                        <ItemMetadata item={classObject} showCreatedAt={true} showCreatedBy={true} editMode={isEditMode} />
+                    </Container>
                     <TabsContainer id={id} editMode={isEditMode} classObject={classObject} label={label} key={keyInstances} setLabel={setLabel} />
                     <ImportCSVInstances
                         classId={id}

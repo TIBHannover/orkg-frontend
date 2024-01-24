@@ -1,39 +1,27 @@
-import { faCalendar, faPen } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
 import ClassInlineItem from 'components/Class/ClassInlineItem/ClassInlineItem';
 import useCountInstances from 'components/Class/hooks/useCountInstances';
-import useEditClassLabel from 'components/Class/hooks/useEditClassLabel';
 import Link from 'components/NextJsMigration/Link';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { orderBy } from 'lodash';
-import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Button, Input, InputGroup, Table } from 'reactstrap';
+import { Button, Table } from 'reactstrap';
 import { deleteParentByID, getChildrenByID, getParentByID, setParentClassByID } from 'services/backend/classes';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getErrorMessage } from 'utils';
 
-function InformationTab({ id, label, classObject, editMode, callBackToReloadTree, showStatementsBrowser = true, setLabel }) {
+function InformationTab({ id, classObject, editMode, callBackToReloadTree, showStatementsBrowser = true }) {
     const [template, setTemplate] = useState(null);
     const [parent, setParent] = useState(null);
     const [children, setChildren] = useState([]);
     const { countInstances, isLoading: isLoadingCount } = useCountInstances(id);
-    const {
-        draftLabel,
-        isSaving,
-        isEditing: isEditingLabel,
-        setIsEditing: setIsEditingLabel,
-        setDraftLabel,
-        handleSubmitClick,
-    } = useEditClassLabel({ id, label, setLabel });
     const [showMoreChildren, setShowMoreChildren] = useState(false);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
@@ -82,46 +70,6 @@ function InformationTab({ id, label, classObject, editMode, callBackToReloadTree
         <div className="p-4">
             <Table bordered>
                 <tbody>
-                    <tr>
-                        <th className="col-4" scope="row">
-                            ID
-                        </th>
-                        <td> {id}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Label</th>
-                        <td>
-                            {!isEditingLabel && (
-                                <div className="d-inline-block py-1">
-                                    {label || (
-                                        <i>
-                                            <small>No label</small>
-                                        </i>
-                                    )}
-                                </div>
-                            )}
-                            {editMode && !isEditingLabel && (countInstances === 0 || isCurationAllowed) && (
-                                <>
-                                    <span className="ms-2">
-                                        <StatementActionButton title="Edit label" icon={faPen} action={() => setIsEditingLabel(v => !v)} />
-                                    </span>
-                                </>
-                            )}
-                            {editMode && isEditingLabel && (
-                                <>
-                                    <InputGroup>
-                                        <Input bsSize="sm" type="text" value={draftLabel} onChange={e => setDraftLabel(e.target.value)} />
-                                        <Button disabled={isSaving} size="sm" className="px-3" outline onClick={() => setIsEditingLabel(false)}>
-                                            Cancel
-                                        </Button>
-                                        <Button disabled={isSaving} size="sm" className="px-3" outline onClick={handleSubmitClick}>
-                                            Done
-                                        </Button>
-                                    </InputGroup>
-                                </>
-                            )}
-                        </td>
-                    </tr>
                     <tr>
                         <th scope="row">URI</th>
                         <td>
@@ -241,22 +189,6 @@ function InformationTab({ id, label, classObject, editMode, callBackToReloadTree
                             )}
                         </td>
                     </tr>
-                    {classObject.created_by !== MISC.UNKNOWN_ID && (
-                        <tr>
-                            <th scope="row">Created by</th>
-                            <td>
-                                <span className="d-inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
-                                    <UserAvatar size={20} userId={classObject.created_by} showDisplayName={true} />
-                                </span>
-                            </td>
-                        </tr>
-                    )}
-                    <tr>
-                        <th scope="row">Created at</th>
-                        <td>
-                            <Icon size="sm" icon={faCalendar} className="me-1" /> {moment(classObject.created_at).format('DD MMMM YYYY - H:mm')}
-                        </td>
-                    </tr>
                 </tbody>
             </Table>
             {showStatementsBrowser && (
@@ -283,7 +215,7 @@ InformationTab.propTypes = {
     editMode: PropTypes.bool.isRequired,
     callBackToReloadTree: PropTypes.func,
     showStatementsBrowser: PropTypes.bool,
-    setLabel: PropTypes.func,
+    // setLabel: PropTypes.func,
 };
 
 export default InformationTab;

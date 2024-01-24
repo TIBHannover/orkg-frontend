@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import { Input, InputGroup } from 'reactstrap';
 import { updatePredicate } from 'services/backend/predicates';
 import { updateResource } from 'services/backend/resources';
+import { updateClass } from 'services/backend/classes';
 
 const EditableHeader = ({ entityType, id, onChange, curatorsOnly = false, value }) => {
     const [label, setLabel] = useState(value);
@@ -26,6 +27,8 @@ const EditableHeader = ({ entityType, id, onChange, curatorsOnly = false, value 
                 await updateResource(id, label);
             } else if (entityType === ENTITIES.PREDICATE) {
                 await updatePredicate(id, label);
+            } else if (entityType === ENTITIES.CLASS) {
+                await updateClass(id, label);
             }
             toast.success('Label updated successfully');
             onChange(label);

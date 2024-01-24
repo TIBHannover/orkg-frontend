@@ -29,7 +29,6 @@ function Property() {
     const propertyId = params.id;
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const { deleteProperty } = useDeleteProperty({ propertyId, redirect: true });
-
     useEffect(() => {
         const findPredicate = async () => {
             setIsLoading(true);
@@ -80,57 +79,53 @@ function Property() {
                     >
                         Property
                     </TitleBar>
-                    <Container className="p-0 clearfix">
-                        <EditModeHeader isVisible={isEditMode} />
-                        <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${isEditMode ? 'rounded-bottom' : 'rounded'}`}>
-                            {!isEditMode ? (
-                                <h3 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                    {property?.label || (
-                                        <i>
-                                            <small>No label</small>
-                                        </i>
-                                    )}
-                                </h3>
-                            ) : (
-                                <>
-                                    <EditableHeader
-                                        id={params.id}
-                                        value={property?.label}
-                                        onChange={handleHeaderChange}
-                                        entityType={ENTITIES.PREDICATE}
-                                        curatorsOnly={true}
-                                    />
-                                    {isEditMode && isCurationAllowed && (
-                                        <Button
-                                            color="danger"
-                                            size="sm"
-                                            className="mt-2 mb-3"
-                                            style={{ marginLeft: 'auto' }}
-                                            onClick={deleteProperty}
-                                        >
-                                            <Icon icon={faTrash} /> Delete property
-                                        </Button>
-                                    )}
-                                </>
-                            )}
-                            <ItemMetadata item={property} showCreatedAt={true} showCreatedBy={true} />
-                            <hr />
-                            <h3 className="h5">Statements</h3>
-                            <div className="clearfix">
-                                <StatementBrowser
-                                    rootNodeType={ENTITIES.PREDICATE}
-                                    enableEdit={isEditMode}
-                                    syncBackend={isEditMode}
-                                    openExistingResourcesInDialog={false}
-                                    initialSubjectId={propertyId}
-                                    newStore={true}
-                                    propertiesAsLinks={true}
-                                    resourcesAsLinks={true}
-                                    keyToKeepStateOnLocationChange={propertyId}
+                    <EditModeHeader isVisible={isEditMode} />
+                    <Container className={`box pt-4 pb-4 ps-4 pe-4 ${isEditMode ? 'rounded-bottom' : 'rounded'}`}>
+                        {!isEditMode ? (
+                            <h3 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                {property?.label || (
+                                    <i>
+                                        <small>No label</small>
+                                    </i>
+                                )}
+                            </h3>
+                        ) : (
+                            <>
+                                <EditableHeader
+                                    id={params.id}
+                                    value={property?.label}
+                                    onChange={handleHeaderChange}
+                                    entityType={ENTITIES.PREDICATE}
+                                    curatorsOnly={true}
                                 />
-                            </div>
+                                {isCurationAllowed && (
+                                    <Button color="danger" size="sm" className="mt-2 mb-3" style={{ marginLeft: 'auto' }} onClick={deleteProperty}>
+                                        <Icon icon={faTrash} /> Delete property
+                                    </Button>
+                                )}
+                            </>
+                        )}
+                        <ItemMetadata item={property} showCreatedAt={true} showCreatedBy={true} />
+                    </Container>
+                    <Container className="mt-3 p-1 box rounded">
+
+                        <h3 className="ps-4 pt-4">Statements</h3>
+                        <div className="ps-4 pb-4 pe-4">
+
+                            <StatementBrowser
+                                rootNodeType={ENTITIES.PREDICATE}
+                                enableEdit={isEditMode}
+                                syncBackend={isEditMode}
+                                openExistingResourcesInDialog={false}
+                                initialSubjectId={propertyId}
+                                newStore={true}
+                                propertiesAsLinks={true}
+                                resourcesAsLinks={true}
+                                keyToKeepStateOnLocationChange={propertyId}
+                            />
                             <PropertyStatements propertyId={propertyId} />
                         </div>
+
                     </Container>
                 </>
             )}
