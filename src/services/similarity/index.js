@@ -3,28 +3,11 @@
  * https://gitlab.com/TIBHannover/orkg/orkg-simcomp/
  */
 
-import { submitPostRequest, submitGetRequest } from 'network';
-import qs from 'qs';
 import env from 'components/NextJsMigration/env';
+import { submitGetRequest, submitPostRequest } from 'network';
+import qs from 'qs';
 
 export const simCompServiceUrl = env('SIMILARITY_SERVICE_URL');
-
-/**
- * Index a contribution
- *
- * @param {String} contributionId Contribution id
- */
-export const indexContribution = contributionId => {
-    const params = qs.stringify(
-        {
-            contribution_id: contributionId,
-        },
-        {
-            skipNulls: true,
-        },
-    );
-    return submitPostRequest(`${simCompServiceUrl}contribution/internal/index/?${params}`, { 'Content-Type': 'application/json' }, {});
-};
 
 /**
  * Queries Similar Contributions

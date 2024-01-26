@@ -1,10 +1,8 @@
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { url } from 'constants/misc';
-import { submitPutRequest, submitDeleteRequest, submitPostRequest, submitGetRequest } from 'network';
-import { getStatementsBySubjectAndPredicate, getStatementsByObjectAndPredicate } from 'services/backend/statements';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
-import { indexContribution } from 'services/similarity';
-import { toast } from 'react-toastify';
+import { submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
+import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { PaginatedResponse, Resource, Statement } from 'services/backend/types';
 
 export const papersUrl = `${url}papers/`;
@@ -24,20 +22,14 @@ type PaperData = {
         url: string;
         researchField: string;
         contributions: {
-            extraction_method: string,
+            extraction_method: string;
             name: string;
         }[];
     };
 };
 
-// Save full paper and index contributions in the similarity service
 export const saveFullPaper = (data: PaperData, mergeIfExists: boolean = false): Promise<Resource> =>
-    submitPostRequest(`${papersUrl}?mergeIfExists=${mergeIfExists}`, { 'Content-Type': 'application/json' }, data).then(async paper => {
-        Promise.all(await indexContributionsByPaperId(paper.id)).catch(() =>
-            toast.warning('Similarity service seems to be down, skipping paper indexing'),
-        );
-        return paper;
-    });
+    submitPostRequest(`${papersUrl}?mergeIfExists=${mergeIfExists}`, { 'Content-Type': 'application/json' }, data);
 
 export const getIsVerified = (id: string): Promise<null> =>
     submitGetRequest(`${papersUrl}${id}/metadata/verified`, { 'Content-Type': 'application/json' });
@@ -47,15 +39,6 @@ export const markAsVerified = (id: string): Promise<null> =>
 
 export const markAsUnverified = (id: string): Promise<null> =>
     submitDeleteRequest(`${papersUrl}${id}/metadata/verified`, { 'Content-Type': 'application/json' });
-
-export const indexContributionsByPaperId = async (paperId: string): Promise<{ message: string }[]> => {
-    const contributionStatements = await getStatementsBySubjectAndPredicate({
-        subjectId: paperId,
-        predicateId: PREDICATES.HAS_CONTRIBUTION,
-    });
-
-    return contributionStatements.map(statement => indexContribution(statement.object.id) as unknown as { message: string }); // first as unknown before 'indexContribution' is not yet typed
-};
 
 export const getOriginalPaperId = (paperId: string) => {
     const getPaperId = async (id: string): Promise<string> => {
