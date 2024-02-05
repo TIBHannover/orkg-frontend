@@ -92,7 +92,20 @@ export const getHelpCategories = () => {
 
 export const getHelpCategory = id => {
     const query = qs.stringify(
-        { populate: { help_articles: { fields: ['title', 'order'], sort: ['order'] } } },
+        {
+            populate: {
+                help_articles: {
+                    fields: ['title', 'order'],
+                    sort: ['order'],
+                    filters: {
+                        // hide draft articles
+                        publishedAt: {
+                            $notNull: true,
+                        },
+                    },
+                },
+            },
+        },
         {
             encodeValuesOnly: true,
         },
