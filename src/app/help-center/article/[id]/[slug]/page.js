@@ -48,7 +48,7 @@ const HelpCenterArticle = () => {
                             <BreadcrumbItem>
                                 <Link href={ROUTES.HELP_CENTER}>Help center</Link>
                             </BreadcrumbItem>
-                            {page.attributes?.help_category && (
+                            {page.attributes?.help_category?.data && (
                                 <BreadcrumbItem>
                                     <Link
                                         href={reverse(ROUTES.HELP_CENTER_CATEGORY, {
