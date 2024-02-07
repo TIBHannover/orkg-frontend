@@ -128,7 +128,7 @@ function usePublish() {
                         description,
                         authors: comparisonCreatorsORCID.map(creator => ({
                             name: creator.label,
-                            ...(creator.orcid ? { identifiers: { orcid: creator.orcid } } : {}),
+                            ...(creator.orcid ? { identifiers: { orcid: [creator.orcid] } } : {}),
                         })),
                     });
                     const doi = (await getComparison(comparisonId))?.identifiers.doi;
