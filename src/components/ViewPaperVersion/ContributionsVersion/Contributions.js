@@ -68,12 +68,12 @@ const Contributions = props => {
                         items={props.contributions.map(contribution => ({
                             label: (
                                 <ContributionTab
-                                    handleChangeContributionLabel={() => { }}
+                                    handleChangeContributionLabel={() => {}}
                                     isSelected={contribution.id === selectedContribution}
                                     canDelete={false}
                                     contribution={contribution}
                                     key={contribution.id}
-                                    toggleDeleteContribution={() => { }}
+                                    toggleDeleteContribution={() => {}}
                                     enableEdit={false}
                                 />
                             ),
@@ -124,10 +124,12 @@ const Contributions = props => {
                                                                                         color="link"
                                                                                         onClick={() => handleResourceClick(s)}
                                                                                     >
-                                                                                        {s.object.label}
+                                                                                        {s.object.label || <i>No label</i>}
                                                                                     </Button>
                                                                                 ) : (
-                                                                                    <ValuePlugins type={ENTITIES.LITERAL}>{s.object.label}</ValuePlugins>
+                                                                                    <ValuePlugins type={ENTITIES.LITERAL}>
+                                                                                        {s.object.label || <i>No label</i>}
+                                                                                    </ValuePlugins>
                                                                                 )}
                                                                             </ListGroup>
                                                                         ))}
