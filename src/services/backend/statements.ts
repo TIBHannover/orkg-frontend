@@ -462,7 +462,7 @@ export const getParentResearchProblems = (researchProblemId: string, parents: Re
  *
  * @param {String} classID class ID
  */
-export const getTemplatesByClass = (classID: string) =>
+export const getTemplatesByClass = (classID: string): Promise<string[]> =>
     getStatementsByObjectAndPredicate({
         objectId: classID,
         predicateId: PREDICATES.SHACL_TARGET_CLASS,
@@ -474,3 +474,33 @@ export const getTemplatesByClass = (classID: string) =>
                 .filter(c => c),
         )
         .catch(() => []);
+
+/**
+ * Load template flow by ID
+ *
+ * @param {String} id template ID
+ * @param {Array} loadedNodes Set of templates {id: String, ...restOfProperties, neighbors}
+ * @returns {Promise<object>} Promise resolving to a object containing loaded template flow
+ */
+export const loadTemplateFlowByID = (id: string, loadedNodes: Set<any>): Promise<object> => {
+    if (!loadedNodes.has(id)) {
+        loadedNodes.add(id);
+        return getTemplateById(id).then(t => {
+            const promises: Promise<any>[] = t.propertyShapes
+                .filter(ps => ps.value)
+                .map(ps =>
+                    getTemplatesByClass(ps.value?.id).then(templateIds => {
+                        if (templateIds.length) {
+                            return loadTemplateFlowByID(templateIds[0], loadedNodes);
+                        }
+                        return Promise.resolve({});
+                    }),
+                );
+            return Promise.all(promises).then(neighborNodes => ({
+                ...t,
+                neighbors: neighborNodes,
+            }));
+        });
+    }
+    return Promise.resolve({});
+};

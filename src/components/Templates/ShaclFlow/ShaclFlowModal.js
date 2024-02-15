@@ -1,11 +1,12 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
 import DownloadButton from 'components/Templates/ShaclFlow/DownloadImage/DownloadButton';
-import ExportSHACL from 'components/Templates/ShaclFlow/ExportSHACL/ExportSHACL';
 import Node from 'components/Templates/ShaclFlow/Node/Node';
 import useAutoLayout from 'components/Templates/ShaclFlow/hooks/useAutoLayoutAndFitView';
+import useExportSHACL from 'components/Templates/ShaclFlow/hooks/useExportSHACL';
 import { CLASSES } from 'constants/graphSettings';
 import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -13,38 +14,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import ReactFlow, { Background, Controls, MiniMap, ReactFlowProvider, applyEdgeChanges, applyNodeChanges } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { getTemplateById, getTemplatesByClass } from 'services/backend/statements';
+import { loadTemplateFlowByID } from 'services/backend/statements';
 import { setDiagramMode, setTemplateFlow } from 'slices/templateEditorSlice';
 import { convertTreeToFlat } from 'utils';
-
-/**
- * Load template flow by ID
- *
- * @param {String} id template ID
- * @param {Array} loadedNodes Set of templates {id: String, ...restOfProperties, neighbors}
- */
-const loadTemplateFlowByID = (id, loadedNodes) => {
-    if (!loadedNodes.has(id)) {
-        loadedNodes.add(id);
-        return getTemplateById(id).then(t => {
-            const promises = t.propertyShapes
-                .filter(ps => ps.value)
-                .map(ps =>
-                    getTemplatesByClass(ps.value.id).then(templateIds => {
-                        if (templateIds.length) {
-                            return loadTemplateFlowByID(templateIds[0], loadedNodes);
-                        }
-                        return Promise.resolve([]);
-                    }),
-                );
-            return Promise.all(promises).then(neighborNodes => ({
-                ...t,
-                neighbors: neighborNodes,
-            }));
-        });
-    }
-    return Promise.resolve([]);
-};
 
 function ShaclFlowModal() {
     useAutoLayout({ direction: 'LR' });
@@ -53,7 +25,7 @@ function ShaclFlowModal() {
     const templateID = useSelector(state => state.templateEditor.templateID);
     const toggle = () => dispatch(setDiagramMode(false));
     const nodeTypes = useMemo(() => ({ [CLASSES.NODE_SHAPE]: Node }), []);
-
+    const { exportSHACL, isConvertingToSHACL } = useExportSHACL();
     const [isLoading, setIsLoading] = useState(false);
     const [nodes, setNodes] = useState([]);
     const [edges, setEdges] = useState([]);
@@ -63,15 +35,14 @@ function ShaclFlowModal() {
             setIsLoading(true);
             try {
                 const templatesFlow = await loadTemplateFlowByID(id, new Set());
-
+                const flattenNodes = [templatesFlow, ...convertTreeToFlat(templatesFlow, 'neighbors').filter(n => !isEmpty(n))];
+                dispatch(setTemplateFlow(flattenNodes));
                 // We need this root node to make sure the algorithm of useAutoLayout always use as a root node if the selected template doesn't have a root (not a Tree) like qudt:Unit template
                 const startNode = {
                     id: 'ROOT',
                     data: { label: 'Current Template' },
                     position: { x: 0, y: 0 },
                 };
-                const flattenNodes = [templatesFlow, ...convertTreeToFlat(templatesFlow, 'neighbors').filter(n => !isEmpty(n))];
-                dispatch(setTemplateFlow(flattenNodes));
                 setNodes([startNode, ...flattenNodes.map(n => ({ id: n.id, data: n, type: CLASSES.NODE_SHAPE, position: { x: 0, y: 0 } }))]);
 
                 const _edges = [{ id: 'startingEdge', type: 'straight', source: startNode.id, target: id }];
@@ -147,7 +118,9 @@ function ShaclFlowModal() {
             <ModalFooter className="d-flex justify-content-between">
                 <div>
                     <DownloadButton />
-                    <ExportSHACL />
+                    <ButtonWithLoading color="light" isLoading={isConvertingToSHACL} onClick={exportSHACL}>
+                        Export as SHACL
+                    </ButtonWithLoading>
                 </div>
                 <div>
                     <Button
