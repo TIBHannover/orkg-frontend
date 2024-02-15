@@ -1,9 +1,10 @@
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import rdf from 'rdf';
 import { isEmpty } from 'lodash';
+import { loadTemplateFlowByID } from 'services/backend/statements';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { convertTreeToFlat } from 'utils';
 
 function downloadN3(graph, turtleName) {
     const a = document.createElement('a');
@@ -24,12 +25,11 @@ function downloadN3(graph, turtleName) {
     a.click();
 }
 
-function ExportSHACL() {
-    const [isConvertingToImage, setIsConvertingToImage] = useState(false);
+const useExportSHACL = () => {
+    const [isConvertingToSHACL, setIsConvertingToSHACL] = useState(false);
     const templateID = useSelector(state => state.templateEditor.templateID);
-    const templateFlow = useSelector(state => state.templateEditor.templateFlow);
 
-    const convertFlowToSHACL = () => {
+    const convertFlowToSHACL = templateFlow => {
         const graph = new rdf.Graph();
         const shacl = rdf.ns('http://www.w3.org/ns/shacl#');
         const orkgr = rdf.ns('http://orkg.org/orkg/resource/');
@@ -145,18 +145,16 @@ function ExportSHACL() {
         return graph;
     };
 
-    const onClick = async () => {
-        setIsConvertingToImage(true);
-        const graph = await convertFlowToSHACL();
-        setIsConvertingToImage(false);
+    const exportSHACL = async () => {
+        setIsConvertingToSHACL(true);
+        const templatesFlow = await loadTemplateFlowByID(templateID, new Set());
+        const flattenNodes = [templatesFlow, ...convertTreeToFlat(templatesFlow, 'neighbors').filter(n => !isEmpty(n))];
+        const graph = await convertFlowToSHACL(flattenNodes);
+        setIsConvertingToSHACL(false);
         downloadN3(graph, `template-${templateID}.n3`);
     };
 
-    return (
-        <ButtonWithLoading color="light" isLoading={isConvertingToImage} onClick={onClick}>
-            Export as SHACL
-        </ButtonWithLoading>
-    );
-}
+    return { exportSHACL, isConvertingToSHACL };
+};
 
-export default ExportSHACL;
+export default useExportSHACL;

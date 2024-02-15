@@ -1,6 +1,6 @@
 'use client';
 
-import { faDiagramProject, faEllipsisV, faPen, faQuestionCircle, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faDiagramProject, faEllipsisV, faPen, faQuestionCircle, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import NotFound from 'app/not-found';
@@ -13,6 +13,7 @@ import useRouter from 'components/NextJsMigration/useRouter';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ItemMetadata from 'components/Search/ItemMetadata';
 import ShaclFlowModal from 'components/Templates/ShaclFlow/ShaclFlowModal';
+import useExportSHACL from 'components/Templates/ShaclFlow/hooks/useExportSHACL';
 import TabsContainer from 'components/Templates/TabsContainer';
 import TemplateEditorHeaderBar from 'components/Templates/TemplateEditorHeaderBar';
 import TitleBar from 'components/TitleBar/TitleBar';
@@ -24,7 +25,18 @@ import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import VisibilitySensor from 'react-visibility-sensor';
-import { Button, ButtonDropdown, ButtonGroup, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import {
+    Button,
+    ButtonDropdown,
+    ButtonGroup,
+    Container,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Modal,
+    ModalBody,
+    ModalHeader,
+} from 'reactstrap';
 import { loadTemplate, saveTemplate, setDiagramMode } from 'slices/templateEditorSlice';
 
 const Template = () => {
@@ -51,6 +63,8 @@ const Template = () => {
     const handleShowHeaderBar = isVisible => {
         setShowHeaderBar(!isVisible);
     };
+
+    const { exportSHACL, isConvertingToSHACL } = useExportSHACL();
 
     const { contributor } = useContributor({ userId: createdBy });
 
@@ -131,11 +145,20 @@ const Template = () => {
                             </DropdownToggle>
                             <DropdownMenu end>
                                 <DropdownItem onClick={() => setShowExportCitation(v => !v)}>Export citation</DropdownItem>
+                                <DropdownItem onClick={exportSHACL}>{!isConvertingToSHACL ? 'Export as SHACL' : 'Exporting...'}</DropdownItem>
                                 <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                                     View resource
                                 </DropdownItem>
                             </DropdownMenu>
                         </ButtonDropdown>
+                        <Modal isOpen={isConvertingToSHACL} backdrop="static">
+                            <ModalHeader>Export as SHACL</ModalHeader>
+                            <ModalBody>
+                                <div className="text-center mt-4 mb-4">
+                                    <Icon icon={faSpinner} spin /> Loading
+                                </div>
+                            </ModalBody>
+                        </Modal>
                     </>
                 }
             >
