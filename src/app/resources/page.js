@@ -30,7 +30,7 @@ const Resources = () => {
             totalElements,
         } = await getResources({
             page,
-            items: pageSize,
+            size: pageSize,
             sortBy: 'created_at',
             desc: true,
         });

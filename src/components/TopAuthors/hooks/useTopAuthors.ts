@@ -26,13 +26,13 @@ function useTopAuthors({
                     result = await getAuthorsByResearchProblemId({
                         id: researchProblemId,
                         page: _page,
-                        items: pageSize,
+                        size: pageSize,
                     });
                 } else if (comparisonId) {
                     result = await getAuthorsByComparisonId({
                         id: comparisonId,
                         page: _page,
-                        items: pageSize,
+                        size: pageSize,
                     });
                 }
 

@@ -1,7 +1,7 @@
+import { RESOURCES } from 'constants/graphSettings';
+import { orderBy } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { getChangelogs } from 'services/backend/stats';
-import { orderBy } from 'lodash';
-import { RESOURCES } from 'constants/graphSettings';
 
 function useTopChangelog({ researchFieldId, pageSize = 30 }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +17,7 @@ function useTopChangelog({ researchFieldId, pageSize = 30 }) {
             getChangelogs({
                 researchFieldId: researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN ? null : researchFieldId,
                 page,
-                items: pageSize,
+                size: pageSize,
             })
                 .then(result => {
                     setActivities(prevResources => orderBy([...prevResources, ...(result.content || [])], ['created_at'], ['desc']));

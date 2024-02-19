@@ -1,6 +1,6 @@
-import { submitPostRequest, submitPutRequest, submitGetRequest, submitDeleteRequest } from 'network';
-import qs from 'qs';
 import { url } from 'constants/misc';
+import { submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
+import qs from 'qs';
 import { PaginatedResponse, Predicate } from 'services/backend/types';
 
 export const predicatesUrl = `${url}predicates/`;
@@ -17,7 +17,7 @@ export const deletePredicate = (id: string): Promise<null> => submitDeleteReques
 
 export const getPredicates = ({
     page = 0,
-    items: size = 9999,
+    size = 9999,
     sortBy = 'created_at',
     desc = true,
     q = null,
@@ -25,7 +25,7 @@ export const getPredicates = ({
     returnContent = false,
 }: {
     page?: number;
-    items?: number;
+    size?: number;
     sortBy?: string;
     desc?: boolean;
     q?: string | null;

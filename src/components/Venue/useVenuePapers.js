@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
-import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
-import { find } from 'lodash';
 import { PREDICATES } from 'constants/graphSettings';
+import { find } from 'lodash';
+import { useCallback, useEffect, useState } from 'react';
+import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
 import { addAuthorsToStatementBundle, getPaperData } from 'utils';
 
 function useVenuePapers({ venueId }) {
@@ -21,7 +21,7 @@ function useVenuePapers({ venueId }) {
                 objectId: venueId,
                 predicateId: PREDICATES.HAS_VENUE,
                 page: p,
-                items: pageSize,
+                size: pageSize,
                 sortBy: 'created_at',
                 desc: true,
                 returnContent: false,

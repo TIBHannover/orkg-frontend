@@ -7,7 +7,7 @@ import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { AsyncPaginate } from 'react-select-async-paginate';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 import { getPapersByTitle } from 'services/semanticScholar';
 import { withTheme } from 'styled-components';
 
@@ -58,10 +58,10 @@ function PaperTitleInput({
                 const promises = [];
                 for (const _class of searchClasses) {
                     promises.push(
-                        getResourcesByClass({
-                            id: _class,
+                        getResources({
+                            include: [_class],
                             page,
-                            items: PAGE_SIZE,
+                            size: PAGE_SIZE,
                             q: title,
                         }),
                     );
@@ -73,7 +73,7 @@ function PaperTitleInput({
 
                 /* resources = await getResources({
                     page: page,
-                    items: PAGE_SIZE,
+                    size: PAGE_SIZE,
                     q: title
                 });
                 options = resources.content.map(result => ({ ...result, isOrkgResource: true }));

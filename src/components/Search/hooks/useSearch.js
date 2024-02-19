@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
 import useParams from 'components/NextJsMigration/useParams';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
-import { getClassById, getClasses } from 'services/backend/classes';
-import { getResources, getResourcesByClass } from 'services/backend/resources';
-import { getPredicates } from 'services/backend/predicates';
-import { getPaperByDOI } from 'services/backend/misc';
-import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
-import REGEX from 'constants/regex';
-import { toast } from 'react-toastify';
-import { getStatementsByObject, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
-import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
 import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import REGEX from 'constants/regex';
+import ROUTES from 'constants/routes';
+import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import { isEmpty } from 'lodash';
+import { reverse } from 'named-urls';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { getClassById, getClasses } from 'services/backend/classes';
+import { getPaperByDOI } from 'services/backend/misc';
+import { getPredicates } from 'services/backend/predicates';
+import { getResources } from 'services/backend/resources';
+import { getStatementsByObject, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
 
 const IGNORED_CLASSES = [CLASSES.CONTRIBUTION, CLASSES.CONTRIBUTION_DELETED, CLASSES.PAPER_DELETED, CLASSES.COMPARISON_DRAFT];
 
@@ -52,35 +52,33 @@ export const useSearch = () => {
             if (filterType === ENTITIES.PREDICATE) {
                 resultsResponse = await getPredicates({
                     page,
-                    items: itemsPerFilter,
+                    size: itemsPerFilter,
                     q: searchQuery,
                     returnContent: true,
                 });
             } else if (filterType === ENTITIES.RESOURCE) {
                 resultsResponse = await getResources({
                     page,
-                    items: itemsPerFilter,
+                    size: itemsPerFilter,
                     q: searchQuery,
-                    exclude: DEFAULT_FILTERS.map(df => df.id)
-                        .concat(IGNORED_CLASSES)
-                        .join(','),
+                    exclude: DEFAULT_FILTERS.map(df => df.id).concat(IGNORED_CLASSES),
                     returnContent: true,
                 });
             } else if (filterType === ENTITIES.CLASS) {
                 resultsResponse = await getClasses({
                     page,
-                    items: itemsPerFilter,
+                    size: itemsPerFilter,
                     q: searchQuery,
                     returnContent: true,
                 });
             } else {
-                resultsResponse = await getResourcesByClass({
+                resultsResponse = await getResources({
                     page,
-                    items: itemsPerFilter,
+                    size: itemsPerFilter,
                     q: searchQuery,
-                    id: filterType,
+                    include: [filterType],
                     returnContent: true,
-                    creator: !isEmpty(searchParams.get('createdBy')) ? searchParams.get('createdBy') : undefined,
+                    createdBy: !isEmpty(searchParams.get('createdBy')) ? searchParams.get('createdBy') : undefined,
                 });
             }
 
@@ -98,7 +96,7 @@ export const useSearch = () => {
                 const listStatements = await getStatementsByPredicateAndLiteral({
                     literal: searchQuery,
                     predicateId: PREDICATES.HAS_LIST_ELEMENT,
-                    items: 1,
+                    size: 1,
                     returnContent: true,
                 });
                 const statements = listStatements.length > 0 ? await getStatementsByObject({ id: listStatements[0].subject.id }) : null;

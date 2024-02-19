@@ -1,8 +1,8 @@
-import { useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
-import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useDeepCompareEffect } from 'react-use';
+import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 
 const useUsedTemplates = ({ resourceId = null, resourceObject = null }) => {
     const [usedTemplates, setUsedTemplates] = useState([]);
@@ -22,7 +22,7 @@ const useUsedTemplates = ({ resourceId = null, resourceObject = null }) => {
                 objectId: rId,
                 predicateId,
                 page: p !== null ? p : 0,
-                items: pageSize,
+                size: pageSize,
                 sortBy: 'created_at',
                 desc: true,
                 returnContent: false,

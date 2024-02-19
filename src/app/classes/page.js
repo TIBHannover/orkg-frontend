@@ -1,15 +1,15 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
-import { useEffect } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
+import Link from 'components/NextJsMigration/Link';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import { useEffect } from 'react';
 import { getClasses } from 'services/backend/classes';
 
 const Classes = () => {
@@ -30,7 +30,7 @@ const Classes = () => {
             totalElements,
         } = await getClasses({
             page,
-            items: pageSize,
+            size: pageSize,
             sortBy: 'created_at',
             desc: true,
         });

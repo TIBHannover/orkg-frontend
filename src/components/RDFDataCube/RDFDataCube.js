@@ -1,35 +1,35 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { faEllipsisV, faSortDown, faSortUp, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import CUBE from 'olap-cube';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { CSVLink } from 'react-csv';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFilters, usePagination, useSortBy, useTable } from 'react-table';
 import {
-    Modal,
-    ModalHeader,
-    ModalBody,
     Alert,
-    Table,
-    Pagination,
-    PaginationItem,
-    PaginationLink,
-    Input,
     Dropdown,
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
+    Input,
     InputGroup,
+    Modal,
+    ModalBody,
+    ModalHeader,
+    Pagination,
+    PaginationItem,
+    PaginationLink,
+    Table,
 } from 'reactstrap';
-import {
-    selectResourceAction as selectResource,
-    fetchStatementsForResource,
-    createResourceAction as createResource,
-} from 'slices/statementBrowserSlice';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
-import { getStatementsBySubject, getStatementsByObject } from 'services/backend/statements';
 import { getClasses } from 'services/backend/classes';
-import { useDispatch, useSelector } from 'react-redux';
-import { useTable, usePagination, useSortBy, useFilters } from 'react-table';
+import { getStatementsByObject, getStatementsBySubject } from 'services/backend/statements';
+import {
+    createResourceAction as createResource,
+    fetchStatementsForResource,
+    selectResourceAction as selectResource,
+} from 'slices/statementBrowserSlice';
 import { sortMethod } from 'utils';
-import CUBE from 'olap-cube';
-import { CSVLink } from 'react-csv';
-import PropTypes from 'prop-types';
 
 // Define a default UI for filtering
 // eslint-disable-next-line react/prop-types
@@ -258,7 +258,7 @@ const RDFDataCube = props => {
                     const allDim = { ...sDimensions, ...sMeasures, ...sAttributes };
                     getStatementsByObject({
                         id: existingResourceId,
-                        items: 9999,
+                        size: 9999,
                         sortBy: 'created_at',
                         desc: true,
                     }).then(statements => {

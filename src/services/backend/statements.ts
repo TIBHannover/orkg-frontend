@@ -3,9 +3,9 @@ import { url } from 'constants/misc';
 import { flatten } from 'lodash';
 import { submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
-import { filterObjectOfStatementsByPredicateAndClass, filterStatementsBySubjectId, getPropertyShapeData, sortMethod } from 'utils';
 import { getResource } from 'services/backend/resources';
 import { PaginatedResponse, Resource, Statement } from 'services/backend/types';
+import { filterObjectOfStatementsByPredicateAndClass, filterStatementsBySubjectId, getPropertyShapeData, sortMethod } from 'utils';
 
 export const statementsUrl = `${url}statements/`;
 
@@ -74,13 +74,13 @@ export const deleteStatementsByIds = (ids: string[]): Promise<null> => submitDel
 export const getStatementsBySubject = ({
     id,
     page = 0,
-    items: size = 9999,
+    size = 9999,
     sortBy = 'created_at',
     desc = true,
 }: {
     id: string;
     page?: number;
-    items?: number;
+    size?: number;
     sortBy?: string;
     desc?: boolean;
 }): Promise<Statement[]> => {
@@ -128,13 +128,13 @@ export const getStatementsBundleBySubject = ({
 export const getStatementsBySubjects = ({
     ids,
     page = 0,
-    items: size = 9999,
+    size = 9999,
     sortBy = 'created_at',
     desc = true,
 }: {
     ids: string[];
     page?: number;
-    items?: number;
+    size?: number;
     sortBy?: string;
     desc?: boolean;
 }): Promise<{ id: string; statements: Statement[] }[]> => {
@@ -156,14 +156,14 @@ export const getStatementsBySubjects = ({
 export const getStatementsByObject = async ({
     id,
     page = 0,
-    items: size = 9999,
+    size = 9999,
     sortBy = 'created_at',
     desc = true,
     returnContent = true,
 }: {
     id: string;
     page?: number;
-    items?: number;
+    size?: number;
     sortBy?: string;
     desc?: boolean;
     returnContent?: boolean;
@@ -186,14 +186,14 @@ export const getStatementsByObject = async ({
 export const getStatementsByPredicate = ({
     id,
     page = 0,
-    items: size = 9999,
+    size = 9999,
     sortBy = 'created_at',
     desc = true,
     returnContent = true,
 }: {
     id: string;
     page?: number;
-    items?: number;
+    size?: number;
     sortBy?: string;
     desc?: boolean;
     returnContent?: boolean;
@@ -213,14 +213,14 @@ export const getStatementsBySubjectAndPredicate = ({
     subjectId,
     predicateId,
     page = 0,
-    items: size = 9999,
+    size = 9999,
     sortBy = 'created_at',
     desc = true,
 }: {
     subjectId: string;
     predicateId: string;
     page?: number;
-    items?: number;
+    size?: number;
     sortBy?: string;
     desc?: boolean;
 }): Promise<Statement[]> => {
@@ -238,7 +238,7 @@ export const getStatementsByObjectAndPredicate = ({
     objectId,
     predicateId,
     page = 0,
-    items: size = 9999,
+    size = 9999,
     sortBy = 'created_at',
     desc = true,
     returnContent = true,
@@ -246,7 +246,7 @@ export const getStatementsByObjectAndPredicate = ({
     objectId: string;
     predicateId: string;
     page?: number;
-    items?: number;
+    size?: number;
     sortBy?: string;
     desc?: boolean;
     returnContent?: boolean;
@@ -268,7 +268,7 @@ export const getStatementsByPredicateAndLiteral = ({
     literal,
     predicateId,
     subjectClass = null,
-    items: size = 9999,
+    size = 9999,
     page = 0,
     sortBy = 'created_at',
     desc = true,
@@ -277,7 +277,7 @@ export const getStatementsByPredicateAndLiteral = ({
     literal: string;
     predicateId: string;
     subjectClass?: string | null;
-    items?: number;
+    size?: number;
     page?: number;
     sortBy?: string;
     desc?: boolean;

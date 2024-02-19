@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getContributorsByResearchProblemId } from 'services/backend/problems';
 
 function useResearchProblemContributors({ researchProblemId, pageSize = 30 }) {
@@ -16,7 +16,7 @@ function useResearchProblemContributors({ researchProblemId, pageSize = 30 }) {
             getContributorsByResearchProblemId({
                 id: researchProblemId,
                 page,
-                items: pageSize,
+                size: pageSize,
             })
                 .then(result => {
                     if (result.length > 0) {

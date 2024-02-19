@@ -60,14 +60,14 @@ export const getOriginalPaperId = (paperId: string) => {
 export const getPapersLinkedToResource = async ({
     id,
     page = 0,
-    items: size = 9999,
+    size = 9999,
     sortBy = 'paper.created_at',
     desc = true,
     returnContent = false,
 }: {
     id: string;
     page?: number;
-    items?: number;
+    size?: number;
     sortBy?: string;
     desc?: boolean;
     returnContent?: boolean;

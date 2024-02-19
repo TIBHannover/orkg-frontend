@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
-import { getStatementsByObject } from 'services/backend/statements';
-import ListPage from 'components/ListPage/ListPage';
 import StatementCard from 'components/Cards/StatementCard/StatementCard';
+import ListPage from 'components/ListPage/ListPage';
 import pluralize from 'pluralize';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { getStatementsByObject } from 'services/backend/statements';
 
 const ObjectStatements = ({ id }) => {
     const [totalStatements, setTotalStatements] = useState(0);
@@ -18,7 +18,7 @@ const ObjectStatements = ({ id }) => {
         } = await getStatementsByObject({
             id,
             page,
-            items: pageSize,
+            size: pageSize,
             returnContent: false,
         });
         setTotalStatements(totalElements);

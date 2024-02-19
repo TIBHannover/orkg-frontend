@@ -1,10 +1,19 @@
 import { rest } from 'msw';
 import { resourcesUrl } from 'services/backend/resources';
 import { faker } from '@faker-js/faker';
+import DClocationResources from 'services/mocks/backend/__mocks__/Resources';
 
 const resources = [
-    rest.get(resourcesUrl, (req, res, ctx) =>
-        res(
+    rest.get(resourcesUrl, (req, res, ctx) => {
+        const include = req.url.searchParams.get('include');
+        const MAPPING = {
+            DCLocation: DClocationResources,
+        };
+        console.log(include);
+        if (MAPPING[include]) {
+            return res(ctx.json(MAPPING[include]));
+        }
+        return res(
             ctx.json({
                 content: [
                     {
@@ -58,8 +67,8 @@ const resources = [
                 size: 10,
                 empty: true,
             }),
-        ),
-    ),
+        );
+    }),
     rest.get(`${resourcesUrl}:id`, (req, res, ctx) => {
         const { id } = req.params;
         const MAPPING = {

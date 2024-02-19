@@ -19,13 +19,13 @@ export type ComparisonTopAuthor = {
 export const getAuthorsByComparisonId = ({
     id,
     page = 0,
-    items = 9999,
+    size = 9999,
 }: {
     id: string;
     page?: number;
-    items?: number;
+    size?: number;
 }): Promise<PaginatedResponse<ComparisonTopAuthor>> => {
-    const params = qs.stringify({ page, size: items });
+    const params = qs.stringify({ page, size });
     return submitGetRequest(`${comparisonUrl}${encodeURIComponent(id)}/authors?${params}`);
 };
 

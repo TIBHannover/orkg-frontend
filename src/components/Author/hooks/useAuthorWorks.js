@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { find, flatten, intersection } from 'lodash';
+import { useCallback, useEffect, useState } from 'react';
 import {
     getStatementsByObject,
     getStatementsByObjectAndPredicate,
     getStatementsByPredicateAndLiteral,
     getStatementsBySubjects,
 } from 'services/backend/statements';
-import { find, flatten, intersection } from 'lodash';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { addAuthorsToStatementBundle, getDataBasedOnType } from 'utils';
 
 function useAuthorWorks({ authorId, authorString }) {
@@ -28,7 +28,7 @@ function useAuthorWorks({ authorId, authorString }) {
                     objectId: authorId,
                     predicateId: PREDICATES.HAS_LIST_ELEMENT,
                     page: p,
-                    items: pageSize,
+                    size: pageSize,
                     sortBy: 'created_at',
                     desc: true,
                     returnContent: false,
@@ -38,7 +38,7 @@ function useAuthorWorks({ authorId, authorString }) {
                     literal: authorString,
                     predicateId: PREDICATES.HAS_LIST_ELEMENT,
                     page: p,
-                    items: pageSize,
+                    size: pageSize,
                     sortBy: 'created_at',
                     desc: true,
                     returnContent: false,

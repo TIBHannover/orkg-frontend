@@ -1,7 +1,7 @@
 'use client';
 
 import { url } from 'constants/misc';
-import { submitPostRequest, submitGetRequest, submitPatchRequest, submitDeleteRequest, submitPutRequest } from 'network';
+import { submitDeleteRequest, submitGetRequest, submitPatchRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
 import { Class, PaginatedResponse } from 'services/backend/types';
 
@@ -17,7 +17,7 @@ export const updateClass = (id: string, label: string): Promise<Class> =>
 
 export const getClasses = ({
     page = 0,
-    items: size = 9999,
+    size = 9999,
     sortBy = 'created_at',
     desc = true,
     q = null,
@@ -26,7 +26,7 @@ export const getClasses = ({
     returnContent = false,
 }: {
     page?: number;
-    items?: number;
+    size?: number;
     sortBy?: string;
     desc?: boolean;
     q?: string | null;

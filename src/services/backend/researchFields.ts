@@ -10,7 +10,7 @@ export const researchFieldUrl = `${url}research-fields/`;
 export const getContentByResearchFieldIdAndClasses = ({
     id,
     page = 0,
-    items = 9999,
+    size = 9999,
     sortBy = 'created_at',
     desc = true,
     subfields = true,
@@ -19,7 +19,7 @@ export const getContentByResearchFieldIdAndClasses = ({
 }: {
     id: string;
     page?: number;
-    items?: number;
+    size?: number;
     sortBy?: string;
     desc?: boolean;
     subfields?: boolean;
@@ -29,7 +29,7 @@ export const getContentByResearchFieldIdAndClasses = ({
     // Sort is not supported in this endpoint
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
-        { page, size: items, sort, visibility, classes: classes.join(',') },
+        { page, size, sort, visibility, classes: classes.join(',') },
         {
             skipNulls: true,
         },
@@ -40,7 +40,7 @@ export const getContentByResearchFieldIdAndClasses = ({
 export const getPapersByResearchFieldId = ({
     id,
     page = 0,
-    items = 9999,
+    size = 9999,
     sortBy = 'created_at',
     desc = true,
     subfields = true,
@@ -48,7 +48,7 @@ export const getPapersByResearchFieldId = ({
 }: {
     id: string;
     page?: number;
-    items?: number;
+    size?: number;
     sortBy?: string;
     desc?: boolean;
     subfields?: boolean;
@@ -56,7 +56,7 @@ export const getPapersByResearchFieldId = ({
 }): Promise<PaginatedResponse<Resource>> => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
-        { page, size: items, sort, visibility },
+        { page, size, sort, visibility },
         {
             skipNulls: true,
         },
@@ -67,7 +67,7 @@ export const getPapersByResearchFieldId = ({
 export const getResearchProblemsByResearchFieldId = ({
     id,
     page = 0,
-    items = 9999,
+    size = 9999,
     sortBy = 'created_at',
     desc = true,
     subfields = true,
@@ -75,7 +75,7 @@ export const getResearchProblemsByResearchFieldId = ({
 }: {
     id: string;
     page?: number;
-    items?: number;
+    size?: number;
     sortBy?: string;
     desc?: boolean;
     subfields?: boolean;
@@ -83,7 +83,7 @@ export const getResearchProblemsByResearchFieldId = ({
 }): Promise<PaginatedResponse<Resource>> => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
-        { page, size: items, sort, visibility },
+        { page, size, sort, visibility },
         {
             skipNulls: true,
         },

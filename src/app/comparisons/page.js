@@ -10,7 +10,7 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { find } from 'lodash';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getComparisonData, groupVersionsOfComparisons } from 'utils';
 import comparisonsThumbnail from 'assets/img/video_thumbnails/comparisons.png';
@@ -25,10 +25,10 @@ const Comparisons = () => {
     const renderListItem = comparison => <ComparisonCard comparison={comparison} key={`pc${comparison.id}`} />;
 
     const fetchItems = async ({ page, pageSize }) => {
-        const { items, last, totalElements } = await getResourcesByClass({
-            id: CLASSES.COMPARISON,
+        const { items, last, totalElements } = await getResources({
+            include: [CLASSES.COMPARISON],
             page,
-            items: pageSize,
+            size: pageSize,
             sortBy: 'created_at',
             desc: true,
         }).then(async result => ({

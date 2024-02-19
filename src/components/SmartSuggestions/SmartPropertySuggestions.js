@@ -1,17 +1,17 @@
 import { faLightbulb, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import SmartSuggestions from 'components/SmartSuggestions/SmartSuggestions';
-import { memo, useCallback, useEffect, useState } from 'react';
-import { Button } from 'reactstrap';
-import PropTypes from 'prop-types';
-import { createPredicate, getPredicates } from 'services/backend/predicates';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import { ENTITIES } from 'constants/graphSettings';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import Tippy from '@tippyjs/react';
-import { getLlmResponse } from 'services/orkgNlp';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import SmartSuggestions from 'components/SmartSuggestions/SmartSuggestions';
+import { ENTITIES } from 'constants/graphSettings';
 import LLM_TASK_NAMES from 'constants/llmTasks';
 import { functions, isEqual, omit } from 'lodash';
+import PropTypes from 'prop-types';
+import { memo, useCallback, useEffect, useState } from 'react';
+import { Button } from 'reactstrap';
+import { createPredicate, getPredicates } from 'services/backend/predicates';
+import { getLlmResponse } from 'services/orkgNlp';
 
 export const SmartPropertySuggestions = ({ properties, handleCreate, isDisabled = false }) => {
     const [recommendedProperties, setRecommendedProperties] = useState([]);
@@ -34,7 +34,7 @@ export const SmartPropertySuggestions = ({ properties, handleCreate, isDisabled 
                 placeholders: { properties },
             });
             const propertyPromises = llmResponse?.properties.map(propertyLabel =>
-                getPredicates({ q: propertyLabel, exact: true, items: 1, returnContent: true }),
+                getPredicates({ q: propertyLabel, exact: true, size: 1, returnContent: true }),
             );
             const fetchedProperties = (await Promise.all(propertyPromises)).map((_properties, index) =>
                 _properties[0] ? { id: _properties[0].id, label: _properties[0].label } : { label: llmResponse?.properties[index].toLowerCase() },

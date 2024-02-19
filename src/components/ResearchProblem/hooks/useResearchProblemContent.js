@@ -1,9 +1,9 @@
+import useRouter from 'components/NextJsMigration/useRouter';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import ROUTES from 'constants/routes.js';
 import { find, flatten } from 'lodash';
 import { reverse } from 'named-urls';
 import { useCallback, useEffect, useState } from 'react';
-import useRouter from 'components/NextJsMigration/useRouter';
 import { getContentByResearchProblemIdAndClasses } from 'services/backend/problems';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { addAuthorsToStatementBundle, getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate, reverseWithSlug } from 'utils';
@@ -37,7 +37,7 @@ function useResearchProblemContent({
                 const noFeaturedContentService = getContentByResearchProblemIdAndClasses({
                     id: researchProblemId,
                     page,
-                    items: Math.round(pageSize / 2),
+                    size: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     visibility: VISIBILITY_FILTERS.NON_FEATURED,
@@ -46,7 +46,7 @@ function useResearchProblemContent({
                 const featuredContentService = getContentByResearchProblemIdAndClasses({
                     id: researchProblemId,
                     page,
-                    items: Math.round(pageSize / 2),
+                    size: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     visibility: VISIBILITY_FILTERS.FEATURED,
@@ -64,7 +64,7 @@ function useResearchProblemContent({
                 contentService = getContentByResearchProblemIdAndClasses({
                     id: researchProblemId,
                     page,
-                    items: pageSize,
+                    size: pageSize,
                     sortBy: 'created_at',
                     desc: true,
                     visibility: sort,

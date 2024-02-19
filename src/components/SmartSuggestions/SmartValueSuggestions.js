@@ -4,7 +4,7 @@ import SmartSuggestions from 'components/SmartSuggestions/SmartSuggestions';
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { getResources, getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
@@ -44,17 +44,17 @@ export const SmartValueSuggestions = ({ paperTitle, abstract = '', resourceId, p
             const values = llmResponse?.values.slice(0, 5) ?? [];
             const resourcePromises = values.map(label =>
                 classId
-                    ? getResourcesByClass({
-                          id: classId,
+                    ? getResources({
+                          include: [classId],
                           q: label,
                           exact: true,
-                          items: 1,
+                          size: 1,
                           returnContent: true,
                       })
                     : getResources({
                           q: label,
                           exact: true,
-                          items: 1,
+                          size: 1,
                           returnContent: true,
                       }),
             );

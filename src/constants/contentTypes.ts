@@ -1,7 +1,6 @@
 import { CLASSES } from 'constants/graphSettings';
 
-// Content types are the classes where featured/unlisted flags are supported
-const contentTypes = [
+const contentTypes: string[] = [
     CLASSES.PAPER,
     CLASSES.CONTRIBUTION,
     CLASSES.COMPARISON,
@@ -11,12 +10,13 @@ const contentTypes = [
     CLASSES.PROBLEM,
 ];
 
+// Define the type for VISIBILITY_FILTERS using a const assertion
 export const VISIBILITY_FILTERS = {
     ALL_LISTED: 'ALL_LISTED',
     UNLISTED: 'UNLISTED',
     FEATURED: 'FEATURED',
     NON_FEATURED: 'NON_FEATURED',
     DELETED: 'DELETED',
-};
+} as const;
 
 export default contentTypes;

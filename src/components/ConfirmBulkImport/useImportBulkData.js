@@ -3,7 +3,7 @@ import { CLASSES, MISC, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { omit, isString } from 'lodash';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { getPaperByDOI } from 'services/backend/misc';
-import { createResource, getResourcesByClass, getResources, getResource } from 'services/backend/resources';
+import { createResource, getResources, getResource } from 'services/backend/resources';
 import { getPredicate, getPredicates, createPredicate } from 'services/backend/predicates';
 import { saveFullPaper } from 'services/backend/papers';
 import { Cite } from '@citation-js/core';
@@ -140,7 +140,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                             _idToLabel[propertyId] = fetchedPredicate.label;
                             valueToId[property] = propertyId;
                         }
-                    } catch (e) { }
+                    } catch (e) {}
                 }
 
                 // no property id found
@@ -183,7 +183,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                                 if (resource) {
                                     _idToLabel[value] = resource.label;
                                 }
-                            } catch (e) { }
+                            } catch (e) {}
                         }
                         if (value in _idToLabel) {
                             valueObject = {
@@ -206,7 +206,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                             fetchedResource = await getResources({ q: cleanNewResource(value), exact: true });
                         }
                         if (propertyId === PREDICATES.HAS_RESEARCH_PROBLEM) {
-                            fetchedResource = await getResourcesByClass({ id: CLASSES.PROBLEM, q: cleanNewResource(value), exact: true });
+                            fetchedResource = await getResources({ include: [CLASSES.PROBLEM], q: cleanNewResource(value), exact: true });
                         }
                         if (fetchedResource?.totalElements) {
                             valueToId[cleanNewResource(value)] = fetchedResource.content[0].id;
@@ -280,12 +280,12 @@ const useImportBulkData = ({ data, onFinish }) => {
                 if (paper) {
                     return paper.id;
                 }
-            } catch (e) { }
+            } catch (e) {}
         }
 
         // if no paper is found, check if there is a paper with this title
-        const paperResources = await getResourcesByClass({
-            id: CLASSES.PAPER,
+        const paperResources = await getResources({
+            include: [CLASSES.PAPER],
             q: title,
             exact: true,
             returnContent: true,

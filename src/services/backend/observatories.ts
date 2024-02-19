@@ -4,7 +4,7 @@ import { url } from 'constants/misc';
 import { submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
 import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
-import { Contributor, Observatory, Organization, PaginatedResponse, Resource } from 'services/backend/types';
+import { Contributor, Observatory, PaginatedResponse, Resource } from 'services/backend/types';
 
 export const observatoriesUrl = `${url}observatories/`;
 
@@ -90,7 +90,7 @@ export const deleteOrganizationFromObservatory = (id: string, organization_id: s
 export const getContentByObservatoryIdAndClasses = ({
     id,
     page = 0,
-    items = 9999,
+    size = 9999,
     sortBy = 'created_at',
     desc = true,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
@@ -98,7 +98,7 @@ export const getContentByObservatoryIdAndClasses = ({
 }: {
     id: string;
     page?: number;
-    items?: number;
+    size?: number;
     sortBy?: string;
     desc?: boolean;
     visibility?: string;
@@ -107,7 +107,7 @@ export const getContentByObservatoryIdAndClasses = ({
     // Sort is not supported in this endpoint
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
-        { page, size: items, sort, visibility, classes: classes.join(',') },
+        { page, size, sort, visibility, classes: classes.join(',') },
         {
             skipNulls: true,
         },

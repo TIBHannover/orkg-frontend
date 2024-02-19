@@ -5,7 +5,7 @@ import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Col, Row } from 'reactstrap';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 
 const STATISTICS = [
     {
@@ -47,7 +47,7 @@ const UserStatistics = ({ userId }) => {
             }
             try {
                 setIsLoading(true);
-                const statsPromises = STATISTICS.map(statistic => getResourcesByClass({ id: statistic.class, creator: userId }));
+                const statsPromises = STATISTICS.map(statistic => getResources({ include: [statistic.class], createdBy: userId }));
                 const _stats = (await Promise.all(statsPromises)).map((statistic, index) => ({
                     number: statistic.totalElements,
                     label: STATISTICS[index].label,

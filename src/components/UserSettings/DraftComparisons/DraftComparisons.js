@@ -13,7 +13,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Alert, Button, ButtonGroup, ListGroup, ListGroupItem } from 'reactstrap';
-import { deleteResource, getResourcesByClass } from 'services/backend/resources';
+import { deleteResource, getResources } from 'services/backend/resources';
 import { getThing } from 'services/similarity';
 
 const DraftComparisons = () => {
@@ -31,12 +31,12 @@ const DraftComparisons = () => {
 
     const getDraftComparisons = useCallback(async () => {
         setIsLoading(true);
-        const { content: _draftComparisons, last } = await getResourcesByClass({
-            id: CLASSES.COMPARISON_DRAFT,
+        const { content: _draftComparisons, last } = await getResources({
+            include: [CLASSES.COMPARISON_DRAFT],
             page,
-            items: 10,
+            size: 10,
             sortBy: 'created_at',
-            creator: userId,
+            createdBy: userId,
         });
 
         let draftComparisonUrls = await Promise.all(

@@ -20,7 +20,7 @@ import MarkdownRenderer from 'components/ArticleBuilder/MarkdownEditor/MarkdownR
 import MarkdownRendererReferences from 'components/Review/MarkdownRenderer';
 import { MarkdownPlaceholder } from 'components/ArticleBuilder/styled';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Textarea from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
 import { ButtonGroup } from 'reactstrap';
@@ -152,7 +152,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
             }
         } else {
             return token && token !== '!'
-                ? (await getResources({ q: token.substring(1), returnContent: true, items: 10 })).map(resource => ({
+                ? (await getResources({ q: token.substring(1), returnContent: true, size: 10 })).map(resource => ({
                       resource,
                   }))
                 : [];

@@ -6,7 +6,7 @@ import { Button } from 'reactstrap';
 import { classifyPaper } from 'services/orkgNlp';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 import { CLASSES } from 'constants/graphSettings';
 import ContentLoader from 'react-content-loader';
 import { SuggestionsBox } from 'components/ViewPaper/SmartSuggestions/styled';
@@ -27,7 +27,7 @@ const SmartSuggestionsFields = ({ handleFieldSelect, title = null, abstract = nu
     }, [title, abstract]);
 
     const handleFieldLabelSelect = async fieldLabel => {
-        const fieldResources = await getResourcesByClass({ q: fieldLabel, id: CLASSES.RESEARCH_FIELD, returnContent: true });
+        const fieldResources = await getResources({ q: fieldLabel, include: [CLASSES.RESEARCH_FIELD], returnContent: true });
 
         if (fieldResources.length === 0) {
             toast.error('The selected research field does not exist in the ORKG. Please select a different field');

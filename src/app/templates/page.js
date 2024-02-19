@@ -1,10 +1,10 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
 import { faEllipsisV, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
+import Link from 'components/NextJsMigration/Link';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
@@ -28,7 +28,7 @@ import {
     ListGroupItem,
     Row,
 } from 'reactstrap';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 
 const Templates = () => {
@@ -61,7 +61,7 @@ const Templates = () => {
             objectId: resourceId,
             predicateId,
             page,
-            items: pageSize,
+            size: pageSize,
             sortBy: 'created_at',
             desc: true,
             returnContent: false,
@@ -86,11 +86,11 @@ const Templates = () => {
         } else if (fClass) {
             apiCalls = getTemplatesOfResourceId(fClass.id, PREDICATES.SHACL_TARGET_CLASS);
         } else {
-            apiCalls = getResourcesByClass({
-                id: CLASSES.NODE_SHAPE,
+            apiCalls = getResources({
+                include: [CLASSES.NODE_SHAPE],
                 page,
                 q: label,
-                items: pageSize,
+                size: pageSize,
             });
         }
 

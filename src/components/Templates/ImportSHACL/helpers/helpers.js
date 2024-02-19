@@ -75,7 +75,7 @@ export const mapPredicate = async (g, predicateNode) => {
             [result] = fetchedPredicate.content;
         } else {
             // Search for a predicate with same label
-            fetchedPredicate = await getPredicates({ q: labelNode?.value, items: 1 });
+            fetchedPredicate = await getPredicates({ q: labelNode?.value, size: 1 });
             if (fetchedPredicate.totalElements) {
                 [result] = fetchedPredicate.content;
             } else {

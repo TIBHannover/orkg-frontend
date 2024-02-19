@@ -1,6 +1,6 @@
 import Link from 'components/NextJsMigration/Link';
 import { useState, useEffect, useCallback } from 'react';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 import { Table, Input, FormGroup, Label, Form } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -25,10 +25,10 @@ const ClassInstances = ({ title = 'class', classId }) => {
         debounce((_page, _searchQuery) => {
             setIsLoading(true);
 
-            getResourcesByClass({
-                id: classId,
+            getResources({
+                include: [classId],
                 page: _page,
-                items: pageSize,
+                size: pageSize,
                 q: _searchQuery,
             }).then(result => {
                 // Resources

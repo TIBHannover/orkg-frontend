@@ -10,7 +10,7 @@ import { CLASSES } from 'constants/graphSettings';
 import DiagramCard from 'components/Cards/DiagramCard/DiagramCard';
 import ROUTES from 'constants/routes';
 import { getVisualizationData } from 'utils';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 
 const Diagrams = () => {
@@ -27,10 +27,10 @@ const Diagrams = () => {
             content: resources,
             last,
             totalElements,
-        } = await getResourcesByClass({
-            id: resourceClass,
+        } = await getResources({
+            include: [resourceClass],
             page,
-            items: pageSize,
+            size: pageSize,
             sortBy: 'created_at',
             desc: true,
         });

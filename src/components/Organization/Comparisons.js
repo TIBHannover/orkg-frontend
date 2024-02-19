@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from 'react';
 import { Container, ListGroup } from 'reactstrap';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getComparisonsByOrganizationId } from 'services/backend/organizations';
+import { getResources } from 'services/backend/resources';
 import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
 import ContentLoader from 'react-content-loader';
 import { getComparisonData, groupVersionsOfComparisons } from 'utils';
@@ -20,7 +20,7 @@ const Comparisons = ({ organizationsId }) => {
     const loadComparisons = useCallback(
         page => {
             setIsLoadingComparisons(true);
-            getComparisonsByOrganizationId(organizationsId, page)
+            getResources({ organizationId: organizationsId, size: 10, page })
                 .then(comparisons =>
                     // Fetch the data of each comparison
                     getStatementsBySubjects({
