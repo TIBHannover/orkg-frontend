@@ -1,5 +1,5 @@
-import { url } from 'constants/misc';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
+import { url } from 'constants/misc';
 import { submitGetRequest } from 'network';
 import qs from 'qs';
 import { Contributor, PaginatedResponse, Resource } from 'services/backend/types';
@@ -18,11 +18,11 @@ export const getResearchFieldsByResearchProblemId = (
 export const getContributorsByResearchProblemId = ({
     id,
     page = 0,
-    items = 9999,
+    size = 9999,
 }: {
     id: string;
     page?: number;
-    items?: number;
+    size?: number;
 }): Promise<
     {
         user: Contributor;
@@ -30,7 +30,7 @@ export const getContributorsByResearchProblemId = ({
     }[]
 > => {
     const params = qs.stringify(
-        { page, size: items },
+        { page, size },
         {
             skipNulls: true,
         },
@@ -48,14 +48,14 @@ export type ResearchProblemTopAuthor = {
 export const getAuthorsByResearchProblemId = ({
     id,
     page = 0,
-    items = 9999,
+    size = 9999,
 }: {
     id: string;
     page?: number;
-    items?: number;
+    size?: number;
 }): Promise<PaginatedResponse<ResearchProblemTopAuthor>> => {
     const params = qs.stringify(
-        { page, size: items },
+        { page, size },
         {
             skipNulls: true,
         },
@@ -66,7 +66,7 @@ export const getAuthorsByResearchProblemId = ({
 export const getContentByResearchProblemIdAndClasses = ({
     id,
     page = 0,
-    items = 9999,
+    size = 9999,
     sortBy = 'created_at',
     desc = true,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
@@ -74,7 +74,7 @@ export const getContentByResearchProblemIdAndClasses = ({
 }: {
     id: string;
     page?: number;
-    items?: number;
+    size?: number;
     sortBy?: string;
     desc?: boolean;
     visibility?: string;
@@ -93,7 +93,7 @@ export const getContentByResearchProblemIdAndClasses = ({
     // Sort is not supported in this endpoint
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
-        { page, size: items, sort, visibility, classes: classes.join(',') },
+        { page, size, sort, visibility, classes: classes.join(',') },
         {
             skipNulls: true,
         },

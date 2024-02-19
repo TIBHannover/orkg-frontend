@@ -14,6 +14,8 @@ export const resourcesUrl = `${url}resources/`;
 
 type SortByOptions = 'id' | 'label' | 'created_at' | 'created_by' | 'visibility';
 
+type VisibilityFilter = 'ALL_LISTED' | 'UNLISTED' | 'FEATURED' | 'NON_FEATURED' | 'DELETED';
+
 export const updateResource = (id: string, label?: string, classes: string[] | null = null, extractionMethod?: string): Promise<Resource> =>
     submitPutRequest(
         `${resourcesUrl}${id}`,
@@ -32,23 +34,58 @@ export const getResource = (id: string): Promise<Resource> => submitGetRequest(`
 
 export const deleteResource = (id: string): Promise<null> => submitDeleteRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' });
 
+/**
+ * Fetches resources based on various filter and sorting criteria.
+ *
+ * @param {Object} params - The parameters for the function.
+ * @param {string|null} [params.q=null] - Query string for searching resources.
+ * @param {boolean} [params.exact=false] - Flag for exact match in search.
+ * @param {VisibilityFilter} [params.visibility=VISIBILITY_FILTERS.ALL_LISTED] - Filter for resource visibility.
+ * @param {string|null} [params.createdBy=null] - Filter for the creator of the resources.
+ * @param {string|null} [params.createdAtStart=null] - Start date for creation date filter. eg: 2023-11-30T08:25:14.049085776+01:00
+ * @param {string|null} [params.createdAtEnd=null] - End date for creation date filter. eg: 2023-11-30T10:25:14.049085776+01:00
+ * @param {string[]} [params.include=[]] - Filter for a set of classes that the resource must have.
+ * @param {string[]} [params.exclude=[]] - Filter for a set of classes that the resource must not have.
+ * @param {string|null} [params.observatoryId=null] - Filter for resources by observatory ID.
+ * @param {string|null} [params.organizationId=null] - Filter for resources by organization ID.
+ * @param {number} [params.page=0] - Page number for pagination.
+ * @param {number} [params.size=9999] - Number of items per page.
+ * @param {SortByOptions} [params.sortBy='created_at'] - The field to sort by.
+ * @param {boolean} [params.desc=true] - Specifies descending order if true.
+ * @param {boolean} [params.returnContent=false] - Flag to return only content field in response.
+ * @returns {Promise<PaginatedResponse<Resource> | Resource[]>} A promise to the resource data.
+ */
 export const getResources = ({
+    q = null,
+    exact = false,
+    visibility = VISIBILITY_FILTERS.ALL_LISTED,
+    createdBy = null,
+    createdAtStart = null,
+    createdAtEnd = null,
+    include = [],
+    exclude = [],
+    observatoryId = null,
+    organizationId = null,
     page = 0,
-    items: size = 9999,
+    size = 9999,
     sortBy = 'created_at',
     desc = true,
-    q = null,
-    exclude = null,
-    exact = false,
     returnContent = false,
 }: {
+    q?: string | null;
+    exact?: boolean;
+    visibility?: VisibilityFilter;
+    createdBy?: string | null;
+    createdAtStart?: string | null;
+    createdAtEnd?: string | null;
+    include?: string[];
+    exclude?: string[];
+    observatoryId?: string | null;
+    organizationId?: string | null;
     page?: number;
-    items?: number;
+    size?: number;
     sortBy?: SortByOptions;
     desc?: boolean;
-    q?: string | null;
-    exclude?: string | null;
-    exact?: boolean;
     returnContent?: boolean;
 }): Promise<PaginatedResponse<Resource> | Resource[]> => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
@@ -56,15 +93,20 @@ export const getResources = ({
         {
             page,
             size,
-            exact,
-            ...(q ? { q } : { sort, desc }),
-            ...(exclude ? { exclude } : {}),
+            ...(q ? { q, exact } : { sort, desc }),
+            visibility,
+            created_by: createdBy,
+            created_at_start: createdAtStart,
+            created_at_end: createdAtEnd,
+            ...(include?.length ? { include: include.join(',') } : {}),
+            ...(exclude?.length ? { exclude: exclude.join(',') } : {}),
+            observatory_id: observatoryId,
+            organization_id: organizationId,
         },
         {
             skipNulls: true,
         },
     );
-
     return submitGetRequest(`${resourcesUrl}?${params}`).then(res => (returnContent ? res.content : res));
 };
 
@@ -130,42 +172,30 @@ export const addResourceToObservatory = ({
 }): Promise<null> =>
     submitPutRequest(`${resourcesUrl}${id}/observatory`, { 'Content-Type': 'application/json' }, { observatory_id, organization_id });
 
-export const getResourcesByClass = async ({
-    id,
+export const getPapers = async ({
     page = 0,
-    items: size = 9999,
+    size = 9999,
     sortBy = 'created_at',
     desc = true,
-    q = null,
-    creator = null,
-    exact = false,
     verified = null,
     returnContent = false,
-    visibility = VISIBILITY_FILTERS.ALL_LISTED,
 }: {
-    id: string;
     page?: number;
-    items?: number;
+    size?: number;
     sortBy?: string;
     desc?: boolean;
-    q?: string | null;
-    creator?: string | null;
-    exact?: boolean;
     verified?: boolean | null;
     returnContent?: boolean;
-    visibility?: string;
 }): Promise<PaginatedResponse<Resource> | Resource[]> => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
-        { page, size, creator, exact, ...(q ? { q } : { sort, desc }), verified, visibility },
+        { page, size, sort, desc, verified },
         {
             skipNulls: true,
         },
     );
 
-    const resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/?${params}`).then(res =>
-        returnContent ? res.content : res,
-    );
+    const resources = await submitGetRequest(`${classesUrl}Paper/resources/?${params}`).then(res => (returnContent ? res.content : res));
     return resources;
 };
 

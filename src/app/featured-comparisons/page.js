@@ -6,7 +6,7 @@ import { Container, Alert, Row } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import FeaturedComparisonsItem from 'components/FeaturedComparisons/FeaturedComparisonsItem';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
@@ -52,24 +52,24 @@ const FeaturedComparisons = () => {
     const getFeaturedComparisonCategories = async () => {
         setLoading(true);
 
-        const responseJson = await getResourcesByClass({
-            id: CLASSES.FEATURED_COMPARISON_CATEGORY,
+        const responseJson = await getResources({
+            include: [CLASSES.FEATURED_COMPARISON_CATEGORY],
             sortBy: 'created_at',
             desc: false,
             returnContent: true,
         });
 
-        const categories = responseJson.map(item => ({
+        const _categories = responseJson.map(item => ({
             label: item.label,
             id: item.id,
         }));
 
-        setCategories(categories);
+        setCategories(_categories);
     };
 
     const getFeaturedComparisons = async () => {
-        const responseJson = await getResourcesByClass({
-            id: CLASSES.FEATURED_COMPARISON,
+        const responseJson = await getResources({
+            include: [CLASSES.FEATURED_COMPARISON],
             sortBy: 'created_at',
             desc: false,
             returnContent: true,

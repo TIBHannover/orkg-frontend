@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useSelector } from 'react-redux';
-import { getStatementsByObjectAndPredicate, getParentResearchFields } from 'services/backend/statements';
-import { getResearchProblemsOfContribution } from 'slices/statementBrowserSlice';
-import { getResearchProblems, getResearchFields, getCommonClasses } from 'slices/contributionEditorSlice';
-import { uniqBy, differenceBy, debounce } from 'lodash';
-import { getResourcesByClass } from 'services/backend/resources';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import useUsedTemplates from 'components/StatementBrowser/TemplatesModal/hooks/useUsedTemplates';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { debounce, differenceBy, uniqBy } from 'lodash';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { getResources } from 'services/backend/resources';
+import { getParentResearchFields, getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { getCommonClasses, getResearchFields, getResearchProblems } from 'slices/contributionEditorSlice';
+import { getResearchProblemsOfContribution } from 'slices/statementBrowserSlice';
 
 const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => {
     const filterOptions = [
@@ -70,7 +70,7 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
                 objectId: resourceId,
                 predicateId,
                 page: p !== null ? p : 0,
-                items: pageSize,
+                size: pageSize,
                 sortBy: 'created_at',
                 desc: true,
                 returnContent: false,
@@ -94,11 +94,11 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
             if (target) {
                 searchCall = getTemplatesOfResourceId(target.id, sf.predicate, page);
             } else {
-                searchCall = getResourcesByClass({
-                    id: CLASSES.NODE_SHAPE,
+                searchCall = getResources({
+                    include: [CLASSES.NODE_SHAPE],
                     page,
                     q: label?.trim(),
-                    items: pageSize,
+                    size: pageSize,
                 });
             }
 

@@ -2,7 +2,7 @@ import Link from 'components/NextJsMigration/Link';
 import { useState, useEffect, useCallback } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, FormGroup, Input, Label, ListGroup, ListGroupItem, InputGroup, Alert } from 'reactstrap';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'react-content-loader';
@@ -103,11 +103,11 @@ export default function AddContribution({
                     setHasNextPage(false);
                 });
         } else {
-            getResourcesByClass({
+            getResources({
                 page: page || currentPage,
-                items: numberOfPaper,
+                size: numberOfPaper,
                 q: searchQuery,
-                id: CLASSES.PAPER,
+                include: [CLASSES.PAPER],
                 returnContent: true,
             })
                 .then(results => {

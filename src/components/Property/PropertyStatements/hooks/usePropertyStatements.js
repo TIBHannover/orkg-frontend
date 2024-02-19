@@ -15,7 +15,7 @@ function usePropertyStatements({ propertyId, pageSize = 10 }) {
             const statementsService = getStatementsByPredicate({
                 id: propertyId,
                 page,
-                items: pageSize,
+                size: pageSize,
                 sortBy: 'created_at',
                 desc: true,
                 returnContent: false,

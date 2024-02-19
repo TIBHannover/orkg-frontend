@@ -1,7 +1,7 @@
 import { url } from 'constants/misc';
-import { getContributorInformationById } from 'services/backend/contributors';
 import { submitGetRequest } from 'network';
 import qs from 'qs';
+import { getContributorInformationById } from 'services/backend/contributors';
 import { PaginatedResponse } from 'services/backend/types';
 
 export const statsUrl = `${url}stats/`;
@@ -56,17 +56,6 @@ export const getObservatoryStatsById = (
     total: number;
 }> => submitGetRequest(`${statsUrl}observatories/${id}/`);
 
-/**
- * Get top contributors
- * @param {String} researchFieldId Research field id
- * @param {Number} days Number of last days (by default it counts all time, from 2010-01-01)
- * @param {Number} page Page number (Doesn't not work!)
- * @param {Number} items Number of items per page
- * @param {String} sortBy Sort field
- * @param {Boolean} desc  ascending order and descending order.
- * @param {Boolean} subfields whether include the subfields or not
- * @return {Object} List of contributors
- */
 type TopContributor = {
     contributor: string;
     comparisons: number;
@@ -77,6 +66,17 @@ type TopContributor = {
     total: number;
 };
 
+/**
+ * Get top contributors
+ * @param {String} researchFieldId Research field id
+ * @param {Number} days Number of last days (by default it counts all time, from 2010-01-01)
+ * @param {Number} page Page number (Doesn't not work!)
+ * @param {Number} size Number of items per page
+ * @param {String} sortBy Sort field
+ * @param {Boolean} desc  ascending order and descending order.
+ * @param {Boolean} subfields whether include the subfields or not
+ * @return {Object} List of contributors
+ */
 export const getTopContributors = async ({
     researchFieldId = null,
     days = null,
@@ -119,11 +119,11 @@ export const getTopContributors = async ({
 export const getChangelogs = ({
     researchFieldId = null,
     page = 0,
-    items = 9999,
+    size = 9999,
 }: {
     researchFieldId?: string | null;
     page?: number;
-    items?: number;
+    size?: number;
 }): Promise<
     PaginatedResponse<{
         id: string;
@@ -139,7 +139,7 @@ export const getChangelogs = ({
     }>
 > => {
     const params = qs.stringify(
-        { page, size: items },
+        { page, size },
         {
             skipNulls: true,
         },

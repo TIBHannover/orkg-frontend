@@ -14,7 +14,7 @@ import NotFound from 'app/not-found';
 import pluralize from 'pluralize';
 import { useEffect, useState } from 'react';
 import useParams from 'components/NextJsMigration/useParams';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 
 function ContentTypes() {
     const { type } = useParams();
@@ -46,10 +46,10 @@ function ContentTypes() {
             content: items,
             last,
             totalElements,
-        } = await getResourcesByClass({
-            id: type,
+        } = await getResources({
+            include: [type],
             page,
-            items: pageSize,
+            size: pageSize,
             sortBy: 'created_at',
             desc: true,
         });

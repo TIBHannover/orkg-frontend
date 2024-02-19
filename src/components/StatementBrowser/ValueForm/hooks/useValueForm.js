@@ -285,7 +285,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                                 subjectId: resourceId,
                                 predicateId: PREDICATES.HAS_LIST_ELEMENT,
                                 page: 0,
-                                items: 1,
+                                size: 1,
                                 sortBy: 'created_at',
                                 desc: true,
                             });

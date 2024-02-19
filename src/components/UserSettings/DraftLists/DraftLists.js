@@ -9,7 +9,7 @@ import { reverse } from 'named-urls';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Alert } from 'reactstrap';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 
 const DraftLists = () => {
@@ -32,12 +32,12 @@ const DraftLists = () => {
             content: resources,
             last,
             totalElements,
-        } = await getResourcesByClass({
-            id: resourceClass,
+        } = await getResources({
+            include: [resourceClass],
             page,
-            items: pageSize,
+            size: pageSize,
             sortBy: 'created_at',
-            creator: user.id,
+            createdBy: user.id,
             desc: true,
         });
 

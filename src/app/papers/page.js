@@ -13,7 +13,7 @@ import ROUTES from 'constants/routes';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getPapers } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 
 const Papers = () => {
@@ -45,10 +45,9 @@ const Papers = () => {
             content: items,
             last,
             totalElements,
-        } = await getResourcesByClass({
-            id: CLASSES.PAPER,
+        } = await getPapers({
             page,
-            items: pageSize,
+            size: pageSize,
             sortBy: 'created_at',
             desc: true,
             verified,

@@ -49,9 +49,6 @@ export const getAllObservatoriesByOrganizationId = (id: string): Promise<Observa
 export const getUsersByOrganizationId = (id: string): Promise<Contributor[]> =>
     submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/users`);
 
-export const getComparisonsByOrganizationId = (id: string, page: number, size: number = 10): Promise<PaginatedResponse<Resource>> =>
-    submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/comparisons/?page=${page}&size=${size}`);
-
 export const getConferences = (): Promise<Organization[]> => submitGetRequest(`${organizationsUrl}conferences`);
 
 export const getProblemsByOrganizationId = (id: string): Promise<PaginatedResponse<Resource>> =>

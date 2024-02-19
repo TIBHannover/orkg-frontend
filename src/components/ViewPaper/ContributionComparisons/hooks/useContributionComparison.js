@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
-import { getStatementsBySubjects, getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { getComparisonData, groupVersionsOfComparisons } from 'utils';
 import { find, flatten } from 'lodash';
+import { useCallback, useEffect, useState } from 'react';
+import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
+import { getComparisonData, groupVersionsOfComparisons } from 'utils';
 
 function useContributionComparison(contributionId) {
     const pageSize = 3;
@@ -21,7 +21,7 @@ function useContributionComparison(contributionId) {
                 objectId: contributionId,
                 predicateId: PREDICATES.COMPARE_CONTRIBUTION,
                 page,
-                items: pageSize,
+                size: pageSize,
                 sortBy: 'created_at',
                 desc: true,
             }).then(result => {

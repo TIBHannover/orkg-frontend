@@ -12,7 +12,7 @@ import ROUTES from 'constants/routes';
 import { useSelector } from 'react-redux';
 import { groupBy } from 'lodash';
 import { getReviewData } from 'utils';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { reverse } from 'named-urls';
 import VideoExplainer from 'components/ListPage/VideoExplainer';
@@ -35,10 +35,10 @@ const Reviews = () => {
             content: resources,
             last,
             totalElements,
-        } = await getResourcesByClass({
-            id: resourceClass,
+        } = await getResources({
+            include: [resourceClass],
             page,
-            items: pageSize,
+            size: pageSize,
             sortBy: 'created_at',
             desc: true,
         });

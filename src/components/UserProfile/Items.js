@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import useRouter from 'components/NextJsMigration/useRouter';
 import { Button, ListGroup } from 'reactstrap';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import {
     getComparisonData,
@@ -40,13 +40,13 @@ const Items = ({ showDelete = false, filterClass, filterLabel, userId }) => {
         p => {
             setIsLoading(true);
 
-            getResourcesByClass({
-                id: filterClass,
+            getResources({
+                include: [filterClass],
                 page: p,
-                items: pageSize,
+                size: pageSize,
                 sortBy: 'created_at',
                 desc: true,
-                creator: userId,
+                createdBy: userId,
             }).then(result => {
                 // Resources
                 if (result.totalElements === 0) {

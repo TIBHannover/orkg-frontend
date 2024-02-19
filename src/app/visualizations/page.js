@@ -6,7 +6,7 @@ import ListPage from 'components/ListPage/ListPage';
 import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
 import { CLASSES } from 'constants/graphSettings';
 import { find } from 'lodash';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 import { addAuthorsToStatementBundle, getVisualizationData } from 'utils';
 
 const Visualizations = () => {
@@ -17,10 +17,10 @@ const Visualizations = () => {
     const renderListItem = visualization => <VisualizationCard visualization={visualization} key={`vis${visualization.id}`} />;
 
     const fetchItems = async ({ page, pageSize }) => {
-        const { items, last, totalElements } = await getResourcesByClass({
-            id: CLASSES.VISUALIZATION,
+        const { items, last, totalElements } = await getResources({
+            include: [CLASSES.VISUALIZATION],
             page,
-            items: pageSize,
+            size: pageSize,
             sortBy: 'created_at',
             desc: true,
         }).then(result =>

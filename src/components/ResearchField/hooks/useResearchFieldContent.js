@@ -1,9 +1,9 @@
+import useRouter from 'components/NextJsMigration/useRouter';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import ROUTES from 'constants/routes.js';
 import { find, flatten } from 'lodash';
 import { reverse } from 'named-urls';
 import { useCallback, useEffect, useState } from 'react';
-import useRouter from 'components/NextJsMigration/useRouter';
 import { getContentByResearchFieldIdAndClasses } from 'services/backend/researchFields';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { addAuthorsToStatementBundle, getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate, reverseWithSlug } from 'utils';
@@ -39,7 +39,7 @@ function useResearchFieldContent({
                 const noFeaturedContentService = getContentByResearchFieldIdAndClasses({
                     id: researchFieldId,
                     page,
-                    items: Math.round(pageSize / 2),
+                    size: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
@@ -49,7 +49,7 @@ function useResearchFieldContent({
                 const featuredContentService = getContentByResearchFieldIdAndClasses({
                     id: researchFieldId,
                     page,
-                    items: Math.round(pageSize / 2),
+                    size: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
@@ -68,7 +68,7 @@ function useResearchFieldContent({
                 contentService = getContentByResearchFieldIdAndClasses({
                     id: researchFieldId,
                     page,
-                    items: pageSize,
+                    size: pageSize,
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,

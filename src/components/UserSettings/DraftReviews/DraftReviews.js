@@ -6,10 +6,10 @@ import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Alert } from 'reactstrap';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 
 const DraftReviews = () => {
@@ -32,12 +32,12 @@ const DraftReviews = () => {
             content: resources,
             last,
             totalElements,
-        } = await getResourcesByClass({
-            id: resourceClass,
+        } = await getResources({
+            include: [resourceClass],
             page,
-            items: pageSize,
+            size: pageSize,
             sortBy: 'created_at',
-            creator: user.id,
+            createdBy: user.id,
             desc: true,
         });
 

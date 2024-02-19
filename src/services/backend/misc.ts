@@ -52,14 +52,14 @@ export const createObject = (payload: object): Promise<Resource> =>
 export const getEntities = (
     entityType: string,
     params: {
-        page: number;
-        items: number;
-        q: string;
-        exclude: string | null;
-        exact: boolean;
+        page?: number;
+        size?: number;
+        q?: string | null;
+        exclude?: string[];
+        exact?: boolean;
     },
 ): Promise<PaginatedResponse<Resource | Predicate | Class> | Resource[] | Predicate[] | Class[]> => {
-    // { page = 0, items: size = 9999, sortBy = 'created_at', desc = true, q = null, exact = false, returnContent = false }
+    // { page = 0, size = 9999, sortBy = 'created_at', desc = true, q = null, exact = false, returnContent = false }
     // for resources there additional parameter: exclude
     // for resources there additional parameter: uri
     switch (entityType) {

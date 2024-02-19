@@ -190,8 +190,16 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                 entityType={entityType}
                                 excludeClasses={
                                     entityType === ENTITIES.RESOURCE && !valueClass
-                                        ? `${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.NODE_SHAPE},${CLASSES.PROPERTY_SHAPE},${CLASSES.PAPER_DELETED},${CLASSES.CONTRIBUTION_DELETED},${CLASSES.EXTERNAL}`
-                                        : null
+                                        ? [
+                                              CLASSES.CONTRIBUTION,
+                                              CLASSES.PROBLEM,
+                                              CLASSES.NODE_SHAPE,
+                                              CLASSES.PROPERTY_SHAPE,
+                                              CLASSES.PAPER_DELETED,
+                                              CLASSES.CONTRIBUTION_DELETED,
+                                              CLASSES.EXTERNAL,
+                                          ]
+                                        : []
                                 }
                                 optionsClass={entityType === ENTITIES.RESOURCE && valueClass ? valueClass.id : undefined}
                                 placeholder={`Enter a ${entityType}`}

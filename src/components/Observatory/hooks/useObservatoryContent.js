@@ -1,11 +1,11 @@
+import useRouter from 'components/NextJsMigration/useRouter';
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
+import ROUTES from 'constants/routes.js';
 import { find, flatten } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { getContentByObservatoryIdAndClasses } from 'services/backend/observatories';
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import useRouter from 'components/NextJsMigration/useRouter';
 import { addAuthorsToStatementBundle, getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate, reverseWithSlug } from 'utils';
-import ROUTES from 'constants/routes.js';
 
 function useObservatoryContent({ observatoryId, slug, initialSort, initialClassFilterOptions, initClassesFilter, pageSize = 30, updateURL = false }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +28,7 @@ function useObservatoryContent({ observatoryId, slug, initialSort, initialClassF
                 const noFeaturedContentService = getContentByObservatoryIdAndClasses({
                     id: observatoryId,
                     page,
-                    items: Math.round(pageSize / 2),
+                    size: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     visibility: VISIBILITY_FILTERS.NON_FEATURED,
@@ -37,7 +37,7 @@ function useObservatoryContent({ observatoryId, slug, initialSort, initialClassF
                 const featuredContentService = getContentByObservatoryIdAndClasses({
                     id: observatoryId,
                     page,
-                    items: Math.round(pageSize / 2),
+                    size: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     visibility: VISIBILITY_FILTERS.FEATURED,
@@ -55,7 +55,7 @@ function useObservatoryContent({ observatoryId, slug, initialSort, initialClassF
                 contentService = getContentByObservatoryIdAndClasses({
                     id: observatoryId,
                     page,
-                    items: pageSize,
+                    size: pageSize,
                     sortBy: 'created_at',
                     desc: true,
                     visibility: sort,

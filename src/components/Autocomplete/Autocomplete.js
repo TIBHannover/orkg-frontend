@@ -1,4 +1,3 @@
-import Link from 'components/NextJsMigration/Link';
 import { faClipboard, faGear, faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -7,6 +6,7 @@ import CustomOption from 'components/Autocomplete/CustomOption';
 import OntologiesModal from 'components/Autocomplete/OntologiesModal';
 import TreeSelector from 'components/Autocomplete/TreeSelector';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+import Link from 'components/NextJsMigration/Link';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
@@ -23,7 +23,7 @@ import { createClass, getClasses } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
 import { getEntities, getEntity } from 'services/backend/misc';
 import { createPredicate, getPredicate } from 'services/backend/predicates';
-import { createResource, getResource, getResourcesByClass } from 'services/backend/resources';
+import { createResource, getResource, getResources } from 'services/backend/resources';
 import { createLiteralStatement } from 'services/backend/statements';
 import { getAllOntologies, getOntologyTerms, getTermMatchingAcrossOntologies, olsBaseUrl, selectTerms } from 'services/ols/index';
 import styled, { withTheme } from 'styled-components';
@@ -223,7 +223,7 @@ const Autocomplete = ({
         }
         let responseJson;
         if (optionsClass) {
-            responseJson = await getResourcesByClass({ id: optionsClass, q: value?.trim(), page, items: PAGE_SIZE, exact });
+            responseJson = await getResources({ include: [optionsClass], q: value?.trim(), page, size: PAGE_SIZE, exact });
         } else {
             const isURI = new RegExp(REGEX.URL).test(value.trim());
             if (entityType === ENTITIES.CLASS && isURI) {
@@ -231,7 +231,7 @@ const Autocomplete = ({
                 try {
                     responseJson = await getClasses({
                         page,
-                        items: PAGE_SIZE,
+                        size: PAGE_SIZE,
                         exact,
                         uri: value.trim(),
                     });
@@ -245,9 +245,9 @@ const Autocomplete = ({
             } else {
                 responseJson = await getEntities(entityType, {
                     page,
-                    items: PAGE_SIZE,
+                    size: PAGE_SIZE,
                     q: value?.trim(),
-                    exclude: excludeClasses || null,
+                    exclude: excludeClasses?.length ? [excludeClasses] : null,
                     exact,
                 });
             }
@@ -936,7 +936,7 @@ const Autocomplete = ({
 Autocomplete.propTypes = {
     requestUrl: PropTypes.string,
     entityType: PropTypes.string,
-    excludeClasses: PropTypes.string,
+    excludeClasses: PropTypes.array,
     optionsClass: PropTypes.string,
     placeholder: PropTypes.string,
     onItemSelected: PropTypes.func,

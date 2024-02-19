@@ -1,9 +1,9 @@
-import { createResourceStatement, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { isEqual } from 'lodash';
+import { createList, updateList } from 'services/backend/lists';
 import { createLiteral } from 'services/backend/literals';
 import { createObject } from 'services/backend/misc';
-import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
-import { createList, updateList } from 'services/backend/lists';
+import { createResourceStatement, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
 
 /**
  * Save the authors of a resource
@@ -26,7 +26,7 @@ const prepareNewAuthors = async newAuthors => {
                     predicateId: PREDICATES.HAS_ORCID,
                     literal: author.orcid,
                     subjectClass: CLASSES.AUTHOR,
-                    items: 1,
+                    size: 1,
                 });
                 return s.length > 0 ? { ...s[0].subject, orcid: author.orcid } : author;
             }

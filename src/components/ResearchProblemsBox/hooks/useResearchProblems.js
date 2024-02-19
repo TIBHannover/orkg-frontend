@@ -28,7 +28,7 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
                 const newService = apiFunc({
                     id,
                     page: _page,
-                    items: Math.round(pageSize / 2),
+                    size: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     ...(by === 'ResearchField' ? { subfields: includeSubFields } : {}),
@@ -38,7 +38,7 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
                 const featuredService = apiFunc({
                     id,
                     page: _page,
-                    items: Math.round(pageSize / 2),
+                    size: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     ...(by === 'ResearchField' ? { subfields: includeSubFields } : {}),
@@ -57,7 +57,7 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
                 problemsService = apiFunc({
                     id,
                     page: _page,
-                    items: pageSize,
+                    size: pageSize,
                     sortBy: 'created_at',
                     desc: true,
                     ...(by === 'ResearchField' ? { subfields: includeSubFields } : {}),

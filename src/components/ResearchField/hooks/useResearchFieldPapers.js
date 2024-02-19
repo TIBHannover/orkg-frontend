@@ -3,7 +3,7 @@ import { CLASSES, RESOURCES } from 'constants/graphSettings';
 import { find } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { getPapersByResearchFieldId } from 'services/backend/researchFields';
-import { getResourcesByClass } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { addAuthorsToStatementBundle, getPaperData, mergeAlternate } from 'utils';
 
@@ -27,7 +27,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                 const noFeaturedPapersService = getPapersByResearchFieldId({
                     id: researchFieldId,
                     page: _page,
-                    items: Math.round(pageSize / 2),
+                    size: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
@@ -36,7 +36,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                 const featuredPapersService = getPapersByResearchFieldId({
                     id: researchFieldId,
                     page: _page,
-                    items: Math.round(pageSize / 2),
+                    size: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
@@ -52,18 +52,18 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                     };
                 });
             } else if (researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN) {
-                papersService = getResourcesByClass({
-                    id: sort === 'featured' ? CLASSES.FEATURED_PAPER : CLASSES.PAPER,
+                papersService = getResources({
+                    include: [sort === 'featured' ? CLASSES.FEATURED_PAPER : CLASSES.PAPER],
                     sortBy: 'created_at',
                     desc: true,
-                    items: pageSize,
+                    size: pageSize,
                     visibility: sort,
                 });
             } else {
                 papersService = getPapersByResearchFieldId({
                     id: researchFieldId,
                     page: _page,
-                    items: pageSize,
+                    size: pageSize,
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
