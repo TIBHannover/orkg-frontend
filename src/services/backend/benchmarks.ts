@@ -1,7 +1,7 @@
 import { url } from 'constants/misc';
 import { submitGetRequest } from 'network';
-import qs from 'qs';
-import { BenchmarkSummary, PaginatedResponse } from 'services/backend/types';
+import { prepareParams } from 'services/backend/misc';
+import { BenchmarkSummary, PaginatedResponse, PaginationParams } from 'services/backend/types';
 
 export const benchmarksUrl = `${url}benchmarks/`;
 
@@ -10,20 +10,8 @@ export const benchmarksUrl = `${url}benchmarks/`;
 export const getAllBenchmarks = ({
     page = 0,
     size = 9999,
-    sortBy = 'totalPapers',
-    desc = true,
-}: {
-    page?: number;
-    size?: number;
-    sortBy?: string;
-    desc?: boolean;
-}): Promise<PaginatedResponse<BenchmarkSummary>> => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = qs.stringify(
-        { page, size, sort },
-        {
-            skipNulls: true,
-        },
-    );
+    sortBy = [{ property: 'totalPapers', direction: 'desc' }],
+}: PaginationParams): Promise<PaginatedResponse<BenchmarkSummary>> => {
+    const params = prepareParams({ page, size, sortBy });
     return submitGetRequest(`${benchmarksUrl}summary/?${params}`);
 };

@@ -1,7 +1,8 @@
 import { url } from 'constants/misc';
 import { submitGetRequest } from 'network';
 import qs from 'qs';
-import { PaginatedResponse } from 'services/backend/types';
+import { prepareParams } from 'services/backend/misc';
+import { PaginatedResponse, PaginationParams } from 'services/backend/types';
 
 export const datasetsUrl = `${url}datasets/`;
 
@@ -80,14 +81,14 @@ export const getDatasetsBenchmarksByResearchProblemId = ({
     id,
     page = 0,
     size = 9999,
-    sortBy = 'totalPapers',
-    desc = true,
-}: {
+    sortBy = [
+        { property: 'totalPapers', direction: 'desc' },
+        { property: 'totalModels', direction: 'desc' },
+        { property: 'totalCodes', direction: 'desc' },
+        { property: 'dataset.label', direction: 'asc' },
+    ],
+}: PaginationParams & {
     id: string;
-    page?: number;
-    size?: number;
-    sortBy?: string;
-    desc?: boolean;
 }): Promise<
     PaginatedResponse<{
         id: string;
@@ -97,12 +98,6 @@ export const getDatasetsBenchmarksByResearchProblemId = ({
         total_codes: number;
     }>
 > => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = qs.stringify(
-        { page, size, sort },
-        {
-            skipNulls: true,
-        },
-    );
+    const params = prepareParams({ page, size, sortBy });
     return submitGetRequest(`${datasetsUrl}research-problem/${encodeURIComponent(id)}?${params}`);
 };
