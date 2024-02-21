@@ -22,6 +22,7 @@ export const PREDICATES = {
     RELATED_RESOURCE: 'RelatedResource',
     RELATED_FIGURE: 'RelatedFigure',
     IMAGE: 'Image',
+    PLACEHOLDER: 'placeholder',
     TEMPLATE_OF_RESEARCH_FIELD: 'TemplateOfResearchField',
     TEMPLATE_OF_RESEARCH_PROBLEM: 'TemplateOfResearchProblem',
     TEMPLATE_OF_PREDICATE: 'TemplateOfPredicate',

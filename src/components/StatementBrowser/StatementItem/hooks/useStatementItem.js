@@ -6,6 +6,7 @@ import {
     setIsDeletingProperty,
     canAddValue as canAddValueAction,
     canDeleteProperty as canDeletePropertyAction,
+    getPropertyShapesByResourceIDAndPredicateID,
 } from 'slices/statementBrowserSlice';
 import { updateStatement, deleteStatementById } from 'services/backend/statements';
 import { createPredicate } from 'services/backend/predicates';
@@ -20,7 +21,7 @@ function useStatementItem({ propertyId, resourceId, syncBackend }) {
     const property = useSelector(state => state.statementBrowser.properties.byId[propertyId]);
     const values = useSelector(state => state.statementBrowser.values);
     const [predicateLabel, setPredicateLabel] = useState(property.label);
-
+    const propertyShape = useSelector(state => getPropertyShapesByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)?.[0]);
     const canAddValue = useSelector(state => canAddValueAction(state, resourceId || state.statementBrowser.selectedResource, propertyId));
     const canDeleteProperty = useSelector(state => canDeletePropertyAction(state, resourceId || state.statementBrowser.selectedResource, propertyId));
     const propertiesAsLinks = useSelector(state => state.statementBrowser.propertiesAsLinks);
@@ -143,6 +144,7 @@ function useStatementItem({ propertyId, resourceId, syncBackend }) {
     );
 
     return {
+        propertyShape,
         propertiesAsLinks,
         propertyOptionsClasses,
         canDeleteProperty,

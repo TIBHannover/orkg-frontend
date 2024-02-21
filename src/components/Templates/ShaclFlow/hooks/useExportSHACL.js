@@ -90,6 +90,14 @@ const useExportSHACL = () => {
                     graph.add(new rdf.Triple(propertyShapeNode, shacl('maxCount'), new rdf.Literal(propertyShape.maxCount, rdf.xsdns('integer'))));
                 }
 
+                if (propertyShape.placeholder) {
+                    graph.add(new rdf.Triple(propertyShapeNode, orkgp(PREDICATES.PLACEHOLDER), new rdf.Literal(propertyShape.placeholder)));
+                }
+
+                if (propertyShape.description) {
+                    graph.add(new rdf.Triple(propertyShapeNode, shacl('description'), new rdf.Literal(propertyShape.description)));
+                }
+
                 if (propertyShape.value?.id && !['Decimal', 'Integer', 'String', 'Boolean', 'Date', 'URI'].includes(propertyShape.value.id)) {
                     graph.add(new rdf.Triple(propertyShapeNode, shacl('class'), orkgc(propertyShape.value.id.toString())));
                     graph.add(

@@ -21,6 +21,7 @@ import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 
 const StatementItem = forwardRef(({ resourceId = null, showValueHelp = false, id, syncBackend, enableEdit, inTemplate }, ref) => {
     const {
+        propertyShape,
         propertiesAsLinks,
         propertyOptionsClasses,
         canDeleteProperty,
@@ -51,6 +52,7 @@ const StatementItem = forwardRef(({ resourceId = null, showValueHelp = false, id
                                         id={property.existingPredicateId}
                                         _class={ENTITIES.PREDICATE}
                                         disabled={!preferences.showDescriptionTooltips}
+                                        contextDescription={propertyShape?.description}
                                     >
                                         <Link
                                             href={reverse(ROUTES.PROPERTY, { id: property.existingPredicateId })}

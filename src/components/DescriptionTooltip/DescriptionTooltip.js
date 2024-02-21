@@ -47,13 +47,13 @@ const TippyStyle = styled(Tippy)`
     }
 `;
 
-const DescriptionTooltip = ({ disabled = false, showURL = false, id, _class, classes, children, extraContent }) => {
-    const [description, setDescription] = useState('');
+const DescriptionTooltip = ({ disabled = false, showURL = false, id, _class, classes, children, extraContent, contextDescription }) => {
+    const [description, setDescription] = useState(contextDescription ?? '');
     const [isLoading, setIsLoading] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(!!contextDescription);
 
     const onTrigger = () => {
-        if (!isLoaded && _class !== ENTITIES.LITERAL && id) {
+        if (!isLoaded && _class !== ENTITIES.LITERAL && id && !contextDescription) {
             setIsLoading(true);
             getStatementsBySubjectAndPredicate({ subjectId: id, predicateId: PREDICATES.DESCRIPTION })
                 .then(descriptionStatement => {
@@ -73,6 +73,10 @@ const DescriptionTooltip = ({ disabled = false, showURL = false, id, _class, cla
     useEffect(() => {
         setIsLoaded(false);
     }, [id]);
+
+    useEffect(() => {
+        setDescription(contextDescription);
+    }, [contextDescription]);
 
     const renderTypeLabel = () => {
         switch (_class) {
@@ -189,8 +193,9 @@ DescriptionTooltip.propTypes = {
     _class: PropTypes.oneOf([ENTITIES.RESOURCE, ENTITIES.LITERAL, ENTITIES.CLASS, ENTITIES.PREDICATE]),
     classes: PropTypes.array,
     extraContent: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-    disabled: PropTypes.bool.isRequired,
-    showURL: PropTypes.bool.isRequired,
+    disabled: PropTypes.bool,
+    showURL: PropTypes.bool,
+    contextDescription: PropTypes.string,
 };
 
 export default DescriptionTooltip;

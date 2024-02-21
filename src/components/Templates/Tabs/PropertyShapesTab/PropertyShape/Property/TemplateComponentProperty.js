@@ -11,6 +11,7 @@ import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { InputGroup } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -22,6 +23,7 @@ const DragHandler = styled.div`
 
 function TemplateComponentProperty(props) {
     const [isEditing, setIsEditing] = useState(false);
+    const property = useSelector(state => state.templateEditor.propertyShapes[props.id].property);
     const { isEditMode } = useIsEditMode();
 
     return (
@@ -33,14 +35,14 @@ function TemplateComponentProperty(props) {
             )}
             {!isEditing ? (
                 <div className="propertyLabel">
-                    {props.property?.id ? (
-                        <Link href={reverse(ROUTES.PROPERTY, { id: props.property.id })} target="_blank" className="text-dark">
-                            <DescriptionTooltip id={props.property.id} _class={ENTITIES.PREDICATE}>
-                                {props.property.label}
+                    {property?.id ? (
+                        <Link href={reverse(ROUTES.PROPERTY, { id: property.id })} target="_blank" className="text-dark">
+                            <DescriptionTooltip id={property.id} _class={ENTITIES.PREDICATE}>
+                                {property.label}
                             </DescriptionTooltip>
                         </Link>
                     ) : (
-                        props.property?.label
+                        property?.label
                     )}
 
                     {isEditMode && (
@@ -79,7 +81,7 @@ function TemplateComponentProperty(props) {
                                 props.handlePropertiesSelect(selected, action, props.id);
                                 setIsEditing(false);
                             }}
-                            value={props.property}
+                            value={property}
                             autoLoadOption={true}
                             openMenuOnFocus={true}
                             allowCreate={true}
@@ -97,7 +99,6 @@ function TemplateComponentProperty(props) {
 
 TemplateComponentProperty.propTypes = {
     id: PropTypes.number.isRequired,
-    property: PropTypes.object.isRequired,
     handleDeletePropertyShape: PropTypes.func.isRequired,
     handlePropertiesSelect: PropTypes.func.isRequired,
     dragRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
