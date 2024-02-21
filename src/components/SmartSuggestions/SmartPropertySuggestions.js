@@ -13,7 +13,7 @@ import { Button } from 'reactstrap';
 import { createPredicate, getPredicates } from 'services/backend/predicates';
 import { getLlmResponse } from 'services/orkgNlp';
 
-export const SmartPropertySuggestions = ({ properties, handleCreate, isDisabled = false }) => {
+export const SmartPropertySuggestions = ({ properties, handleCreate }) => {
     const [recommendedProperties, setRecommendedProperties] = useState([]);
     const [isOpenSmartTooltip, setIsOpenSmartTooltip] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -117,7 +117,6 @@ export const SmartPropertySuggestions = ({ properties, handleCreate, isDisabled 
         >
             <Tippy content="Get suggestions for new properties">
                 <button
-                    disabled={isDisabled}
                     className="btn btn-smart px-3 btn-sm"
                     style={{ marginLeft: 1 }}
                     onClick={() => setIsOpenSmartTooltip(v => !v)}
@@ -132,7 +131,6 @@ export const SmartPropertySuggestions = ({ properties, handleCreate, isDisabled 
 SmartPropertySuggestions.propTypes = {
     properties: PropTypes.array.isRequired,
     handleCreate: PropTypes.func.isRequired,
-    isDisabled: PropTypes.bool,
 };
 
 // use memo to prevent rerendering when the PaperHeaderBar appears/disappears on scroll

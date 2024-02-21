@@ -54,11 +54,12 @@ const AddPropertyView = ({
                             >
                                 <Icon className="icon" size="sm" icon={faPlus} /> Add property
                             </ButtonWithLoading>
-                            <SmartPropertySuggestions
-                                disabled={isDisabled}
-                                properties={propertyLabels}
-                                handleCreate={({ id, label }) => handlePropertySelect({ id, value: label })}
-                            />
+                            {!isDisabled && (
+                                <SmartPropertySuggestions
+                                    properties={propertyLabels}
+                                    handleCreate={({ id, label }) => handlePropertySelect({ id, value: label })}
+                                />
+                            )}
                         </ButtonGroup>
                     </ConditionalWrapper>
                 ) : (
