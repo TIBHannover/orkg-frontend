@@ -306,35 +306,35 @@ export const getTemplateById = async (templateId: string) => {
     if (!subject) {
         return Promise.reject(new Error('Template not found'));
     }
-    // use @ts-ignore because of the filterObjectOfStatementsByPredicateAndClass is still in JS instead of TS
+    // use @ts-expect-error because of the filterObjectOfStatementsByPredicateAndClass is still in JS instead of TS
     const statements: Statement[] = filterStatementsBySubjectId(response.statements, templateId);
     const templatePredicate = filterObjectOfStatementsByPredicateAndClass(
         response.statements,
         PREDICATES.TEMPLATE_OF_PREDICATE,
         true,
-        // @ts-ignore
+        // @ts-expect-error
         null,
         templateId,
     );
-    // @ts-ignore
+    // @ts-expect-error
     const targetClass = filterObjectOfStatementsByPredicateAndClass(response.statements, PREDICATES.SHACL_TARGET_CLASS, true, null, templateId);
     const templateFormatLabel = filterObjectOfStatementsByPredicateAndClass(
         response.statements,
         PREDICATES.TEMPLATE_LABEL_FORMAT,
         true,
-        // @ts-ignore
+        // @ts-expect-error
         null,
         templateId,
     );
-    // @ts-ignore
+    // @ts-expect-error
     const descriptionLabel = filterObjectOfStatementsByPredicateAndClass(response.statements, PREDICATES.DESCRIPTION, true, null, templateId);
-    // @ts-ignore
+    // @ts-expect-error
     const templateIsClosed = filterObjectOfStatementsByPredicateAndClass(response.statements, PREDICATES.SHACL_CLOSED, true, null, templateId);
     const templatePropertyShapes: Resource[] = filterObjectOfStatementsByPredicateAndClass(
         response.statements,
         PREDICATES.SHACL_PROPERTY,
         false,
-        // @ts-ignore
+        // @ts-expect-error
         null,
         templateId,
     );
@@ -343,7 +343,7 @@ export const getTemplateById = async (templateId: string) => {
         response.statements,
         PREDICATES.TEMPLATE_OF_RESEARCH_FIELD,
         false,
-        // @ts-ignore
+        // @ts-expect-error
         null,
         templateId,
     );
@@ -352,7 +352,7 @@ export const getTemplateById = async (templateId: string) => {
         response.statements,
         PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM,
         false,
-        // @ts-ignore
+        // @ts-expect-error
         null,
         templateId,
     );
@@ -362,7 +362,7 @@ export const getTemplateById = async (templateId: string) => {
     );
 
     const propertyShapesStatements = templatePropertyShapes.map(propertyShape =>
-        // @ts-ignore
+        // @ts-expect-error
         filterStatementsBySubjectId(response.statements, propertyShape.id).map(s => s.id),
     );
 

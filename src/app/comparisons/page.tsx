@@ -1,46 +1,37 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
-import { useEffect } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import comparisonsThumbnail from 'assets/img/video_thumbnails/comparisons.png';
 import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
 import ListPage from 'components/ListPage/ListPage';
+import VideoExplainer from 'components/ListPage/VideoExplainer';
+import Link from 'components/NextJsMigration/Link';
+import loadImage from 'components/NextJsMigration/loadImage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
-import { find } from 'lodash';
-import { getResources } from 'services/backend/resources';
-import { getStatementsBySubjects } from 'services/backend/statements';
-import { getComparisonData, groupVersionsOfComparisons } from 'utils';
-import comparisonsThumbnail from 'assets/img/video_thumbnails/comparisons.png';
-import VideoExplainer from 'components/ListPage/VideoExplainer';
-import loadImage from 'components/NextJsMigration/loadImage';
+import { useEffect } from 'react';
+import { getComparisons } from 'services/backend/comparisons';
+import { Comparison } from 'services/backend/types';
 
 const Comparisons = () => {
     useEffect(() => {
         document.title = 'Comparisons list - ORKG';
     });
 
-    const renderListItem = comparison => <ComparisonCard comparison={comparison} key={`pc${comparison.id}`} />;
+    const renderListItem = (comparison: Comparison) => <ComparisonCard comparison={comparison} key={comparison.id} />;
 
-    const fetchItems = async ({ page, pageSize }) => {
-        const { items, last, totalElements } = await getResources({
-            include: [CLASSES.COMPARISON],
+    const fetchItems = async ({ page, pageSize }: { page: number; pageSize: number }) => {
+        const {
+            content: items,
+            last,
+            totalElements,
+        } = await getComparisons({
             page,
             size: pageSize,
-            sortBy: 'created_at',
-            desc: true,
-        }).then(async result => ({
-            ...result,
-            items: groupVersionsOfComparisons(
-                await getStatementsBySubjects({ ids: result.content.map(p => p.id) }).then(comparisonsStatements =>
-                    comparisonsStatements.map(comparisonStatements =>
-                        getComparisonData(find(result.content, { id: comparisonStatements.id }), comparisonStatements.statements),
-                    ),
-                ),
-            ),
-        }));
+            sortBy: [{ property: 'created_at', direction: 'desc' }],
+        });
 
         return {
             items,
@@ -60,6 +51,7 @@ const Comparisons = () => {
             >
                 <Icon icon={faPlus} /> Create comparison
             </RequireAuthentication>
+            {/* @ts-expect-error */}
             <Link style={{ marginLeft: '1px' }} className="btn btn-secondary btn-sm flex-shrink-0" href={ROUTES.FEATURED_COMPARISONS}>
                 Featured comparisons
             </Link>
@@ -97,8 +89,10 @@ const Comparisons = () => {
             resourceClass={CLASSES.COMPARISON}
             renderListItem={renderListItem}
             fetchItems={fetchItems}
+            // @ts-expect-error
             buttons={buttons}
             pageSize={15}
+            // @ts-expect-error
             infoContainerText={infoContainerText}
         />
     );

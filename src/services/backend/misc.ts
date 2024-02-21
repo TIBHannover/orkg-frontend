@@ -1,10 +1,11 @@
-import { url } from 'constants/misc';
 import { ENTITIES } from 'constants/graphSettings';
+import { url } from 'constants/misc';
 import { submitGetRequest, submitPostRequest } from 'network';
-import { getClasses, getClassById } from 'services/backend/classes';
-import { getPredicates, getPredicate } from 'services/backend/predicates';
-import { getResources, getResource } from 'services/backend/resources';
-import { Class, PaginatedResponse, Predicate, Resource } from 'services/backend/types';
+import qs from 'qs';
+import { getClassById, getClasses } from 'services/backend/classes';
+import { getPredicate, getPredicates } from 'services/backend/predicates';
+import { getResource, getResources } from 'services/backend/resources';
+import { Class, PaginatedResponse, PaginationParams, Predicate, Resource, VerifiedParam, VisibilityParam } from 'services/backend/types';
 
 export const doisUrl = `${url}dois/`;
 
@@ -93,3 +94,18 @@ export const getEntity = (entityType: string = ENTITIES.RESOURCE, id: string): P
             return getResource(id);
     }
 };
+
+export const prepareParams = (params: PaginationParams & VerifiedParam & VisibilityParam): string =>
+    qs.stringify(
+        {
+            page: params.page,
+            size: params.size,
+            sort: params.sortBy?.map(p => `${p.property},${p.direction}`),
+            verified: params.verified,
+            visibility: params.visibility,
+        },
+        {
+            skipNulls: true,
+            arrayFormat: 'repeat',
+        },
+    );

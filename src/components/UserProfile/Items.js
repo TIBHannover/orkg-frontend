@@ -1,11 +1,12 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
+import ListCard from 'components/Cards/ListCard/ListCard';
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
-import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
 import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
-import ListCard from 'components/Cards/ListCard/ListCard';
+import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
+import useRouter from 'components/NextJsMigration/useRouter';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
@@ -13,18 +14,20 @@ import { find, flatten, groupBy } from 'lodash';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
-import useRouter from 'components/NextJsMigration/useRouter';
 import { Button, ListGroup } from 'reactstrap';
 import { getResources } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import {
+    addAuthorsToStatementBundle,
+    convertComparisonToNewFormat,
+    convertPaperToNewFormat,
+    convertVisualizationToNewFormat,
     getComparisonData,
     getListData,
-    getVisualizationData,
     getPaperData,
     getReviewData,
+    getVisualizationData,
     groupVersionsOfComparisons,
-    addAuthorsToStatementBundle,
 } from 'utils';
 
 const Items = ({ showDelete = false, filterClass, filterLabel, userId }) => {
@@ -182,13 +185,13 @@ const Items = ({ showDelete = false, filterClass, filterLabel, userId }) => {
                                     selectable={showDelete}
                                     selected={selected}
                                     onSelect={() => handleSelect(paperId)}
-                                    paper={{ title: resource.label, ...resource }}
+                                    paper={convertPaperToNewFormat(resource)}
                                     key={`pc${resource.id}`}
                                 />
                             );
                         }
                         if (filterClass === CLASSES.COMPARISON) {
-                            return <ComparisonCard comparison={{ ...resource }} key={`pc${resource.id}`} />;
+                            return <ComparisonCard comparison={convertComparisonToNewFormat(resource)} key={`pc${resource.id}`} />;
                         }
                         if (filterClass === CLASSES.NODE_SHAPE) {
                             return <TemplateCard template={resource} key={`pc${resource.id}`} />;
@@ -198,7 +201,14 @@ const Items = ({ showDelete = false, filterClass, filterLabel, userId }) => {
                             return <ReviewCard key={resource[0]?.id} versions={resource} showBadge={false} showCurationFlags={true} />;
                         }
                         if (filterClass === CLASSES.VISUALIZATION) {
-                            return <VisualizationCard visualization={resource} showBadge={false} showCurationFlags={true} key={`pc${resource.id}`} />;
+                            return (
+                                <VisualizationCard
+                                    visualization={convertVisualizationToNewFormat(resource)}
+                                    showBadge={false}
+                                    showCurationFlags={true}
+                                    key={`pc${resource.id}`}
+                                />
+                            );
                         }
                         if (filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
                             return <ListCard versions={resource} showBadge={false} showCurationFlags={true} />;

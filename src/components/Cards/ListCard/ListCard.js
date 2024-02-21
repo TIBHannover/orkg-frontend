@@ -1,20 +1,21 @@
-import Link from 'components/NextJsMigration/Link';
-import { reverse } from 'named-urls';
-import styled from 'styled-components';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import ROUTES from 'constants/routes.js';
-import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
 import Authors from 'components/Cards/PaperCard/Authors';
 import useCardData from 'components/Cards/hooks/useCardData';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import PropTypes from 'prop-types';
-import { CardBadge } from 'components/styled';
-import moment from 'moment';
-import Tippy from '@tippyjs/react';
+import Link from 'components/NextJsMigration/Link';
+import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
+import { CardBadge } from 'components/styled';
+import ROUTES from 'constants/routes.js';
+import moment from 'moment';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { convertAuthorsToNewFormat } from 'utils';
 
 const CardStyled = styled.div`
     &:last-child {
@@ -64,7 +65,7 @@ const ListCard = ({ versions, showBadge = false, showCurationFlags = true }) => 
                     </div>
                     <div className="mb-1">
                         <small>
-                            {!isLoadingMetaData && <Authors authors={authors} />}
+                            {!isLoadingMetaData && <Authors authors={convertAuthorsToNewFormat(authors)} />}
                             {isLoadingMetaData && 'Loading...'}
                             {versions[0].created_at && (
                                 <>

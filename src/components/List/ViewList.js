@@ -1,25 +1,26 @@
-import Link from 'components/NextJsMigration/Link';
 import Tippy from '@tippyjs/react';
+import MarkdownRenderer from 'components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
 import { SectionStyled } from 'components/ArticleBuilder/styled';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import Contributors from 'components/List/Contributors';
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
-import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
-import MarkdownRenderer from 'components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
+import { supportedContentTypes } from 'components/ContentType/types';
+import Contributors from 'components/List/Contributors';
+import ListEntryAmount from 'components/List/ListEntryAmount/ListEntryAmount';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
+import Link from 'components/NextJsMigration/Link';
+import useParams from 'components/NextJsMigration/useParams';
+import { CLASSES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import useParams from 'components/NextJsMigration/useParams';
 import { Alert, Button, Container, ListGroup, ListGroupItem } from 'reactstrap';
 import { historyModalToggled } from 'slices/listSlice';
-import ListEntryAmount from 'components/List/ListEntryAmount/ListEntryAmount';
-import { supportedContentTypes } from 'components/ContentType/types';
+import { convertPaperToNewFormat } from 'utils';
 
 const ViewList = ({ isEmbedded }) => {
     const { id } = useParams();
@@ -111,10 +112,7 @@ const ViewList = ({ isEmbedded }) => {
                                                         showBreadcrumbs={false}
                                                         showCreator={false}
                                                         description={entry.description}
-                                                        paper={{
-                                                            ...contentType,
-                                                            title: contentType.label,
-                                                        }}
+                                                        paper={convertPaperToNewFormat(contentType)}
                                                         showAddToComparison={!isEmbedded}
                                                         linkTarget="_blank"
                                                         showContributionCount={true}

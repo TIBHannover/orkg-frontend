@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { getPapersLinkedToResource } from 'services/backend/papers';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { addAuthorsToStatementBundle, getPaperData } from 'utils';
+import { addAuthorsToStatementBundle, convertPaperToNewFormat, getPaperData } from 'utils';
 
 function ResourceUsage({ id }) {
     const [statements, setStatements] = useState([]);
@@ -16,11 +16,11 @@ function ResourceUsage({ id }) {
         const paperCardData = statements.find(({ id: _id }) => _id === object.id);
         return (
             <PaperCard
-                paper={{
+                paper={convertPaperToNewFormat({
                     title: object.label,
                     ...object,
                     ...(!paperCardData ? { isLoading: true } : getPaperData(object, paperCardData?.statements)),
-                }}
+                })}
                 paths={object.path}
                 key={object.id}
             />

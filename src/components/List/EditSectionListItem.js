@@ -1,9 +1,10 @@
-import Link from 'components/NextJsMigration/Link';
 import { faBars, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import Confirm from 'components/Confirmation/Confirmation';
 import { supportedContentTypes } from 'components/ContentType/types';
-import PaperCard from 'components/Cards/PaperCard/PaperCard';
+import Link from 'components/NextJsMigration/Link';
+import EditPaperModal from 'components/PaperForm/EditPaperModal';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -14,7 +15,7 @@ import { SortableElement, sortableHandle } from 'react-sortable-hoc';
 import { Button, ListGroupItem } from 'reactstrap';
 import { deleteListEntry, listEntryUpdated } from 'slices/listSlice';
 import styled from 'styled-components';
-import EditPaperModal from 'components/PaperForm/EditPaperModal';
+import { convertPaperToNewFormat } from 'utils';
 
 const Toolbar = styled.div`
     width: 200px;
@@ -104,10 +105,7 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
                     isListGroupItem={false}
                     showBreadcrumbs={false}
                     showCreator={false}
-                    paper={{
-                        ...contentType,
-                        title: contentType.label,
-                    }}
+                    paper={convertPaperToNewFormat(contentType)}
                     description={entry.description}
                     showAddToComparison
                     linkTarget="_blank"

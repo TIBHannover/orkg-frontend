@@ -28,6 +28,13 @@ export type PaginatedResponse<T> = {
 };
 
 export type ExtractionMethod = 'UNKNOWN' | 'MANUAL' | 'AUTOMATIC';
+export type Visibility = 'default' | 'featured' | 'unlisted' | 'deleted';
+export type VisibilityFilter = 'ALL_LISTED' | 'UNLISTED' | 'FEATURED' | 'NON_FEATURED' | 'DELETED';
+
+export type Node = {
+    id: string;
+    label: string;
+};
 
 export type Resource = {
     id: string;
@@ -180,4 +187,96 @@ export type Author = {
         web_of_science: string;
         homepage: string;
     }[];
+};
+
+export type Paper = {
+    id: string;
+    title: string;
+    research_fields: Node[];
+    identifiers: {
+        doi?: string[];
+    };
+    publication_info: {
+        published_month?: number | null;
+        published_year?: number | null;
+        published_in?: string | null;
+        url?: string | null;
+    };
+    authors: Author[];
+    contributions: Node[];
+    organizations: string[];
+    observatories: string[];
+    extraction_method: ExtractionMethod;
+    created_at: string;
+    created_by: string;
+    verified: boolean;
+    visibility: Visibility;
+    unlisted_by: string;
+};
+
+export type Visualization = {
+    id: string;
+    title: string;
+    authors: Author[];
+    organizations: string[];
+    observatories: string[];
+    extraction_method: ExtractionMethod;
+    created_at: string;
+    created_by: string;
+    visibility: Visibility;
+    description: string;
+};
+
+export type ComparisonVersion = {
+    created_at: string;
+    id: string;
+    label: string;
+};
+
+// type not complete, but part of other issue: https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/issues/1610
+export type Comparison = {
+    id: string;
+    title: string;
+    description: string;
+    research_fields: Node[];
+    identifiers: {
+        doi?: string;
+    };
+    publication_info: {
+        published_month: number;
+        published_year: number;
+        published_in: string | null;
+        url: string | null;
+    };
+    authors: Author[];
+    contributions: Node[];
+    visualizations: any[];
+    related_figures: any[];
+    related_resources: any[];
+    references: any[];
+    observatories: string[];
+    organizations: string[];
+    extraction_method: string;
+    created_at: string;
+    created_by: string;
+    previous_version: string;
+    is_anonymized: boolean;
+    visibility: string;
+    versions: ComparisonVersion[];
+};
+
+export type Verified = boolean | null;
+
+export type PaginationParams = {
+    page?: number;
+    size?: number;
+    sortBy?: { property: string; direction: 'asc' | 'desc' }[];
+};
+
+export type VerifiedParam = {
+    verified?: Verified;
+};
+
+export type VisibilityParam = {
+    visibility?: VisibilityFilter;
 };

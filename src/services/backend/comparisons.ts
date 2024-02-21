@@ -1,7 +1,9 @@
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { url } from 'constants/misc';
 import { submitGetRequest, submitPostRequest } from 'network';
 import qs from 'qs';
-import { Author, PaginatedResponse } from 'services/backend/types';
+import { Author, Comparison, PaginatedResponse, PaginationParams, VerifiedParam, VisibilityParam } from 'services/backend/types';
+import { prepareParams } from 'services/backend/misc';
 
 export const comparisonUrl = `${url}comparisons/`;
 
@@ -50,35 +52,15 @@ export const publishComparisonDoi = ({
         },
     );
 
-// type not complete, but part of other issue: https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/issues/1610
-export type Comparison = {
-    id: string;
-    title: string;
-    description: string;
-    research_fields: string[];
-    identifiers: {
-        doi?: string;
-    };
-    publication_info: {
-        published_month: number;
-        published_year: number;
-        published_in: string | null;
-        url: string | null;
-    };
-    authors: Author[];
-    contributions: any[];
-    visualizations: any[];
-    related_figures: any[];
-    related_resources: any[];
-    references: any[];
-    observatories: string[];
-    organizations: string[];
-    extraction_method: string;
-    created_at: string;
-    created_by: string;
-    previous_version: string;
-    is_anonymized: boolean;
-    visibility: string;
-};
-
 export const getComparison = (id: string): Promise<Comparison> => submitGetRequest(`${comparisonUrl}${encodeURIComponent(id)}`);
+
+export const getComparisons = ({
+    page = 0,
+    size = 999,
+    sortBy = [{ property: 'created_at', direction: 'desc' }],
+    verified = null,
+    visibility = VISIBILITY_FILTERS.ALL_LISTED,
+}: PaginationParams & VerifiedParam & VisibilityParam): Promise<PaginatedResponse<Comparison>> => {
+    const params = prepareParams({ page, size, sortBy, verified, visibility });
+    return submitGetRequest(`${comparisonUrl}?${params}`);
+};

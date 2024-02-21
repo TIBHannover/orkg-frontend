@@ -1,9 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getUserInformation } from 'services/backend/users';
 import env from 'components/NextJsMigration/env';
 import { Cookies } from 'react-cookie';
+import { Dispatch } from 'redux';
+import { getUserInformation } from 'services/backend/users';
+import { AuthSliceType } from 'slices/types';
 
-const initialState = {
+const initialState: AuthSliceType = {
     dialogIsOpen: false,
     action: 'signin',
     user: 0, // possible values: 0 (to differentiate first load from non-signedin but stay falsy), null (non signedin), or object (signedin)
@@ -40,7 +42,7 @@ export const { updateAuth, resetAuth, openAuthDialog, toggleAuthDialog } = authS
 export default authSlice.reducer;
 
 export function firstLoad() {
-    return dispatch => {
+    return (dispatch: Dispatch) => {
         const cookies = new Cookies();
         const token = cookies.get('token') ? cookies.get('token') : null;
         const token_expires_in = cookies.get('token_expires_in') ? cookies.get('token_expires_in') : null;

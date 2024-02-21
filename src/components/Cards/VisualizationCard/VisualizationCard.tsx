@@ -1,19 +1,21 @@
-import Link from 'components/NextJsMigration/Link';
+import { faCalendar, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar } from '@fortawesome/free-solid-svg-icons';
-import ROUTES from 'constants/routes.js';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
+import Thumbnail from 'components/Cards/VisualizationCard/Thumbnail';
+import useVisualizationResearchField from 'components/Cards/VisualizationCard/hooks/useVisualizationResearchField';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
+import Link from 'components/NextJsMigration/Link';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CardBadge } from 'components/styled';
-import { reverse } from 'named-urls';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import { VISIBILITY } from 'constants/contentTypes';
+import ROUTES from 'constants/routes.js';
 import moment from 'moment';
-import Thumbnail from 'components/Cards/VisualizationCard/Thumbnail';
-import useVisualizationResearchField from 'components/Cards/VisualizationCard/hooks/useVisualizationResearchField';
+import { reverse } from 'named-urls';
+import { FC } from 'react';
+import { Visualization } from 'services/backend/types';
+import styled from 'styled-components';
 
 const VisualizationCardStyled = styled.div`
     a {
@@ -25,11 +27,17 @@ const VisualizationCardStyled = styled.div`
     }
 `;
 
-const VisualizationCard = ({ showBadge = false, showCurationFlags = true, visualization }) => {
+type VisualizationCardProps = {
+    visualization: Visualization;
+    showBadge?: boolean;
+    showCurationFlags?: boolean;
+};
+
+const VisualizationCard: FC<VisualizationCardProps> = ({ visualization, showBadge = false, showCurationFlags = true }) => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: visualization.id,
-        unlisted: visualization?.unlisted,
-        featured: visualization?.featured,
+        unlisted: visualization?.visibility === VISIBILITY.UNLISTED,
+        featured: visualization?.visibility === VISIBILITY.FEATURED,
     });
 
     const { researchField } = useVisualizationResearchField({
@@ -51,14 +59,9 @@ const VisualizationCard = ({ showBadge = false, showCurationFlags = true, visual
                 )}
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
-                        <Link
-                            href={
-                                visualization.comparisonId
-                                    ? `${reverse(ROUTES.COMPARISON, { comparisonId: visualization.comparisonId })}#Vis${visualization.id}`
-                                    : reverse(ROUTES.VISUALIZATION, { id: visualization.id })
-                            }
-                        >
-                            {visualization.label ? visualization.label : <em>No title</em>}
+                        {/* @ts-expect-error */}
+                        <Link href={reverse(ROUTES.VISUALIZATION, { id: visualization.id })}>
+                            {visualization.title ? visualization.title : <em>No title</em>}
                         </Link>
                         {showBadge && (
                             <div className="d-inline-block ms-2">
@@ -70,7 +73,7 @@ const VisualizationCard = ({ showBadge = false, showCurationFlags = true, visual
                         <small>
                             {visualization.authors && visualization.authors.length > 0 && (
                                 <>
-                                    <Icon size="sm" icon={faUser} /> {visualization.authors.map(a => a.label).join(', ')}
+                                    <Icon size="sm" icon={faUser} /> {visualization.authors.map(a => a.name).join(', ')}
                                 </>
                             )}
                             {visualization.created_at && (
@@ -102,22 +105,6 @@ const VisualizationCard = ({ showBadge = false, showCurationFlags = true, visual
             </div>
         </VisualizationCardStyled>
     );
-};
-
-VisualizationCard.propTypes = {
-    visualization: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        comparisonId: PropTypes.string,
-        label: PropTypes.string,
-        authors: PropTypes.array,
-        created_at: PropTypes.string,
-        created_by: PropTypes.string,
-        description: PropTypes.string,
-        featured: PropTypes.bool,
-        unlisted: PropTypes.bool,
-    }).isRequired,
-    showBadge: PropTypes.bool,
-    showCurationFlags: PropTypes.bool,
 };
 
 export default VisualizationCard;

@@ -14,9 +14,9 @@ const GDCVisualizationRenderer = props => {
     // this replace the date string with a new Date() obj
     // no need to create new model, it is directly updated as reference
     const strModel = props.model.data.googleChartsData;
-    strModel.cols.forEach((item, index) => {
+    strModel?.cols?.forEach((item, index) => {
         if (item.type === 'date') {
-            strModel.rows.forEach(rowItem => {
+            strModel?.rows?.forEach(rowItem => {
                 const dateItem = rowItem.c[index];
                 dateItem.v = new Date(dateItem.v); // overwrite the date item
             });
@@ -32,8 +32,8 @@ const GDCVisualizationRenderer = props => {
         },
     ];
 
-    const hAxisTitle = props.model.data.reconstructionData?.customizationState?.xAxisLabel ?? '';
-    const vAxisTitle = props.model.data.reconstructionData?.customizationState?.yAxisLabel ?? '';
+    const hAxisTitle = props.model.data?.reconstructionData?.customizationState?.xAxisLabel ?? '';
+    const vAxisTitle = props.model.data?.reconstructionData?.customizationState?.yAxisLabel ?? '';
 
     return (
         <StyledChart

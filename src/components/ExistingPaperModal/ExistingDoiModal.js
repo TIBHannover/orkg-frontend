@@ -1,6 +1,7 @@
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import PropTypes from 'prop-types';
 import { Alert, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { convertPaperToNewFormat } from 'utils';
 
 const ExistingDoiModal = ({ existingPaper, toggle }) => (
     <Modal size="lg" isOpen backdrop="static">
@@ -11,7 +12,7 @@ const ExistingDoiModal = ({ existingPaper, toggle }) => (
             </Alert>
             <strong>Existing paper</strong>
             <div className="list-group">
-                <PaperCard paper={existingPaper} showAddToComparison={false} />
+                <PaperCard paper={convertPaperToNewFormat(existingPaper)} showAddToComparison={false} />
             </div>
         </ModalBody>
     </Modal>

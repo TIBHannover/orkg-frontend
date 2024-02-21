@@ -2,10 +2,10 @@ import { faAward } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
 import AuthorsContentLoader from 'components/TopAuthors/AuthorsContentLoader';
-import pluralize from 'pluralize';
-import { Alert, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import useResearchProblemAuthors from 'components/TopAuthors/hooks/useTopAuthors';
+import pluralize from 'pluralize';
 import { Dispatch, SetStateAction } from 'react';
+import { Alert, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { ResearchProblemTopAuthor } from 'services/backend/problems';
 
 type ResearchProblemAuthorsModalProps = {
@@ -40,7 +40,7 @@ const ResearchProblemAuthorsModal = ({ researchProblemId, openModal, setOpenModa
                                 <div className="flex-grow-1">
                                     <AuthorCard
                                         author={author.author.value}
-                                        // @ts-ignore
+                                        // @ts-expect-error
                                         paperAmount={pluralize('paper', (author as ResearchProblemTopAuthor).papers, true)}
                                         isVisibleGoogleScholar
                                         isVisibleShowCitations

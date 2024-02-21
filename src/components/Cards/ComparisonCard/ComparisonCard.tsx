@@ -1,32 +1,50 @@
-import Link from 'components/NextJsMigration/Link';
-import { reverse } from 'named-urls';
-import styled from 'styled-components';
+import { faCalendar, faChartBar, faFile, faPaperclip } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faCalendar, faFile, faChartBar, faPaperclip } from '@fortawesome/free-solid-svg-icons';
-import ROUTES from 'constants/routes.js';
+import Thumbnail from 'components/Cards/ComparisonCard/Thumbnail';
+import Versions from 'components/Cards/ComparisonCard/Versions';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import PropTypes from 'prop-types';
-import moment from 'moment';
-import { CardBadge } from 'components/styled';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
+import Link from 'components/NextJsMigration/Link';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
+import { CardBadge } from 'components/styled';
+import { VISIBILITY } from 'constants/contentTypes';
+import ROUTES from 'constants/routes.js';
 import { truncate } from 'lodash';
-import Thumbnail from 'components/Cards/ComparisonCard/Thumbnail';
-import Versions from 'components/Cards/ComparisonCard/Versions';
+import moment from 'moment';
+import { reverse } from 'named-urls';
+import { FC } from 'react';
+import { Comparison } from 'services/backend/types';
+import styled from 'styled-components';
 
-const ComparisonCardStyled = styled.li`
+const ComparisonCardStyled = styled.li<{ rounded: string }>`
     &:last-child {
         border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
     }
 `;
 
-const ComparisonCard = ({ comparison, rounded, showHistory = true, showBreadcrumbs = true, showBadge = false, showCurationFlags = true }) => {
+type ComparisonCardProps = {
+    comparison: Comparison;
+    rounded?: string;
+    showHistory?: boolean;
+    showBreadcrumbs?: boolean;
+    showBadge?: boolean;
+    showCurationFlags?: boolean;
+};
+
+const ComparisonCard: FC<ComparisonCardProps> = ({
+    comparison,
+    rounded = 'false',
+    showHistory = true,
+    showBreadcrumbs = true,
+    showBadge = false,
+    showCurationFlags = true,
+}) => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: comparison.id,
-        unlisted: comparison?.unlisted,
-        featured: comparison?.featured,
+        unlisted: comparison?.visibility === VISIBILITY.UNLISTED,
+        featured: comparison?.visibility === VISIBILITY.FEATURED,
     });
     return (
         <ComparisonCardStyled
@@ -47,8 +65,9 @@ const ComparisonCard = ({ comparison, rounded, showHistory = true, showBreadcrum
                 )}
                 <div className="d-flex flex-column">
                     <div className="mb-2">
+                        {/* @ts-expect-error */}
                         <Link href={reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })}>
-                            {comparison.label ? comparison.label : <em>No title</em>}
+                            {comparison.title ? comparison.title : <em>No title</em>}
                         </Link>
                         {showBadge && (
                             <div className="d-inline-block ms-2">
@@ -57,17 +76,17 @@ const ComparisonCard = ({ comparison, rounded, showHistory = true, showBreadcrum
                         )}
                     </div>
                     <div className="d-inline-block d-md-none mt-1 me-1">
-                        {showBreadcrumbs && <RelativeBreadcrumbs researchField={comparison.researchField} />}
+                        {showBreadcrumbs && <RelativeBreadcrumbs researchField={comparison.research_fields?.[0]} />}
                     </div>
 
                     <div className="mb-1">
                         <small>
                             <Icon size="sm" icon={faFile} className="me-1" /> {comparison.contributions?.length} Contributions
                             <Icon size="sm" icon={faChartBar} className="ms-2 me-1" /> {comparison.visualizations?.length} Visualizations
-                            {(comparison.resources?.length > 0 || comparison.figures?.length > 0) && (
+                            {(comparison.related_resources?.length > 0 || comparison.related_figures?.length > 0) && (
                                 <>
                                     <Icon size="sm" icon={faPaperclip} className="ms-2 me-1" />{' '}
-                                    {comparison.resources.length + comparison.resources.length} attachments
+                                    {comparison.related_resources.length + comparison.related_resources.length} attachments
                                 </>
                             )}
                             {comparison.created_at && (
@@ -91,42 +110,16 @@ const ComparisonCard = ({ comparison, rounded, showHistory = true, showBreadcrum
             <div className="col-md-3 d-flex align-items-end flex-column p-0">
                 <div className="flex-grow-1 mb-1">
                     <div className="d-none d-md-flex align-items-end justify-content-end">
-                        <RelativeBreadcrumbs researchField={comparison.researchField} />
+                        <RelativeBreadcrumbs researchField={comparison.research_fields?.[0]} />
                     </div>
                     <div className="d-none d-md-flex align-items-end justify-content-end mt-1">
-                        <Thumbnail figures={comparison.figures} visualizations={comparison.visualizations} id={comparison.id} />
+                        <Thumbnail figures={comparison.related_figures} visualizations={comparison.visualizations} id={comparison.id} />
                     </div>
                 </div>
                 <UserAvatar userId={comparison.created_by} />
             </div>
         </ComparisonCardStyled>
     );
-};
-
-ComparisonCard.propTypes = {
-    comparison: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        label: PropTypes.string,
-        description: PropTypes.string,
-        contributions: PropTypes.array,
-        created_at: PropTypes.string,
-        resources: PropTypes.array,
-        figures: PropTypes.array,
-        researchField: PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            label: PropTypes.string,
-        }),
-        created_by: PropTypes.string,
-        versions: PropTypes.array,
-        visualizations: PropTypes.array,
-        featured: PropTypes.bool,
-        unlisted: PropTypes.bool,
-    }).isRequired,
-    rounded: PropTypes.string,
-    showHistory: PropTypes.bool,
-    showBreadcrumbs: PropTypes.bool,
-    showBadge: PropTypes.bool,
-    showCurationFlags: PropTypes.bool,
 };
 
 export default ComparisonCard;

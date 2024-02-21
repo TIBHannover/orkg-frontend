@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
-import ContentLoader from 'react-content-loader';
-import { Button } from 'reactstrap';
-import pluralize from 'pluralize';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
 import ResearchProblemAuthorsModal from 'components/TopAuthors/ResearchProblemAuthorsModal';
 import useResearchProblemAuthors from 'components/TopAuthors/hooks/useTopAuthors';
+import pluralize from 'pluralize';
+import { useState } from 'react';
+import ContentLoader from 'react-content-loader';
+import { Button } from 'reactstrap';
 import { ResearchProblemTopAuthor } from 'services/backend/problems';
 
 type AuthorsBoxProps = {
@@ -29,7 +29,7 @@ const AuthorsBox = ({ researchProblemId }: AuthorsBoxProps) => {
                             <div className="pt-1 ps-2 pe-2" key={`rp${index}`}>
                                 <AuthorCard
                                     author={author.author.value}
-                                    // @ts-ignore
+                                    // @ts-expect-error
                                     paperAmount={pluralize('paper', (author as ResearchProblemTopAuthor).papers, true)}
                                 />
                                 {authors.slice(0, 3).length - 1 !== index && <hr className="mb-0 mt-1" />}

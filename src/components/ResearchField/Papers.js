@@ -1,18 +1,18 @@
-import Link from 'components/NextJsMigration/Link';
-import { useState, forwardRef } from 'react';
-import { Container, Button, ListGroup, FormGroup, Label, Input } from 'reactstrap';
+import { faChevronDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import Tippy from '@tippyjs/react';
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
+import Link from 'components/NextJsMigration/Link';
 import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
+import TitleBar from 'components/TitleBar/TitleBar';
+import { SubTitle } from 'components/styled';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import ROUTES from 'constants/routes';
-import ContentLoader from 'react-content-loader';
-import { SubTitle } from 'components/styled';
-import { stringifySort } from 'utils';
-import Tippy from '@tippyjs/react';
-import TitleBar from 'components/TitleBar/TitleBar';
 import PropTypes from 'prop-types';
+import { forwardRef, useState } from 'react';
+import ContentLoader from 'react-content-loader';
+import { Button, Container, FormGroup, Input, Label, ListGroup } from 'reactstrap';
+import { convertPaperToNewFormat, stringifySort } from 'utils';
 
 const SortButton = forwardRef((props, ref) => (
     <Button innerRef={ref} color="secondary" className="ps-3 pe-3" size="sm">
@@ -118,17 +118,7 @@ const Papers = ({ id, boxShadow = false, showBreadcrumbs = true }) => {
                     <ListGroup className={boxShadow ? 'box' : ''}>
                         {papers.map(
                             paper =>
-                                paper && (
-                                    <PaperCard
-                                        paper={{
-                                            id: paper.id,
-                                            title: paper.label,
-                                            ...paper,
-                                        }}
-                                        showBreadcrumbs={showBreadcrumbs}
-                                        key={`pc${paper.id}`}
-                                    />
-                                ),
+                                paper && <PaperCard paper={convertPaperToNewFormat(paper)} showBreadcrumbs={showBreadcrumbs} key={`pc${paper.id}`} />,
                         )}
                         {!isLoading && hasNextPage && (
                             <div

@@ -1,46 +1,33 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
-import { addAuthorsToStatementBundle, getPaperData } from 'utils';
-import ListPage from 'components/ListPage/ListPage';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
+import ListPage from 'components/ListPage/ListPage';
+import Link from 'components/NextJsMigration/Link';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
-import { useState, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
-import { getPapers } from 'services/backend/resources';
-import { getStatementsBySubjects } from 'services/backend/statements';
+import { getPapers } from 'services/backend/papers';
+import { Paper } from 'services/backend/types';
+import { RootStore } from 'slices/types';
 
-const Papers = () => {
-    const [verified, setVerified] = useState(null);
+const Papers: FC = () => {
+    const [verified, setVerified] = useState<boolean | null>(null);
     const [reset, setReset] = useState(false);
-    const [statements, setStatements] = useState([]);
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state: RootStore) => state.auth.user);
 
     useEffect(() => {
         document.title = 'Papers list - ORKG';
     });
 
-    const renderListItem = paper => {
-        const paperCardData = statements.find(({ id }) => id === paper.id);
-        return (
-            <PaperCard
-                paper={{
-                    title: paper.label,
-                    ...paper,
-                    ...(!paperCardData ? { isLoading: true } : getPaperData(paper, paperCardData?.statements)),
-                }}
-                key={paper.id}
-            />
-        );
-    };
+    const renderListItem = (paper: Paper) => <PaperCard paper={paper} key={paper.id} />;
 
-    const fetchItems = async ({ page, pageSize }) => {
+    const fetchItems = async ({ page, pageSize }: { page: number; pageSize: number }) => {
         const {
             content: items,
             last,
@@ -48,17 +35,9 @@ const Papers = () => {
         } = await getPapers({
             page,
             size: pageSize,
-            sortBy: 'created_at',
-            desc: true,
+            sortBy: [{ property: 'created_at', direction: 'desc' }],
             verified,
         });
-
-        // promise to prevent blocking loading of the additional paper data
-        if (items.length > 0) {
-            getStatementsBySubjects({ ids: items.map(p => p.id) })
-                .then(_statements => addAuthorsToStatementBundle(_statements))
-                .then(_statements => setStatements(prevStatements => [...prevStatements, ..._statements]));
-        }
 
         return {
             items,
@@ -67,7 +46,7 @@ const Papers = () => {
         };
     };
 
-    const changeFilter = filter => {
+    const changeFilter = (filter: boolean | null) => {
         setVerified(filter);
         setReset(true);
     };
@@ -117,12 +96,16 @@ const Papers = () => {
                 resourceClass={CLASSES.PAPER}
                 renderListItem={renderListItem}
                 fetchItems={fetchItems}
+                /* @ts-expect-error */
                 buttons={buttons}
                 disableSearch={verified !== null}
                 reset={reset}
+                /* @ts-expect-error */
                 setReset={setReset}
+                /* @ts-expect-error */
                 infoContainerText={infoContainerText}
             />
+
             <ComparisonPopup />
         </>
     );
