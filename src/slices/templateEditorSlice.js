@@ -295,6 +295,22 @@ export const saveTemplate = toggleIsEditMode => async (dispatch, getState) => {
                                     datatype: 'xsd:integer',
                                 },
                             ],
+                            ...(propertyShape.placeholder && {
+                                [PREDICATES.PLACEHOLDER]: [
+                                    {
+                                        text: propertyShape.placeholder,
+                                        datatype: 'xsd:string',
+                                    },
+                                ],
+                            }),
+                            ...(propertyShape.description && {
+                                [PREDICATES.DESCRIPTION]: [
+                                    {
+                                        text: propertyShape.description,
+                                        datatype: 'xsd:string',
+                                    },
+                                ],
+                            }),
                             ...(['Decimal', 'Integer', 'String'].includes(propertyShape.value?.id)
                                 ? {
                                       ...((propertyShape.minInclusive || propertyShape.minInclusive === 0) && {

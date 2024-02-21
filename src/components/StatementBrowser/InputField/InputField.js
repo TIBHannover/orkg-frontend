@@ -27,7 +27,7 @@ export default function InputField(props) {
     const Forms = {
         textarea: (
             <Textarea
-                placeholder="Enter a value"
+                placeholder={props.placeholder ? props.placeholder : 'Enter a value'}
                 name="literalValue"
                 value={props.inputValue}
                 onChange={(e, value) => props.setInputValue(e ? e.target.value : value)}
@@ -62,7 +62,7 @@ export default function InputField(props) {
         default: (
             <>
                 <Input
-                    placeholder="Enter a value"
+                    placeholder={props.placeholder ? props.placeholder : 'Enter a value'}
                     name="literalValue"
                     type={inputFormType}
                     bsSize="sm"
@@ -90,5 +90,6 @@ InputField.propTypes = {
     inputValue: PropTypes.string.isRequired,
     inputDataType: PropTypes.string.isRequired,
     isValid: PropTypes.bool.isRequired,
+    placeholder: PropTypes.string,
     literalInputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
 };

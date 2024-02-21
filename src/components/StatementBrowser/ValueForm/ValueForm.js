@@ -20,6 +20,7 @@ import useValueForm from 'components/StatementBrowser/ValueForm/hooks/useValueFo
 const ValueForm = props => {
     const editMode = Boolean(props.id);
     const {
+        propertyShape,
         value,
         valueClass,
         inputDataType,
@@ -156,7 +157,7 @@ const ValueForm = props => {
                                 : null
                         }
                         optionsClass={optionsClass}
-                        placeholder={`Enter a ${entityType}`}
+                        placeholder={propertyShape?.placeholder ? propertyShape.placeholder : `Enter a ${entityType}`}
                         onItemSelected={i => {
                             handleAddValue(entityType, { ...i, label: i.value, selected: true });
                             props.setShowAddValue?.(false);
@@ -198,6 +199,7 @@ const ValueForm = props => {
                                 onSubmit();
                             }
                         }}
+                        placeholder={propertyShape?.placeholder}
                     />
                 )}
 

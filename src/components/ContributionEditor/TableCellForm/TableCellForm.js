@@ -20,6 +20,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
     const editMode = Boolean(value);
 
     const {
+        propertyShape,
         schema,
         isUniqLabel,
         valueClass,
@@ -194,7 +195,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                         : null
                                 }
                                 optionsClass={entityType === ENTITIES.RESOURCE && valueClass ? valueClass.id : undefined}
-                                placeholder={`Enter a ${entityType}`}
+                                placeholder={propertyShape?.placeholder ? propertyShape.placeholder : `Enter a ${entityType}`}
                                 onItemSelected={i => {
                                     dispatch(addValue(entityType, { ...i, label: i.value, selected: true }, valueClass, contributionId, propertyId));
                                     closeForm?.(false);
@@ -246,6 +247,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                             onSubmit();
                                         }
                                     }}
+                                    placeholder={propertyShape?.placeholder}
                                 />
                                 {!isValid && (
                                     <FormFeedback tooltip className="d-block">

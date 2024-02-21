@@ -78,6 +78,8 @@ const useImportSHACL = () => {
                 const pattern = extractConcept(parsed.graph, 'object', propertyShape, shacl('pattern'), null, true);
                 const datatype = extractConcept(parsed.graph, 'object', propertyShape, shacl('datatype'), null, true);
                 const classNode = extractConcept(parsed.graph, 'object', propertyShape, shacl('class'), null, true);
+                const placeholder = extractConcept(parsed.graph, 'object', propertyShape, orkgp(PREDICATES.PLACEHOLDER), null, true);
+                const shapeDescription = extractConcept(parsed.graph, 'object', propertyShape, shacl('description'), null, true);
                 if (classNode) {
                     mappedRange = await mapClass(parsed.graph, classNode);
                 } else {
@@ -92,6 +94,8 @@ const useImportSHACL = () => {
                     order: order?.value,
                     pattern: pattern?.value,
                     range: mappedRange,
+                    placeholder: placeholder?.value,
+                    description: shapeDescription?.value,
                 };
             });
             const propertyShapesObj = await Promise.all(propertyShapes);
@@ -206,6 +210,22 @@ const useImportSHACL = () => {
                                         : PREDICATES.SHACL_CLASS]: [
                                         {
                                             '@id': range.id,
+                                        },
+                                    ],
+                                }),
+                                ...(propertyShape.placeholder && {
+                                    [PREDICATES.PLACEHOLDER]: [
+                                        {
+                                            text: propertyShape.placeholder,
+                                            datatype: 'xsd:string',
+                                        },
+                                    ],
+                                }),
+                                ...(propertyShape.description && {
+                                    [PREDICATES.DESCRIPTION]: [
+                                        {
+                                            text: propertyShape.description,
+                                            datatype: 'xsd:string',
                                         },
                                     ],
                                 }),

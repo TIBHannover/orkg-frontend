@@ -159,7 +159,7 @@ const TemplateTooltip = ({ children, id, extraContent, disabled = false }) => {
 TemplateTooltip.propTypes = {
     children: PropTypes.node.isRequired,
     id: PropTypes.string,
-    disabled: PropTypes.bool.isRequired,
+    disabled: PropTypes.bool,
     extraContent: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 };
 

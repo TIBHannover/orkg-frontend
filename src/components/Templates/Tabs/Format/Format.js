@@ -60,6 +60,7 @@ const Format = () => {
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Placeholder</th>
                                     <th>Property</th>
                                 </tr>
                             </thead>
@@ -67,6 +68,7 @@ const Format = () => {
                                 {propertyShapes.map(propertyShape => (
                                     <tr key={`row${propertyShape.property.id}`}>
                                         <th scope="row">{propertyShape.property.id}</th>
+                                        <td style={{}}>{propertyShape.placeholder}</td>
                                         <td style={{}}>{propertyShape.property.label}</td>
                                     </tr>
                                 ))}

@@ -13,7 +13,8 @@ import { Col, FormGroup, FormText, Input, InputGroup, Label } from 'reactstrap';
 import { updatePropertyShapes } from 'slices/templateEditorSlice';
 
 const TemplateComponentValue = props => {
-    const [cardinality, setCardinality] = useState(!props.minCount && !props.maxCount ? '0,*' : 'range');
+    const propertyShape = useSelector(state => state.templateEditor.propertyShapes[props.id]);
+    const [cardinality, setCardinality] = useState(!propertyShape.minCount && !propertyShape.maxCount ? '0,*' : 'range');
     const classAutocompleteRef = useRef(null);
     const { isEditMode } = useIsEditMode();
 
@@ -60,7 +61,7 @@ const TemplateComponentValue = props => {
                             classAutocompleteRef.current && classAutocompleteRef.current.blur();
                             props.handleClassOfPropertySelect(selected, action, props.id);
                         }}
-                        value={props.value}
+                        value={propertyShape.value}
                         autoLoadOption={true}
                         openMenuOnFocus={true}
                         allowCreate={true}
@@ -69,7 +70,7 @@ const TemplateComponentValue = props => {
                         isClearable
                         defaultOptions={DATA_TYPES.filter(dt => dt.classId !== CLASSES.RESOURCE).map(dt => ({ label: dt.name, id: dt.classId }))}
                         innerRef={classAutocompleteRef}
-                        linkButton={props.value && props.value.id ? reverse(ROUTES.CLASS, { id: props.value.id }) : ''}
+                        linkButton={propertyShape.value && propertyShape.value.id ? reverse(ROUTES.CLASS, { id: propertyShape.value.id }) : ''}
                         linkButtonTippy="Go to class page"
                         cssClasses="form-control-sm"
                         autoFocus={false}
@@ -111,7 +112,7 @@ const TemplateComponentValue = props => {
                                         disabled={!isEditMode}
                                         onChange={onChange}
                                         bsSize="sm"
-                                        value={props.minCount}
+                                        value={propertyShape.minCount}
                                         type="number"
                                         min="0"
                                         step="1"
@@ -130,7 +131,7 @@ const TemplateComponentValue = props => {
                                         disabled={!isEditMode}
                                         onChange={onChange}
                                         bsSize="sm"
-                                        value={props.maxCount !== null ? props.maxCount : ''}
+                                        value={propertyShape.maxCount !== null ? propertyShape.maxCount : ''}
                                         type="number"
                                         min="0"
                                         step="1"
@@ -146,14 +147,49 @@ const TemplateComponentValue = props => {
                         </div>
                     </>
                 )}
+                <FormGroup row>
+                    <Label className="text-end text-muted" for="placeholderInput" sm={3}>
+                        <small>Placeholder</small>
+                    </Label>
+                    <Col sm={9}>
+                        <Input
+                            disabled={!isEditMode}
+                            onChange={onChange}
+                            bsSize="sm"
+                            value={propertyShape.placeholder}
+                            type="text"
+                            name="placeholder"
+                            id="placeholderInput"
+                            placeholder="Enter a placeholder for the input form"
+                        />
+                    </Col>
+                </FormGroup>
 
-                {props.value && ['Decimal', 'Integer', 'String'].includes(props.value.id) && (
+                <FormGroup row>
+                    <Label className="text-end text-muted" for="descriptionInput" sm={3}>
+                        <small>Description</small>
+                    </Label>
+                    <Col sm={9}>
+                        <Input
+                            disabled={!isEditMode}
+                            onChange={onChange}
+                            bsSize="sm"
+                            value={propertyShape.description}
+                            type="textarea"
+                            name="description"
+                            id="descriptionInput"
+                            placeholder="Enter a description for the input form"
+                        />
+                    </Col>
+                </FormGroup>
+
+                {propertyShape.value && ['Decimal', 'Integer', 'String'].includes(propertyShape.value.id) && (
                     <ValidationRules
-                        minInclusive={props.minInclusive}
-                        maxInclusive={props.maxInclusive}
-                        pattern={props.pattern}
+                        minInclusive={propertyShape.minInclusive}
+                        maxInclusive={propertyShape.maxInclusive}
+                        pattern={propertyShape.pattern}
                         id={props.id}
-                        value={props.value}
+                        value={propertyShape.value}
                     />
                 )}
             </div>
@@ -163,12 +199,6 @@ const TemplateComponentValue = props => {
 
 TemplateComponentValue.propTypes = {
     id: PropTypes.number.isRequired,
-    value: PropTypes.object,
-    minCount: PropTypes.string.isRequired,
-    maxCount: PropTypes.string,
-    minInclusive: PropTypes.string,
-    maxInclusive: PropTypes.string,
-    pattern: PropTypes.string,
     handleClassOfPropertySelect: PropTypes.func.isRequired,
 };
 

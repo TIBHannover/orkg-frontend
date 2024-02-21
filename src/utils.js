@@ -437,6 +437,11 @@ export const getPropertyShapeData = (propertyShape, propertyShapeStatements) => 
         null,
         propertyShape.id,
     );
+
+    const placeholder = filterObjectOfStatementsByPredicateAndClass(propertyShapeStatements, PREDICATES.PLACEHOLDER, true, null, propertyShape.id);
+
+    const description = filterObjectOfStatementsByPredicateAndClass(propertyShapeStatements, PREDICATES.DESCRIPTION, true, null, propertyShape.id);
+
     const pattern = filterObjectOfStatementsByPredicateAndClass(propertyShapeStatements, PREDICATES.SHACL_PATTERN, true, null, propertyShape.id);
 
     const minCount = filterObjectOfStatementsByPredicateAndClass(propertyShapeStatements, PREDICATES.SHACL_MIN_COUNT, true, null, propertyShape.id);
@@ -462,6 +467,8 @@ export const getPropertyShapeData = (propertyShape, propertyShapeStatements) => 
             : null,
         minCount: minCount ? minCount.label : 0,
         maxCount: maxCount ? maxCount.label : null,
+        placeholder: placeholder ? placeholder.label : '',
+        description: description ? description.label : '',
         order: order ? order.label : null,
         minInclusive: minInclusive?.label ?? null,
         maxInclusive: maxInclusive?.label ?? null,

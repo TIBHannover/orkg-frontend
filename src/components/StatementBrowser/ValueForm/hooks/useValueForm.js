@@ -33,6 +33,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     const values = useSelector(state => state.statementBrowser.values);
     const subjectId = useSelector(state => (editMode ? getSubjectIdByValue(state, valueId) : resourceId));
     const isList = useSelector(state => checkIfIsList({ state, propertyId }));
+    const propertyShape = useSelector(state => getPropertyShapesByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)?.[0]);
 
     // refactoring: Can be replaced with the id class
     const valueClass = useSelector(state =>
@@ -345,6 +346,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     };
 
     return {
+        propertyShape,
         value,
         property,
         valueClass,

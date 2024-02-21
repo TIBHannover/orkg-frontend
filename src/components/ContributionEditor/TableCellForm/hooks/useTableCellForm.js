@@ -21,6 +21,7 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
     const property = useSelector(state => state.contributionEditor.properties[propertyId]);
     const { previousInputDataType } = useSelector(state => state.contributionEditor);
     const valueClass = useSelector(state => getValueClass(getPropertyShapesByResourceIDAndPredicateID(state, contributionId, propertyId)));
+    const propertyShape = useSelector(state => getPropertyShapesByResourceIDAndPredicateID(state, contributionId, propertyId)?.[0]);
 
     const canAddValue = useSelector(state => canAddValueAction(state, contributionId, propertyId));
 
@@ -166,6 +167,7 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
     };
 
     return {
+        propertyShape,
         createBlankNode,
         isModelOpen,
         dialogResourceId,
