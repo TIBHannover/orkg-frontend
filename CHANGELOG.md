@@ -3,6 +3,18 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.134.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.133.2...v0.134.0) - 2024-02-21
+
+### Changes
+
+- fix: benchmarks duplicate datasets in summary [`#1271`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1271)
+- Resolved issue #1630: Fix bug task [`#1262`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1262)
+- chore: migrate list page papers, visualization and comparisons to new endpoints [`#1269`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1269)
+- refactor(services): Consolidate data fetching to use getResources endpoint [`#1257`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1257)
+- fix(PaperVersion): display no label for resources without label [`#1267`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1267)
+- feat(Template): Prominent display of SHACL export [`#1265`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1265)
+
+---
 ## [v0.133.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.133.1...v0.133.2) - 2024-02-08
 
 ### Changes
