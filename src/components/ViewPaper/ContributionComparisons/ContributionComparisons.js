@@ -1,10 +1,11 @@
-import { Container, Button, ListGroup } from 'reactstrap';
-import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
 import useContributionComparison from 'components/ViewPaper/ContributionComparisons/hooks/useContributionComparison';
+import PropTypes from 'prop-types';
+import { Button, Container, ListGroup } from 'reactstrap';
+import styled from 'styled-components';
+import { convertComparisonToNewFormat } from 'utils';
 
 const Title = styled.div`
     font-size: 18px;
@@ -58,7 +59,7 @@ function ContributionComparisons(props) {
                                 comparison && (
                                     <ComparisonCard
                                         rounded={!hasNextPage ? 'false' : 'true'}
-                                        comparison={{ ...comparison }}
+                                        comparison={convertComparisonToNewFormat(comparison)}
                                         key={`pc${comparison.id}`}
                                         showCurationFlags={false}
                                         showBadge={false}

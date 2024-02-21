@@ -1,7 +1,7 @@
 import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
 import AuthorsContentLoader from 'components/TopAuthors/AuthorsContentLoader';
-import { Alert, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import useTopAuthors from 'components/TopAuthors/hooks/useTopAuthors';
+import { Alert, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { ComparisonTopAuthor } from 'services/backend/comparisons';
 
 type ComparisonAuthorsModelProps = {
@@ -28,7 +28,7 @@ const ComparisonAuthorsModel = ({ comparisonId, toggle }: ComparisonAuthorsModel
                         <ListGroupItem className="py-2 px-4" key={index}>
                             <AuthorCard
                                 author={author.author.value}
-                                // @ts-ignore
+                                // @ts-expect-error
                                 papers={(author as ComparisonTopAuthor).info}
                                 isVisibleGoogleScholar
                                 isVisibleShowCitations

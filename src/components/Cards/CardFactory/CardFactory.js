@@ -1,11 +1,12 @@
 import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
-import PaperCard from 'components/Cards/PaperCard/PaperCard';
-import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
-import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
 import ListCard from 'components/Cards/ListCard/ListCard';
+import PaperCard from 'components/Cards/PaperCard/PaperCard';
+import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
+import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
+import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { useCallback } from 'react';
-import { CLASSES } from 'constants/graphSettings';
+import { convertComparisonToNewFormat, convertPaperToNewFormat, convertVisualizationToNewFormat } from 'utils';
 
 const CardFactory = ({ item, showBadge, showCurationFlags, showAddToComparison }) => {
     const findClass = useCallback(classId => item?.classes?.includes(classId), [item?.classes]);
@@ -13,11 +14,7 @@ const CardFactory = ({ item, showBadge, showCurationFlags, showAddToComparison }
     if (findClass(CLASSES.PAPER)) {
         return (
             <PaperCard
-                paper={{
-                    id: item.id,
-                    title: item.label,
-                    ...item,
-                }}
+                paper={convertPaperToNewFormat(item)}
                 showBadge={showBadge}
                 showCurationFlags={showCurationFlags}
                 showAddToComparison={showAddToComparison}
@@ -25,29 +22,11 @@ const CardFactory = ({ item, showBadge, showCurationFlags, showAddToComparison }
         );
     }
     if (findClass(CLASSES.COMPARISON)) {
-        return (
-            <ComparisonCard
-                comparison={{
-                    id: item.id,
-                    title: item.label,
-                    ...item,
-                }}
-                showBadge={showBadge}
-                showCurationFlags={showCurationFlags}
-            />
-        );
+        return <ComparisonCard comparison={convertComparisonToNewFormat(item)} showBadge={showBadge} showCurationFlags={showCurationFlags} />;
     }
     if (findClass(CLASSES.VISUALIZATION)) {
         return (
-            <VisualizationCard
-                visualization={{
-                    id: item.id,
-                    title: item.label,
-                    ...item,
-                }}
-                showBadge={showBadge}
-                showCurationFlags={showCurationFlags}
-            />
+            <VisualizationCard visualization={convertVisualizationToNewFormat(item)} showBadge={showBadge} showCurationFlags={showCurationFlags} />
         );
     }
     if (findClass(CLASSES.SMART_REVIEW) || findClass(CLASSES.SMART_REVIEW_PUBLISHED)) {

@@ -1,16 +1,16 @@
 import capitalize from 'capitalize';
-import { CLASSES, MISC, PREDICATES, ENTITIES } from 'constants/graphSettings';
+import env from 'components/NextJsMigration/env';
+import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import ROUTES from 'constants/routes';
-import { isString, sortBy, uniqBy } from 'lodash';
 import { unescape } from 'he';
+import { isString, sortBy, uniqBy } from 'lodash';
 import { reverse } from 'named-urls';
 import qs from 'qs';
 import { Cookies } from 'react-cookie';
-import env from 'components/NextJsMigration/env';
-import slugifyString from 'slugify';
 import { LOCATION_CHANGE as LOCATION_CHANGE_RFH } from 'redux-first-history';
 import { getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
+import slugifyString from 'slugify';
 
 const cookies = new Cookies();
 
@@ -978,3 +978,94 @@ export const handleSortableHoverReactDnd = ({ item, monitor, currentRef, hoverIn
     // to avoid expensive index searches.
     item.index = hoverIndex;
 };
+
+export const convertAuthorToNewFormat = author => ({
+    id: author.id,
+    name: author.label,
+    ...(author.orcid
+        ? {
+              identifiers: {
+                  orcid: author.orcid ? [author.orcid] : [],
+              },
+          }
+        : {}),
+});
+
+export const convertAuthorsToNewFormat = authors => authors.map(author => convertAuthorToNewFormat(author));
+
+export const convertVisualizationToNewFormat = visualization => ({
+    id: visualization.id,
+    title: visualization.label,
+    authors: visualization.authors.map(author => convertAuthorToNewFormat(author)),
+    organizations: visualization.organizations,
+    observatories: visualization.observatories,
+    extraction_method: visualization.extraction_method,
+    created_at: visualization.created_at,
+    created_by: visualization.created_by,
+    visibility: visualization.visibility,
+    description: visualization.description,
+});
+
+export const convertComparisonToNewFormat = comparison => ({
+    id: comparison.id,
+    title: comparison.label,
+    description: comparison.description,
+    ...(comparison.researchField ? { research_fields: [comparison.researchField] } : {}),
+    ...(comparison.doi
+        ? {
+              identifiers: {
+                  doi: comparison.doi,
+              },
+          }
+        : {}),
+    publication_info: {
+        published_month: comparison.publicationMonth?.label,
+        published_year: comparison.publicationYear?.label,
+        published_in: comparison.publishedIn?.label,
+        url: comparison.url?.label,
+    },
+    versions: comparison.versions,
+    authors: comparison.authors.map(author => convertAuthorToNewFormat(author)),
+    contributions: comparison.contributions,
+    visualizations: comparison.visualizations,
+    related_figures: comparison.figures,
+    related_resources: comparison.resources,
+    references: comparison.references,
+    observatories: comparison.observatories,
+    organizations: comparison.organizations,
+    extraction_method: comparison.extraction_method,
+    created_at: comparison.created_at,
+    created_by: comparison.created_by,
+    previous_version: comparison.hasPreviousVersion?.id,
+    is_anonymized: comparison.anonymized,
+    visibility: comparison.visibility,
+});
+
+export const convertPaperToNewFormat = paper => ({
+    id: paper.id,
+    title: paper.title || paper.label,
+    ...(paper.researchField ? { research_fields: [paper.researchField] } : {}),
+    ...(paper.doi
+        ? {
+              identifiers: {
+                  doi: paper.doi,
+              },
+          }
+        : {}),
+    publication_info: {
+        published_month: paper.publicationMonth?.label,
+        published_year: paper.publicationYear?.label,
+        published_in: paper.publishedIn?.label,
+        url: paper.url?.label,
+    },
+    authors: paper.authors ? paper.authors.map(author => convertAuthorToNewFormat(author)) : [],
+    contributions: paper.contributions,
+    organizations: paper.organizations,
+    observatories: paper.observatories,
+    extraction_method: paper.extractionMethod,
+    created_at: paper.created_at,
+    created_by: paper.created_by,
+    verified: paper.verified,
+    visibility: paper.visibility,
+    unlisted_by: paper.unlisted_by,
+});

@@ -1,9 +1,11 @@
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { url } from 'constants/misc';
 import { submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
-import { PaginatedResponse, Resource, Statement } from 'services/backend/types';
+import { PaginatedResponse, PaginationParams, Paper, Resource, Statement, VerifiedParam, VisibilityParam } from 'services/backend/types';
+import { prepareParams } from 'services/backend/misc';
 
 export const papersUrl = `${url}papers/`;
 
@@ -88,4 +90,18 @@ export const getPapersLinkedToResource = async ({
 
     const resources = await submitGetRequest(`${papersUrl}?${params}`).then(res => (returnContent ? res.content : res));
     return resources;
+};
+
+export const getPapers = ({
+    page = 0,
+    size = 999,
+    sortBy = [{ property: 'created_at', direction: 'desc' }],
+    verified = null,
+    visibility = VISIBILITY_FILTERS.ALL_LISTED,
+}: PaginationParams & VerifiedParam & VisibilityParam): Promise<PaginatedResponse<Paper>> => {
+    const params = prepareParams({ page, size, sortBy, verified, visibility });
+    return submitGetRequest(`${papersUrl}?${params}`, {
+        'Content-Type': 'application/vnd.orkg.paper.v2+json;charset=UTF-8',
+        Accept: 'application/vnd.orkg.paper.v2+json',
+    });
 };

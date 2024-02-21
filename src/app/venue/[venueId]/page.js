@@ -1,20 +1,21 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
 import { faAngleDoubleDown, faEllipsisV, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
-import { SubTitle } from 'components/styled';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
+import Link from 'components/NextJsMigration/Link';
+import useParams from 'components/NextJsMigration/useParams';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useVenuePapers from 'components/Venue/useVenuePapers';
+import { SubTitle } from 'components/styled';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import pluralize from 'pluralize';
 import { useEffect, useState } from 'react';
-import useParams from 'components/NextJsMigration/useParams';
 import { ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle, ListGroup, ListGroupItem } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
+import { convertPaperToNewFormat } from 'utils';
 
 const VenuePage = () => {
     const params = useParams();
@@ -68,7 +69,7 @@ const VenuePage = () => {
                         {papers.length > 0 && (
                             <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
                                 {papers.map(resource => (
-                                    <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />
+                                    <PaperCard paper={convertPaperToNewFormat(resource)} key={`pc${resource.id}`} />
                                 ))}
                             </ListGroup>
                         )}

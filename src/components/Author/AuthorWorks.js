@@ -1,16 +1,17 @@
-import { Container, ListGroupItem, ListGroup } from 'reactstrap';
-import PaperCard from 'components/Cards/PaperCard/PaperCard';
-import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
-import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
-import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { CLASSES } from 'constants/graphSettings';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import useAuthorWorks from 'components/Author/hooks/useAuthorWorks';
+import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
+import PaperCard from 'components/Cards/PaperCard/PaperCard';
+import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
+import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
+import TitleBar from 'components/TitleBar/TitleBar';
+import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { useCallback } from 'react';
-import TitleBar from 'components/TitleBar/TitleBar';
+import { Container, ListGroup, ListGroupItem } from 'reactstrap';
+import { convertComparisonToNewFormat, convertPaperToNewFormat, convertVisualizationToNewFormat } from 'utils';
 
 const AuthorWorks = ({ authorId = null, authorString = null }) => {
     const { isNextPageLoading, hasNextPage, works, page, totalElements, isLastPageReached, handleLoadMore } = useAuthorWorks({
@@ -22,11 +23,7 @@ const AuthorWorks = ({ authorId = null, authorString = null }) => {
         if (item?.classes?.includes(CLASSES.PAPER)) {
             return (
                 <PaperCard
-                    paper={{
-                        id: item.id,
-                        title: item.label,
-                        ...item,
-                    }}
+                    paper={convertPaperToNewFormat(item)}
                     showBadge={true}
                     showCurationFlags={false}
                     showAddToComparison={false}
@@ -37,11 +34,7 @@ const AuthorWorks = ({ authorId = null, authorString = null }) => {
         if (item?.classes?.includes(CLASSES.COMPARISON)) {
             return (
                 <ComparisonCard
-                    comparison={{
-                        id: item.id,
-                        title: item.label,
-                        ...item,
-                    }}
+                    comparison={convertComparisonToNewFormat(item)}
                     showBadge={true}
                     showCurationFlags={false}
                     showAddToComparison={false}
@@ -52,14 +45,9 @@ const AuthorWorks = ({ authorId = null, authorString = null }) => {
         if (item?.classes?.includes(CLASSES.VISUALIZATION)) {
             return (
                 <VisualizationCard
-                    visualization={{
-                        id: item.id,
-                        title: item.label,
-                        ...item,
-                    }}
+                    visualization={convertVisualizationToNewFormat(item)}
                     showBadge={true}
                     showCurationFlags={false}
-                    showAddToComparison={false}
                     key={`v${item.id}`}
                 />
             );
