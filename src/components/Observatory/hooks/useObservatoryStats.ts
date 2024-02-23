@@ -1,11 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getObservatoryStatsById } from 'services/backend/stats';
 
-const useObservatoryStats = ({ id }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [stats, setStats] = useState({});
+type ObservatoryStats = {
+    comparisons: number;
+    papers: number;
+};
 
-    const loadObservatoryStats = useCallback(oId => {
+export const useObservatoryStats = ({ id }: { id: string }) => {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [stats, setStats] = useState<ObservatoryStats>({ comparisons: 0, papers: 0 });
+
+    const loadObservatoryStats = useCallback((oId: string) => {
         if (oId) {
             setIsLoading(true);
             // Get the observatory stats

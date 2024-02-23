@@ -16,6 +16,7 @@ export const observatoriesUrl = `${url}observatories/`;
  * @param {Number} size Number of items per page
  * @return {Object} List of observatories
  */
+
 export const getObservatories = ({
     researchFieldId = null,
     q = null,
