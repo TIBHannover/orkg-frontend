@@ -3,6 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import Comment from 'components/DiscussionModal/Comment';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import ContentLoader from 'react-content-loader';
@@ -136,6 +137,7 @@ const DiscussionModal = ({ entityId, toggle, refreshCount }) => {
                                     disabled={isLoadingCreate}
                                     onChange={e => setCommentValue(e.target.value)}
                                     rows="3"
+                                    maxLength={MAX_LENGTH_INPUT}
                                 />
                             </div>
                             <ButtonWithLoading color="secondary" size="sm" isLoading={isLoadingCreate} onClick={handleSubmit}>

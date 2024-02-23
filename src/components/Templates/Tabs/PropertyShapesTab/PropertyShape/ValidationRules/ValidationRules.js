@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Col, FormGroup, FormText, Input, Label } from 'reactstrap';
 import { updatePropertyShapes } from 'slices/templateEditorSlice';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const ValidationRules = ({ id, value, minInclusive, maxInclusive, pattern }) => {
     const dispatch = useDispatch();
@@ -60,6 +61,7 @@ const ValidationRules = ({ id, value, minInclusive, maxInclusive, pattern }) => 
                                 name="minInclusive"
                                 id="minInclusiveInput"
                                 placeholder="Specify the minimum value"
+                                maxLength={MAX_LENGTH_INPUT}
                             />
                         </Col>
                     </FormGroup>
@@ -77,6 +79,7 @@ const ValidationRules = ({ id, value, minInclusive, maxInclusive, pattern }) => 
                                 name="maxInclusive"
                                 id="maxInclusiveInput"
                                 placeholder="Specify the maximum value"
+                                maxLength={MAX_LENGTH_INPUT}
                             />
                         </Col>
                     </FormGroup>

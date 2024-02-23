@@ -2,6 +2,7 @@ import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import feedbackQuestions from 'components/Comparison/QualityReportModal/FeedbackQuestions';
 import InviteResearchersButton from 'components/Comparison/QualityReportModal/InviteResearchersButton';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import THING_TYPES from 'constants/thingTypes';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
@@ -156,6 +157,7 @@ const WriteFeedback = ({ toggle }) => {
                                                 disabled={comparisonCreator === userId}
                                                 onChange={handleChange}
                                                 value={answers[id]}
+                                                maxLength={MAX_LENGTH_INPUT}
                                             />
                                         </td>
                                     )}

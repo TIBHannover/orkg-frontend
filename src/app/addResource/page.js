@@ -1,25 +1,26 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import requireAuthentication from 'requireAuthentication';
+import { Cite } from '@citation-js/core';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
+import useRouter from 'components/NextJsMigration/useRouter';
+import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import TitleBar from 'components/TitleBar/TitleBar';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
+import REGEX from 'constants/regex';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { Container, Form, FormGroup, Input, Label } from 'reactstrap';
-import { createLiteralStatement } from 'services/backend/statements';
+import requireAuthentication from 'requireAuthentication';
 import { getClassById } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
-import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { toast } from 'react-toastify';
-import { reverse } from 'named-urls';
-import REGEX from 'constants/regex';
-import { Cite } from '@citation-js/core';
-import ROUTES from 'constants/routes';
-import { useSelector } from 'react-redux';
-import { PREDICATES, ENTITIES, CLASSES } from 'constants/graphSettings';
-import TitleBar from 'components/TitleBar/TitleBar';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { createLiteralStatement } from 'services/backend/statements';
 
 const AddResource = () => {
     const isDOI = new RegExp(REGEX.DOI_ID);
@@ -127,7 +128,14 @@ const AddResource = () => {
                     <div className="pt-2">
                         <FormGroup>
                             <Label for="ResourceLabel">Resource label or DOI</Label>
-                            <Input onChange={e => setLabel(e.target.value)} type="text" name="value" id="ResourceLabel" disabled={isLoading} />
+                            <Input
+                                onChange={e => setLabel(e.target.value)}
+                                type="text"
+                                maxLength={MAX_LENGTH_INPUT}
+                                name="value"
+                                id="ResourceLabel"
+                                disabled={isLoading}
+                            />
                         </FormGroup>
                         <FormGroup>
                             <Label for="select-classes">

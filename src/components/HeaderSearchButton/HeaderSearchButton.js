@@ -8,6 +8,7 @@ import { useClickAway } from 'react-use';
 import { Button } from 'reactstrap';
 import useRouter from 'components/NextJsMigration/useRouter';
 import { SearchStyled, InputStyled, SearchButtonStyled } from 'components/styled';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const HeaderSearchButton = ({ placeholder = '', type, userId }) => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -54,6 +55,7 @@ const HeaderSearchButton = ({ placeholder = '', type, userId }) => {
                 onKeyDown={handleKeyDown}
                 value={value}
                 onChange={e => setValue(e.target.value)}
+                maxLength={MAX_LENGTH_INPUT}
             />
             <SearchButtonStyled size="sm" className="px-3" color="link" onClick={() => (isSearchOpen ? goToResults() : setIsSearchOpen(true))}>
                 <Icon icon={faSearch} />

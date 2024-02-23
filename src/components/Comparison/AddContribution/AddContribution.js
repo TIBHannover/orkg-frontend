@@ -17,6 +17,7 @@ import { debounce } from 'lodash';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import Tippy from '@tippyjs/react';
 import pluralize from 'pluralize';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
@@ -193,6 +194,7 @@ export default function AddContribution({
                             name="title"
                             id="title"
                             onChange={e => setSearchPaper(e.target.value)}
+                            maxLength={MAX_LENGTH_INPUT}
                         />
                     </InputGroup>
                 </FormGroup>

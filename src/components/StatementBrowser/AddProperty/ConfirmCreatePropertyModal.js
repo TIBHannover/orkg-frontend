@@ -6,6 +6,7 @@ import { createLiteral } from 'services/backend/literals';
 import { createLiteralStatement } from 'services/backend/statements';
 import { PREDICATES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const ConfirmCreatePropertyModal = ({ toggle, onCreate, shouldPerformCreate = false, shouldHideDescriptionInput = false, label }) => {
     const [description, setDescription] = useState('');
@@ -41,6 +42,7 @@ const ConfirmCreatePropertyModal = ({ toggle, onCreate, shouldPerformCreate = fa
                             type="textarea"
                             id="property-description"
                             placeholder="E.g. date of acceptance of the resource"
+                            maxLength={MAX_LENGTH_INPUT}
                         />
                     </FormGroup>
                 )}

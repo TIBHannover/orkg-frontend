@@ -11,6 +11,7 @@ import { isString } from 'lodash';
 import { getLinkByEntityType, getEntityTypeByID } from 'utils';
 import useRouter from 'components/NextJsMigration/useRouter';
 import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const SearchForm = ({ placeholder, onSearch = null }) => {
     const [value, setValue] = useState('');
@@ -57,6 +58,8 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
                     onChange={handleChange}
                     aria-label="Search ORKG"
                     aria-describedby="button-main-search"
+                    type="text"
+                    maxLength={MAX_LENGTH_INPUT}
                 />
 
                 <Button id="button-main-search" className="ps-2 pe-2 search-icon" type="submit">

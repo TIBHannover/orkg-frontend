@@ -7,6 +7,7 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { createFeedback } from 'services/cms';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const Feedback = ({ type, inputData, outputData, llmTask }) => {
     const [comments, setComments] = useState('');
@@ -83,6 +84,7 @@ const Feedback = ({ type, inputData, outputData, llmTask }) => {
                                 rows={4}
                                 className="my-3"
                                 style={{ fontSize: 'inherit' }}
+                                maxLength={MAX_LENGTH_INPUT}
                             />
                             <div className="d-flex justify-content-end">
                                 <ButtonWithLoading color="primary" size="sm" onClick={handleSubmit} isLoading={isLoading}>

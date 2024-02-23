@@ -8,6 +8,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { Button, Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { getResourceLink } from 'utils';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const ExportCitation = ({ isOpen, toggle, id, title, authors, classId }) => {
     const bibtexOptions = {
@@ -36,7 +37,7 @@ const ExportCitation = ({ isOpen, toggle, id, title, authors, classId }) => {
             <ModalHeader toggle={toggle}>Export citation</ModalHeader>
             <ModalBody>
                 <p>
-                    <Input type="textarea" value={latex.get()} disabled rows="10" />
+                    <Input type="textarea" maxLength={MAX_LENGTH_INPUT} value={latex.get()} disabled rows="10" />
                 </p>
 
                 <CopyToClipboard

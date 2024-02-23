@@ -28,6 +28,7 @@ import { createLiteralStatement } from 'services/backend/statements';
 import { getAllOntologies, getOntologyTerms, getTermMatchingAcrossOntologies, olsBaseUrl, selectTerms } from 'services/ols/index';
 import styled, { withTheme } from 'styled-components';
 import { asyncLocalStorage, compareOption } from 'utils';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 export const StyledAutoCompleteInputFormControl = styled.div`
     padding-top: 0 !important;
@@ -823,6 +824,7 @@ const Autocomplete = ({
 
     // Creatable with adding new options : https://codesandbox.io/s/6pznz
     const Select = useMemo(() => (allowCreate ? withAsyncPaginate(Creatable) : AsyncPaginate), [allowCreate]);
+    const Input = useCallback(props => <components.Input {...props} maxLength={MAX_LENGTH_INPUT} />, []);
 
     return (
         <ConditionalWrapper
@@ -899,6 +901,7 @@ const Autocomplete = ({
                         Menu,
                         Control,
                         DropdownIndicator,
+                        Input,
                     }}
                     menuIsOpen={menuIsOpen}
                     onMenuOpen={() => setMenuIsOpen(true)}

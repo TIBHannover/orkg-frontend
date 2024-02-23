@@ -1,17 +1,16 @@
-import Link from 'components/NextJsMigration/Link';
 import { faCubes, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import Link from 'components/NextJsMigration/Link';
+import useObservatoryStats from 'components/Observatory/hooks/useObservatoryStats';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import ROUTES from 'constants/routes';
-// @ts-expect-error
 import { reverse } from 'named-urls';
 import pluralize from 'pluralize';
-import useObservatoryStats from 'components/Observatory/hooks/useObservatoryStats';
 import Dotdotdot from 'react-dotdotdot';
 import { Card, CardBody, CardFooter, CardSubtitle, CardTitle, CarouselItem } from 'reactstrap';
 import { getOrganizationLogoUrl } from 'services/backend/organizations';
-import styled from 'styled-components';
 import { Observatory } from 'services/backend/types';
+import styled from 'styled-components';
 
 const ObservatoryCardStyled = styled(Card)`
     cursor: initial;

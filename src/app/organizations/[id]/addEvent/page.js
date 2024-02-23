@@ -19,6 +19,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import { useSelector, useDispatch } from 'react-redux';
 import { CONFERENCE_REVIEW_TYPE } from 'constants/organizationsTypes';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const AddConference = () => {
     const params = useParams();
@@ -117,6 +118,7 @@ const AddConference = () => {
                                 id="conferenceName"
                                 disabled={loading}
                                 value={name}
+                                maxLength={MAX_LENGTH_INPUT}
                             />
                         </FormGroup>
 
@@ -136,6 +138,7 @@ const AddConference = () => {
                                         disabled={loading}
                                         placeholder="name"
                                         value={permalink}
+                                        maxLength={MAX_LENGTH_INPUT}
                                     />
                                 </InputGroup>
                             </div>
@@ -150,6 +153,7 @@ const AddConference = () => {
                                 disabled={loading}
                                 value={website}
                                 placeholder="https://www.example.com"
+                                maxLength={MAX_LENGTH_INPUT}
                             />
                         </FormGroup>
                         <FormGroup>

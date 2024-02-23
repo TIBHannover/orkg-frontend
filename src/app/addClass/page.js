@@ -5,16 +5,17 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
+import useRouter from 'components/NextJsMigration/useRouter';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { ENTITIES } from 'constants/graphSettings';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import REGEX from 'constants/regex';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import useRouter from 'components/NextJsMigration/useRouter';
 import { toast } from 'react-toastify';
-import { Container, FormGroup, FormText, Input, Label, Form } from 'reactstrap';
+import { Container, Form, FormGroup, FormText, Input, Label } from 'reactstrap';
 import requireAuthentication from 'requireAuthentication';
 import { createClass, setParentClassByID } from 'services/backend/classes';
 import { getErrorMessage } from 'utils';
@@ -107,7 +108,14 @@ const AddClass = () => {
                     <div className="pt-2">
                         <FormGroup>
                             <Label for="classLabel">Class label</Label>
-                            <Input onChange={e => setLabel(e.target.value)} type="text" name="value" id="classLabel" disabled={isLoading} />
+                            <Input
+                                onChange={e => setLabel(e.target.value)}
+                                type="text"
+                                name="value"
+                                maxLength={MAX_LENGTH_INPUT}
+                                id="classLabel"
+                                disabled={isLoading}
+                            />
                         </FormGroup>
                         <FormGroup>
                             <Label for="URIInput">

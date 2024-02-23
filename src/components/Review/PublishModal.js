@@ -6,6 +6,7 @@ import Link from 'components/NextJsMigration/Link';
 import usePathname from 'components/NextJsMigration/usePathname';
 import Tooltip from 'components/Utils/Tooltip';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import THING_TYPES from 'constants/thingTypes';
 import { reverse } from 'named-urls';
@@ -120,6 +121,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                                     placeholder="Example: added introduction section"
                                     value={updateMessage}
                                     onChange={e => setUpdateMessage(e.target.value)}
+                                    maxLength={MAX_LENGTH_INPUT}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -151,6 +153,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                                         value={description}
                                         id="description"
                                         onChange={e => setDescription(e.target.value)}
+                                        maxLength={MAX_LENGTH_INPUT}
                                     />
                                 </FormGroup>
                             )}

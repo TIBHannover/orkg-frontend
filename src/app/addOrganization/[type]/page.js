@@ -19,6 +19,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
 import { useSelector, useDispatch } from 'react-redux';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const AddOrganization = () => {
     const params = useParams();
@@ -117,6 +118,7 @@ const AddOrganization = () => {
                                 id="organizationName"
                                 disabled={loading}
                                 value={name}
+                                maxLength={MAX_LENGTH_INPUT}
                             />
                         </FormGroup>
 
@@ -136,6 +138,7 @@ const AddOrganization = () => {
                                         disabled={loading}
                                         placeholder="name"
                                         value={permalink}
+                                        maxLength={MAX_LENGTH_INPUT}
                                     />
                                 </InputGroup>
                             </div>
@@ -150,6 +153,7 @@ const AddOrganization = () => {
                                 disabled={loading}
                                 value={website}
                                 placeholder="https://www.example.com"
+                                maxLength={MAX_LENGTH_INPUT}
                             />
                         </FormGroup>
                         <FormGroup>

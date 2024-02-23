@@ -3,6 +3,7 @@ import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
 import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
 import Tooltip from 'components/Utils/Tooltip';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import THING_TYPES from 'constants/thingTypes';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import PropTypes from 'prop-types';
@@ -118,7 +119,14 @@ function PublishVisualization(props) {
                         <Label for="title">
                             <Tooltip message="Enter the title of the visualization">Title</Tooltip>
                         </Label>
-                        <Input type="text" name="title" value={title} id="title" onChange={e => setTitle(e.target.value)} />
+                        <Input
+                            type="text"
+                            maxLength={MAX_LENGTH_INPUT}
+                            name="title"
+                            value={title}
+                            id="title"
+                            onChange={e => setTitle(e.target.value)}
+                        />
                     </FormGroup>
                     <FormGroup>
                         <Label for="description">
@@ -131,6 +139,7 @@ function PublishVisualization(props) {
                             value={description}
                             id="description"
                             onChange={e => setDescription(e.target.value)}
+                            maxLength={MAX_LENGTH_INPUT}
                         />
                     </FormGroup>
                     <FormGroup>

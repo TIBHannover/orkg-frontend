@@ -3,6 +3,7 @@ import Link from 'components/NextJsMigration/Link';
 import useRouter from 'components/NextJsMigration/useRouter';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes.js';
 import THING_TYPES from 'constants/thingTypes';
 import { reverse } from 'named-urls';
@@ -64,7 +65,7 @@ function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagra
                 <>
                     Enter a diagram label
                     <div className="mt-2">
-                        <Input type="text" value={value} onChange={e => setValue(e.target.value)} />
+                        <Input type="text" maxLength={MAX_LENGTH_INPUT} value={value} onChange={e => setValue(e.target.value)} />
                     </div>
                 </>
             </ModalBody>

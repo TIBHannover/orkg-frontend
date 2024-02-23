@@ -18,6 +18,7 @@ import Tooltip from 'components/Utils/Tooltip';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import useTemplates from 'components/StatementBrowser/TemplatesModal/hooks/useTemplates';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const AnimationContainer = styled(CSSTransition)`
     &.zoom-enter {
@@ -115,6 +116,7 @@ const TemplatesModal = props => {
                                         type="text"
                                         name="labelFilter"
                                         onChange={handleLabelFilterChange}
+                                        maxLength={MAX_LENGTH_INPUT}
                                     />
                                 )}
                                 {selectedFilter.id !== CLASSES.NODE_SHAPE && (

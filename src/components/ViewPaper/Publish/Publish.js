@@ -28,6 +28,7 @@ import {
 import { createThing } from 'services/similarity';
 import { filterObjectOfStatementsByPredicateAndClass, getErrorMessage, getPublicUrl } from 'utils';
 import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 function Publish(props) {
     const [isLoading, setIsLoading] = useState(false);
@@ -206,7 +207,7 @@ function Publish(props) {
                             <Label for="title">
                                 <Tooltip message="Title of the paper">Title</Tooltip>
                             </Label>
-                            <Input type="text" name="title" value={`${title} [ORKG]`} disabled={true} id="title" />
+                            <Input type="text" maxLength={MAX_LENGTH_INPUT} name="title" value={`${title} [ORKG]`} disabled={true} id="title" />
                         </FormGroup>
                         <FormGroup>
                             <Label for="description">
@@ -218,6 +219,7 @@ function Publish(props) {
                                 value={description}
                                 id="description"
                                 onChange={e => setDescription(e.target.value)}
+                                maxLength={MAX_LENGTH_INPUT}
                             />
                         </FormGroup>
                         <FormGroup>
