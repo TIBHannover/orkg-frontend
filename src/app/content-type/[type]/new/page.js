@@ -1,20 +1,21 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
-import { faFile, faBars, faComments } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faComments, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { supportedContentTypes } from 'components/ContentType/types';
+import Link from 'components/NextJsMigration/Link';
+import useParams from 'components/NextJsMigration/useParams';
+import useRouter from 'components/NextJsMigration/useRouter';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { CLASSES } from 'constants/graphSettings';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
+import { upperFirst } from 'lodash';
 import { reverse } from 'named-urls';
+import pluralize from 'pluralize';
 import { useEffect, useState } from 'react';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useParams from 'components/NextJsMigration/useParams';
 import { Alert, Button, Container, Form, FormGroup, Input, InputGroup, Label } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
-import { supportedContentTypes } from 'components/ContentType/types';
-import pluralize from 'pluralize';
-import { upperFirst } from 'lodash';
 
 const TYPES = [
     ...supportedContentTypes,
@@ -81,7 +82,15 @@ const ContentTypeNew = () => {
                         <FormGroup>
                             <Label for="title">Title</Label>
                             <InputGroup>
-                                <Input value={title} onChange={e => setTitle(e.target.value)} type="text" name="value" id="title" disabled={isLoading} />
+                                <Input
+                                    value={title}
+                                    onChange={e => setTitle(e.target.value)}
+                                    type="text"
+                                    maxLength={MAX_LENGTH_INPUT}
+                                    name="value"
+                                    id="title"
+                                    disabled={isLoading}
+                                />
                                 {!resource?.id && (
                                     <Button type="submit" color="primary" onClick={handleCreate}>
                                         Create

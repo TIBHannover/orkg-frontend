@@ -12,6 +12,7 @@ import env from 'components/NextJsMigration/env';
 import { reverse } from 'named-urls';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const cookies = new Cookies();
 
@@ -105,6 +106,7 @@ export default function SignUp() {
                         id="name"
                         placeholder="Name"
                         invalid={Boolean(getErrorMessage(errors, 'display_name'))}
+                        maxLength={MAX_LENGTH_INPUT}
                     />
                     {Boolean(getErrorMessage(errors, 'display_name')) && <FormFeedback>{getErrorMessage(errors, 'display_name')}</FormFeedback>}
                 </FormGroup>
@@ -118,6 +120,7 @@ export default function SignUp() {
                         id="Email"
                         placeholder="Email address"
                         invalid={Boolean(getErrorMessage(errors, 'email'))}
+                        maxLength={MAX_LENGTH_INPUT}
                     />
                     {Boolean(getErrorMessage(errors, 'email')) && <FormFeedback>{getErrorMessage(errors, 'email')}</FormFeedback>}
                 </FormGroup>

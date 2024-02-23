@@ -1,4 +1,5 @@
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -27,7 +28,7 @@ function EditTitleModal({ isOpen, toggle, editItem, onChange }) {
             <ModalBody>
                 <FormGroup>
                     <Label for="draft-title">Title</Label>
-                    <Input type="text" id="draft-title" value={title} onChange={e => setTitle(e.target.value)} />
+                    <Input type="text" maxLength={MAX_LENGTH_INPUT} id="draft-title" value={title} onChange={e => setTitle(e.target.value)} />
                 </FormGroup>
             </ModalBody>
             <ModalFooter>

@@ -11,6 +11,7 @@ import { setBioassayRawResponse, setBioassayText } from 'slices/viewPaperSlice';
 import { useDispatch } from 'react-redux';
 import useBioassays from 'components/ViewPaper/hooks/useBioassays';
 import BioassaySelectItem from 'components/ViewPaper/BioassaysModal/BioassaySelectItem';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const BioassaysModal = props => {
     const dispatch = useDispatch();
@@ -168,6 +169,7 @@ const BioassaysModal = props => {
                                 placeholder="Copy a text into this form or use the upload button"
                                 onChange={e => setBioassaysTest(e.target.value)}
                                 invalid={!!submitAlert}
+                                maxLength={MAX_LENGTH_INPUT}
                             />
                             {!!submitAlert && <FormFeedback className="order-1">{submitAlert}</FormFeedback>}
                         </FormGroup>

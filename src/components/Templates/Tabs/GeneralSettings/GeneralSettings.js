@@ -126,7 +126,7 @@ const GeneralSettings = () => {
                     disabled={!isEditMode}
                     id="template-description"
                     placeholder="Give a brief description of the template. E.g. what are the intended use cases?"
-                    maxlength={MAX_DESCRIPTION_LENGTH}
+                    maxLength={MAX_DESCRIPTION_LENGTH}
                 />
                 <div className="text-muted text-end">
                     {description?.length}/{MAX_DESCRIPTION_LENGTH}

@@ -11,3 +11,4 @@ export const EXTRACTION_METHODS = {
     AUTOMATIC: 'AUTOMATIC',
     MANUAL: 'MANUAL',
 };
+export const MAX_LENGTH_INPUT = 8164;

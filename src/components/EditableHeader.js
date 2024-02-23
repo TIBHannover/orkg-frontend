@@ -11,6 +11,7 @@ import { Input, InputGroup } from 'reactstrap';
 import { updatePredicate } from 'services/backend/predicates';
 import { updateResource } from 'services/backend/resources';
 import { updateClass } from 'services/backend/classes';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const EditableHeader = ({ entityType, id, onChange, curatorsOnly = false, value }) => {
     const [label, setLabel] = useState(value);
@@ -66,7 +67,7 @@ const EditableHeader = ({ entityType, id, onChange, curatorsOnly = false, value 
             {isEditMode && (
                 <div className="clearfix">
                     <InputGroup>
-                        <Input value={label} onChange={e => setLabel(e.target.value)} />
+                        <Input type="text" maxLength={MAX_LENGTH_INPUT} value={label} onChange={e => setLabel(e.target.value)} />
                         <StyledButton className="px-3" outline onClick={handleCancelClick}>
                             Cancel
                         </StyledButton>

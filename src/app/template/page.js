@@ -19,6 +19,7 @@ import { createResource } from 'services/backend/resources';
 import { createResourceStatement, getTemplatesByClass } from 'services/backend/statements';
 import useRouter from 'components/NextJsMigration/useRouter';
 import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const TemplateNew = () => {
     const [title, setTitle] = useState('');
@@ -104,7 +105,7 @@ const TemplateNew = () => {
                         </span>
                     </Tippy>
 
-                    <Input type="text" id="articleName" value={title} onChange={e => setTitle(e.target.value)} />
+                    <Input type="text" maxLength={MAX_LENGTH_INPUT} id="articleName" value={title} onChange={e => setTitle(e.target.value)} />
                 </FormGroup>
                 <div className="text-end">
                     <ButtonWithLoading color="primary" onClick={handleCreate} isLoading={isLoading}>

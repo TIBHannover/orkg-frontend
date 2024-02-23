@@ -10,6 +10,7 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import useEditResource from 'components/EditResourceDialog/hooks/useEditResource';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate = null, showResourceLink = false, fixedClasses }) => {
     const { classes, label, isLoading, setIsLoading, handleChangeClasses, setLabel } = useEditResource(resource);
@@ -49,7 +50,15 @@ const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate = null, show
             <ModalBody>
                 <FormGroup>
                     <Label for="label">Label</Label>
-                    <Input id="label" name="label" placeholder="resource label" type="text" value={label} onChange={e => setLabel(e.target.value)} />
+                    <Input
+                        id="label"
+                        name="label"
+                        placeholder="resource label"
+                        type="text"
+                        maxLength={MAX_LENGTH_INPUT}
+                        value={label}
+                        onChange={e => setLabel(e.target.value)}
+                    />
                 </FormGroup>
                 <FormGroup>
                     <Label for="label">Classes</Label>

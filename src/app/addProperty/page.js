@@ -1,15 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Container, Form, FormGroup, Input, Label } from 'reactstrap';
-import { createPredicate } from 'services/backend/predicates';
-import { toast } from 'react-toastify';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes';
-import TitleBar from 'components/TitleBar/TitleBar';
-import requireAuthentication from 'requireAuthentication';
-import useRouter from 'components/NextJsMigration/useRouter';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import useRouter from 'components/NextJsMigration/useRouter';
+import TitleBar from 'components/TitleBar/TitleBar';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { Container, Form, FormGroup, Input, Label } from 'reactstrap';
+import requireAuthentication from 'requireAuthentication';
+import { createPredicate } from 'services/backend/predicates';
 
 const AddProperty = () => {
     const [label, setLabel] = useState('');
@@ -53,6 +54,7 @@ const AddProperty = () => {
                                 onChange={e => setLabel(e.target.value)}
                                 onKeyDown={e => (e.keyCode === 13 ? handleAdd : undefined)}
                                 type="text"
+                                maxLength={MAX_LENGTH_INPUT}
                                 name="value"
                                 id="propertyLabel"
                                 disabled={isLoading}

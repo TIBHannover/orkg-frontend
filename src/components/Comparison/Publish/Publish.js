@@ -25,6 +25,7 @@ import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ResearchFieldInput from 'components/Input/ResearchFieldInput/ResearchFieldInput';
 import SmartDescriptivenessCheck from 'components/SmartSuggestions/SmartDescriptivenessCheck';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const StyledCustomInput = styled(Input)`
     margin-right: 0;
@@ -213,6 +214,7 @@ function Publish(props) {
                                 disabled={Boolean(id)}
                                 id="title"
                                 onChange={e => setTitle(e.target.value)}
+                                maxLength={MAX_LENGTH_INPUT}
                             />
                         </Form>
                         <FormGroup>
@@ -227,6 +229,7 @@ function Publish(props) {
                                     disabled={Boolean(id)}
                                     id="description"
                                     onChange={e => setDescription(e.target.value)}
+                                    maxLength={MAX_LENGTH_INPUT}
                                 />
                                 <SmartDescriptivenessCheck value={description} />
                             </div>
@@ -300,6 +303,7 @@ function Publish(props) {
                                                     value={reference}
                                                     onChange={e => handleReferenceChange(e, i)}
                                                     id="publish-reference"
+                                                    maxLength={MAX_LENGTH_INPUT}
                                                 />
                                                 {!id && (
                                                     <>

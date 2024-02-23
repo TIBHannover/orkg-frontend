@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { ENTITIES, CLASSES } from 'constants/graphSettings';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 export const MAX_DESCRIPTION_LENGTH = 750;
 
@@ -147,6 +148,7 @@ class EditObservatory extends Component {
                                     value={this.state.label}
                                     placeholder="Name"
                                     disabled={isLoading}
+                                    maxLength={MAX_LENGTH_INPUT}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -176,7 +178,7 @@ class EditObservatory extends Component {
                                     value={this.state.description}
                                     rows={4}
                                     disabled={isLoading}
-                                    maxlength={MAX_DESCRIPTION_LENGTH}
+                                    maxLength={MAX_DESCRIPTION_LENGTH}
                                 />
                                 <div className="text-muted text-end">
                                     {this.state.description?.length}/{MAX_DESCRIPTION_LENGTH}

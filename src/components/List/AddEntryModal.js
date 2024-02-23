@@ -19,6 +19,7 @@ import { saveFullPaper } from 'services/backend/papers';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { addListEntry } from 'slices/listSlice';
 import { addAuthorsToStatements, getPaperData, parseCiteResult } from 'utils';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -269,6 +270,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                                     maxRows="10"
                                     className="form-control"
                                     onChange={e => setBibTex(e.target.value)}
+                                    maxLength={MAX_LENGTH_INPUT}
                                 />
                             </InputGroup>
                             <Button color="secondary" size="sm" className="mt-2" disabled={isLoadingCite} onClick={() => handleParse(bibTex)}>

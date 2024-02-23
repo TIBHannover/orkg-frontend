@@ -2,7 +2,9 @@ import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { getComparisonConfigObject } from 'components/Comparison/hooks/helpers';
 import Link from 'components/NextJsMigration/Link';
 import { CLASSES } from 'constants/graphSettings';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
+import THING_TYPES from 'constants/thingTypes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
@@ -10,7 +12,6 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Alert, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
-import THING_TYPES from 'constants/thingTypes';
 import { createThing } from 'services/similarity';
 
 const SaveDraft = ({ isOpen, toggle }) => {
@@ -49,7 +50,13 @@ const SaveDraft = ({ isOpen, toggle }) => {
                             </Alert>
                             <FormGroup>
                                 <Label for="draft-title">Title</Label>
-                                <Input type="text" id="draft-title" value={title} onChange={e => setTitle(e.target.value)} />
+                                <Input
+                                    type="text"
+                                    maxLength={MAX_LENGTH_INPUT}
+                                    id="draft-title"
+                                    value={title}
+                                    onChange={e => setTitle(e.target.value)}
+                                />
                             </FormGroup>
                         </>
                     ) : (

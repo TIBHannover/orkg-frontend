@@ -5,6 +5,7 @@ import AutoComplete from 'components/Autocomplete/Autocomplete';
 import useFilters from 'components/Search/hooks/useFilters';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { ENTITIES } from 'constants/graphSettings';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import { isString } from 'lodash';
 import { Button, FormGroup, Input, InputGroup, Label } from 'reactstrap';
@@ -30,12 +31,14 @@ const Filters = () => {
             <Label for="searchQuery">Search query</Label>
             <InputGroup>
                 <Input
+                    type="text"
                     value={decodedValue}
                     onChange={e => setValue(e.target.value)}
                     placeholder="Search..."
                     id="searchQuery"
                     name="value"
                     onKeyDown={e => e.key === 'Enter' && handleSubmitSearch(value)}
+                    maxLength={MAX_LENGTH_INPUT}
                 />
                 <Button onClick={() => handleSubmitSearch(value)} color="secondary" className="ps-2 pe-2">
                     <FontAwesomeIcon icon={faSearch} />

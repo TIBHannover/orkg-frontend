@@ -7,6 +7,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button, Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const bibtexOptions = {
     output: {
@@ -62,7 +63,13 @@ const ExportBibtexModal = ({ isOpen, toggle }) => {
         <Modal size="lg" isOpen={isOpen} toggle={toggle}>
             <ModalHeader toggle={toggle}>BibTeX export</ModalHeader>
             <ModalBody>
-                <Input type="textarea" value={!isLoading ? bibtex || 'No items added' : 'Loading...'} rows="15" disabled />
+                <Input
+                    type="textarea"
+                    maxLength={MAX_LENGTH_INPUT}
+                    value={!isLoading ? bibtex || 'No items added' : 'Loading...'}
+                    rows="15"
+                    disabled
+                />
                 <CopyToClipboard
                     id="copyToClipboardLatex"
                     text={isLoading ? 'Loading...' : bibtex}

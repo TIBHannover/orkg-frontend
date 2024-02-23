@@ -15,6 +15,7 @@ import { createPredicate } from 'services/backend/predicates';
 import moment from 'moment';
 import { range } from 'utils';
 import { isString } from 'lodash';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 class EditorComponent extends BaseEditorComponent {
     constructor(props) {
@@ -280,6 +281,7 @@ class EditorComponent extends BaseEditorComponent {
                                 innerRef={this.literalInputRef}
                                 onKeyDown={e => e.keyCode === 13 && this.finishEditing()}
                                 autoFocus
+                                maxLength={MAX_LENGTH_INPUT}
                             />
                         )}
                         {this.state.type === 'resource' && !this.state.valueClass && (

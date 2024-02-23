@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Alert, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const PublishModal = ({ id, show, toggle, listId }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -40,6 +41,7 @@ const PublishModal = ({ id, show, toggle, listId }) => {
                             placeholder="Example: updated section order"
                             value={updateMessage}
                             onChange={e => setUpdateMessage(e.target.value)}
+                            maxLength={MAX_LENGTH_INPUT}
                         />
                     </FormGroup>
                 ) : (

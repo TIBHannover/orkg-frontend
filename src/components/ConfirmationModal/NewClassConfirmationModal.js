@@ -1,5 +1,6 @@
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import REGEX from 'constants/regex';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
@@ -60,7 +61,15 @@ function CreateClassModal({ label: newLabel, uri: newUri, onClose, showParentFie
                     <p>Often there are existing classes that you can use as well. It is better to use existing classes than new ones.</p>
                     <FormGroup>
                         <Label for="labelInput">Label</Label>
-                        <Input disabled={!isURI} type="text" name="label" id="labelInput" value={label} onChange={e => setLabel(e.target.value)} />
+                        <Input
+                            disabled={!isURI}
+                            type="text"
+                            name="label"
+                            id="labelInput"
+                            value={label}
+                            onChange={e => setLabel(e.target.value)}
+                            maxLength={MAX_LENGTH_INPUT}
+                        />
                     </FormGroup>
                     <FormGroup>
                         <Label for="URIInput">
@@ -87,7 +96,7 @@ function CreateClassModal({ label: newLabel, uri: newUri, onClose, showParentFie
                             <Label for="URIInput">
                                 Subclass of <span className="text-muted fst-italic">(optional)</span>
                             </Label>
-                            <AutoComplete
+                            <Autocomplete
                                 entityType={ENTITIES.CLASS}
                                 placeholder="Select a class"
                                 onChange={handleParentClassSelect}
@@ -113,6 +122,7 @@ function CreateClassModal({ label: newLabel, uri: newUri, onClose, showParentFie
                             type="text"
                             id="property-description"
                             placeholder="E.g. Set of collection of objects"
+                            maxLength={MAX_LENGTH_INPUT}
                         />
                     </FormGroup>
                 </ModalBody>

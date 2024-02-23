@@ -9,6 +9,7 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Alert, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 // TODO: accepted paper data as props:
 // it is not really needed to fetch the contribution data, it could be passed as props as well
@@ -44,7 +45,7 @@ const CreateContributionModal = ({ isOpen, toggle, paperId, onCreateContribution
                             <Tooltip message="Enter the title of the contribution">Contribution title</Tooltip>
                         </Label>
                         <InputGroup>
-                            <Input value={title} type="text" id="title" onChange={e => setTitle(e.target.value)} />
+                            <Input value={title} maxLength={MAX_LENGTH_INPUT} type="text" id="title" onChange={e => setTitle(e.target.value)} />
                         </InputGroup>
                     </FormGroup>
                 ) : (

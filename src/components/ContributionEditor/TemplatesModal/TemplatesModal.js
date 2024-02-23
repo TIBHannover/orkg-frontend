@@ -16,6 +16,7 @@ import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const AnimationContainer = styled(CSSTransition)`
     &.zoom-enter {
@@ -114,6 +115,7 @@ const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsT
                                         type="text"
                                         name="labelFilter"
                                         onChange={handleLabelFilterChange}
+                                        maxLength={MAX_LENGTH_INPUT}
                                     />
                                 )}
                                 {selectedFilter.id !== CLASSES.NODE_SHAPE && (

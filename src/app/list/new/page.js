@@ -4,12 +4,13 @@ import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import useRouter from 'components/NextJsMigration/useRouter';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { CLASSES } from 'constants/graphSettings';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
-import useRouter from 'components/NextJsMigration/useRouter';
 import { toast } from 'react-toastify';
 import { Container, Form, FormGroup, Input, Label } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
@@ -58,7 +59,7 @@ const ListNew = () => {
                             </span>
                         </Tippy>
 
-                        <Input type="text" id="articleTitle" value={title} onChange={e => setTitle(e.target.value)} />
+                        <Input type="text" id="articleTitle" value={title} maxLength={MAX_LENGTH_INPUT} onChange={e => setTitle(e.target.value)} />
                     </FormGroup>
                     <div className="text-end">
                         <ButtonWithLoading type="submit" color="primary" onClick={handleCreate} isLoading={isLoading}>

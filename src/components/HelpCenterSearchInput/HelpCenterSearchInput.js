@@ -4,6 +4,7 @@ import { useState } from 'react';
 import useRouter from 'components/NextJsMigration/useRouter';
 import useParams from 'components/NextJsMigration/useParams';
 import { Button, Input, InputGroup } from 'reactstrap';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const HelpCenterSearchInput = () => {
     const router = useRouter();
@@ -25,9 +26,11 @@ const HelpCenterSearchInput = () => {
             <Input
                 placeholder="Search for articles..."
                 bsSize="lg"
+                type="text"
                 value={value}
                 onChange={e => setValue(e.target.value)}
                 onKeyDown={handleKeyDown}
+                maxLength={MAX_LENGTH_INPUT}
             />
 
             <Button onClick={handleSearch}>Search</Button>

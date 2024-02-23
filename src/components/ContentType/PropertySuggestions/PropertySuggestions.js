@@ -6,6 +6,7 @@ import { ENTITIES } from 'constants/graphSettings';
 import { createRef, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Input, ListGroupItem } from 'reactstrap';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const PropertySuggestions = () => {
     const [filterValue, setFilterValue] = useState('');
@@ -43,6 +44,7 @@ const PropertySuggestions = () => {
                     className="mt-3 mb-2"
                     value={filterValue}
                     onChange={e => setFilterValue(e.target.value)}
+                    maxLength={MAX_LENGTH_INPUT}
                 />
                 <div className="list-group" style={{ maxHeight: !isExpanded ? 400 : 5000, overflowY: 'auto' }} ref={ref}>
                     {filteredSuggestions.map(c => (

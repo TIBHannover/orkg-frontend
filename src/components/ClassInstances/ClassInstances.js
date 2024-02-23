@@ -9,6 +9,7 @@ import { debounce } from 'lodash';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const ClassInstances = ({ title = 'class', classId }) => {
     const pageSize = 25;
@@ -83,11 +84,13 @@ const ClassInstances = ({ title = 'class', classId }) => {
                     <Label for="searchInputField">Search</Label>
                     <Input
                         id="searchInputField"
+                        type="text"
                         className="ms-2"
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
                         placeholder="Enter a label"
                         bsSize="sm"
+                        maxLength={MAX_LENGTH_INPUT}
                     />
                 </FormGroup>
             </Form>

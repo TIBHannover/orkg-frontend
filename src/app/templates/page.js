@@ -30,6 +30,7 @@ import {
 } from 'reactstrap';
 import { getResources } from 'services/backend/resources';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const Templates = () => {
     const pageSize = 25;
@@ -274,7 +275,7 @@ const Templates = () => {
                         <Col md={6}>
                             <FormGroup>
                                 <Label for="filter-label">Filter by label</Label>
-                                <Input value={filterLabel} type="text" id="filter-label" onChange={handleLabelFilter} />
+                                <Input value={filterLabel} type="text" id="filter-label" maxLength={MAX_LENGTH_INPUT} onChange={handleLabelFilter} />
                             </FormGroup>
                         </Col>
                         <Col md={6}>

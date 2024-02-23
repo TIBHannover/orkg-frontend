@@ -22,6 +22,7 @@ import { getOrganization } from 'services/backend/organizations';
 import { openAuthDialog } from 'slices/authSlice';
 import slugify from 'slugify';
 import { getPublicUrl } from 'utils';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const AddObservatory = () => {
     const params = useParams();
@@ -137,6 +138,7 @@ const AddObservatory = () => {
                                         id="ObservatoryName"
                                         disabled={loading}
                                         value={name}
+                                        maxLength={MAX_LENGTH_INPUT}
                                     />
                                 </FormGroup>
                                 <FormGroup>
@@ -155,6 +157,7 @@ const AddObservatory = () => {
                                                 disabled={loading}
                                                 placeholder="name"
                                                 value={permalink}
+                                                maxLength={MAX_LENGTH_INPUT}
                                             />
                                         </InputGroup>
                                     </div>
@@ -185,7 +188,7 @@ const AddObservatory = () => {
                                         value={description}
                                         id="ObservatoryDescription"
                                         disabled={loading}
-                                        maxlength={MAX_DESCRIPTION_LENGTH}
+                                        maxLength={MAX_DESCRIPTION_LENGTH}
                                     />
                                     <div className="text-muted text-end">
                                         {description?.length}/{MAX_DESCRIPTION_LENGTH}

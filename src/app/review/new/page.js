@@ -3,15 +3,16 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import useRouter from 'components/NextJsMigration/useRouter';
 import useSave from 'components/Review/hooks/useSave';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Container, Form, FormGroup, Input, Label } from 'reactstrap';
-import useRouter from 'components/NextJsMigration/useRouter';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const ReviewNew = () => {
     const [title, setTitle] = useState('');
@@ -59,7 +60,7 @@ const ReviewNew = () => {
                             </span>
                         </Tippy>
 
-                        <Input type="text" id="articleTitle" value={title} onChange={e => setTitle(e.target.value)} />
+                        <Input type="text" id="articleTitle" maxLength={MAX_LENGTH_INPUT} value={title} onChange={e => setTitle(e.target.value)} />
                     </FormGroup>
                     <div className="text-end">
                         <ButtonWithLoading type="submit" color="primary" onClick={handleCreate} isLoading={isLoading}>

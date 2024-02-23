@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import capitalize from 'capitalize';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, updateOrganizationMetadata, typeName }) => {
     const [organizationLabel, setOrganizationLabel] = useState('');
@@ -108,6 +109,7 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
                                 value={organizationLabel}
                                 placeholder={`${typeName} name`}
                                 disabled={isSaving}
+                                maxLength={MAX_LENGTH_INPUT}
                             />
                         </FormGroup>
                         <FormGroup>
@@ -120,6 +122,7 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
                                 value={organizationUrl}
                                 disabled={isSaving}
                                 placeholder="https://www.example.com"
+                                maxLength={MAX_LENGTH_INPUT}
                             />
                         </FormGroup>
                         <FormGroup>
