@@ -14,7 +14,7 @@ import ResearchProblemsBox from 'components/ResearchProblemsBox/ResearchProblems
 const ResearchField = () => {
     const { researchFieldId, slug } = useParams();
 
-    const [observatories, isLoadingObservatories] = useResearchFieldObservatories({ researchFieldId });
+    const { observatories, isLoading } = useResearchFieldObservatories({ researchFieldId });
 
     return (
         <>
@@ -33,7 +33,7 @@ const ResearchField = () => {
                         <div className="box rounded-3 flex-grow-1 flex-column d-flex" style={{ overflow: 'hidden' }}>
                             <h5 className="pe-3 ps-3 pt-3 pb-2 m-0">Observatories</h5>
                             <hr className="mb-3 mt-0" />
-                            <ObservatoriesCarousel observatories={observatories} isLoading={isLoadingObservatories} />
+                            <ObservatoriesCarousel observatories={observatories} isLoading={isLoading} />
                         </div>
                     </Col>
                 </Row>
