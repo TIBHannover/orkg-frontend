@@ -10,7 +10,7 @@ import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import useRouter from 'components/NextJsMigration/useRouter';
 import useParams from 'components/NextJsMigration/useParams';
-import { Alert, Button, Container, FormGroup, Input, InputGroup, Label } from 'reactstrap';
+import { Alert, Button, Container, Form, FormGroup, Input, InputGroup, Label } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 import { supportedContentTypes } from 'components/ContentType/types';
 import pluralize from 'pluralize';
@@ -48,7 +48,8 @@ const ContentTypeNew = () => {
         setSelectedClassId(params.type || TYPES[0].id);
     }, [params.type]);
 
-    const handleCreate = async () => {
+    const handleCreate = async e => {
+        e.preventDefault();
         setIsLoading(true);
         const _resource = await createResource(title, [selectedClassId]);
         setResource(_resource);
@@ -76,17 +77,19 @@ const ContentTypeNew = () => {
 
                 <hr />
                 {(selectedClassId === CLASSES.DATASET || selectedClassId === CLASSES.SOFTWARE) && (
-                    <FormGroup>
-                        <Label for="title">Title</Label>
-                        <InputGroup>
-                            <Input value={title} onChange={e => setTitle(e.target.value)} type="text" name="value" id="title" disabled={isLoading} />
-                            {!resource?.id && (
-                                <Button color="primary" onClick={handleCreate}>
-                                    Create
-                                </Button>
-                            )}
-                        </InputGroup>
-                    </FormGroup>
+                    <Form>
+                        <FormGroup>
+                            <Label for="title">Title</Label>
+                            <InputGroup>
+                                <Input value={title} onChange={e => setTitle(e.target.value)} type="text" name="value" id="title" disabled={isLoading} />
+                                {!resource?.id && (
+                                    <Button type="submit" color="primary" onClick={handleCreate}>
+                                        Create
+                                    </Button>
+                                )}
+                            </InputGroup>
+                        </FormGroup>
+                    </Form>
                 )}
                 {selectedClassId === CLASSES.PAPER && (
                     <>

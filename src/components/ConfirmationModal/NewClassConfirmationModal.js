@@ -4,7 +4,7 @@ import REGEX from 'constants/regex';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, FormFeedback, FormGroup, FormText, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Button, Form, FormFeedback, FormGroup, FormText, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { createClass, setParentClassByID } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
 import { createLiteralStatement } from 'services/backend/statements';
@@ -54,75 +54,77 @@ function CreateClassModal({ label: newLabel, uri: newUri, onClose, showParentFie
 
     return (
         <Modal isOpen toggle={() => onClose(false)} size="lg">
-            <ModalHeader toggle={() => onClose(false)}>Are you sure you need a new class?</ModalHeader>
-            <ModalBody>
-                <p>Often there are existing classes that you can use as well. It is better to use existing classes than new ones.</p>
-                <FormGroup>
-                    <Label for="labelInput">Label</Label>
-                    <Input disabled={!isURI} type="text" name="label" id="labelInput" value={label} onChange={e => setLabel(e.target.value)} />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="URIInput">
-                        URI <span className="text-muted fst-italic">(optional)</span>
-                    </Label>
-                    <Input
-                        type="uri"
-                        name="uri"
-                        id="URIInput"
-                        value={uri}
-                        placeholder="Enter the URI of the class"
-                        onChange={e => setUri(e.target.value)}
-                        invalid={Boolean(getErrorMessage(errors, 'uri'))}
-                    />
-                    {Boolean(getErrorMessage(errors, 'uri')) && <FormFeedback>{getErrorMessage(errors, 'uri')}</FormFeedback>}
-                    <small>
-                        <FormText color="muted">
-                            Please provide the URI of the class if you are using a class defined in an external ontology
-                        </FormText>
-                    </small>
-                </FormGroup>
-                {showParentField && (
+            <Form onSubmit={e => e.preventDefault()}>
+                <ModalHeader toggle={() => onClose(false)}>Are you sure you need a new class?</ModalHeader>
+                <ModalBody>
+                    <p>Often there are existing classes that you can use as well. It is better to use existing classes than new ones.</p>
+                    <FormGroup>
+                        <Label for="labelInput">Label</Label>
+                        <Input disabled={!isURI} type="text" name="label" id="labelInput" value={label} onChange={e => setLabel(e.target.value)} />
+                    </FormGroup>
                     <FormGroup>
                         <Label for="URIInput">
-                            Subclass of <span className="text-muted fst-italic">(optional)</span>
+                            URI <span className="text-muted fst-italic">(optional)</span>
                         </Label>
-                        <AutoComplete
-                            entityType={ENTITIES.CLASS}
-                            placeholder="Select a class"
-                            onChange={handleParentClassSelect}
-                            value={parentClass}
-                            autoLoadOption={true}
-                            openMenuOnFocus={true}
-                            allowCreate={false}
-                            copyValueButton={true}
-                            isClearable
-                            autoFocus={false}
-                            inputId="target-class"
+                        <Input
+                            type="uri"
+                            name="uri"
+                            id="URIInput"
+                            value={uri}
+                            placeholder="Enter the URI of the class"
+                            onChange={e => setUri(e.target.value)}
+                            invalid={Boolean(getErrorMessage(errors, 'uri'))}
                         />
+                        {Boolean(getErrorMessage(errors, 'uri')) && <FormFeedback>{getErrorMessage(errors, 'uri')}</FormFeedback>}
                         <small>
-                            <FormText color="muted">Enter the parent class for this new class.</FormText>
+                            <FormText color="muted">
+                                Please provide the URI of the class if you are using a class defined in an external ontology
+                            </FormText>
                         </small>
                     </FormGroup>
-                )}
-                <FormGroup className="mt-4">
-                    <Label for="property-description">Description</Label>
-                    <Input
-                        onChange={e => setDescription(e.target.value)}
-                        value={description}
-                        type="text"
-                        id="property-description"
-                        placeholder="E.g. Set of collection of objects"
-                    />
-                </FormGroup>
-            </ModalBody>
-            <ModalFooter>
-                <Button color="light" onClick={() => onClose(false)}>
-                    Cancel
-                </Button>
-                <Button color="primary" onClick={handleConfirm}>
-                    Create class
-                </Button>
-            </ModalFooter>
+                    {showParentField && (
+                        <FormGroup>
+                            <Label for="URIInput">
+                                Subclass of <span className="text-muted fst-italic">(optional)</span>
+                            </Label>
+                            <AutoComplete
+                                entityType={ENTITIES.CLASS}
+                                placeholder="Select a class"
+                                onChange={handleParentClassSelect}
+                                value={parentClass}
+                                autoLoadOption={true}
+                                openMenuOnFocus={true}
+                                allowCreate={false}
+                                copyValueButton={true}
+                                isClearable
+                                autoFocus={false}
+                                inputId="target-class"
+                            />
+                            <small>
+                                <FormText color="muted">Enter the parent class for this new class.</FormText>
+                            </small>
+                        </FormGroup>
+                    )}
+                    <FormGroup className="mt-4">
+                        <Label for="property-description">Description</Label>
+                        <Input
+                            onChange={e => setDescription(e.target.value)}
+                            value={description}
+                            type="text"
+                            id="property-description"
+                            placeholder="E.g. Set of collection of objects"
+                        />
+                    </FormGroup>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="light" onClick={() => onClose(false)}>
+                        Cancel
+                    </Button>
+                    <Button color="primary" onClick={handleConfirm}>
+                        Create class
+                    </Button>
+                </ModalFooter>
+            </Form>
         </Modal>
     );
 }

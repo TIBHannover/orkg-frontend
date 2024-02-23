@@ -74,7 +74,6 @@ const SignIn = props => {
                 setErrors(error);
             });
     };
-
     return (
         <>
             <Form className="ps-3 pe-3 pt-2" onSubmit={signIn}>
@@ -84,7 +83,14 @@ const SignIn = props => {
 
                 <FormGroup>
                     <Label for="Email">Email address</Label>
-                    <Input onChange={e => setEmail(e.target.value)} value={email} type="email" name="email" id="Email" placeholder="Email address" />
+                    <Input
+                        onChange={e => setEmail(e.target.value)}
+                        value={email}
+                        type="email"
+                        name="email"
+                        id="Email"
+                        placeholder="Email address"
+                    />
                 </FormGroup>
                 <FormGroup>
                     <Label for="Password">Password</Label>
@@ -97,7 +103,7 @@ const SignIn = props => {
                         placeholder="Password"
                     />
                 </FormGroup>
-                <ButtonWithLoading type="submit" color="primary" className="mt-4 mb-2" block isLoading={loading}>
+                <ButtonWithLoading type="submit" onClick={signIn} color="primary" className="mt-4 mb-2" block isLoading={loading}>
                     Sign in
                 </ButtonWithLoading>
             </Form>

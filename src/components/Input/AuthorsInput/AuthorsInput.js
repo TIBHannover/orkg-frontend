@@ -11,7 +11,7 @@ import REGEX from 'constants/regex';
 import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import getPersonFullNameByORCID from 'services/ORCID/index';
 
 function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabled, value }) {
@@ -139,36 +139,38 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                 </AddAuthor>
             </div>
             <Modal onOpened={() => inputRef?.current?.focus()} isOpen={showAuthorForm} toggle={() => setShowAuthorForm(v => !v)}>
-                <ModalHeader>{editMode ? `Edit ${itemLabel}` : `Add ${itemLabel}`}</ModalHeader>
-                <ModalBody>
-                    <FormGroup>
-                        <Label for="authorInput">
-                            Enter {itemLabel} name <b>or</b> ORCID <Icon color="#A6CE39" icon={faOrcid} />
-                        </Label>
-                        <Autocomplete
-                            entityType={ENTITIES.RESOURCE}
-                            optionsClass={CLASSES.AUTHOR}
-                            placeholder="Search for author or enter a new author..."
-                            onChange={handleChange}
-                            value={authorInput}
-                            allowCreate={true}
-                            autoLoadOption={false}
-                            innerRef={inputRef}
-                            inputId="authorInput"
-                            onChangeInputValue={value => setAuthorAutocompleteLabel(value)}
-                            ols={false}
-                        />
-                    </FormGroup>
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="light" onClick={() => setShowAuthorForm(v => !v)}>
-                        Cancel
-                    </Button>
-                    <ButtonWithLoading isLoading={authorNameLoading} color="primary" onClick={() => saveAuthor(authorInput)}>
-                        {editMode && 'Save'}
-                        {!editMode && 'Add'}
-                    </ButtonWithLoading>
-                </ModalFooter>
+                <Form onSubmit={e => e.preventDefault()}>
+                    <ModalHeader>{editMode ? `Edit ${itemLabel}` : `Add ${itemLabel}`}</ModalHeader>
+                    <ModalBody>
+                        <FormGroup>
+                            <Label for="authorInput">
+                                Enter {itemLabel} name <b>or</b> ORCID <Icon color="#A6CE39" icon={faOrcid} />
+                            </Label>
+                            <Autocomplete
+                                entityType={ENTITIES.RESOURCE}
+                                optionsClass={CLASSES.AUTHOR}
+                                placeholder="Search for author or enter a new author..."
+                                onChange={handleChange}
+                                value={authorInput}
+                                allowCreate={true}
+                                autoLoadOption={false}
+                                innerRef={inputRef}
+                                inputId="authorInput"
+                                onChangeInputValue={value => setAuthorAutocompleteLabel(value)}
+                                ols={false}
+                            />
+                        </FormGroup>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="light" onClick={() => setShowAuthorForm(v => !v)}>
+                            Cancel
+                        </Button>
+                        <ButtonWithLoading type="submit" isLoading={authorNameLoading} color="primary" onClick={() => saveAuthor(authorInput)}>
+                            {editMode && 'Save'}
+                            {!editMode && 'Add'}
+                        </ButtonWithLoading>
+                    </ModalFooter>
+                </Form>
             </Modal>
         </div>
     );

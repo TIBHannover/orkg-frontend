@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import useRouter from 'components/NextJsMigration/useRouter';
 import { toast } from 'react-toastify';
-import { Container, FormGroup, FormText, Input, Label } from 'reactstrap';
+import { Container, FormGroup, FormText, Input, Label, Form } from 'reactstrap';
 import requireAuthentication from 'requireAuthentication';
 import { createClass, setParentClassByID } from 'services/backend/classes';
 import { getErrorMessage } from 'utils';
@@ -35,7 +35,9 @@ const AddClass = () => {
         document.title = 'Add Class - ORKG';
     }, []);
 
-    const handleAdd = async () => {
+    const handleAdd = async e => {
+        e.preventDefault();
+        setIsLoading(true);
         if (label.trim() !== '') {
             if (uri && !isURI.test(uri.trim())) {
                 toast.error('Please enter a valid URI of the class');
@@ -88,65 +90,67 @@ const AddClass = () => {
         <>
             <TitleBar>Create class</TitleBar>
             <Container className="box rounded p-5">
-                <p>
-                    This form allows you to create a new class. If you want to create a hierarchy of classes, we suggest that you first create the
-                    root class, which is the highest-level class in the hierarchy. Alternatively, you can also suggest to include a new ontology to
-                    the{' '}
-                    <a href="https://service.tib.eu/ts4tib/index" target="_blank" rel="noopener noreferrer">
-                        TIB Terminology Service <Icon size="sm" icon={faExternalLinkAlt} />
-                    </a>{' '}
-                    by creating an issue at the{' '}
-                    <a href="https://github.com/TIBHannover/OLS/issues" target="_blank" rel="noopener noreferrer">
-                        issue tracker <Icon size="sm" icon={faExternalLinkAlt} />
-                    </a>{' '}
-                    .
-                </p>
-                <div className="pt-2">
-                    <FormGroup>
-                        <Label for="classLabel">Class label</Label>
-                        <Input onChange={e => setLabel(e.target.value)} type="text" name="value" id="classLabel" disabled={isLoading} />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="URIInput">
-                            URI <span className="text-muted fst-italic">(optional)</span>
-                        </Label>
-                        <Input type="uri" name="uri" id="URIInput" value={uri} onChange={e => setUri(e.target.value)} />
-                        <FormText color="muted">
-                            Please provide the URI of the class if you are using a class defined in an external ontology
-                        </FormText>
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="URIInput">
-                            Subclass of <span className="text-muted fst-italic">(optional)</span>
-                        </Label>
-                        <AutoComplete
-                            entityType={ENTITIES.CLASS}
-                            placeholder={isCurationAllowed ? 'Select or type to enter a class' : 'This field requires a curator role'}
-                            onChange={handleParentClassSelect}
-                            value={parentClass}
-                            autoLoadOption={true}
-                            openMenuOnFocus={true}
-                            allowCreate={true}
-                            copyValueButton={true}
-                            isClearable
-                            autoFocus={false}
-                            innerRef={parentClassAutocompleteRef}
-                            showTreeSelector={true}
-                            linkButton={parentClass && parentClass.id ? reverse(ROUTES.CLASS, { id: parentClass.id }) : ''}
-                            linkButtonTippy="Go to class page"
-                            inputId="target-class"
-                            isDisabled={!isCurationAllowed}
-                        />
-                        {isCurationAllowed && (
+                <Form className="ps-3 pe-3 pt-2" onSubmit={handleAdd}>
+                    <p>
+                        This form allows you to create a new class. If you want to create a hierarchy of classes, we suggest that you first create the
+                        root class, which is the highest-level class in the hierarchy. Alternatively, you can also suggest to include a new ontology
+                        to the{' '}
+                        <a href="https://service.tib.eu/ts4tib/index" target="_blank" rel="noopener noreferrer">
+                            TIB Terminology Service <Icon size="sm" icon={faExternalLinkAlt} />
+                        </a>{' '}
+                        by creating an issue at the{' '}
+                        <a href="https://github.com/TIBHannover/OLS/issues" target="_blank" rel="noopener noreferrer">
+                            issue tracker <Icon size="sm" icon={faExternalLinkAlt} />
+                        </a>{' '}
+                        .
+                    </p>
+                    <div className="pt-2">
+                        <FormGroup>
+                            <Label for="classLabel">Class label</Label>
+                            <Input onChange={e => setLabel(e.target.value)} type="text" name="value" id="classLabel" disabled={isLoading} />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="URIInput">
+                                URI <span className="text-muted fst-italic">(optional)</span>
+                            </Label>
+                            <Input type="uri" name="uri" id="URIInput" value={uri} onChange={e => setUri(e.target.value)} />
                             <FormText color="muted">
-                                Enter the parent class for this new class. Select an existing class, or create a new one by typing its name.
+                                Please provide the URI of the class if you are using a class defined in an external ontology
                             </FormText>
-                        )}
-                    </FormGroup>
-                    <ButtonWithLoading color="primary" onClick={handleAdd} className="mt-3 mb-2" isLoading={isLoading}>
-                        Create class
-                    </ButtonWithLoading>
-                </div>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="URIInput">
+                                Subclass of <span className="text-muted fst-italic">(optional)</span>
+                            </Label>
+                            <AutoComplete
+                                entityType={ENTITIES.CLASS}
+                                placeholder={isCurationAllowed ? 'Select or type to enter a class' : 'This field requires a curator role'}
+                                onChange={handleParentClassSelect}
+                                value={parentClass}
+                                autoLoadOption={true}
+                                openMenuOnFocus={true}
+                                allowCreate={true}
+                                copyValueButton={true}
+                                isClearable
+                                autoFocus={false}
+                                innerRef={parentClassAutocompleteRef}
+                                showTreeSelector={true}
+                                linkButton={parentClass && parentClass.id ? reverse(ROUTES.CLASS, { id: parentClass.id }) : ''}
+                                linkButtonTippy="Go to class page"
+                                inputId="target-class"
+                                isDisabled={!isCurationAllowed}
+                            />
+                            {isCurationAllowed && (
+                                <FormText color="muted">
+                                    Enter the parent class for this new class. Select an existing class, or create a new one by typing its name.
+                                </FormText>
+                            )}
+                        </FormGroup>
+                        <ButtonWithLoading type="submit" color="primary" onClick={handleAdd} className="mt-3 mb-2" isLoading={isLoading}>
+                            Create class
+                        </ButtonWithLoading>
+                    </div>
+                </Form>
             </Container>
         </>
     );

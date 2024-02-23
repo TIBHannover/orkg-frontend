@@ -1,5 +1,5 @@
 import Link from 'components/NextJsMigration/Link';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert, InputGroup } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert, InputGroup, Form } from 'reactstrap';
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
@@ -202,7 +202,7 @@ function Publish(props) {
                 {!comparisonResource.doi && (!id || (id && assignDOI)) && (
                     <>
                         {' '}
-                        <FormGroup>
+                        <Form onSubmit={handleSubmit}>
                             <Label for="title">
                                 <Tooltip message="Enter the title of the comparison">Title</Tooltip>
                             </Label>
@@ -214,7 +214,7 @@ function Publish(props) {
                                 id="title"
                                 onChange={e => setTitle(e.target.value)}
                             />
-                        </FormGroup>
+                        </Form>
                         <FormGroup>
                             <Label for="description">
                                 <Tooltip message="Describe the goal and what is being compared">Description</Tooltip>
@@ -231,12 +231,12 @@ function Publish(props) {
                                 <SmartDescriptivenessCheck value={description} />
                             </div>
                         </FormGroup>
-                        <FormGroup>
+                        <Form onSubmit={handleSubmit}>
                             <Label for="research-field">
                                 <Tooltip message="Enter the research field of the comparison">Research field</Tooltip>
                             </Label>
                             <ResearchFieldInput value={researchField} onChange={setResearchField} inputId="research-field" />
-                        </FormGroup>
+                        </Form>
                         <FormGroup>
                             <Label for="Creator">
                                 <Tooltip message="The creator or creators of the comparison. Enter both the first and last name">Creators</Tooltip>
@@ -284,7 +284,7 @@ function Publish(props) {
                         )}
                         {!id /* Hide those fields because they are not part of the DOI metadata */ && (
                             <>
-                                <FormGroup>
+                                <Form onSubmit={handleSubmit}>
                                     <Label>
                                         <Tooltip message="Enter a reference to the data sources from which the comparison is generated">
                                             Reference (optional)
@@ -326,8 +326,8 @@ function Publish(props) {
                                                 )}
                                             </InputGroup>
                                         ))}
-                                </FormGroup>
-                                <FormGroup>
+                                </Form>
+                                <Form onSubmit={handleSubmit}>
                                     <Label for="conference">
                                         <Tooltip message="If this comparison is part of a conference submission, select the conference. Only selected conferences are supported">
                                             Conference <span className="text-muted fst-italic">(optional)</span>
@@ -347,7 +347,7 @@ function Publish(props) {
                                         value={conference}
                                     />
                                     <SelectGlobalStyle />
-                                </FormGroup>
+                                </Form>
                             </>
                         )}
                     </>
@@ -357,14 +357,14 @@ function Publish(props) {
                 <ModalFooter>
                     {!comparisonResource.doi && !id && (
                         <div className="text-align-center mt-2">
-                            <ButtonWithLoading color="primary" isLoading={isLoading} onClick={handleSubmit}>
+                            <ButtonWithLoading type="submit" color="primary" isLoading={isLoading} onClick={handleSubmit}>
                                 Publish
                             </ButtonWithLoading>
                         </div>
                     )}
                     {id && !comparisonResource.doi && assignDOI && (
                         <div className="text-align-center mt-2">
-                            <ButtonWithLoading color="primary" isLoading={isLoading} onClick={handleSubmit}>
+                            <ButtonWithLoading type="submit" color="primary" isLoading={isLoading} onClick={handleSubmit}>
                                 Publish DOI
                             </ButtonWithLoading>
                         </div>

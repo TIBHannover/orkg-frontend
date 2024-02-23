@@ -11,7 +11,7 @@ import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import useRouter from 'components/NextJsMigration/useRouter';
 import { toast } from 'react-toastify';
-import { Container, FormGroup, Input, Label } from 'reactstrap';
+import { Container, Form, FormGroup, Input, Label } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 
 const ListNew = () => {
@@ -22,7 +22,8 @@ const ListNew = () => {
         document.title = 'Create list - ORKG';
     });
 
-    const handleCreate = async () => {
+    const handleCreate = async e => {
+        e.preventDefault();
         if (!title) {
             toast.error('Enter a title');
             return;
@@ -38,31 +39,33 @@ const ListNew = () => {
         <>
             <TitleBar>Create list</TitleBar>
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                <p>
-                    ORKG lists provide a way to organize and describe state-of-the-art literature for a specific research domain. From lists, it is
-                    possible to create ORKG comparisons.
-                </p>
-                <p>
-                    <em>
-                        Please note: a list can be <strong>changed by anyone</strong> (just like Wikipedia)
-                    </em>
-                </p>
+                <Form>
+                    <p>
+                        ORKG lists provide a way to organize and describe state-of-the-art literature for a specific research domain. From lists, it
+                        is possible to create ORKG comparisons.
+                    </p>
+                    <p>
+                        <em>
+                            Please note: a list can be <strong>changed by anyone</strong> (just like Wikipedia)
+                        </em>
+                    </p>
 
-                <hr className="mt-5 mb-4" />
-                <FormGroup>
-                    <Tippy content="Choose the title of your list. You can always update the title later">
-                        <span>
-                            <Label for="articleTitle">Title</Label> <Icon icon={faQuestionCircle} className="text-secondary" />
-                        </span>
-                    </Tippy>
+                    <hr className="mt-5 mb-4" />
+                    <FormGroup>
+                        <Tippy content="Choose the title of your list. You can always update the title later">
+                            <span>
+                                <Label for="articleTitle">Title</Label> <Icon icon={faQuestionCircle} className="text-secondary" />
+                            </span>
+                        </Tippy>
 
-                    <Input type="text" id="articleTitle" value={title} onChange={e => setTitle(e.target.value)} />
-                </FormGroup>
-                <div className="text-end">
-                    <ButtonWithLoading color="primary" onClick={handleCreate} isLoading={isLoading}>
-                        Create
-                    </ButtonWithLoading>
-                </div>
+                        <Input type="text" id="articleTitle" value={title} onChange={e => setTitle(e.target.value)} />
+                    </FormGroup>
+                    <div className="text-end">
+                        <ButtonWithLoading type="submit" color="primary" onClick={handleCreate} isLoading={isLoading}>
+                            Create
+                        </ButtonWithLoading>
+                    </div>
+                </Form>
             </Container>
         </>
     );

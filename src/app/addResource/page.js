@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import requireAuthentication from 'requireAuthentication';
-import { Container, FormGroup, Input, Label } from 'reactstrap';
+import { Container, Form, FormGroup, Input, Label } from 'reactstrap';
 import { createLiteralStatement } from 'services/backend/statements';
 import { getClassById } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
@@ -57,7 +57,8 @@ const AddResource = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const handleAdd = async () => {
+    const handleAdd = async e => {
+        e.preventDefault();
         setIsLoading(true);
         if (label.trim() !== '') {
             if (!isDOI.test(label)) {
@@ -122,42 +123,44 @@ const AddResource = () => {
         <>
             <TitleBar>Create resource</TitleBar>
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                <div className="pt-2">
-                    <FormGroup>
-                        <Label for="ResourceLabel">Resource label or DOI</Label>
-                        <Input onChange={e => setLabel(e.target.value)} type="text" name="value" id="ResourceLabel" disabled={isLoading} />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="select-classes">
-                            Classes <span className="text-muted fst-italic">(optional)</span>
-                        </Label>
-                        {!isLoadingDefaultClasses && (
-                            <AutoComplete
-                                entityType={ENTITIES.CLASS}
-                                onChange={(selected, action) => {
-                                    // blur the field allows to focus and open the menu again
-                                    classesAutocompleteRef.current && classesAutocompleteRef.current.blur();
-                                    handleClassSelect(selected, action);
-                                }}
-                                placeholder="Select or type to enter a class"
-                                value={classes}
-                                autoLoadOption={true}
-                                openMenuOnFocus={true}
-                                allowCreate={true}
-                                isClearable
-                                innerRef={classesAutocompleteRef}
-                                isMulti
-                                autoFocus={false}
-                                ols={true}
-                                inputId="select-classes"
-                            />
-                        )}
-                        {isLoadingDefaultClasses && <div>Loading default classes</div>}
-                    </FormGroup>
-                    <ButtonWithLoading color="primary" onClick={handleAdd} className="mt-3 mb-2" isLoading={isLoading}>
-                        Create Resource
-                    </ButtonWithLoading>
-                </div>
+                <Form>
+                    <div className="pt-2">
+                        <FormGroup>
+                            <Label for="ResourceLabel">Resource label or DOI</Label>
+                            <Input onChange={e => setLabel(e.target.value)} type="text" name="value" id="ResourceLabel" disabled={isLoading} />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="select-classes">
+                                Classes <span className="text-muted fst-italic">(optional)</span>
+                            </Label>
+                            {!isLoadingDefaultClasses && (
+                                <AutoComplete
+                                    entityType={ENTITIES.CLASS}
+                                    onChange={(selected, action) => {
+                                        // blur the field allows to focus and open the menu again
+                                        classesAutocompleteRef.current && classesAutocompleteRef.current.blur();
+                                        handleClassSelect(selected, action);
+                                    }}
+                                    placeholder="Select or type to enter a class"
+                                    value={classes}
+                                    autoLoadOption={true}
+                                    openMenuOnFocus={true}
+                                    allowCreate={true}
+                                    isClearable
+                                    innerRef={classesAutocompleteRef}
+                                    isMulti
+                                    autoFocus={false}
+                                    ols={true}
+                                    inputId="select-classes"
+                                />
+                            )}
+                            {isLoadingDefaultClasses && <div>Loading default classes</div>}
+                        </FormGroup>
+                        <ButtonWithLoading type="submit" color="primary" onClick={handleAdd} className="mt-3 mb-2" isLoading={isLoading}>
+                            Create Resource
+                        </ButtonWithLoading>
+                    </div>
+                </Form>
             </Container>
         </>
     );
