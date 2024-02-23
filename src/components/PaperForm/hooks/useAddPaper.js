@@ -39,14 +39,7 @@ const useAddPaper = ({ onCreate = null }) => {
                     publishedIn: publishedIn.label || '', // replace by publishedIn.id when backend supports this
                     url,
                     researchField: researchField.id,
-                    contributions:
-                        extractedContributionData.length > 0
-                            ? extractedContributionData
-                            : [
-                                  {
-                                      name: 'Contribution 1',
-                                  },
-                              ],
+                    contributions: extractedContributionData.length > 0 ? extractedContributionData : [{ name: 'Contribution 1' }],
                 },
             };
             const paper = await saveFullPaper(paperObject);

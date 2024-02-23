@@ -91,7 +91,6 @@ const AddOrganization = () => {
         };
         reader.readAsDataURL(file);
     };
-
     const loading = editorState === 'loading';
 
     return (
@@ -99,7 +98,7 @@ const AddOrganization = () => {
             <TitleBar>Create {organizationType?.alternateLabel}</TitleBar>
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 {!!user && user.isCurationAllowed && (
-                    <Form className="ps-3 pe-3 pt-2">
+                    <Form className="ps-3 pe-3 pt-2" onSubmit={e => e.preventDefault()}>
                         <FormGroup>
                             <Label for="organizationName">Name</Label>
                             <Input
@@ -164,7 +163,7 @@ const AddOrganization = () => {
                             <Input type="file" id="organizationLogo" onChange={handlePreview} />
                         </FormGroup>
 
-                        <ButtonWithLoading color="primary" onClick={createNewOrganization} className="mb-2 mt-2" isLoading={loading}>
+                        <ButtonWithLoading type="submit" color="primary" onClick={createNewOrganization} className="mb-2 mt-2" isLoading={loading}>
                             Create organization
                         </ButtonWithLoading>
                     </Form>

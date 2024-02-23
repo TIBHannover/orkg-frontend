@@ -14,7 +14,7 @@ import { useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Alert, Button, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert, Button, Form, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { createLiteral } from 'services/backend/literals';
 import { generateDoi } from 'services/backend/misc';
 import { createResource } from 'services/backend/resources';
@@ -103,85 +103,87 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
 
     return (
         <Modal isOpen={show} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Publish review</ModalHeader>
-            <ModalBody>
-                {!publishedId ? (
-                    <>
-                        <Alert color="info">
-                            Once an article is published, the current state is saved and will be persistent over time. The update message is used to
-                            identify why a version is published
-                        </Alert>
-                        <FormGroup>
-                            <Label for="update-message">Update message</Label>
-                            <Input
-                                type="text"
-                                id="update-message"
-                                placeholder="Example: added introduction section"
-                                value={updateMessage}
-                                onChange={e => setUpdateMessage(e.target.value)}
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <div>
-                                <Tooltip message="Assign a DOI to the published version of this review">
-                                    <Label check>
-                                        <Input
-                                            type="checkbox"
-                                            onChange={e => {
-                                                setShouldAssignDoi(e.target.checked);
-                                            }}
-                                            checked={shouldAssignDoi}
-                                            id="switchAssignDoi"
-                                            inline
-                                        />{' '}
-                                        Assign DOI to article
-                                    </Label>
-                                </Tooltip>
-                            </div>
-                        </FormGroup>
-                        {shouldAssignDoi && (
+            <Form onSubmit={e => e.preventDefault()}>
+                <ModalHeader toggle={toggle}>Publish review</ModalHeader>
+                <ModalBody>
+                    {!publishedId ? (
+                        <>
+                            <Alert color="info">
+                                Once an article is published, the current state is saved and will be persistent over time. The update message is used
+                                to identify why a version is published
+                            </Alert>
                             <FormGroup>
-                                <Label for="description">
-                                    <Tooltip message="Briefly describe the contents of the article">Description</Tooltip>
-                                </Label>
+                                <Label for="update-message">Update message</Label>
                                 <Input
-                                    type="textarea"
-                                    name="description"
-                                    value={description}
-                                    id="description"
-                                    onChange={e => setDescription(e.target.value)}
+                                    type="text"
+                                    id="update-message"
+                                    placeholder="Example: added introduction section"
+                                    value={updateMessage}
+                                    onChange={e => setUpdateMessage(e.target.value)}
                                 />
                             </FormGroup>
-                        )}
-                    </>
-                ) : (
-                    <>
-                        {doi && (
                             <FormGroup>
-                                <Label for="doi_link">DOI</Label>
-                                <InputGroup>
-                                    <Input id="doi_link" value={`https://doi.org/${doi}`} disabled />
-                                    <CopyToClipboard text={`https://doi.org/${doi}`} onCopy={() => toast.success('DOI link copied')}>
-                                        <Button color="primary" className="px-3">
-                                            <Icon icon={faClipboard} />
-                                        </Button>
-                                    </CopyToClipboard>
-                                </InputGroup>
+                                <div>
+                                    <Tooltip message="Assign a DOI to the published version of this review">
+                                        <Label check>
+                                            <Input
+                                                type="checkbox"
+                                                onChange={e => {
+                                                    setShouldAssignDoi(e.target.checked);
+                                                }}
+                                                checked={shouldAssignDoi}
+                                                id="switchAssignDoi"
+                                                inline
+                                            />{' '}
+                                            Assign DOI to article
+                                        </Label>
+                                    </Tooltip>
+                                </div>
                             </FormGroup>
-                        )}
-                        <Link href={reverse(ROUTES.REVIEW, { id: publishedId })} onClick={toggle}>
-                            View the published article
-                        </Link>
-                    </>
+                            {shouldAssignDoi && (
+                                <FormGroup>
+                                    <Label for="description">
+                                        <Tooltip message="Briefly describe the contents of the article">Description</Tooltip>
+                                    </Label>
+                                    <Input
+                                        type="textarea"
+                                        name="description"
+                                        value={description}
+                                        id="description"
+                                        onChange={e => setDescription(e.target.value)}
+                                    />
+                                </FormGroup>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            {doi && (
+                                <FormGroup>
+                                    <Label for="doi_link">DOI</Label>
+                                    <InputGroup>
+                                        <Input id="doi_link" value={`https://doi.org/${doi}`} disabled />
+                                        <CopyToClipboard text={`https://doi.org/${doi}`} onCopy={() => toast.success('DOI link copied')}>
+                                            <Button color="primary" className="px-3">
+                                                <Icon icon={faClipboard} />
+                                            </Button>
+                                        </CopyToClipboard>
+                                    </InputGroup>
+                                </FormGroup>
+                            )}
+                            <Link href={reverse(ROUTES.REVIEW, { id: publishedId })} onClick={toggle}>
+                                View the published article
+                            </Link>
+                        </>
+                    )}
+                </ModalBody>
+                {!publishedId && (
+                    <ModalFooter>
+                        <ButtonWithLoading type="submit" isLoading={isLoading} color="primary" onClick={handlePublish}>
+                            Publish
+                        </ButtonWithLoading>
+                    </ModalFooter>
                 )}
-            </ModalBody>
-            {!publishedId && (
-                <ModalFooter>
-                    <ButtonWithLoading isLoading={isLoading} color="primary" onClick={handlePublish}>
-                        Publish
-                    </ButtonWithLoading>
-                </ModalFooter>
-            )}
+            </Form>
         </Modal>
     );
 };

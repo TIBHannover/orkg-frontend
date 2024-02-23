@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Container, FormGroup, Input, Label } from 'reactstrap';
+import { Container, Form, FormGroup, Input, Label } from 'reactstrap';
 import { createPredicate } from 'services/backend/predicates';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
@@ -21,7 +21,8 @@ const AddProperty = () => {
         document.title = 'Add property - ORKG';
     }, []);
 
-    const handleAdd = async () => {
+    const handleAdd = async e => {
+        e.preventDefault();
         setIsLoading(true);
         if (label.trim() !== '') {
             try {
@@ -44,22 +45,24 @@ const AddProperty = () => {
         <>
             <TitleBar>Create property</TitleBar>
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                <div className="pt-2">
-                    <FormGroup>
-                        <Label for="propertyLabel">Property label</Label>
-                        <Input
-                            onChange={e => setLabel(e.target.value)}
-                            onKeyDown={e => (e.keyCode === 13 ? handleAdd : undefined)}
-                            type="text"
-                            name="value"
-                            id="propertyLabel"
-                            disabled={isLoading}
-                        />
-                    </FormGroup>
-                    <ButtonWithLoading color="primary" onClick={handleAdd} className="mt-3 mb-2" isLoading={isLoading}>
-                        Create property
-                    </ButtonWithLoading>
-                </div>
+                <Form>
+                    <div className="pt-2">
+                        <FormGroup>
+                            <Label for="propertyLabel">Property label</Label>
+                            <Input
+                                onChange={e => setLabel(e.target.value)}
+                                onKeyDown={e => (e.keyCode === 13 ? handleAdd : undefined)}
+                                type="text"
+                                name="value"
+                                id="propertyLabel"
+                                disabled={isLoading}
+                            />
+                        </FormGroup>
+                        <ButtonWithLoading type="submit" color="primary" onClick={handleAdd} className="mt-3 mb-2" isLoading={isLoading}>
+                            Create property
+                        </ButtonWithLoading>
+                    </div>
+                </Form>
             </Container>
         </>
     );
