@@ -4,5 +4,5 @@
     "tabWidth": 4,
     "endOfLine": "auto",
     "trailingComma": "all",
-    "arrowParens": "avoid"
+    "arrowParens": "always"
 }
