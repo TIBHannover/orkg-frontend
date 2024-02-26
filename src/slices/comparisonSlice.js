@@ -225,7 +225,7 @@ export function getMatrixOfComparison(comparison) {
     for (let i = 0; i < comparison.contributions.length; i++) {
         const contribution = comparison.contributions[i];
         if (contribution.active) {
-            const row = [contribution.title];
+            const row = [`${contribution.paper_label} - ${contribution.label}`];
 
             for (const property of comparison.properties) {
                 if (property.active) {
