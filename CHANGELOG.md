@@ -3,6 +3,18 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.135.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.134.0...v0.135.0) - 2024-02-29
+
+### Changes
+
+- comparisons:similarPaperScreen-structure [`#1246`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1246)
+- fix: missing title in CSV export of comparisons [`#1279`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1279)
+- fix issue #1415 [`#1264`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1264)
+- Fix issues #1528 [`#1261`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1261)
+- ObservatoriesCarousel =&gt; limit the observatories till 15 [`#1270`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1270)
+- feat(template): Add support for placeholder & description [`#1248`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1248)
+
+---
 ## [v0.134.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.133.2...v0.134.0) - 2024-02-21
 
 ### Changes
