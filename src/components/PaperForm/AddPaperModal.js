@@ -11,8 +11,8 @@ const AddPaperModal = ({ isOpen, toggle, onCreatePaper, initialValue = '' }) => 
     const [isLoadingParsing, setIsLoadingParsing] = useState(false);
     const [isMetadataExpanded, setIsMetadataExpanded] = useState(false);
 
-    const onCreate = createdIds => {
-        onCreatePaper(createdIds);
+    const onCreate = ({ paperId, contributionId }) => {
+        onCreatePaper({ paperId, contributionId });
     };
 
     const {
@@ -44,7 +44,8 @@ const AddPaperModal = ({ isOpen, toggle, onCreatePaper, initialValue = '' }) => 
             return;
         }
 
-        const doiEntry = initialValue.startsWith('http') ? initialValue.substring(initialValue.indexOf('10.')) : initialValue;
+        const doiEntry =
+            typeof initialValue === 'string' && initialValue.startsWith('http') ? initialValue.substring(initialValue.indexOf('10.')) : initialValue;
 
         if (REGEX.DOI_ID.test(doiEntry)) {
             setDoi(doiEntry);

@@ -112,6 +112,7 @@
         "string-format": "^2.0.0",
         "styled-components": "^6.0.7",
         "stylis": "^4.3.0",
+        "swr": "^2.2.5",
         "typed.js": "^2.0.15",
         "use-resize-observer": "^9.1.0"
     },

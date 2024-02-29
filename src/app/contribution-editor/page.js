@@ -21,6 +21,7 @@ import { Alert, Button, Container } from 'reactstrap';
 import TitleBar from 'components/TitleBar/TitleBar';
 import AddPaperModal from 'components/PaperForm/AddPaperModal';
 import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import RelatedPapersCarousel from 'components/Comparison/ComparisonCarousel/RelatedPapers/RelatedPaperCarousel';
 
 const ContributionEditor = () => {
     const [isOpenAddContribution, setIsOpenAddContribution] = useState(false);
@@ -175,6 +176,12 @@ const ContributionEditor = () => {
                     toggle={() => setIsOpenCreatePaper(v => !v)}
                     initialValue={initialValueCreatePaper}
                 />
+            )}
+
+            {!hasFailed && contributionAmount > 0 && (
+                <Container>
+                    <RelatedPapersCarousel handleAddContributions={handleAddContributions} contributionIds={contributionIds} />
+                </Container>
             )}
         </>
     );

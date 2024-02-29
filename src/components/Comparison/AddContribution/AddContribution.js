@@ -53,29 +53,29 @@ export default function AddContribution({
     onCreateContribution = () => {},
     onCreatePaper = () => {},
     onAddContributions,
+    initialSearchQuery,
 }) {
-    const [searchPaper, setSearchPaper] = useState('');
+    const [searchPaper, setSearchPaper] = useState(initialSearchQuery || '');
     const [currentPage, setCurrentPage] = useState(0);
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
-
     const [paperResult, setPaperResult] = useState([]);
     const [selectedContributions, setSelectedContributions] = useState([]);
 
     const numberOfPaper = 5;
 
     const loadMoreResults = (searchQuery, page) => {
-        if (searchQuery.length === 0) {
+        if (searchQuery?.length === 0) {
             setPaperResult([]);
             setCurrentPage(0);
             setIsNextPageLoading(false);
             return;
         }
         setIsNextPageLoading(true);
-        const doi = searchQuery.startsWith('http') ? searchQuery.substring(searchQuery.indexOf('10.')) : searchQuery;
+        const doi = searchQuery?.startsWith('http') ? searchQuery?.substring(searchQuery.indexOf('10.')) : searchQuery;
 
         // The entry is a DOI, check if it exists in the database
-        if (doi.trim().match(new RegExp(REGEX.DOI_ID))) {
+        if (doi?.trim().match(new RegExp(REGEX.DOI_ID))) {
             getPaperByDOI(doi.trim())
                 .then(result =>
                     getStatementsBySubjectAndPredicate({
@@ -172,12 +172,15 @@ export default function AddContribution({
     };
 
     useEffect(() => {
+        setSearchPaper(initialSearchQuery);
+    }, [initialSearchQuery]);
+
+    useEffect(() => {
         setHasNextPage(false);
         setCurrentPage(0);
         setSelectedContributions([]);
         setIsNextPageLoading(true);
         debouncedGetLoadMoreResults(searchPaper, 0);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchPaper]);
 
     return (
@@ -288,6 +291,7 @@ export default function AddContribution({
                             </ListGroup>
                         </>
                     )}
+
                     {!isNextPageLoading && hasNextPage && (
                         <StyledLoadMoreButton className="text-end action">
                             <div
@@ -309,13 +313,16 @@ export default function AddContribution({
                 </div>
             </ModalBody>
             <ModalFooter className="d-flex">
-                {allowCreate && (
-                    <div className="flex-grow-1">
-                        <Button color="light" onClick={() => onCreatePaper(searchPaper)}>
-                            Add new paper
-                        </Button>
-                    </div>
-                )}
+                {paperResult.length > 0
+                    ? !allowCreate && (
+                          <div className="flex-grow-1">
+                              <Button color="light" onClick={() => onCreatePaper(searchPaper)}>
+                                  Add new paper
+                              </Button>
+                          </div>
+                      )
+                    : ''}
+
                 <Button
                     disabled={selectedContributions.length === 0}
                     color="primary"
@@ -335,6 +342,7 @@ export default function AddContribution({
 }
 AddContribution.propTypes = {
     showDialog: PropTypes.bool.isRequired,
+    initialSearchQuery: PropTypes.string,
     toggle: PropTypes.func.isRequired,
     onAddContributions: PropTypes.func.isRequired,
     allowCreate: PropTypes.bool,

@@ -48,9 +48,10 @@ const useAddPaper = ({ onCreate = null }) => {
                 // get and return the newly created contribution ID
                 const paperStatements = await getStatementsBySubject({ id: paper.id });
                 const contributionStatement = paperStatements.find(statement => statement.predicate.id === PREDICATES.HAS_CONTRIBUTION);
+
                 onCreate({
                     paperId: paper.id,
-                    contributionId: contributionStatement.object.id,
+                    contributionId: contributionStatement?.object?.id,
                 });
             }
         } catch (e) {
