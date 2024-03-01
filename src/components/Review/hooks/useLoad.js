@@ -5,12 +5,7 @@ import { countBy, orderBy } from 'lodash';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getResource } from 'services/backend/resources';
-import {
-    getStatementsBundleBySubject,
-    getStatementsByObjectAndPredicate,
-    getStatementsBySubjectAndPredicate,
-    getStatementsBySubjects,
-} from 'services/backend/statements';
+import { getStatementsBundleBySubject, getStatementsBySubjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
 import { getThing } from 'services/similarity';
 import { load as loadArticle } from 'slices/reviewSlice';
 import { filterObjectOfStatementsByPredicateAndClass, getAuthorsInList } from 'utils';
@@ -32,8 +27,8 @@ const useLoad = () => {
     };
 
     const getVersions = async paperId => {
-        const statements = await getStatementsByObjectAndPredicate({ objectId: paperId, predicateId: PREDICATES.HAS_PAPER });
-        const ids = statements.map(version => version.subject.id);
+        const statements = await getStatementsBySubjectAndPredicate({ subjectId: paperId, predicateId: PREDICATES.HAS_PUBLISHED_VERSION });
+        const ids = statements.map(version => version.object.id);
 
         if (ids.length === 0) {
             return [];

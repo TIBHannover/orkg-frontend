@@ -57,7 +57,8 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
             const updateMessageLiteral = await createLiteral(updateMessage);
 
             await createLiteralStatement(versionResource.id, PREDICATES.DESCRIPTION, updateMessageLiteral.id);
-            await createResourceStatement(versionResource.id, PREDICATES.HAS_PAPER, id);
+            await createResourceStatement(id, PREDICATES.HAS_PUBLISHED_VERSION, versionResource.id);
+
             await createThing({ thingType: THING_TYPES.REVIEW, thingKey: versionResource.id, data: { rootResource: id, statements } });
 
             if (shouldAssignDoi) {

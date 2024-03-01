@@ -62,8 +62,8 @@ const Items = ({ showDelete = false, filterClass, filterLabel, userId }) => {
                     ids: result.content.map(c => c.id),
                 })
                     .then(statements => addAuthorsToStatementBundle(statements))
-                    .then(resourcesStatements => {
-                        let newResources = resourcesStatements.map(resourceStatements => {
+                    .then(async resourcesStatements => {
+                        let newResources = resourcesStatements.map(async resourceStatements => {
                             const resourceSubject = find(result.content, { id: resourceStatements.id });
                             if (filterClass === CLASSES.PAPER) {
                                 return getPaperData(resourceSubject, resourceStatements.statements);
@@ -75,6 +75,7 @@ const Items = ({ showDelete = false, filterClass, filterLabel, userId }) => {
                                 return getReviewData(resourceSubject, resourceStatements.statements);
                             }
                             if (filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
+                                // function is async, so promise all needed later
                                 return getListData(resourceSubject, resourceStatements.statements);
                             }
                             if (filterClass === CLASSES.VISUALIZATION) {
@@ -82,6 +83,8 @@ const Items = ({ showDelete = false, filterClass, filterLabel, userId }) => {
                             }
                             return resourceSubject;
                         });
+                        newResources = await Promise.all(newResources);
+
                         if (filterClass === CLASSES.COMPARISON) {
                             setResources(prevResources =>
                                 groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...newResources]),
@@ -91,7 +94,7 @@ const Items = ({ showDelete = false, filterClass, filterLabel, userId }) => {
                             newResources = Object.keys(groupedByPaper).map(paperId => [...groupedByPaper[paperId]]);
                             setResources(prevResources => [...prevResources, ...newResources]);
                         } else if (filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
-                            const groupedByPaper = groupBy(newResources, 'paperId');
+                            const groupedByPaper = groupBy(newResources, 'listId');
                             newResources = Object.keys(groupedByPaper).map(paperId => [...groupedByPaper[paperId]]);
                             setResources(prevResources => [...prevResources, ...newResources]);
                         } else {

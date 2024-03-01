@@ -1,20 +1,20 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
-import { useEffect } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import ListPage from 'components/ListPage/ListPage';
 import ListCard from 'components/Cards/ListCard/ListCard';
+import ListPage from 'components/ListPage/ListPage';
+import Link from 'components/NextJsMigration/Link';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { groupBy } from 'lodash';
 import { reverse } from 'named-urls';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { getListData } from 'utils';
 import { getResources } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
+import { getListData } from 'utils';
 
 const Lists = () => {
     useEffect(() => {
@@ -49,6 +49,7 @@ const Lists = () => {
                     ),
                 ),
             );
+            items = await Promise.all(items);
             const groupedByPaper = groupBy(items, 'listId');
             items = Object.keys(groupedByPaper).map(listId => [...groupedByPaper[listId]]);
         }

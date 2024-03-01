@@ -10,8 +10,8 @@ import {
     createLiteralStatement,
     createResourceStatement,
     getStatementsBundleBySubject,
-    getStatementsByObjectAndPredicate,
     getStatementsBySubject,
+    getStatementsBySubjectAndPredicate,
     getStatementsBySubjects,
 } from 'services/backend/statements';
 import { createThing, getThing } from 'services/similarity';
@@ -39,8 +39,8 @@ const useList = () => {
     };
 
     const getVersions = async listId => {
-        const statements = await getStatementsByObjectAndPredicate({ objectId: listId, predicateId: PREDICATES.HAS_LIST });
-        const ids = statements.map(version => version.subject.id);
+        const statements = await getStatementsBySubjectAndPredicate({ subjectId: listId, predicateId: PREDICATES.HAS_PUBLISHED_VERSION });
+        const ids = statements.map(version => version.object.id);
 
         if (ids.length === 0) {
             return [];
@@ -283,8 +283,7 @@ const useList = () => {
             const versionResource = await createResource(listTitle, [CLASSES.LITERATURE_LIST_PUBLISHED]);
             const updateMessageLiteral = await createLiteral(updateMessage);
             await createLiteralStatement(versionResource.id, PREDICATES.DESCRIPTION, updateMessageLiteral.id);
-            await createResourceStatement(versionResource.id, PREDICATES.HAS_LIST, id);
-
+            await createResourceStatement(id, PREDICATES.HAS_PUBLISHED_VERSION, versionResource.id);
             await createThing({ thingType: THING_TYPES.LIST, thingKey: versionResource.id, data: { rootResource: id, statements } });
 
             const versions = await getVersions(listId);

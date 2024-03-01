@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { useCallback, useEffect, useState } from 'react';
+import { getStatementsByObjectAndPredicate, getStatementsBySubject } from 'services/backend/statements';
 import { filterObjectOfStatementsByPredicateAndClass, getAuthorStatements } from 'utils';
-import { getStatementsBySubjectAndPredicate, getStatementsBySubject } from 'services/backend/statements';
 
 function useCardData({ id, initResearchField = null, initAuthors = [], isList = false }) {
     const [researchField, setResearchField] = useState(initResearchField);
@@ -10,9 +10,9 @@ function useCardData({ id, initResearchField = null, initAuthors = [], isList = 
 
     const loadSubject = useCallback(() => {
         setIsLoading(true);
-        getStatementsBySubjectAndPredicate({
-            subjectId: id,
-            predicateId: isList ? PREDICATES.HAS_LIST : PREDICATES.HAS_PAPER,
+        getStatementsByObjectAndPredicate({
+            objectId: id,
+            predicateId: PREDICATES.HAS_PUBLISHED_VERSION,
         })
             .then(async subject => {
                 if (subject?.length > 0) {

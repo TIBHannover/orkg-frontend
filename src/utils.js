@@ -9,7 +9,7 @@ import { reverse } from 'named-urls';
 import qs from 'qs';
 import { Cookies } from 'react-cookie';
 import { LOCATION_CHANGE as LOCATION_CHANGE_RFH } from 'redux-first-history';
-import { getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
+import { getStatementsByObjectAndPredicate, getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
 import slugifyString from 'slugify';
 
 const cookies = new Cookies();
@@ -291,9 +291,10 @@ export const getPaperData = (resource, paperStatements) => {
  * @param {Object} resource Review resource
  * @param {Array} statements Review Statements
  */
-export const getReviewData = (resource, statements) => {
+export const getReviewData = async (resource, statements) => {
     const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
-    const paperId = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_PAPER, true)?.id;
+    const paperId = (await getStatementsByObjectAndPredicate({ objectId: resource.id, predicateId: PREDICATES.HAS_PUBLISHED_VERSION }))?.[0]?.subject
+        ?.id;
 
     return {
         ...resource,
@@ -309,9 +310,11 @@ export const getReviewData = (resource, statements) => {
  * @param {Object} resource List resource
  * @param {Array} statements List  Statements
  */
-export const getListData = (resource, statements) => {
+export const getListData = async (resource, statements) => {
     const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
-    const listId = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_LIST, true)?.id;
+    const listId = (await getStatementsByObjectAndPredicate({ objectId: resource.id, predicateId: PREDICATES.HAS_PUBLISHED_VERSION }))?.[0]?.subject
+        ?.id;
+
     return {
         ...resource,
         id: resource.id,
