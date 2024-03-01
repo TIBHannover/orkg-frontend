@@ -64,7 +64,7 @@ export const PREDICATES = {
     LINKED_IN_ID: 'linkedInID',
     RESEARCH_GATE_ID: 'researchGateID',
     GOOGLE_SCHOLAR_ID: 'googleScholarID',
-    HAS_LIST: 'HasList',
+    HAS_PUBLISHED_VERSION: 'hasPublishedVersion',
     HAS_ENTRY: 'HasEntry',
     HAS_HEADING_LEVEL: 'HasHeadingLevel',
     METHOD: 'METHOD',

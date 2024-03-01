@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Alert } from 'reactstrap';
 import { getResources } from 'services/backend/resources';
-import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 
 const DraftReviews = () => {
     const user = useSelector(state => state.auth.user);
@@ -43,7 +43,9 @@ const DraftReviews = () => {
 
         if (resources.length) {
             return Promise.all(
-                resources.map(resource => getStatementsByObjectAndPredicate({ objectId: resource.id, predicateId: PREDICATES.HAS_PAPER })),
+                resources.map(resource =>
+                    getStatementsBySubjectAndPredicate({ subjectId: resource.id, predicateId: PREDICATES.HAS_PUBLISHED_VERSION }),
+                ),
             )
                 .then(resourcesStatements =>
                     resourcesStatements.map((statements, idx) => {

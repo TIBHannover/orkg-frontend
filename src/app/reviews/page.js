@@ -1,23 +1,23 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
-import { useEffect } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import reviewsThumbnail from 'assets/img/video_thumbnails/reviews.png';
+import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
 import ListPage from 'components/ListPage/ListPage';
+import VideoExplainer from 'components/ListPage/VideoExplainer';
+import Link from 'components/NextJsMigration/Link';
+import loadImage from 'components/NextJsMigration/loadImage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { CLASSES } from 'constants/graphSettings';
-import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
 import ROUTES from 'constants/routes';
-import { useSelector } from 'react-redux';
 import { groupBy } from 'lodash';
-import { getReviewData } from 'utils';
+import { reverse } from 'named-urls';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { getResources } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { reverse } from 'named-urls';
-import VideoExplainer from 'components/ListPage/VideoExplainer';
-import reviewsThumbnail from 'assets/img/video_thumbnails/reviews.png';
-import loadImage from 'components/NextJsMigration/loadImage';
+import { getReviewData } from 'utils';
 
 const Reviews = () => {
     const user = useSelector(state => state.auth.user);
@@ -52,6 +52,7 @@ const Reviews = () => {
                     ),
                 ),
             );
+            items = await Promise.all(items);
             const groupedByPaper = groupBy(items, 'paperId');
             items = Object.keys(groupedByPaper).map(paperId => [...groupedByPaper[paperId]]);
         }
