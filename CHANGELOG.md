@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.135.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.135.0...v0.135.1) - 2024-03-04
+
+### Changes
+
+- refactor: change predicate of published lists [`#1281`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1281)
+
+---
 ## [v0.135.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.134.0...v0.135.0) - 2024-02-29
 
 ### Changes
