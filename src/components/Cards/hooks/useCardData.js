@@ -16,7 +16,7 @@ function useCardData({ id, initResearchField = null, initAuthors = [], isList = 
         })
             .then(async subject => {
                 if (subject?.length > 0) {
-                    const statements = await getStatementsBySubject({ id: subject[0].object.id });
+                    const statements = await getStatementsBySubject({ id: subject[0].subject.id });
                     setResearchField(
                         filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD),
                     );
