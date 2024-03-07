@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { setAuthorListResource, updateAuthors } from 'slices/reviewSlice';
+import { convertAuthorsToNewFormat, convertAuthorsToOldFormat } from 'utils';
 
 const AuthorsModal = props => {
     const { show, toggle } = props;
@@ -50,7 +51,7 @@ const AuthorsModal = props => {
         <Modal isOpen={show} toggle={toggle}>
             <ModalHeader toggle={toggle}>Article authors</ModalHeader>
             <ModalBody>
-                <AuthorsInput value={authors} handler={onChange} />
+                <AuthorsInput value={convertAuthorsToNewFormat(authors)} handler={_authors => onChange(convertAuthorsToOldFormat(_authors))} />
             </ModalBody>
             <ModalFooter>
                 <Button color="primary" onClick={handleSave}>

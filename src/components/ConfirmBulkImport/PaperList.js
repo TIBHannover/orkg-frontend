@@ -1,15 +1,15 @@
+import { faArrowsAltV, faCalendar, faExclamationCircle, faExclamationTriangle, faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
+import StatementList from 'components/ConfirmBulkImport/StatementList';
 import Link from 'components/NextJsMigration/Link';
-import { Fragment, useState } from 'react';
-import { Button, ListGroup, Alert, Badge } from 'reactstrap';
-import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import moment from 'moment';
-import styled from 'styled-components';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faArrowsAltV, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import StatementList from 'components/ConfirmBulkImport/StatementList';
-import Tippy from '@tippyjs/react';
+import { Fragment, useState } from 'react';
+import { Alert, Badge, Button, ListGroup } from 'reactstrap';
+import styled from 'styled-components';
 
 const PaperCardStyled = styled.div`
     & .options {
@@ -76,6 +76,12 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
                         >
                             <div className="d-flex">
                                 <span className="flex-grow-1">
+                                    {Object.keys(paper.contents[0].statements).length === 0 && (
+                                        <Alert color="danger">
+                                            <Icon icon={faExclamationCircle} className="me-2" /> Paper can't be imported because it doesn't contain
+                                            any contribution data
+                                        </Alert>
+                                    )}
                                     {hasValidationErrorsForPaper(i) && <Icon icon={faExclamationTriangle} className="text-warning me-2" />}
 
                                     {existingPaperIds[i] && (
@@ -103,7 +109,7 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
                             </div>
                             <small>
                                 <Icon size="sm" icon={faUser} />{' '}
-                                {paper.authors.length > 0 ? paper.authors.map(a => a.label).join(' • ') : <i className="ms-1">No authors provided</i>}
+                                {paper.authors.length > 0 ? paper.authors.map(a => a.name).join(' • ') : <i className="ms-1">No authors provided</i>}
                                 {(paper.publicationMonth || paper.publicationYear) && <Icon size="sm" icon={faCalendar} className="ms-2 me-1" />}
                                 {paper.publicationMonth && paper.publicationMonth > 0 ? moment(paper.publicationMonth, 'M').format('MMMM') : ''}{' '}
                                 {paper.publicationYear}
@@ -112,20 +118,20 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
                         {showContributions.includes(i) && (
                             <PaperCardStyled className="list-group-item">
                                 <ListGroup className="listGroupEnlarge" style={{ fontSize: '90%' }}>
-                                    {Object.keys(paper.contributions[0].values).length > 0 && (
+                                    {Object.keys(paper.contents[0].statements).length > 0 && (
                                         <>
-                                            {Object.keys(paper.contributions[0].values).map(property => (
+                                            {Object.keys(paper.contents[0].statements).map(property => (
                                                 <StatementList
                                                     key={property}
                                                     property={property}
                                                     idToLabel={idToLabel}
-                                                    values={paper.contributions[0].values[property]}
+                                                    values={paper.contents[0].statements[property]}
                                                     validationErrors={validationErrors?.[i]?.[property]}
                                                 />
                                             ))}
                                         </>
                                     )}
-                                    {Object.keys(paper.contributions[0].values).length === 0 && <>No contribution data to import.</>}
+                                    {Object.keys(paper.contents[0].statements).length === 0 && <>No contribution data to import.</>}
                                 </ListGroup>
                             </PaperCardStyled>
                         )}

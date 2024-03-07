@@ -1,21 +1,22 @@
-import Link from 'components/NextJsMigration/Link';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import OrganizationBanner from 'components/Comparison/ComparisonFooter/ProvenanceBox/OrganizationBanner';
 import MarkFeaturedUnlistedContainer from 'components/Comparison/ComparisonHeader/MarkFeaturedUnlistedContainer';
+import Link from 'components/NextJsMigration/Link';
+import useRouter from 'components/NextJsMigration/useRouter';
 import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import LinkValuePlugins from 'components/ValuePlugins/Link/Link';
 import Video from 'components/ValuePlugins/Video/Video';
 import { ENTITIES } from 'constants/graphSettings';
+import { LICENSE_URL } from 'constants/misc';
 import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
 import ROUTES from 'constants/routes.js';
 import moment from 'moment';
 import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
-import useRouter from 'components/NextJsMigration/useRouter';
 import { Alert, Badge } from 'reactstrap';
-import { LICENSE_URL } from 'constants/misc';
+import { convertAuthorsToNewFormat } from 'utils';
 
 const ComparisonMetaData = () => {
     const comparisonResource = useSelector(state => state.comparison.comparisonResource);
@@ -126,7 +127,7 @@ const ComparisonMetaData = () => {
                                                 </Badge>
                                             )}
                                             {comparisonResource.authors?.length > 0 && !isDoubleBlind && !comparisonResource.anonymized && (
-                                                <AuthorBadges authors={comparisonResource.authors} />
+                                                <AuthorBadges authors={convertAuthorsToNewFormat(comparisonResource.authors)} />
                                             )}
                                         </div>
                                         {comparisonResource.description && (

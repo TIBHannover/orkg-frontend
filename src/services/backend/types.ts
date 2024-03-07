@@ -179,13 +179,13 @@ export type Author = {
     id: string;
     name: string;
     identifiers: {
-        orcid: string;
-        google_scholar: string;
-        research_gate: string;
-        linked_in: string;
-        wikidata: string;
-        web_of_science: string;
-        homepage: string;
+        orcid: string[];
+        google_scholar: string[];
+        research_gate: string[];
+        linked_in: string[];
+        wikidata: string[];
+        web_of_science: string[];
+        homepage: string[];
     }[];
 };
 
@@ -213,6 +213,57 @@ export type Paper = {
     visibility: Visibility;
     unlisted_by: string;
 };
+
+export type ContributionContentsStatements = {
+    [key: string]: {
+        id: string;
+        statements?: ContributionContentsStatements;
+    }[];
+};
+
+export type CreateContributionData = {
+    resources?: {
+        [key: string]: {
+            label: string;
+            classes: string[];
+        };
+    };
+    literals?: {
+        [key: string]: {
+            label: string;
+            data_type?: string;
+        };
+    };
+    predicates?: {
+        [key: string]: {
+            label: string;
+            description?: string;
+        };
+    };
+    lists?: {
+        [key: string]: {
+            label: string;
+            elements: string[];
+        };
+    };
+};
+
+export type NewContribution = {
+    label: string;
+    classes?: string[];
+    statements: ContributionContentsStatements;
+};
+
+export type CreatePaperContents = CreateContributionData & {
+    contributions: NewContribution[];
+};
+
+export type CreateContribution = CreateContributionData & {
+    contribution: NewContribution;
+};
+
+export type CreatePaperParams = Partial<Omit<Paper, 'id' | 'research_fields'> & { research_fields: string[]; contents: CreatePaperContents }>;
+export type UpdatePaperParams = Partial<Omit<Paper, 'id' | 'research_fields'> & { research_fields: string[] }>;
 
 export type Visualization = {
     id: string;

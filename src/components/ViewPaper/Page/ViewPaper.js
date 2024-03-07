@@ -1,51 +1,50 @@
-import env from 'components/NextJsMigration/env';
+import NotFound from 'app/not-found';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import GraphViewModal from 'components/GraphView/GraphViewModal';
+import env from 'components/NextJsMigration/env';
+import useParams from 'components/NextJsMigration/useParams';
 import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import TitleBar from 'components/TitleBar/TitleBar';
 import Contributions from 'components/ViewPaper/Contributions/Contributions';
-import useViewPaper from 'components/ViewPaper/hooks/useViewPaper';
 import PaperHeader from 'components/ViewPaper/PaperHeader';
 import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
 import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
+import useViewPaper from 'components/ViewPaper/hooks/useViewPaper';
+import { LICENSE_URL } from 'constants/misc';
 import moment from 'moment';
-import NotFound from 'app/not-found';
 import ContentLoader from 'react-content-loader';
 import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
-import useParams from 'components/NextJsMigration/useParams';
 import VisibilitySensor from 'react-visibility-sensor';
 import { Container } from 'reactstrap';
-import GraphViewModal from 'components/GraphView/GraphViewModal';
-import { LICENSE_URL } from 'constants/misc';
 
 const ViewPaper = () => {
     const { resourceId } = useParams();
-    const viewPaper = useSelector(state => state.viewPaper);
+    const viewPaper = useSelector(state => state.viewPaper.paper);
     const { isLoading, isLoadingFailed, showHeaderBar, isEditMode, showGraphModal, toggle, handleShowHeaderBar, setShowGraphModal } = useViewPaper({
         paperId: resourceId,
     });
-
     const getSEODescription = () =>
-        `Published: ${viewPaper.publicationMonth ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''} ${
-            viewPaper.publicationYear ? viewPaper.publicationYear.label : ''
-        } • Research field: ${viewPaper?.researchField?.label} • Authors: ${viewPaper?.authors?.map(author => author.label).join(', ')}`;
+        `Published: ${viewPaper.publication_info?.published_month ? moment(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''} ${
+            viewPaper.publication_info?.published_year ? viewPaper.publication_info?.published_year : ''
+        } • Research field: ${viewPaper?.research_fields?.[0]?.label} • Authors: ${viewPaper?.authors?.map(author => author.name).join(', ')}`;
 
     const ldJson = {
         mainEntity: {
-            headline: viewPaper.paperResource?.label,
+            headline: viewPaper.title,
             description: getSEODescription(),
-            ...(viewPaper?.doi?.label ? { sameAs: `https://doi.org/${viewPaper.doi.label}` } : {}),
+            ...(viewPaper?.identifiers?.doi?.[0] ? { sameAs: `https://doi.org/${viewPaper?.identifiers?.doi?.[0]}` } : {}),
             author: viewPaper?.authors?.map(author => ({
-                name: author.label,
-                ...(author.orcid ? { url: `http://orcid.org/${author.orcid}` } : {}),
+                name: author.name,
+                ...(author?.identifiers?.orcid?.[0] ? { url: `http://orcid.org/${author?.identifiers?.orcid?.[0]}` } : {}),
                 '@type': 'Person',
             })),
-            datePublished: `${viewPaper?.publicationMonth ? moment(viewPaper?.publicationMonth?.label, 'M').format('MMMM') : ''} ${
-                viewPaper?.publicationYear ? viewPaper?.publicationYear?.label : ''
-            }`,
-            about: viewPaper?.researchField?.label,
+            datePublished: `${
+                viewPaper.publication_info?.published_month ? moment(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''
+            } ${viewPaper.publication_info?.published_year ? viewPaper.publication_info?.published_year : ''}`,
+            about: viewPaper?.research_fields?.[0]?.label,
             license: LICENSE_URL,
             '@type': 'ScholarlyArticle',
         },
@@ -59,17 +58,13 @@ const ViewPaper = () => {
             {!isLoadingFailed && (
                 <>
                     {showHeaderBar && (
-                        <PaperHeaderBar
-                            disableEdit={env('PWC_USER_ID') === viewPaper.paperResource.created_by}
-                            editMode={isEditMode}
-                            toggle={toggle}
-                        />
+                        <PaperHeaderBar disableEdit={env('PWC_USER_ID') === viewPaper.createdBy} editMode={isEditMode} toggle={toggle} />
                     )}
-                    <Breadcrumbs researchFieldId={viewPaper.researchField ? viewPaper.researchField.id : null} />
+                    <Breadcrumbs researchFieldId={viewPaper.research_fields.length > 0 ? viewPaper.research_fields?.[0]?.id : null} />
 
                     <Helmet>
-                        <title>{`${viewPaper.paperResource?.label ?? 'Paper'} - ORKG`}</title>
-                        <meta property="og:title" content={`${viewPaper.paperResource?.label} - ORKG`} />
+                        <title>{`${viewPaper.title ?? 'Paper'} - ORKG`}</title>
+                        <meta property="og:title" content={`${viewPaper.title} - ORKG`} />
                         <meta property="og:type" content="article" />
                         <meta property="og:description" content={getSEODescription()} />
                         <script type="application/ld+json">{JSON.stringify(ldJson)}</script>
@@ -78,11 +73,7 @@ const ViewPaper = () => {
                     <VisibilitySensor onChange={handleShowHeaderBar}>
                         <TitleBar
                             buttonGroup={
-                                <PaperMenuBar
-                                    disableEdit={env('PWC_USER_ID') === viewPaper.paperResource.created_by}
-                                    editMode={isEditMode}
-                                    toggle={toggle}
-                                />
+                                <PaperMenuBar disableEdit={env('PWC_USER_ID') === viewPaper.createdBy} editMode={isEditMode} toggle={toggle} />
                             }
                         >
                             Paper
@@ -95,7 +86,7 @@ const ViewPaper = () => {
                         className={`box pt-md-4 pb-md-4 ps-md-5 pe-md-5 pt-sm-2 pb-sm-2 ps-sm-2 pe-sm-2 clearfix position-relative 
                                 ${isEditMode ? 'rounded-bottom' : 'rounded'}`}
                     >
-                        {!isLoading && <ShareLinkMarker typeOfLink="paper" title={viewPaper.paperResource.label} />}
+                        {!isLoading && <ShareLinkMarker typeOfLink="paper" title={viewPaper.title} />}
 
                         {isLoading && (
                             <ContentLoader

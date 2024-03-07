@@ -10,13 +10,13 @@ import PublishedInInput from 'components/Input/PublishedInInput/PublishedInInput
 import ResearchFieldInput from 'components/Input/ResearchFieldInput/ResearchFieldInput';
 import useOverwriteValuesModal from 'components/PaperForm/hooks/useOverwriteValuesModal';
 import Tooltip from 'components/Utils/Tooltip';
+import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { useId } from 'react';
 import { toast } from 'react-toastify';
 import { Button, Col, Form, FormGroup, FormText, Input, InputGroup, Label, Row } from 'reactstrap';
-import { parseCiteResult } from 'utils';
-import { motion, AnimatePresence } from 'framer-motion';
 import { getAbstractByDoi } from 'services/semanticScholar';
+import { parseCiteResult } from 'utils';
 
 const PaperForm = ({
     isLoadingParsing,
@@ -72,7 +72,7 @@ const PaperForm = ({
                     currentData: {
                         ...(!isNewPaper && { doi: doi.toLowerCase() }), // we don't care about casing of the DOI
                         title,
-                        authors: authors.map(author => ({ label: author.label, ...(author.orcid && { orcid: author.orcid }) })),
+                        authors,
                         publicationMonth: parseInt(publicationMonth, 10),
                         publicationYear: parseInt(publicationYear, 10),
                         publishedIn: publishedIn?.label,
@@ -81,7 +81,7 @@ const PaperForm = ({
                     newData: {
                         ...(!isNewPaper && { doi: parseResult.doi.toLowerCase() }),
                         title: parseResult.paperTitle,
-                        authors: parseResult.paperAuthors.map(author => ({ label: author.label, ...(author.orcid && { orcid: author.orcid }) })),
+                        authors: parseResult.paperAuthors,
                         publicationMonth: parseResult.paperPublicationMonth,
                         publicationYear: parseResult.paperPublicationYear,
                         publishedIn: parseResult.publishedIn,
@@ -124,14 +124,14 @@ const PaperForm = ({
             await shouldUpdateValues({
                 currentData: {
                     doi,
-                    authors: authors.map(author => ({ label: author.label, orcid: author.orcid })),
+                    authors,
                     publicationYear: parseInt(publicationYear, 10),
                     publishedIn: publishedIn?.label,
                     url,
                 },
                 newData: {
                     doi: paper.externalIds?.DOI,
-                    authors: paper?.authors?.length > 0 ? paper.authors.map(author => ({ label: author.name })) : [],
+                    authors: paper.authors,
                     publicationYear: paper.year || '',
                     publishedIn: paper.venue || '',
                     url: paper.externalIds?.ArXiv ? `https://arxiv.org/abs/${paper.externalIds?.ArXiv}` : '',
@@ -140,7 +140,7 @@ const PaperForm = ({
         ) {
             setDoi(paper.externalIds?.DOI);
             setTitle(paper.label);
-            setAuthors(paper?.authors?.length > 0 ? paper.authors.map(author => ({ label: author.name })) : []);
+            setAuthors(paper?.authors?.length > 0 ? paper.authors.map(author => ({ name: author.name })) : []);
             setPublicationYear(paper.year || '');
             setPublishedIn({ label: paper.venue || '' });
             setUrl(paper.externalIds?.ArXiv ? `https://arxiv.org/abs/${paper.externalIds?.ArXiv}` : '');

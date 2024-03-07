@@ -20,7 +20,7 @@ const AddValue = ({ isDisabled = false, propertyId, resourceId, syncBackend }) =
 
     const [showAddValue, setShowAddValue] = useState(false);
     const isAddingValue = useSelector(state => state.statementBrowser.properties.byId[propertyId].isAddingValue ?? false);
-    const paperTitle = useSelector(state => state.viewPaper.paperResource.label);
+    const paperTitle = useSelector(state => state.viewPaper.title);
     const abstract = useSelector(state => state.viewPaper.abstract);
 
     const [templateIsLoading] = useState(false); // to show loading indicator of the template if the value class has a template

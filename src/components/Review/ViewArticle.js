@@ -1,4 +1,3 @@
-import env from 'components/NextJsMigration/env';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -9,6 +8,7 @@ import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatu
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import Link from 'components/NextJsMigration/Link';
+import env from 'components/NextJsMigration/env';
 import useParams from 'components/NextJsMigration/useParams';
 import Acknowledgements from 'components/Review/Acknowledgements';
 import SectionDataTable from 'components/Review/DataTable/SectionOntology';
@@ -25,6 +25,7 @@ import { reverse } from 'named-urls';
 import { useDispatch, useSelector } from 'react-redux';
 import { Alert, Button, Container } from 'reactstrap';
 import { toggleHistoryModal as toggleHistoryModalAction } from 'slices/reviewSlice';
+import { convertAuthorsToNewFormat } from 'utils';
 
 const ViewArticle = () => {
     const { id } = useParams();
@@ -89,7 +90,7 @@ const ViewArticle = () => {
                                         Read the full and interactive version of this article on the ORKG website: <Link href={url}>{url}</Link>
                                     </Alert>
                                     <ResearchFieldBadge researchField={researchField} />
-                                    <AuthorBadges authors={authors} />{' '}
+                                    <AuthorBadges authors={convertAuthorsToNewFormat(authors)} />{' '}
                                     {doi && (
                                         <div className="mb-1">
                                             <small>

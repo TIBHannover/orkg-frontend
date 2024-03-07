@@ -1,37 +1,55 @@
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { url } from 'constants/misc';
-import { submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
+import { getCreatedIdFromHeaders, submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
-import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
-import { PaginatedResponse, PaginationParams, Paper, Resource, Statement, VerifiedParam, VisibilityParam } from 'services/backend/types';
 import { prepareParams } from 'services/backend/misc';
+import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import {
+    CreateContribution,
+    CreatePaperParams,
+    ExtractionMethod,
+    PaginatedResponse,
+    PaginationParams,
+    Paper,
+    Resource,
+    Statement,
+    UpdatePaperParams,
+    VerifiedParam,
+    VisibilityParam,
+} from 'services/backend/types';
 
 export const papersUrl = `${url}papers/`;
 
-type PaperData = {
-    paper: {
-        title: string;
-        doi: string;
-        authors: {
-            label: string;
-            id?: string;
-            orcid?: string;
-        }[];
-        publicationMonth: string;
-        publicationYear: string;
-        publishedIn: string;
-        url: string;
-        researchField: string;
-        contributions: {
-            extraction_method: string;
-            name: string;
-        }[];
-    };
-};
+export const getPaper = (id: string): Promise<Paper> =>
+    submitGetRequest(`${papersUrl}${id}`, {
+        'Content-Type': 'application/vnd.orkg.paper.v2+json',
+        Accept: 'application/vnd.orkg.paper.v2+json',
+    });
 
-export const saveFullPaper = (data: PaperData, mergeIfExists: boolean = false): Promise<Resource> =>
-    submitPostRequest(`${papersUrl}?mergeIfExists=${mergeIfExists}`, { 'Content-Type': 'application/json' }, data);
+export const updatePaper = (id: string, data: UpdatePaperParams): Promise<Paper> =>
+    submitPutRequest(
+        `${papersUrl}${id}`,
+        {
+            'Content-Type': 'application/vnd.orkg.paper.v2+json',
+            Accept: 'application/vnd.orkg.paper.v2+json',
+        },
+        data,
+    );
+
+export const createPaper = (data: CreatePaperParams): Promise<string> =>
+    submitPostRequest(
+        `${papersUrl}`,
+        {
+            'Content-Type': 'application/vnd.orkg.paper.v2+json',
+            Accept: 'application/vnd.orkg.paper.v2+json',
+        },
+        data,
+        true,
+        true,
+        true,
+        true,
+    ).then(({ headers }) => getCreatedIdFromHeaders(headers)); // get the id from the location header
 
 export const getIsVerified = (id: string): Promise<null> =>
     submitGetRequest(`${papersUrl}${id}/metadata/verified`, { 'Content-Type': 'application/json' });
@@ -92,6 +110,22 @@ export const getPapersLinkedToResource = async ({
     return resources;
 };
 
+export const getPaperByDoi = async (doi: string): Promise<Paper | null> => {
+    const papers: PaginatedResponse<Paper> = await submitGetRequest(`${papersUrl}?doi=${encodeURIComponent(doi)}`, {
+        'Content-Type': 'application/vnd.orkg.paper.v2+json;charset=UTF-8',
+        Accept: 'application/vnd.orkg.paper.v2+json',
+    });
+    return papers.content[0] ?? null;
+};
+
+export const getPaperByTitle = async (title: string): Promise<Paper | null> => {
+    const papers: PaginatedResponse<Paper> = await submitGetRequest(`${papersUrl}?title=${encodeURIComponent(title)}&exact=true`, {
+        'Content-Type': 'application/vnd.orkg.paper.v2+json;charset=UTF-8',
+        Accept: 'application/vnd.orkg.paper.v2+json',
+    });
+    return papers.content?.[0] ?? null;
+};
+
 export const getPapers = ({
     page = 0,
     size = 999,
@@ -105,3 +139,24 @@ export const getPapers = ({
         Accept: 'application/vnd.orkg.paper.v2+json',
     });
 };
+
+type CreateContributionParams = {
+    paperId: string;
+    contributionStatements: {
+        extraction_method?: ExtractionMethod;
+    } & CreateContribution;
+};
+
+export const createContribution = ({ paperId, contributionStatements }: CreateContributionParams): Promise<string> =>
+    submitPostRequest(
+        `${papersUrl}${paperId}/contributions`,
+        {
+            'Content-Type': 'application/vnd.orkg.contribution.v2+json',
+            Accept: 'application/vnd.orkg.contribution.v2+json',
+        },
+        contributionStatements,
+        true,
+        true,
+        true,
+        true,
+    ).then(({ headers }) => getCreatedIdFromHeaders(headers));

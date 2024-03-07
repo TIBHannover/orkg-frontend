@@ -45,7 +45,7 @@ export function firstLoad() {
     return (dispatch: Dispatch) => {
         const cookies = new Cookies();
         const token = cookies.get('token') ? cookies.get('token') : null;
-        const token_expires_in = cookies.get('token_expires_in') ? cookies.get('token_expires_in') : null;
+        const tokenExpiresIn = cookies.get('token_expires_in') ? cookies.get('token_expires_in') : null;
         return getUserInformation()
             .then(userData => {
                 dispatch(
@@ -54,9 +54,11 @@ export function firstLoad() {
                             displayName: userData.display_name,
                             id: userData.id,
                             token,
-                            tokenExpire: token_expires_in,
+                            tokenExpire: tokenExpiresIn,
                             email: userData.email,
                             isCurationAllowed: userData.is_curation_allowed,
+                            organization_id: userData.organization_id,
+                            observatory_id: userData.observatory_id,
                         },
                     }),
                 );

@@ -1,13 +1,12 @@
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import { CLASSES } from 'constants/graphSettings';
+import { PREDICATES } from 'constants/graphSettings';
+import { sortBy } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getIsVerified } from 'services/backend/papers';
-import { getResource } from 'services/backend/resources';
-import { getStatementsBundleBySubject } from 'services/backend/statements';
+import { getPaper } from 'services/backend/papers';
+import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { resetStatementBrowser } from 'slices/statementBrowserSlice';
-import { loadPaper } from 'slices/viewPaperSlice';
-import { getPaperDataViewPaper } from 'utils';
+import { loadPaper, setPaperContributions, setVersion } from 'slices/viewPaperSlice';
 
 const useViewPaper = ({ paperId }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -17,31 +16,32 @@ const useViewPaper = ({ paperId }) => {
     const dispatch = useDispatch();
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
 
-    const loadPaperData = useCallback(() => {
+    const loadPaperData = useCallback(async () => {
         setIsLoading(true);
         dispatch(resetStatementBrowser());
-        getResource(paperId)
-            .then(paperResource => {
-                if (!paperResource.classes.includes(CLASSES.PAPER)) {
-                    setIsLoadingFailed(true);
-                    setIsLoading(false);
-                    return;
-                }
-                // Load the paper metadata but skip the research field and contribution data
-                // 3 levels so the author list (level 2) and nested ORCIDs (level 3) can be fetched
-                Promise.all([
-                    getStatementsBundleBySubject({ id: paperId, maxLevel: 3, blacklist: [CLASSES.RESEARCH_FIELD, CLASSES.CONTRIBUTION] }),
-                    getIsVerified(paperId).catch(() => false),
-                ]).then(([paperStatements, verified]) => {
-                    const paperData = getPaperDataViewPaper(paperResource, paperStatements.statements);
-                    dispatch(loadPaper({ ...paperData, verified }));
-                    setIsLoading(false);
-                });
-            })
-            .catch(error => {
-                setIsLoadingFailed(true);
-                setIsLoading(false);
-            });
+        try {
+            const paper = await getPaper(paperId);
+            dispatch(loadPaper(paper));
+            const contributions = await getStatementsBySubjectAndPredicate({ subjectId: paperId, predicateId: PREDICATES.HAS_CONTRIBUTION });
+            dispatch(
+                setPaperContributions(
+                    sortBy(
+                        contributions.map(statement => ({ ...statement.object, statementId: statement.id })),
+                        'label',
+                    ),
+                ),
+            );
+            const versionStatement =
+                (await getStatementsBySubjectAndPredicate({ subjectId: paperId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION }))?.[0] ?? null;
+            if (versionStatement) {
+                dispatch(setVersion({ ...versionStatement?.object, statementId: versionStatement.id }));
+            }
+        } catch (error) {
+            console.error(error);
+            setIsLoadingFailed(true);
+        } finally {
+            setIsLoading(false);
+        }
     }, [dispatch, paperId]);
 
     useEffect(() => {

@@ -6,13 +6,14 @@ import Autocomplete from 'components/Autocomplete/Autocomplete';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import SortableAuthorItem from 'components/Input/AuthorsInput/SortableAuthorItem';
 import { AddAuthor, AuthorTags, GlobalStyle } from 'components/Input/AuthorsInput/styled';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, Form, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import getPersonFullNameByORCID from 'services/ORCID/index';
+import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 
 function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabled, value }) {
     const [showAuthorForm, setShowAuthorForm] = useState(false);
@@ -34,7 +35,8 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
     };
 
     const isORCID = value => Boolean(value && value.replaceAll('−', '-').match(REGEX.ORCID_URL));
-    const saveAuthor = _authorInput => {
+
+    const saveAuthor = async _authorInput => {
         if (_authorInput && _authorInput.label) {
             if (isORCID(_authorInput.label)) {
                 setAuthorNameLoading(true);
@@ -43,10 +45,10 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                 getPersonFullNameByORCID(orcid)
                     .then(authorFullName => {
                         const newAuthor = {
-                            label: authorFullName,
-                            id: authorFullName,
-                            orcid,
-                            statementId: editMode && value[editIndex] && value[editIndex].statementId ? value[editIndex].statementId : '',
+                            name: authorFullName,
+                            identifiers: {
+                                orcid: [orcid],
+                            },
                         };
                         if (editMode) {
                             handler([...value.slice(0, editIndex), newAuthor, ...value.slice(editIndex + 1)]);
@@ -64,13 +66,16 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                         toast.error(`Invalid ORCID ID. Please enter the ${itemLabel} name`);
                     });
             } else {
+                let orcids = [];
+                if (_authorInput.id) {
+                    orcids = (await getStatementsBySubjectAndPredicate({ subjectId: _authorInput.id, predicateId: PREDICATES.HAS_ORCID })).map(
+                        statement => statement.object.label,
+                    );
+                }
                 const newAuthor = {
-                    ..._authorInput,
-                    label: _authorInput.label,
-                    id: _authorInput.id ? _authorInput.id : _authorInput.label, // ID if the Author resource Exist
-                    ...(!_authorInput.id ? { __isNew__: true } : {}),
-                    orcid: '',
-                    statementId: editMode && value[editIndex] && value[editIndex].statementId ? value[editIndex].statementId : '',
+                    id: _authorInput.id ?? null,
+                    name: _authorInput.label,
+                    ...(orcids.length > 0 && { identifiers: { orcid: orcids } }),
                 };
                 if (editMode) {
                     handler([...value.slice(0, editIndex), newAuthor, ...value.slice(editIndex + 1)]);
@@ -86,13 +91,13 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
         }
     };
 
-    const removeAuthor = key => {
-        handler(value.filter(a => a.id !== key));
+    const removeAuthor = indexToRemove => {
+        handler(value.filter((_, index) => index !== indexToRemove));
     };
 
     const editAuthor = key => {
         setEditIndex(key);
-        setAuthorInput({ ...value[key], label: value[key].orcid ? value[key].orcid : value[key].label });
+        setAuthorInput({ ...value[key], label: value[key].identifiers?.orcid?.[0] ? value[key].identifiers?.orcid?.[0] : value[key].name });
         setEditMode(true);
         setShowAuthorForm(v => !v);
     };
@@ -113,8 +118,8 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                                 author={author}
                                 authorIndex={index}
                                 itemLabel={itemLabel}
-                                editAuthor={() => editAuthor(index)}
-                                removeAuthor={() => removeAuthor(author.id)}
+                                editAuthor={editAuthor}
+                                removeAuthor={removeAuthor}
                                 handleUpdate={handleUpdate}
                                 isDisabled={isDisabled}
                             />

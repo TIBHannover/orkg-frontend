@@ -1,18 +1,18 @@
-import Link from 'components/NextJsMigration/Link';
-import { useState } from 'react';
-import { Form, FormGroup, Input, Label, Alert, FormFeedback } from 'reactstrap';
-import { toggleAuthDialog, updateAuth } from 'slices/authSlice';
-import { registerWithEmailAndPassword, signInWithEmailAndPassword, getUserInformation } from 'services/backend/users';
-import { useDispatch } from 'react-redux';
-import { getErrorMessage, checkCookie } from 'utils';
-import ROUTES_CMS from 'constants/routesCms';
-import ROUTES from 'constants/routes';
-import { Cookies } from 'react-cookie';
-import env from 'components/NextJsMigration/env';
-import { reverse } from 'named-urls';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import Link from 'components/NextJsMigration/Link';
+import env from 'components/NextJsMigration/env';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
+import ROUTES from 'constants/routes';
+import ROUTES_CMS from 'constants/routesCms';
+import { reverse } from 'named-urls';
+import { useState } from 'react';
+import { Cookies } from 'react-cookie';
+import { useDispatch } from 'react-redux';
+import { Alert, Form, FormFeedback, FormGroup, Input, Label } from 'reactstrap';
+import { getUserInformation, registerWithEmailAndPassword, signInWithEmailAndPassword } from 'services/backend/users';
+import { toggleAuthDialog, updateAuth } from 'slices/authSlice';
+import { checkCookie, getErrorMessage } from 'utils';
 
 const cookies = new Cookies();
 
@@ -32,7 +32,7 @@ export default function SignUp() {
         e.preventDefault();
         setIsLoading(true);
         let userToken;
-        let token_expires_in;
+        let tokenExpiresIn;
         if (termsConditionIsChecked && dataProtectionIsChecked) {
             registerWithEmailAndPassword(email, password, matchingPassword, name)
                 .then(() => {
@@ -40,8 +40,8 @@ export default function SignUp() {
                         .then(token => {
                             userToken = token.access_token;
                             cookies.set('token', token.access_token, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
-                            token_expires_in = new Date(Date.now() + token.expires_in * 1000).toUTCString();
-                            cookies.set('token_expires_in', token_expires_in, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
+                            tokenExpiresIn = new Date(Date.now() + token.expires_in * 1000).toUTCString();
+                            cookies.set('token_expires_in', tokenExpiresIn, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
                             return getUserInformation();
                             // window.location.reload();
                         })
@@ -53,8 +53,10 @@ export default function SignUp() {
                                         id: userData.id,
                                         token: userToken,
                                         email: userData.email,
-                                        tokenExpire: token_expires_in,
+                                        tokenExpire: tokenExpiresIn,
                                         isCurationAllowed: userData.is_curation_allowed,
+                                        organization_id: userData.organization_id,
+                                        observatory_id: userData.observatory_id,
                                     },
                                 }),
                             );
@@ -64,7 +66,7 @@ export default function SignUp() {
                             setErrors(null);
                             trackEvent({ category: 'authentication', action: 'sign-up' });
                         })
-                        .catch(e => {
+                        .catch(() => {
                             if (checkCookie()) {
                                 cookies.remove('token', { path: env('PUBLIC_URL') });
                                 cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
@@ -76,14 +78,14 @@ export default function SignUp() {
                             }
                         });
                 })
-                .catch(e => {
+                .catch(_e => {
                     setIsLoading(false);
                     if (password !== matchingPassword) {
                         setErrors({ message: 'Your password and confirmation password do not match.' });
-                    } else if (e.message === '') {
+                    } else if (_e.message === '') {
                         setErrors({ message: 'Something went wrong, please try again' });
                     } else {
-                        setErrors(e);
+                        setErrors(_e);
                     }
                 });
         } else {

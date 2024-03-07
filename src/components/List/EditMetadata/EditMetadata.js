@@ -1,14 +1,15 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { EditableTitle, SectionStyled } from 'components/ArticleBuilder/styled';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import EditAuthorsModal from 'components/List/EditAuthorsModal';
 import EditResearchField from 'components/List/EditResearchField';
-import { EditableTitle, SectionStyled } from 'components/ArticleBuilder/styled';
+import ListEntryAmount from 'components/List/ListEntryAmount/ListEntryAmount';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
 import { updateTitle } from 'slices/listSlice';
-import ListEntryAmount from 'components/List/ListEntryAmount/ListEntryAmount';
+import { convertAuthorsToNewFormat } from 'utils';
 
 const EditMetadata = () => {
     const { id, title: titleStore } = useSelector(state => state.list.list);
@@ -47,7 +48,7 @@ const EditMetadata = () => {
 
             <EditResearchField />
             <ListEntryAmount />
-            <AuthorBadges authors={authorResources} />
+            <AuthorBadges authors={convertAuthorsToNewFormat(authorResources)} />
 
             <Button size="sm" color="secondary" className="ms-2" onClick={() => setShowModal(true)} aria-label="Edit article authors">
                 <Icon icon={faPen} /> Edit

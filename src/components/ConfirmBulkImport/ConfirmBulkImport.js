@@ -1,21 +1,26 @@
-import Link from 'components/NextJsMigration/Link';
-import { useEffect } from 'react';
-import { Alert, Button, Modal, ModalHeader, ModalBody, ModalFooter, Progress } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import PropTypes from 'prop-types';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
-import useImportBulkData from 'components/ConfirmBulkImport/useImportBulkData';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PaperList from 'components/ConfirmBulkImport/PaperList';
+import useImportBulkData from 'components/ConfirmBulkImport/useImportBulkData';
+import Link from 'components/NextJsMigration/Link';
+import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Alert, Button, Modal, ModalBody, ModalFooter, ModalHeader, Progress } from 'reactstrap';
 
-const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish = () => {} }) => {
+const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = () => {} }) => {
+    const onFinish = () => {
+        setIsFinished(true);
+        onFinishParent();
+    };
     const { papers, existingPaperIds, idToLabel, isLoading, createdContributions, makePaperList, handleImport, validationErrors } = useImportBulkData(
         {
             data,
             onFinish,
         },
     );
+    const [isFinished, setIsFinished] = useState(false);
 
     useEffect(() => {
         makePaperList();
@@ -27,8 +32,6 @@ const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish = () => {} }) => {
 
     const progressPercentage =
         createdContributions.length > 0 && papers.length > 0 ? Math.round((createdContributions.length / papers.length) * 100) : 0;
-
-    const isFinished = createdContributions.length > 0 && createdContributions.length === papers.length;
 
     return (
         <Modal isOpen={isOpen} size="lg" backdrop="static">

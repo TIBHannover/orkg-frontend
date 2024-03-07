@@ -15,6 +15,7 @@ import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
 import { createLiteralStatement, createResourceStatement } from 'services/backend/statements';
 import { createThing } from 'services/similarity';
+import { convertAuthorsToNewFormat, convertAuthorsToOldFormat } from 'utils';
 
 function PublishVisualization(props) {
     const [isLoading, setIsLoading] = useState(false);
@@ -148,7 +149,11 @@ function PublishVisualization(props) {
                                 Creators <span className="text-muted fst-italic">(optional)</span>
                             </Tooltip>
                         </Label>
-                        <AuthorsInput itemLabel="creator" handler={handleCreatorsChange} value={visualizationCreators} />
+                        <AuthorsInput
+                            itemLabel="creator"
+                            handler={authors => handleCreatorsChange(convertAuthorsToOldFormat(authors))}
+                            value={convertAuthorsToNewFormat(visualizationCreators)}
+                        />
                     </FormGroup>
                 </>
 

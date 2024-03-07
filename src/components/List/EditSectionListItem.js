@@ -9,10 +9,11 @@ import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SortableElement, sortableHandle } from 'react-sortable-hoc';
 import { Button, ListGroupItem } from 'reactstrap';
+import { getPaper } from 'services/backend/papers';
 import { deleteListEntry, listEntryUpdated } from 'slices/listSlice';
 import styled from 'styled-components';
 import { convertPaperToNewFormat } from 'utils';
@@ -47,6 +48,16 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
     const dispatch = useDispatch();
     const isPaper = contentType?.classes?.includes(CLASSES.PAPER);
     const contentTypeClass = contentType?.classes?.filter(classId => supportedContentTypes.find(c => c.id === classId))?.[0];
+    const [paperData, setPaperData] = useState({});
+
+    useEffect(() => {
+        const getData = async () => {
+            if (isOpenEditModal) {
+                setPaperData(await getPaper(contentType.id));
+            }
+        };
+        getData();
+    }, [contentType.id, isOpenEditModal]);
 
     const handleDelete = async () => {
         const confirm = await Confirm({
@@ -60,7 +71,19 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
     };
 
     const handleUpdatePaper = async data => {
-        dispatch(listEntryUpdated({ ...data, contentType: data.paper, ...data.paper }));
+        dispatch(
+            listEntryUpdated({
+                // TODO: the data model of lists should be updated to use the same model as the paper form, then this mapping of updated data is not needed anymore
+                contentType: { id: contentType.id },
+                label: data.title,
+                authors: data.authors.map(author => ({
+                    id: author.id,
+                    label: author.name,
+                })),
+                publicationMonth: data.publication_info?.published_month ? { label: data.publication_info?.published_month } : null,
+                publicationYear: data.publication_info?.published_year ? { label: data.publication_info?.published_year } : null,
+            }),
+        );
         setIsOpenEditModal(false);
     };
 
@@ -114,17 +137,7 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
                 />
             </div>
             {isOpenEditModal && (
-                <EditPaperModal
-                    paperData={{
-                        ...contentType,
-                        paper: { label: contentType.label, id: contentType.id },
-                        month: contentType.publicationMonth,
-                        year: contentType.publicationYear,
-                    }}
-                    afterUpdate={handleUpdatePaper}
-                    toggle={v => setIsOpenEditModal(!v)}
-                    isPaperLinkVisible
-                />
+                <EditPaperModal paperData={paperData} afterUpdate={handleUpdatePaper} toggle={v => setIsOpenEditModal(!v)} isPaperLinkVisible />
             )}
         </ListGroupItem>
     );

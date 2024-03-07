@@ -1,7 +1,7 @@
-import Link from 'components/NextJsMigration/Link';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import Link from 'components/NextJsMigration/Link';
 import { PropertyStyle, StatementsGroupStyle, ValueItemStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import { getConfigByType } from 'constants/DataTypes';
 import ROUTES from 'constants/routes.js';
@@ -32,10 +32,10 @@ const ListStatements = ({ property, idToLabel, values, validationErrors = [] }) 
                     {values.map((value, i) => (
                         <ValueItemStyle style={{ display: 'list-item' }} key={i}>
                             <div className="d-inline">
-                                {'@id' in value && idToLabel[value['@id']] && (
+                                {'id' in value && idToLabel[value.id] && (
                                     <>
-                                        <Link href={`${reverse(ROUTES.RESOURCE, { id: value['@id'] })}?noRedirect`} target="_blank">
-                                            {idToLabel[value['@id']]}
+                                        <Link href={`${reverse(ROUTES.RESOURCE, { id: value.id })}?noRedirect`} target="_blank">
+                                            {idToLabel[value.id]}
                                         </Link>
                                         <Badge color="light" className="ms-2">
                                             Resource

@@ -1,26 +1,46 @@
-import Link from 'components/NextJsMigration/Link';
-import { useState } from 'react';
-import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { setPaperObservatory } from 'slices/viewPaperSlice';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import capitalize from 'capitalize';
+import Link from 'components/NextJsMigration/Link';
+import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
-import PropTypes from 'prop-types';
-import moment from 'moment';
-import { useSelector, useDispatch } from 'react-redux';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
-import { Button } from 'reactstrap';
+import { StyledItemProvenanceBox } from 'components/ViewPaper/ProvenanceBox/styled';
 import { MISC } from 'constants/graphSettings';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
-import capitalize from 'capitalize';
+import ROUTES from 'constants/routes.js';
+import moment from 'moment';
+import { reverse } from 'named-urls';
+import { FC, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button } from 'reactstrap';
 import { getOrganizationLogoUrl } from 'services/backend/organizations';
-import { StyledItemProvenanceBox } from 'components/ViewPaper/ProvenanceBox/styled';
+import { Contributor, Observatory, Organization, Paper } from 'services/backend/types';
+import { RootStore } from 'slices/types';
+import { setPaperObservatory } from 'slices/viewPaperSlice';
 
-const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contributors, createdBy, isLoadingProvenance, isLoadingContributors }) => {
+type ProvenanceProps = {
+    observatoryInfo: Observatory;
+    organizationInfo: Organization;
+    paperResource: Paper;
+    contributors: { created_at: string; created_by: Contributor }[];
+    createdBy: Contributor;
+    isLoadingProvenance: boolean;
+    isLoadingContributors: boolean;
+};
+
+const Provenance: FC<ProvenanceProps> = ({
+    observatoryInfo,
+    organizationInfo,
+    paperResource,
+    contributors,
+    createdBy,
+    isLoadingProvenance,
+    isLoadingContributors,
+}) => {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
-    const user = useSelector(state => state.auth.user);
-    const dataCiteDoi = useSelector(state => state.viewPaper.dataCiteDoi?.label);
+    const user = useSelector((state: RootStore) => state.auth.user);
+    // @ts-expect-error
+    const dataCiteDoi = useSelector(state => state.viewPaper.dataCiteDoi);
     const dispatch = useDispatch();
 
     return (
@@ -34,6 +54,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                                     <b>Belongs to observatory</b>
                                 </div>
                                 {observatoryInfo.display_id && (
+                                    // @ts-expect-error
                                     <Link
                                         href={reverse(ROUTES.OBSERVATORY, {
                                             id: observatoryInfo.display_id,
@@ -52,6 +73,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                                         <b>Belongs to organization</b>
                                     </div>
                                 )}
+                                {/* @ts-expect-error */}
                                 <Link
                                     href={reverse(ROUTES.ORGANIZATION, {
                                         type: capitalize(ORGANIZATIONS_MISC.GENERAL),
@@ -88,6 +110,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                             <b>Added by</b>
                         </div>
                         <UserAvatar userId={createdBy.id} />
+                        {/* @ts-expect-error */}
                         <Link
                             href={reverse(ROUTES.USER_PROFILE, {
                                 userId: createdBy.id,
@@ -108,7 +131,8 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                         contributors
                             .filter(c => c.created_by.id !== MISC.UNKNOWN_ID)
                             .map((contributor, index) => (
-                                <div key={`cntbrs-${contributor.id}${index}`}>
+                                <div key={`cntbrs-${contributor.created_by.id}${index}`}>
+                                    {/* @ts-expect-error */}
                                     <Link
                                         href={reverse(ROUTES.USER_PROFILE, {
                                             userId: contributor.created_by.id,
@@ -151,16 +175,6 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
             />
         </div>
     );
-};
-
-Provenance.propTypes = {
-    contributors: PropTypes.array,
-    observatoryInfo: PropTypes.object,
-    organizationInfo: PropTypes.object,
-    paperResource: PropTypes.object,
-    createdBy: PropTypes.object,
-    isLoadingProvenance: PropTypes.bool,
-    isLoadingContributors: PropTypes.bool,
 };
 
 export default Provenance;

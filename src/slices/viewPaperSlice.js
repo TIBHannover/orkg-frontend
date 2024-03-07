@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { MISC } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { match } from 'path-to-regexp';
 import {
@@ -12,34 +13,32 @@ import {
 import { LOCATION_CHANGE, asyncLocalStorage, guid } from 'utils';
 
 const initialState = {
+    paper: {
+        id: null,
+        title: '',
+        research_fields: [],
+        identifiers: {},
+        publication_info: {},
+        authors: [],
+        contributions: [],
+        organizations: [],
+        observatories: [],
+        extraction_method: '',
+        created_at: MISC.UNKNOWN_ID,
+        created_by: MISC.UNKNOWN_ID,
+        verified: false,
+        visibility: 'default',
+        unlisted_by: '',
+    },
     comparison: {
         byId: {},
         allIds: [],
     },
-    paperResource: {
-        id: '',
-        label: '',
-        created_at: null,
-        classes: [],
-        shared: 0,
-        created_by: '00000000-0000-0000-0000-000000000000',
-        observatory_id: '00000000-0000-0000-0000-000000000000',
-        extraction_method: 'UNKNOWN',
-        organization_id: '00000000-0000-0000-0000-000000000000',
-    },
-    authors: [],
-    authorListResource: {},
+    contributions: [],
     selectedContributionId: '',
-    publicationMonth: {},
-    publicationYear: {},
-    doi: {},
     abstract: '',
     isAbstractFetched: false,
     fetchAbstractTitle: '',
-    researchField: {},
-    verified: false,
-    publishedIn: {},
-    url: {},
     isAddingContribution: false,
     nerResources: [],
     nerProperties: [],
@@ -49,16 +48,21 @@ const initialState = {
     bioassayRawResponse: [],
     ranges: {},
     abstractDialogView: 'annotator', // annotator | input | list
+    version: null,
+    originalPaperId: null,
+    dataCiteDoi: null,
 };
 
 export const viewPaperSlice = createSlice({
     name: 'viewPaper',
     initialState,
     reducers: {
-        loadPaper: (state, { payload }) => ({
-            ...state,
-            ...payload,
-        }),
+        loadPaper: (state, { payload }) => {
+            state.paper = {
+                ...state.paper,
+                ...payload,
+            };
+        },
         setIsAddingContribution: (state, { payload }) => {
             state.isAddingContribution = payload;
         },
@@ -74,9 +78,18 @@ export const viewPaperSlice = createSlice({
         setPaperAuthors: (state, { payload }) => {
             state.authors = payload;
         },
+        setVersion: (state, { payload }) => {
+            state.version = payload;
+        },
+        setOriginalPaperId: (state, { payload }) => {
+            state.originalPaperId = payload;
+        },
+        setDataCiteDoi: (state, { payload }) => {
+            state.dataCiteDoi = payload;
+        },
         setPaperObservatory: (state, { payload }) => {
-            state.paperResource.observatory_id = payload.observatory_id;
-            state.paperResource.organization_id = payload.organization_id;
+            state.observatory_id = [payload.observatory_id];
+            state.organization_id = [payload.organization_id];
         },
         loadComparisonFromLocalStorage: (state, { payload }) => {
             state.comparison = payload;
@@ -161,8 +174,8 @@ export const viewPaperSlice = createSlice({
             const parsedPayload = matchPaper(payload.location.pathname);
             const parsedPayload2 = matchPaperContribution(payload.location.pathname);
             if (
-                (parsedPayload && parsedPayload.params?.resourceId === state.paperResource.id) ||
-                (parsedPayload2 && parsedPayload2.params?.resourceId === state.paperResource.id)
+                (parsedPayload && parsedPayload.params?.resourceId === state.paper.id) ||
+                (parsedPayload2 && parsedPayload2.params?.resourceId === state.paper.id)
             ) {
                 // when it's the same paper, do not init
                 return state;
@@ -201,66 +214,69 @@ export const {
     clearAnnotations,
     setAbstractDialogView,
     setContributionExtractionMethod,
+    setVersion,
+    setOriginalPaperId,
+    setDataCiteDoi,
 } = viewPaperSlice.actions;
 
 export default viewPaperSlice.reducer;
 
 export const selectContribution =
     ({ contributionId: id, contributionLabel }) =>
-        (dispatch, getState) => {
-            const contributionIsLoaded = !!getState().statementBrowser.resources.byId[id];
+    (dispatch, getState) => {
+        const contributionIsLoaded = !!getState().statementBrowser.resources.byId[id];
 
-            if (!contributionIsLoaded) {
-                // let resourceId = guid(); //use this as ID in the future, when changing the data is possible
+        if (!contributionIsLoaded) {
+            // let resourceId = guid(); //use this as ID in the future, when changing the data is possible
 
-                dispatch(
-                    createResource({
-                        // only needed for connecting properties, label is shown in the breadcrumb
-                        resourceId: id,
-                        label: contributionLabel,
-                        existingResourceId: id,
-                    }),
-                );
-                // this will create or set the selected contribution id in the statementBrowser (HERE CREATE)
-                dispatch(
-                    createContributionObject({
-                        id,
-                    }),
-                );
+            dispatch(
+                createResource({
+                    // only needed for connecting properties, label is shown in the breadcrumb
+                    resourceId: id,
+                    label: contributionLabel,
+                    existingResourceId: id,
+                }),
+            );
+            // this will create or set the selected contribution id in the statementBrowser (HERE CREATE)
+            dispatch(
+                createContributionObject({
+                    id,
+                }),
+            );
 
-                dispatch(
-                    fetchStatementsForResource({
-                        resourceId: id,
-                        depth: 3, // load depth 3 the first time
-                    }),
-                );
-                dispatch(clearResourceHistory());
-            }
-            // this will create or set the selected contribution id in the statementBrowser (HERE SELECT)
-            Promise.resolve(
-                dispatch(
-                    createContributionObject({
-                        id,
-                    }),
-                ),
-            ).then(() => {
-                dispatch(
-                    selectResource({
-                        increaseLevel: false,
-                        resourceId: id,
-                        label: contributionLabel,
-                        resetLevel: false,
-                    }),
-                );
+            dispatch(
+                fetchStatementsForResource({
+                    resourceId: id,
+                    depth: 3, // load depth 3 the first time
+                }),
+            );
+            dispatch(clearResourceHistory());
+        }
+        // this will create or set the selected contribution id in the statementBrowser (HERE SELECT)
+        Promise.resolve(
+            dispatch(
+                createContributionObject({
+                    id,
+                }),
+            ),
+        ).then(() => {
+            dispatch(
+                selectResource({
+                    increaseLevel: false,
+                    resourceId: id,
+                    label: contributionLabel,
+                    resetLevel: false,
+                }),
+            );
 
-                // this will load the contribution data/history into the statementBrowser
-                dispatch(
-                    loadContributionHistory({
-                        id,
-                    }),
-                );
-            });
-        };
+            // this will load the contribution data/history into the statementBrowser
+            dispatch(
+                loadContributionHistory({
+                    id,
+                }),
+            );
+        });
+    };
 
 /**
  * Get paper link
@@ -268,11 +284,11 @@ export const selectContribution =
  * @return {String=} the paper link
  */
 export const getPaperLink = state => {
-    if (state.viewPaper.url) {
-        return state.viewPaper.url.label;
+    if (state.viewPaper.publicationInfo?.url) {
+        return state.viewPaper.publicationInfo?.url;
     }
-    if (state.viewPaper.doi && state.viewPaper.doi.label.startsWith('10.')) {
-        return `https://doi.org/${state.viewPaper.doi.label}`;
+    if (state.viewPaper.identifiers?.doi?.[0] && state.viewPaper.identifiers?.doi?.[0].startsWith('10.')) {
+        return `https://doi.org/${state.viewPaper.identifiers?.doi?.[0]}`;
     }
     return '';
 };

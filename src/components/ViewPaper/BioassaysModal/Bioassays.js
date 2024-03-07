@@ -8,7 +8,7 @@ import { Button } from 'reactstrap';
 
 const Bioassays = () => {
     const [isOpenBioassays, setIsOpenBioassays] = useState(false);
-    const researchFieldId = useSelector(state => state.viewPaper.researchField)?.id ?? null;
+    const researchFieldId = useSelector(state => state.viewPaper.paper.research_fields?.[0])?.id ?? null;
     const selectedContributionId = useSelector(state => state.viewPaper.selectedContributionId);
     const isBioassayField = BIOASSAYS_FIELDS_LIST.includes(researchFieldId);
 

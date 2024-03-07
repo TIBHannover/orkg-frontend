@@ -1,6 +1,6 @@
 import { ENTITIES } from 'constants/graphSettings';
 import { url } from 'constants/misc';
-import { submitGetRequest, submitPostRequest } from 'network';
+import { submitPostRequest } from 'network';
 import qs from 'qs';
 import { getClassById, getClasses } from 'services/backend/classes';
 import { getPredicate, getPredicates } from 'services/backend/predicates';
@@ -8,17 +8,6 @@ import { getResource, getResources } from 'services/backend/resources';
 import { Class, PaginatedResponse, PaginationParams, Predicate, Resource, VerifiedParam, VisibilityParam } from 'services/backend/types';
 
 export const doisUrl = `${url}dois/`;
-
-type WidgetResponse = {
-    id: string;
-    doi: string | null;
-    title: string;
-    num_statements: number;
-    class: string;
-};
-export const getPaperByDOI = (doi: string): Promise<WidgetResponse> => submitGetRequest(`${url}widgets/?doi=${encodeURIComponent(doi)}`);
-
-export const getPaperByTitle = (title: string): Promise<WidgetResponse> => submitGetRequest(`${url}widgets/?title=${encodeURIComponent(title)}`);
 
 export const generateDoi = ({
     type,

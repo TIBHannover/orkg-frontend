@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { authorsUpdated, listLoaded } from 'slices/listSlice';
+import { convertAuthorsToNewFormat, convertAuthorsToOldFormat } from 'utils';
 
 const EditAuthorsModal = props => {
     const { show, toggle } = props;
@@ -61,7 +62,9 @@ const EditAuthorsModal = props => {
                             <div className="name"> {author.label} </div>
                         </AuthorTag>
                     ))}
-                {!isSaving && <AuthorsInput value={authors} handler={onChange} />}
+                {!isSaving && (
+                    <AuthorsInput value={convertAuthorsToNewFormat(authors)} handler={_authors => onChange(convertAuthorsToOldFormat(_authors))} />
+                )}
             </ModalBody>
             <ModalFooter>
                 <ButtonWithLoading isLoading={isSaving} loadingMessage="Saving" color="primary" onClick={handleSave}>
