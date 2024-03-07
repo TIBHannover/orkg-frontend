@@ -1,15 +1,15 @@
-import { Form, FormGroup, Input, Label, Alert } from 'reactstrap';
-import { useState } from 'react';
-import PropTypes from 'prop-types';
-import { toggleAuthDialog, updateAuth } from 'slices/authSlice';
-import { signInWithEmailAndPassword, getUserInformation } from 'services/backend/users';
-import useRouter from 'components/NextJsMigration/useRouter';
-import { Cookies } from 'react-cookie';
-import { checkCookie } from 'utils';
-import env from 'components/NextJsMigration/env';
-import { useDispatch } from 'react-redux';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import env from 'components/NextJsMigration/env';
+import useRouter from 'components/NextJsMigration/useRouter';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { Cookies } from 'react-cookie';
+import { useDispatch } from 'react-redux';
+import { Alert, Form, FormGroup, Input, Label } from 'reactstrap';
+import { getUserInformation, signInWithEmailAndPassword } from 'services/backend/users';
+import { toggleAuthDialog, updateAuth } from 'slices/authSlice';
+import { checkCookie } from 'utils';
 
 const cookies = new Cookies();
 
@@ -26,14 +26,13 @@ const SignIn = props => {
         setLoading(true);
 
         let userToken;
-        let token_expires_in;
+        let tokenExpiresIn;
         signInWithEmailAndPassword(email, password)
             .then(token => {
                 userToken = token.access_token;
                 cookies.set('token', token.access_token, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
-                token_expires_in = new Date(Date.now() + token.expires_in * 1000).toUTCString();
-                cookies.set('token_expires_in', token_expires_in, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
-                // window.location.reload();
+                tokenExpiresIn = new Date(Date.now() + token.expires_in * 1000).toUTCString();
+                cookies.set('token_expires_in', tokenExpiresIn, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
                 return getUserInformation();
             })
             .then(userData => {
@@ -45,8 +44,10 @@ const SignIn = props => {
                             id: userData.id,
                             token: userToken,
                             email: userData.email,
-                            tokenExpire: token_expires_in,
+                            tokenExpire: tokenExpiresIn,
                             isCurationAllowed: userData.is_curation_allowed,
+                            organization_id: userData.organization_id,
+                            observatory_id: userData.observatory_id,
                         },
                         redirectRoute: null,
                     }),
@@ -59,14 +60,14 @@ const SignIn = props => {
                     router.push(redirectRoute);
                 }
             })
-            .catch(e => {
+            .catch(_e => {
                 let error = 'Something went wrong, please try again';
                 cookies.remove('token', { path: env('PUBLIC_URL') });
                 cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
-                if (e.error === 'invalid_grant') {
+                if (_e.error === 'invalid_grant') {
                     error = 'Wrong email address or password';
-                } else if (e.error_description) {
-                    error = e.error_description;
+                } else if (_e.error_description) {
+                    error = _e.error_description;
                 } else if (!checkCookie()) {
                     error = 'Cookies must be enabled to sign in';
                 }
@@ -83,14 +84,7 @@ const SignIn = props => {
 
                 <FormGroup>
                     <Label for="Email">Email address</Label>
-                    <Input
-                        onChange={e => setEmail(e.target.value)}
-                        value={email}
-                        type="email"
-                        name="email"
-                        id="Email"
-                        placeholder="Email address"
-                    />
+                    <Input onChange={e => setEmail(e.target.value)} value={email} type="email" name="email" id="Email" placeholder="Email address" />
                 </FormGroup>
                 <FormGroup>
                     <Label for="Password">Password</Label>

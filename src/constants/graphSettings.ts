@@ -1,4 +1,6 @@
-export const PREDICATES = {
+export const PREDICATES: {
+    [key: string]: string;
+} = {
     HAS_DOI: 'P26',
     HAS_VENUE: 'HAS_VENUE',
     HAS_AUTHOR: 'P27',
@@ -88,7 +90,9 @@ export const PREDICATES = {
     MATERIAL: 'MATERIAL',
 };
 
-export const CLASSES = {
+export const CLASSES: {
+    [key: string]: string;
+} = {
     PAPER: 'Paper',
     PAPER_DELETED: 'PaperDeleted',
     FEATURED_PAPER: 'FeaturedPaper',
@@ -148,18 +152,24 @@ export const CLASSES = {
     QUALITY_FEEDBACK: 'QualityFeedback',
 };
 
-export const RESOURCES = {
+export const RESOURCES: {
+    [key: string]: string;
+} = {
     RESEARCH_FIELD_MAIN: 'R11',
     EMPTY_RESOURCE: 'empty',
 };
 
-export const MISC = {
+export const MISC: {
+    [key: string]: string;
+} = {
     DEFAULT_LITERAL_DATATYPE: 'xsd:string',
     UNKNOWN_ID: '00000000-0000-0000-0000-000000000000',
 };
 
 /* entities usually are returned by the backend (in _class) to specify the type of node  */
-export const ENTITIES = {
+export const ENTITIES: {
+    [key: string]: string;
+} = {
     CLASS: 'class',
     PREDICATE: 'predicate',
     RESOURCE: 'resource',

@@ -34,7 +34,7 @@ const AnimationContainer = styled(CSSTransition)`
 `;
 
 function PaperHeaderBar(props) {
-    const label = useSelector(state => state.viewPaper.paperResource?.label);
+    const title = useSelector(state => state.viewPaper.paper.title);
 
     return (
         <AnimationContainer in={true} appear={true} classNames="fade" timeout={500}>
@@ -46,7 +46,7 @@ function PaperHeaderBar(props) {
                                 Edit mode <span className="ps-2">Every change you make is automatically saved</span>
                             </>
                         ) : (
-                            label
+                            title
                         )}
                     </div>
                     <ButtonGroup className="flex-shrink-0">

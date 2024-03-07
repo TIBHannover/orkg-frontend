@@ -2,8 +2,8 @@ import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { url } from 'constants/misc';
 import { submitGetRequest, submitPostRequest } from 'network';
 import qs from 'qs';
-import { Author, Comparison, PaginatedResponse, PaginationParams, VerifiedParam, VisibilityParam } from 'services/backend/types';
 import { prepareParams } from 'services/backend/misc';
+import { Author, Comparison, PaginatedResponse, PaginationParams, VerifiedParam, VisibilityParam } from 'services/backend/types';
 
 export const comparisonUrl = `${url}comparisons/`;
 

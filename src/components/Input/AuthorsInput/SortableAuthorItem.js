@@ -41,8 +41,8 @@ const SortableAuthorItem = ({ author, authorIndex, editAuthor, removeAuthor, ite
                 role="button"
                 tabIndex={0}
             >
-                {author.label}
-                {author.orcid && <Icon style={{ margin: '4px' }} icon={faOrcid} />}
+                {author.name}
+                {author.identifiers?.orcid?.[0] && <Icon style={{ margin: '4px' }} icon={faOrcid} />}
             </div>
             {!isDisabled && (
                 <>
@@ -58,8 +58,8 @@ const SortableAuthorItem = ({ author, authorIndex, editAuthor, removeAuthor, ite
                     <div
                         title={`Delete ${itemLabel}`}
                         className="delete"
-                        onClick={() => removeAuthor(author.id)}
-                        onKeyDown={e => (e.key === 'Enter' ? removeAuthor(author.id) : undefined)}
+                        onClick={() => removeAuthor(authorIndex)}
+                        onKeyDown={e => (e.key === 'Enter' ? removeAuthor(authorIndex) : undefined)}
                         role="button"
                         tabIndex={0}
                     >

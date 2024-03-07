@@ -1,87 +1,75 @@
-import Link from 'components/NextJsMigration/Link';
 import { faCalendar, faCheckCircle, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
-import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
-import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
+import Link from 'components/NextJsMigration/Link';
+import EditPaperModal from 'components/PaperForm/EditPaperModal';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import OpenCitations from 'components/ViewPaper/OpenCitations/OpenCitations';
-import Tippy from '@tippyjs/react';
+import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { Button, Alert } from 'reactstrap';
+import { Alert, Button } from 'reactstrap';
 import { getAltMetrics } from 'services/altmetric/index';
 import { loadPaper } from 'slices/viewPaperSlice';
-import EditPaperModal from 'components/PaperForm/EditPaperModal';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 
 const PaperHeader = props => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
-    const viewPaper = useSelector(state => state.viewPaper, shallowEqual);
+    const viewPaper = useSelector(state => state.viewPaper.paper, shallowEqual);
+    const version = useSelector(state => state.viewPaper.version);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const userId = useSelector(state => state.auth.user?.id);
-    const [deletePapers] = useDeletePapers({ paperIds: [viewPaper.paperResource.id], redirect: true });
+    const [deletePapers] = useDeletePapers({ paperIds: [viewPaper.id], redirect: true });
     const [altMetrics, setAltMetrics] = useState(null);
     const dispatch = useDispatch();
     // make sure a user is signed in (not null)
-    const userCreatedThisPaper = viewPaper.paperResource.created_by && userId && viewPaper.paperResource.created_by === userId;
+    const userCreatedThisPaper = viewPaper.created_by && userId && viewPaper.created_by === userId;
     const showDeleteButton = props.editMode && (isCurationAllowed || userCreatedThisPaper);
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
-        resourceId: viewPaper.paperResource.id,
-        unlisted: viewPaper.paperResource.unlisted,
-        featured: viewPaper.paperResource.featured,
+        resourceId: viewPaper.id,
+        unlisted: viewPaper.visibility === 'unlisted',
+        featured: viewPaper.visibility === 'featured',
     });
 
     useEffect(() => {
-        if (!viewPaper.doi?.label) {
+        if (!viewPaper.identifiers?.doi?.[0]) {
             return;
         }
         const loadAltMetrics = async () => {
-            const altM = await getAltMetrics(viewPaper.doi?.label);
+            const altM = await getAltMetrics(viewPaper.identifiers?.doi?.[0]);
             setAltMetrics(altM);
         };
         loadAltMetrics();
-    }, [viewPaper.doi?.label]);
+    }, [viewPaper.identifiers?.doi]);
 
     const handleUpdatePaper = data => {
-        // TODO: the viewPaper store should be refactored to directly support the updated data that is passed
-        dispatch(
-            loadPaper({
-                paperResource: { ...viewPaper.paperResource, label: data.paper.label },
-                publicationMonth: { ...viewPaper.publicationMonth, label: data.month?.label || null, id: data.month?.id },
-                publicationYear: { ...viewPaper.publicationYear, label: data.year?.label || null, id: data.year?.id },
-                doi: { ...viewPaper.doi, label: data.doi?.label, id: data.doi?.id },
-                authors: data.authors,
-                publishedIn: data.publishedIn,
-                url: { ...viewPaper.url, label: data.url?.label, id: data.url?.id },
-                researchField: data.researchField,
-                verified: data.isVerified,
-            }),
-        );
+        dispatch(loadPaper(data));
         setIsOpenEditModal(false);
     };
-    const hasDoi = viewPaper.doi && viewPaper.doi.label?.startsWith('10.');
+    const hasDoi = viewPaper.identifiers?.doi?.[0] && viewPaper.identifiers?.doi?.[0]?.startsWith('10.');
     const isMetadataDisabled = viewPaper.verified && !isCurationAllowed;
 
     return (
         <>
-            {viewPaper.hasVersion && (
+            {version && (
                 <Alert color="warning" className="mt-1 container d-flex">
                     <div className="flex-grow-1">
                         A published version of this paper is available.{' '}
-                        <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: viewPaper.hasVersion.id })}>View published version</Link>
+                        <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: version.id })}>View published version</Link>
                     </div>
                 </Alert>
             )}
             <div className="d-flex align-items-start">
-                <h2 className={`h4 ${viewPaper.hasVersion ? 'mt-1' : 'mt-4'} mb-3 flex-grow-1`}>
-                    {viewPaper.paperResource.label ? viewPaper.paperResource.label : <em>No title</em>}{' '}
+                <h2 className={`h4 ${version ? 'mt-1' : 'mt-4'} mb-3 flex-grow-1`}>
+                    {viewPaper.title ? viewPaper.title : <em>No title</em>}{' '}
                     <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
                     <div className="d-inline-block ms-1">
                         <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
@@ -98,26 +86,27 @@ const PaperHeader = props => {
                 )}
             </div>
             <div className="clearfix" />
-            {(viewPaper.publicationMonth?.label || viewPaper.publicationYear?.label) && (
+            {(viewPaper.publication_info?.published_month || viewPaper.publication_info?.published_year) && (
                 <span className="badge bg-light me-2">
-                    <Icon icon={faCalendar} /> {viewPaper.publicationMonth?.label ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''}{' '}
-                    {viewPaper.publicationYear?.label ? viewPaper.publicationYear.label : ''}
+                    <Icon icon={faCalendar} />{' '}
+                    {viewPaper.publication_info?.published_month ? moment(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''}{' '}
+                    {viewPaper.publication_info?.published_year ? viewPaper.publication_info?.published_year : ''}
                 </span>
             )}
-            {hasDoi && <OpenCitations doi={viewPaper.doi.label} />}
-            <ResearchFieldBadge researchField={viewPaper.researchField} />
+            {hasDoi && <OpenCitations doi={viewPaper.identifiers?.doi?.[0]} />}
+            <ResearchFieldBadge researchField={viewPaper.research_fields?.[0]} />
             <AuthorBadges authors={viewPaper.authors} />
             <br />
             <div className="d-flex justify-content-end align-items-center">
-                {viewPaper.publishedIn && viewPaper.publishedIn.id && (
+                {viewPaper.publication_info.published_in && viewPaper.publication_info.published_in?.id && (
                     <div className="flex-grow-1">
                         <small>
                             Published in:{' '}
                             <Link
                                 style={{ color: '#60687a', fontStyle: 'italic' }}
-                                href={reverse(ROUTES.VENUE_PAGE, { venueId: viewPaper.publishedIn.id })}
+                                href={reverse(ROUTES.VENUE_PAGE, { venueId: viewPaper.publication_info.published_in?.id })}
                             >
-                                {viewPaper.publishedIn.label}
+                                {viewPaper.publication_info.published_in?.label}
                             </Link>
                         </small>
                     </div>
@@ -126,8 +115,8 @@ const PaperHeader = props => {
                     <div className="flex-shrink-0">
                         <small>
                             DOI:{' '}
-                            <a href={`https://doi.org/${viewPaper.doi.label}`} target="_blank" rel="noopener noreferrer">
-                                https://doi.org/{viewPaper.doi.label}
+                            <a href={`https://doi.org/${viewPaper.identifiers?.doi?.[0]}`} target="_blank" rel="noopener noreferrer">
+                                https://doi.org/{viewPaper.identifiers?.doi?.[0]}
                             </a>
                         </small>
                     </div>
@@ -177,16 +166,13 @@ const PaperHeader = props => {
             {isOpenEditModal && (
                 <EditPaperModal
                     paperData={{
-                        paper: viewPaper.paperResource,
-                        month: viewPaper.publicationMonth,
-                        year: viewPaper.publicationYear,
+                        id: viewPaper.id,
+                        title: viewPaper.title,
+                        research_fields: viewPaper.research_fields,
+                        identifiers: viewPaper.identifiers,
+                        publication_info: viewPaper.publication_info,
                         authors: viewPaper.authors,
-                        doi: viewPaper.doi,
-                        publishedIn: viewPaper.publishedIn,
-                        researchField: viewPaper.researchField,
-                        url: viewPaper.url,
-                        isVerified: viewPaper.verified,
-                        authorListResource: viewPaper.authorListResource,
+                        verified: viewPaper.verified,
                     }}
                     afterUpdate={handleUpdatePaper}
                     isOpen={isOpenEditModal}

@@ -676,9 +676,14 @@ export const parseCiteResult = paper => {
                     fullname = author.literal ? author.literal : '';
                 }
                 return {
-                    label: unescape(fullname),
-                    id: fullname,
-                    orcid: author.ORCID ? author.ORCID?.split('/')?.[1] : '',
+                    name: unescape(fullname),
+                    ...(author.ORCID
+                        ? {
+                              identifiers: {
+                                  orcid: [author.ORCID?.split('/')?.[1]],
+                              },
+                          }
+                        : {}),
                 };
             });
         }
@@ -989,8 +994,16 @@ export const handleSortableHoverReactDnd = ({ item, monitor, currentRef, hoverIn
     item.index = hoverIndex;
 };
 
-export const convertAuthorToNewFormat = author => ({
+export const convertAuthorToOldFormat = author => ({
     id: author.id,
+    label: author.name,
+    orcid: author.identifiers?.orcid?.[0],
+    _class: author.id ? ENTITIES.RESOURCE : ENTITIES.LITERAL,
+});
+export const convertAuthorsToOldFormat = authors => authors.map(author => convertAuthorToOldFormat(author));
+
+export const convertAuthorToNewFormat = author => ({
+    id: author.classes && author.classes.includes(CLASSES.AUTHOR) ? author.id : null,
     name: author.label,
     ...(author.orcid
         ? {
@@ -1058,7 +1071,7 @@ export const convertPaperToNewFormat = paper => ({
     ...(paper.doi
         ? {
               identifiers: {
-                  doi: paper.doi,
+                  doi: [paper.doi.label],
               },
           }
         : {}),
@@ -1070,8 +1083,8 @@ export const convertPaperToNewFormat = paper => ({
     },
     authors: paper.authors ? paper.authors.map(author => convertAuthorToNewFormat(author)) : [],
     contributions: paper.contributions,
-    organizations: paper.organizations,
-    observatories: paper.observatories,
+    organizations: [paper.organization_id],
+    observatories: [paper.observatory_id],
     extraction_method: paper.extractionMethod,
     created_at: paper.created_at,
     created_by: paper.created_by,

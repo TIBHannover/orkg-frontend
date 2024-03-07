@@ -151,6 +151,7 @@
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^14.0.0",
         "@testing-library/user-event": "^14.4.3",
+        "@types/capitalize": "^2.0.2",
         "@types/jest": "^29.5.3",
         "@types/node": "^20.4.9",
         "@types/pluralize": "^0.0.32",

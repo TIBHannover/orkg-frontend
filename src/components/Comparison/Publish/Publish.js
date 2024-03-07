@@ -1,31 +1,31 @@
-import Link from 'components/NextJsMigration/Link';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert, InputGroup, Form } from 'reactstrap';
-import { toast } from 'react-toastify';
-import ROUTES from 'constants/routes.js';
-import PropTypes from 'prop-types';
-import Tooltip from 'components/Utils/Tooltip';
-import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
-import ShareCreatedContent from 'components/ShareLinkMarker/ShareCreatedContent';
-import NewerVersionWarning from 'components/Comparison/HistoryModal/NewerVersionWarning';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import Select from 'react-select';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import { reverse } from 'named-urls';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { slugify, getPublicUrl } from 'utils';
-import styled from 'styled-components';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { MISC } from 'constants/graphSettings';
-import env from 'components/NextJsMigration/env';
-import usePublish from 'components/Comparison/hooks/usePublish';
-import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import NewerVersionWarning from 'components/Comparison/HistoryModal/NewerVersionWarning';
+import usePublish from 'components/Comparison/hooks/usePublish';
+import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
 import ResearchFieldInput from 'components/Input/ResearchFieldInput/ResearchFieldInput';
+import Link from 'components/NextJsMigration/Link';
+import env from 'components/NextJsMigration/env';
+import ShareCreatedContent from 'components/ShareLinkMarker/ShareCreatedContent';
 import SmartDescriptivenessCheck from 'components/SmartSuggestions/SmartDescriptivenessCheck';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
+import Tooltip from 'components/Utils/Tooltip';
+import { MISC } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
+import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
+import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import Select from 'react-select';
+import { toast } from 'react-toastify';
+import { Alert, Button, Form, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import styled from 'styled-components';
+import { convertAuthorsToNewFormat, convertAuthorsToOldFormat, getPublicUrl, slugify } from 'utils';
 
 const StyledCustomInput = styled(Input)`
     margin-right: 0;
@@ -248,8 +248,8 @@ function Publish(props) {
                                 <AuthorsInput
                                     disabled={Boolean(comparisonCreators.length > 0)}
                                     itemLabel="creator"
-                                    handler={handleCreatorsChange}
-                                    value={comparisonCreators}
+                                    handler={authors => handleCreatorsChange(convertAuthorsToOldFormat(authors))}
+                                    value={convertAuthorsToNewFormat(comparisonCreators)}
                                 />
                             )}
                             {!comparisonResource.doi &&

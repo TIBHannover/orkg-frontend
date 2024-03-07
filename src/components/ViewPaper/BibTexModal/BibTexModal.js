@@ -20,7 +20,7 @@ const BibTexModal = ({ toggle, onUpdateData }) => {
             const newData = {
                 doi: parseResult.doi,
                 title: parseResult.paperTitle,
-                authors: parseResult.paperAuthors.map(author => ({ label: author.label, ...(author.orcid && { orcid: author.orcid }) })),
+                authors: parseResult.paperAuthors,
                 publicationMonth: parseResult.paperPublicationMonth,
                 publicationYear: parseResult.paperPublicationYear,
                 publishedIn: parseResult.publishedIn,

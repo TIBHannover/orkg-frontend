@@ -1,43 +1,44 @@
-import Link from 'components/NextJsMigration/Link';
-import {
-    Container,
-    Modal,
-    ModalHeader,
-    ModalBody,
-    Input,
-    Button,
-    Label,
-    FormGroup,
-    Alert,
-    InputGroup,
-    ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-} from 'reactstrap';
-import NotFound from 'app/not-found';
-import ContentLoader from 'react-content-loader';
-import useParams from 'components/NextJsMigration/useParams';
-import Contributions from 'components/ViewPaperVersion/ContributionsVersion/Contributions';
-import useViewPaperVersion from 'components/ViewPaperVersion/hooks/useViewPaperVersion';
-import PaperVersionHeader from 'components/ViewPaperVersion/PaperVersionHeader';
-import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
-import { useSelector } from 'react-redux';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import NotFound from 'app/not-found';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import ExportCitation from 'components/Comparison/Export/ExportCitation';
+import Link from 'components/NextJsMigration/Link';
+import useParams from 'components/NextJsMigration/useParams';
+import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
+import TitleBar from 'components/TitleBar/TitleBar';
+import Contributions from 'components/ViewPaperVersion/ContributionsVersion/Contributions';
+import PaperVersionHeader from 'components/ViewPaperVersion/PaperVersionHeader';
+import useViewPaperVersion from 'components/ViewPaperVersion/hooks/useViewPaperVersion';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
+import { useState } from 'react';
+import ContentLoader from 'react-content-loader';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { faClipboard } from '@fortawesome/free-regular-svg-icons';
+import {
+    Alert,
+    Button,
+    ButtonDropdown,
+    Container,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    FormGroup,
+    Input,
+    InputGroup,
+    Label,
+    Modal,
+    ModalBody,
+    ModalHeader,
+} from 'reactstrap';
 
 const ViewPaperVersion = () => {
     const { resourceId } = useParams();
-    const viewPaper = useSelector(state => state.viewPaper);
+    const paper = useSelector(state => state.viewPaper.paper);
+    const originalPaperId = useSelector(state => state.viewPaper.originalPaperId);
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -52,7 +53,7 @@ const ViewPaperVersion = () => {
             {!isLoading && isLoadingFailed && <NotFound />}
             {!isLoadingFailed && (
                 <>
-                    <Breadcrumbs researchFieldId={viewPaper.researchField ? viewPaper.researchField.id : null} />
+                    <Breadcrumbs researchFieldId={paper.research_fields.length > 0 ? paper.research_fields?.[0]?.id : null} />
                     <TitleBar
                         buttonGroup={
                             <>
@@ -77,7 +78,7 @@ const ViewPaperVersion = () => {
                         Paper
                     </TitleBar>
                     <Container className="box pt-md-4 pb-md-4 ps-md-5 pe-md-5 pt-sm-2 pb-sm-2 ps-sm-2 pe-sm-2 clearfix position-relative rounded">
-                        {!isLoading && <ShareLinkMarker typeOfLink="paper" title={viewPaper.paperResource.label} />}
+                        {!isLoading && <ShareLinkMarker typeOfLink="paper" title={paper.title} />}
 
                         {isLoading && (
                             <ContentLoader
@@ -98,11 +99,11 @@ const ViewPaperVersion = () => {
                         )}
                         {!isLoading && (
                             <>
-                                {viewPaper.originalPaperId && (
+                                {originalPaperId && (
                                     <Alert color="warning" className="container d-flex">
                                         <div className="flex-grow-1">
                                             You are viewing the published version of the paper. Click to{' '}
-                                            <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: viewPaper.originalPaperId })}>Fetch live data</Link>
+                                            <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: originalPaperId })}>Fetch live data</Link>
                                         </div>
                                     </Alert>
                                 )}
@@ -123,17 +124,17 @@ const ViewPaperVersion = () => {
                 </>
             )}
             {dataCiteDoi && (
-                <ExportCitation showDialog={showExportCitationsDialog} toggle={() => setShowExportCitationsDialog(v => !v)} DOI={dataCiteDoi.label} />
+                <ExportCitation showDialog={showExportCitationsDialog} toggle={() => setShowExportCitationsDialog(v => !v)} DOI={dataCiteDoi} />
             )}
             <Modal size="lg" isOpen={showPublishDialog} toggle={() => setShowPublishDialog(v => !v)}>
                 <ModalHeader toggle={() => setShowPublishDialog(v => !v)}>Publish ORKG paper</ModalHeader>
                 <ModalBody>
-                    {dataCiteDoi && viewPaper.originalPaperId && (
+                    {dataCiteDoi && originalPaperId && (
                         <Alert color="info">
                             <>
                                 This paper is already published, you can find the persistent link below.{' '}
-                                <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: viewPaper.originalPaperId })}>Fetch live data</Link> for updating
-                                the current version.
+                                <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: originalPaperId })}>Fetch live data</Link> for updating the
+                                current version.
                             </>
                         </Alert>
                     )}
@@ -159,9 +160,9 @@ const ViewPaperVersion = () => {
                             <FormGroup>
                                 <Label for="doi_link">DOI</Label>
                                 <InputGroup>
-                                    <Input id="doi_link" value={`https://doi.org/${dataCiteDoi.label}`} disabled />
+                                    <Input id="doi_link" value={`https://doi.org/${dataCiteDoi}`} disabled />
                                     <CopyToClipboard
-                                        text={`https://doi.org/${dataCiteDoi.label}`}
+                                        text={`https://doi.org/${dataCiteDoi}`}
                                         onCopy={() => {
                                             toast.dismiss();
                                             toast.success('DOI link copied!');

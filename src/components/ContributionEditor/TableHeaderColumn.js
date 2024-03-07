@@ -7,7 +7,6 @@ import { Contribution, ContributionButton, Delete, ItemHeader, ItemHeaderInner }
 import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
 import EditResourceDialog from 'components/EditResourceDialog/EditResourceDialog';
 import EditPaperModal from 'components/PaperForm/EditPaperModal';
-import useEditPaper from 'components/PaperForm/hooks/useEditPaper';
 import useUsedTemplates from 'components/StatementBrowser/TemplatesModal/hooks/useUsedTemplates';
 import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
 import { CLASSES } from 'constants/graphSettings';
@@ -20,13 +19,13 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
 import { contributionUpdated, fetchTemplatesOfClassIfNeeded, paperUpdated } from 'slices/contributionEditorSlice';
+import { getPaper } from 'services/backend/papers';
 
 const TableHeaderColumn = ({ contribution, paper }) => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
     const [isOpenContributionModal, setIsOpenContributionModal] = useState(false);
     const [data, setData] = useState(null);
     const { handleRemoveContribution } = useContributionEditor();
-    const { loadPaperData } = useEditPaper({});
     const dispatch = useDispatch();
     const { usedTemplates, isLoadingUsedTemplates } = useUsedTemplates({ resourceObject: contribution });
 
@@ -35,8 +34,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
 
         // load the paper data if it isn't fetched already
         if (!data) {
-            const paperData = await loadPaperData(paper.id);
-            setData(paperData);
+            setData(await getPaper(paper.id));
         }
     };
 
@@ -46,8 +44,8 @@ const TableHeaderColumn = ({ contribution, paper }) => {
         dispatch(
             paperUpdated({
                 id: paper.id,
-                title: newData.paper?.label,
-                researchField: newData.researchField,
+                title: newData.title,
+                researchField: newData.researchFields?.[0],
             }),
         );
     };

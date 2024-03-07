@@ -1,6 +1,32 @@
+import { faChevronDown, faExternalLinkAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon, FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { scrollbarWidth } from '@xobotyi/scrollbar-width';
+import HomeBannerBg from 'assets/img/graph-background.svg';
+import Logo from 'assets/img/logo.svg';
+import LogoWhite from 'assets/img/logo_white.svg';
+import Authentication from 'components/Authentication/Authentication';
+import Jumbotron from 'components/Home/Jumbotron';
+import AboutMenu from 'components/Layout/Header/AboutMenu';
+import AddNew from 'components/Layout/Header/AddNew';
+import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
+import Nfdi4dsButton from 'components/Layout/Header/Nfdi4dsButton';
+import SearchForm from 'components/Layout/Header/SearchForm';
+import UserTooltip from 'components/Layout/Header/UserTooltip';
+import Image from 'components/NextJsMigration/Image';
 import Link from 'components/NextJsMigration/Link';
-import { useState, useEffect } from 'react';
+import env from 'components/NextJsMigration/env';
+import loadImage from 'components/NextJsMigration/loadImage';
+import usePathname from 'components/NextJsMigration/usePathname';
+import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
+import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
+import { match } from 'path-to-regexp';
+import { useEffect, useState } from 'react';
+import { Cookies } from 'react-cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import {
+    Badge,
     Button,
     UncontrolledButtonDropdown as ButtonDropdown,
     Collapse,
@@ -10,36 +36,10 @@ import {
     Nav,
     Navbar,
     NavbarToggler,
-    Badge,
 } from 'reactstrap';
-import Jumbotron from 'components/Home/Jumbotron';
-import Logo from 'assets/img/logo.svg';
-import LogoWhite from 'assets/img/logo_white.svg';
-import { FontAwesomeIcon, FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faUser, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import ROUTES from 'constants/routes.js';
-import { Cookies } from 'react-cookie';
-import { useSelector, useDispatch } from 'react-redux';
-import Authentication from 'components/Authentication/Authentication';
-import { openAuthDialog, updateAuth, resetAuth } from 'slices/authSlice';
 import { getUserInformation } from 'services/backend/users';
+import { openAuthDialog, resetAuth, updateAuth } from 'slices/authSlice';
 import styled, { createGlobalStyle } from 'styled-components';
-import { reverse } from 'named-urls';
-import env from 'components/NextJsMigration/env';
-import { toast } from 'react-toastify';
-import HomeBannerBg from 'assets/img/graph-background.svg';
-import { scrollbarWidth } from '@xobotyi/scrollbar-width';
-import AboutMenu from 'components/Layout/Header/AboutMenu';
-import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
-import Nfdi4dsButton from 'components/Layout/Header/Nfdi4dsButton';
-import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
-import UserTooltip from 'components/Layout/Header/UserTooltip';
-import SearchForm from 'components/Layout/Header/SearchForm';
-import AddNew from 'components/Layout/Header/AddNew';
-import { match } from 'path-to-regexp';
-import Image from 'components/NextJsMigration/Image';
-import usePathname from 'components/NextJsMigration/usePathname';
-import loadImage from 'components/NextJsMigration/loadImage';
 
 const cookies = new Cookies();
 
@@ -197,9 +197,9 @@ const Header = () => {
 
     useEffect(() => {
         const userInformation = () => {
-            const cookies = new Cookies();
-            const token = cookies.get('token') ? cookies.get('token') : null;
-            const token_expires_in = cookies.get('token_expires_in') ? cookies.get('token_expires_in') : null;
+            const _cookies = new Cookies();
+            const token = _cookies.get('token') ? _cookies.get('token') : null;
+            const tokenExpiresIn = _cookies.get('token_expires_in') ? _cookies.get('token_expires_in') : null;
             if (token && !user) {
                 getUserInformation()
                     .then(userData => {
@@ -209,16 +209,18 @@ const Header = () => {
                                     displayName: userData.display_name,
                                     id: userData.id,
                                     token,
-                                    tokenExpire: token_expires_in,
+                                    tokenExpire: tokenExpiresIn,
                                     email: userData.email,
                                     isCurationAllowed: userData.is_curation_allowed,
+                                    organization_id: userData.organization_id,
+                                    observatory_id: userData.observatory_id,
                                 },
                             }),
                         );
                     })
-                    .catch(error => {
-                        cookies.remove('token', { path: env('PUBLIC_URL') });
-                        cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
+                    .catch(() => {
+                        _cookies.remove('token', { path: env('PUBLIC_URL') });
+                        _cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
                         dispatch(resetAuth());
                     });
             }
@@ -265,15 +267,15 @@ const Header = () => {
     }, [dispatch, logoutTimeoutId, user]);
 
     const toggleNavBar = () => {
-        setIsOpenNavBar(v => !isOpenNavBar);
+        setIsOpenNavBar(!isOpenNavBar);
     };
 
     const toggleAboutMenu = () => {
-        setIsOpenAboutMenu(v => !isOpenAboutMenu);
+        setIsOpenAboutMenu(!isOpenAboutMenu);
     };
 
     const toggleViewMenu = () => {
-        setIsOpenViewMenu(v => !isOpenViewMenu);
+        setIsOpenViewMenu(!isOpenViewMenu);
     };
 
     const closeMenu = () => {

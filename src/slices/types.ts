@@ -1,7 +1,19 @@
 export type AuthSliceType = {
     dialogIsOpen: boolean;
     action: string;
-    user: null | 0 | { displayName: string; id: string; token: string; tokenExpire: string; email: string; isCurationAllowed: boolean };
+    user:
+        | null
+        | 0
+        | {
+              displayName: string;
+              id: string;
+              token: string;
+              tokenExpire: string;
+              email: string;
+              isCurationAllowed: boolean;
+              organization_id: string;
+              observatory_id: string;
+          };
     signInRequired: null | string;
     redirectRoute: null | string;
 };

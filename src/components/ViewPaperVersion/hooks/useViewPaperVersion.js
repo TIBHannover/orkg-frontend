@@ -7,8 +7,8 @@ import { getOriginalPaperId } from 'services/backend/papers';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBundleBySubject } from 'services/backend/statements';
 import { getThing } from 'services/similarity';
-import { loadPaper } from 'slices/viewPaperSlice';
-import { filterSubjectOfStatementsByPredicateAndClass, getPaperDataViewPaper } from 'utils';
+import { loadPaper, setDataCiteDoi, setOriginalPaperId } from 'slices/viewPaperSlice';
+import { convertPaperToNewFormat, filterSubjectOfStatementsByPredicateAndClass, getPaperDataViewPaper } from 'utils';
 
 const useViewPaperVersion = ({ paperId }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -37,14 +37,20 @@ const useViewPaperVersion = ({ paperId }) => {
                     );
                     setContributions(uniqBy(contributionsNodes, 'id').reverse());
                 });
+                // const paper = await getPaper(paperId);
                 const pStatements = await getStatementsBundleBySubject({ id: paperId, maxLevel: 3, blacklist: [CLASSES.RESEARCH_FIELD] });
-                const paperData = getPaperDataViewPaper(paperResource, pStatements.statements);
+                const data = getPaperDataViewPaper(paperResource, pStatements.statements);
+                const paper = convertPaperToNewFormat({ ...data, ...data.paperResource });
+                dispatch(loadPaper(paper));
+                dispatch(setDataCiteDoi(data.dataCiteDoi.label));
+
                 const livePaperId = await getOriginalPaperId(paperId);
-                dispatch(loadPaper({ ...paperData, originalPaperId: livePaperId }));
+                dispatch(setOriginalPaperId(livePaperId));
                 setIsLoading(false);
-                document.title = paperData.paperResource.label;
+                document.title = paper.title;
             })
-            .catch(() => {
+            .catch(e => {
+                console.error(e);
                 setIsLoadingFailed(true);
                 setIsLoading(false);
             });

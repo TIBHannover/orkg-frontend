@@ -1,15 +1,13 @@
-import { createRef, useState, useEffect } from 'react';
-import { ListGroup, ListGroupItem } from 'reactstrap';
 import Confirm from 'components/Confirmation/Confirmation';
-import { setTableData } from 'slices/pdfAnnotationSlice';
-import { toast } from 'react-toastify';
-import { usePapaParse } from 'react-papaparse';
-import { useSelector, useDispatch } from 'react-redux';
-import { zip, omit, isString, cloneDeep } from 'lodash';
 import { PREDICATES, RESOURCES } from 'constants/graphSettings';
-import { getStatementsBySubject } from 'services/backend/statements';
-import { saveFullPaper } from 'services/backend/papers';
+import { cloneDeep, isString, omit, zip } from 'lodash';
+import { createRef, useEffect, useState } from 'react';
+import { usePapaParse } from 'react-papaparse';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { ListGroup, ListGroupItem } from 'reactstrap';
 import { extractTable } from 'services/orkgNlp/index';
+import { setTableData } from 'slices/pdfAnnotationSlice';
 
 function useExtractionModal(props) {
     const [loading, setLoading] = useState(false);
@@ -253,18 +251,18 @@ function useExtractionModal(props) {
 
             for (const paper of papers) {
                 try {
-                    const _paper = await saveFullPaper({ paper }, true);
-                    const paperStatements = await getStatementsBySubject({ id: _paper.id });
-
-                    for (const statement of paperStatements) {
-                        if (statement.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
-                            createdContributions.push({
-                                paperId: _paper.id,
-                                contributionId: statement.object.id,
-                            });
-                            break;
-                        }
-                    }
+                    // the saveFullPaper function is deprecated and should be replaced with createPaper
+                    // const _paper = await saveFullPaper({ paper }, true);
+                    // const paperStatements = await getStatementsBySubject({ id: _paper.id });
+                    // for (const statement of paperStatements) {
+                    //     if (statement.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
+                    //         createdContributions.push({
+                    //             paperId: _paper.id,
+                    //             contributionId: statement.object.id,
+                    //         });
+                    //         break;
+                    //     }
+                    // }
                 } catch (e) {
                     console.log(e);
                     toast.error(`Something went wrong while adding the paper: ${paper.paper.title}`);

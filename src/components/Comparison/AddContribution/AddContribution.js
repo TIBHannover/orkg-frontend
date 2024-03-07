@@ -1,23 +1,23 @@
-import Link from 'components/NextJsMigration/Link';
-import { useState, useEffect, useCallback } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, FormGroup, Input, Label, ListGroup, ListGroupItem, InputGroup, Alert } from 'reactstrap';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { getResources } from 'services/backend/resources';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import ContentLoader from 'react-content-loader';
-import { getPaperByDOI } from 'services/backend/misc';
-import REGEX from 'constants/regex';
-import { toast } from 'react-toastify';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import { debounce } from 'lodash';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import pluralize from 'pluralize';
+import Link from 'components/NextJsMigration/Link';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
+import REGEX from 'constants/regex';
+import ROUTES from 'constants/routes.js';
+import { debounce } from 'lodash';
+import { reverse } from 'named-urls';
+import pluralize from 'pluralize';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useState } from 'react';
+import ContentLoader from 'react-content-loader';
+import { toast } from 'react-toastify';
+import { Alert, Button, FormGroup, Input, InputGroup, Label, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { getPaperByDoi } from 'services/backend/papers';
+import { getResources } from 'services/backend/resources';
+import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+import styled from 'styled-components';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
@@ -76,7 +76,7 @@ export default function AddContribution({
 
         // The entry is a DOI, check if it exists in the database
         if (doi?.trim().match(new RegExp(REGEX.DOI_ID))) {
-            getPaperByDOI(doi.trim())
+            getPaperByDoi(doi.trim())
                 .then(result =>
                     getStatementsBySubjectAndPredicate({
                         subjectId: result.id,

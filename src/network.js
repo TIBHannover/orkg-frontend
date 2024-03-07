@@ -1,5 +1,5 @@
-import { Cookies } from 'react-cookie';
 import fetch, { Headers } from 'cross-fetch';
+import { Cookies } from 'react-cookie';
 
 export const submitGetRequest = (url, headers, send_token = false) => {
     if (!url) {
@@ -43,7 +43,15 @@ export const submitGetRequest = (url, headers, send_token = false) => {
     });
 };
 
-export const submitPostRequest = (url, headers, data, jsonStringify = true, send_token = true, parseResponse = true) => {
+export const submitPostRequest = (
+    url,
+    headers,
+    data,
+    jsonStringify = true,
+    send_token = true,
+    parseResponse = true,
+    returnResponseHeaders = false,
+) => {
     if (!url) {
         throw new Error('Cannot submit POST request. URL is null or undefined.');
     }
@@ -81,6 +89,9 @@ export const submitPostRequest = (url, headers, data, jsonStringify = true, send
                     return resolve(null);
                 }
                 const json = response.json();
+                if (returnResponseHeaders) {
+                    return resolve({ headers: response.headers, data: json });
+                }
                 if (json.then) {
                     json.then(resolve).catch(reject);
                 } else {
@@ -205,3 +216,5 @@ export const submitDeleteRequest = (url, headers, data) => {
             .catch(reject);
     });
 };
+
+export const getCreatedIdFromHeaders = headers => headers.get('Location')?.substring((headers.get('Location')?.lastIndexOf('/') || 0) + 1) || '';

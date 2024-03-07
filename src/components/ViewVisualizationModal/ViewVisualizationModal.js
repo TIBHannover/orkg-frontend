@@ -25,6 +25,7 @@ import {
     PopoverHeader,
     UncontrolledPopover,
 } from 'reactstrap';
+import { convertAuthorsToNewFormat } from 'utils';
 
 const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) => {
     const handleEditVisualization = () => {
@@ -72,7 +73,7 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                     <Badge color="light" className="me-2">
                         <Icon icon={faCalendar} className="text-primary" /> {data.created_at ? moment(data.created_at).format('DD MMMM YYYY') : ''}
                     </Badge>
-                    <AuthorBadges authors={data.authors} />
+                    <AuthorBadges authors={convertAuthorsToNewFormat(data.authors)} />
                 </div>
                 <hr />
                 <GDCVisualizationRenderer height="500px" model={data.reconstructionModel} />

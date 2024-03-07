@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Alert, Button, Container, ListGroup, ListGroupItem } from 'reactstrap';
 import { historyModalToggled } from 'slices/listSlice';
-import { convertPaperToNewFormat } from 'utils';
+import { convertAuthorsToNewFormat, convertPaperToNewFormat } from 'utils';
 
 const ViewList = ({ isEmbedded }) => {
     const { id } = useParams();
@@ -77,7 +77,7 @@ const ViewList = ({ isEmbedded }) => {
                         <div className="my-3">
                             <ResearchFieldBadge researchField={researchField} />
                             <ListEntryAmount />
-                            <AuthorBadges authors={authors} />
+                            <AuthorBadges authors={convertAuthorsToNewFormat(authors)} />
                         </div>
                     </header>
 

@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
+import { MISC, PREDICATES } from 'constants/graphSettings';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { getContributorInformationById } from 'services/backend/contributors';
 import { getObservatoryById } from 'services/backend/observatories';
 import { getOrganization } from 'services/backend/organizations';
-import { useSelector } from 'react-redux';
-import { MISC, PREDICATES } from 'constants/graphSettings';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 
 function useProvenance() {
-    const paperResource = useSelector(state => state.viewPaper.paperResource);
+    const viewPaper = useSelector(state => state.viewPaper.paper);
     const [isLoadingProvenance, setIsLoadingProvenance] = useState(true);
     const [observatoryInfo, setObservatoryInfo] = useState(null);
     const [organizationInfo, setOrganizationInfo] = useState(null);
@@ -18,13 +18,13 @@ function useProvenance() {
         const loadProvenance = () => {
             setIsLoadingProvenance(true);
             const observatoryCall =
-                paperResource.observatory_id !== MISC.UNKNOWN_ID
-                    ? getObservatoryById(paperResource.observatory_id).catch(() => null)
+                viewPaper.observatories?.[0] !== MISC.UNKNOWN_ID
+                    ? getObservatoryById(viewPaper.observatories?.[0]).catch(() => null)
                     : Promise.resolve(null);
 
             const organizationCall =
-                paperResource.organization_id !== MISC.UNKNOWN_ID
-                    ? getOrganization(paperResource.organization_id).catch(() => null)
+                viewPaper.organizations?.[0] !== MISC.UNKNOWN_ID
+                    ? getOrganization(viewPaper.organizations?.[0]).catch(() => null)
                     : Promise.resolve(null);
 
             Promise.all([observatoryCall, organizationCall])
@@ -37,8 +37,8 @@ function useProvenance() {
         };
 
         const loadCreator = () => {
-            if (paperResource.created_by && paperResource.created_by !== MISC.UNKNOWN_ID) {
-                getContributorInformationById(paperResource.created_by)
+            if (viewPaper.created_by && viewPaper.created_by !== MISC.UNKNOWN_ID) {
+                getContributorInformationById(viewPaper.created_by)
                     .then(creator => {
                         setCreatedBy(creator);
                     })
@@ -65,11 +65,11 @@ function useProvenance() {
 
         loadProvenance();
         loadCreator();
-        loadVersions(paperResource.id, []);
-    }, [paperResource.created_by, paperResource.id, paperResource.observatory_id, paperResource.organization_id]);
+        loadVersions(viewPaper.id, []);
+    }, [viewPaper.created_by, viewPaper.id, viewPaper.observatories, viewPaper.organizations]);
 
     return {
-        paperResource,
+        viewPaper,
         isLoadingProvenance,
         observatoryInfo,
         organizationInfo,

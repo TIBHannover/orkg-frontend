@@ -1,12 +1,14 @@
-import Link from 'components/NextJsMigration/Link';
+import { Cite } from '@citation-js/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { Cite } from '@citation-js/core';
 import PaperTitleInput from 'components/Input/PaperTitleInput/PaperTitleInput';
-import useList from 'components/List/hooks/useList';
 import MetadataTable from 'components/List/MetadataTable/MetadataTable';
+import useList from 'components/List/hooks/useList';
+import Link from 'components/NextJsMigration/Link';
 import { CLASSES, RESOURCES } from 'constants/graphSettings';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
+import createPaperMergeIfExists from 'helpers/createPaperMergeIfExists';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
@@ -14,12 +16,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
 import { Button, ButtonGroup, FormGroup, Input, InputGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { getPaperByDOI, getPaperByTitle } from 'services/backend/misc';
-import { saveFullPaper } from 'services/backend/papers';
+import { getPaperByDoi, getPaperByTitle } from 'services/backend/papers';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { addListEntry } from 'slices/listSlice';
-import { addAuthorsToStatements, getPaperData, parseCiteResult } from 'utils';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
+import { addAuthorsToStatements, convertAuthorsToNewFormat, convertAuthorsToOldFormat, getPaperData, parseCiteResult } from 'utils';
 
 const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -33,10 +33,11 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
     const sections = useSelector(state => state.list.sections);
     const dispatch = useDispatch();
     const { getContentTypeData } = useList();
+    const user = useSelector(state => state.auth.user);
 
     const getPaperIdByDoi = async doi => {
         try {
-            const paper = await getPaperByDOI(doi);
+            const paper = await getPaperByDoi(doi);
             return paper.id;
         } catch (e) {
             return null;
@@ -57,28 +58,28 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
             const _entity = { ...entity };
             // entity does not yet exist, create it before proceeding
             if (!entity.existingContentTypeId) {
-                const savedPaper = await saveFullPaper(
-                    {
-                        paper: {
-                            title: entity.title,
-                            researchField: RESOURCES.RESEARCH_FIELD_MAIN,
-                            authors: entity.authors
-                                ? entity.authors.map(author => ({ label: author.label, ...(author.orcid ? { orcid: author.orcid } : {}) }))
-                                : null,
-                            publicationMonth: entity.publicationMonth || undefined,
-                            publicationYear: entity.publicationYear || undefined,
-                            doi: doi || undefined,
-                            publishedIn: entity.publishedIn || '',
-                            contributions: [
-                                {
-                                    name: 'Contribution',
-                                },
-                            ],
+                const paper = await createPaperMergeIfExists({
+                    paper: {
+                        title: entity.title,
+                        research_fields: [RESOURCES.RESEARCH_FIELD_MAIN],
+                        ...(entity.doi
+                            ? {
+                                  identifiers: {
+                                      doi: [entity.doi],
+                                  },
+                              }
+                            : {}),
+                        publication_info: {
+                            published_month: entity.publicationMonth || undefined,
+                            published_year: entity.publicationYear || undefined,
+                            published_in: entity.publishedIn || null,
                         },
+                        authors: convertAuthorsToNewFormat(entity.authors),
+                        observatories: user && 'observatory_id' in user && user.observatory_id ? [user.observatory_id] : [],
+                        organizations: user && 'organization_id' in user && user.organization_id ? [user.organization_id] : [],
                     },
-                    true,
-                );
-                _entity.existingContentTypeId = savedPaper.id;
+                });
+                _entity.existingContentTypeId = paper;
             }
             if (checkIfInList(_entity.existingContentTypeId)) {
                 toast.error('Entry is already in list');
@@ -131,7 +132,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                 } else {
                     _results.push({
                         title: paperTitle,
-                        authors: paperAuthors,
+                        authors: convertAuthorsToOldFormat(paperAuthors),
                         paperPublicationMonth,
                         paperPublicationYear,
                         doi,

@@ -22,7 +22,7 @@ import {
 
 const useContributions = ({ paperId, contributionId }) => {
     const contributions = useSelector(state => state.viewPaper.contributions);
-    const paperResource = useSelector(state => state.viewPaper.paperResource);
+    const paperTitle = useSelector(state => state.viewPaper.paper.title);
     const selectedContributionId = useSelector(state => state.viewPaper.selectedContributionId);
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(true);
@@ -161,7 +161,7 @@ const useContributions = ({ paperId, contributionId }) => {
         isLoadingContributionFailed,
         selectedContributionId,
         contributions,
-        paperTitle: paperResource.label,
+        paperTitle,
         handleAutomaticContributionVerification,
         handleChangeContributionLabel,
         handleCreateContribution,

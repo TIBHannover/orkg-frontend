@@ -46,7 +46,7 @@ const EditPaperModal = ({ paperData, toggle, afterUpdate = null, isPaperLinkVisi
             <ModalHeader toggle={toggle} cssModule={{ 'modal-title': 'modal-title w-100 d-flex justify-content-between' }}>
                 <span>Edit paper</span>
                 {isPaperLinkVisible && (
-                    <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: paperData?.paper?.id })} target="_blank">
+                    <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: paperData?.id })} target="_blank">
                         <Button color="link" className="p-0">
                             Open paper <Icon icon={faExternalLinkAlt} className="me-1" />
                         </Button>

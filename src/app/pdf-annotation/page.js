@@ -1,105 +1,114 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Toolbar from 'components/PdfAnnotation/Toolbar';
-import TableSelect from 'components/PdfAnnotation/TableSelect';
-import styled, { createGlobalStyle } from 'styled-components';
-import DragUpload from 'components/PdfAnnotation/DragUpload';
-import { useSelector } from 'react-redux';
+import { Alert, Container } from 'reactstrap';
 
-const PdfContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    max-height: 0;
-`;
+// import { useState, useEffect } from 'react';
+// import Toolbar from 'components/PdfAnnotation/Toolbar';
+// import TableSelect from 'components/PdfAnnotation/TableSelect';
+// import styled, { createGlobalStyle } from 'styled-components';
+// import DragUpload from 'components/PdfAnnotation/DragUpload';
+// import { useSelector } from 'react-redux';
 
-const ZoomContainer = styled.div`
-    transform-origin: center top;
-    transition: 0.2s;
-`;
+// const PdfContainer = styled.div`
+//     display: flex;
+//     justify-content: center;
+//     max-height: 0;
+// `;
 
-const GlobalStyle = createGlobalStyle`
-    #page-container {
-        //overwrite styles of returned pdf
-        position: initial !important;
-        background: transparent !important;
-        display: inline-block !important;
-        padding: 10px !important;
-    }
+// const ZoomContainer = styled.div`
+//     transform-origin: center top;
+//     transition: 0.2s;
+// `;
 
-    // PDF survey extraction
-    #sidebar {
-        display: none;
-    }
-    ::selection {
-        background: #e8616169 !important;
-    }
-`;
+// const GlobalStyle = createGlobalStyle`
+//     #page-container {
+//         //overwrite styles of returned pdf
+//         position: initial !important;
+//         background: transparent !important;
+//         display: inline-block !important;
+//         padding: 10px !important;
+//     }
 
-const PdfAnnotation = () => {
-    const DEFAULT_PAGE_WIDTH = 968;
-    const [zoom, setZoom] = useState(1);
-    const pdf = useSelector(state => state.pdfAnnotation.pdf);
-    const pages = useSelector(state => state.pdfAnnotation.pages);
-    const styles = useSelector(state => state.pdfAnnotation.styles);
+//     // PDF survey extraction
+//     #sidebar {
+//         display: none;
+//     }
+//     ::selection {
+//         background: #e8616169 !important;
+//     }
+// `;
 
-    useEffect(() => {
-        document.title = 'Survey table extractor - ORKG';
-    }, []);
+// const PdfAnnotation = () => {
+//     const DEFAULT_PAGE_WIDTH = 968;
+//     const [zoom, setZoom] = useState(1);
+//     const pdf = useSelector(state => state.pdfAnnotation.pdf);
+//     const pages = useSelector(state => state.pdfAnnotation.pages);
+//     const styles = useSelector(state => state.pdfAnnotation.styles);
 
-    const handleZoomChange = zoom => {
-        if (zoom) {
-            const maxZoom = getFullPageScale();
+//     useEffect(() => {
+//         document.title = 'Survey table extractor - ORKG';
+//     }, []);
 
-            if (zoom > maxZoom) {
-                zoom = maxZoom;
-            } else if (zoom < 0) {
-                zoom = 0.1;
-            }
+//     const handleZoomChange = zoom => {
+//         if (zoom) {
+//             const maxZoom = getFullPageScale();
 
-            setZoom(zoom);
+//             if (zoom > maxZoom) {
+//                 zoom = maxZoom;
+//             } else if (zoom < 0) {
+//                 zoom = 0.1;
+//             }
 
-            /* Could be helpful for zooming beyond full width
-            () => {
-                const container = this.pdfContainer.current;
-                const difference = container.scrollWidth - container.clientWidth;
-                console.log(difference);
-            } */
-        } else {
-            setZoom(getFullPageScale());
-        }
-    };
+//             setZoom(zoom);
 
-    const getFullPageScale = () => window.innerWidth / (DEFAULT_PAGE_WIDTH + 20);
+//             /* Could be helpful for zooming beyond full width
+//             () => {
+//                 const container = this.pdfContainer.current;
+//                 const difference = container.scrollWidth - container.clientWidth;
+//                 console.log(difference);
+//             } */
+//         } else {
+//             setZoom(getFullPageScale());
+//         }
+//     };
 
-    const zoomContainerStyle = { transform: `scale(${zoom})` };
+//     const getFullPageScale = () => window.innerWidth / (DEFAULT_PAGE_WIDTH + 20);
 
-    return (
-        <div style={{ paddingTop: 20 }}>
-            <GlobalStyle />
-            <Toolbar changeZoom={handleZoomChange} zoom={zoom} />
+//     const zoomContainerStyle = { transform: `scale(${zoom})` };
 
-            {pages && (
-                <PdfContainer>
-                    <ZoomContainer style={zoomContainerStyle} id="zoom-container">
-                        {pages.map((page, index) => (
-                            <div style={{ position: 'relative' }} key={index}>
-                                <TableSelect pageNumber={index + 1} pdf={pdf}>
-                                    <div dangerouslySetInnerHTML={{ __html: page }} />
-                                </TableSelect>
-                            </div>
-                        ))}
-                    </ZoomContainer>
+//     return (
+//         <div style={{ paddingTop: 20 }}>
+//             <GlobalStyle />
+//             <Toolbar changeZoom={handleZoomChange} zoom={zoom} />
 
-                    {styles.map((style, index) => (
-                        <div dangerouslySetInnerHTML={{ __html: style }} key={index} />
-                    ))}
-                </PdfContainer>
-            )}
+//             {pages && (
+//                 <PdfContainer>
+//                     <ZoomContainer style={zoomContainerStyle} id="zoom-container">
+//                         {pages.map((page, index) => (
+//                             <div style={{ position: 'relative' }} key={index}>
+//                                 <TableSelect pageNumber={index + 1} pdf={pdf}>
+//                                     <div dangerouslySetInnerHTML={{ __html: page }} />
+//                                 </TableSelect>
+//                             </div>
+//                         ))}
+//                     </ZoomContainer>
 
-            <DragUpload />
-        </div>
-    );
-};
+//                     {styles.map((style, index) => (
+//                         <div dangerouslySetInnerHTML={{ __html: style }} key={index} />
+//                     ))}
+//                 </PdfContainer>
+//             )}
 
+//             <DragUpload />
+//         </div>
+//     );
+// };
+
+// export default PdfAnnotation;
+
+const PdfAnnotation = () => (
+    <Container>
+        <Alert color="warning">The survey table extractor is currently not available due to maintenance</Alert>
+    </Container>
+);
 export default PdfAnnotation;

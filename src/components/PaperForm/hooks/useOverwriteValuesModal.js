@@ -1,5 +1,4 @@
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
-import { CLASSES } from 'constants/graphSettings';
 import { isArray, isEqual } from 'lodash';
 import { Fragment, useCallback, useState } from 'react';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Table } from 'reactstrap';
@@ -55,12 +54,6 @@ const useOverwriteValuesModal = () => {
         return true;
     };
 
-    const addClassesToAuthors = authors =>
-        authors.map(author => ({
-            ...author,
-            ...(author.orcid && { classes: [CLASSES.AUTHOR] }),
-        }));
-
     const OverwriteValuesModal = useCallback(
         () =>
             isOpenModal && (
@@ -77,17 +70,11 @@ const useOverwriteValuesModal = () => {
                                         </tr>
                                         <tr>
                                             <th scope="row">Current</th>
-                                            <td>
-                                                {value.key !== 'authors' ? (
-                                                    value.current
-                                                ) : (
-                                                    <AuthorBadges authors={addClassesToAuthors(value.current)} />
-                                                )}
-                                            </td>
+                                            <td>{value.key !== 'authors' ? value.current : <AuthorBadges authors={value.current} />}</td>
                                         </tr>
                                         <tr>
                                             <th scope="row">New</th>
-                                            <td>{value.key !== 'authors' ? value.new : <AuthorBadges authors={addClassesToAuthors(value.new)} />}</td>
+                                            <td>{value.key !== 'authors' ? value.new : <AuthorBadges authors={value.new} />}</td>
                                         </tr>
                                     </Fragment>
                                 ))}

@@ -1,9 +1,11 @@
 import useExistingPaper from 'components/ExistingPaperModal/useExistingPaper';
-import { PREDICATES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { saveFullPaper } from 'services/backend/papers';
-import { getStatementsBySubject } from 'services/backend/statements';
+import { createPaper } from 'services/backend/papers';
+import { createResource } from 'services/backend/resources';
+import { createResourceStatement } from 'services/backend/statements';
 import { getErrorMessage } from 'utils';
 
 const useAddPaper = ({ onCreate = null }) => {
@@ -18,6 +20,8 @@ const useAddPaper = ({ onCreate = null }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [url, setUrl] = useState('');
     const [extractedContributionData, setExtractedContributionData] = useState([]);
+    const organizationId = useSelector(state => state.auth.user?.organization_id);
+    const observatoryId = useSelector(state => state.auth.user?.observatory_id);
 
     const { checkIfPaperExists, ExistingPaperModels } = useExistingPaper();
 
@@ -25,33 +29,32 @@ const useAddPaper = ({ onCreate = null }) => {
         try {
             setIsLoading(true); // it is set to false if the paper already exists
 
-            const paperObject = {
-                paper: {
-                    title,
-                    doi,
-                    authors: authors.map(author => ({
-                        label: author.label,
-                        ...(author.label !== author.id ? { id: author.id } : {}),
-                        ...(author.orcid ? { orcid: author.orcid } : {}),
-                    })),
-                    publicationMonth,
-                    publicationYear,
-                    publishedIn: publishedIn.label || '', // replace by publishedIn.id when backend supports this
+            const paperId = await createPaper({
+                title,
+                research_fields: [researchField.id],
+                identifiers: doi
+                    ? {
+                          doi: [doi],
+                      }
+                    : null,
+                publication_info: {
+                    published_month: publicationMonth,
+                    published_year: publicationYear,
+                    published_in: publishedIn?.label || null,
                     url,
-                    researchField: researchField.id,
-                    contributions: extractedContributionData.length > 0 ? extractedContributionData : [{ name: 'Contribution 1' }],
                 },
-            };
-            const paper = await saveFullPaper(paperObject);
+                authors,
+                observatories: observatoryId ? [observatoryId] : [],
+                organizations: organizationId ? [organizationId] : [],
+            });
+
+            const contribution = await createResource('Contribution 1', [CLASSES.CONTRIBUTION]);
+            await createResourceStatement(paperId, PREDICATES.HAS_CONTRIBUTION, contribution.id);
 
             if (onCreate) {
-                // get and return the newly created contribution ID
-                const paperStatements = await getStatementsBySubject({ id: paper.id });
-                const contributionStatement = paperStatements.find(statement => statement.predicate.id === PREDICATES.HAS_CONTRIBUTION);
-
                 onCreate({
-                    paperId: paper.id,
-                    contributionId: contributionStatement?.object?.id,
+                    paperId,
+                    contributionId: contribution.id,
                 });
             }
         } catch (e) {

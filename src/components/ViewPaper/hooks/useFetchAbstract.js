@@ -8,8 +8,8 @@ const removeLineBreaks = text => text.replace(/(\r\n|\n|\r)/gm, ' ');
 const useFetchAbstract = () => {
     const abstract = useSelector(state => state.viewPaper.abstract);
     const isAbstractFetched = useSelector(state => state.viewPaper.isAbstractFetched);
-    const title = useSelector(state => state.viewPaper.paperResource)?.label;
-    const doi = useSelector(state => state.viewPaper.doi)?.label;
+    const title = useSelector(state => state.viewPaper.paper.title);
+    const doi = useSelector(state => state.viewPaper.paper?.identifiers?.doi);
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
 

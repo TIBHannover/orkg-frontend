@@ -1,23 +1,23 @@
-import { useState } from 'react';
-import { TransitionGroup } from 'react-transition-group';
-import env from 'components/NextJsMigration/env';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
-import useProvenance from 'components/ViewPaper/hooks/useProvenance';
-import useTimeline from 'components/ViewPaper/hooks/useTimeline';
-import { uniqBy, orderBy } from 'lodash';
+import env from 'components/NextJsMigration/env';
 import Provenance from 'components/ViewPaper/ProvenanceBox/Provenance';
 import Timeline from 'components/ViewPaper/ProvenanceBox/Timeline';
-import { AnimationContainer, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from 'components/ViewPaper/ProvenanceBox/styled';
+import { AnimationContainer, ErrorMessage, ProvenanceBoxTabs, SidebarStyledBox } from 'components/ViewPaper/ProvenanceBox/styled';
+import useProvenance from 'components/ViewPaper/hooks/useProvenance';
+import useTimeline from 'components/ViewPaper/hooks/useTimeline';
+import { orderBy, uniqBy } from 'lodash';
+import { useState } from 'react';
+import { TransitionGroup } from 'react-transition-group';
 
 const ProvenanceBox = () => {
-    const { paperResource, isLoadingProvenance, observatoryInfo, organizationInfo, createdBy, versions } = useProvenance();
+    const { viewPaper, isLoadingProvenance, observatoryInfo, organizationInfo, createdBy, versions } = useProvenance();
 
     const {
         isNextPageLoading: isNextPageLoadingContributors,
         hasNextPage: hasNextPageContributors,
         contributors,
         handleLoadMore: handleLoadMoreContributors,
-    } = useTimeline(paperResource.id);
+    } = useTimeline(viewPaper.id);
 
     const _versions = orderBy([...contributors, ...versions], ['created_at'], ['desc']); // combining contributors and version with DOI information
 
@@ -25,7 +25,7 @@ const ProvenanceBox = () => {
 
     return (
         <div>
-            {env('PWC_USER_ID') === paperResource.created_by && (
+            {env('PWC_USER_ID') === viewPaper.created_by && (
                 <div className="mb-2">
                     <PWCProvenanceBox />
                 </div>
@@ -53,7 +53,7 @@ const ProvenanceBox = () => {
                         Timeline
                     </div>
                 </ProvenanceBoxTabs>
-                {paperResource.extraction_method === 'AUTOMATIC' && (
+                {viewPaper.extraction_method === 'AUTOMATIC' && (
                     <ErrorMessage className="alert-server">The data has been partially imported automatically.</ErrorMessage>
                 )}
                 <TransitionGroup exit={false}>
@@ -62,7 +62,7 @@ const ProvenanceBox = () => {
                             <Provenance
                                 observatoryInfo={observatoryInfo}
                                 organizationInfo={organizationInfo}
-                                paperResource={paperResource}
+                                paperResource={viewPaper}
                                 contributors={uniqBy(contributors, 'created_by.id')}
                                 createdBy={createdBy}
                                 isLoadingProvenance={isLoadingProvenance}
@@ -74,7 +74,7 @@ const ProvenanceBox = () => {
                             <Timeline
                                 observatoryInfo={observatoryInfo}
                                 organizationInfo={organizationInfo}
-                                paperResource={paperResource}
+                                paperResource={viewPaper}
                                 versions={_versions}
                                 createdBy={createdBy}
                                 isLoadingContributors={isNextPageLoadingContributors}

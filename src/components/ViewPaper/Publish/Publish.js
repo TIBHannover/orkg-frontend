@@ -2,10 +2,12 @@ import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
 import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
 import Link from 'components/NextJsMigration/Link';
 import Tooltip from 'components/Utils/Tooltip';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes.js';
 import THING_TYPES from 'constants/thingTypes';
 import { flatten } from 'lodash';
@@ -26,23 +28,28 @@ import {
     getStatementsBySubjectAndPredicate,
 } from 'services/backend/statements';
 import { createThing } from 'services/similarity';
-import { filterObjectOfStatementsByPredicateAndClass, getErrorMessage, getPublicUrl } from 'utils';
-import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
+import {
+    convertAuthorsToNewFormat,
+    convertAuthorsToOldFormat,
+    filterObjectOfStatementsByPredicateAndClass,
+    getErrorMessage,
+    getPublicUrl,
+} from 'utils';
 
 function Publish(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [description, setDescription] = useState('');
     const [subject, setSubject] = useState(null);
     const [creators, setCreators] = useState([]);
-    const viewPaper = useSelector(state => state.viewPaper);
+    const viewPaper = useSelector(state => state.viewPaper.paper);
+    const version = useSelector(state => state.viewPaper.version);
     const [dataCiteDoi, setDataCiteDoi] = useState('');
     const [createdPaperId, setCreatedPaperId] = useState('');
-    const title = viewPaper.paperResource.label;
+    const { title } = viewPaper;
 
     useEffect(() => {
-        setSubject(viewPaper.researchField);
-    }, [viewPaper.researchField]);
+        setSubject(viewPaper.research_fields.length > 0 ? viewPaper.research_fields?.[0] : null);
+    }, [viewPaper]);
 
     const getPaperStatements = async paperId => {
         const pStatements = await getStatementsBySubject({ id: paperId });
@@ -75,24 +82,24 @@ function Publish(props) {
                                 },
                             ],
                         }),
-                        ...(viewPaper.publicationMonth && {
+                        ...(viewPaper.publication_info?.published_month && {
                             [PREDICATES.HAS_PUBLICATION_MONTH]: [
                                 {
-                                    text: viewPaper.publicationMonth.label,
+                                    text: viewPaper.publication_info?.published_month,
                                 },
                             ],
                         }),
-                        ...(viewPaper.publicationYear && {
+                        ...(viewPaper.publication_info?.published_month && {
                             [PREDICATES.HAS_PUBLICATION_YEAR]: [
                                 {
-                                    text: viewPaper.publicationYear.label,
+                                    text: viewPaper.publication_info?.published_month,
                                 },
                             ],
                         }),
-                        ...(viewPaper.doi && {
+                        ...(viewPaper.identifiers?.doi?.[0] && {
                             [PREDICATES.HAS_DOI]: [
                                 {
-                                    '@id': viewPaper.doi.id,
+                                    text: viewPaper.identifiers?.doi?.[0],
                                 },
                             ],
                         }),
@@ -109,7 +116,7 @@ function Publish(props) {
             });
             paperCreatorsORCID = await Promise.all(paperCreatorsORCID);
             const createdPaper = await createObject(paperObj);
-            await createAuthorsList({ authors: viewPaper.authors, resourceId: createdPaper.id });
+            await createAuthorsList({ authors: convertAuthorsToOldFormat(viewPaper.authors), resourceId: createdPaper.id });
             generateDoi({
                 type: CLASSES.PAPER,
                 resource_type: CLASSES.DATASET,
@@ -128,11 +135,11 @@ function Publish(props) {
                     // https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Modeling-of-persistent-identification-of-ORKG-papers
                     const doiLiteral = await createLiteral(doiResponse.doi);
                     const apiCalls = [createResourceStatement(createdPaper.id, PREDICATES.HAS_DOI, doiLiteral.id)];
-                    if (viewPaper.hasVersion) {
-                        await deleteStatementById(viewPaper.hasVersion.statementId);
-                        apiCalls.push(createResourceStatement(createdPaper.id, PREDICATES.HAS_PREVIOUS_VERSION, viewPaper.hasVersion.id));
+                    if (version) {
+                        await deleteStatementById(version.statementId);
+                        apiCalls.push(createResourceStatement(createdPaper.id, PREDICATES.HAS_PREVIOUS_VERSION, version.id));
                     }
-                    apiCalls.push(createResourceStatement(viewPaper.paperResource.id, PREDICATES.HAS_PREVIOUS_VERSION, createdPaper.id));
+                    apiCalls.push(createResourceStatement(viewPaper.id, PREDICATES.HAS_PREVIOUS_VERSION, createdPaper.id));
                     apiCalls.push(
                         createThing({ thingType: THING_TYPES.PAPER_VERSION, thingKey: createdPaper.id, data: { statements: paperStatements } }),
                     );
@@ -156,7 +163,7 @@ function Publish(props) {
         e.preventDefault();
         setIsLoading(true);
         try {
-            publishDOI(viewPaper.paperResource.id);
+            publishDOI(viewPaper.id);
         } catch (error) {
             toast.error(`Error publishing a paper : ${getErrorMessage(error)}`);
             setIsLoading(false);
@@ -168,7 +175,7 @@ function Publish(props) {
             <ModalHeader toggle={props.toggle}>Publish ORKG paper</ModalHeader>
             <ModalBody>
                 <Alert color="info">
-                    {viewPaper.paperResource.id && !dataCiteDoi && (
+                    {viewPaper.id && !dataCiteDoi && (
                         <>Persistently identified paper will be findable in global scholarly infrastructures (DataCite, OpenAIRE and ORCID).</>
                     )}
                     {createdPaperId && dataCiteDoi && (
@@ -245,12 +252,12 @@ function Publish(props) {
                             <Label for="Creator">
                                 <Tooltip message="The creator or creators of ORKG paper.">Creators</Tooltip>
                             </Label>
-                            {!dataCiteDoi && viewPaper.paperResource.id && (
+                            {!dataCiteDoi && viewPaper.id && (
                                 <AuthorsInput
                                     disabled={true}
                                     itemLabel="creator"
-                                    handler={_creators => setCreators(_creators || [])}
-                                    value={creators}
+                                    handler={_creators => setCreators(convertAuthorsToOldFormat(_creators) || [])}
+                                    value={convertAuthorsToNewFormat(creators)}
                                 />
                             )}
                         </FormGroup>

@@ -1,16 +1,18 @@
-import { useState, useCallback } from 'react';
-import { CLASSES, MISC, PREDICATES, RESOURCES } from 'constants/graphSettings';
-import { omit, isString } from 'lodash';
-import { getStatementsBySubject } from 'services/backend/statements';
-import { getPaperByDOI } from 'services/backend/misc';
-import { createResource, getResources, getResource } from 'services/backend/resources';
-import { getPredicate, getPredicates, createPredicate } from 'services/backend/predicates';
-import { saveFullPaper } from 'services/backend/papers';
+/* eslint-disable guard-for-in */
 import { Cite } from '@citation-js/core';
-import { parseCiteResult } from 'utils';
-import { toast } from 'react-toastify';
 import DATA_TYPES, { checkDataTypeIsInValid, getSuggestionByValue } from 'constants/DataTypes';
+import { CLASSES, MISC, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { EXTRACTION_METHODS } from 'constants/misc';
+import createPaperMergeIfExists from 'helpers/createPaperMergeIfExists';
+import { isString, omit, uniqueId } from 'lodash';
+import { useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { getPaperByDoi } from 'services/backend/papers';
+import { createPredicate, getPredicate, getPredicates } from 'services/backend/predicates';
+import { createResource, getResource, getResources } from 'services/backend/resources';
+import { getStatementsBySubject } from 'services/backend/statements';
+import { parseCiteResult } from 'utils';
 
 const PREDEFINED_COLUMNS = [
     'paper:title',
@@ -31,6 +33,7 @@ const useImportBulkData = ({ data, onFinish }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [validationErrors, setValidationErrors] = useState({});
     const [createdContributions, setCreatedContributions] = useState([]);
+    const user = useSelector(state => state.auth.user);
 
     const getFirstValue = (object, key, defaultValue = '') => (key in object && object[key].length && object[key][0] ? object[key][0] : defaultValue);
 
@@ -87,7 +90,7 @@ const useImportBulkData = ({ data, onFinish }) => {
 
             let title = getFirstValue(rowObject, 'paper:title');
             let authors = getFirstValue(rowObject, 'paper:authors', []);
-            authors = authors.length ? authors.split(';').map(name => ({ label: name })) : [];
+            authors = authors.length ? authors.split(';').map(name => ({ name })) : [];
             let publicationMonth = getFirstValue(rowObject, 'paper:publication_month');
             let publicationYear = getFirstValue(rowObject, 'paper:publication_year');
             const doi = getFirstValue(rowObject, 'paper:doi');
@@ -106,7 +109,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                 if (paperMetadata) {
                     paperMetadata = parseCiteResult(paperMetadata);
                     title = paperMetadata.paperTitle;
-                    authors = paperMetadata.paperAuthors.map(author => ({ label: author.label }));
+                    authors = paperMetadata.paperAuthors;
                     publicationMonth = paperMetadata.paperPublicationMonth;
                     publicationYear = paperMetadata.paperPublicationYear;
                     publishedIn = paperMetadata.publishedIn;
@@ -187,7 +190,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                         }
                         if (value in _idToLabel) {
                             valueObject = {
-                                '@id': value,
+                                id: value,
                             };
                         }
                     }
@@ -212,7 +215,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                             valueToId[cleanNewResource(value)] = fetchedResource.content[0].id;
                             _idToLabel[fetchedResource.content[0].id] = cleanNewResource(value);
                             valueObject = {
-                                '@id': valueToId[cleanNewResource(value)],
+                                id: valueToId[cleanNewResource(value)],
                             };
                         } else {
                             valueObject = {
@@ -246,18 +249,28 @@ const useImportBulkData = ({ data, onFinish }) => {
 
             const paper = {
                 title,
-                doi,
+                research_fields: [researchField],
+                ...(doi
+                    ? {
+                          identifiers: {
+                              doi: [doi],
+                          },
+                      }
+                    : {}),
+                publication_info: {
+                    published_month: publicationMonth,
+                    published_year: publicationYear,
+                    published_in: publishedIn || null,
+                    url,
+                },
                 authors,
-                publicationMonth,
-                publicationYear,
-                researchField,
-                url,
-                publishedIn,
-                contributions: [
+                observatories: user && 'observatory_id' in user && user.observatory_id ? [user.observatory_id] : [],
+                organizations: user && 'organization_id' in user && user.organization_id ? [user.organization_id] : [],
+                extraction_method: extractionMethod,
+                contents: [
                     {
-                        name: 'Contribution',
-                        extractionMethod,
-                        values: contributionStatements,
+                        label: 'Contribution',
+                        statements: contributionStatements,
                     },
                 ],
             };
@@ -275,7 +288,7 @@ const useImportBulkData = ({ data, onFinish }) => {
         // first check if there is a paper with this DOI
         if (doi) {
             try {
-                const paper = await getPaperByDOI(doi);
+                const paper = await getPaperByDoi(doi);
 
                 if (paper) {
                     return paper.id;
@@ -316,11 +329,12 @@ const useImportBulkData = ({ data, onFinish }) => {
         const _idToLabel = { ...idToLabel };
         const newProperties = {};
         const newResources = {};
+        const newLiterals = {};
 
-        for (const paper of papers) {
+        for (const paper of papers.filter(_paper => Object.keys(_paper.contents[0].statements).length > 0)) {
             try {
                 // create new properties for the ones that do not yet exist
-                for (let property in paper.contributions[0].values) {
+                for (let property in paper.contents[0].statements) {
                     // property does not yet exist, create a new one
                     if (!(property in _idToLabel) && !(property in newProperties)) {
                         const newProperty = await createPredicate(property);
@@ -329,15 +343,15 @@ const useImportBulkData = ({ data, onFinish }) => {
                     // assign the newly created property id to the contribution
                     if (property in newProperties) {
                         const newId = newProperties[property];
-                        const propertyObject = paper.contributions[0].values;
+                        const propertyObject = paper.contents[0].statements;
                         // rename the property label to the property id
                         delete Object.assign(propertyObject, { [newId]: propertyObject[property] })[property];
                         property = newId;
                     }
                     // if new resources should be created, create them now
                     // then ensure that duplicate resource labels are mapped to the same newly created resource  ID
-                    // (don't loop over 'values' directly, because they might be updated while creating properties above)
-                    for (const [index, value] of paper.contributions[0].values[property].entries()) {
+                    // (don't loop over 'statements' directly, because they might be updated while creating properties above)
+                    for (const [index, value] of paper.contents[0].statements[property].entries()) {
                         // if there is a label, a new resource is created
                         if ('label' in value) {
                             const { label } = value;
@@ -347,26 +361,47 @@ const useImportBulkData = ({ data, onFinish }) => {
                             }
                             if (label in newResources) {
                                 const newId = newResources[label];
-                                paper.contributions[0].values[property][index] = {
-                                    '@id': newId,
+                                paper.contents[0].statements[property][index] = {
+                                    id: newId,
                                 };
                             }
                         }
+                        if ('text' in value) {
+                            const literalId = uniqueId('#');
+                            newLiterals[literalId] = {
+                                label: value.text,
+                                data_type: value.datatype,
+                            };
+                            paper.contents[0].statements[property][index] = {
+                                id: literalId,
+                            };
+                        }
                     }
                 }
+                const contribution = paper.contents[0];
+                delete paper.contents[0];
+                const extractionMethod = paper.extraction_method;
+                delete paper.extraction_method;
 
-                // add the paper
-                const _paper = await saveFullPaper({ paper }, true);
+                // only create the paper if there is contribution data (backend endpoint requirement)
+                const _paper = await createPaperMergeIfExists({
+                    paper,
+                    contribution,
+                    createContributionData: {
+                        literals: newLiterals,
+                    },
+                    extractionMethod,
+                });
 
                 // get paper statements so it is possible to list the contribution IDs and make a comparison
-                const paperStatements = await getStatementsBySubject({ id: _paper.id });
+                const paperStatements = await getStatementsBySubject({ id: _paper });
 
                 for (const statement of paperStatements) {
                     if (statement.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
                         setCreatedContributions(state => [
                             ...state,
                             {
-                                paperId: _paper.id,
+                                paperId: _paper,
                                 contributionId: statement.object.id,
                             },
                         ]);

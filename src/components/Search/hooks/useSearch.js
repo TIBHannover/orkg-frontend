@@ -9,7 +9,7 @@ import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getClassById, getClasses } from 'services/backend/classes';
-import { getPaperByDOI } from 'services/backend/misc';
+import { getPaperByDoi } from 'services/backend/papers';
 import { getPredicates } from 'services/backend/predicates';
 import { getResources } from 'services/backend/resources';
 import { getStatementsByObject, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
@@ -86,7 +86,7 @@ export const useSearch = () => {
             const doi = searchQuery.startsWith('http') ? searchQuery.trim().substring(searchQuery.trim().indexOf('10.')) : searchQuery;
             if (filterType === CLASSES.PAPER && REGEX.DOI_ID.test(doi)) {
                 try {
-                    const paper = await getPaperByDOI(doi);
+                    const paper = await getPaperByDoi(doi);
                     resultsResponse.push({ label: paper.title, id: paper.id, class: CLASSES.PAPER });
                 } catch (e) {}
             }
