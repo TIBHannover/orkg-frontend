@@ -49,7 +49,7 @@
                 "ignoreComments": true
             }
         ],
-        "arrow-parens": [2, "as-needed"],
+        "arrow-parens": [1, "always"],
         "no-param-reassign": [
             1,
             {
