@@ -92,7 +92,7 @@ export const getStatementsBySubject = ({
         },
     );
 
-    return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`).then(res => res.content);
+    return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`).then((res) => res.content);
 };
 
 /**
@@ -146,7 +146,7 @@ export const getStatementsBySubjects = ({
         },
     );
     return submitGetRequest(`${statementsUrl}subjects/?${params}`).then((res: { id: string; statements: PaginatedResponse<Statement> }[]) =>
-        res.map(subjectStatements => ({
+        res.map((subjectStatements) => ({
             ...subjectStatements,
             statements: subjectStatements.statements.content,
         })),
@@ -176,7 +176,7 @@ export const getStatementsByObject = async ({
         },
     );
 
-    const statements = await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/?${params}`).then(res =>
+    const statements = await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/?${params}`).then((res) =>
         returnContent ? res.content : res,
     );
 
@@ -206,7 +206,7 @@ export const getStatementsByPredicate = ({
         },
     );
 
-    return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/?${params}`).then(res => (returnContent ? res.content : res));
+    return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/?${params}`).then((res) => (returnContent ? res.content : res));
 };
 
 export const getStatementsBySubjectAndPredicate = ({
@@ -231,7 +231,7 @@ export const getStatementsBySubjectAndPredicate = ({
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${statementsUrl}subject/${subjectId}/predicate/${predicateId}/?${params}`).then(res => res.content);
+    return submitGetRequest(`${statementsUrl}subject/${subjectId}/predicate/${predicateId}/?${params}`).then((res) => res.content);
 };
 
 export const getStatementsByObjectAndPredicate = ({
@@ -259,7 +259,7 @@ export const getStatementsByObjectAndPredicate = ({
         },
     );
 
-    return submitGetRequest(`${statementsUrl}object/${objectId}/predicate/${predicateId}/?${params}`).then(res =>
+    return submitGetRequest(`${statementsUrl}object/${objectId}/predicate/${predicateId}/?${params}`).then((res) =>
         returnContent ? res.content : res,
     );
 };
@@ -290,7 +290,7 @@ export const getStatementsByPredicateAndLiteral = ({
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${statementsUrl}predicate/${predicateId}/literals/?${params}`).then(res => (returnContent ? res.content : res));
+    return submitGetRequest(`${statementsUrl}predicate/${predicateId}/literals/?${params}`).then((res) => (returnContent ? res.content : res));
 };
 
 /**
@@ -300,9 +300,16 @@ export const getStatementsByPredicateAndLiteral = ({
  */
 export const getTemplateById = async (templateId: string) => {
     const subject = await getResource(templateId);
-    const response = await getStatementsBundleBySubject({ id: templateId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD] }).catch(() => ({
-        statements: [],
-    }));
+    let response: {
+        root: string;
+        statements: Statement[];
+    };
+    try {
+        response = await getStatementsBundleBySubject({ id: templateId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD] });
+    } catch (e) {
+        return Promise.reject(e);
+    }
+
     if (!subject) {
         return Promise.reject(new Error('Template not found'));
     }
@@ -357,18 +364,18 @@ export const getTemplateById = async (templateId: string) => {
         templateId,
     );
 
-    const propertyShapes = templatePropertyShapes.map(propertyShape =>
+    const propertyShapes = templatePropertyShapes.map((propertyShape) =>
         getPropertyShapeData(propertyShape, filterStatementsBySubjectId(response.statements, propertyShape.id)),
     );
 
-    const propertyShapesStatements = templatePropertyShapes.map(propertyShape =>
+    const propertyShapesStatements = templatePropertyShapes.map((propertyShape) =>
         // @ts-expect-error
-        filterStatementsBySubjectId(response.statements, propertyShape.id).map(s => s.id),
+        filterStatementsBySubjectId(response.statements, propertyShape.id).map((s) => s.id),
     );
 
     return {
         ...subject,
-        statements: [...statements.map(s => s.id), ...flatten(propertyShapesStatements)],
+        statements: [...statements.map((s) => s.id), ...flatten(propertyShapesStatements)],
         predicate: templatePredicate,
         labelFormat: templateFormatLabel ? templateFormatLabel.label : '',
         description: descriptionLabel ? descriptionLabel.label : '',
@@ -382,11 +389,11 @@ export const getTemplateById = async (templateId: string) => {
                   uri: targetClass.uri,
               }
             : {},
-        researchFields: researchFields.map(statement => ({
+        researchFields: researchFields.map((statement) => ({
             id: statement.id,
             label: statement.label,
         })),
-        researchProblems: researchProblems.map(statement => ({
+        researchProblems: researchProblems.map((statement) => ({
             id: statement.id,
             label: statement.label,
         })),
@@ -421,10 +428,10 @@ export const getParentResearchFields = (researchFieldId: string, parents: Resour
     return getStatementsByObjectAndPredicate({
         objectId: researchFieldId,
         predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD,
-    }).then(parentResearchField => {
+    }).then((parentResearchField) => {
         if (parentResearchField && Array.isArray(parentResearchField) && parentResearchField[0]) {
             parents.push(parentResearchField[0].object as Resource);
-            if (parents.find(p => p.id === parentResearchField[0].subject.id)) {
+            if (parents.find((p) => p.id === parentResearchField[0].subject.id)) {
                 return Promise.resolve(parents);
             }
             return getParentResearchFields(parentResearchField[0].subject.id, parents);
@@ -445,7 +452,7 @@ export const getParentResearchProblems = (researchProblemId: string, parents: Re
     return getStatementsByObjectAndPredicate({
         objectId: researchProblemId,
         predicateId: PREDICATES.SUB_PROBLEM,
-    }).then(parentResearchProblem => {
+    }).then((parentResearchProblem) => {
         if (parentResearchProblem && Array.isArray(parentResearchProblem) && parentResearchProblem[0]) {
             if (parents.length === 0) {
                 parents.push(parentResearchProblem[0].object as Resource);
@@ -467,11 +474,11 @@ export const getTemplatesByClass = (classID: string): Promise<string[]> =>
         objectId: classID,
         predicateId: PREDICATES.SHACL_TARGET_CLASS,
     })
-        .then(statements =>
+        .then((statements) =>
             (statements as Statement[])
-                .filter(statement => statement.subject.classes?.includes(CLASSES.NODE_SHAPE))
-                .map(st => st.subject.id)
-                .filter(c => c),
+                .filter((statement) => statement.subject.classes?.includes(CLASSES.NODE_SHAPE))
+                .map((st) => st.subject.id)
+                .filter((c) => c),
         )
         .catch(() => []);
 
@@ -485,18 +492,18 @@ export const getTemplatesByClass = (classID: string): Promise<string[]> =>
 export const loadTemplateFlowByID = (id: string, loadedNodes: Set<any>): Promise<object> => {
     if (!loadedNodes.has(id)) {
         loadedNodes.add(id);
-        return getTemplateById(id).then(t => {
+        return getTemplateById(id).then((t) => {
             const promises: Promise<any>[] = t.propertyShapes
-                .filter(ps => ps.value)
-                .map(ps =>
-                    getTemplatesByClass(ps.value?.id).then(templateIds => {
+                .filter((ps) => ps.value)
+                .map((ps) =>
+                    getTemplatesByClass(ps.value?.id).then((templateIds) => {
                         if (templateIds.length) {
                             return loadTemplateFlowByID(templateIds[0], loadedNodes);
                         }
                         return Promise.resolve({});
                     }),
                 );
-            return Promise.all(promises).then(neighborNodes => ({
+            return Promise.all(promises).then((neighborNodes) => ({
                 ...t,
                 neighbors: neighborNodes,
             }));

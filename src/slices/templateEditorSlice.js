@@ -34,6 +34,7 @@ const initialState = {
     error: null,
     propertyShapes: [],
     isLoading: false,
+    failureStatus: '',
     hasFailed: false,
     statements: [],
     isSaving: false,
@@ -100,6 +101,9 @@ export const templateEditorSlice = createSlice({
         setHasFailed: (state, { payload }) => {
             state.hasFailed = payload;
         },
+        setFailureStatus: (state, { payload }) => {
+            state.failureStatus = payload;
+        },
         setIsSaving: (state, { payload }) => {
             state.isSaving = payload;
         },
@@ -113,7 +117,7 @@ export const templateEditorSlice = createSlice({
             state.templateFlow = payload;
         },
     },
-    extraReducers: builder => {
+    extraReducers: (builder) => {
         builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
             const matchTemplateTabs = match(ROUTES.TEMPLATE_TABS);
             const matchTemplate = match(ROUTES.TEMPLATE);
@@ -145,6 +149,7 @@ export const {
     updatePropertyShapes,
     initTemplate,
     setIsLoading,
+    setFailureStatus,
     setHasFailed,
     setIsSaving,
     setHasFailedSaving,
@@ -154,11 +159,11 @@ export const {
 
 export default templateEditorSlice.reducer;
 
-export const loadTemplate = data => dispatch => {
+export const loadTemplate = (data) => (dispatch) => {
     dispatch(setIsLoading(true));
 
     return getTemplateById(data)
-        .then(templateData => {
+        .then((templateData) => {
             dispatch(
                 initTemplate({
                     templateID: data,
@@ -167,13 +172,14 @@ export const loadTemplate = data => dispatch => {
             );
             dispatch(setIsLoading(false));
         })
-        .catch(() => {
+        .catch((e) => {
+            dispatch(setFailureStatus(e.statusCode));
             dispatch(setIsLoading(false));
             dispatch(setHasFailed(true));
         });
 };
 
-export const saveTemplate = toggleIsEditMode => async (dispatch, getState) => {
+export const saveTemplate = (toggleIsEditMode) => async (dispatch, getState) => {
     dispatch(setIsSaving(true));
     const data = getState().templateEditor;
 
@@ -347,7 +353,7 @@ export const saveTemplate = toggleIsEditMode => async (dispatch, getState) => {
             }
             const propertyShapes = await Promise.all(propertyShapesAPICalls);
             // link components to the template
-            propertyShapes.map(c => promises.push(createResourceStatement(templateResource, PREDICATES.SHACL_PROPERTY, c.id)));
+            propertyShapes.map((c) => promises.push(createResourceStatement(templateResource, PREDICATES.SHACL_PROPERTY, c.id)));
         }
 
         // save Label Format
@@ -357,11 +363,11 @@ export const saveTemplate = toggleIsEditMode => async (dispatch, getState) => {
         }
 
         return Promise.all(promises)
-            .then(async responses => {
+            .then(async (responses) => {
                 // delete all the statement old
                 if (data.templateID) {
                     if (data.statements.length > 0) {
-                        await deleteStatementsByIds(data.statements.filter(s => !responses.map(r => r.id).includes(s))); // filter on the newly created statements
+                        await deleteStatementsByIds(data.statements.filter((s) => !responses.map((r) => r.id).includes(s))); // filter on the newly created statements
                     }
                 }
                 if (data.templateID) {
