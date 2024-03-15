@@ -220,7 +220,7 @@ export const AddPropertyContentStyle = styled.span`
     &.inTemplate {
         width: 30%;
 
-        button {
+        button:not(.btn-smart) {
             padding: 2px 10px;
             width: 100%;
             border: 1px solid rgba(0, 0, 0, 0.125);

@@ -25,8 +25,8 @@ const AddPropertyView = ({
     toggleConfirmNewProperty,
 }) => {
     const [inputValue, setInputValue] = useState('');
-    const properties = useSelector(state => state.statementBrowser.properties.byId);
-    const propertyLabels = Object.values(properties).map(property => property.label);
+    const properties = useSelector((state) => state.statementBrowser.properties.byId);
+    const propertyLabels = Object.values(properties).map((property) => property.label);
 
     return (
         <AddPropertyStyle className={inTemplate ? 'inTemplate' : 'mt-3'}>
@@ -37,13 +37,13 @@ const AddPropertyView = ({
                 {isLoading || !showAddProperty ? (
                     <ConditionalWrapper
                         condition={isDisabled}
-                        wrapper={children => (
+                        wrapper={(children) => (
                             <Tippy content="This resource uses strict template">
                                 <span>{children}</span>
                             </Tippy>
                         )}
                     >
-                        <ButtonGroup>
+                        <ButtonGroup className="d-flex">
                             <ButtonWithLoading
                                 color={inTemplate ? 'light' : 'secondary'}
                                 disabled={isDisabled || isLoading}
@@ -75,7 +75,7 @@ const AddPropertyView = ({
                                 placeholder="Select or type to enter a property"
                                 onItemSelected={handlePropertySelect}
                                 onNewItemSelected={toggleConfirmNewProperty}
-                                onKeyDown={e => {
+                                onKeyDown={(e) => {
                                     if (e.keyCode === 27) {
                                         // escape
                                         setShowAddProperty(false);
