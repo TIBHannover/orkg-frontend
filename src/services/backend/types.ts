@@ -331,3 +331,26 @@ export type VerifiedParam = {
 export type VisibilityParam = {
     visibility?: VisibilityFilter;
 };
+
+export type TopContributor = {
+    contributor: string;
+    comparisons: number;
+    papers: number;
+    contributions: number;
+    problems: number;
+    visualizations: number;
+    total: number;
+};
+
+export type Activity = {
+    id: string;
+    label: string;
+    created_at: string;
+    classes: string[];
+    profile: {
+        id: string;
+        display_name: string;
+        gravatar_id: string;
+        gravatar_url: string;
+    };
+};

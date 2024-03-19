@@ -1,14 +1,17 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import useContributors from 'components/TopContributors/hooks/useContributors';
 import ContributorCard from 'components/Cards/ContributorCard/ContributorCard';
 import ContentLoader from 'react-content-loader';
-import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import pluralize from 'pluralize';
 import ContributorsModal from 'components/TopContributors/ContributorsModal';
 
-const ContributorsBox = ({ researchFieldId }) => {
-    const { contributors, isLoading } = useContributors({ researchFieldId, pageSize: 5, initialSort: 'top' });
+type ContributorsBoxProps = {
+    researchFieldId: string;
+};
+
+const ContributorsBox: FC<ContributorsBoxProps> = ({ researchFieldId }) => {
+    const { contributors, isLoading } = useContributors({ researchFieldId, pageSize: 5, initialSort: 'top', initialIncludeSubFields: true });
     const [openModal, setOpenModal] = useState(false);
 
     return (
@@ -18,7 +21,7 @@ const ContributorsBox = ({ researchFieldId }) => {
             <div className="flex-grow-1">
                 {!isLoading && contributors && contributors.length > 0 && (
                     <div className="mt-2">
-                        {contributors.slice(0, 4).map((contributor, index) => (
+                        {contributors.slice(0, 4).map((contributor, index: number) => (
                             <div className="pt-1 ps-2 pe-2" key={`rp${index}`}>
                                 <ContributorCard
                                     contributor={{
@@ -61,10 +64,6 @@ const ContributorsBox = ({ researchFieldId }) => {
             </div>
         </div>
     );
-};
-
-ContributorsBox.propTypes = {
-    researchFieldId: PropTypes.string.isRequired,
 };
 
 export default ContributorsBox;

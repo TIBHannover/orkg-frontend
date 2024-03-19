@@ -2,21 +2,22 @@ import { RESOURCES } from 'constants/graphSettings';
 import { orderBy } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { getChangelogs } from 'services/backend/stats';
+import { Activity } from 'services/backend/types';
 
-function useTopChangelog({ researchFieldId, pageSize = 30 }) {
+function useTopChangelog({ researchFieldId, pageSize = 30 }: { researchFieldId: string; pageSize: number }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     const [page, setPage] = useState(0);
-    const [activities, setActivities] = useState([]);
+    const [activities, setActivities] = useState<Activity[]>([]);
     const [totalElements, setTotalElements] = useState(0);
 
     const loadData = useCallback(
-        page => {
+        (_page: number) => {
             setIsLoading(true);
             getChangelogs({
                 researchFieldId: researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN ? null : researchFieldId,
-                page,
+                page: _page,
                 size: pageSize,
             })
                 .then(result => {

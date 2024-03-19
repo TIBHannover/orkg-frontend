@@ -3,7 +3,7 @@ import { Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselItem } from 
 import { getNewsCards } from 'services/cms';
 import { CarouselIndicatorsStyled } from 'components/styled';
 import styled from 'styled-components';
-import * as Showdown from 'showdown';
+import Showdown from 'showdown';
 import moment from 'moment';
 
 const CarouselContainer = styled.div`
@@ -20,11 +20,15 @@ const CarouselContainer = styled.div`
 const converter = new Showdown.Converter();
 converter.setFlavor('github');
 
+type Item = {
+    attributes: { title: string; message: string; publishedAt: Date };
+};
+
 export default function News() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [animating, setAnimating] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [items, setItems] = useState([]);
+    const [items, setItems] = useState<Item[]>([]);
 
     useEffect(() => {
         const loadNews = async () => {
@@ -51,7 +55,7 @@ export default function News() {
         setActiveIndex(nextIndex);
     };
 
-    const goToIndex = newIndex => {
+    const goToIndex = (newIndex: number) => {
         setActiveIndex(newIndex);
     };
 

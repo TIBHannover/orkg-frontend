@@ -1,24 +1,35 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getTopContributors } from 'services/backend/stats';
 import { RESOURCES } from 'constants/graphSettings';
+import { TopContributor } from 'services/backend/types';
 
-function useContributors({ researchFieldId, pageSize = 30, initialSort = 'top', initialIncludeSubFields = true }) {
+function useContributors({
+    researchFieldId,
+    pageSize = 30,
+    initialSort = 'top',
+    initialIncludeSubFields = true,
+}: {
+    researchFieldId: string;
+    pageSize: number;
+    initialSort: string;
+    initialIncludeSubFields: boolean;
+}) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     const [page, setPage] = useState(0);
     const [sort, setSort] = useState(initialSort);
-    const [contributors, setContributors] = useState([]);
+    const [contributors, setContributors] = useState<TopContributor[]>([]);
     const [totalElements, setTotalElements] = useState(0);
     const [includeSubFields, setIncludeSubFields] = useState(initialIncludeSubFields);
 
     const loadData = useCallback(
-        page => {
+        (_page: number) => {
             setIsLoading(true);
 
             const contributorsCall = getTopContributors({
                 researchFieldId: researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN ? null : researchFieldId,
-                page,
+                page: _page,
                 size: pageSize,
                 sortBy: 'contributions',
                 desc: true,

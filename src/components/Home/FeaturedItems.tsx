@@ -1,7 +1,6 @@
 import Link from 'components/NextJsMigration/Link';
 import { FormGroup, Label, Input, ListGroup, Button } from 'reactstrap';
 import ROUTES from 'constants/routes.js';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { CLASSES, RESOURCES } from 'constants/graphSettings';
 import ContentLoader from 'react-content-loader';
@@ -9,6 +8,7 @@ import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import useResearchFieldContent from 'components/ResearchField/hooks/useResearchFieldContent';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { reverseWithSlug } from 'utils';
+import { FC } from 'react';
 
 const ListGroupStyled = styled(ListGroup)`
     &&& .list-group-item {
@@ -18,7 +18,14 @@ const ListGroupStyled = styled(ListGroup)`
     }
 `;
 
-const FeaturedItems = ({ researchFieldId, researchFieldLabel, classId, classLabel }) => {
+type FeaturedItemsProps = {
+    researchFieldId: string;
+    researchFieldLabel: string;
+    classId: string;
+    classLabel: string;
+};
+
+const FeaturedItems: FC<FeaturedItemsProps> = ({ researchFieldId, researchFieldLabel, classId, classLabel }) => {
     const { items, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useResearchFieldContent({
         researchFieldId,
         initialSort: 'combined',
@@ -128,13 +135,6 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, classId, classLabe
             )}
         </div>
     );
-};
-
-FeaturedItems.propTypes = {
-    researchFieldId: PropTypes.string.isRequired,
-    researchFieldLabel: PropTypes.string,
-    classId: PropTypes.string.isRequired,
-    classLabel: PropTypes.string.isRequired,
 };
 
 export default FeaturedItems;

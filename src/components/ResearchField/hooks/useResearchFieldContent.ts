@@ -6,7 +6,13 @@ import { reverse } from 'named-urls';
 import { useCallback, useEffect, useState } from 'react';
 import { getContentByResearchFieldIdAndClasses } from 'services/backend/researchFields';
 import { getStatementsBySubjects } from 'services/backend/statements';
+import { Resource, Statement } from 'services/backend/types';
 import { addAuthorsToStatementBundle, getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate, reverseWithSlug } from 'utils';
+
+export type InitialClassFilter = {
+    id: string;
+    label: string;
+};
 
 function useResearchFieldContent({
     researchFieldId,
@@ -14,15 +20,24 @@ function useResearchFieldContent({
     initialSort,
     initialIncludeSubFields,
     initialClassFilterOptions,
-    initClassesFilter,
     pageSize = 10,
     updateURL = false,
+    initClassesFilter,
+}: {
+    researchFieldId: string;
+    slug?: string;
+    initialSort: string;
+    initialIncludeSubFields: boolean;
+    initialClassFilterOptions: InitialClassFilter[];
+    pageSize?: number;
+    updateURL?: boolean;
+    initClassesFilter: InitialClassFilter[];
 }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
-    const [items, setItems] = useState([]);
+    const [items, setItems] = useState<Resource[]>([]);
     const [sort, setSort] = useState(initialSort);
     const [classFilterOptions] = useState(initialClassFilterOptions);
     const [classesFilter, setClassesFilter] = useState(initClassesFilter);
@@ -31,7 +46,7 @@ function useResearchFieldContent({
     const router = useRouter();
 
     const loadData = useCallback(
-        (page, total) => {
+        (page: number, total: number) => {
             setIsLoading(true);
             let contentService;
             if (sort === 'combined') {
@@ -86,7 +101,7 @@ function useResearchFieldContent({
                         .then((statements) => addAuthorsToStatementBundle(statements))
                         .then((contentsStatements) =>
                             Promise.all(
-                                contentsStatements.map((statements) => {
+                                contentsStatements.map((statements: { id: string; statements: Statement[] }) => {
                                     const resourceSubject = find(result.content, {
                                         id: statements.id,
                                     });
@@ -95,9 +110,10 @@ function useResearchFieldContent({
                             ),
                         )
                         .then((dataObjects) => {
-                            setItems((prevResources) => {
-                                let newItems = dataObjects;
+                            setItems((prevResources: Resource[]) => {
+                                let newItems: Resource[] = dataObjects;
                                 newItems = groupVersionsOfComparisons([
+                                    // @ts-expect-error
                                     ...flatten([...prevResources.map((c) => c.versions ?? []), ...prevResources]),
                                     ...newItems,
                                 ]);
@@ -154,13 +170,14 @@ function useResearchFieldContent({
                               researchFieldId,
                           })
                 }?sort=${sort}&includeSubFields=${includeSubFields}&classesFilter=${classesFilter.map((c) => c.id).join(',')}`,
+                // @ts-expect-error
                 { replace: true },
             );
         }
-    }, [researchFieldId, sort, includeSubFields, classesFilter, updateURL, slug]);
+    }, [researchFieldId, sort, includeSubFields, classesFilter, updateURL, slug, router]);
 
     useEffect(() => {
-        loadData(0);
+        loadData(0, 0);
     }, [loadData]);
 
     const handleLoadMore = () => {
