@@ -4,6 +4,7 @@ import { faDiagramProject, faEllipsisV, faPen, faQuestionCircle, faSave, faSpinn
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import NotFound from 'app/not-found';
+import InternalServerError from 'app/error';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { EditModeContainer, Title } from 'components/EditModeHeader/EditModeHeader';
 import ExportCitation from 'components/ExportCitation/ExportCitation';
@@ -48,19 +49,20 @@ const Template = () => {
         diagramMode,
         isSaving,
         isLoading,
+        failureStatus,
         hasFailed,
         label,
         created_by: createdBy,
         created_at: createdAt,
         observatory_id: observatoryId,
         organization_id: organizationId,
-    } = useSelector(state => state.templateEditor);
+    } = useSelector((state) => state.templateEditor);
     const router = useRouter();
     const [menuOpen, setMenuOpen] = useState(false);
     const [showHeaderBar, setShowHeaderBar] = useState(false);
     const [showExportCitation, setShowExportCitation] = useState(false);
 
-    const handleShowHeaderBar = isVisible => {
+    const handleShowHeaderBar = (isVisible) => {
         setShowHeaderBar(!isVisible);
     };
 
@@ -77,6 +79,10 @@ const Template = () => {
     useEffect(() => {
         document.title = `${label ? `${label} - ` : ''}Contribution Template - ORKG`;
     }, [label]);
+
+    if (!isLoading && hasFailed && failureStatus === 500) {
+        return <InternalServerError />;
+    }
 
     if (!isLoading && hasFailed) {
         return <NotFound />;
@@ -139,12 +145,12 @@ const Template = () => {
                                 <Icon icon={faSave} className="ms-1" /> Save
                             </ButtonWithLoading>
                         )}
-                        <ButtonDropdown className="flex-shrink-0" isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                        <ButtonDropdown className="flex-shrink-0" isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                             <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                 <Icon icon={faEllipsisV} />
                             </DropdownToggle>
                             <DropdownMenu end>
-                                <DropdownItem onClick={() => setShowExportCitation(v => !v)}>Export citation</DropdownItem>
+                                <DropdownItem onClick={() => setShowExportCitation((v) => !v)}>Export citation</DropdownItem>
                                 <DropdownItem onClick={exportSHACL}>{!isConvertingToSHACL ? 'Export as SHACL' : 'Exporting...'}</DropdownItem>
                                 <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                                     View resource
@@ -206,7 +212,7 @@ const Template = () => {
                     authors={[contributor?.display_name]}
                     classId={CLASSES.TEMPLATE}
                     isOpen={showExportCitation}
-                    toggle={() => setShowExportCitation(v => !v)}
+                    toggle={() => setShowExportCitation((v) => !v)}
                 />
             )}
         </>
