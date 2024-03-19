@@ -4,16 +4,15 @@ import Tabs from 'components/Tabs/Tabs';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
-import propTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router-dom';
 
-function HomeTabsContainer({ researchFieldId, researchFieldLabel }) {
+function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFieldId: string; researchFieldLabel: string }) {
     const params = useParams();
     const searchParams = useSearchParams();
     const { slug } = params;
     const navigate = useNavigate();
 
-    const onTabChange = tab => {
+    const onTabChange = (tab: string) => {
         if (researchFieldId && slug) {
             navigate(
                 `${`${reverse(ROUTES.HOME_WITH_RESEARCH_FIELD, {
@@ -54,12 +53,13 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }) {
         },
     ];
 
-    const activeKey = items.map(i => i.label.toLowerCase()).includes(searchParams.get('tab')) ? searchParams.get('tab') : 'comparisons';
+    const activeKey = items.map(i => i.label.toLowerCase()).includes(searchParams.get('tab') ?? '') ? searchParams.get('tab') : 'comparisons';
 
     return (
+        // @ts-expect-error
         <Tabs
             className="box rounded"
-            getPopupContainer={trigger => trigger.parentNode}
+            getPopupContainer={(trigger: HTMLElement) => trigger?.parentNode}
             onChange={onTabChange}
             activeKey={activeKey}
             items={items.map(({ label, classId }) => ({
@@ -72,10 +72,5 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }) {
         />
     );
 }
-
-HomeTabsContainer.propTypes = {
-    researchFieldLabel: propTypes.string,
-    researchFieldId: propTypes.string,
-};
 
 export default HomeTabsContainer;

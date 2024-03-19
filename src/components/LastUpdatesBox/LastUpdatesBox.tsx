@@ -1,5 +1,5 @@
 import Link from 'components/NextJsMigration/Link';
-import { useState } from 'react';
+import { useState, FC } from 'react';
 import ContentLoader from 'react-content-loader';
 import useTopChangelog from 'components/LastUpdatesBox/hooks/useTopChangelog';
 import moment from 'moment';
@@ -7,12 +7,15 @@ import { getResourceLink, getResourceTypeLabel } from 'utils';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import { truncate } from 'lodash';
-import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import { StyledActivity } from 'components/LastUpdatesBox/styled';
 import LastUpdatesModal from 'components/LastUpdatesBox/LastUpdatesModal';
 
-const LastUpdatesBox = ({ researchFieldId }) => {
+type LastUpdatesBoxProps = {
+    researchFieldId: string;
+};
+
+const LastUpdatesBox: FC<LastUpdatesBoxProps> = ({ researchFieldId }) => {
     const { activities, isLoading } = useTopChangelog({ researchFieldId, pageSize: 4 });
     const [openModal, setOpenModal] = useState(false);
 
@@ -31,6 +34,7 @@ const LastUpdatesBox = ({ researchFieldId }) => {
                                     <div className="action">
                                         {activity.profile?.id ? (
                                             <>
+                                                {/* @ts-expect-error */}
                                                 <Link href={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>
                                                     {activity.profile.display_name}
                                                 </Link>
@@ -40,6 +44,7 @@ const LastUpdatesBox = ({ researchFieldId }) => {
                                         )}{' '}
                                         added
                                         {` ${getResourceTypeLabel(activity.classes?.length > 0 ? activity.classes[0] : '')} `}
+                                        {/* @ts-expect-error */}
                                         <Link href={getResourceLink(activity.classes?.length > 0 ? activity.classes[0] : '', activity.id)}>
                                             {truncate(activity.label, { length: 50 })}
                                         </Link>
@@ -81,10 +86,6 @@ const LastUpdatesBox = ({ researchFieldId }) => {
             </div>
         </div>
     );
-};
-
-LastUpdatesBox.propTypes = {
-    researchFieldId: PropTypes.string.isRequired,
 };
 
 export default LastUpdatesBox;

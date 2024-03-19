@@ -2,10 +2,16 @@ import { url } from 'constants/misc';
 import { submitGetRequest } from 'network';
 import qs from 'qs';
 import { getContributorInformationById } from 'services/backend/contributors';
-import { PaginatedResponse } from 'services/backend/types';
+import { PaginatedResponse, TopContributor, Activity } from 'services/backend/types';
 
 export const statsUrl = `${url}stats/`;
 
+export type ResearchFieldStat = {
+    id: string;
+    total: number;
+    papers: number;
+    comparisons: number;
+};
 export const getStats = (
     extra: string[] = [],
 ): Promise<{
@@ -33,14 +39,8 @@ export const getResearchFieldsStats = (): Promise<{
     [key: string]: number;
 }> => submitGetRequest(`${statsUrl}fields`);
 
-export const getResearchFieldsStatsWithSubfields = (
-    fieldId: string,
-): Promise<{
-    id: string;
-    papers: number;
-    comparisons: number;
-    total: number;
-}> => submitGetRequest(`${statsUrl}research-fields/${fieldId}?includeSubfields=true`);
+export const getResearchFieldsStatsWithSubfields = (fieldId: string): Promise<ResearchFieldStat> =>
+    submitGetRequest(`${statsUrl}research-fields/${fieldId}?includeSubfields=true`);
 
 /**
  * Get statistics of an observatory by id
@@ -55,16 +55,6 @@ export const getObservatoryStatsById = (
     comparisons: number;
     total: number;
 }> => submitGetRequest(`${statsUrl}observatories/${id}/`);
-
-type TopContributor = {
-    contributor: string;
-    comparisons: number;
-    papers: number;
-    contributions: number;
-    problems: number;
-    visualizations: number;
-    total: number;
-};
 
 /**
  * Get top contributors
@@ -124,20 +114,7 @@ export const getChangelogs = ({
     researchFieldId?: string | null;
     page?: number;
     size?: number;
-}): Promise<
-    PaginatedResponse<{
-        id: string;
-        label: string;
-        created_at: string;
-        classes: string[];
-        profile: {
-            id: string;
-            display_name: string;
-            gravatar_id: string;
-            gravatar_url: string;
-        };
-    }>
-> => {
+}): Promise<PaginatedResponse<Activity>> => {
     const params = qs.stringify(
         { page, size },
         {

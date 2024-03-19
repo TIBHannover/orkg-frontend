@@ -12,6 +12,7 @@ import { Button, Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselItem
 import { CarouselIndicatorsStyled } from 'components/styled';
 import styled from 'styled-components';
 import Image from 'components/NextJsMigration/Image';
+import { RootStore } from 'slices/types';
 
 const CarouselContainer = styled.div`
     width: 100%;
@@ -90,7 +91,8 @@ export default function Benefits() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [animating, setAnimating] = useState(false);
     const dispatch = useDispatch();
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state: RootStore) => state.auth.user);
+
     const next = () => {
         if (animating) {
             return;
@@ -107,7 +109,7 @@ export default function Benefits() {
         setActiveIndex(nextIndex);
     };
 
-    const goToIndex = newIndex => {
+    const goToIndex = (newIndex: number) => {
         setActiveIndex(newIndex);
     };
 

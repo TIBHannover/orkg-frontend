@@ -4,7 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { Button, ListGroup, ListGroupItem } from 'reactstrap';
-import { loadMastodonTimeline } from 'services/mastodon';
+import { loadMastodonTimeline, Message } from 'services/mastodon';
 import { sanitize } from 'dompurify';
 import moment from 'moment';
 import styled from 'styled-components';
@@ -17,10 +17,11 @@ const MastodonContent = styled.p`
         display: none;
     }
 `;
+
 const MastodonTimeline = () => {
     const [cookies, setCookie] = useCookies([COOKIE_NAME]);
     const [isLoading, setIsLoading] = useState(true);
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState<Message[]>([]);
 
     const handleLoadTimeline = () => setCookie(COOKIE_NAME, true, { path: env('PUBLIC_URL'), maxAge: 604800 });
 
@@ -71,7 +72,7 @@ const MastodonTimeline = () => {
                         <hr className="mt-2 mb-0" />
                     </div>
                     <ListGroup className="overflow-auto rounded" flush style={{ maxHeight: 400 }}>
-                        {messages.map(activity => {
+                        {messages.map((activity: Message) => {
                             const message = activity.reblog ? activity.reblog : activity; // reblog is used for showing somebody else's toot
 
                             return (

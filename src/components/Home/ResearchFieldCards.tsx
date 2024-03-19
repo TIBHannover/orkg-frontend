@@ -1,20 +1,21 @@
-import Link from 'components/NextJsMigration/Link';
-import { useState, useRef } from 'react';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faStream } from '@fortawesome/free-solid-svg-icons';
-import styled from 'styled-components';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { CLASSES, RESOURCES } from 'constants/graphSettings';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { resourcesUrl } from 'services/backend/resources';
-import ContentLoader from 'react-content-loader';
-import PropTypes from 'prop-types';
-import ROUTES from 'constants/routes';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import { Button } from 'reactstrap';
-import { reverseWithSlug } from 'utils';
+import Link from 'components/NextJsMigration/Link';
 import useRouter from 'components/NextJsMigration/useRouter';
+import { CLASSES, RESOURCES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
 import pluralize from 'pluralize';
+import { useRef, useState } from 'react';
+import ContentLoader from 'react-content-loader';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { Button } from 'reactstrap';
+import { resourcesUrl } from 'services/backend/resources';
+import { Node } from 'services/backend/types';
+import styled from 'styled-components';
+import { reverseWithSlug } from 'utils';
+import { ResearchFieldStat } from 'services/backend/stats';
 
 /* Bootstrap card column is not working correctly working with vertical alignment,
 thus used custom styling here */
@@ -100,11 +101,30 @@ const ShowMore = styled(Card)`
     color: ${props => props.theme.bodyColor} !important;
     text-align: center;
 `;
+type SelectedType = {
+    id: string;
+    value: string;
+};
 
 const MAX_FIELDS = 30;
 
-const ResearchFieldCards = ({ selectedFieldId, selectedFieldLabel, researchFields, researchFieldStats, isLoading, isLoadingStats }) => {
-    const rfAutocompleteRef = useRef(null);
+const ResearchFieldCards = ({
+    selectedFieldId,
+    selectedFieldLabel,
+    researchFields,
+    researchFieldStats,
+    isLoading,
+    isLoadingStats,
+}: {
+    selectedFieldId: string;
+    selectedFieldLabel: string;
+    researchFields: Node[];
+    researchFieldStats: ResearchFieldStat[];
+    isLoading: boolean;
+    isLoadingStats: boolean;
+}) => {
+    // Assuming rfAutocompleteRef is a ref pointing to an HTMLInputElement or null
+    const rfAutocompleteRef = useRef<HTMLInputElement | null>(null);
     const [showMoreFields, setShowMoreFields] = useState(false);
     const router = useRouter();
     const researchFieldsSliced = showMoreFields ? researchFields : researchFields.slice(0, MAX_FIELDS);
@@ -121,7 +141,7 @@ const ResearchFieldCards = ({ selectedFieldId, selectedFieldLabel, researchField
                             requestUrl={resourcesUrl}
                             optionsClass={CLASSES.RESEARCH_FIELD}
                             placeholder="Search for fields..."
-                            onItemSelected={selected => {
+                            onItemSelected={(selected: SelectedType) => {
                                 // blur the field allows to focus and open the menu again
                                 rfAutocompleteRef.current && rfAutocompleteRef.current.blur();
                                 router.push(
@@ -177,6 +197,7 @@ const ResearchFieldCards = ({ selectedFieldId, selectedFieldLabel, researchField
                         <TransitionGroup id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap" exit={false}>
                             {researchFieldsSliced?.map((field, index) => (
                                 <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
+                                    {/* @ts-expect-error */}
                                     <Card
                                         disabled={researchFieldStats?.[index]?.total === 0}
                                         to={reverseWithSlug(ROUTES.HOME_WITH_RESEARCH_FIELD, {
@@ -233,15 +254,6 @@ const ResearchFieldCards = ({ selectedFieldId, selectedFieldLabel, researchField
             )}
         </>
     );
-};
-
-ResearchFieldCards.propTypes = {
-    selectedFieldId: PropTypes.string,
-    selectedFieldLabel: PropTypes.string,
-    researchFields: PropTypes.array,
-    researchFieldStats: PropTypes.array,
-    isLoading: PropTypes.bool.isRequired,
-    isLoadingStats: PropTypes.bool.isRequired,
 };
 
 export default ResearchFieldCards;

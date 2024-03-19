@@ -4,11 +4,16 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { Button } from 'reactstrap';
 import Tippy from '@tippyjs/react';
-import { useState } from 'react';
+import { useState, FC } from 'react';
 import env from 'components/NextJsMigration/env';
 import { Steps } from 'intro.js-react';
 
-const HelpButton = styled.div`
+type HelpButtonProps = {
+    id: string;
+    woochat: string;
+};
+
+const HelpButton = styled.div<HelpButtonProps>`
     box-sizing: border-box;
     position: fixed;
     white-space: nowrap;
@@ -221,7 +226,7 @@ const HelpTour = () => {
             <HelpButton id="helpIcon" woochat={env('CHATWOOT_WEBSITE_TOKEN')}>
                 <Tippy
                     visible={isTooltipVisible}
-                    appendTo={typeof window !== 'undefined' ? document.body : null}
+                    appendTo={typeof window !== 'undefined' ? document.body : undefined}
                     interactive
                     content={
                         <div className="p-1">
