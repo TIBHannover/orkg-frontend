@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import Confirm from 'components/Confirmation/Confirmation';
-import { deleteResource as deleteResourceNetwork } from 'services/backend/resources';
-import { toast } from 'react-toastify';
 import useRouter from 'components/NextJsMigration/useRouter';
 import ROUTES from 'constants/routes.js';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { deleteResource as deleteResourceNetwork } from 'services/backend/resources';
 
 function useDeleteResource({ resourceId, redirect = false }) {
     const router = useRouter();
@@ -25,12 +25,8 @@ function useDeleteResource({ resourceId, redirect = false }) {
                     router.push(ROUTES.RESOURCES);
                 }
             } catch (err) {
-                toast.error(
-                    <>
-                        An error occurred, resource not deleted <br />
-                        The resource cannot be deleted if it is used in statements (either as subject or object)
-                    </>,
-                );
+                console.error(err);
+                toast.error(err.message);
             }
 
             setIsLoading(false);
