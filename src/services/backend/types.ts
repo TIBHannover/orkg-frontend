@@ -199,7 +199,7 @@ export type Paper = {
     publication_info: {
         published_month?: number | null;
         published_year?: number | null;
-        published_in?: string | null;
+        published_in?: string | null | Node;
         url?: string | null;
     };
     authors: Author[];
