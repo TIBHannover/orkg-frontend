@@ -3,6 +3,19 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.136.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.135.2...v0.136.0) - 2024-03-19
+
+### Changes
+
+- Display Table for persistent paper versions [`#1278`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1278)
+- app(page) =&gt; converted to typescript [`#1280`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1280)
+- fix(Template): Show error if loading fails [`#1285`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1285)
+- fix(Paper): Add property button in template box is misaligned [`#1286`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1286)
+- fix(Home): Fetching literature lists and smart reviews [`#1284`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1284)
+- chore: require parentheses for arrow function arguments [`#1276`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1276)
+- refactor: use new paper endpoints [`#1263`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1263)
+
+---
 ## [v0.135.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.135.1...v0.135.2) - 2024-03-07
 
 ### Changes
