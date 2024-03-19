@@ -63,7 +63,7 @@ export const guid = () => {
     return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
 };
 
-export const range = (start, end) => [...Array(1 + end - start).keys()].map(v => start + v);
+export const range = (start, end) => [...Array(1 + end - start).keys()].map((v) => start + v);
 
 export function timeoutPromise(ms, promise) {
     return new Promise((resolve, reject) => {
@@ -71,11 +71,11 @@ export function timeoutPromise(ms, promise) {
             reject(new Error('Promise timeout'));
         }, ms);
         promise.then(
-            res => {
+            (res) => {
                 clearTimeout(timeoutId);
                 resolve(res);
             },
-            err => {
+            (err) => {
                 clearTimeout(timeoutId);
                 reject(err);
             },
@@ -98,7 +98,7 @@ export const getErrorMessage = (errors, field = null) => {
     if (field === null) {
         return errors.message ? errors.message?.replace?.('Predicate', 'Property') : null;
     }
-    const fieldError = errors.errors ? errors.errors.find(e => e.field === field) : null;
+    const fieldError = errors.errors ? errors.errors.find((e) => e.field === field) : null;
     return fieldError ? capitalize(fieldError.message).replace('Predicate', 'Property') : null;
 };
 
@@ -116,22 +116,22 @@ export const filterObjectOfStatementsByPredicateAndClass = (statementsArray, pre
         return isUnique ? null : [];
     }
     let result = statementsArray.filter(
-        statement => statement.predicate.id === predicateID && (statement.subject.id === subjectID || subjectID === null),
+        (statement) => statement.predicate.id === predicateID && (statement.subject.id === subjectID || subjectID === null),
     );
     if (classID) {
-        result = statementsArray.filter(statement => statement.object.classes && statement.object.classes.includes(classID));
+        result = statementsArray.filter((statement) => statement.object.classes && statement.object.classes.includes(classID));
     }
     if (result.length > 0 && isUnique) {
         return { ...result[0].object, statementId: result[0].id, s_created_at: result[0].created_at }; // TODO, check if statementId and s_created_at are needed
     }
     if (result.length > 0 && !isUnique) {
-        return result.map(s => ({ ...s.object, statementId: s.id, s_created_at: s.created_at }));
+        return result.map((s) => ({ ...s.object, statementId: s.id, s_created_at: s.created_at }));
     }
     return isUnique ? null : [];
 };
 
 function getOrder(paperStatements) {
-    let order = paperStatements.filter(statement => statement.predicate.id === PREDICATES.ORDER);
+    let order = paperStatements.filter((statement) => statement.predicate.id === PREDICATES.ORDER);
     if (order.length > 0) {
         order = order[0].object.label;
     } else {
@@ -151,15 +151,15 @@ export const filterDoiObjects = (objects, isDataCite = false) => {
         return '';
     }
     if (isDataCite) {
-        return objects.find(doi => doi.label?.startsWith(env('DATACITE_DOI_PREFIX'))) ?? '';
+        return objects.find((doi) => doi.label?.startsWith(env('DATACITE_DOI_PREFIX'))) ?? '';
     }
-    return objects.find(doi => doi.label?.startsWith('10.') && !doi.label?.startsWith(env('DATACITE_DOI_PREFIX'))) ?? '';
+    return objects.find((doi) => doi.label?.startsWith('10.') && !doi.label?.startsWith(env('DATACITE_DOI_PREFIX'))) ?? '';
 };
 
 export const getAuthorsInList = ({ resourceId, statements }) => {
     const sortedStatements = sortBy(statements ?? [], 'index');
     const authorList = filterObjectOfStatementsByPredicateAndClass(
-        sortedStatements.filter(s => s.subject.id === resourceId),
+        sortedStatements.filter((s) => s.subject.id === resourceId),
         PREDICATES.HAS_AUTHORS,
         false,
     );
@@ -171,7 +171,7 @@ export const getAuthorsInList = ({ resourceId, statements }) => {
 
     const authorsArray = [];
     for (const author of authors) {
-        const orcid = sortedStatements.find(s => s.subject.id === author.id && s.predicate.id === PREDICATES.HAS_ORCID);
+        const orcid = sortedStatements.find((s) => s.subject.id === author.id && s.predicate.id === PREDICATES.HAS_ORCID);
         if (orcid) {
             authorsArray.push({ ...author, orcid: orcid.object.label });
         } else {
@@ -181,9 +181,9 @@ export const getAuthorsInList = ({ resourceId, statements }) => {
     return authorsArray ?? [];
 };
 
-export const addAuthorsToStatementBundle = async statements => {
-    const authorListStatements = statements.map(bundle => bundle.statements.find(statement => statement.predicate.id === PREDICATES.HAS_AUTHORS));
-    const _authors = await getStatementsBySubjects({ ids: authorListStatements.filter(p => p?.object?.id).map(p => p?.object?.id) });
+export const addAuthorsToStatementBundle = async (statements) => {
+    const authorListStatements = statements.map((bundle) => bundle.statements.find((statement) => statement.predicate.id === PREDICATES.HAS_AUTHORS));
+    const _authors = await getStatementsBySubjects({ ids: authorListStatements.filter((p) => p?.object?.id).map((p) => p?.object?.id) });
 
     return statements.map((bundle, index) => ({
         ...bundle,
@@ -191,8 +191,8 @@ export const addAuthorsToStatementBundle = async statements => {
     }));
 };
 
-export const getAuthorStatements = async statements => {
-    const listId = statements.find(statement => statement.predicate.id === PREDICATES.HAS_AUTHORS)?.object?.id;
+export const getAuthorStatements = async (statements) => {
+    const listId = statements.find((statement) => statement.predicate.id === PREDICATES.HAS_AUTHORS)?.object?.id;
     if (!listId) {
         return statements;
     }
@@ -203,8 +203,8 @@ export const getAuthorStatements = async statements => {
     });
 };
 
-export const addAuthorsToStatements = async statements => {
-    const listId = statements.find(statement => statement.predicate.id === PREDICATES.HAS_AUTHORS)?.object?.id;
+export const addAuthorsToStatements = async (statements) => {
+    const listId = statements.find((statement) => statement.predicate.id === PREDICATES.HAS_AUTHORS)?.object?.id;
     if (!listId) {
         return statements;
     }
@@ -217,7 +217,7 @@ export const addAuthorsToStatements = async statements => {
  * @param {Array} paperStatements
  */
 export const getPaperDataViewPaper = (paperResource, paperStatements) => {
-    const paperStatementsFirstLevel = paperStatements.filter(s => s.subject.id === paperResource.id);
+    const paperStatementsFirstLevel = paperStatements.filter((s) => s.subject.id === paperResource.id);
     const authors = getAuthorsInList({ resourceId: paperResource.id, statements: paperStatements });
     const authorListResource = filterObjectOfStatementsByPredicateAndClass(paperStatementsFirstLevel, PREDICATES.HAS_AUTHORS, false)?.[0];
 
@@ -486,7 +486,7 @@ export const getPropertyShapeData = (propertyShape, propertyShapeStatements) => 
  * @param {Array} visualizationStatements
  */
 export const getVisualizationData = (resource, visualizationStatements) => {
-    const description = visualizationStatements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
+    const description = visualizationStatements.find((statement) => statement.predicate.id === PREDICATES.DESCRIPTION);
     const authors = getAuthorsInList({ resourceId: resource.id, statements: visualizationStatements });
 
     return {
@@ -539,15 +539,15 @@ export const filterSubjectOfStatementsByPredicateAndClass = (statementsArray, pr
     if (!statementsArray) {
         return isUnique ? null : [];
     }
-    let result = statementsArray.filter(statement => statement.predicate.id === predicateID);
+    let result = statementsArray.filter((statement) => statement.predicate.id === predicateID);
     if (classID) {
-        result = statementsArray.filter(statement => statement.subject.classes && statement.subject.classes.includes(classID));
+        result = statementsArray.filter((statement) => statement.subject.classes && statement.subject.classes.includes(classID));
     }
     if (result.length > 0 && isUnique) {
         return { ...result[0].subject, statementId: result[0].id, s_created_at: result[0].created_at };
     }
     if (result.length > 0 && !isUnique) {
-        return result.map(s => ({ ...s.subject, statementId: s.id, s_created_at: s.created_at }));
+        return result.map((s) => ({ ...s.subject, statementId: s.id, s_created_at: s.created_at }));
     }
     return isUnique ? null : [];
 };
@@ -576,7 +576,7 @@ export function listToTree(list) {
     for (i = 0; i < list.length; i += 1) {
         map[list[i].id] = i; // initialize the map
         const v = list[i].hasPreviousVersion;
-        list[i].versions = v && !list.find(c => c.id === v.id) ? [list[i].hasPreviousVersion] : []; // initialize the versions
+        list[i].versions = v && !list.find((c) => c.id === v.id) ? [list[i].hasPreviousVersion] : []; // initialize the versions
     }
     for (i = 0; i < list.length; i += 1) {
         node = list[i];
@@ -594,9 +594,9 @@ export function convertTreeToFlat(treeStructure, childrenAttribute = 'versions')
     const flatten = (children, extractChildren) =>
         Array.prototype.concat.apply(
             children,
-            children.map(x => flatten(extractChildren(x) || [], extractChildren)),
+            children.map((x) => flatten(extractChildren(x) || [], extractChildren)),
         );
-    const extractChildren = x => x[childrenAttribute] ?? [];
+    const extractChildren = (x) => x[childrenAttribute] ?? [];
     const flat = flatten(extractChildren(treeStructure), extractChildren);
     return flat;
 }
@@ -608,7 +608,7 @@ export function convertTreeToFlat(treeStructure, childrenAttribute = 'versions')
  */
 export const groupVersionsOfComparisons = (comparisons, sortFunc = (a, b) => new Date(b.created_at) - new Date(a.created_at)) => {
     // 1- Remove duplicated and keep the ones with hasPreviousVersion
-    let result = comparisons.filter(c => c?.classes?.includes(CLASSES.COMPARISON));
+    let result = comparisons.filter((c) => c?.classes?.includes(CLASSES.COMPARISON));
     // 2- Make a tree of versions
     result = listToTree(uniqBy(sortBy(result, 'hasPreviousVersion'), 'id'));
     // 3- We flat the versions  inside the roots
@@ -618,7 +618,7 @@ export const groupVersionsOfComparisons = (comparisons, sortFunc = (a, b) => new
         result[i] = { ...arrayVersions[0], versions: arrayVersions };
     }
     // 4- We sort the roots
-    result = [...result, ...comparisons.filter(c => !c?.classes?.includes(CLASSES.COMPARISON))].sort(sortFunc);
+    result = [...result, ...comparisons.filter((c) => !c?.classes?.includes(CLASSES.COMPARISON))].sort(sortFunc);
     return result;
 };
 
@@ -652,7 +652,7 @@ export const mergeAlternate = (array1, array2) => {
 };
 
 // TODO: could be part of a 'parseDoi' hook when the add paper wizard is refactored to support hooks
-export const parseCiteResult = paper => {
+export const parseCiteResult = (paper) => {
     let paperTitle = '';
     let paperAuthors = [];
     let paperPublicationMonth = '';
@@ -670,7 +670,7 @@ export const parseCiteResult = paper => {
             paperTitle = unescape(`${paperTitle}: ${subtitle[0]}`);
         }
         if (author) {
-            paperAuthors = author.map(author => {
+            paperAuthors = author.map((author) => {
                 let fullname = [author.given, author.family].join(' ').trim();
                 if (!fullname) {
                     fullname = author.literal ? author.literal : '';
@@ -720,8 +720,8 @@ export const parseCiteResult = paper => {
  * @param {Array} resourceStatements
  */
 export function getRelatedFiguresData(resourcesStatements) {
-    const _figures = resourcesStatements.map(resourceStatements => {
-        const imageStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
+    const _figures = resourcesStatements.map((resourceStatements) => {
+        const imageStatement = resourceStatements.statements.find((statement) => statement.predicate.id === PREDICATES.IMAGE);
         const alt = resourceStatements.statements.length ? resourceStatements.statements[0]?.subject?.label : null;
         return {
             src: imageStatement ? imageStatement.object.label : '',
@@ -737,10 +737,10 @@ export function getRelatedFiguresData(resourcesStatements) {
  * @param {Array} resourceStatements
  */
 export function getRelatedResourcesData(resourcesStatements) {
-    const _resources = resourcesStatements.map(resourceStatements => {
-        const imageStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
-        const urlStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.URL);
-        const descriptionStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
+    const _resources = resourcesStatements.map((resourceStatements) => {
+        const imageStatement = resourceStatements.statements.find((statement) => statement.predicate.id === PREDICATES.IMAGE);
+        const urlStatement = resourceStatements.statements.find((statement) => statement.predicate.id === PREDICATES.URL);
+        const descriptionStatement = resourceStatements.statements.find((statement) => statement.predicate.id === PREDICATES.DESCRIPTION);
         return {
             url: urlStatement ? urlStatement.object.label : '',
             image: imageStatement ? imageStatement.object.label : '',
@@ -804,7 +804,7 @@ export const getLinkByEntityType = (_class, id) => {
  * @param {String} id Entity ID
  * @result {String} Entity type or false if no pattern matched
  */
-export const getEntityTypeByID = value => {
+export const getEntityTypeByID = (value) => {
     if (value.match(REGEX.RESOURCE_PATTERN)) {
         return ENTITIES.RESOURCE;
     }
@@ -823,7 +823,7 @@ export const getEntityTypeByID = value => {
  * @param {String} classId class ID
  * @result {String} resource label
  */
-export const getResourceTypeLabel = classId => {
+export const getResourceTypeLabel = (classId) => {
     let label = 'resource';
 
     switch (classId) {
@@ -882,7 +882,7 @@ export const getResourceTypeLabel = classId => {
  * @param {String} sort sort value
  * @result {String} Label
  */
-export const stringifySort = sort => {
+export const stringifySort = (sort) => {
     const stringsSortMapping = {
         newest: 'Recently added',
         oldest: 'Oldest first',
@@ -899,7 +899,7 @@ export const stringifySort = sort => {
  * Use reverse from 'named-urls' and automatically slugifies the slug param
  * @param input string that should be slugified
  */
-export const slugify = input => slugifyString(input.replace('/', ' '), '_');
+export const slugify = (input) => slugifyString(input.replace('/', ' '), '_');
 
 /**
  * Get base url of the application
@@ -927,7 +927,7 @@ export const checkCookie = () => {
     return !!cookieEnabled;
 };
 
-export const filterStatementsBySubjectId = (statements, subjectId) => statements.filter(statement => statement.subject.id === subjectId);
+export const filterStatementsBySubjectId = (statements, subjectId) => statements.filter((statement) => statement.subject.id === subjectId);
 
 /**
  * Parse resource statements and return an object of its type
@@ -994,15 +994,15 @@ export const handleSortableHoverReactDnd = ({ item, monitor, currentRef, hoverIn
     item.index = hoverIndex;
 };
 
-export const convertAuthorToOldFormat = author => ({
+export const convertAuthorToOldFormat = (author) => ({
     id: author.id,
     label: author.name,
     orcid: author.identifiers?.orcid?.[0],
     _class: author.id ? ENTITIES.RESOURCE : ENTITIES.LITERAL,
 });
-export const convertAuthorsToOldFormat = authors => authors.map(author => convertAuthorToOldFormat(author));
+export const convertAuthorsToOldFormat = (authors) => authors.map((author) => convertAuthorToOldFormat(author));
 
-export const convertAuthorToNewFormat = author => ({
+export const convertAuthorToNewFormat = (author) => ({
     id: author.classes && author.classes.includes(CLASSES.AUTHOR) ? author.id : null,
     name: author.label,
     ...(author.orcid
@@ -1014,12 +1014,12 @@ export const convertAuthorToNewFormat = author => ({
         : {}),
 });
 
-export const convertAuthorsToNewFormat = authors => authors.map(author => convertAuthorToNewFormat(author));
+export const convertAuthorsToNewFormat = (authors) => authors.map((author) => convertAuthorToNewFormat(author));
 
-export const convertVisualizationToNewFormat = visualization => ({
+export const convertVisualizationToNewFormat = (visualization) => ({
     id: visualization.id,
     title: visualization.label,
-    authors: visualization.authors.map(author => convertAuthorToNewFormat(author)),
+    authors: visualization.authors.map((author) => convertAuthorToNewFormat(author)),
     organizations: visualization.organizations,
     observatories: visualization.observatories,
     extraction_method: visualization.extraction_method,
@@ -1029,7 +1029,7 @@ export const convertVisualizationToNewFormat = visualization => ({
     description: visualization.description,
 });
 
-export const convertComparisonToNewFormat = comparison => ({
+export const convertComparisonToNewFormat = (comparison) => ({
     id: comparison.id,
     title: comparison.label,
     description: comparison.description,
@@ -1048,7 +1048,7 @@ export const convertComparisonToNewFormat = comparison => ({
         url: comparison.url?.label,
     },
     versions: comparison.versions,
-    authors: comparison.authors.map(author => convertAuthorToNewFormat(author)),
+    authors: comparison.authors.map((author) => convertAuthorToNewFormat(author)),
     contributions: comparison.contributions,
     visualizations: comparison.visualizations,
     related_figures: comparison.figures,
@@ -1064,7 +1064,7 @@ export const convertComparisonToNewFormat = comparison => ({
     visibility: comparison.visibility,
 });
 
-export const convertPaperToNewFormat = paper => ({
+export const convertPaperToNewFormat = (paper) => ({
     id: paper.id,
     title: paper.title || paper.label,
     ...(paper.researchField ? { research_fields: [paper.researchField] } : {}),
@@ -1078,10 +1078,10 @@ export const convertPaperToNewFormat = paper => ({
     publication_info: {
         published_month: paper.publicationMonth?.label,
         published_year: paper.publicationYear?.label,
-        published_in: paper.publishedIn?.label,
+        published_in: paper.publishedIn,
         url: paper.url?.label,
     },
-    authors: paper.authors ? paper.authors.map(author => convertAuthorToNewFormat(author)) : [],
+    authors: paper.authors ? paper.authors.map((author) => convertAuthorToNewFormat(author)) : [],
     contributions: paper.contributions,
     organizations: [paper.organization_id],
     observatories: [paper.observatory_id],

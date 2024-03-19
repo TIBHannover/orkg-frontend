@@ -1,35 +1,43 @@
-import { Alert, Col, FormGroup, Row, ListGroup, Button } from 'reactstrap';
-import ContentLoader from 'react-content-loader';
-import PropTypes from 'prop-types';
-import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useParams from 'components/NextJsMigration/useParams';
-import ContributionTab from 'components/ContributionTabs/ContributionTab';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
-import Tabs from 'components/Tabs/Tabs';
-import { StyledStatementItem, StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import { ENTITIES } from 'constants/graphSettings';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
-import useContributions from 'components/ViewPaperVersion/ContributionsVersion/hooks/useContributions';
-import Breadcrumbs from 'components/ViewPaperVersion/BreadCrumbs';
+import useParams from 'components/NextJsMigration/useParams';
+import useRouter from 'components/NextJsMigration/useRouter';
+import { PropertyStyle, StatementsGroupStyle, StyledStatementItem, ValuesStyle } from 'components/StatementBrowser/styled';
+import Tabs from 'components/Tabs/Tabs';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
+import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
+import Breadcrumbs from 'components/ViewPaperVersion/BreadCrumbs';
+import CSVWTable from 'components/ViewPaperVersion/CSVWTable/CSVWTable';
+import useContributions from 'components/ViewPaperVersion/ContributionsVersion/hooks/useContributions';
+import { ENTITIES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
+import ContentLoader from 'react-content-loader';
+import { Alert, Button, Col, FormGroup, ListGroup, Row } from 'reactstrap';
 
-const Contributions = props => {
+const Contributions = (props) => {
     const { resourceId, contributionId } = useParams();
-
-    const { isLoading, isLoadingContributionFailed, selectedContribution, contributionData, handleResourceClick, resourceHistory, handleBackClick } =
-        useContributions({
-            paperId: resourceId,
-            contributionId,
-            contributions: props.contributions,
-            paperStatements: props.paperStatements,
-        });
+    const {
+        isLoading,
+        isLoadingContributionFailed,
+        selectedContribution,
+        contributionData,
+        handleResourceClick,
+        resourceHistory,
+        handleBackClick,
+        activeTableId,
+    } = useContributions({
+        paperId: resourceId,
+        contributionId,
+        contributions: props.contributions,
+        paperStatements: props.paperStatements,
+    });
     const router = useRouter();
 
-    const onTabChange = key => {
+    const onTabChange = (key) => {
         router.push(
             reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                 resourceId,
@@ -65,7 +73,7 @@ const Contributions = props => {
                         activeKey={selectedContribution}
                         destroyInactiveTabPane={true}
                         onChange={onTabChange}
-                        items={props.contributions.map(contribution => ({
+                        items={props.contributions.map((contribution) => ({
                             label: (
                                 <ContributionTab
                                     handleChangeContributionLabel={() => {}}
@@ -101,7 +109,11 @@ const Contributions = props => {
                                                 {resourceHistory.length > 0 && (
                                                     <Breadcrumbs resourceHistory={resourceHistory} handleBackClick={handleBackClick} />
                                                 )}
-                                                {!isLoading && Object.keys(contributionData).length > 0 ? (
+                                                {!isLoading && activeTableId && (
+                                                    // When activeTableId is set, display the CSVWTable for that ID.
+                                                    <CSVWTable id={activeTableId} paperStatements={props.paperStatements} />
+                                                )}
+                                                {!isLoading && !activeTableId && Object.keys(contributionData).length > 0 && (
                                                     <>
                                                         {Object.keys(contributionData).map((cd, i) => (
                                                             <StatementsGroupStyle className="noTemplate list-group-item" key={`st${i}`}>
@@ -138,7 +150,8 @@ const Contributions = props => {
                                                             </StatementsGroupStyle>
                                                         ))}
                                                     </>
-                                                ) : (
+                                                )}
+                                                {!isLoading && !activeTableId && Object.keys(contributionData).length === 0 && (
                                                     <ListGroup tag="div" className="listGroupEnlarge">
                                                         <StyledStatementItem className="mb-0 rounded">No data</StyledStatementItem>
                                                     </ListGroup>

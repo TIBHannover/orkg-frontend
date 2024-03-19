@@ -41,8 +41,8 @@ function Publish(props) {
     const [description, setDescription] = useState('');
     const [subject, setSubject] = useState(null);
     const [creators, setCreators] = useState([]);
-    const viewPaper = useSelector(state => state.viewPaper.paper);
-    const version = useSelector(state => state.viewPaper.version);
+    const viewPaper = useSelector((state) => state.viewPaper.paper);
+    const version = useSelector((state) => state.viewPaper.version);
     const [dataCiteDoi, setDataCiteDoi] = useState('');
     const [createdPaperId, setCreatedPaperId] = useState('');
     const { title } = viewPaper;
@@ -51,17 +51,17 @@ function Publish(props) {
         setSubject(viewPaper.research_fields.length > 0 ? viewPaper.research_fields?.[0] : null);
     }, [viewPaper]);
 
-    const getPaperStatements = async paperId => {
+    const getPaperStatements = async (paperId) => {
         const pStatements = await getStatementsBySubject({ id: paperId });
         const contributions = filterObjectOfStatementsByPredicateAndClass(pStatements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
-        const contributionAPIcalls = contributions.map(contribution =>
+        const contributionAPIcalls = contributions.map((contribution) =>
             getStatementsBundleBySubject({ id: contribution.id, maxLevel: 10, blacklist: [CLASSES.RESEARCH_FIELD] }),
         );
-        const statements = await Promise.all(contributionAPIcalls).then(r => flatten(r.map(c => c.statements)));
+        const statements = await Promise.all(contributionAPIcalls).then((r) => flatten(r.map((c) => c.statements)));
         return statements;
     };
 
-    const publishDOI = async paperId => {
+    const publishDOI = async (paperId) => {
         if (title && title.trim() !== '' && description && description.trim() !== '') {
             const paperStatements = await getPaperStatements(paperId);
             if (paperStatements.length === 0) {
@@ -103,11 +103,18 @@ function Publish(props) {
                                 },
                             ],
                         }),
+                        ...(viewPaper.publication_info?.published_in && {
+                            [PREDICATES.HAS_VENUE]: [
+                                {
+                                    '@id': viewPaper.publication_info?.published_in.id,
+                                },
+                            ],
+                        }),
                     },
                 },
             };
 
-            let paperCreatorsORCID = creators.map(async curator => {
+            let paperCreatorsORCID = creators.map(async (curator) => {
                 if (!curator.orcid && curator._class === ENTITIES.RESOURCE) {
                     const statements = await getStatementsBySubjectAndPredicate({ subjectId: curator.id, predicateId: PREDICATES.HAS_ORCID });
                     return { ...curator, orcid: filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_ORCID, true)?.label };
@@ -127,10 +134,10 @@ function Publish(props) {
                 // we send only one contribution id because we want to create a DOI for the whole paper and not for each contribution.
                 // the backend will fetch the paper original DOI
                 related_resources: viewPaper.contributions?.[0] ? [viewPaper.contributions[0].id] : [''],
-                authors: paperCreatorsORCID.map(creator => ({ creator: creator.label, orcid: creator.orcid ? creator.orcid : null })),
+                authors: paperCreatorsORCID.map((creator) => ({ creator: creator.label, orcid: creator.orcid ? creator.orcid : null })),
                 url: `${getPublicUrl()}${reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaper.id })}`,
             })
-                .then(async doiResponse => {
+                .then(async (doiResponse) => {
                     // The followed model:
                     // https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Modeling-of-persistent-identification-of-ORKG-papers
                     const doiLiteral = await createLiteral(doiResponse.doi);
@@ -159,7 +166,7 @@ function Publish(props) {
         }
     };
 
-    const handleSubmit = e => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         setIsLoading(true);
         try {
@@ -176,7 +183,7 @@ function Publish(props) {
             <ModalBody>
                 <Alert color="info">
                     {viewPaper.id && !dataCiteDoi && (
-                        <>Persistently identified paper will be findable in global scholarly infrastructures (DataCite, OpenAIRE and ORCID).</>
+                        <>Persistently identified papers will be findable in global scholarly infrastructures (DataCite, OpenAIRE and ORCID).</>
                     )}
                     {createdPaperId && dataCiteDoi && (
                         <>
@@ -225,7 +232,7 @@ function Publish(props) {
                                 name="description"
                                 value={description}
                                 id="description"
-                                onChange={e => setDescription(e.target.value)}
+                                onChange={(e) => setDescription(e.target.value)}
                                 maxLength={MAX_LENGTH_INPUT}
                             />
                         </FormGroup>
@@ -238,7 +245,7 @@ function Publish(props) {
                                 entityType={ENTITIES.RESOURCE}
                                 optionsClass={CLASSES.RESEARCH_FIELD}
                                 placeholder="Enter a research field"
-                                onItemSelected={i => {
+                                onItemSelected={(i) => {
                                     setSubject({ ...i, label: i.value });
                                 }}
                                 value={subject}
@@ -256,7 +263,7 @@ function Publish(props) {
                                 <AuthorsInput
                                     disabled={true}
                                     itemLabel="creator"
-                                    handler={_creators => setCreators(convertAuthorsToOldFormat(_creators) || [])}
+                                    handler={(_creators) => setCreators(convertAuthorsToOldFormat(_creators) || [])}
                                     value={convertAuthorsToNewFormat(creators)}
                                 />
                             )}
@@ -271,7 +278,7 @@ function Publish(props) {
                     {!dataCiteDoi && (
                         <div className="text-align-center mt-2">
                             <ButtonWithLoading color="primary" isLoading={isLoading} onClick={handleSubmit}>
-                                Publish DOI
+                                Publish
                             </ButtonWithLoading>
                         </div>
                     )}

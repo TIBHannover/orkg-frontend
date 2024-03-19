@@ -11,7 +11,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { getAltMetrics } from 'services/altmetric/index';
 
 const PaperVersionHeader = () => {
-    const viewPaper = useSelector(state => state.viewPaper.paper, shallowEqual);
+    const viewPaper = useSelector((state) => state.viewPaper.paper, shallowEqual);
     const [altMetrics, setAltMetrics] = useState(null);
 
     useEffect(() => {
