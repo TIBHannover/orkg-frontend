@@ -44,7 +44,7 @@ function useResearchFieldContent({
                     desc: true,
                     subfields: includeSubFields,
                     visibility: VISIBILITY_FILTERS.NON_FEATURED,
-                    classes: classesFilter.map(c => c.id),
+                    classes: classesFilter.map((c) => c.id),
                 });
                 const featuredContentService = getContentByResearchFieldIdAndClasses({
                     id: researchFieldId,
@@ -54,7 +54,7 @@ function useResearchFieldContent({
                     desc: true,
                     subfields: includeSubFields,
                     visibility: VISIBILITY_FILTERS.FEATURED,
-                    classes: classesFilter.map(c => c.id),
+                    classes: classesFilter.map((c) => c.id),
                 });
                 contentService = Promise.all([noFeaturedContentService, featuredContentService]).then(([noFeaturedContent, featuredContent]) => {
                     const combinedComparisons = mergeAlternate(noFeaturedContent.content, featuredContent.content);
@@ -73,37 +73,41 @@ function useResearchFieldContent({
                     desc: true,
                     subfields: includeSubFields,
                     visibility: sort,
-                    classes: classesFilter.map(c => c.id),
-                }).then(response => ({ ...response, content: response.content }));
+                    classes: classesFilter.map((c) => c.id),
+                }).then((response) => ({ ...response, content: response.content }));
             }
 
             contentService
-                .then(result => {
+                .then((result) => {
                     // Fetch the data of each content
                     getStatementsBySubjects({
-                        ids: result.content.map(p => p.id),
+                        ids: result.content.map((p) => p.id),
                     })
-                        .then(statements => addAuthorsToStatementBundle(statements))
-                        .then(contentsStatements => {
-                            const dataObjects = contentsStatements.map(statements => {
-                                const resourceSubject = find(result.content, {
-                                    id: statements.id,
-                                });
-                                return getDataBasedOnType(resourceSubject, statements.statements);
-                            });
-                            setItems(prevResources => {
+                        .then((statements) => addAuthorsToStatementBundle(statements))
+                        .then((contentsStatements) =>
+                            Promise.all(
+                                contentsStatements.map((statements) => {
+                                    const resourceSubject = find(result.content, {
+                                        id: statements.id,
+                                    });
+                                    return getDataBasedOnType(resourceSubject, statements.statements);
+                                }),
+                            ),
+                        )
+                        .then((dataObjects) => {
+                            setItems((prevResources) => {
                                 let newItems = dataObjects;
                                 newItems = groupVersionsOfComparisons([
-                                    ...flatten([...prevResources.map(c => c.versions ?? []), ...prevResources]),
+                                    ...flatten([...prevResources.map((c) => c.versions ?? []), ...prevResources]),
                                     ...newItems,
                                 ]);
                                 if (sort === 'combined') {
                                     newItems = mergeAlternate(
-                                        newItems.filter(i => i.featured),
-                                        newItems.filter(i => !i.featured),
+                                        newItems.filter((i) => i.featured),
+                                        newItems.filter((i) => !i.featured),
                                     );
                                 }
-                                return flatten([...prevResources, newItems.filter(t => t && !prevResources.map(p => p.id).includes(t.id))]);
+                                return flatten([...prevResources, newItems.filter((t) => t && !prevResources.map((p) => p.id).includes(t.id))]);
                             });
 
                             setIsLoading(false);
@@ -149,7 +153,7 @@ function useResearchFieldContent({
                         : reverse(ROUTES.RESEARCH_FIELD_NO_SLUG, {
                               researchFieldId,
                           })
-                }?sort=${sort}&includeSubFields=${includeSubFields}&classesFilter=${classesFilter.map(c => c.id).join(',')}`,
+                }?sort=${sort}&includeSubFields=${includeSubFields}&classesFilter=${classesFilter.map((c) => c.id).join(',')}`,
                 { replace: true },
             );
         }
