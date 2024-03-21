@@ -19,7 +19,7 @@ export const submitGetRequest = (url, headers, send_token = false) => {
             method: 'GET',
             headers: myHeaders,
         })
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     reject({
                         error: new Error(`Error response. (${response.status}) ${response.statusText}`),
@@ -72,7 +72,7 @@ export const submitPostRequest = (
 
     return new Promise((resolve, reject) => {
         fetch(url, { method: 'POST', headers: myHeaders, body: data })
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     const json = response.json();
                     if (json.then) {
@@ -120,7 +120,7 @@ export const submitPutRequest = (url, headers, data, jsonStringify = true) => {
 
     return new Promise((resolve, reject) => {
         fetch(url, { method: 'PUT', headers: myHeaders, body: _data })
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     const json = response.json();
                     if (json.then) {
@@ -165,7 +165,7 @@ export const submitPatchRequest = (url, headers, data, jsonStringify = true) => 
 
     return new Promise((resolve, reject) => {
         fetch(url, { method: 'PATCH', headers: myHeaders, body: _data })
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     const json = response.json();
                     if (json.then) {
@@ -206,8 +206,12 @@ export const submitDeleteRequest = (url, headers, data) => {
 
     return new Promise((resolve, reject) => {
         fetch(url, { method: 'DELETE', headers: myHeaders, body: JSON.stringify(data) })
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
+                    const json = response.json();
+                    if (json.then) {
+                        return json.then(reject);
+                    }
                     reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
                 } else {
                     return resolve();
@@ -217,4 +221,4 @@ export const submitDeleteRequest = (url, headers, data) => {
     });
 };
 
-export const getCreatedIdFromHeaders = headers => headers.get('Location')?.substring((headers.get('Location')?.lastIndexOf('/') || 0) + 1) || '';
+export const getCreatedIdFromHeaders = (headers) => headers.get('Location')?.substring((headers.get('Location')?.lastIndexOf('/') || 0) + 1) || '';

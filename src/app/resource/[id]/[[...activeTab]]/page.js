@@ -2,6 +2,7 @@
 
 import { faEllipsisV, faExternalLinkAlt, faPen, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
@@ -43,7 +44,7 @@ function Resource() {
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
     const [isOpenGraphViewModal, setIsOpenGraphViewModal] = useState(false);
     const [preventEditCase, setPreventEditCase] = useState(null);
-    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
+    const user = useSelector((state) => state.auth.user);
     const { deleteResource } = useDeleteResource({ resourceId: id, redirect: true });
     const [isOpenPreventModal, setIsOpenPreventModal] = useState(false);
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
@@ -52,7 +53,7 @@ function Resource() {
         featured: resource?.featured,
     });
 
-    const getDedicatedLink = useCallback(_classes => {
+    const getDedicatedLink = useCallback((_classes) => {
         for (const _class of _classes ?? []) {
             if (_class in DEDICATED_PAGE_LINKS) {
                 // only for a link for the first class occurrence (to prevent problems when a
@@ -67,7 +68,7 @@ function Resource() {
         const findResource = async () => {
             setIsLoading(true);
             getResource(id)
-                .then(async responseJson => {
+                .then(async (responseJson) => {
                     document.title = `${responseJson.label} - Resource - ORKG`;
                     setResource(responseJson);
                     const link = getDedicatedLink(responseJson.classes);
@@ -84,7 +85,7 @@ function Resource() {
                     setPreventEditCase(prevent);
                     setIsLoading(false);
                 })
-                .catch(err => {
+                .catch((err) => {
                     setResource(null);
                     setError(err);
                     setIsLoading(false);
@@ -94,11 +95,18 @@ function Resource() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, isCurationAllowed, getDedicatedLink]);
 
-    const handleHeaderChange = val => {
-        setResource(prev => ({ ...prev, label: val }));
+    const handleHeaderChange = (val) => {
+        setResource((prev) => ({ ...prev, label: val }));
     };
 
     const dedicatedLink = getDedicatedLink(resource?.classes);
+    const isShared = resource.shared > 0;
+    const isUserIsCreator = resource.created_by === user.id;
+    const { isCurationAllowed } = user;
+    const isDeletionAllowed = !isShared && (isUserIsCreator || isCurationAllowed);
+    const preventDeletionTooltipText = isShared
+        ? 'This resource is used in statements so it cannot be deleted'
+        : "You cannot delete this resource because you are not the creator and you don't have the curator role";
 
     return (
         <>
@@ -172,7 +180,7 @@ function Resource() {
                                         <small>No label</small>
                                     </i>
                                 )}
-                                {resource?.classes?.some(c => CONTENT_TYPES.includes(c)) && (
+                                {resource?.classes?.some((c) => CONTENT_TYPES.includes(c)) && (
                                     <span className="ms-2">
                                         <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
                                         <div className="d-inline-block ms-1">
@@ -184,11 +192,21 @@ function Resource() {
                         ) : (
                             <>
                                 <EditableHeader id={id} value={resource.label} onChange={handleHeaderChange} entityType={ENTITIES.RESOURCE} />
-                                {isEditMode && isCurationAllowed && (
-                                    <Button color="danger" size="sm" className="mt-2 mb-3" style={{ marginLeft: 'auto' }} onClick={deleteResource}>
-                                        <Icon icon={faTrash} /> Delete resource
-                                    </Button>
-                                )}
+
+                                <Tippy content={preventDeletionTooltipText} disabled={isDeletionAllowed}>
+                                    <span>
+                                        <Button
+                                            color="danger"
+                                            size="sm"
+                                            className="mt-2 mb-3"
+                                            style={{ marginLeft: 'auto' }}
+                                            onClick={deleteResource}
+                                            disabled={!isDeletionAllowed}
+                                        >
+                                            <Icon icon={faTrash} /> Delete resource
+                                        </Button>
+                                    </span>
+                                </Tippy>
                             </>
                         )}
 
@@ -200,12 +218,12 @@ function Resource() {
                         <PreventModal
                             {...preventEditCase.preventModalProps(resource)}
                             isOpen={isOpenPreventModal}
-                            toggle={() => setIsOpenPreventModal(v => !v)}
+                            toggle={() => setIsOpenPreventModal((v) => !v)}
                         />
                     )}
                 </>
             )}
-            {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal(v => !v)} resourceId={resource.id} />}
+            {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal((v) => !v)} resourceId={resource.id} />}
         </>
     );
 }
