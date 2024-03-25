@@ -43,9 +43,13 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate }, ref) => {
                         {value._class === ENTITIES.RESOURCE && <TableCellValueResource value={value} />}
                         {value._class === ENTITIES.LITERAL && (
                             <div role="textbox" tabIndex="0" onDoubleClick={env('PWC_USER_ID') !== value.created_by ? handleStartEdit : undefined}>
-                                <ValuePlugins type={value._class} options={{ inModal: true }}>
-                                    {value.label || <i>No label</i>}
-                                </ValuePlugins>
+                                {value.label ? (
+                                    <ValuePlugins type={value._class} options={{ inModal: true }}>
+                                        {value.label}
+                                    </ValuePlugins>
+                                ) : (
+                                    <i>No label</i>
+                                )}
                             </div>
                         )}
 

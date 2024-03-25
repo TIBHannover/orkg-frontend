@@ -46,8 +46,8 @@ const ValueItem = ({
 
     const [isTooltipVisible, setIsTooltipVisible] = useState(showHelp && value._class === ENTITIES.RESOURCE);
 
-    const resourcesAsLinks = useSelector(state => state.statementBrowser.resourcesAsLinks);
-    const preferences = useSelector(state => state.statementBrowser.preferences);
+    const resourcesAsLinks = useSelector((state) => state.statementBrowser.resourcesAsLinks);
+    const preferences = useSelector((state) => state.statementBrowser.preferences);
     const existingResourceId = resource ? resource.existingResourceId : false;
     let handleOnClick = null;
 
@@ -128,9 +128,11 @@ const ValueItem = ({
                                                         >
                                                             {value._class === ENTITIES.CLASS && <div className="typeCircle">C</div>}
                                                             {value._class === ENTITIES.PREDICATE && <div className="typeCircle">P</div>}
-                                                            <ValuePlugins type="resource">
-                                                                {formattedLabel !== '' ? formattedLabel.toString() : <i>No label</i>}
-                                                            </ValuePlugins>
+                                                            {formattedLabel !== '' ? (
+                                                                <ValuePlugins type="resource">{formattedLabel.toString()}</ValuePlugins>
+                                                            ) : (
+                                                                <i>No label</i>
+                                                            )}
                                                             {resource && resource.existingResourceId && openExistingResourcesInDialog && (
                                                                 <span>
                                                                     {' '}
@@ -156,9 +158,11 @@ const ValueItem = ({
 
                                     {value._class === ENTITIES.LITERAL && (
                                         <div className="literalLabel">
-                                            <ValuePlugins type={ENTITIES.LITERAL}>
-                                                {value.label !== '' ? value.label.toString() : <i>No label</i>}
-                                            </ValuePlugins>
+                                            {value.label !== '' ? (
+                                                <ValuePlugins type={ENTITIES.LITERAL}>{value.label.toString()}</ValuePlugins>
+                                            ) : (
+                                                <i>No label</i>
+                                            )}
                                         </div>
                                     )}
                                 </span>
@@ -176,7 +180,7 @@ const ValueItem = ({
             {modal ? (
                 <StatementBrowserDialog
                     show={modal}
-                    toggleModal={() => setModal(prev => !prev)}
+                    toggleModal={() => setModal((prev) => !prev)}
                     id={dialogResourceId}
                     label={dialogResourceLabel}
                     newStore={Boolean(contextStyle === 'StatementBrowser' || existingResourceId)}
