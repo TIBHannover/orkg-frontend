@@ -152,8 +152,8 @@ const useQualityReport = () => {
                     solution:
                         'Edit the contributions and add resources instead of literals. Ensure the resource labels are short, making them more suitable to be reused.',
                     performEvaluation: () => {
-                        const resources = resourcesAndLiterals.filter(entity => entity.type === ENTITIES.RESOURCE);
-                        const literals = resourcesAndLiterals.filter(entity => entity.type === ENTITIES.LITERAL);
+                        const resources = resourcesAndLiterals.filter(entity => entity._class === ENTITIES.RESOURCE);
+                        const literals = resourcesAndLiterals.filter(entity => entity._class === ENTITIES.LITERAL);
                         const passing = resources.length > 0 && literals.length > 0;
                         return {
                             passing,
@@ -167,7 +167,7 @@ const useQualityReport = () => {
                     solution: 'Update the resource labels in the contributions, or change the resources all together.',
                     performEvaluation: () => {
                         const MAX_LENGTH = 100;
-                        const resources = resourcesAndLiterals.filter(entity => entity.type === ENTITIES.RESOURCE);
+                        const resources = resourcesAndLiterals.filter(entity => entity._class === ENTITIES.RESOURCE);
                         const resourcesWithTooLongLabels = resources.filter(resource => resource.label.length > MAX_LENGTH);
                         const passing = resourcesWithTooLongLabels.length === 0;
                         return {
