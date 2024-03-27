@@ -1,20 +1,20 @@
+import { faMastodon } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
+import EOSC_LOGO from 'assets/img/poweredby/EOSC.png';
+import L3S_LOGO from 'assets/img/poweredby/L3S.png';
+import LUH_LOGO from 'assets/img/poweredby/LUH.png';
+import TIB_LOGO from 'assets/img/poweredby/TIB_Logo_EN.png';
+import EU_LOGO from 'assets/img/poweredby/co-funded-h2020-horiz_en.png';
+import INFAI_LOGO from 'assets/img/poweredby/infAI.png';
+import Logo from 'assets/img/vertical_logo.svg';
+import Image from 'components/NextJsMigration/Image';
 import Link from 'components/NextJsMigration/Link';
-import { Container, Row, Col, Badge } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import ROUTES_CMS from 'constants/routesCms';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTwitter } from '@fortawesome/free-brands-svg-icons';
-import Logo from 'assets/img/vertical_logo.svg';
-import TIB_LOGO from 'assets/img/poweredby/TIB_Logo_EN.png';
-import LUH_LOGO from 'assets/img/poweredby/LUH.png';
-import L3S_LOGO from 'assets/img/poweredby/L3S.png';
-import INFAI_LOGO from 'assets/img/poweredby/infAI.png';
-import EU_LOGO from 'assets/img/poweredby/co-funded-h2020-horiz_en.png';
-import EOSC_LOGO from 'assets/img/poweredby/EOSC.png';
-import styled from 'styled-components';
 import { reverse } from 'named-urls';
-import Tippy from '@tippyjs/react';
-import Image from 'components/NextJsMigration/Image';
+import { Badge, Col, Container, Row } from 'reactstrap';
+import styled from 'styled-components';
 
 const FooterWrapper = styled.div`
     background: #e0e2ea;
@@ -23,32 +23,26 @@ const FooterWrapper = styled.div`
 `;
 
 const FooterCol = styled(Col)`
-    color: ${props => props.theme.secondaryDarker};
+    color: ${(props) => props.theme.secondaryDarker};
     margin: 10px 0;
     font-size: 0.95rem;
 
     h5 {
         font-weight: 500;
         text-transform: uppercase;
-        color: ${props => props.theme.secondaryDarker};
+        color: ${(props) => props.theme.secondaryDarker};
         font-size: 1.1rem;
     }
     .description {
         font-size: 0.85rem;
     }
     a {
-        color: ${props => props.theme.secondaryDarker};
+        color: ${(props) => props.theme.secondaryDarker};
     }
 `;
 
 const PartnerLogoCol = styled(Col)`
     text-align: center;
-`;
-
-const TwitterLink = styled.a`
-    &:hover {
-        color: #00acee;
-    }
 `;
 
 const Footer = () => (
@@ -126,10 +120,10 @@ const Footer = () => (
                         <hr className="me-5" />
                         <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
-                                <TwitterLink href="https://twitter.com/orkg_org" target="_blank" rel="noopener noreferrer">
+                                <a href="https://mastodon.social/@orkg" target="_blank" rel="noopener noreferrer">
                                     Follow us
-                                    <Icon className="ms-2" icon={faTwitter} />
-                                </TwitterLink>
+                                    <Icon className="ms-2" icon={faMastodon} />
+                                </a>
                             </li>
                             <li>
                                 <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.CONTACT })}>Contact us</Link>

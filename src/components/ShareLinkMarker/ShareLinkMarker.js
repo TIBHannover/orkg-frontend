@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { faFacebook, faXTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
@@ -46,7 +46,7 @@ const ShareLinkMarker = ({ typeOfLink, title }) => {
             </Tippy>
             <Tippy singleton={target} content={`Share this  ${typeOfLink || 'page'} on Twitter`}>
                 <a href={getTwitterSharerLink({ shareUrl, title })} target="_blank" className="text-secondary" rel="noopener noreferrer">
-                    <Icon icon={faTwitter} />
+                    <Icon icon={faXTwitter} />
                 </a>
             </Tippy>
             <Tippy singleton={target} content={`Share this  ${typeOfLink || 'page'} on Linkedin`}>
