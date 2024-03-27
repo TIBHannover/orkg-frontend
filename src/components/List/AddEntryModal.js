@@ -30,12 +30,12 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
     const [bibTex, setBibTex] = useState('');
     const [tab, setTab] = useState('title');
     const [results, setResults] = useState([]);
-    const sections = useSelector(state => state.list.sections);
+    const sections = useSelector((state) => state.list.sections);
     const dispatch = useDispatch();
     const { getContentTypeData } = useList();
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
 
-    const getPaperIdByDoi = async doi => {
+    const getPaperIdByDoi = async (doi) => {
         try {
             const paper = await getPaperByDoi(doi);
             return paper.id;
@@ -44,7 +44,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
         }
     };
 
-    const getPaperIdByTitle = async title => {
+    const getPaperIdByTitle = async (title) => {
         try {
             const paper = await getPaperByTitle(title);
             return paper.id;
@@ -89,9 +89,10 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
         }
     };
 
-    const checkIfInList = entityId => sections.find(section => section.id === sectionId)?.entries.find(entry => entry.contentTypeId === entityId);
+    const checkIfInList = (entityId) =>
+        sections.find((section) => section.id === sectionId)?.entries.find((entry) => entry.contentTypeId === entityId);
 
-    const addEntityToList = async contentTypeData => {
+    const addEntityToList = async (contentTypeData) => {
         const _contentTypeData = await getContentTypeData(contentTypeData.existingContentTypeId);
         dispatch(
             addListEntry({
@@ -103,7 +104,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
     };
 
     // for now parsed bibtex and DOIs are always considered as papers
-    const handleParse = async value => {
+    const handleParse = async (value) => {
         setIsLoadingCite(true);
         try {
             const _results = [];
@@ -133,8 +134,8 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                     _results.push({
                         title: paperTitle,
                         authors: convertAuthorsToOldFormat(paperAuthors),
-                        paperPublicationMonth,
-                        paperPublicationYear,
+                        publicationMonth: paperPublicationMonth,
+                        publicationYear: paperPublicationYear,
                         doi,
                         publishedIn,
                         paperId,
@@ -158,7 +159,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
         }
     };
 
-    const handleAutocompleteSelect = async selected => {
+    const handleAutocompleteSelect = async (selected) => {
         setTitle(selected.label);
 
         // check if is existing
@@ -169,20 +170,20 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                 {
                     title: selected.title,
                     paperPublicationYear: selected.year,
-                    authors: selected.authors?.map(author => ({ label: author.name })),
+                    authors: selected.authors?.map((author) => ({ label: author.name })),
                     venue: selected.venue,
                 },
             ]);
         }
     };
 
-    const getMetaData = async id => {
+    const getMetaData = async (id) => {
         let statements = await getStatementsBySubject({ id });
         statements = await addAuthorsToStatements(statements);
         const paperData = getPaperData(statements[0]?.subject, statements);
         return {
             title: paperData?.label,
-            authors: paperData?.authors.map(author => ({ label: author.label })),
+            authors: paperData?.authors.map((author) => ({ label: author.label })),
             paperPublicationMonth: paperData?.publicationMonth?.label,
             paperPublicationYear: paperData?.publicationYear?.label,
             doi: paperData?.doi?.label,
@@ -191,7 +192,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
         };
     };
 
-    const switchTab = _tab => {
+    const switchTab = (_tab) => {
         if (tab === _tab) {
             return;
         }
@@ -201,8 +202,8 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
 
     return (
         <>
-            <Modal isOpen={isOpen} toggle={v => setIsOpen(!v)} size="lg">
-                <ModalHeader toggle={v => setIsOpen(!v)}>Add entries</ModalHeader>
+            <Modal isOpen={isOpen} toggle={(v) => setIsOpen(!v)} size="lg">
+                <ModalHeader toggle={(v) => setIsOpen(!v)}>Add entries</ModalHeader>
                 <ModalBody>
                     <ButtonGroup className="w-100 mb-4">
                         <Button size="sm" color={tab === 'title' ? 'primary' : 'light'} style={{ marginRight: 2 }} onClick={() => switchTab('title')}>
@@ -223,7 +224,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                                     type="select"
                                     style={{ width: 120 }}
                                     className="flex-grow-0"
-                                    onChange={e => setContentType(e.target.value)}
+                                    onChange={(e) => setContentType(e.target.value)}
                                 >
                                     <option value="all">All</option>
                                     <option value={CLASSES.PAPER}>Papers</option>
@@ -235,7 +236,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                                         key={contentType} // reset autocomplete when content type changes
                                         contentType={contentType}
                                         value={title}
-                                        onChange={v => setTitle(v)}
+                                        onChange={(v) => setTitle(v)}
                                         onOptionClick={handleAutocompleteSelect}
                                         performExistingPaperLookup={false}
                                         performOrkgLookup={true}
@@ -253,7 +254,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                                     value={doi}
                                     placeholder="Enter DOIs, whitespace separated"
                                     className="form-control"
-                                    onChange={e => setDoi(e.target.value)}
+                                    onChange={(e) => setDoi(e.target.value)}
                                 />
                                 <Button outline color="primary" style={{ minWidth: 130 }} disabled={isLoadingCite} onClick={() => handleParse(doi)}>
                                     {!isLoadingCite ? 'Lookup' : <Icon icon={faSpinner} spin />}
@@ -270,7 +271,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                                     minRows="3"
                                     maxRows="10"
                                     className="form-control"
-                                    onChange={e => setBibTex(e.target.value)}
+                                    onChange={(e) => setBibTex(e.target.value)}
                                     maxLength={MAX_LENGTH_INPUT}
                                 />
                             </InputGroup>
@@ -284,8 +285,8 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                             key={index}
                             title={result.title}
                             authors={result.authors}
-                            publicationMonth={result.paperPublicationMonth}
-                            publicationYear={result.paperPublicationYear}
+                            publicationMonth={result.publicationMonth}
+                            publicationYear={result.publicationYear}
                             venue={result.publishedIn}
                             contentTypeId={result.existingContentTypeId}
                         />
