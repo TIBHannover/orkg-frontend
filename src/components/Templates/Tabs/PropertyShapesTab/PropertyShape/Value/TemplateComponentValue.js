@@ -12,16 +12,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Col, FormGroup, FormText, Input, InputGroup, Label } from 'reactstrap';
 import { updatePropertyShapes } from 'slices/templateEditorSlice';
 
-const TemplateComponentValue = props => {
-    const propertyShape = useSelector(state => state.templateEditor.propertyShapes[props.id]);
-    const [cardinality, setCardinality] = useState(!propertyShape.minCount && !propertyShape.maxCount ? '0,*' : 'range');
+const TemplateComponentValue = (props) => {
+    const propertyShape = useSelector((state) => state.templateEditor.propertyShapes[props.id]);
+    const strCardinality = `${propertyShape.minCount || '*'},${propertyShape.maxCount || '*'}`;
+    const mapOptions = {
+        '*,*': '0,*',
+        '0,*': '0,*',
+        '0,1': '0,1',
+        '1,1': '1,1',
+        '1,*': '1,*',
+    };
+    const [cardinality, setCardinality] = useState(mapOptions[strCardinality] || 'range');
     const classAutocompleteRef = useRef(null);
     const { isEditMode } = useIsEditMode();
 
     const dispatch = useDispatch();
-    const propertyShapes = useSelector(state => state.templateEditor.propertyShapes);
+    const propertyShapes = useSelector((state) => state.templateEditor.propertyShapes);
 
-    const onChange = event => {
+    const onChange = (event) => {
         const templatePropertyShapes = propertyShapes.map((item, j) => {
             const _item = { ...item };
             if (j === props.id) {
@@ -32,7 +40,7 @@ const TemplateComponentValue = props => {
         dispatch(updatePropertyShapes(templatePropertyShapes));
     };
 
-    const onChangeCardinality = event => {
+    const onChangeCardinality = (event) => {
         setCardinality(event.target.value);
 
         if (event.target.value !== 'range') {
@@ -68,7 +76,7 @@ const TemplateComponentValue = props => {
                         isDisabled={!isEditMode}
                         copyValueButton={true}
                         isClearable
-                        defaultOptions={DATA_TYPES.filter(dt => dt.classId !== CLASSES.RESOURCE).map(dt => ({ label: dt.name, id: dt.classId }))}
+                        defaultOptions={DATA_TYPES.filter((dt) => dt.classId !== CLASSES.RESOURCE).map((dt) => ({ label: dt.name, id: dt.classId }))}
                         innerRef={classAutocompleteRef}
                         linkButton={propertyShape.value && propertyShape.value.id ? reverse(ROUTES.CLASS, { id: propertyShape.value.id }) : ''}
                         linkButtonTippy="Go to class page"
