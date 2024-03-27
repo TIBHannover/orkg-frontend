@@ -3,6 +3,7 @@ import REGEX from 'constants/regex';
 import Linkify from 'linkify-react';
 import * as linkify from 'linkifyjs';
 import PropTypes from 'prop-types';
+import { isString } from 'lodash';
 import { renderToString } from 'react-dom/server';
 
 const Link = (props) => {
@@ -19,7 +20,7 @@ const Link = (props) => {
     };
 
     const label = props.children;
-    const labelToText = renderToString(label);
+    const labelToText = isString(label) ? label : renderToString(label);
 
     if (!labelToText) {
         return '';

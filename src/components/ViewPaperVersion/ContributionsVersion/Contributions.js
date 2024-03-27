@@ -130,7 +130,7 @@ const Contributions = (props) => {
                                                                     <ValuesStyle className="col-8 valuesList" key={`v${i}`}>
                                                                         {contributionData[cd].map((s, index) => (
                                                                             <ListGroup flush className="px-3 mt-2" key={`pv${index}`}>
-                                                                                {s.object._class === ENTITIES.RESOURCE ? (
+                                                                                {s.object._class === ENTITIES.RESOURCE && (
                                                                                     <Button
                                                                                         className="p-0 text-start objectLabel"
                                                                                         color="link"
@@ -138,10 +138,14 @@ const Contributions = (props) => {
                                                                                     >
                                                                                         {s.object.label || <i>No label</i>}
                                                                                     </Button>
-                                                                                ) : (
+                                                                                )}
+                                                                                {s.object._class !== ENTITIES.RESOURCE && s.object.label && (
                                                                                     <ValuePlugins type={ENTITIES.LITERAL}>
                                                                                         {s.object.label || <i>No label</i>}
                                                                                     </ValuePlugins>
+                                                                                )}
+                                                                                {s.object._class !== ENTITIES.RESOURCE && !s.object.label && (
+                                                                                    <i>No label</i>
                                                                                 )}
                                                                             </ListGroup>
                                                                         ))}
