@@ -1,3 +1,4 @@
+import { StoryFn } from '@storybook/react';
 import ColoredStatsBox from 'components/Stats/ColoredStatsBox';
 
 export default {
@@ -5,7 +6,7 @@ export default {
     component: ColoredStatsBox,
 };
 
-const Template = args => <ColoredStatsBox {...args} />;
+const Template: StoryFn<typeof ColoredStatsBox> = args => <ColoredStatsBox {...args} />;
 
 export const Default = Template.bind({});
 

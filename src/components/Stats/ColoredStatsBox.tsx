@@ -2,8 +2,8 @@ import Link from 'components/NextJsMigration/Link';
 import { Col } from 'reactstrap';
 import styled from 'styled-components';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import PropTypes from 'prop-types';
 import CountUp from 'react-countup';
+import { FC } from 'react';
 
 const StatsBoxStyled = styled(Col)`
     color: ${props => props.theme.bodyColor};
@@ -42,11 +42,19 @@ const Label = styled.div`
     font-size: 18px;
 `;
 
-const ColoredStatsBox = ({ link, isLoading, label, className = null, number = 0 }) => (
+export type ColoredStatsBoxProps = {
+    label: string;
+    number: number;
+    className: string;
+    isLoading: boolean;
+    link: string;
+};
+const ColoredStatsBox: FC<ColoredStatsBoxProps> = ({ link, isLoading, label, className = null, number = 0 }) => (
     <StatsBoxStyled className={`d-flex flex-grow-1 ${className} text-center box rounded mb-3 mx-2`}>
         <ConditionalWrapper
             condition={link}
-            wrapper={children => (
+            wrapper={(children: any) => (
+                // @ts-expect-error
                 <Link className="flex-grow-1" href={link}>
                     {children}
                 </Link>
@@ -67,13 +75,4 @@ const ColoredStatsBox = ({ link, isLoading, label, className = null, number = 0 
         </ConditionalWrapper>
     </StatsBoxStyled>
 );
-
-ColoredStatsBox.propTypes = {
-    label: PropTypes.string.isRequired,
-    number: PropTypes.number,
-    className: PropTypes.string,
-    isLoading: PropTypes.bool,
-    link: PropTypes.string,
-};
-
 export default ColoredStatsBox;
