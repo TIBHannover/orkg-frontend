@@ -42,7 +42,7 @@ export const getClasses = ({
         },
     );
 
-    return submitGetRequest(`${classesUrl}?${params}`).then(res => (returnContent ? res.content : res));
+    return submitGetRequest(`${classesUrl}?${params}`).then((res) => (returnContent ? res.content : res));
 };
 
 /**

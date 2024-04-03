@@ -132,7 +132,6 @@ const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAdd
                                                     color="smart-darker"
                                                     size="sm"
                                                     className="float-right"
-                                                    // @ts-ignore
                                                     onClick={() => {
                                                         setCurrentSimilarPaper(paper);
                                                         setIsOpenAddContribution(true);

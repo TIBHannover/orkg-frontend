@@ -32,8 +32,9 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
     const [doi, setDoi] = useState(null);
     const [description, setDescription] = useState('');
     const pathname = usePathname();
-    const { title } = useSelector(state => state.review.paper);
-    const researchField = useSelector(state => state.review.researchField);
+    const { title } = useSelector((state) => state.review.paper);
+    const researchField = useSelector((state) => state.review.researchField);
+    const sdgs = useSelector((state) => state.review.sdgs);
 
     const dispatch = useDispatch();
     const { trackEvent } = useMatomo();
@@ -52,18 +53,23 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
             const { statements } = await getStatementsBundleBySubject({
                 id,
             });
-            const paperTitle = statements.find(statement => statement.subject.id === id).subject.label;
+            const paperTitle = statements.find((statement) => statement.subject.id === id).subject.label;
             const versionResource = await createResource(paperTitle, [CLASSES.SMART_REVIEW_PUBLISHED]);
             const updateMessageLiteral = await createLiteral(updateMessage);
 
             await createLiteralStatement(versionResource.id, PREDICATES.DESCRIPTION, updateMessageLiteral.id);
+            if (sdgs.length > 0) {
+                for (const sdg of sdgs) {
+                    createResourceStatement(versionResource.id, PREDICATES.SUSTAINABLE_DEVELOPMENT_GOAL, sdg.id);
+                }
+            }
             await createResourceStatement(id, PREDICATES.HAS_PUBLISHED_VERSION, versionResource.id);
 
             await createThing({ thingType: THING_TYPES.REVIEW, thingKey: versionResource.id, data: { rootResource: id, statements } });
 
             if (shouldAssignDoi) {
                 try {
-                    const authors = getAuthorsInList({ resourceId: id, statements }).map(author => ({
+                    const authors = getAuthorsInList({ resourceId: id, statements }).map((author) => ({
                         creator: author.label,
                         orcid: author.orcid || null,
                     }));
@@ -105,7 +111,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
 
     return (
         <Modal isOpen={show} toggle={toggle}>
-            <Form onSubmit={e => e.preventDefault()}>
+            <Form onSubmit={(e) => e.preventDefault()}>
                 <ModalHeader toggle={toggle}>Publish review</ModalHeader>
                 <ModalBody>
                     {!publishedId ? (
@@ -121,7 +127,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                                     id="update-message"
                                     placeholder="Example: added introduction section"
                                     value={updateMessage}
-                                    onChange={e => setUpdateMessage(e.target.value)}
+                                    onChange={(e) => setUpdateMessage(e.target.value)}
                                     maxLength={MAX_LENGTH_INPUT}
                                 />
                             </FormGroup>
@@ -131,7 +137,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                                         <Label check>
                                             <Input
                                                 type="checkbox"
-                                                onChange={e => {
+                                                onChange={(e) => {
                                                     setShouldAssignDoi(e.target.checked);
                                                 }}
                                                 checked={shouldAssignDoi}
@@ -153,7 +159,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                                         name="description"
                                         value={description}
                                         id="description"
-                                        onChange={e => setDescription(e.target.value)}
+                                        onChange={(e) => setDescription(e.target.value)}
                                         maxLength={MAX_LENGTH_INPUT}
                                     />
                                 </FormGroup>

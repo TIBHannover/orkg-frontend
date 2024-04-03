@@ -148,6 +148,7 @@ export type Observatory = {
     members: string[];
     organization_ids: string[];
     display_id: string;
+    sdgs: Node[];
 };
 
 export type Organization = {
@@ -238,6 +239,7 @@ export type Paper = {
     verified: boolean;
     visibility: Visibility;
     unlisted_by: string;
+    sdgs: Node[];
 };
 
 export type ContributionContentsStatements = {
@@ -288,8 +290,14 @@ export type CreateContribution = CreateContributionData & {
     contribution: NewContribution;
 };
 
-export type CreatePaperParams = Partial<Omit<Paper, 'id' | 'research_fields'> & { research_fields: string[]; contents: CreatePaperContents }>;
-export type UpdatePaperParams = Partial<Omit<Paper, 'id' | 'research_fields'> & { research_fields: string[] }>;
+export type CreatePaperParams = Partial<
+    Omit<Paper, 'id' | 'research_fields' | 'sdgs'> & { research_fields: string[]; contents: CreatePaperContents }
+> & {
+    sdgs?: string[];
+};
+export type UpdatePaperParams = Partial<Omit<Paper, 'id' | 'research_fields' | 'sdgs'> & { research_fields: string[] }> & {
+    sdgs?: string[];
+};
 
 export type Visualization = {
     id: string;
@@ -342,6 +350,87 @@ export type Comparison = {
     versions: ComparisonVersion[];
 };
 
+export type Review = {
+    id: string;
+    title: string;
+    research_fields: Node[];
+    authors: Author[];
+    versions: {
+        head: {
+            id: string;
+            label: string;
+            created_at: string;
+        };
+        published: {
+            id: string;
+            label: string;
+            created_at: string;
+            changelog: string;
+        }[];
+    };
+    sdgs: Node[];
+    observatories: string[];
+    organizations: string[];
+    extraction_method: ExtractionMethod;
+    created_at: string;
+    created_by: string;
+    visibility: Visibility;
+    published: boolean;
+    sections: {
+        id: string;
+        heading: string;
+        classes: string[];
+        text?: string;
+        type: string;
+        comparison?: {
+            id: string;
+            label: string;
+            classes: string[];
+        };
+    }[];
+    references: string[];
+};
+
+export type LiteratureList = {
+    id: string;
+    title: string;
+    research_fields: Node[];
+    authors: Author[];
+    versions: {
+        head: {
+            id: string;
+            label: string;
+            created_at: string;
+        };
+        published: {
+            id: string;
+            label: string;
+            created_at: string;
+            changelog: string;
+        }[];
+    };
+    sdgs: Node[];
+    observatories: string[];
+    organizations: string[];
+    extraction_method: ExtractionMethod;
+    created_at: string;
+    created_by: string;
+    visibility: Visibility;
+    published: boolean;
+    sections: {
+        id: string;
+        heading: string;
+        classes: string[];
+        text?: string;
+        type: string;
+        comparison?: {
+            id: string;
+            label: string;
+            classes: string[];
+        };
+    }[];
+};
+
 export type Verified = boolean | null;
 
 export type PaginationParams = {
@@ -356,6 +445,18 @@ export type VerifiedParam = {
 
 export type VisibilityParam = {
     visibility?: VisibilityFilter;
+};
+
+export type CreatedByParam = {
+    created_by?: string;
+};
+
+export type SdgParam = {
+    sdg?: string;
+};
+
+export type PublishedParam = {
+    published?: boolean;
 };
 
 export type TopContributor = {

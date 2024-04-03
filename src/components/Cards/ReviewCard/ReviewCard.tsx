@@ -10,34 +10,40 @@ import Link from 'components/NextJsMigration/Link';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CardBadge } from 'components/styled';
+import { VISIBILITY } from 'constants/contentTypes';
 import ROUTES from 'constants/routes.js';
 import moment from 'moment';
 import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
+import { FC } from 'react';
+import { Review } from 'services/backend/types';
 import styled from 'styled-components';
-import { convertAuthorsToNewFormat } from 'utils';
 
-const ReviewCardStyled = styled.div`
+const ReviewCardStyled = styled('div')<{ rounded?: string }>`
     &:last-child {
-        border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
+        border-bottom-right-radius: ${(props) => (props.rounded === 'true' ? '0 !important' : '')};
     }
 `;
 
-const ReviewCard = ({ versions, showCurationFlags = true, showBadge = false }) => {
-    const {
-        researchField,
-        authors,
-        isLoading: isLoadingMetaData,
-    } = useCardData({
-        id: versions[0]?.id,
-        initResearchField: versions[0]?.researchField,
-        initAuthors: versions[0]?.authors,
+type ReviewCardProps = {
+    review: Review;
+    showCurationFlags?: boolean;
+    showBadge?: boolean;
+};
+
+const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, showBadge = false }) => {
+    // the useCardData can be removed as soon as the convertReviewToNewFormat function is not used anymore to transform review data,
+    // this because the new 'review' variable already has the field and authors included
+    const { researchField, authors } = useCardData({
+        id: review?.id,
+        // @ts-expect-error
+        initResearchField: review.research_fields?.[0],
+        initAuthors: review.authors,
     });
 
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
-        resourceId: versions[0]?.id,
-        unlisted: versions[0]?.unlisted,
-        featured: versions[0]?.featured,
+        resourceId: review.id,
+        unlisted: review?.visibility === VISIBILITY.UNLISTED,
+        featured: review?.visibility === VISIBILITY.FEATURED,
     });
 
     return (
@@ -55,7 +61,8 @@ const ReviewCard = ({ versions, showCurationFlags = true, showBadge = false }) =
                 )}
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
-                        <Link href={reverse(ROUTES.REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
+                        {/* @ts-expect-error */}
+                        <Link href={reverse(ROUTES.REVIEW, { id: review.id })}>{review.title}</Link>
                         {showBadge && (
                             <div className="d-inline-block ms-2">
                                 <CardBadge color="primary">Review</CardBadge>
@@ -64,25 +71,27 @@ const ReviewCard = ({ versions, showCurationFlags = true, showBadge = false }) =
                     </div>
                     <div className="mb-1">
                         <small>
-                            {!isLoadingMetaData && <Authors authors={convertAuthorsToNewFormat(authors) || ''} />}
-                            {isLoadingMetaData && 'Loading...'}
-                            {versions[0]?.created_at && (
+                            <Authors authors={review.authors.length > 0 ? review.authors : authors} />
+                            {review.created_at && (
                                 <>
-                                    <Icon size="sm" icon={faCalendar} className="ms-2 me-1" /> {moment(versions[0]?.created_at).format('DD-MM-YYYY')}
+                                    <Icon size="sm" icon={faCalendar} className="ms-2 me-1" /> {moment(review.created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
                         </small>
                     </div>
 
-                    {versions.length > 1 && (
+                    {review.versions?.published?.length > 1 && (
                         <small>
                             All versions:{' '}
-                            {versions.map((version, index) => (
+                            {review.versions.published.map((version, index) => (
                                 <span key={version?.id}>
-                                    <Tippy content={version?.description || 'no description'}>
-                                        <Link href={reverse(ROUTES.REVIEW, { id: version?.id })}>Version {versions?.length - index}</Link>
+                                    <Tippy content={version?.changelog || 'no description'}>
+                                        {/* @ts-expect-error */}
+                                        <Link href={reverse(ROUTES.REVIEW, { id: version?.id })}>
+                                            Version {(review.versions.published?.length ?? 0) - index}
+                                        </Link>
                                     </Tippy>{' '}
-                                    {index < versions.length - 1 && ' • '}
+                                    {index < review.versions.published.length - 1 && ' • '}
                                 </span>
                             ))}
                         </small>
@@ -92,19 +101,13 @@ const ReviewCard = ({ versions, showCurationFlags = true, showBadge = false }) =
             <div className="col-md-3 d-flex align-items-end flex-column p-0">
                 <div className="flex-grow-1 mb-1">
                     <div className="d-none d-md-flex align-items-end justify-content-end">
-                        <RelativeBreadcrumbs researchField={researchField} />
+                        <RelativeBreadcrumbs researchField={review.research_fields?.[0] ?? researchField} />
                     </div>
                 </div>
-                <UserAvatar userId={versions[0]?.created_by} />
+                <UserAvatar userId={review.created_by} />
             </div>
         </ReviewCardStyled>
     );
-};
-
-ReviewCard.propTypes = {
-    versions: PropTypes.array.isRequired,
-    showBadge: PropTypes.bool,
-    showCurationFlags: PropTypes.bool,
 };
 
 export default ReviewCard;

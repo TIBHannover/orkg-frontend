@@ -1,81 +1,83 @@
 /* eslint-disable react/prop-types */
-import { lazy } from 'react';
-import { Navigate } from 'react-router-dom';
-import useParams from 'components/NextJsMigration/useParams';
-import ResourceDetails from 'app/resource/[id]/[[...activeTab]]/page';
+import About from 'app/about/[id]/[[...slug]]/page';
+import AddComparison from 'app/add-comparison/page';
 import AddPaper from 'app/add-paper/page';
-import AuthorPage from 'app/author/[authorId]/page';
-import VenuePage from 'app/venue/[venueId]/page';
+import AddClass from 'app/addClass/page';
+import AddOrganization from 'app/addOrganization/[type]/page';
+import AddProperty from 'app/addProperty/page';
 import AddResource from 'app/addResource/page';
-import Comparison from 'app/comparison/[[...comparisonId]]/page';
-import ComparisonDiff from 'app/comparison/diff/[oldId]/[newId]/page';
-import Home from 'app/page';
+import AuthorLiteral from 'app/author-literal/[authorString]/page';
+import AuthorPage from 'app/author/[authorId]/page';
+import Benchmark from 'app/benchmark/[datasetId]/problem/[problemId]/page';
+import Benchmarks from 'app/benchmarks/page';
+import RedirectShortLinks from 'app/c/[shortCode]/page';
 import Changelog from 'app/changelog/page';
-import NotFound from 'app/not-found';
-import Papers from 'app/papers/page';
-import Comparisons from 'app/comparisons/page';
-import Visualizations from 'app/visualizations/page';
-import Visualization from 'app/visualization/[id]/page';
 import ClassDetails from 'app/class/[id]/[[...activeTab]]/page';
 import Classes from 'app/classes/page';
-import AddClass from 'app/addClass/page';
-import Properties from 'app/properties/page';
-import AddProperty from 'app/addProperty/page';
-import PropertyDetails from 'app/property/[id]/page';
-import Templates from 'app/templates/page';
-import ImportSHACL from 'app/template/ImportSHACL/page';
-import Template from 'app/template/[id]/[[...activeTab]]/page';
-import ROUTES from 'constants/routes';
-import RedirectShortLinks from 'app/c/[shortCode]/page';
-import ResearchField from 'app/field/[researchFieldId]/[[...slug]]/page';
-import ResearchFields from 'app/fields/page';
-import Resources from 'app/resources/page';
-import Organizations from 'app/organizations/[id]/page';
-import Observatories from 'app/observatories/[[...researchFieldId]]/page';
-import Organization from 'app/organization/[type]/[id]/page';
-import AddOrganization from 'app/addOrganization/[type]/page';
-import AddObservatory from 'app/organizations/[id]/addObservatory/page';
-import Observatory from 'app/observatory/[id]/page';
-import SearchResults from 'app/search/[searchTerm]/page';
-import Stats from 'app/stats/page';
-import UserSettings from 'app/settings/[[...tab]]/page';
-import UserProfile from 'app/u/[userId]/[[...activeTab]]/page';
-import Data from 'app/data/page';
+import Comparison from 'app/comparison/[[...comparisonId]]/page';
+import ComparisonDiff from 'app/comparison/diff/[oldId]/[newId]/page';
+import Comparisons from 'app/comparisons/page';
+import ContentType from 'app/content-type/[type]/[id]/page';
+import ContentTypeNew from 'app/content-type/[type]/new/page';
+import ContentTypes from 'app/content-type/[type]/page';
+import ContributionEditor from 'app/contribution-editor/page';
 import Contribution from 'app/contribution/[id]/page';
 import CsvImport from 'app/csv-import/page';
-import Review from 'app/review/[id]/page';
-import Reviews from 'app/reviews/page';
-import ReviewNew from 'app/review/new/page';
-import ReviewDiff from 'app/review/diff/[oldId]/[newId]/page';
-import Tools from 'app/tools/page';
-import AddComparison from 'app/add-comparison/page';
-import requireAuthentication from 'requireAuthentication';
-import Benchmarks from 'app/benchmarks/page';
-import Benchmark from 'app/benchmark/[datasetId]/problem/[problemId]/page';
-import { reverse } from 'named-urls';
-import ContributionEditor from 'app/contribution-editor/page';
-import Page from 'app/page/[url]/page';
-import About from 'app/about/[id]/[[...slug]]/page';
-import HelpCenter from 'app/help-center/page';
-import HelpCenterCategory from 'app/help-center/category/[id]/page';
+import Data from 'app/data/page';
+import Diagram from 'app/diagram/[[...id]]/page';
+import Diagrams from 'app/diagrams/page';
+import ConferenceDetails from 'app/event-series/[id]/page';
+import ResearchField from 'app/field/[researchFieldId]/[[...slug]]/page';
+import ResearchFields from 'app/fields/page';
 import HelpCenterArticle from 'app/help-center/article/[id]/[slug]/page';
+import HelpCenterCategory from 'app/help-center/category/[id]/page';
+import HelpCenter from 'app/help-center/page';
 import HelpCenterSearch from 'app/help-center/search/[searchQuery]/page';
-import WebinarMay11 from 'app/webinar-may-11/page';
-import CheckPaperVersion from 'app/paper/[resourceId]/[[...contributionId]]/page';
-import Lists from 'app/lists/page';
-import ListNew from 'app/list/new/page';
 import List from 'app/list/[id]/[[...embed]]/page';
 import ListDiff from 'app/list/diff/[oldId]/[newId]/page';
-import ContentTypeNew from 'app/content-type/[type]/new/page';
-import ContentType from 'app/content-type/[type]/[id]/page';
-import ContentTypes from 'app/content-type/[type]/page';
-import Diagrams from 'app/diagrams/page';
-import Diagram from 'app/diagram/[[...id]]/page';
-import ConferenceDetails from 'app/event-series/[id]/page';
+import ListNew from 'app/list/new/page';
+import Lists from 'app/lists/page';
+import NotFound from 'app/not-found';
+import Observatories from 'app/observatories/[[...researchFieldId]]/page';
+import Observatory from 'app/observatory/[id]/page';
+import Organization from 'app/organization/[type]/[id]/page';
 import AddConference from 'app/organizations/[id]/addEvent/page';
+import AddObservatory from 'app/organizations/[id]/addObservatory/page';
+import Organizations from 'app/organizations/[id]/page';
+import Home from 'app/page';
+import Page from 'app/page/[url]/page';
+import CheckPaperVersion from 'app/paper/[resourceId]/[[...contributionId]]/page';
+import Papers from 'app/papers/page';
 import ResearchProblem from 'app/problem/[researchProblemId]/[[...slug]]/page';
-import AuthorLiteral from 'app/author-literal/[authorString]/page';
+import Properties from 'app/properties/page';
+import PropertyDetails from 'app/property/[id]/page';
+import ResourceDetails from 'app/resource/[id]/[[...activeTab]]/page';
+import Resources from 'app/resources/page';
+import Review from 'app/review/[id]/page';
+import ReviewDiff from 'app/review/diff/[oldId]/[newId]/page';
+import ReviewNew from 'app/review/new/page';
+import Reviews from 'app/reviews/page';
+import SearchResults from 'app/search/[searchTerm]/page';
+import UserSettings from 'app/settings/[[...tab]]/page';
+import Stats from 'app/stats/page';
+import SustainableDevelopmentGoal from 'app/sustainable-development-goal/[[...sdg]]/page';
+import SustainableDevelopmentGoals from 'app/sustainable-development-goals/page';
+import ImportSHACL from 'app/template/ImportSHACL/page';
+import Template from 'app/template/[id]/[[...activeTab]]/page';
 import TemplateNew from 'app/template/page';
+import Templates from 'app/templates/page';
+import Tools from 'app/tools/page';
+import UserProfile from 'app/u/[userId]/[[...activeTab]]/page';
+import VenuePage from 'app/venue/[venueId]/page';
+import Visualization from 'app/visualization/[id]/page';
+import Visualizations from 'app/visualizations/page';
+import WebinarMay11 from 'app/webinar-may-11/page';
+import useParams from 'components/NextJsMigration/useParams';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import { lazy } from 'react';
+import { Navigate } from 'react-router-dom';
+import requireAuthentication from 'requireAuthentication';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -282,6 +284,14 @@ const routes = [
     {
         path: ROUTES.STATS,
         element: Stats,
+    },
+    {
+        path: ROUTES.SUSTAINABLE_DEVELOPMENT_GOALS,
+        element: SustainableDevelopmentGoals,
+    },
+    {
+        path: ROUTES.SUSTAINABLE_DEVELOPMENT_GOAL,
+        element: SustainableDevelopmentGoal,
     },
     /* Legacy routes, only used for debugging now */
     {

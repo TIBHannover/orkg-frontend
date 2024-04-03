@@ -6,10 +6,16 @@ import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationC
 import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { useCallback } from 'react';
-import { convertComparisonToNewFormat, convertPaperToNewFormat, convertVisualizationToNewFormat } from 'utils';
+import {
+    convertComparisonToNewFormat,
+    convertListToNewFormat,
+    convertPaperToNewFormat,
+    convertReviewToNewFormat,
+    convertVisualizationToNewFormat,
+} from 'utils';
 
 const CardFactory = ({ item, showBadge, showCurationFlags, showAddToComparison }) => {
-    const findClass = useCallback(classId => item?.classes?.includes(classId), [item?.classes]);
+    const findClass = useCallback((classId) => item?.classes?.includes(classId), [item?.classes]);
 
     if (findClass(CLASSES.PAPER)) {
         return (
@@ -30,10 +36,10 @@ const CardFactory = ({ item, showBadge, showCurationFlags, showAddToComparison }
         );
     }
     if (findClass(CLASSES.SMART_REVIEW) || findClass(CLASSES.SMART_REVIEW_PUBLISHED)) {
-        return <ReviewCard versions={[item]} showBadge={showBadge} showCurationFlags={showCurationFlags} />;
+        return <ReviewCard review={convertReviewToNewFormat([item])} showBadge={showBadge} showCurationFlags={showCurationFlags} />;
     }
     if (findClass(CLASSES.LITERATURE_LIST) || findClass(CLASSES.LITERATURE_LIST_PUBLISHED)) {
-        return <ListCard versions={[item]} showBadge={showBadge} showCurationFlags={showCurationFlags} />;
+        return <ListCard list={convertListToNewFormat([item])} showBadge={showBadge} showCurationFlags={showCurationFlags} />;
     }
     return null;
 };

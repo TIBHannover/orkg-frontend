@@ -1,12 +1,13 @@
 import Tippy from '@tippyjs/react';
-import { updateTitle } from 'slices/reviewSlice';
-import ResearchField from 'components/Review/ResearchField';
 import { EditableTitle, SectionStyled, SectionTypeStyled } from 'components/ArticleBuilder/styled';
-import React, { useEffect, useState } from 'react';
+import ResearchField from 'components/Review/ResearchField';
+import SustainableDevelopmentGoals from 'components/Review/SustainableDevelopmentGoals';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { updateTitle } from 'slices/reviewSlice';
 
 const Title = () => {
-    const { id, title: titleStore } = useSelector(state => state.review.paper);
+    const { id, title: titleStore } = useSelector((state) => state.review.paper);
     const dispatch = useDispatch();
     const [title, setTitle] = useState('');
 
@@ -14,7 +15,7 @@ const Title = () => {
         setTitle(titleStore);
     }, [titleStore]);
 
-    const handleBlur = e => {
+    const handleBlur = (e) => {
         dispatch(
             updateTitle({
                 id,
@@ -36,12 +37,16 @@ const Title = () => {
                     className="focus-primary"
                     value={title}
                     onBlur={handleBlur}
-                    onChange={e => setTitle(e.target.value)}
+                    onChange={(e) => setTitle(e.target.value)}
                     placeholder="Enter a paper title..."
                 />
             </h1>
-
-            <ResearchField />
+            <div className="d-flex justify-content-between">
+                <ResearchField />
+                <div>
+                    <SustainableDevelopmentGoals isEditable />
+                </div>
+            </div>
         </SectionStyled>
     );
 };

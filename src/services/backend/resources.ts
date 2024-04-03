@@ -108,7 +108,7 @@ export const getResources = ({
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${resourcesUrl}?${params}`).then(res => (returnContent ? res.content : res));
+    return submitGetRequest(`${resourcesUrl}?${params}`).then((res) => (returnContent ? res.content : res));
 };
 
 export const getContributorsByResourceId = ({ id, page = 0, size = 9999 }: { id: string; page?: number; size?: number }) => {
@@ -121,7 +121,7 @@ export const getContributorsByResourceId = ({ id, page = 0, size = 9999 }: { id:
     return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/contributors?${params}`).then(
         async (contributors: PaginatedResponse<string>) => {
             const uniqContributors = uniq(contributors.content);
-            const uniqContributorsInfosRequests = uniqContributors.map(contributor =>
+            const uniqContributorsInfosRequests = uniqContributors.map((contributor) =>
                 contributor === MISC.UNKNOWN_ID
                     ? { id: MISC.UNKNOWN_ID, display_name: 'Unknown' }
                     : getContributorInformationById(contributor).catch(() => ({ id: contributor, display_name: 'User not found' })),
@@ -129,7 +129,7 @@ export const getContributorsByResourceId = ({ id, page = 0, size = 9999 }: { id:
             const uniqContributorsInfos = await Promise.all(uniqContributorsInfosRequests);
             return {
                 ...contributors,
-                content: contributors.content.map(u => uniqContributorsInfos.find(i => u === i.id)),
+                content: contributors.content.map((u) => uniqContributorsInfos.find((i) => u === i.id)),
             };
         },
     );
@@ -145,7 +145,7 @@ export const getTimelineByResourceId = ({ id, page = 0, size = 9999 }: { id: str
     return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/timeline?${params}`).then(
         async (contributors: PaginatedResponse<{ created_by: string; created_at: string }>) => {
             const uniqContributors = uniqBy(contributors.content, 'created_by');
-            const uniqContributorsInfosRequests = uniqContributors.map(contributor =>
+            const uniqContributorsInfosRequests = uniqContributors.map((contributor) =>
                 contributor.created_by === MISC.UNKNOWN_ID
                     ? { id: MISC.UNKNOWN_ID, display_name: 'Unknown' }
                     : getContributorInformationById(contributor.created_by).catch(() => ({
@@ -156,7 +156,7 @@ export const getTimelineByResourceId = ({ id, page = 0, size = 9999 }: { id: str
             const uniqContributorsInfos = await Promise.all(uniqContributorsInfosRequests);
             return {
                 ...contributors,
-                content: contributors.content.map(u => ({ ...u, created_by: uniqContributorsInfos.find(i => u.created_by === i.id) })),
+                content: contributors.content.map((u) => ({ ...u, created_by: uniqContributorsInfos.find((i) => u.created_by === i.id) })),
             };
         },
     );
@@ -196,7 +196,7 @@ export const getPapers = async ({
         },
     );
 
-    const resources = await submitGetRequest(`${classesUrl}Paper/resources/?${params}`).then(res => (returnContent ? res.content : res));
+    const resources = await submitGetRequest(`${classesUrl}Paper/resources/?${params}`).then((res) => (returnContent ? res.content : res));
     return resources;
 };
 

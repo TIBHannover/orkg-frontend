@@ -95,6 +95,8 @@ const routes = {
     TPDL: '/tpdl',
     EXPORT_DATA: '/export-data',
     CURATION_CALL: '/open-call-curation-grant',
+    SUSTAINABLE_DEVELOPMENT_GOALS: '/sustainable-development-goals',
+    SUSTAINABLE_DEVELOPMENT_GOAL: '/sustainable-development-goal/:sdg',
 };
 /**
  * Legacy routes are used to redirect old URLs to new ones

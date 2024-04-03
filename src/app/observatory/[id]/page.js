@@ -1,27 +1,28 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { Col, Row, Container, Button } from 'reactstrap';
-import { getOrganization } from 'services/backend/organizations';
-import { getObservatoryById } from 'services/backend/observatories';
-import InternalServerError from 'app/error';
-import EditObservatory from 'components/Observatory/EditObservatory';
-import ResearchProblemsBox from 'components/ResearchProblemsBox/ResearchProblemsBox';
-import OrganizationsBox from 'components/Observatory/OrganizationsBox';
-import IntegratedListWrapper from 'components/Observatory/IntegratedList/IntegratedListWrapper';
-import MembersBox from 'components/Observatory/MembersBox';
-import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import { SubTitle } from 'components/styled';
-import NotFound from 'app/not-found';
-import useParams from 'components/NextJsMigration/useParams';
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import TitleBar from 'components/TitleBar/TitleBar';
+import InternalServerError from 'app/error';
+import NotFound from 'app/not-found';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import useParams from 'components/NextJsMigration/useParams';
+import EditObservatory from 'components/Observatory/EditObservatory';
+import IntegratedListWrapper from 'components/Observatory/IntegratedList/IntegratedListWrapper';
+import MembersBox from 'components/Observatory/MembersBox';
 import ObservatoryModal from 'components/Observatory/ObservatoryModal/ObservatoryModal';
+import OrganizationsBox from 'components/Observatory/OrganizationsBox';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import ResearchProblemsBox from 'components/ResearchProblemsBox/ResearchProblemsBox';
+import SdgBox from 'components/SustainableDevelopmentGoals/SdgBox';
+import TitleBar from 'components/TitleBar/TitleBar';
+import { SubTitle } from 'components/styled';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Button, Col, Container, Row } from 'reactstrap';
+import { getObservatoryById } from 'services/backend/observatories';
+import { getOrganization } from 'services/backend/organizations';
 
 const Observatory = () => {
     const [error, setError] = useState(null);
@@ -29,6 +30,7 @@ const Observatory = () => {
     const [label, setLabel] = useState(null);
     const [description, setDescription] = useState('');
     const [researchField, setResearchField] = useState(null);
+    const [sdgs, setSdgs] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingOrganizations, setIsLoadingOrganizations] = useState(false);
     const [organizationsList, setOrganizationsList] = useState([]);
@@ -36,11 +38,11 @@ const Observatory = () => {
     const [showDialogInfo, setShowDialogInfo] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const { id } = useParams();
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
 
-    const loadOrganizations = organizationsData => {
+    const loadOrganizations = (organizationsData) => {
         setIsLoadingOrganizations(true);
-        Promise.all(organizationsData.map(o => getOrganization(o))).then(data => {
+        Promise.all(organizationsData.map((o) => getOrganization(o))).then((data) => {
             setOrganizationsList(data);
             setIsLoadingOrganizations(false);
         });
@@ -50,7 +52,7 @@ const Observatory = () => {
         const loadObservatory = () => {
             setIsLoading(true);
             getObservatoryById(id)
-                .then(observatory => {
+                .then((observatory) => {
                     document.title = `${observatory.name} - Details`;
                     setObservatoryId(observatory.id);
                     setLabel(observatory.name);
@@ -58,8 +60,9 @@ const Observatory = () => {
                     setIsLoading(false);
                     setResearchField(observatory.research_field);
                     loadOrganizations(observatory.organization_ids);
+                    setSdgs(observatory.sdgs);
                 })
-                .catch(error => {
+                .catch((error) => {
                     setIsLoading(false);
                     setError(error);
                 });
@@ -68,15 +71,16 @@ const Observatory = () => {
         loadObservatory();
     }, [id]);
 
-    const updateObservatoryMetadata = (label, description, researchField) => {
+    const updateObservatoryMetadata = (label, description, researchField, sdgs) => {
         setLabel(label);
         setDescription(description);
         setIsLoading(false);
         setResearchField(researchField);
+        setSdgs(sdgs);
     };
 
-    const toggleOrganizationItem = organization => {
-        setOrganizationsList(v => (v.map(o => o.id).includes(organization.id) ? v.filter(t => t !== organization) : [organization, ...v]));
+    const toggleOrganizationItem = (organization) => {
+        setOrganizationsList((v) => (v.map((o) => o.id).includes(organization.id) ? v.filter((t) => t !== organization) : [organization, ...v]));
     };
 
     return (
@@ -94,7 +98,7 @@ const Observatory = () => {
                                 className="flex-shrink-0"
                                 color={isEditMode ? 'secondary-darker' : 'secondary'}
                                 size="sm"
-                                onClick={() => (!!user && user.isCurationAllowed ? setIsEditMode(!isEditMode) : setShowDialogInfo(v => !v))}
+                                onClick={() => (!!user && user.isCurationAllowed ? setIsEditMode(!isEditMode) : setShowDialogInfo((v) => !v))}
                             >
                                 {isEditMode ? (
                                     <>
@@ -117,11 +121,16 @@ const Observatory = () => {
                               ${isEditMode ? 'rounded-bottom' : 'rounded'}`}
                     >
                         <>
-                            {description && (
-                                <p className="m-0" style={{ whiteSpace: 'pre-wrap' }}>
-                                    {description || <small className="fst-italic">No Description provided</small>}
-                                </p>
-                            )}
+                            <div className="d-flex justify-content-between">
+                                {description && (
+                                    <p className="m-0 flex-grow-1" style={{ whiteSpace: 'pre-wrap' }}>
+                                        {description || <small className="fst-italic">No Description provided</small>}
+                                    </p>
+                                )}
+                                <div className="align-items-end w-100">
+                                    <SdgBox sdgs={sdgs} maxWidth="100%" />
+                                </div>
+                            </div>
 
                             {isEditMode && (
                                 <div className="flex-grow-1">
@@ -130,7 +139,7 @@ const Observatory = () => {
                                         size="sm"
                                         className="mt-2"
                                         style={{ marginLeft: 'auto' }}
-                                        onClick={() => setShowEditDialog(v => !v)}
+                                        onClick={() => setShowEditDialog((v) => !v)}
                                     >
                                         <Icon icon={faPen} /> Edit data
                                     </Button>
@@ -160,14 +169,16 @@ const Observatory = () => {
                     <IntegratedListWrapper id={observatoryId} boxShadow />
                     <EditObservatory
                         showDialog={showEditDialog}
-                        toggle={() => setShowEditDialog(v => !v)}
+                        toggle={() => setShowEditDialog((v) => !v)}
                         label={label}
                         id={observatoryId}
                         description={description}
                         researchField={researchField}
                         updateObservatoryMetadata={updateObservatoryMetadata}
+                        sdgs={sdgs}
                     />
-                    <ObservatoryModal isOpen={showDialogInfo} toggle={() => setShowDialogInfo(v => !v)} />
+                    <ObservatoryModal isOpen={showDialogInfo} toggle={() => setShowDialogInfo((v) => !v)} />
+
                     <ComparisonPopup />
                 </>
             )}

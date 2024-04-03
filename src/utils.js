@@ -195,7 +195,7 @@ export const addAuthorsToStatementBundle = async (statements) => {
 export const getAuthorStatements = async (statements) => {
     const listId = statements.find((statement) => statement.predicate.id === PREDICATES.HAS_AUTHORS)?.object?.id;
     if (!listId) {
-        return statements;
+        return [];
     }
     return getStatementsBySubject({
         id: listId,
@@ -392,6 +392,10 @@ export const getComparisonData = (resource, comparisonStatements) => {
     const authors = getAuthorsInList({ resourceId: resource.id, statements: comparisonStatements });
     const properties = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_PROPERTY, false);
     const anonymized = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.IS_ANONYMIZED, true);
+    const sdgs = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.SUSTAINABLE_DEVELOPMENT_GOAL, false).map((sdg) => ({
+        id: sdg.id,
+        label: sdg.label,
+    }));
 
     return {
         ...resource,
@@ -413,6 +417,7 @@ export const getComparisonData = (resource, comparisonStatements) => {
         properties,
         video,
         anonymized: !!anonymized,
+        sdgs,
     };
 };
 
@@ -1102,4 +1107,78 @@ export const convertPaperToNewFormat = (paper) => ({
     verified: paper.verified,
     visibility: convertFeaturedAndUnlisted2Visibility(paper.unlisted, paper.featured),
     unlisted_by: paper.unlisted_by,
+});
+
+export const convertReviewToNewFormat = (reviews) => ({
+    id: reviews?.[0]?.id,
+    title: reviews?.[0]?.title || reviews?.[0]?.label,
+    organizations: [reviews?.[0]?.organization_id],
+    observatories: [reviews?.[0]?.observatory_id],
+    extraction_method: reviews?.[0]?.extraction_method,
+    created_at: reviews?.[0]?.created_at,
+    created_by: reviews?.[0]?.created_by,
+    verified: reviews?.[0]?.verified,
+    visibility: reviews?.[0]?.visibility,
+    unlisted_by: null,
+    authors: reviews?.[0]?.authors ? reviews?.[0]?.authors.map((author) => convertAuthorToNewFormat(author)) : [],
+    ...(reviews?.[0]?.researchField
+        ? {
+              research_fields: [
+                  {
+                      id: reviews?.[0]?.researchField.id,
+                      label: reviews?.[0]?.researchField.label,
+                  },
+              ],
+          }
+        : {}),
+    versions: {
+        head: {
+            id: reviews?.[0]?.id,
+            label: reviews?.[0]?.title || reviews?.[0]?.label,
+            created_at: reviews?.[0]?.created_at,
+        },
+        published: reviews.map((review) => ({
+            id: review.id,
+            label: review.title || review.label,
+            created_at: review.created_at,
+            changelog: review.description,
+        })),
+    },
+});
+
+export const convertListToNewFormat = (lists) => ({
+    id: lists?.[0]?.id,
+    title: lists?.[0]?.title || lists?.[0]?.label,
+    organizations: [lists?.[0]?.organization_id],
+    observatories: [lists?.[0]?.observatory_id],
+    extraction_method: lists?.[0]?.extraction_method,
+    created_at: lists?.[0]?.created_at,
+    created_by: lists?.[0]?.created_by,
+    verified: lists?.[0]?.verified,
+    visibility: lists?.[0]?.visibility,
+    unlisted_by: null,
+    authors: lists?.[0]?.authors ? lists?.[0]?.authors.map((author) => convertAuthorToNewFormat(author)) : [],
+    ...(lists?.[0]?.researchField
+        ? {
+              research_fields: [
+                  {
+                      id: lists?.[0]?.researchField.id,
+                      label: lists?.[0]?.researchField.label,
+                  },
+              ],
+          }
+        : {}),
+    versions: {
+        head: {
+            id: lists?.[0]?.id,
+            label: lists?.[0]?.title || lists?.[0]?.label,
+            created_at: lists?.[0]?.created_at,
+        },
+        published: lists.map((review) => ({
+            id: review.id,
+            label: review.title || review.label,
+            created_at: review.created_at,
+            changelog: review.description,
+        })),
+    },
 });

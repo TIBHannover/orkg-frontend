@@ -1,21 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LOCATION_CHANGE } from 'utils';
-import { match } from 'path-to-regexp';
-import ROUTES from 'constants/routes';
 import arrayMove from 'array-move';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
+import { match } from 'path-to-regexp';
 import { createLiteral, updateLiteral } from 'services/backend/literals';
 import { createResource, updateResource, updateResourceClasses } from 'services/backend/resources';
 import {
     createLiteralStatement,
     createResourceStatement,
+    deleteStatementById,
     deleteStatementsByIds,
     getStatementsByObject,
     getStatementsBySubject,
     getStatementsBySubjectAndPredicate,
-    deleteStatementById,
     updateStatement,
 } from 'services/backend/statements';
+import { LOCATION_CHANGE } from 'utils';
 
 const initialState = {
     articleId: null,
@@ -37,6 +37,7 @@ const initialState = {
     usedReferences: {},
     statements: [],
     doi: null,
+    sdgs: [],
 };
 
 export const reviewSlice = createSlice({
@@ -58,6 +59,7 @@ export const reviewSlice = createSlice({
             state.statements = payload.statements;
             state.references = payload.references;
             state.doi = payload.doi;
+            state.sdgs = payload.sdgs;
         },
         setIsLoading: (state, { payload }) => {
             state.isLoading = payload;
@@ -72,22 +74,22 @@ export const reviewSlice = createSlice({
             state.paper.title = payload;
         },
         sectionTitleUpdated: (state, { payload: { sectionId, title } }) => {
-            const index = state.sections.findIndex(section => section.id === sectionId);
+            const index = state.sections.findIndex((section) => section.id === sectionId);
             state.sections[index].title.label = title;
         },
         sectionMarkdownUpdated: (state, { payload: { id, markdown } }) => {
-            const index = state.sections.findIndex(section => section.markdown?.id === id);
+            const index = state.sections.findIndex((section) => section.markdown?.id === id);
             state.sections[index].markdown.label = markdown;
         },
         sectionLinkUpdated: (state, { payload: { id, objectId, label } }) => {
-            const index = state.sections.findIndex(section => section?.id === id);
+            const index = state.sections.findIndex((section) => section?.id === id);
             state.sections[index].contentLink = {
                 objectId,
                 label,
             };
         },
         sectionTypeUpdated: (state, { payload: { sectionId, sectionType } }) => {
-            const index = state.sections.findIndex(section => section.id === sectionId);
+            const index = state.sections.findIndex((section) => section.id === sectionId);
             state.sections[index].type.id = sectionType;
         },
         updateAuthors: (state, { payload }) => {
@@ -120,7 +122,7 @@ export const reviewSlice = createSlice({
             ];
         },
         sectionDeleted: (state, { payload: { id } }) => {
-            const index = state.sections.findIndex(section => section.id === id);
+            const index = state.sections.findIndex((section) => section.id === id);
             state.sections.splice(index, 1);
         },
         sectionsSorted: (state, { payload }) => {
@@ -129,7 +131,7 @@ export const reviewSlice = createSlice({
         setIsLoadingSort: (state, { payload }) => {
             state.isLoadingSortSection = payload;
         },
-        toggleHistoryModal: state => {
+        toggleHistoryModal: (state) => {
             state.isOpenHistoryModal = !state.isOpenHistoryModal;
         },
         researchFieldUpdated: (state, { payload }) => {
@@ -139,18 +141,18 @@ export const reviewSlice = createSlice({
             state.comparisons[id] = data;
         },
         updateDataTable: (state, { payload: { sectionId, dataTable } }) => {
-            const index = state.sections.findIndex(section => section.id === sectionId);
+            const index = state.sections.findIndex((section) => section.id === sectionId);
             state.sections[index].dataTable = {
                 ...state.sections[index].dataTable,
                 ...dataTable,
             };
         },
         setDataTableStatements: (state, { payload: { id, sectionId, statements } }) => {
-            const sectionIndex = state.sections.findIndex(section => section.id === sectionId);
+            const sectionIndex = state.sections.findIndex((section) => section.id === sectionId);
             if (sectionIndex === -1) {
                 return state;
             }
-            const dataTableIndex = state.sections[sectionIndex]?.dataTable?.entities?.findIndex(entity => entity.id === id);
+            const dataTableIndex = state.sections[sectionIndex]?.dataTable?.entities?.findIndex((entity) => entity.id === id);
             if (dataTableIndex === -1) {
                 return state;
             }
@@ -163,10 +165,10 @@ export const reviewSlice = createSlice({
             state.references.push(reference);
         },
         referenceDeleted: (state, { payload }) => {
-            state.references = state.references.filter(reference => reference.statementId !== payload);
+            state.references = state.references.filter((reference) => reference.statementId !== payload);
         },
         referenceUpdated: (state, { payload: { literalId, bibtex, parsedReference } }) => {
-            state.references = state.references.map(reference =>
+            state.references = state.references.map((reference) =>
                 reference.literal.id === literalId ? { ...reference, literal: { ...reference.literal, label: bibtex }, parsedReference } : reference,
             );
         },
@@ -176,8 +178,11 @@ export const reviewSlice = createSlice({
         setAuthorListResource: (state, { payload }) => {
             state.authorListResource = payload.authorListResource;
         },
+        setSdgs: (state, { payload }) => {
+            state.sdgs = payload;
+        },
     },
-    extraReducers: builder => {
+    extraReducers: (builder) => {
         builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
             const matchReview = match(ROUTES.REVIEW);
             const parsed_payload = matchReview(payload.location.pathname);
@@ -215,13 +220,14 @@ export const {
     referenceUpdated,
     setUsedReferences,
     setAuthorListResource,
+    setSdgs,
 } = reviewSlice.actions;
 
 export default reviewSlice.reducer;
 
 export const updateTitle =
     ({ id, title }) =>
-    async dispatch => {
+    async (dispatch) => {
         // on purpose don't have a blocking update there (so don't wait with dispatching the change before updating resource)
         dispatch(titleUpdated(title));
         dispatch(setIsLoading(true));
@@ -231,7 +237,7 @@ export const updateTitle =
 
 export const updateSectionTitle =
     ({ sectionId, title }) =>
-    async dispatch => {
+    async (dispatch) => {
         dispatch(sectionTitleUpdated({ sectionId, title }));
         dispatch(setIsLoading(true));
         await updateResource(sectionId, title);
@@ -240,7 +246,7 @@ export const updateSectionTitle =
 
 export const updateSectionMarkdown =
     ({ id, markdown }) =>
-    async dispatch => {
+    async (dispatch) => {
         dispatch(sectionMarkdownUpdated({ id, markdown }));
         dispatch(setIsLoading(true));
         await updateLiteral(id, markdown);
@@ -249,7 +255,7 @@ export const updateSectionMarkdown =
 
 export const updateSectionLink =
     ({ id, label, objectId }) =>
-    async dispatch => {
+    async (dispatch) => {
         dispatch(sectionLinkUpdated({ id, objectId, label }));
         dispatch(setIsLoading(true));
         // delete the current statement (if it exists, not empty sections, this statement doesn't exist)
@@ -263,7 +269,7 @@ export const updateSectionLink =
 
 export const updateSectionType =
     ({ sectionId, type: sectionType }) =>
-    async dispatch => {
+    async (dispatch) => {
         dispatch(sectionTypeUpdated({ sectionId, sectionType }));
         dispatch(setIsLoading(true));
         await updateResourceClasses(sectionId, [CLASSES.SECTION, sectionType]);
@@ -272,14 +278,14 @@ export const updateSectionType =
 
 export const sortSections =
     ({ contributionId, sections }) =>
-    async dispatch => {
+    async (dispatch) => {
         dispatch(setIsLoading(true));
         dispatch(setIsLoadingSort(true));
 
         dispatch(sectionsSorted({ sections }));
 
         const sectionSubjectStatement = await getStatementsBySubjectAndPredicate({ subjectId: contributionId, predicateId: PREDICATES.HAS_SECTION });
-        const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
+        const sectionSubjectStatementIds = sectionSubjectStatement.map((stmt) => stmt.id);
         await deleteStatementsByIds(sectionSubjectStatementIds);
 
         for (const section of sections) {
@@ -292,7 +298,7 @@ export const sortSections =
 
 export const moveSection =
     ({ contributionId, sections, oldIndex, newIndex }) =>
-    async dispatch => {
+    async (dispatch) => {
         const sectionsNewOrder = arrayMove(sections, oldIndex, newIndex);
 
         dispatch(sortSections({ contributionId, sections: sectionsNewOrder }));
@@ -355,14 +361,14 @@ export const createSection =
         dispatch(setIsLoading(false));
     };
 
-export const deleteSection = id => async dispatch => {
+export const deleteSection = (id) => async (dispatch) => {
     dispatch(setIsLoading(true));
     dispatch(sectionDeleted({ id }));
 
     const sectionObjectStatement = await getStatementsByObject({ id });
     const sectionSubjectStatement = await getStatementsBySubject({ id });
-    const sectionObjectStatementIds = sectionObjectStatement.map(stmt => stmt.id);
-    const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
+    const sectionObjectStatementIds = sectionObjectStatement.map((stmt) => stmt.id);
+    const sectionSubjectStatementIds = sectionSubjectStatement.map((stmt) => stmt.id);
     await deleteStatementsByIds([...sectionObjectStatementIds, ...sectionSubjectStatementIds]);
     // the resource isn't deleted, because deleting resources can only be done with the is_curation_allowed flag
     // await deleteResource(id);
@@ -373,7 +379,7 @@ export const deleteSection = id => async dispatch => {
 
 export const setResearchField =
     ({ statementId, paperId, researchField }) =>
-    async dispatch => {
+    async (dispatch) => {
         if (statementId) {
             updateStatement(statementId, {
                 subject_id: paperId,
@@ -391,12 +397,12 @@ export const setResearchField =
 
 export const saveEntities =
     ({ sectionId, entities }) =>
-    async dispatch => {
+    async (dispatch) => {
         // delete existing statements
         const entityStatements = await getStatementsBySubject({ id: sectionId });
         const entityStatementIds = entityStatements
-            .filter(statement => statement.predicate.id === PREDICATES.HAS_ENTITY)
-            .map(statement => statement.id);
+            .filter((statement) => statement.predicate.id === PREDICATES.HAS_ENTITY)
+            .map((statement) => statement.id);
         await deleteStatementsByIds(entityStatementIds);
 
         // create new statements, import to use await to ensure statements are created in the correct order
@@ -409,12 +415,12 @@ export const saveEntities =
 
 export const saveShowProperties =
     ({ sectionId, properties }) =>
-    async dispatch => {
+    async (dispatch) => {
         // delete existing statements
         const propertyStatements = await getStatementsBySubject({ id: sectionId });
         const propertyStatementIds = propertyStatements
-            .filter(statement => statement.predicate.id === PREDICATES.SHOW_PROPERTY)
-            .map(statement => statement.id);
+            .filter((statement) => statement.predicate.id === PREDICATES.SHOW_PROPERTY)
+            .map((statement) => statement.id);
         await deleteStatementsByIds(propertyStatementIds);
 
         // create new statements
@@ -427,7 +433,7 @@ export const saveShowProperties =
 
 export const reloadDataTableStatements =
     ({ id, sectionId }) =>
-    async dispatch => {
+    async (dispatch) => {
         const statements = await getStatementsBySubject({ id });
 
         dispatch(setDataTableStatements({ id, sectionId, statements }));
@@ -435,38 +441,38 @@ export const reloadDataTableStatements =
 
 export const createReference =
     ({ contributionId, bibtex, parsedReference }) =>
-    dispatch =>
+    (dispatch) =>
         createLiteral(bibtex)
-            .then(async literal => {
+            .then(async (literal) => {
                 const { id: statementId } = await createLiteralStatement(contributionId, PREDICATES.HAS_REFERENCE, literal.id);
                 dispatch(referenceAdded({ reference: { statementId, literal, parsedReference } }));
                 return Promise.resolve();
             })
-            .catch(e => {
+            .catch((e) => {
                 console.log(e);
                 return Promise.resolve();
             });
 
-export const deleteReference = statementId => dispatch =>
+export const deleteReference = (statementId) => (dispatch) =>
     deleteStatementById(statementId)
         .then(() => {
             dispatch(referenceDeleted(statementId));
             return Promise.resolve();
         })
-        .catch(e => {
+        .catch((e) => {
             console.log(e);
             return Promise.resolve();
         });
 
 export const updateReference =
     ({ literalId, bibtex, parsedReference }) =>
-    dispatch =>
+    (dispatch) =>
         updateLiteral(literalId, bibtex)
-            .then(literal => {
+            .then((literal) => {
                 dispatch(referenceUpdated({ literalId, bibtex, parsedReference }));
                 return Promise.resolve();
             })
-            .catch(e => {
+            .catch((e) => {
                 console.log(e);
                 return Promise.resolve();
             });

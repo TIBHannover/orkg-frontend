@@ -9,7 +9,7 @@ import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
 const OrganizationBannerStyled = styled.div`
     float: right;
-    border: 2px solid ${props => props.theme.light};
+    border: 1px solid ${(props) => props.theme.lightDarker};
     border-radius: 5px;
     display: flex;
     padding: 5px 20px;
@@ -22,12 +22,12 @@ const OrganizationBannerStyled = styled.div`
     flex-shrink: 0;
 
     &:hover {
-        border: 2px solid ${props => props.theme.secondary};
+        border: 1px solid ${(props) => props.theme.secondary};
     }
 `;
 
 const OrganizationBanner = () => {
-    const observatory = useSelector(state => state.comparison.observatory ?? null);
+    const observatory = useSelector((state) => state.comparison.observatory ?? null);
 
     if (!observatory || !observatory.organization) {
         return null;

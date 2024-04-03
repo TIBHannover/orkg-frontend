@@ -6,6 +6,7 @@ import MarkFeaturedUnlistedContainer from 'components/Comparison/ComparisonHeade
 import Link from 'components/NextJsMigration/Link';
 import useRouter from 'components/NextJsMigration/useRouter';
 import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
+import SdgBox from 'components/SustainableDevelopmentGoals/SdgBox';
 import LinkValuePlugins from 'components/ValuePlugins/Link/Link';
 import Video from 'components/ValuePlugins/Video/Video';
 import { ENTITIES } from 'constants/graphSettings';
@@ -19,14 +20,14 @@ import { Alert, Badge } from 'reactstrap';
 import { convertAuthorsToNewFormat } from 'utils';
 
 const ComparisonMetaData = () => {
-    const comparisonResource = useSelector(state => state.comparison.comparisonResource);
-    const provenance = useSelector(state => state.comparison.provenance);
+    const comparisonResource = useSelector((state) => state.comparison.comparisonResource);
+    const provenance = useSelector((state) => state.comparison.provenance);
 
-    const isLoadingMetadata = useSelector(state => state.comparison.isLoadingMetadata);
-    const isFailedLoadingMetadata = useSelector(state => state.comparison.isFailedLoadingMetadata);
-    const isFailedLoadingResult = useSelector(state => state.comparison.isFailedLoadingResult);
-    const errors = useSelector(state => state.comparison.errors);
-    const contributionsList = useSelector(state => state.comparison.configuration.contributionsList);
+    const isLoadingMetadata = useSelector((state) => state.comparison.isLoadingMetadata);
+    const isFailedLoadingMetadata = useSelector((state) => state.comparison.isFailedLoadingMetadata);
+    const isFailedLoadingResult = useSelector((state) => state.comparison.isFailedLoadingResult);
+    const errors = useSelector((state) => state.comparison.errors);
+    const contributionsList = useSelector((state) => state.comparison.configuration.contributionsList);
     const router = useRouter();
 
     /**
@@ -45,7 +46,7 @@ const ComparisonMetaData = () => {
             headline: comparisonResource?.label,
             description: comparisonResource?.description,
             ...(comparisonResource?.doi ? { sameAs: `https://doi.org/${comparisonResource.doi}` } : {}),
-            author: comparisonResource.authors?.map(author => ({
+            author: comparisonResource.authors?.map((author) => ({
                 name: author.label,
                 ...(author.orcid ? { url: `http://orcid.org/${author.orcid}` } : {}),
                 '@type': 'Person',
@@ -87,7 +88,7 @@ const ComparisonMetaData = () => {
                                         className="btn-link"
                                         style={{ cursor: 'pointer' }}
                                         onClick={() => handleGoBack}
-                                        onKeyDown={e => (e.key === 'Enter' ? handleGoBack : undefined)}
+                                        onKeyDown={(e) => (e.key === 'Enter' ? handleGoBack : undefined)}
                                         role="button"
                                         tabIndex={0}
                                     >
@@ -158,7 +159,12 @@ const ComparisonMetaData = () => {
                             )}
                         </div>
 
-                        {comparisonResource.id && <OrganizationBanner />}
+                        <div className="d-flex flex-column align-items-end w-100 gap-3">
+                            {comparisonResource.id && <OrganizationBanner />}
+                            <div style={{ marginRight: -25 }}>
+                                <SdgBox sdgs={comparisonResource.sdgs} maxWidth="100%" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}

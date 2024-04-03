@@ -1,12 +1,18 @@
-import { createRef, Component } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup } from 'reactstrap';
-import { updateObservatoryName, updateObservatoryDescription, updateObservatoryResearchField } from 'services/backend/observatories';
-import { isEqual } from 'lodash';
-import { toast } from 'react-toastify';
-import PropTypes from 'prop-types';
-import { ENTITIES, CLASSES } from 'constants/graphSettings';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
+import SdgBox from 'components/SustainableDevelopmentGoals/SdgBox';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
+import { isEqual } from 'lodash';
+import PropTypes from 'prop-types';
+import { Component, createRef } from 'react';
+import { toast } from 'react-toastify';
+import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import {
+    updateObservatory,
+    updateObservatoryDescription,
+    updateObservatoryName,
+    updateObservatoryResearchField,
+} from 'services/backend/observatories';
 
 export const MAX_DESCRIPTION_LENGTH = 750;
 
@@ -21,10 +27,11 @@ class EditObservatory extends Component {
             isLoadingDescription: false,
             researchField: this.props.researchField,
             isLoadingResearchField: false,
+            sdgs: this.props.sdgs,
         };
     }
 
-    componentDidUpdate = prevProps => {
+    componentDidUpdate = (prevProps) => {
         if (prevProps.label !== this.props.label) {
             this.setState({ label: this.props.label });
         }
@@ -38,15 +45,16 @@ class EditObservatory extends Component {
         }
     };
 
-    handleChange = event => {
+    handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
     };
 
-    handleSubmit = async e => {
+    handleSubmit = async (e) => {
         const value = this.state.label;
         const { description } = this.state;
         const { id } = this.props;
         const { researchField } = this.state;
+        const { sdgs } = this.state;
 
         let isUpdatedLabel = true;
         let isUpdatedDescription = true;
@@ -84,9 +92,14 @@ class EditObservatory extends Component {
             isUpdatedResearchField = true;
         }
 
+        if (!isEqual(sdgs, this.props.sdgs)) {
+            await this.updateObservatorySdgs(id, sdgs);
+            isUpdatedResearchField = true;
+        }
+
         if (isUpdatedLabel || isUpdatedDescription || isUpdatedResearchField) {
             toast.success('Observatory updated successfully');
-            this.props.updateObservatoryMetadata(value, description, researchField);
+            this.props.updateObservatoryMetadata(value, description, researchField, sdgs);
             this.props.toggle();
         } else {
             this.props.toggle();
@@ -129,6 +142,20 @@ class EditObservatory extends Component {
         }
     };
 
+    updateObservatorySdgs = async (id, sdgs) => {
+        this.setState({ isLoadingResearchField: true });
+        try {
+            await updateObservatory(id, {
+                sdgs: sdgs.map((sdg) => sdg.id),
+            });
+            this.setState({ isLoadingResearchField: false });
+        } catch (error) {
+            this.setState({ isLoadingResearchField: false });
+            console.error(error);
+            toast.error(`Error updating an observatory ${error.message}`);
+        }
+    };
+
     render() {
         const isLoading = this.state.isLoadingName || this.state.isLoadingDescription || this.state.isLoadingResearchField;
         return (
@@ -158,7 +185,7 @@ class EditObservatory extends Component {
                                     entityType={ENTITIES.RESOURCE}
                                     optionsClass={CLASSES.RESEARCH_FIELD}
                                     placeholder="Select research field"
-                                    onItemSelected={async rf => {
+                                    onItemSelected={async (rf) => {
                                         this.setState({ researchField: { ...rf, label: rf.value } });
                                     }}
                                     value={this.state.researchField && this.state.researchField.id ? this.state.researchField : null}
@@ -184,6 +211,10 @@ class EditObservatory extends Component {
                                     {this.state.description?.length}/{MAX_DESCRIPTION_LENGTH}
                                 </div>
                             </FormGroup>
+                            <FormGroup>
+                                <Label>Sustainable development goals</Label>
+                                <SdgBox handleSave={(sdgs) => this.setState({ sdgs })} sdgs={this.state.sdgs} maxWidth="100%" isEditable />
+                            </FormGroup>
                         </>
                     </ModalBody>
                     <ModalFooter>
@@ -206,6 +237,7 @@ EditObservatory.propTypes = {
     id: PropTypes.string,
     description: PropTypes.string,
     researchField: PropTypes.object,
+    sdgs: PropTypes.array,
     updateObservatoryMetadata: PropTypes.func.isRequired,
 };
 

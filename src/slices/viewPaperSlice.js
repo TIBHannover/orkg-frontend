@@ -29,6 +29,7 @@ const initialState = {
         verified: false,
         visibility: 'default',
         unlisted_by: '',
+        sdgs: [],
     },
     comparison: {
         byId: {},
@@ -67,10 +68,10 @@ export const viewPaperSlice = createSlice({
             state.isAddingContribution = payload;
         },
         setIsDeletingContribution: (state, { payload: { id, status } }) => {
-            state.contributions[state.contributions.map(c => c.id).indexOf(id)].isSaving = status;
+            state.contributions[state.contributions.map((c) => c.id).indexOf(id)].isSaving = status;
         },
         setIsSavingContribution: (state, { payload: { id, status } }) => {
-            state.contributions[state.contributions.map(c => c.id).indexOf(id)].isSaving = status;
+            state.contributions[state.contributions.map((c) => c.id).indexOf(id)].isSaving = status;
         },
         setPaperContributions: (state, { payload }) => {
             state.contributions = payload;
@@ -101,7 +102,7 @@ export const viewPaperSlice = createSlice({
         },
         removeFromComparison: (state, { payload }) => {
             delete state.comparison.byId[payload];
-            state.comparison.allIds = state.comparison.allIds.filter(id => id !== payload);
+            state.comparison.allIds = state.comparison.allIds.filter((id) => id !== payload);
             asyncLocalStorage.setItem('comparison', JSON.stringify(state.comparison));
         },
         setAbstract: (state, { payload }) => {
@@ -157,17 +158,17 @@ export const viewPaperSlice = createSlice({
             };
             state.ranges[payload.range.id].certainty = 1;
         },
-        clearAnnotations: state => {
+        clearAnnotations: (state) => {
             state.ranges = {};
         },
         setAbstractDialogView: (state, { payload }) => {
             state.abstractDialogView = payload;
         },
         setContributionExtractionMethod: (state, { payload: { id, extractionMethod } }) => {
-            state.contributions[state.contributions.map(c => c.id).indexOf(id)].extraction_method = extractionMethod;
+            state.contributions[state.contributions.map((c) => c.id).indexOf(id)].extraction_method = extractionMethod;
         },
     },
-    extraReducers: builder => {
+    extraReducers: (builder) => {
         builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
             const matchPaper = match(ROUTES.VIEW_PAPER);
             const matchPaperContribution = match(ROUTES.VIEW_PAPER_CONTRIBUTION);
@@ -283,7 +284,7 @@ export const selectContribution =
  * @param {Object[]} viewPaper view paper redux state
  * @return {String=} the paper link
  */
-export const getPaperLink = state => {
+export const getPaperLink = (state) => {
     if (state.viewPaper.publicationInfo?.url) {
         return state.viewPaper.publicationInfo?.url;
     }

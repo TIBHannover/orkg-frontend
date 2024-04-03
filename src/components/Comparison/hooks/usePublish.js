@@ -19,12 +19,13 @@ import { setDoi } from 'slices/comparisonSlice';
 import { addAuthorsToStatements, filterObjectOfStatementsByPredicateAndClass, getComparisonData, getErrorMessage } from 'utils';
 
 function usePublish() {
-    const comparisonResource = useSelector(state => state.comparison.comparisonResource);
+    const comparisonResource = useSelector((state) => state.comparison.comparisonResource);
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
     const [assignDOI, setAssignDOI] = useState(false);
     const [title, setTitle] = useState(comparisonResource && comparisonResource.label ? comparisonResource.label : '');
+    const [sdgs, setSdgs] = useState(comparisonResource && comparisonResource.sdgs ? comparisonResource.sdgs : []);
     const [description, setDescription] = useState(comparisonResource && comparisonResource.description ? comparisonResource.description : '');
     const [references, setReferences] = useState(
         comparisonResource?.references && comparisonResource.references.length > 0 ? comparisonResource.references : [''],
@@ -36,21 +37,21 @@ function usePublish() {
     const [conferencesList, setConferencesList] = useState([]);
     const [conference, setConference] = useState(null);
 
-    const data = useSelector(state => state.comparison.data);
-    const contributions = useSelector(state => state.comparison.contributions);
-    const properties = useSelector(state => state.comparison.properties);
+    const data = useSelector((state) => state.comparison.data);
+    const contributions = useSelector((state) => state.comparison.contributions);
+    const properties = useSelector((state) => state.comparison.properties);
 
-    const id = useSelector(state => state.comparison.comparisonResource.id);
-    const comparisonConfigObject = useSelector(state => getComparisonConfigObject(state.comparison));
-    const comparisonType = useSelector(state => state.comparison.configuration.comparisonType);
+    const id = useSelector((state) => state.comparison.comparisonResource.id);
+    const comparisonConfigObject = useSelector((state) => getComparisonConfigObject(state.comparison));
+    const comparisonType = useSelector((state) => state.comparison.configuration.comparisonType);
 
-    const predicatesList = useSelector(state => state.comparison.configuration.predicatesList);
-    const contributionsList = useSelector(state => activatedContributionsToList(state.comparison.contributions));
+    const predicatesList = useSelector((state) => state.comparison.configuration.predicatesList);
+    const contributionsList = useSelector((state) => activatedContributionsToList(state.comparison.contributions));
 
     const { trackEvent } = useMatomo();
-    const displayName = useSelector(state => state.auth?.user?.displayName ?? null);
+    const displayName = useSelector((state) => state.auth?.user?.displayName ?? null);
 
-    const handleCreatorsChange = creators => {
+    const handleCreatorsChange = (creators) => {
         const _creators = creators || [];
         setComparisonCreators(_creators);
     };
@@ -67,7 +68,7 @@ function usePublish() {
         );
     }, [comparisonResource, displayName]);
 
-    const getConference = async conferenceId => {
+    const getConference = async (conferenceId) => {
         if (!conferenceId || conferenceId === MISC.UNKNOWN_ID) {
             return null;
         }
@@ -91,7 +92,8 @@ function usePublish() {
             setDescription(comparisonData.description);
             setResearchField(comparisonData.researchField);
             setComparisonCreators(comparisonData.authors);
-            setReferences(comparisonData.references.length > 0 ? comparisonData.references.map(reference => reference.label) : ['']);
+            setSdgs(comparisonData.sdgs);
+            setReferences(comparisonData.references.length > 0 ? comparisonData.references.map((reference) => reference.label) : ['']);
             setConference((await getConference(comparisonData.organization_id)) ?? null);
         };
         fetchData();
@@ -99,20 +101,20 @@ function usePublish() {
 
     useEffect(() => {
         const getConferencesList = () => {
-            getConferencesSeries().then(response => {
+            getConferencesSeries().then((response) => {
                 setConferencesList(response.content);
             });
         };
         getConferencesList();
     }, []);
 
-    const publishDOI = async comparisonId => {
+    const publishDOI = async (comparisonId) => {
         try {
             if (id && comparisonResource?.authors.length === 0) {
                 await createAuthorsList({ authors: comparisonCreators, resourceId: id });
             }
             // Load ORCID of curators
-            let comparisonCreatorsORCID = comparisonCreators.map(async curator => {
+            let comparisonCreatorsORCID = comparisonCreators.map(async (curator) => {
                 if (!curator.orcid && curator._class === ENTITIES.RESOURCE) {
                     const statements = await getStatementsBySubjectAndPredicate({ subjectId: curator.id, predicateId: PREDICATES.HAS_ORCID });
                     return { ...curator, orcid: filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_ORCID, true)?.label };
@@ -126,7 +128,7 @@ function usePublish() {
                         id: comparisonId,
                         subject: researchField ? researchField.label : '',
                         description,
-                        authors: comparisonCreatorsORCID.map(creator => ({
+                        authors: comparisonCreatorsORCID.map((creator) => ({
                             name: creator.label,
                             ...(creator.orcid ? { identifiers: { orcid: [creator.orcid] } } : {}),
                         })),
@@ -150,7 +152,7 @@ function usePublish() {
         }
     };
 
-    const handleSubmit = async e => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         try {
@@ -177,8 +179,8 @@ function usePublish() {
                                 ...(references &&
                                     references.length > 0 && {
                                         [PREDICATES.REFERENCE]: references
-                                            .filter(reference => reference && reference.trim() !== '')
-                                            .map(reference => ({
+                                            .filter((reference) => reference && reference.trim() !== '')
+                                            .map((reference) => ({
                                                 text: reference,
                                             })),
                                     }),
@@ -190,11 +192,11 @@ function usePublish() {
                                             },
                                         ],
                                     }),
-                                [PREDICATES.COMPARE_CONTRIBUTION]: contributionsList.map(contributionID => ({
+                                [PREDICATES.COMPARE_CONTRIBUTION]: contributionsList.map((contributionID) => ({
                                     '@id': contributionID,
                                 })),
                                 ...(comparisonType === 'MERGE' && {
-                                    [PREDICATES.HAS_PROPERTY]: predicatesList.map(predicateID => {
+                                    [PREDICATES.HAS_PROPERTY]: predicatesList.map((predicateID) => {
                                         const property =
                                             comparisonType === 'MERGE' ? predicateID : getPropertyObjectFromData(data, { id: predicateID });
                                         return { '@id': property.id };
@@ -215,6 +217,12 @@ function usePublish() {
                                                 datatype: 'xsd:boolean',
                                             },
                                         ],
+                                    }),
+                                ...(sdgs &&
+                                    sdgs.length > 0 && {
+                                        [PREDICATES.SUSTAINABLE_DEVELOPMENT_GOAL]: sdgs.map((sdg) => ({
+                                            '@id': sdg.id,
+                                        })),
                                     }),
                             },
                             observatoryId: MISC.UNKNOWN_ID,
@@ -251,7 +259,7 @@ function usePublish() {
         }
     };
 
-    const handleRemoveReferenceClick = index => {
+    const handleRemoveReferenceClick = (index) => {
         const list = [...references];
         list.splice(index, 1);
         setReferences(list);
@@ -277,6 +285,7 @@ function usePublish() {
         references,
         conferencesList,
         isLoading,
+        sdgs,
         setTitle,
         setDescription,
         setResearchField,
@@ -287,6 +296,7 @@ function usePublish() {
         handleRemoveReferenceClick,
         handleReferenceChange,
         handleSubmit,
+        setSdgs,
     };
 }
 export default usePublish;

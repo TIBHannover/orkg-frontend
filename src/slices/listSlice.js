@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import arrayMove from 'array-move';
-import { LOCATION_CHANGE } from 'utils';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import dotProp from 'dot-prop-immutable';
@@ -19,6 +18,7 @@ import {
     getStatementsBySubjectAndPredicate,
     updateStatement,
 } from 'services/backend/statements';
+import { LOCATION_CHANGE } from 'utils';
 
 const initialState = {
     id: null,
@@ -35,6 +35,7 @@ const initialState = {
     isPublished: false,
     isOpenHistoryModal: false,
     statements: [],
+    sdgs: [],
 };
 
 export const listSlice = createSlice({
@@ -61,19 +62,19 @@ export const listSlice = createSlice({
             state.authorResources = payload;
         },
         sectionTitleUpdated: (state, { payload }) => {
-            const index = state.sections.findIndex(section => section.id === payload.sectionId);
+            const index = state.sections.findIndex((section) => section.id === payload.sectionId);
             state.sections[index].title = payload.title;
         },
         sectionMarkdownUpdated: (state, { payload }) => {
-            const index = state.sections.findIndex(section => section.content?.id === payload.id);
+            const index = state.sections.findIndex((section) => section.content?.id === payload.id);
             state.sections[index].content.text = payload.markdown;
         },
         sectionHeadingLevelUpdated: (state, { payload }) => {
-            const index = state.sections.findIndex(section => section.heading && section.heading.id === payload.id);
+            const index = state.sections.findIndex((section) => section.heading && section.heading.id === payload.id);
             state.sections[index].heading.level = payload.level;
         },
         sectionDeleted: (state, { payload }) => {
-            state.sections = state.sections.filter(section => section.id !== payload);
+            state.sections = state.sections.filter((section) => section.id !== payload);
         },
         sectionAdded: (state, { payload }) => {
             const { afterIndex, sectionId, markdownId, typeId, headingId, headingLevel } = payload;
@@ -110,7 +111,7 @@ export const listSlice = createSlice({
         versionsSet: (state, { payload }) => {
             state.versions = payload;
         },
-        historyModalToggled: state => {
+        historyModalToggled: (state) => {
             state.isOpenHistoryModal = !state.isOpenHistoryModal;
         },
         isLoadingSortSectionSet: (state, { payload }) => {
@@ -118,7 +119,7 @@ export const listSlice = createSlice({
         },
         listEntryAdded: (state, { payload }) => {
             const { entry, sectionId, statementId, contentTypeData } = payload;
-            const index = state.sections.findIndex(section => section.id === sectionId);
+            const index = state.sections.findIndex((section) => section.id === sectionId);
             state.sections[index].entries.push({
                 entry,
                 statementId,
@@ -128,25 +129,28 @@ export const listSlice = createSlice({
         },
         listEntryDeleted: (state, { payload }) => {
             const { statementId, sectionId } = payload;
-            const sectionIndex = state.sections.findIndex(section => section.id === sectionId);
-            state.sections[sectionIndex].entries = state.sections[sectionIndex].entries.filter(entry => entry.statementId !== statementId);
+            const sectionIndex = state.sections.findIndex((section) => section.id === sectionId);
+            state.sections[sectionIndex].entries = state.sections[sectionIndex].entries.filter((entry) => entry.statementId !== statementId);
         },
         listEntryUpdated: (state, { payload }) => {
             state.contentTypes[payload.contentType.id] = { ...state.contentTypes[payload.contentType.id], ...payload };
         },
         listEntryDescriptionUpdated: (state, { payload }) => {
             const { entryId, sectionId, description } = payload;
-            const sectionIndex = state.sections.findIndex(section => section.id === sectionId);
-            const entryIndex = state.sections[sectionIndex].entries.findIndex(entry => entry.entry.id === entryId);
+            const sectionIndex = state.sections.findIndex((section) => section.id === sectionId);
+            const entryIndex = state.sections[sectionIndex].entries.findIndex((entry) => entry.entry.id === entryId);
             return dotProp.set(state, `sections.${sectionIndex}.entries.${entryIndex}.description.label`, description);
         },
         listEntriesSorted: (state, { payload }) => {
             const { sectionId, entries } = payload;
-            const sectionIndex = state.sections.findIndex(section => section.id === sectionId);
+            const sectionIndex = state.sections.findIndex((section) => section.id === sectionId);
             state.sections[sectionIndex].entries = entries;
         },
+        setSdgs: (state, { payload }) => {
+            state.sdgs = payload;
+        },
     },
-    extraReducers: builder => {
+    extraReducers: (builder) => {
         builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
             const matchList = match(ROUTES.LIST);
             const parsed_payload = matchList(payload.location.pathname);
@@ -179,13 +183,14 @@ export const {
     listEntryUpdated,
     listEntryDescriptionUpdated,
     listEntriesSorted,
+    setSdgs,
 } = listSlice.actions;
 
 export default listSlice.reducer;
 
 export const updateTitle =
     ({ id, title }) =>
-    async dispatch => {
+    async (dispatch) => {
         dispatch(titleUpdated(title));
         dispatch(setIsLoading(true));
         await updateResource(id, title);
@@ -194,7 +199,7 @@ export const updateTitle =
 
 export const updateResearchField =
     ({ statementId, listId, researchField }) =>
-    async dispatch => {
+    async (dispatch) => {
         if (statementId) {
             updateStatement(statementId, {
                 subject_id: listId,
@@ -212,7 +217,7 @@ export const updateResearchField =
 
 export const updateSectionTitle =
     ({ sectionId, title }) =>
-    async dispatch => {
+    async (dispatch) => {
         dispatch(
             sectionTitleUpdated({
                 title,
@@ -226,7 +231,7 @@ export const updateSectionTitle =
 
 export const updateSectionHeadingLevel =
     ({ id, level }) =>
-    async dispatch => {
+    async (dispatch) => {
         dispatch(
             sectionHeadingLevelUpdated({
                 level,
@@ -240,7 +245,7 @@ export const updateSectionHeadingLevel =
 
 export const updateSectionMarkdown =
     ({ id, markdown }) =>
-    async dispatch => {
+    async (dispatch) => {
         dispatch(
             sectionMarkdownUpdated({
                 markdown,
@@ -252,13 +257,13 @@ export const updateSectionMarkdown =
         dispatch(setIsLoading(false));
     };
 
-export const deleteSection = id => async dispatch => {
+export const deleteSection = (id) => async (dispatch) => {
     try {
         dispatch(setIsLoading(true));
         const sectionObjectStatement = await getStatementsByObject({ id });
         const sectionSubjectStatement = await getStatementsBySubject({ id });
-        const sectionObjectStatementIds = sectionObjectStatement.map(stmt => stmt.id);
-        const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
+        const sectionObjectStatementIds = sectionObjectStatement.map((stmt) => stmt.id);
+        const sectionSubjectStatementIds = sectionSubjectStatement.map((stmt) => stmt.id);
         await deleteStatementsByIds([...sectionObjectStatementIds, ...sectionSubjectStatementIds]);
         // the resource isn't deleted, because deleting resources can only be done with the is_curation_allowed flag
         // await deleteResource(id);
@@ -324,13 +329,13 @@ export const createSection =
 
 export const sortSections =
     ({ listId, sections }) =>
-    async dispatch => {
+    async (dispatch) => {
         dispatch(setIsLoading(true));
         dispatch(isLoadingSortSectionSet(true));
         dispatch(sectionsSorted(sections));
 
         const sectionSubjectStatement = await getStatementsBySubjectAndPredicate({ subjectId: listId, predicateId: PREDICATES.HAS_SECTION });
-        const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
+        const sectionSubjectStatementIds = sectionSubjectStatement.map((stmt) => stmt.id);
         await deleteStatementsByIds(sectionSubjectStatementIds);
 
         for (const section of sections) {
@@ -343,14 +348,14 @@ export const sortSections =
 
 export const moveSection =
     ({ listId, sections, oldIndex, newIndex }) =>
-    async dispatch => {
+    async (dispatch) => {
         const sectionsNewOrder = arrayMove(sections, oldIndex, newIndex);
         dispatch(sortSections({ listId, sections: sectionsNewOrder }));
     };
 
 export const addListEntry =
     ({ contentTypeData, sectionId }) =>
-    async dispatch => {
+    async (dispatch) => {
         const entryResource = await createResource('Entry');
         const statement = await createResourceStatement(sectionId, PREDICATES.HAS_ENTRY, entryResource.id);
         await createResourceStatement(entryResource.id, PREDICATES.HAS_LINK, contentTypeData.contentType.id);
@@ -367,7 +372,7 @@ export const addListEntry =
 
 export const deleteListEntry =
     ({ statementId, sectionId }) =>
-    async dispatch => {
+    async (dispatch) => {
         try {
             await deleteStatementById(statementId);
             dispatch(
@@ -384,7 +389,7 @@ export const deleteListEntry =
 
 export const updateListEntryDescription =
     ({ description, entryId, descriptionLiteralId, sectionId }) =>
-    async dispatch => {
+    async (dispatch) => {
         dispatch(setIsLoading(true));
         if (!descriptionLiteralId) {
             const descriptionLiteral = await createLiteral(description);
@@ -405,13 +410,13 @@ export const updateListEntryDescription =
 
 export const sortListEntries =
     ({ sectionId, entries, oldIndex, newIndex }) =>
-    async dispatch => {
+    async (dispatch) => {
         dispatch(setIsLoading(true));
         dispatch(isLoadingSortSectionSet(true));
 
         const entriesNewOrder = cloneDeep(arrayMove(entries, oldIndex, newIndex));
         const sectionSubjectStatement = await getStatementsBySubjectAndPredicate({ subjectId: sectionId, predicateId: PREDICATES.HAS_ENTRY });
-        const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
+        const sectionSubjectStatementIds = sectionSubjectStatement.map((stmt) => stmt.id);
         await deleteStatementsByIds(sectionSubjectStatementIds);
 
         for (const [index, entry] of entriesNewOrder.entries()) {

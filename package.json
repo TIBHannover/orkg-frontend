@@ -47,7 +47,7 @@
         "make-latex": "^0.1.0",
         "marked": "^4.3.0",
         "moment": "^2.29.4",
-        "named-urls": "^2.0.0",
+        "named-urls": "^2.0.1",
         "node-html-parser": "^6.1.5",
         "olap-cube": "^1.0.0",
         "path-to-regexp": "^6.2.1",
