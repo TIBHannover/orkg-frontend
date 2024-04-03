@@ -3,6 +3,23 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.137.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.136.0...v0.137.0) - 2024-04-03
+
+### Changes
+
+- Acknowledgements =&gt; changed the smart review methadology link and added The before orkg [`#1295`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1295)
+- feat(Observatory): Faceted browsing of papers [`#1175`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1175)
+- chore: Browserslist package update [`#1298`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1298)
+- useQualityReport =&gt; changed entity.type into entity._class to fetch count of literals and resources [`#1288`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1288)
+- EditableHeader=&gt; added check if id===wikidata then hide the editable icon of the resouce label [`#1274`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1274)
+- chore: update twitter icon [`#1292`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1292)
+- fix: Adding papers via List are missing metadata (publicationMonth, publicationYear) [`#1294`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1294)
+- fix(Template): Set default cardinality for select input field according to the current value [`#1293`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1293)
+- fix(LinkValuePlugin): skip renderToString if props.children is already a string [`#1291`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1291)
+- fix(ValuePlugin): support URLs with trailing non-link characters [`#1290`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1290)
+- feat(Resource): support deletion of own unused resources [`#1287`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1287)
+
+---
 ## [v0.136.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.135.2...v0.136.0) - 2024-03-19
 
 ### Changes
