@@ -7,6 +7,8 @@ export const predicatesUrl = `${url}predicates/`;
 
 export const getPredicate = (id: string): Promise<Predicate> => submitGetRequest(`${predicatesUrl}${encodeURIComponent(id)}/`);
 
+export const getPredicatesByIds = (ids: string[]): Promise<Predicate[]> => Promise.all(ids.map(id => getPredicate(id)));
+
 export const createPredicate = (label: string, id: string | undefined = undefined): Promise<Predicate> =>
     submitPostRequest(predicatesUrl, { 'Content-Type': 'application/json' }, { label, id });
 

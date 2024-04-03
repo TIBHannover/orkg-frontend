@@ -9,7 +9,7 @@ import InternalServerError from 'app/error';
 import EditObservatory from 'components/Observatory/EditObservatory';
 import ResearchProblemsBox from 'components/ResearchProblemsBox/ResearchProblemsBox';
 import OrganizationsBox from 'components/Observatory/OrganizationsBox';
-import IntegratedList from 'components/Observatory/IntegratedList';
+import IntegratedListWrapper from 'components/Observatory/IntegratedList/IntegratedListWrapper';
 import MembersBox from 'components/Observatory/MembersBox';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { SubTitle } from 'components/styled';
@@ -86,7 +86,6 @@ const Observatory = () => {
             {!isLoading && !error && label && (
                 <>
                     <Breadcrumbs researchFieldId={researchField?.id} />
-
                     <TitleBar
                         titleAddition={<SubTitle>Observatory</SubTitle>}
                         buttonGroup={
@@ -112,7 +111,6 @@ const Observatory = () => {
                     >
                         {label}
                     </TitleBar>
-
                     <EditModeHeader isVisible={isEditMode} />
                     <Container
                         className={`box py-3 px-4 mb-4 clearfix position-relative 
@@ -140,7 +138,6 @@ const Observatory = () => {
                             )}
                         </>
                     </Container>
-
                     <Container className="p-0">
                         <Row className="mt-3">
                             <Col md="4" className="d-flex">
@@ -160,9 +157,7 @@ const Observatory = () => {
                             </Col>
                         </Row>
                     </Container>
-
-                    <IntegratedList id={observatoryId} slug={id} boxShadow />
-
+                    <IntegratedListWrapper id={observatoryId} boxShadow />
                     <EditObservatory
                         showDialog={showEditDialog}
                         toggle={() => setShowEditDialog(v => !v)}
@@ -173,7 +168,6 @@ const Observatory = () => {
                         updateObservatoryMetadata={updateObservatoryMetadata}
                     />
                     <ObservatoryModal isOpen={showDialogInfo} toggle={() => setShowDialogInfo(v => !v)} />
-
                     <ComparisonPopup />
                 </>
             )}

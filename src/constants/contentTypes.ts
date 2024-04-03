@@ -12,6 +12,7 @@ const contentTypes: string[] = [
 ];
 
 export const VISIBILITY_FILTERS: { [key: string]: VisibilityFilter } = {
+    TOP_RECENT: 'combined',
     ALL_LISTED: 'ALL_LISTED',
     UNLISTED: 'UNLISTED',
     FEATURED: 'FEATURED',
@@ -20,10 +21,10 @@ export const VISIBILITY_FILTERS: { [key: string]: VisibilityFilter } = {
 } as const;
 
 export const VISIBILITY: { [key: string]: Visibility } = {
-    DEFAULT: 'default',
-    FEATURED: 'featured',
-    UNLISTED: 'unlisted',
-    DELETED: 'deleted',
+    DEFAULT: 'DEFAULT',
+    FEATURED: 'FEATURED',
+    UNLISTED: 'UNLISTED',
+    DELETED: 'DELETED',
 };
 
 export default contentTypes;

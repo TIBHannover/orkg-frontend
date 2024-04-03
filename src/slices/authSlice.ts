@@ -3,7 +3,7 @@ import env from 'components/NextJsMigration/env';
 import { Cookies } from 'react-cookie';
 import { Dispatch } from 'redux';
 import { getUserInformation } from 'services/backend/users';
-import { AuthSliceType } from 'slices/types';
+import { AuthSliceType, RootStore } from 'slices/types';
 
 const initialState: AuthSliceType = {
     dialogIsOpen: false,
@@ -71,4 +71,13 @@ export function firstLoad() {
             })
             .then(() => Promise.resolve());
     };
+}
+
+/**
+ * Check if the user has a curation role
+ *
+ */
+export function isCurationAllowed(state: RootStore): boolean {
+    const { user } = state.auth;
+    return !!(user && user.isCurationAllowed);
 }

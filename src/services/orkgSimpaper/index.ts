@@ -5,13 +5,9 @@ import { SimilarPaper } from 'services/orkgSimpaper/types';
 
 export const similarPaperURL = env('SIMILAR_PAPER_URL');
 
-export const getSimilarPapers = ({
-    contributionIds,
-    mode,
-}: {
-    contributionIds: string[];
-    mode?: 'STATIC' | 'DYNAMIC' | null;
-}): Promise<SimilarPaper[]> => {
+export type GetSimilarPapersParams = { contributionIds: string[]; mode?: 'STATIC' | 'DYNAMIC' | null };
+
+export const getSimilarPapers = ({ contributionIds, mode }: GetSimilarPapersParams): Promise<SimilarPaper[]> => {
     const params: string = qs.stringify(
         {
             contribution_ids: contributionIds,
@@ -23,5 +19,5 @@ export const getSimilarPapers = ({
         },
     );
 
-    return submitGetRequest(`${similarPaperURL}paper/similar?${params}`).then(response => response?.payload);
+    return submitGetRequest(`${similarPaperURL}paper/similar?${params}`).then((response) => response?.payload);
 };

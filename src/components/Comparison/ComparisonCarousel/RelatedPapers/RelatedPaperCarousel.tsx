@@ -7,7 +7,7 @@ import StyledSlider from 'components/ResearchProblem/Benchmarks/styled';
 import { isArray } from 'lodash';
 import React, { useState } from 'react';
 import { Button, Card, CardBody, CardText, CardTitle } from 'reactstrap';
-import { getSimilarPapers } from 'services/orkgSimpaper';
+import { GetSimilarPapersParams, getSimilarPapers, similarPaperURL } from 'services/orkgSimpaper';
 import { SimilarPaper } from 'services/orkgSimpaper/types';
 import useSWR from 'swr';
 
@@ -72,14 +72,12 @@ const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAdd
         handleCreatePaper(newContributionIds);
     };
 
-    const { data: similarPaperList, isLoading } = useSWR(
-        {
-            contributionIds,
-            mode: 'DYNAMIC',
-        },
-        // @ts-expect-error
-        getSimilarPapers,
-    );
+    const params: GetSimilarPapersParams = {
+        contributionIds,
+        mode: 'DYNAMIC',
+    };
+
+    const { data: similarPaperList, isLoading } = useSWR([params, similarPaperURL, 'getSimilarPapers'], ([_params]) => getSimilarPapers(_params));
 
     const handleOpenCreatePaperModal = (initialValue: string) => {
         setIsOpenAddContribution(false);
@@ -105,7 +103,7 @@ const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAdd
 
             <>
                 <StyledSlider {...settings}>
-                    {similarPaperList.map(paper => (
+                    {similarPaperList.map((paper) => (
                         <div className="w-100 mx-1" key={paper?.title}>
                             <Card>
                                 <CardBody
@@ -182,7 +180,7 @@ const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAdd
                     allowCreate={true}
                     onAddContributions={addContributions}
                     showDialog={isOpenAddContribution}
-                    toggle={() => setIsOpenAddContribution(v => !v)}
+                    toggle={() => setIsOpenAddContribution((v) => !v)}
                     initialSearchQuery={currentSimilarPaper?.title}
                     // @ts-expect-error
                     onCreatePaper={handleOpenCreatePaperModal}
@@ -192,12 +190,16 @@ const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAdd
                 <AddPaperModal
                     isOpen
                     onCreatePaper={handleCreatePaper}
-                    toggle={() => setIsOpenCreatePaper(v => !v)}
+                    toggle={() => setIsOpenCreatePaper((v) => !v)}
                     initialValue={initialValueCreatePaper !== null ? initialValueCreatePaper : undefined}
                 />
             )}
             {isOpenRelatedPaperModal && (
-                <RelatedPaperModal paper={currentSimilarPaper} isOpen={isOpenRelatedPaperModal} toggle={() => setIsOpenRelatedPaperModal(v => !v)} />
+                <RelatedPaperModal
+                    paper={currentSimilarPaper}
+                    isOpen={isOpenRelatedPaperModal}
+                    toggle={() => setIsOpenRelatedPaperModal((v) => !v)}
+                />
             )}
         </div>
     );
