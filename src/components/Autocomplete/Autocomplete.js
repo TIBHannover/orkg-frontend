@@ -85,6 +85,7 @@ const Autocomplete = ({
     onOntologySelectorIsOpenStatusChange,
     excludeClasses,
     optionsClass,
+    baseClass,
     onKeyDown,
     additionalData,
     defaultOptions,
@@ -110,7 +111,7 @@ const Autocomplete = ({
     const [selectedOntologies, setSelectedOntologies] = useState(DEFAULT_SOURCES);
 
     // Pagination params
-    const PAGE_SIZE = 3;
+    const PAGE_SIZE = ols ? 3 : 12;
     const defaultAdditional = {
         page: 0,
     };
@@ -223,7 +224,9 @@ const Autocomplete = ({
             value = value.substring(1, value.length - 1).trim();
         }
         let responseJson;
-        if (optionsClass) {
+        if (baseClass) {
+            responseJson = await getResources({ baseClass, q: value?.trim() || '', page, size: PAGE_SIZE });
+        } else if (optionsClass) {
             responseJson = await getResources({ include: [optionsClass], q: value?.trim(), page, size: PAGE_SIZE, exact });
         } else {
             const isURI = new RegExp(REGEX.URL).test(value.trim());
@@ -375,6 +378,7 @@ const Autocomplete = ({
         try {
             const defaultOpts = defaultOptions ?? true;
             if ((!value || value === '' || value.trim() === '') && (!defaultOpts || !autoLoadOption)) {
+                console.log(autoLoadOption);
                 // if default options is disabled return empty result
                 return {
                     options: [],
@@ -941,6 +945,7 @@ Autocomplete.propTypes = {
     entityType: PropTypes.string,
     excludeClasses: PropTypes.array,
     optionsClass: PropTypes.string,
+    baseClass: PropTypes.string,
     placeholder: PropTypes.string,
     onItemSelected: PropTypes.func,
     onChange: PropTypes.func,

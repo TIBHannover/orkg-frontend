@@ -1,12 +1,13 @@
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { MISC } from 'constants/graphSettings';
-import { url } from 'constants/misc';
-import { submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
+import { url as baseUrl } from 'constants/misc';
+import { submitDeleteRequest, submitGetRequest, submitPatchRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
+import { mergePaginateResponses } from 'services/backend/misc';
 import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
-import { Contributor, Observatory, PaginatedResponse, Resource } from 'services/backend/types';
+import { Contributor, FilterConfig, Observatory, PaginatedResponse, Resource, SortByOptions, VisibilityOptions } from 'services/backend/types';
 
-export const observatoriesUrl = `${url}observatories/`;
+export const observatoriesUrl = `${baseUrl}observatories/`;
 
 /**
  * Get Observatories (400 BAD REQUEST if both q and research_field are specified)
@@ -88,7 +89,30 @@ export const addOrganizationToObservatory = (id: string, organization_id: string
 export const deleteOrganizationFromObservatory = (id: string, organization_id: string): Promise<Observatory> =>
     submitPutRequest(`${observatoriesUrl}delete/${encodeURIComponent(id)}/organization`, { 'Content-Type': 'application/json' }, { organization_id });
 
-export const getContentByObservatoryIdAndClasses = ({
+export type GetContentByObservatoryIdParams = {
+    id: string;
+    page?: number;
+    size?: number;
+    sortBy?: SortByOptions;
+    desc?: boolean;
+    visibility?: VisibilityOptions;
+    classes?: string[];
+    filters?: FilterConfig[];
+};
+
+/**
+ * Get content of an observatory
+ * @param {String} id observatory id
+ * @param {Number} page Page number
+ * @param {Number} size Number of items per page
+ * @param {SortByOptions} sortBy Sort field
+ * @param {Boolean} desc  ascending order and descending order.
+ * @param {VisibilityOptions} visibility Visibility of paper
+ * @param {string[]} classes Classes IDs Filter
+ * @param {FilterConfig} filters The filter config to use
+ * @return {Promise} Promise of paginated list of resources
+ */
+export const getContentByObservatoryId = ({
     id,
     page = 0,
     size = 9999,
@@ -96,24 +120,21 @@ export const getContentByObservatoryIdAndClasses = ({
     desc = true,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
     classes = [],
-}: {
-    id: string;
-    page?: number;
-    size?: number;
-    sortBy?: string;
-    desc?: boolean;
-    visibility?: string;
-    classes?: string[];
-}): Promise<PaginatedResponse<Resource>> => {
+    filters = [],
+}: GetContentByObservatoryIdParams): Promise<PaginatedResponse<Resource>> => {
     // Sort is not supported in this endpoint
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = qs.stringify(
-        { page, size, sort, visibility, classes: classes.join(',') },
-        {
-            skipNulls: true,
-        },
-    );
-    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/class?${params}`);
+    const url = filters.length > 0 ? `${observatoriesUrl}${encodeURIComponent(id)}/papers?` : `${observatoriesUrl}${encodeURIComponent(id)}/class?`;
+    const paramsObj = { page, size, sort, visibility, classes: classes.join(','), filter_config: JSON.stringify(filters) };
+    if (visibility === VISIBILITY_FILTERS.TOP_RECENT) {
+        const paramsFeaturedObj = qs.stringify({ ...paramsObj, visibility: VISIBILITY_FILTERS.FEATURED }, { skipNulls: true });
+        const paramsNoFeaturedObj = qs.stringify({ ...paramsObj, visibility: VISIBILITY_FILTERS.NON_FEATURED }, { skipNulls: true });
+        return Promise.all([submitGetRequest(url + paramsFeaturedObj), submitGetRequest(url + paramsNoFeaturedObj)]).then(([featured, noFeatured]) =>
+            mergePaginateResponses(featured, noFeatured),
+        );
+    }
+    const params = qs.stringify(paramsObj, { skipNulls: true });
+    return submitGetRequest(url + params);
 };
 
 export const createObservatory = (
@@ -146,10 +167,10 @@ export const getObservatoryAndOrganizationInformation = (
 } | null> => {
     if (observatoryId && observatoryId !== MISC.UNKNOWN_ID) {
         return getObservatoryById(observatoryId)
-            .then(obsResponse => {
+            .then((obsResponse) => {
                 if (organizationId !== MISC.UNKNOWN_ID) {
                     return getOrganization(organizationId)
-                        .then(orgResponse => ({
+                        .then((orgResponse) => ({
                             id: observatoryId,
                             name: obsResponse.name,
                             display_id: obsResponse.display_id,
@@ -179,7 +200,7 @@ export const getObservatoryAndOrganizationInformation = (
     }
     if (organizationId && organizationId !== MISC.UNKNOWN_ID) {
         return getOrganization(organizationId)
-            .then(orgResponse => ({
+            .then((orgResponse) => ({
                 id: null,
                 name: null,
                 display_id: null,
@@ -195,3 +216,53 @@ export const getObservatoryAndOrganizationInformation = (
     }
     return Promise.resolve(null);
 };
+
+/**
+ * Get the list of filters for the observatory
+ *
+ * @param {String} id observatory id
+ * @return {Array} List of filters
+ */
+export const getFiltersByObservatoryId = ({ id, page = 0, items = 9999 }: { id: string; page?: number; items?: number }): Promise<FilterConfig[]> => {
+    const params = qs.stringify(
+        { page, size: items },
+        {
+            skipNulls: true,
+        },
+    );
+    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/filters/?${params}&sort=featured,desc&sort=label,asc`).then(
+        (r) => r.content,
+    );
+};
+
+/**
+ * create filter in observatory
+ */
+export const createFiltersInObservatory = (id: string, { label, path, range, featured, exact }: FilterConfig) =>
+    submitPostRequest(
+        `${observatoriesUrl}${encodeURIComponent(id)}/filters/`,
+        { 'Content-Type': 'application/json' },
+        { label, path, range, featured, exact },
+        true,
+        true,
+        false,
+    );
+
+/**
+ * update filter in observatory
+ */
+export const updateFiltersOfObservatory = (observatoryId: string, filterId: string, { label, path, range, featured, exact }: FilterConfig) =>
+    submitPatchRequest(
+        `${observatoriesUrl}${encodeURIComponent(observatoryId)}/filters/${filterId}`,
+        { 'Content-Type': 'application/json' },
+        { label, path, range, featured, exact },
+    );
+
+/**
+ * Delete a filter from an observatory
+ *
+ * @param {String} observatoryId observatory id
+ * @param {String} filterId filter id
+ */
+export const deleteFilterOfObservatory = (observatoryId: string, filterId: string) =>
+    submitDeleteRequest(`${observatoriesUrl}${encodeURIComponent(observatoryId)}/filters/${filterId}`);

@@ -6,6 +6,7 @@ import { getClassById, getClasses } from 'services/backend/classes';
 import { getPredicate, getPredicates } from 'services/backend/predicates';
 import { getResource, getResources } from 'services/backend/resources';
 import { Class, PaginatedResponse, PaginationParams, Predicate, Resource, VerifiedParam, VisibilityParam } from 'services/backend/types';
+import { mergeAlternate } from 'utils';
 
 export const doisUrl = `${url}dois/`;
 
@@ -83,6 +84,24 @@ export const getEntity = (entityType: string = ENTITIES.RESOURCE, id: string): P
             return getResource(id);
     }
 };
+
+/**
+ * Merge two paginated results (Alternate content)
+ *
+ * @param {PaginatedResponse<Resource>} response1 - Paginated Response 1
+ * @param {PaginatedResponse<Resource>} response2 - Paginated Response 2
+ * @return {PaginatedResponse<Resource>} - Merged responses
+ */
+export const mergePaginateResponses = (
+    response1: PaginatedResponse<Resource>,
+    response2: PaginatedResponse<Resource>,
+): PaginatedResponse<Resource> => ({
+    ...response1,
+    content: mergeAlternate(response1.content, response2.content),
+    totalElements: response1.totalElements + response2.totalElements,
+    totalPages: response1.totalPages + response2.totalPages,
+    last: response1.last && response2.last,
+});
 
 export const prepareParams = (params: PaginationParams & VerifiedParam & VisibilityParam): string =>
     qs.stringify(

@@ -1,3 +1,7 @@
+export type SortByOptions = 'id' | 'label' | 'created_at' | 'created_by' | 'visibility';
+
+export type VisibilityOptions = 'combined' | 'ALL_LISTED' | 'UNLISTED' | 'FEATURED' | 'NON_FEATURED' | 'DELETED';
+
 export type PaginatedResponse<T> = {
     content: T[];
     pageable: {
@@ -28,8 +32,8 @@ export type PaginatedResponse<T> = {
 };
 
 export type ExtractionMethod = 'UNKNOWN' | 'MANUAL' | 'AUTOMATIC';
-export type Visibility = 'default' | 'featured' | 'unlisted' | 'deleted';
-export type VisibilityFilter = 'ALL_LISTED' | 'UNLISTED' | 'FEATURED' | 'NON_FEATURED' | 'DELETED';
+export type Visibility = 'DEFAULT' | 'FEATURED' | 'UNLISTED' | 'DELETED';
+export type VisibilityFilter = 'combined' | 'ALL_LISTED' | 'UNLISTED' | 'FEATURED' | 'NON_FEATURED' | 'DELETED';
 
 export type Node = {
     id: string;
@@ -187,6 +191,28 @@ export type Author = {
         web_of_science: string[];
         homepage: string[];
     }[];
+};
+
+export type FilterConfigOperator = 'EQ' | 'LT' | 'GT' | 'GE' | 'LE' | 'NE';
+
+export type FilterConfigValue = {
+    op: FilterConfigOperator;
+    value: string | Resource;
+};
+
+export type FilterConfig = {
+    id?: string;
+    observatory_id?: string;
+    label?: string;
+    path: string[];
+    range: string;
+    exact: boolean;
+    created_at?: string;
+    created_by?: string;
+    featured?: boolean;
+    persisted?: boolean;
+    values?: FilterConfigValue[];
+    source?: string;
 };
 
 export type Paper = {

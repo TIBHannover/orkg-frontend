@@ -2,7 +2,7 @@ import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES, MISC } from 'constants/graphSettings';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { getContentByObservatoryIdAndClasses } from 'services/backend/observatories';
+import { getContentByObservatoryId } from 'services/backend/observatories';
 import { getResearchProblemsByResearchFieldId } from 'services/backend/researchFields';
 import { addResourceToObservatory } from 'services/backend/resources';
 import { mergeAlternate } from 'utils';
@@ -19,7 +19,7 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
 
     const loadData = useCallback(
         (_page, total) => {
-            const apiFunc = by === 'ResearchField' ? getResearchProblemsByResearchFieldId : getContentByObservatoryIdAndClasses;
+            const apiFunc = by === 'ResearchField' ? getResearchProblemsByResearchFieldId : getContentByObservatoryId;
             setIsLoading(true);
             // problems
             let problemsService;

@@ -1,5 +1,6 @@
 import capitalize from 'capitalize';
 import env from 'components/NextJsMigration/env';
+import { VISIBILITY } from 'constants/contentTypes';
 import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import ROUTES from 'constants/routes';
@@ -1016,6 +1017,16 @@ export const convertAuthorToNewFormat = (author) => ({
 
 export const convertAuthorsToNewFormat = (authors) => authors.map((author) => convertAuthorToNewFormat(author));
 
+export const convertFeaturedAndUnlisted2Visibility = (unlisted, featured) => {
+    if (unlisted) {
+        return VISIBILITY.UNLISTED;
+    }
+    if (featured) {
+        return VISIBILITY.FEATURED;
+    }
+    return VISIBILITY.DEFAULT;
+};
+
 export const convertVisualizationToNewFormat = (visualization) => ({
     id: visualization.id,
     title: visualization.label,
@@ -1025,7 +1036,7 @@ export const convertVisualizationToNewFormat = (visualization) => ({
     extraction_method: visualization.extraction_method,
     created_at: visualization.created_at,
     created_by: visualization.created_by,
-    visibility: visualization.visibility,
+    visibility: convertFeaturedAndUnlisted2Visibility(visualization.unlisted, visualization.featured),
     description: visualization.description,
 });
 
@@ -1061,7 +1072,7 @@ export const convertComparisonToNewFormat = (comparison) => ({
     created_by: comparison.created_by,
     previous_version: comparison.hasPreviousVersion?.id,
     is_anonymized: comparison.anonymized,
-    visibility: comparison.visibility,
+    visibility: convertFeaturedAndUnlisted2Visibility(comparison.unlisted, comparison.featured),
 });
 
 export const convertPaperToNewFormat = (paper) => ({
@@ -1089,6 +1100,6 @@ export const convertPaperToNewFormat = (paper) => ({
     created_at: paper.created_at,
     created_by: paper.created_by,
     verified: paper.verified,
-    visibility: paper.visibility,
+    visibility: convertFeaturedAndUnlisted2Visibility(paper.unlisted, paper.featured),
     unlisted_by: paper.unlisted_by,
 });

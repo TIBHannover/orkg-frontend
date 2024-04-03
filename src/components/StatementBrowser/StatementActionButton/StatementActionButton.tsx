@@ -1,10 +1,30 @@
-import { useRef } from 'react';
 import Tippy from '@tippyjs/react';
-import PropTypes from 'prop-types';
-import ActionButtonView from 'components/StatementBrowser/StatementActionButton/ActionButtonView';
 import ConfirmationTooltip from 'components/StatementBrowser/ConfirmationTooltip/ConfirmationTooltip';
+import ActionButtonView from 'components/StatementBrowser/StatementActionButton/ActionButtonView';
+import { FC, MouseEvent, ReactNode, useRef } from 'react';
 
-const StatementActionButton = ({
+type StatementActionButtonProps = {
+    title: ReactNode;
+    icon: object;
+    iconSpin?: boolean;
+    testId?: string;
+    iconSize?: 'xs' | 'sm' | 'lg';
+    action?: () => void;
+    isDisabled?: boolean;
+    appendTo?: 'parent' | Element | ((ref: Element) => Element);
+    onVisibilityChange?: (visibility: boolean) => void;
+    requireConfirmation?: boolean;
+    confirmationMessage?: string;
+    interactive?: boolean;
+    confirmationButtons?: {
+        title: string;
+        color: string;
+        icon: object;
+        action?: () => void;
+    }[];
+};
+
+const StatementActionButton: FC<StatementActionButtonProps> = ({
     iconSpin = false,
     requireConfirmation = false,
     interactive = false,
@@ -19,11 +39,11 @@ const StatementActionButton = ({
     confirmationMessage,
     iconSize,
 }) => {
-    const tippy = useRef(null);
-    const confirmButtonRef = useRef(null);
+    const tippy = useRef<typeof Tippy>(null);
+    const confirmButtonRef = useRef<HTMLInputElement>(null);
 
     const onShown = () => {
-        confirmButtonRef.current.focus();
+        confirmButtonRef.current?.focus();
     };
 
     const onShow = () => {
@@ -39,10 +59,11 @@ const StatementActionButton = ({
     };
 
     const closeTippy = () => {
-        tippy.current.hide();
+        // @ts-expect-error
+        tippy.current?.hide();
     };
 
-    const handleClick = e => {
+    const handleClick = (e: MouseEvent) => {
         e.stopPropagation();
         if (!requireConfirmation) {
             action();
@@ -51,6 +72,7 @@ const StatementActionButton = ({
 
     const tippyChildren = (
         <ActionButtonView
+            // @ts-expect-error
             title={title}
             icon={icon}
             iconSpin={iconSpin}
@@ -67,11 +89,13 @@ const StatementActionButton = ({
                 onShown={onShown}
                 onShow={onShow}
                 onHide={onHide}
-                onCreate={tippyInst => (tippy.current = tippyInst)}
+                // @ts-expect-error
+                onCreate={(tippyInst) => (tippy.current = tippyInst)}
                 interactive={true}
                 trigger="click"
                 appendTo={appendTo}
                 content={
+                    // @ts-expect-error
                     <ConfirmationTooltip message={confirmationMessage} closeTippy={closeTippy} ref={confirmButtonRef} buttons={confirmationButtons} />
                 }
             >
@@ -85,29 +109,6 @@ const StatementActionButton = ({
             </Tippy>
         </>
     );
-};
-
-StatementActionButton.propTypes = {
-    title: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
-    icon: PropTypes.object.isRequired,
-    iconSpin: PropTypes.bool,
-    testId: PropTypes.string,
-    iconSize: PropTypes.oneOf(['xs', 'sm', 'lg']),
-    action: PropTypes.func,
-    isDisabled: PropTypes.bool,
-    appendTo: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-    onVisibilityChange: PropTypes.func,
-    requireConfirmation: PropTypes.bool,
-    confirmationMessage: PropTypes.string,
-    interactive: PropTypes.bool,
-    confirmationButtons: PropTypes.arrayOf(
-        PropTypes.shape({
-            title: PropTypes.string.isRequired,
-            color: PropTypes.string.isRequired,
-            icon: PropTypes.object.isRequired,
-            action: PropTypes.func,
-        }),
-    ),
 };
 
 export default StatementActionButton;

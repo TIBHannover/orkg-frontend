@@ -8,13 +8,9 @@ import { submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequ
 import qs from 'qs';
 import { classesUrl } from 'services/backend/classes';
 import { getContributorInformationById } from 'services/backend/contributors';
-import { PaginatedResponse, Resource } from 'services/backend/types';
+import { PaginatedResponse, Resource, SortByOptions, VisibilityFilter } from 'services/backend/types';
 
 export const resourcesUrl = `${url}resources/`;
-
-type SortByOptions = 'id' | 'label' | 'created_at' | 'created_by' | 'visibility';
-
-type VisibilityFilter = 'ALL_LISTED' | 'UNLISTED' | 'FEATURED' | 'NON_FEATURED' | 'DELETED';
 
 export const updateResource = (id: string, label?: string, classes: string[] | null = null, extractionMethod?: string): Promise<Resource> =>
     submitPutRequest(
@@ -31,6 +27,8 @@ export const createResource = (label: string, classes: string[] = [], id: string
     submitPostRequest(resourcesUrl, { 'Content-Type': 'application/json' }, { label, classes, id });
 
 export const getResource = (id: string): Promise<Resource> => submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`);
+
+export const getResourcesByIds = (ids: string[]): Promise<Resource[]> => Promise.all(ids.map(id => getResource(id)));
 
 export const deleteResource = (id: string): Promise<null> => submitDeleteRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' });
 
@@ -70,6 +68,7 @@ export const getResources = ({
     size = 9999,
     sortBy = 'created_at',
     desc = true,
+    baseClass = null,
     returnContent = false,
 }: {
     q?: string | null;
@@ -86,6 +85,7 @@ export const getResources = ({
     size?: number;
     sortBy?: SortByOptions;
     desc?: boolean;
+    baseClass?: string | null;
     returnContent?: boolean;
 }): Promise<PaginatedResponse<Resource> | Resource[]> => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
@@ -98,6 +98,7 @@ export const getResources = ({
             created_by: createdBy,
             created_at_start: createdAtStart,
             created_at_end: createdAtEnd,
+            ...(baseClass ? { base_class: baseClass } : {}),
             ...(include?.length ? { include: include.join(',') } : {}),
             ...(exclude?.length ? { exclude: exclude.join(',') } : {}),
             observatory_id: observatoryId,

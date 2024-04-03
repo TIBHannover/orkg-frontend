@@ -10,9 +10,8 @@ import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
 import { reverseWithSlug } from 'utils';
 
-const BreadcrumbStyled = styled.ul`
+export const BreadcrumbStyled = styled.ul`
     list-style: none;
-    display: flex;
     margin-bottom: 5px;
     font-size: small;
     padding: 0;
@@ -94,7 +93,7 @@ const BreadcrumbStyled = styled.ul`
     }
 `;
 
-const TippyContentStyled = styled.div`
+export const TippyContentStyled = styled.div`
     text-align: left;
     a {
         color: #fff;
@@ -126,7 +125,7 @@ const RelativeBreadcrumbs = ({ researchField }) => {
     };
 
     return researchField?.id ? (
-        <BreadcrumbStyled>
+        <BreadcrumbStyled className="d-flex">
             <li>
                 <Tippy
                     appendTo={document.body}
