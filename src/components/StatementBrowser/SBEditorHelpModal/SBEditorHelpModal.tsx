@@ -1,22 +1,24 @@
 import Link from 'components/NextJsMigration/Link';
-import { useEffect, useState } from 'react';
-import { Modal, ModalHeader, ModalBody, Alert, Col, Row } from 'reactstrap';
-import { getHelpArticles, getHelpArticle } from 'services/cms';
 import usePage from 'components/Page/usePage';
 import { CmsPage } from 'components/styled';
-import ContentLoader from 'react-content-loader';
-import ROUTES from 'constants/routes';
-import { useDispatch, useSelector } from 'react-redux';
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
+import ROUTES from 'constants/routes';
+import { useEffect, useState } from 'react';
+import ContentLoader from 'react-content-loader';
+import { useDispatch, useSelector } from 'react-redux';
+import { Alert, Col, Modal, ModalBody, ModalHeader, Row } from 'reactstrap';
+import { getHelpArticle, getHelpArticles } from 'services/cms';
+import { HelpArticle } from 'services/cms/types';
 import { setIsHelpModalOpen } from 'slices/statementBrowserSlice';
+import { RootStore } from 'slices/types';
 import { reverseWithSlug } from 'utils';
 
 const SBEditorHelpModal = () => {
-    const isHelpModalOpen = useSelector(state => state.statementBrowser.isHelpModalOpen);
-    const helpCenterArticleId = useSelector(state => state.statementBrowser.helpCenterArticleId);
+    const isHelpModalOpen = useSelector((state: RootStore) => state.statementBrowser.isHelpModalOpen);
+    const helpCenterArticleId = useSelector((state: RootStore) => state.statementBrowser.helpCenterArticleId);
     const { loadPage, page, isLoading: isLoadingPage, isNotFound } = usePage();
     const dispatch = useDispatch();
-    const [articles, setArticles] = useState([]);
+    const [articles, setArticles] = useState<HelpArticle[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [hasFailed, setHasFailed] = useState(false);
 
@@ -33,13 +35,13 @@ const SBEditorHelpModal = () => {
                 getHelpArticles({
                     where: HELP_CENTER_ARTICLES.SB_ARTICLES,
                 })
-                    .then(result => {
+                    .then((result) => {
                         if (isMounted) {
-                            setArticles(result);
+                            setArticles(result.data);
                             setIsLoading(false);
                         }
                     })
-                    .catch(e => {
+                    .catch((e) => {
                         setHasFailed(true);
                         setIsLoading(false);
                     });
@@ -55,7 +57,7 @@ const SBEditorHelpModal = () => {
     return (
         <Modal isOpen={isHelpModalOpen} toggle={() => dispatch(setIsHelpModalOpen({ isOpen: !isHelpModalOpen }))} size="lg">
             <ModalHeader toggle={() => dispatch(setIsHelpModalOpen({ isOpen: !isHelpModalOpen }))}>
-                {helpCenterArticleId && !isLoadingPage && page ? page?.title : 'ORKG Content editor help'}{' '}
+                {helpCenterArticleId && !isLoadingPage && page ? page?.attributes.title : 'ORKG Content editor help'}{' '}
             </ModalHeader>
             <ModalBody>
                 {!helpCenterArticleId && (
@@ -90,17 +92,18 @@ const SBEditorHelpModal = () => {
                 {!isLoading && articles.length > 0 && (
                     <Row className="mt-3">
                         <ul>
-                            {articles.map(article => (
+                            {articles.map((article) => (
                                 <li key={article.id}>
+                                    {/* @ts-expect-error */}
                                     <Link
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         href={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                             id: article.id,
-                                            slug: article.title,
+                                            slug: article.attributes.title,
                                         })}
                                     >
-                                        {article.title}
+                                        {article.attributes.title}
                                     </Link>
                                 </li>
                             ))}

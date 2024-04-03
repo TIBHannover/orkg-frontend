@@ -1,17 +1,18 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
 import HelpCenterSearchInput from 'components/HelpCenterSearchInput/HelpCenterSearchInput';
+import Link from 'components/NextJsMigration/Link';
+import useParams from 'components/NextJsMigration/useParams';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { useEffect, useState } from 'react';
-import useParams from 'components/NextJsMigration/useParams';
 import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
 import { getHelpArticles } from 'services/cms';
+import { HelpArticle } from 'services/cms/types';
 import { reverseWithSlug } from 'utils';
 
 const HelpCenterSearch = () => {
-    const [articles, setArticles] = useState([]);
+    const [articles, setArticles] = useState<HelpArticle[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const { searchQuery } = useParams();
 
@@ -19,20 +20,19 @@ const HelpCenterSearch = () => {
         const getData = async () => {
             try {
                 setIsLoading(true);
-                const words = searchQuery.split(' ');
+                const words = searchQuery?.split(' ');
                 let whereCount = 0;
-                const _articles = await getHelpArticles({
-                    // can be made more readable by using an object and converting it with 'qs' package to a string
-                    where: words
-                        .map(word => {
-                            const where = `filters[$or][${whereCount}][title][$containsi]=${word}&filters[$or][${
-                                whereCount + 1
-                            }][content][$containsi]=${word}`;
-                            whereCount += 2;
-                            return where;
-                        })
-                        .join('&'),
-                });
+                const whereString = words
+                    ?.map((word) => {
+                        const where = `filters[$or][${whereCount}][title][$containsi]=${word}&filters[$or][${
+                            whereCount + 1
+                        }][content][$containsi]=${word}`;
+                        whereCount += 2;
+                        return where;
+                    })
+                    .join('&');
+
+                const _articles = await getHelpArticles({ where: whereString || '' });
                 setArticles(_articles.data);
             } catch (e) {
                 console.log(e);
@@ -52,6 +52,7 @@ const HelpCenterSearch = () => {
 
                 <Breadcrumb>
                     <BreadcrumbItem>
+                        {/* @ts-expect-error */}
                         <Link href={ROUTES.HELP_CENTER}>Help center</Link>
                     </BreadcrumbItem>
                     <BreadcrumbItem active>Search results</BreadcrumbItem>
@@ -61,8 +62,9 @@ const HelpCenterSearch = () => {
                 {isLoading && 'Loading...'}
                 {!isLoading && articles.length > 0 && (
                     <ul>
-                        {articles.map(article => (
+                        {articles.map((article) => (
                             <li key={article.id}>
+                                {/* @ts-expect-error */}
                                 <Link
                                     href={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                         id: article.id,

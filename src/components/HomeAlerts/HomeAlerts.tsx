@@ -2,6 +2,7 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { Alert } from 'reactstrap';
 import { getHomeAlerts } from 'services/cms';
+import { Alert as AlertType } from 'services/cms/types';
 import * as Showdown from 'showdown';
 import styled from 'styled-components';
 
@@ -15,7 +16,7 @@ const AlertStyled = styled(Alert)`
 `;
 
 const HomeAlerts = () => {
-    const [alerts, setAlerts] = useState([]);
+    const [alerts, setAlerts] = useState<AlertType[]>([]);
 
     useEffect(() => {
         (async () => {
@@ -27,7 +28,7 @@ const HomeAlerts = () => {
         return null;
     }
 
-    return alerts.map(alert =>
+    return alerts.map((alert) =>
         !alert.attributes?.hideAfterDate || moment() < moment(alert.attributes?.hideAfterDate) ? (
             <AlertStyled key={alert.id} color={alert.attributes?.color} className="box mt-2">
                 <div dangerouslySetInnerHTML={{ __html: converter.makeHtml(alert.attributes?.message) }} />

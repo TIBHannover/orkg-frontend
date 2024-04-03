@@ -1,26 +1,27 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
+import NotFound from 'app/not-found';
 import CheckSlug from 'components/CheckSlug/CheckSlug';
+import Link from 'components/NextJsMigration/Link';
+import useParams from 'components/NextJsMigration/useParams';
 import PageContentLoader from 'components/Page/PageContentLoader';
 import usePage from 'components/Page/usePage';
-import { CmsPage } from 'components/styled';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { CmsPage } from 'components/styled';
 import ROUTES from 'constants/routes';
-import NotFound from 'app/not-found';
 import { useEffect, useState } from 'react';
-import useParams from 'components/NextJsMigration/useParams';
-import { Container, Nav, Navbar, NavItem, Alert } from 'reactstrap';
+import { Alert, Container, Nav, NavItem, Navbar } from 'reactstrap';
 import { getAboutPage, getAboutPages } from 'services/cms';
+import { HelpArticle } from 'services/cms/types';
 import { reverseWithSlug } from 'utils';
 
 const About = () => {
     const [isLoadingMenu, setIsLoadingMenu] = useState(false);
     const [isFailedLoadingMenu, setIsFailedLoadingMenu] = useState(false);
-    const [menuItems, setMenuItems] = useState([]);
+    const [menuItems, setMenuItems] = useState<HelpArticle[]>([]);
     const { loadPage, page, isLoading, isNotFound } = usePage();
     const params = useParams();
-    const id = params.id ? parseInt(params.id) : null;
+    const id = params.id ? parseInt(params.id, 10) : null;
 
     // load page content
     useEffect(() => {
@@ -79,8 +80,9 @@ const About = () => {
                     <>
                         <Navbar color="white" expand="md" className="mb-3 p-0">
                             <Nav>
-                                {menuItems.map(item => (
+                                {menuItems.map((item) => (
                                     <NavItem key={item.id} className={item.id === page?.id ? 'rounded bg-light' : ''}>
+                                        {/* @ts-expect-error */}
                                         <Link
                                             className="nav-link"
                                             href={reverseWithSlug(ROUTES.ABOUT, { id: item.id, slug: item.attributes?.title })}

@@ -1,21 +1,34 @@
-import Tippy from '@tippyjs/react';
-import { useState } from 'react';
-import { Button, Input, Label } from 'reactstrap';
-import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { createFeedback } from 'services/cms';
+import Tippy from '@tippyjs/react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
+import { FC, useState } from 'react';
+import { toast } from 'react-toastify';
+import { Button, Input, Label } from 'reactstrap';
+import { createFeedback } from 'services/cms';
+import { FeedbackType } from 'services/cms/types';
 
-const Feedback = ({ type, inputData, outputData, llmTask }) => {
+type FeedbackProps = {
+    type: FeedbackType;
+    inputData: [] | {};
+    outputData: [] | {};
+    llmTask: string;
+};
+
+const Feedback: FC<FeedbackProps> = ({ type, inputData, outputData, llmTask }) => {
     const [comments, setComments] = useState('');
-    const [options, setOptions] = useState([]);
+    const [options, setOptions] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const VALUES = {
+    type Values = {
+        [key: string]: {
+            icon: string;
+            options: string[];
+        };
+    };
+    const VALUES: Values = {
         positive: {
             icon: '😀',
             options: ['This is helpful', 'This is correct', 'This reduces my workload'],
@@ -36,7 +49,7 @@ const Feedback = ({ type, inputData, outputData, llmTask }) => {
             await createFeedback({
                 llmTask,
                 type,
-                options: options.filter(o => VALUES[type].options.includes(o)).join(','),
+                options: options.filter((o) => VALUES[type].options.includes(o)).join(','),
                 comments,
                 inputData,
                 outputData,
@@ -59,13 +72,13 @@ const Feedback = ({ type, inputData, outputData, llmTask }) => {
                     <hr />
                     {!isSubmitted ? (
                         <>
-                            {VALUES[type].options.map(option => (
+                            {VALUES[type].options.map((option: string) => (
                                 <div className="mb-1" key={option}>
                                     <Label check className="mb-0">
                                         <Input
-                                            onChange={e =>
+                                            onChange={(e) =>
                                                 options.includes(option)
-                                                    ? setOptions(options.filter(o => o !== option))
+                                                    ? setOptions(options.filter((o) => o !== option))
                                                     : setOptions([...options, option])
                                             }
                                             checked={options.includes(option)}
@@ -80,7 +93,7 @@ const Feedback = ({ type, inputData, outputData, llmTask }) => {
                                 type="textarea"
                                 placeholder="Optional: provide more feedback"
                                 value={comments}
-                                onChange={e => setComments(e.target.value)}
+                                onChange={(e) => setComments(e.target.value)}
                                 rows={4}
                                 className="my-3"
                                 style={{ fontSize: 'inherit' }}
@@ -109,13 +122,6 @@ const Feedback = ({ type, inputData, outputData, llmTask }) => {
             </span>
         </Tippy>
     );
-};
-
-Feedback.propTypes = {
-    type: PropTypes.oneOf(['positive', 'neutral', 'negative']).isRequired,
-    inputData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-    outputData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-    llmTask: PropTypes.string.isRequired,
 };
 
 export default Feedback;
