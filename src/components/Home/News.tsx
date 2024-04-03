@@ -1,10 +1,11 @@
+import { CarouselIndicatorsStyled } from 'components/styled';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselItem } from 'reactstrap';
 import { getNewsCards } from 'services/cms';
-import { CarouselIndicatorsStyled } from 'components/styled';
-import styled from 'styled-components';
+import { NewsCard } from 'services/cms/types';
 import Showdown from 'showdown';
-import moment from 'moment';
+import styled from 'styled-components';
 
 const CarouselContainer = styled.div`
     width: 100%;
@@ -13,22 +14,18 @@ const CarouselContainer = styled.div`
         width: 10px !important;
         height: 10px !important;
         border-radius: 100% !important;
-        background-color: ${props => props.theme.primary} !important;
+        background-color: ${(props) => props.theme.primary} !important;
     }
 `;
 
 const converter = new Showdown.Converter();
 converter.setFlavor('github');
 
-type Item = {
-    attributes: { title: string; message: string; publishedAt: Date };
-};
-
 export default function News() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [animating, setAnimating] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [items, setItems] = useState<Item[]>([]);
+    const [items, setItems] = useState<NewsCard[]>([]);
 
     useEffect(() => {
         const loadNews = async () => {

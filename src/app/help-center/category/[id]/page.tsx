@@ -1,17 +1,18 @@
 'use client';
 
+import NotFound from 'app/not-found';
 import Link from 'components/NextJsMigration/Link';
+import useParams from 'components/NextJsMigration/useParams';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
-import NotFound from 'app/not-found';
 import { useEffect, useState } from 'react';
-import useParams from 'components/NextJsMigration/useParams';
 import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
 import { getHelpCategory } from 'services/cms';
+import { HelpCategory } from 'services/cms/types';
 import { reverseWithSlug } from 'utils';
 
 const HelpCenterCategory = () => {
-    const [category, setCategory] = useState(null);
+    const [category, setCategory] = useState<HelpCategory | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isNotFound, setIsNotFound] = useState(false);
     const { id } = useParams();
@@ -47,14 +48,16 @@ const HelpCenterCategory = () => {
                     <>
                         <Breadcrumb>
                             <BreadcrumbItem>
+                                {/* @ts-expect-error */}
                                 <Link href={ROUTES.HELP_CENTER}>Help center</Link>
                             </BreadcrumbItem>
                             <BreadcrumbItem active>{category.attributes?.title}</BreadcrumbItem>
                         </Breadcrumb>
                         <h1 className="h3 my-4">{category.attributes?.title}</h1>
                         <ul>
-                            {category.attributes?.help_articles?.data?.map(article => (
+                            {category.attributes?.help_articles?.data?.map((article) => (
                                 <li key={article.id}>
+                                    {/* @ts-expect-error */}
                                     <Link
                                         href={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                             id: article.id,

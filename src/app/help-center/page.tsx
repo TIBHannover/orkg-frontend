@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
 import HelpCenterSearchInput from 'components/HelpCenterSearchInput/HelpCenterSearchInput';
+import Link from 'components/NextJsMigration/Link';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { times } from 'lodash';
@@ -10,18 +10,18 @@ import { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import { Alert, Col, Container, Row } from 'reactstrap';
 import { getHelpCategories } from 'services/cms';
+import { HelpArticle } from 'services/cms/types';
 import { reverseWithSlug } from 'utils';
 
 const HelpCenter = () => {
-    const [categories, setCategories] = useState([]);
-    const [isLoading, setIsLoading] = useState([]);
+    const [categories, setCategories] = useState<HelpArticle[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
     const [hasFailed, setHasFailed] = useState(false);
 
     useEffect(() => {
         const fetchCategories = async () => {
             setIsLoading(true);
             setHasFailed(false);
-
             try {
                 setCategories((await getHelpCategories()).data);
             } catch (e) {
@@ -45,7 +45,7 @@ const HelpCenter = () => {
 
                 {isLoading && (
                     <Row className="mt-5">
-                        {times(5, i => (
+                        {times(5, (i) => (
                             <Col key={i} md="6">
                                 <ContentLoader
                                     speed={2}
@@ -67,9 +67,10 @@ const HelpCenter = () => {
                 )}
 
                 <Row className="mt-5">
-                    {categories.map(category => (
+                    {categories.map((category) => (
                         <Col key={category.id} md="6">
                             <h2 className="h4">
+                                {/* @ts-expect-error */}
                                 <Link
                                     href={reverse(ROUTES.HELP_CENTER_CATEGORY, {
                                         id: category.id,
@@ -80,8 +81,9 @@ const HelpCenter = () => {
                                 </Link>
                             </h2>
                             <ul className="ps-3 mb-0">
-                                {category.attributes?.help_articles?.data?.slice(0, 5)?.map(article => (
+                                {category.attributes?.help_articles?.data?.slice(0, 5)?.map((article) => (
                                     <li key={article.id}>
+                                        {/* @ts-expect-error */}
                                         <Link
                                             href={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                                 id: article.id,
@@ -94,6 +96,7 @@ const HelpCenter = () => {
                                 ))}
                             </ul>
                             <div className="mt-2 mb-4">
+                                {/* @ts-expect-error */}
                                 <Link
                                     href={reverse(ROUTES.HELP_CENTER_CATEGORY, {
                                         id: category.id,

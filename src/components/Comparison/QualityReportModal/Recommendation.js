@@ -16,7 +16,7 @@ const Recommendation = ({ type, title, info, evaluation, solution }) => {
                 role="button"
                 fade={false}
                 style={{ cursor: 'pointer' }}
-                onClick={() => setIsOpen(v => !v)}
+                onClick={() => setIsOpen((v) => !v)}
             >
                 <span>
                     <span className="d-inline-block" style={{ width: 20 }}>

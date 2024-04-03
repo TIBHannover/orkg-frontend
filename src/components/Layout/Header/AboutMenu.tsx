@@ -1,20 +1,20 @@
-import Link from 'components/NextJsMigration/Link';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import Link from 'components/NextJsMigration/Link';
+import usePathname from 'components/NextJsMigration/usePathname';
 import ROUTES from 'constants/routes.js';
-import PropTypes from 'prop-types';
+import { get, groupBy } from 'lodash';
+import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
+import ContentLoader from 'react-content-loader';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import { getAboutPageCategories, getAboutPages } from 'services/cms';
-import { reverseWithSlug } from 'utils';
-import { reverse } from 'named-urls';
+import { AboutPageCategory, HelpArticle } from 'services/cms/types';
 import styled from 'styled-components';
-import { groupBy, get } from 'lodash';
-import ContentLoader from 'react-content-loader';
-import usePathname from 'components/NextJsMigration/usePathname';
+import { reverseWithSlug } from 'utils';
 
 const StyledButtonDropdown = styled(UncontrolledButtonDropdown)`
-    @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
+    @media (max-width: ${(props) => props.theme.gridBreakpoints.md}) {
         .dropdown-menu {
             position: relative !important;
             transform: none !important;
@@ -23,16 +23,20 @@ const StyledButtonDropdown = styled(UncontrolledButtonDropdown)`
     }
 `;
 
-const AboutMenu = ({ closeMenu }) => {
-    const [items, setItems] = useState([]);
-    const [categories, setCategories] = useState([]);
+export type Items = {
+    [groupId: string | number]: HelpArticle[];
+};
+
+const AboutMenu = (closeMenu: () => void) => {
+    const [items, setItems] = useState<Items | null>({});
+    const [categories, setCategories] = useState<AboutPageCategory[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const pathname = usePathname();
 
     useEffect(() => {
         const getItems = async () => {
             setIsLoading(true);
-            setItems(groupBy((await getAboutPages()).data, item => get(item, 'attributes.category.data.id', 'main')) ?? []);
+            setItems(groupBy((await getAboutPages()).data, (item) => get(item, 'attributes.category.data.id', 'main')) ?? {});
             setCategories((await getAboutPageCategories()).data ?? []);
             setIsLoading(false);
         };
@@ -49,10 +53,9 @@ const AboutMenu = ({ closeMenu }) => {
                 </DropdownItem>
             )}
             {!isLoading &&
-                categories.map(category => {
-                    const subItems = items[category.id];
+                categories.map((category) => {
                     if (category.attributes.label === 'main') {
-                        return items.main.map(({ id, title }) => (
+                        return items?.main?.map(({ id, attributes: { title } }) => (
                             <DropdownItem
                                 key={id}
                                 tag={Link}
@@ -64,6 +67,10 @@ const AboutMenu = ({ closeMenu }) => {
                                 {title}
                             </DropdownItem>
                         ));
+                    }
+                    const subItems = items?.[category.id];
+                    if (!subItems) {
+                        return null;
                     }
                     return (
                         <StyledButtonDropdown key={category.attributes.label} direction="right" className="w-100 nav inNavbar">
@@ -97,10 +104,6 @@ const AboutMenu = ({ closeMenu }) => {
                 })}
         </>
     );
-};
-
-AboutMenu.propTypes = {
-    closeMenu: PropTypes.func.isRequired,
 };
 
 export default AboutMenu;

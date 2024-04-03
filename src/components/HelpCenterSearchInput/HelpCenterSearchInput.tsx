@@ -1,24 +1,24 @@
+import useParams from 'components/NextJsMigration/useParams';
+import useRouter from 'components/NextJsMigration/useRouter';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import { useState } from 'react';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useParams from 'components/NextJsMigration/useParams';
+import { KeyboardEvent, useState } from 'react';
 import { Button, Input, InputGroup } from 'reactstrap';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const HelpCenterSearchInput = () => {
     const router = useRouter();
     const params = useParams();
     const [value, setValue] = useState(params.searchQuery ?? '');
 
-    const handleKeyDown = e => {
+    const handleSearch = () => {
+        router.push(reverse(ROUTES.HELP_CENTER_SEARCH, { searchQuery: encodeURIComponent(value) }));
+    };
+
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             handleSearch();
         }
-    };
-
-    const handleSearch = () => {
-        router.push(reverse(ROUTES.HELP_CENTER_SEARCH, { searchQuery: encodeURIComponent(value) }));
     };
 
     return (
@@ -28,7 +28,7 @@ const HelpCenterSearchInput = () => {
                 bsSize="lg"
                 type="text"
                 value={value}
-                onChange={e => setValue(e.target.value)}
+                onChange={(e) => setValue(e.target.value)}
                 onKeyDown={handleKeyDown}
                 maxLength={MAX_LENGTH_INPUT}
             />

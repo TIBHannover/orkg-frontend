@@ -1,16 +1,16 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
+import NotFound from 'app/not-found';
 import CheckSlug from 'components/CheckSlug/CheckSlug';
+import Link from 'components/NextJsMigration/Link';
+import useParams from 'components/NextJsMigration/useParams';
 import PageContentLoader from 'components/Page/PageContentLoader';
 import usePage from 'components/Page/usePage';
-import { CmsPage } from 'components/styled';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { CmsPage } from 'components/styled';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import NotFound from 'app/not-found';
 import { useEffect } from 'react';
-import useParams from 'components/NextJsMigration/useParams';
 import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
 import { getHelpArticle } from 'services/cms';
 
@@ -46,10 +46,12 @@ const HelpCenterArticle = () => {
                     <>
                         <Breadcrumb>
                             <BreadcrumbItem>
+                                {/* @ts-expect-error */}
                                 <Link href={ROUTES.HELP_CENTER}>Help center</Link>
                             </BreadcrumbItem>
                             {page.attributes?.help_category?.data && (
                                 <BreadcrumbItem>
+                                    {/* @ts-expect-error */}
                                     <Link
                                         href={reverse(ROUTES.HELP_CENTER_CATEGORY, {
                                             id: page.attributes.help_category.data?.id,
