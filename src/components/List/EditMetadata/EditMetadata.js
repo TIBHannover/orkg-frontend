@@ -5,6 +5,7 @@ import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import EditAuthorsModal from 'components/List/EditAuthorsModal';
 import EditResearchField from 'components/List/EditResearchField';
 import ListEntryAmount from 'components/List/ListEntryAmount/ListEntryAmount';
+import SustainableDevelopmentGoals from 'components/List/SustainableDevelopmentGoals';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
@@ -12,8 +13,8 @@ import { updateTitle } from 'slices/listSlice';
 import { convertAuthorsToNewFormat } from 'utils';
 
 const EditMetadata = () => {
-    const { id, title: titleStore } = useSelector(state => state.list.list);
-    const authorResources = useSelector(state => state.list.authorResources);
+    const { id, title: titleStore } = useSelector((state) => state.list.list);
+    const authorResources = useSelector((state) => state.list.authorResources);
     const dispatch = useDispatch();
     const [title, setTitle] = useState('');
 
@@ -21,7 +22,7 @@ const EditMetadata = () => {
         setTitle(titleStore);
     }, [titleStore]);
 
-    const handleBlur = e => {
+    const handleBlur = (e) => {
         if (titleStore !== e.target.value) {
             dispatch(
                 updateTitle({
@@ -41,20 +42,27 @@ const EditMetadata = () => {
                     className="focus-primary"
                     value={title}
                     onBlur={handleBlur}
-                    onChange={e => setTitle(e.target.value)}
+                    onChange={(e) => setTitle(e.target.value)}
                     placeholder="Enter a title..."
                 />
             </h1>
 
-            <EditResearchField />
-            <ListEntryAmount />
-            <AuthorBadges authors={convertAuthorsToNewFormat(authorResources)} />
+            <div className="d-flex justify-content-between">
+                <div>
+                    <EditResearchField />
 
-            <Button size="sm" color="secondary" className="ms-2" onClick={() => setShowModal(true)} aria-label="Edit article authors">
-                <Icon icon={faPen} /> Edit
-            </Button>
+                    <ListEntryAmount />
+                    <AuthorBadges authors={convertAuthorsToNewFormat(authorResources)} />
+                    <Button size="sm" color="secondary" className="ms-2" onClick={() => setShowModal(true)} aria-label="Edit article authors">
+                        <Icon icon={faPen} /> Edit
+                    </Button>
+                </div>
+                <div>
+                    <SustainableDevelopmentGoals isEditable />
+                </div>
+            </div>
 
-            <EditAuthorsModal show={showModal} toggle={() => setShowModal(v => !v)} />
+            <EditAuthorsModal show={showModal} toggle={() => setShowModal((v) => !v)} />
         </SectionStyled>
     );
 };

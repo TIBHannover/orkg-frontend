@@ -11,7 +11,7 @@ import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { useCallback } from 'react';
 import { Container, ListGroup, ListGroupItem } from 'reactstrap';
-import { convertComparisonToNewFormat, convertPaperToNewFormat, convertVisualizationToNewFormat } from 'utils';
+import { convertComparisonToNewFormat, convertPaperToNewFormat, convertReviewToNewFormat, convertVisualizationToNewFormat } from 'utils';
 
 const AuthorWorks = ({ authorId = null, authorString = null }) => {
     const { isNextPageLoading, hasNextPage, works, page, totalElements, isLastPageReached, handleLoadMore } = useAuthorWorks({
@@ -19,7 +19,7 @@ const AuthorWorks = ({ authorId = null, authorString = null }) => {
         authorString,
     });
 
-    const renderItem = useCallback(item => {
+    const renderItem = useCallback((item) => {
         if (item?.classes?.includes(CLASSES.PAPER)) {
             return (
                 <PaperCard
@@ -53,7 +53,15 @@ const AuthorWorks = ({ authorId = null, authorString = null }) => {
             );
         }
         if (item?.classes?.includes(CLASSES.SMART_REVIEW)) {
-            return <ReviewCard versions={[item]} showBadge={true} showCurationFlags={false} showAddToComparison={false} key={`c${item.id}`} />;
+            return (
+                <ReviewCard
+                    review={convertReviewToNewFormat([item])}
+                    showBadge={true}
+                    showCurationFlags={false}
+                    showAddToComparison={false}
+                    key={`c${item.id}`}
+                />
+            );
         }
         return null;
     }, []);
@@ -72,7 +80,7 @@ const AuthorWorks = ({ authorId = null, authorString = null }) => {
             </TitleBar>
             <Container className="p-0 box rounded">
                 <ListGroup>
-                    {works.length > 0 && works.filter(r => r).map(resource => renderItem(resource))}
+                    {works.length > 0 && works.filter((r) => r).map((resource) => renderItem(resource))}
                     {totalElements === 0 && !isNextPageLoading && (
                         <ListGroupItem tag="div" className="text-center p-4">
                             There are no works of this author, yet

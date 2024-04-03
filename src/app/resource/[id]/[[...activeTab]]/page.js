@@ -53,6 +53,11 @@ function Resource() {
         featured: resource?.featured,
     });
 
+    const isShared = resource.shared > 0;
+    const isUserIsCreator = resource.created_by === user.id;
+    const { isCurationAllowed } = user;
+    const isDeletionAllowed = !isShared && (isUserIsCreator || isCurationAllowed);
+
     const getDedicatedLink = useCallback((_classes) => {
         for (const _class of _classes ?? []) {
             if (_class in DEDICATED_PAGE_LINKS) {
@@ -100,10 +105,6 @@ function Resource() {
     };
 
     const dedicatedLink = getDedicatedLink(resource?.classes);
-    const isShared = resource.shared > 0;
-    const isUserIsCreator = resource.created_by === user.id;
-    const { isCurationAllowed } = user;
-    const isDeletionAllowed = !isShared && (isUserIsCreator || isCurationAllowed);
     const preventDeletionTooltipText = isShared
         ? 'This resource is used in statements so it cannot be deleted'
         : "You cannot delete this resource because you are not the creator and you don't have the curator role";

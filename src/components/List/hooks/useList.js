@@ -2,7 +2,7 @@ import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
 import THING_TYPES from 'constants/thingTypes';
 import { countBy, orderBy } from 'lodash';
 import { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createLiteral } from 'services/backend/literals';
 import { createResource, getResource } from 'services/backend/resources';
@@ -21,26 +21,27 @@ import { addAuthorsToStatements, filterObjectOfStatementsByPredicateAndClass, ge
 const useList = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isNotFound, setIsNotFound] = useState(false);
+    const sdgsStore = useSelector((state) => state.list.sdgs);
     const dispatch = useDispatch();
 
     const getObjectsByPredicateAndSubject = (statements, predicateId, subjectId) =>
         statements
-            .filter(statement => statement.predicate.id === predicateId && statement.subject.id === subjectId)
-            .map(statement => statement.object);
+            .filter((statement) => statement.predicate.id === predicateId && statement.subject.id === subjectId)
+            .map((statement) => statement.object);
 
-    const getStatementsBySubjectId = (statements, subjectId) => statements.filter(statement => statement.subject.id === subjectId);
+    const getStatementsBySubjectId = (statements, subjectId) => statements.filter((statement) => statement.subject.id === subjectId);
 
     const getStatementsByPredicateAndSubject = (statements, predicateId, subjectId) =>
-        statements.filter(statement => statement.subject.id === subjectId && statement.predicate.id === predicateId);
+        statements.filter((statement) => statement.subject.id === subjectId && statement.predicate.id === predicateId);
 
     const notFound = () => {
         setIsNotFound(true);
         setIsLoading(false);
     };
 
-    const getVersions = async listId => {
+    const getVersions = async (listId) => {
         const statements = await getStatementsBySubjectAndPredicate({ subjectId: listId, predicateId: PREDICATES.HAS_PUBLISHED_VERSION });
-        const ids = statements.map(version => version.object.id);
+        const ids = statements.map((version) => version.object.id);
 
         if (ids.length === 0) {
             return [];
@@ -48,13 +49,13 @@ const useList = () => {
         const versionsStatements = await getStatementsBySubjects({ ids });
 
         return versionsStatements
-            .map(versionSubject => ({
+            .map((versionSubject) => ({
                 ...versionSubject.statements.find(
-                    statement =>
+                    (statement) =>
                         statement.subject.classes.includes(CLASSES.LITERATURE_LIST_PUBLISHED) && statement.predicate.id === PREDICATES.DESCRIPTION,
                 ),
             }))
-            .map(statement => ({
+            .map((statement) => ({
                 id: statement.subject.id,
                 date: statement.subject.created_at,
                 description: statement.object.label,
@@ -62,16 +63,16 @@ const useList = () => {
             }));
     };
 
-    const getAllContributors = statements => {
+    const getAllContributors = (statements) => {
         if (statements.length === 0) {
             return [];
         }
         const contributors = statements
-            .flatMap(statement => [statement.subject.created_by, statement.object.created_by, statement.created_by])
-            .filter(contributor => contributor !== MISC.UNKNOWN_ID);
+            .flatMap((statement) => [statement.subject.created_by, statement.object.created_by, statement.created_by])
+            .filter((contributor) => contributor !== MISC.UNKNOWN_ID);
 
         const statementAmountPerContributor = countBy(contributors);
-        const contributorsWithPercentage = Object.keys(statementAmountPerContributor).map(contributorId => ({
+        const contributorsWithPercentage = Object.keys(statementAmountPerContributor).map((contributorId) => ({
             id: contributorId,
             percentage: Math.round((statementAmountPerContributor[contributorId] / contributors.length) * 100),
         }));
@@ -79,7 +80,7 @@ const useList = () => {
         return orderBy(contributorsWithPercentage, 'percentage', 'desc');
     };
 
-    const getListById = useCallback(async id => {
+    const getListById = useCallback(async (id) => {
         // can be the ID of either a "published list" or a "head list"
         let listResource = await getResource(id).catch(() => {});
         let isPublished = false;
@@ -94,7 +95,7 @@ const useList = () => {
 
         // for published lists
         if (listResource.classes.includes(CLASSES.LITERATURE_LIST_PUBLISHED)) {
-            const resourceData = await getThing({ thingType: THING_TYPES.LIST, thingKey: id }).catch(e => {});
+            const resourceData = await getThing({ thingType: THING_TYPES.LIST, thingKey: id }).catch((e) => {});
             if (!resourceData) {
                 console.error('no resource data found');
                 notFound();
@@ -104,7 +105,7 @@ const useList = () => {
             statements = data.statements;
             id = data.rootResource;
             listPublishedResource = listResource;
-            listResource = statements.find(statement => statement.subject.id === id).subject;
+            listResource = statements.find((statement) => statement.subject.id === id).subject;
             isPublished = true;
         } else if (listResource.classes.includes(CLASSES.LITERATURE_LIST)) {
             ({ statements } = await getStatementsBundleBySubject({
@@ -124,7 +125,7 @@ const useList = () => {
         // get the research field
         let researchField = null;
         const researchFieldStatement = statements.find(
-            statement => statement.subject.id === id && statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD,
+            (statement) => statement.subject.id === id && statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD,
         );
         if (researchFieldStatement) {
             researchField = {
@@ -155,7 +156,7 @@ const useList = () => {
                 const orcidStatements = getStatementsBySubjectId(statements, author.id);
                 let orcid = null;
                 if (orcidStatements.length) {
-                    const orcidStatement = orcidStatements.find(statement => statement.predicate.id === PREDICATES.HAS_ORCID);
+                    const orcidStatement = orcidStatements.find((statement) => statement.predicate.id === PREDICATES.HAS_ORCID);
                     orcid = orcidStatement ? orcidStatement.object.label : '';
                 }
                 authorResources.push({
@@ -173,7 +174,7 @@ const useList = () => {
         for (const [index, section] of sectionResources.entries()) {
             const sectionStatements = getStatementsBySubjectId(statements, section.id);
             sectionResources[index].statements = sectionStatements;
-            const type = section.classes.length > 1 ? section.classes.find(_class => _class !== CLASSES.SECTION) : section.classes[0];
+            const type = section.classes.length > 1 ? section.classes.find((_class) => _class !== CLASSES.SECTION) : section.classes[0];
 
             const sectionData = {
                 id: section.id,
@@ -183,19 +184,19 @@ const useList = () => {
 
             if ([CLASSES.LIST_SECTION].includes(type)) {
                 sectionData.entries = section.statements
-                    .filter(statement => statement.predicate.id === PREDICATES.HAS_ENTRY)
-                    .map(statement => {
+                    .filter((statement) => statement.predicate.id === PREDICATES.HAS_ENTRY)
+                    .map((statement) => {
                         const entry = statement.object;
                         const entryId = entry.id;
                         const entryStatements = getStatementsBySubjectId(statements, entryId);
                         // PREDICATES.HAS_PAPER to support legacy data
                         const contentType = entryStatements.find(
-                            _statement => _statement.predicate.id === PREDICATES.HAS_PAPER || _statement.predicate.id === PREDICATES.HAS_LINK,
+                            (_statement) => _statement.predicate.id === PREDICATES.HAS_PAPER || _statement.predicate.id === PREDICATES.HAS_LINK,
                         )?.object;
-                        const description = entryStatements.find(_statement => _statement.predicate.id === PREDICATES.DESCRIPTION)?.object;
+                        const description = entryStatements.find((_statement) => _statement.predicate.id === PREDICATES.DESCRIPTION)?.object;
                         const contentTypeId = contentType?.id;
                         const paperStatements = getStatementsBySubjectId(statements, contentTypeId);
-                        const authorList = paperStatements.find(_statement => _statement.predicate.id === PREDICATES.HAS_AUTHORS);
+                        const authorList = paperStatements.find((_statement) => _statement.predicate.id === PREDICATES.HAS_AUTHORS);
                         const data = contentTypeId
                             ? getPaperData(contentType, [
                                   ...getStatementsBySubjectId(statements, contentTypeId),
@@ -213,13 +214,13 @@ const useList = () => {
                     })
                     .reverse();
             } else if ([CLASSES.TEXT_SECTION].includes(type)) {
-                const contentStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_CONTENT);
+                const contentStatement = section.statements.find((statement) => statement.predicate.id === PREDICATES.HAS_CONTENT);
                 sectionData.content = {
                     id: contentStatement?.object?.id,
                     text: contentStatement?.object?.label,
                 };
 
-                const headingStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_HEADING_LEVEL);
+                const headingStatement = section.statements.find((statement) => statement.predicate.id === PREDICATES.HAS_HEADING_LEVEL);
                 sectionData.heading = {
                     id: headingStatement?.object?.id,
                     level: headingStatement?.object?.label,
@@ -230,6 +231,11 @@ const useList = () => {
         }
 
         const contributors = getAllContributors(statements);
+
+        const sdgs = getObjectsByPredicateAndSubject(statements, PREDICATES.SUSTAINABLE_DEVELOPMENT_GOAL, id).map((sdgResource) => ({
+            id: sdgResource.id,
+            label: sdgResource.label,
+        }));
 
         return {
             id: paramId,
@@ -247,10 +253,11 @@ const useList = () => {
             statements,
             contributors,
             contentTypes,
+            sdgs,
         };
     }, []);
 
-    const getContentTypeData = async id => {
+    const getContentTypeData = async (id) => {
         let statements = await getStatementsBySubject({ id });
         statements = await addAuthorsToStatements(statements);
         const contentTypeResource = await getResource(id);
@@ -262,7 +269,7 @@ const useList = () => {
     };
 
     const load = useCallback(
-        async id => {
+        async (id) => {
             setIsLoading(true);
             const list = await getListById(id);
 
@@ -279,10 +286,15 @@ const useList = () => {
             const { statements } = await getStatementsBundleBySubject({
                 id,
             });
-            const listTitle = statements.find(statement => statement.subject.id === id).subject.label;
+            const listTitle = statements.find((statement) => statement.subject.id === id).subject.label;
             const versionResource = await createResource(listTitle, [CLASSES.LITERATURE_LIST_PUBLISHED]);
             const updateMessageLiteral = await createLiteral(updateMessage);
             await createLiteralStatement(versionResource.id, PREDICATES.DESCRIPTION, updateMessageLiteral.id);
+            if (sdgsStore.length > 0) {
+                for (const sdg of sdgsStore) {
+                    createResourceStatement(versionResource.id, PREDICATES.SUSTAINABLE_DEVELOPMENT_GOAL, sdg.id);
+                }
+            }
             await createResourceStatement(id, PREDICATES.HAS_PUBLISHED_VERSION, versionResource.id);
             await createThing({ thingType: THING_TYPES.LIST, thingKey: versionResource.id, data: { rootResource: id, statements } });
 
@@ -293,6 +305,7 @@ const useList = () => {
             return versionResource.id;
         } catch (e) {
             toast.error('An error occurred when publishing the list');
+            console.error(e);
             return null;
         }
     };

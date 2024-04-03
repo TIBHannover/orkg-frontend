@@ -1,20 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LOCATION_CHANGE, asyncLocalStorage } from 'utils';
-import { match } from 'path-to-regexp';
-import ROUTES from 'constants/routes';
+import arrayMove from 'array-move';
+import { applyRule, getRuleByProperty } from 'components/Comparison/Filters/helpers';
 import {
-    isPredicatesListCorrect,
-    extendPropertyIds,
-    similarPropertiesByLabel,
-    generateFilterControlData,
     activatedContributionsToList,
     activatedPropertiesToList,
+    extendPropertyIds,
+    generateFilterControlData,
+    isPredicatesListCorrect,
+    similarPropertiesByLabel,
 } from 'components/Comparison/hooks/helpers';
-import { applyRule, getRuleByProperty } from 'components/Comparison/Filters/helpers';
-import { flatten, findIndex, cloneDeep, isEmpty, intersection, isEqual } from 'lodash';
 import { DEFAULT_COMPARISON_METHOD } from 'constants/misc';
+import ROUTES from 'constants/routes';
+import { cloneDeep, findIndex, flatten, intersection, isEmpty, isEqual } from 'lodash';
+import { match } from 'path-to-regexp';
 import { Cookies } from 'react-cookie';
-import arrayMove from 'array-move';
+import { LOCATION_CHANGE, asyncLocalStorage } from 'utils';
 
 const cookies = new Cookies();
 
@@ -40,6 +40,7 @@ const initialState = {
         doi: null,
         description: '',
         properties: '',
+        sdgs: [],
     },
     configuration: {
         transpose: false,
@@ -160,7 +161,7 @@ export const comparisonSlice = createSlice({
             state.versions = payload;
         },
     },
-    extraReducers: builder => {
+    extraReducers: (builder) => {
         builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
             const matchComparison = match(ROUTES.COMPARISON);
             const parsedPayload = matchComparison(payload.location.pathname);
@@ -232,7 +233,7 @@ export function getMatrixOfComparison(comparison) {
                     let value = '';
                     if (comparison.data[property.id]) {
                         // separate labels with comma
-                        value = comparison.data[property.id][i].map(entry => entry.label).join(', ');
+                        value = comparison.data[property.id][i].map((entry) => entry.label).join(', ');
                         row.push(value);
                     }
                 }
@@ -299,18 +300,18 @@ export const extendAndSortProperties = (comparisonData, _comparisonType) => (dis
  *
  * @param {String} contributionId Contribution id to remove
  */
-export const removeContribution = contributionId => async (dispatch, getState) => {
-    const cIndex = findIndex(getState().comparison.contributions, c => c.id === contributionId);
+export const removeContribution = (contributionId) => async (dispatch, getState) => {
+    const cIndex = findIndex(getState().comparison.contributions, (c) => c.id === contributionId);
     const newContributions = getState()
-        .comparison.contributions.filter(c => c.id !== contributionId)
-        .map(contribution => ({ ...contribution, active: contribution.active }));
+        .comparison.contributions.filter((c) => c.id !== contributionId)
+        .map((contribution) => ({ ...contribution, active: contribution.active }));
     const newData = cloneDeep(getState().comparison.data);
     let newProperties = cloneDeep(getState().comparison.properties);
     for (const property in newData) {
         // remove the contribution from data
-        if (flatten(newData[property][cIndex]).filter(v => !isEmpty(v)).length !== 0) {
+        if (flatten(newData[property][cIndex]).filter((v) => !isEmpty(v)).length !== 0) {
             // decrement the contribution amount from properties if it has some values
-            const pIndex = newProperties.findIndex(p => p.id === property);
+            const pIndex = newProperties.findIndex((p) => p.id === property);
             newProperties[pIndex].contributionAmount = newProperties[pIndex].contributionAmount - 1;
         }
         newData[property].splice(cIndex, 1);
@@ -324,7 +325,7 @@ export const removeContribution = contributionId => async (dispatch, getState) =
     dispatch(setData(newData));
     dispatch(setProperties(newProperties));
     // keep existing filter rules
-    const newFilterControlData = generateFilterControlData(newContributions, newProperties, newData).map(filter => {
+    const newFilterControlData = generateFilterControlData(newContributions, newProperties, newData).map((filter) => {
         filter.rules = getRuleByProperty(getState().comparison.filterControlData, filter.property.id);
         return filter;
     });
@@ -373,8 +374,8 @@ export const updateContributionOrder =
  *
  * @param {array} contributionIds Contribution ids to display
  */
-export const displayContributions = contributionIds => (dispatch, getState) => {
-    const newContributions = getState().comparison.contributions.map(contribution => {
+export const displayContributions = (contributionIds) => (dispatch, getState) => {
+    const newContributions = getState().comparison.contributions.map((contribution) => {
         if (contributionIds.includes(contribution.id)) {
             return { ...contribution, active: true };
         }
@@ -388,11 +389,11 @@ export const displayContributions = contributionIds => (dispatch, getState) => {
  *
  * @param {Array} newState Filter Control Data
  */
-export const applyAllRules = newState => (dispatch, getState) => {
-    const AllContributionsID = getState().comparison.contributions.map(contribution => contribution.id);
+export const applyAllRules = (newState) => (dispatch, getState) => {
+    const AllContributionsID = getState().comparison.contributions.map((contribution) => contribution.id);
     const contributionIds = []
-        .concat(...newState.map(item => item.rules))
-        .map(c => applyRule({ filterControlData: getState().comparison.filterControlData, ...c }))
+        .concat(...newState.map((item) => item.rules))
+        .map((c) => applyRule({ filterControlData: getState().comparison.filterControlData, ...c }))
         .reduce((prev, acc) => intersection(prev, acc), AllContributionsID);
     dispatch(displayContributions(contributionIds));
 };
@@ -405,7 +406,7 @@ export const applyAllRules = newState => (dispatch, getState) => {
  */
 export const updateRulesOfProperty = (newRules, propertyId) => (dispatch, getState) => {
     const newState = [...getState().comparison.filterControlData];
-    const toChangeIndex = newState.findIndex(item => item.property.id === propertyId);
+    const toChangeIndex = newState.findIndex((item) => item.property.id === propertyId);
     const toChange = { ...newState[toChangeIndex] };
     toChange.rules = newRules;
     newState[toChangeIndex] = toChange;
@@ -424,9 +425,9 @@ export const removeRule =
     ({ propertyId, type, value }) =>
     (dispatch, getState) => {
         const newState = [...getState().comparison.filterControlData];
-        const toChangeIndex = newState.findIndex(item => item.property.id === propertyId);
+        const toChangeIndex = newState.findIndex((item) => item.property.id === propertyId);
         const toChange = { ...newState[toChangeIndex] };
-        toChange.rules = toChange.rules.filter(item => !(item.propertyId === propertyId && item.type === type && item.value === value));
+        toChange.rules = toChange.rules.filter((item) => !(item.propertyId === propertyId && item.type === type && item.value === value));
         newState[toChangeIndex] = toChange;
         dispatch(applyAllRules(newState));
         dispatch(setFilterControlData(newState));
@@ -435,11 +436,11 @@ export const removeRule =
 /**
  * Function to toggle group visibility. If the comparison is published, the configuration is stored in local storage
  */
-export const handleToggleGroupVisibility = property => (dispatch, getState) => {
+export const handleToggleGroupVisibility = (property) => (dispatch, getState) => {
     const comparisonId = getState().comparison?.comparisonResource?.id;
     const hiddenGroupsStorageName = comparisonId ? `comparison-${comparisonId}-hidden-rows` : null;
     const _hiddenGroups = getState().comparison.hiddenGroups.includes(property)
-        ? getState().comparison.hiddenGroups.filter(_id => _id !== property)
+        ? getState().comparison.hiddenGroups.filter((_id) => _id !== property)
         : [...getState().comparison.hiddenGroups, property];
 
     dispatch(setHiddenGroups(_hiddenGroups));
@@ -452,7 +453,7 @@ export const handleToggleGroupVisibility = property => (dispatch, getState) => {
     }
 };
 
-export const getCellPadding = state => {
+export const getCellPadding = (state) => {
     let cellPadding = 10;
     if (state.comparison.configuration.viewDensity === 'normal') {
         cellPadding = 5;

@@ -3,7 +3,16 @@ import { url } from 'constants/misc';
 import { submitGetRequest, submitPostRequest } from 'network';
 import qs from 'qs';
 import { prepareParams } from 'services/backend/misc';
-import { Author, Comparison, PaginatedResponse, PaginationParams, VerifiedParam, VisibilityParam } from 'services/backend/types';
+import {
+    Author,
+    Comparison,
+    CreatedByParam,
+    PaginatedResponse,
+    PaginationParams,
+    SdgParam,
+    VerifiedParam,
+    VisibilityParam,
+} from 'services/backend/types';
 
 export const comparisonUrl = `${url}comparisons/`;
 
@@ -60,7 +69,9 @@ export const getComparisons = ({
     sortBy = [{ property: 'created_at', direction: 'desc' }],
     verified = null,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
-}: PaginationParams & VerifiedParam & VisibilityParam): Promise<PaginatedResponse<Comparison>> => {
-    const params = prepareParams({ page, size, sortBy, verified, visibility });
+    created_by,
+    sdg,
+}: PaginationParams & VerifiedParam & VisibilityParam & CreatedByParam & SdgParam): Promise<PaginatedResponse<Comparison>> => {
+    const params = prepareParams({ page, size, sortBy, verified, visibility, created_by, sdg });
     return submitGetRequest(`${comparisonUrl}?${params}`);
 };

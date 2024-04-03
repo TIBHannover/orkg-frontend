@@ -3,25 +3,26 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
+import useParams from 'components/NextJsMigration/useParams';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tabs from 'components/Tabs/Tabs';
 import ContributionComparisons from 'components/ViewPaper/ContributionComparisons/ContributionComparisons';
+import AutomaticContributionWarning from 'components/ViewPaper/Contributions/AutomaticContributionWarning';
 import useContributions from 'components/ViewPaper/Contributions/hooks/useContributions';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import SmartSuggestions from 'components/ViewPaper/SmartSuggestions/SmartSuggestions';
+import SustainableDevelopmentGoals from 'components/ViewPaper/SustainableDevelopmentGoals/SustainableDevelopmentGoals';
 import useFetchAbstract from 'components/ViewPaper/hooks/useFetchAbstract';
+import { EXTRACTION_METHODS } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import ContentLoader from 'react-content-loader';
 import { useSelector } from 'react-redux';
-import useParams from 'components/NextJsMigration/useParams';
 import { Alert, Col, FormGroup, Row } from 'reactstrap';
-import AutomaticContributionWarning from 'components/ViewPaper/Contributions/AutomaticContributionWarning';
-import { EXTRACTION_METHODS } from 'constants/misc';
 
-const Contributions = props => {
+const Contributions = (props) => {
     const { resourceId, contributionId } = useParams();
 
     const {
@@ -40,9 +41,9 @@ const Contributions = props => {
         contributionId,
     });
 
-    const isAddingContribution = useSelector(state => state.viewPaper.isAddingContribution);
+    const isAddingContribution = useSelector((state) => state.viewPaper.isAddingContribution);
 
-    const onTabChange = key => {
+    const onTabChange = (key) => {
         router.push(
             `${reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                 resourceId,
@@ -91,7 +92,7 @@ const Contributions = props => {
                         activeKey={selectedContributionId}
                         destroyInactiveTabPane={true}
                         onChange={onTabChange}
-                        items={contributions?.map(contribution => ({
+                        items={contributions?.map((contribution) => ({
                             label: (
                                 <ContributionTab
                                     handleChangeContributionLabel={handleChangeContributionLabel}
@@ -162,6 +163,8 @@ const Contributions = props => {
                 </Col>
 
                 <div className="col-md-3">
+                    <SustainableDevelopmentGoals isEditable={props.enableEdit} />
+
                     {contributions?.length > 0 && (
                         <div className="d-flex mb-3 rounded px-3 py-2" style={{ border: '1px solid rgb(219,221,229)' }}>
                             <AddToComparison showLabel={true} paper={{ id: resourceId, label: paperTitle, contributions }} />

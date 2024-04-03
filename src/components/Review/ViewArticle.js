@@ -17,6 +17,7 @@ import Outline from 'components/Review/Outline';
 import ListReferences from 'components/Review/References/ListReferences';
 import SectionComparison from 'components/Review/SectionComparison';
 import SectionVisualization from 'components/Review/SectionVisualization';
+import SustainableDevelopmentGoals from 'components/Review/SustainableDevelopmentGoals';
 import ViewArticleStatementBrowser from 'components/Review/ViewArticleStatementBrowser';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES } from 'constants/graphSettings';
@@ -29,14 +30,14 @@ import { convertAuthorsToNewFormat } from 'utils';
 
 const ViewArticle = () => {
     const { id } = useParams();
-    const paper = useSelector(state => state.review.paper);
-    const articleResource = useSelector(state => state.review.articleResource);
-    const authors = useSelector(state => state.review.authorResources);
-    const sections = useSelector(state => state.review.sections);
-    const isPublished = useSelector(state => state.review.isPublished);
-    const versions = useSelector(state => state.review.versions);
-    const researchField = useSelector(state => state.review.researchField);
-    const doi = useSelector(state => state.review.doi);
+    const paper = useSelector((state) => state.review.paper);
+    const articleResource = useSelector((state) => state.review.articleResource);
+    const authors = useSelector((state) => state.review.authorResources);
+    const sections = useSelector((state) => state.review.sections);
+    const isPublished = useSelector((state) => state.review.isPublished);
+    const versions = useSelector((state) => state.review.versions);
+    const researchField = useSelector((state) => state.review.researchField);
+    const doi = useSelector((state) => state.review.doi);
     const dispatch = useDispatch();
     const latestVersionId = versions?.[0]?.id;
     const newVersionAvailable = isPublished && latestVersionId !== id;
@@ -72,18 +73,23 @@ const ViewArticle = () => {
                     <article>
                         <SectionStyled className="box rounded">
                             <header>
-                                <div className="d-flex mb-2 mt-4">
-                                    <h1 style={{ whiteSpace: 'pre-line' }} typeof="doco:Title" property="c4o:hasContent">
-                                        {paper.title}{' '}
-                                    </h1>
-                                    {isPublished && (
-                                        <h2 className="h4 ms-2 mt-2 d-print-none">
-                                            <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
-                                            <div className="d-inline-block ms-1">
-                                                <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
-                                            </div>
-                                        </h2>
-                                    )}
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div className="d-flex mb-2 mt-4">
+                                            <h1 style={{ whiteSpace: 'pre-line' }} typeof="doco:Title" property="c4o:hasContent">
+                                                {paper.title}{' '}
+                                            </h1>
+                                            {isPublished && (
+                                                <h2 className="h4 ms-2 mt-2 d-print-none">
+                                                    <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                                                    <div className="d-inline-block ms-1">
+                                                        <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                                                    </div>
+                                                </h2>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <SustainableDevelopmentGoals />
                                 </div>
                                 <div className="my-3">
                                     <Alert color="info" fade={false} className="d-none d-print-block">
@@ -103,7 +109,7 @@ const ViewArticle = () => {
                                     )}
                                 </div>
                             </header>
-                            {sections.map(section => {
+                            {sections.map((section) => {
                                 if (
                                     [
                                         CLASSES.RESOURCE_SECTION,

@@ -17,17 +17,16 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { getResources } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getReviewData } from 'utils';
+import { convertReviewToNewFormat, getReviewData } from 'utils';
 
 const Reviews = () => {
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
 
     useEffect(() => {
         document.title = 'Reviews - ORKG';
     });
 
-    const renderListItem = versions => <ReviewCard key={versions[0]?.id} versions={versions} showBadge={false} />;
-
+    const renderListItem = (versions) => <ReviewCard key={versions[0]?.id} review={convertReviewToNewFormat(versions)} showBadge={false} />;
     const fetchItems = async ({ resourceClass, page, pageSize }) => {
         let items = [];
 
@@ -44,17 +43,17 @@ const Reviews = () => {
         });
 
         if (resources.length) {
-            items = await getStatementsBySubjects({ ids: resources.map(item => item.id) }).then(statements =>
-                statements.map(statementsForSubject =>
+            items = await getStatementsBySubjects({ ids: resources.map((item) => item.id) }).then((statements) =>
+                statements.map((statementsForSubject) =>
                     getReviewData(
-                        resources.find(resource => resource.id === statementsForSubject.id),
+                        resources.find((resource) => resource.id === statementsForSubject.id),
                         statementsForSubject.statements,
                     ),
                 ),
             );
             items = await Promise.all(items);
             const groupedByPaper = groupBy(items, 'paperId');
-            items = Object.keys(groupedByPaper).map(paperId => [...groupedByPaper[paperId]]);
+            items = Object.keys(groupedByPaper).map((paperId) => [...groupedByPaper[paperId]]);
         }
 
         return {

@@ -5,6 +5,7 @@ import { submitDeleteRequest, submitGetRequest, submitPatchRequest, submitPostRe
 import qs from 'qs';
 import { mergePaginateResponses } from 'services/backend/misc';
 import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
+import { getResource } from 'services/backend/resources';
 import { Contributor, FilterConfig, Observatory, PaginatedResponse, Resource, SortByOptions, VisibilityOptions } from 'services/backend/types';
 
 export const observatoriesUrl = `${baseUrl}observatories/`;
@@ -54,7 +55,22 @@ export const getResearchFieldOfObservatories = ({
     return submitGetRequest(`${observatoriesUrl}research-fields/?${params}`);
 };
 
-export const getObservatoryById = (id: string): Promise<Observatory> => submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/`);
+export const getObservatoryById = async (id: string): Promise<Observatory> => {
+    // the backend only returns the SDG ids, so we need to fetch the resources to get the labels
+    const response: Omit<Observatory, 'sdgs'> & {
+        sdgs: string[];
+    } = await submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/`);
+    const sdgsPromises = response.sdgs.map((sdgId) =>
+        getResource(sdgId).then((resource) => ({
+            id: resource.id,
+            label: resource.label,
+        })),
+    );
+    return Promise.all(sdgsPromises).then((sdgs) => ({
+        ...response,
+        sdgs,
+    }));
+};
 
 export const updateObservatoryName = (id: string, value: string): Promise<Observatory> =>
     submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/name`, { 'Content-Type': 'application/json' }, { value });
@@ -64,6 +80,34 @@ export const updateObservatoryDescription = (id: string, value: string): Promise
 
 export const updateObservatoryResearchField = (id: string, value: string): Promise<Observatory> =>
     submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/research_field`, { 'Content-Type': 'application/json' }, { value });
+
+export const updateObservatory = (
+    id: string,
+    {
+        name,
+        organizations,
+        description,
+        research_field,
+        sdgs,
+    }: {
+        name?: string;
+        organizations?: string[];
+        description?: string;
+        research_field?: string;
+        sdgs?: string[];
+    },
+): Promise<null> =>
+    submitPatchRequest(
+        `${observatoriesUrl}${encodeURIComponent(id)}`,
+        { 'Content-Type': 'application/json' },
+        {
+            ...(name && { name }),
+            ...(organizations && { organizations }),
+            ...(description && { description }),
+            ...(research_field && { research_field }),
+            ...(sdgs && { sdgs }),
+        },
+    );
 
 export const getUsersByObservatoryId = ({
     id,

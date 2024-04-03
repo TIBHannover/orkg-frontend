@@ -8,11 +8,13 @@ import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import {
     CreateContribution,
     CreatePaperParams,
+    CreatedByParam,
     ExtractionMethod,
     PaginatedResponse,
     PaginationParams,
     Paper,
     Resource,
+    SdgParam,
     Statement,
     UpdatePaperParams,
     VerifiedParam,
@@ -106,7 +108,7 @@ export const getPapersLinkedToResource = async ({
         },
     );
 
-    const resources = await submitGetRequest(`${papersUrl}?${params}`).then(res => (returnContent ? res.content : res));
+    const resources = await submitGetRequest(`${papersUrl}?${params}`).then((res) => (returnContent ? res.content : res));
     return resources;
 };
 
@@ -132,8 +134,10 @@ export const getPapers = ({
     sortBy = [{ property: 'created_at', direction: 'desc' }],
     verified = null,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
-}: PaginationParams & VerifiedParam & VisibilityParam): Promise<PaginatedResponse<Paper>> => {
-    const params = prepareParams({ page, size, sortBy, verified, visibility });
+    created_by,
+    sdg,
+}: PaginationParams & VerifiedParam & VisibilityParam & CreatedByParam & SdgParam): Promise<PaginatedResponse<Paper>> => {
+    const params = prepareParams({ page, size, sortBy, verified, visibility, created_by, sdg });
     return submitGetRequest(`${papersUrl}?${params}`, {
         'Content-Type': 'application/vnd.orkg.paper.v2+json;charset=UTF-8',
         Accept: 'application/vnd.orkg.paper.v2+json',

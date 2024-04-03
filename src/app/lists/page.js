@@ -14,16 +14,16 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { getResources } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getListData } from 'utils';
+import { convertListToNewFormat, getListData } from 'utils';
 
 const Lists = () => {
     useEffect(() => {
         document.title = 'Lists list - ORKG';
     });
 
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
 
-    const renderListItem = versions => <ListCard key={versions[0]?.id} versions={versions} showBadge={false} />;
+    const renderListItem = (versions) => <ListCard key={versions[0]?.id} list={convertListToNewFormat(versions)} showBadge={false} />;
 
     const fetchItems = async ({ resourceClass, page, pageSize }) => {
         let items = [];
@@ -41,17 +41,17 @@ const Lists = () => {
         });
 
         if (resources.length) {
-            items = await getStatementsBySubjects({ ids: resources.map(item => item.id) }).then(statements =>
-                statements.map(statementsForSubject =>
+            items = await getStatementsBySubjects({ ids: resources.map((item) => item.id) }).then((statements) =>
+                statements.map((statementsForSubject) =>
                     getListData(
-                        resources.find(_resource => _resource.id === statementsForSubject.id),
+                        resources.find((_resource) => _resource.id === statementsForSubject.id),
                         statementsForSubject.statements,
                     ),
                 ),
             );
             items = await Promise.all(items);
             const groupedByPaper = groupBy(items, 'listId');
-            items = Object.keys(groupedByPaper).map(listId => [...groupedByPaper[listId]]);
+            items = Object.keys(groupedByPaper).map((listId) => [...groupedByPaper[listId]]);
         }
 
         return {

@@ -12,6 +12,7 @@ import Link from 'components/NextJsMigration/Link';
 import env from 'components/NextJsMigration/env';
 import ShareCreatedContent from 'components/ShareLinkMarker/ShareCreatedContent';
 import SmartDescriptivenessCheck from 'components/SmartSuggestions/SmartDescriptivenessCheck';
+import SdgBox from 'components/SustainableDevelopmentGoals/SdgBox';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import Tooltip from 'components/Utils/Tooltip';
 import { MISC } from 'constants/graphSettings';
@@ -77,6 +78,7 @@ function Publish(props) {
         references,
         conferencesList,
         isLoading,
+        sdgs,
         setTitle,
         setDescription,
         setResearchField,
@@ -87,6 +89,7 @@ function Publish(props) {
         handleRemoveReferenceClick,
         handleReferenceChange,
         handleSubmit,
+        setSdgs,
     } = usePublish();
 
     // if case user session expired
@@ -177,7 +180,7 @@ function Publish(props) {
                                 will be assigned to published comparison and it cannot be changed in future.`}
                             >
                                 <StyledCustomInput
-                                    onChange={e => {
+                                    onChange={(e) => {
                                         setAssignDOI(e.target.checked);
                                     }}
                                     checked={assignDOI}
@@ -213,7 +216,7 @@ function Publish(props) {
                                 value={title}
                                 disabled={Boolean(id)}
                                 id="title"
-                                onChange={e => setTitle(e.target.value)}
+                                onChange={(e) => setTitle(e.target.value)}
                                 maxLength={MAX_LENGTH_INPUT}
                             />
                         </Form>
@@ -228,7 +231,7 @@ function Publish(props) {
                                     value={description}
                                     disabled={Boolean(id)}
                                     id="description"
-                                    onChange={e => setDescription(e.target.value)}
+                                    onChange={(e) => setDescription(e.target.value)}
                                     maxLength={MAX_LENGTH_INPUT}
                                 />
                                 <SmartDescriptivenessCheck value={description} />
@@ -248,7 +251,7 @@ function Publish(props) {
                                 <AuthorsInput
                                     disabled={Boolean(comparisonCreators.length > 0)}
                                     itemLabel="creator"
-                                    handler={authors => handleCreatorsChange(convertAuthorsToOldFormat(authors))}
+                                    handler={(authors) => handleCreatorsChange(convertAuthorsToOldFormat(authors))}
                                     value={convertAuthorsToNewFormat(comparisonCreators)}
                                 />
                             )}
@@ -269,7 +272,7 @@ function Publish(props) {
                                 <div>
                                     <Tooltip message="A DOI will be assigned to published comparison and it cannot be changed in future.">
                                         <StyledCustomInput
-                                            onChange={e => {
+                                            onChange={(e) => {
                                                 setAssignDOI(e.target.checked);
                                             }}
                                             checked={assignDOI}
@@ -301,7 +304,7 @@ function Publish(props) {
                                                     type="text"
                                                     name="reference"
                                                     value={reference}
-                                                    onChange={e => handleReferenceChange(e, i)}
+                                                    onChange={(e) => handleReferenceChange(e, i)}
                                                     id="publish-reference"
                                                     maxLength={MAX_LENGTH_INPUT}
                                                 />
@@ -331,6 +334,14 @@ function Publish(props) {
                                             </InputGroup>
                                         ))}
                                 </Form>
+                                <FormGroup>
+                                    <Label>
+                                        <Tooltip message="Select sustainable development goals related to this comparison">
+                                            Sustainable development goals (optional)
+                                        </Tooltip>
+                                    </Label>
+                                    <SdgBox handleSave={setSdgs} sdgs={sdgs} maxWidth="100%" isEditable />
+                                </FormGroup>
                                 <Form onSubmit={handleSubmit}>
                                     <Label for="conference">
                                         <Tooltip message="If this comparison is part of a conference submission, select the conference. Only selected conferences are supported">
@@ -339,7 +350,7 @@ function Publish(props) {
                                     </Label>
                                     <Select
                                         options={conferencesList}
-                                        onChange={e => {
+                                        onChange={(e) => {
                                             setConference(e);
                                         }}
                                         getOptionValue={({ id }) => id}

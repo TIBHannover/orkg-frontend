@@ -10,35 +10,41 @@ import Link from 'components/NextJsMigration/Link';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CardBadge } from 'components/styled';
+import { VISIBILITY } from 'constants/contentTypes';
 import ROUTES from 'constants/routes.js';
 import moment from 'moment';
 import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
+import { FC } from 'react';
+import { LiteratureList } from 'services/backend/types';
 import styled from 'styled-components';
-import { convertAuthorsToNewFormat } from 'utils';
 
-const CardStyled = styled.div`
+const CardStyled = styled('div')<{ rounded?: string }>`
     &:last-child {
-        border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
+        border-bottom-right-radius: ${(props) => (props.rounded === 'true' ? '0 !important' : '')};
     }
 `;
 
-const ListCard = ({ versions, showBadge = false, showCurationFlags = true }) => {
-    const {
-        researchField,
-        authors,
-        isLoading: isLoadingMetaData,
-    } = useCardData({
-        id: versions[0]?.id,
-        initResearchField: versions[0]?.researchField,
-        initAuthors: versions[0]?.authors,
+type ListCardProps = {
+    list: LiteratureList;
+    showBadge?: boolean;
+    showCurationFlags?: boolean;
+};
+
+const ListCard: FC<ListCardProps> = ({ list, showBadge = false, showCurationFlags = true }) => {
+    // the useCardData can be removed as soon as the convertReviewToNewFormat function is not used anymore to transform review data,
+    // this because the new 'review' variable already has the field and authors included
+    const { researchField, authors } = useCardData({
+        id: list.id,
+        // @ts-expect-error
+        initResearchField: list.research_fields?.[0],
+        initAuthors: list.authors,
         isList: true,
     });
 
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
-        resourceId: versions[0]?.id,
-        unlisted: versions[0]?.unlisted,
-        featured: versions[0]?.featured,
+        resourceId: list.id,
+        unlisted: list?.visibility === VISIBILITY.UNLISTED,
+        featured: list?.visibility === VISIBILITY.FEATURED,
     });
 
     return (
@@ -56,7 +62,8 @@ const ListCard = ({ versions, showBadge = false, showCurationFlags = true }) => 
                 )}
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
-                        <Link href={reverse(ROUTES.LIST, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
+                        {/* @ts-expect-error */}
+                        <Link href={reverse(ROUTES.LIST, { id: list.id })}>{list.title}</Link>
                         {showBadge && (
                             <div className="d-inline-block ms-2">
                                 <CardBadge color="primary">List</CardBadge>
@@ -65,24 +72,26 @@ const ListCard = ({ versions, showBadge = false, showCurationFlags = true }) => 
                     </div>
                     <div className="mb-1">
                         <small>
-                            {!isLoadingMetaData && <Authors authors={convertAuthorsToNewFormat(authors)} />}
-                            {isLoadingMetaData && 'Loading...'}
-                            {versions[0].created_at && (
+                            <Authors authors={authors} />
+                            {list.created_at && (
                                 <>
-                                    <Icon size="sm" icon={faCalendar} className="ms-1 me-1" /> {moment(versions[0].created_at).format('DD-MM-YYYY')}
+                                    <Icon size="sm" icon={faCalendar} className="ms-1 me-1" /> {moment(list.created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
                         </small>
                     </div>
-                    {versions.length > 1 && (
+                    {list.versions?.published?.length > 1 && (
                         <small>
                             All versions:{' '}
-                            {versions.map((version, index) => (
+                            {list.versions?.published.map((version, index) => (
                                 <span key={version.id}>
-                                    <Tippy content={version.description}>
-                                        <Link href={reverse(ROUTES.LIST, { id: version.id })}>Version {versions.length - index}</Link>
+                                    <Tippy content={version.changelog}>
+                                        {/* @ts-expect-error */}
+                                        <Link href={reverse(ROUTES.LIST, { id: version.id })}>
+                                            Version {(list.versions.published?.length ?? 0) - index}
+                                        </Link>
                                     </Tippy>{' '}
-                                    {index < versions.length - 1 && ' • '}
+                                    {index < list.versions.published.length - 1 && ' • '}
                                 </span>
                             ))}
                         </small>
@@ -95,16 +104,10 @@ const ListCard = ({ versions, showBadge = false, showCurationFlags = true }) => 
                         <RelativeBreadcrumbs researchField={researchField} />
                     </div>
                 </div>
-                <UserAvatar userId={versions[0]?.created_by} />
+                <UserAvatar userId={list?.created_by} />
             </div>
         </CardStyled>
     );
-};
-
-ListCard.propTypes = {
-    versions: PropTypes.array.isRequired,
-    showBadge: PropTypes.bool.isRequired,
-    showCurationFlags: PropTypes.bool.isRequired,
 };
 
 export default ListCard;

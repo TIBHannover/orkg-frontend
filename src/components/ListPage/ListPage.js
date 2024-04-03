@@ -1,12 +1,12 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
-import ContentLoader from 'react-content-loader';
-import usePaginate from 'components/hooks/usePaginate';
-import PropTypes from 'prop-types';
-import { Container, ListGroup } from 'reactstrap';
 import TitleBar from 'components/TitleBar/TitleBar';
+import usePaginate from 'components/hooks/usePaginate';
 import { capitalize } from 'lodash';
+import PropTypes from 'prop-types';
+import ContentLoader from 'react-content-loader';
+import { Container, ListGroup } from 'reactstrap';
 
 const ListPage = ({
     label,

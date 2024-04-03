@@ -8,6 +8,7 @@ import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import { supportedContentTypes } from 'components/ContentType/types';
 import Contributors from 'components/List/Contributors';
 import ListEntryAmount from 'components/List/ListEntryAmount/ListEntryAmount';
+import SustainableDevelopmentGoals from 'components/List/SustainableDevelopmentGoals';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
@@ -24,14 +25,14 @@ import { convertAuthorsToNewFormat, convertPaperToNewFormat } from 'utils';
 
 const ViewList = ({ isEmbedded }) => {
     const { id } = useParams();
-    const list = useSelector(state => state.list.list);
-    const listResource = useSelector(state => state.list.listResource);
-    const authors = useSelector(state => state.list.authorResources);
-    const sections = useSelector(state => state.list.sections);
-    const isPublished = useSelector(state => state.list.isPublished);
-    const versions = useSelector(state => state.list.versions);
-    const researchField = useSelector(state => state.list.researchField);
-    const contentTypes = useSelector(state => state.list.contentTypes);
+    const list = useSelector((state) => state.list.list);
+    const listResource = useSelector((state) => state.list.listResource);
+    const authors = useSelector((state) => state.list.authorResources);
+    const sections = useSelector((state) => state.list.sections);
+    const isPublished = useSelector((state) => state.list.isPublished);
+    const versions = useSelector((state) => state.list.versions);
+    const researchField = useSelector((state) => state.list.researchField);
+    const contentTypes = useSelector((state) => state.list.contentTypes);
     const dispatch = useDispatch();
     const latestVersionId = versions?.[0]?.id;
     const newVersionAvailable = isPublished && latestVersionId !== id;
@@ -63,16 +64,21 @@ const ViewList = ({ isEmbedded }) => {
             <main>
                 <SectionStyled className="box rounded">
                     <header className="border-bottom">
-                        <div className="d-flex mb-2 mt-4">
-                            <h1 style={{ whiteSpace: 'pre-line' }}>{list.title}</h1>
-                            {isPublished && !isEmbedded && (
-                                <h2 className="h4 ms-2 mt-2">
-                                    <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
-                                    <div className="d-inline-block ms-1">
-                                        <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
-                                    </div>
-                                </h2>
-                            )}
+                        <div className="d-flex justify-content-between">
+                            <div className="d-flex mb-2 mt-4">
+                                <h1 style={{ whiteSpace: 'pre-line' }}>{list.title}</h1>
+                                {isPublished && !isEmbedded && (
+                                    <h2 className="h4 ms-2 mt-2">
+                                        <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                                        <div className="d-inline-block ms-1">
+                                            <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                                        </div>
+                                    </h2>
+                                )}
+                            </div>
+                            <div>
+                                <SustainableDevelopmentGoals />
+                            </div>
                         </div>
                         <div className="my-3">
                             <ResearchFieldBadge researchField={researchField} />
@@ -81,7 +87,7 @@ const ViewList = ({ isEmbedded }) => {
                         </div>
                     </header>
 
-                    {sections.map(section => {
+                    {sections.map((section) => {
                         if (section.type === CLASSES.TEXT_SECTION) {
                             return (
                                 <section key={section.id}>
@@ -94,11 +100,11 @@ const ViewList = ({ isEmbedded }) => {
                             return (
                                 <section key={section.id} className="mt-3">
                                     <ListGroup>
-                                        {section.entries.map(entry => {
+                                        {section.entries.map((entry) => {
                                             const contentType = contentTypes[entry.contentTypeId];
                                             const isPaper = contentType.classes?.includes(CLASSES.PAPER);
-                                            const contentTypeClass = contentType.classes?.filter(classId =>
-                                                supportedContentTypes.find(c => c.id === classId),
+                                            const contentTypeClass = contentType.classes?.filter((classId) =>
+                                                supportedContentTypes.find((c) => c.id === classId),
                                             )?.[0];
                                             const route = !isPaper
                                                 ? reverse(ROUTES.CONTENT_TYPE, { id: contentType.id, type: contentTypeClass })

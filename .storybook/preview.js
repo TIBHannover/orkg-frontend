@@ -5,6 +5,8 @@ import styled, { createGlobalStyle } from 'styled-components';
 import 'tippy.js/dist/tippy.css';
 import { Wrapper } from '../src/testUtils';
 import '../public/__ENV';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 
 export const parameters = {
     actions: { argTypesRegex: '^on.*' },
@@ -26,11 +28,13 @@ const GlobalStyle = createGlobalStyle`
 
 export const decorators = [
     Story => (
-        <Wrapper>
-            <GlobalStyle />
-            <div className="bg-white" style={{ background: '#fff!important' }}>
-                <Story />
-            </div>
-        </Wrapper>
+        <DndProvider backend={HTML5Backend}>
+            <Wrapper>
+                <GlobalStyle />
+                <div className="bg-white" style={{ background: '#fff!important' }}>
+                    <Story />
+                </div>
+            </Wrapper>
+        </DndProvider>
     ),
 ];

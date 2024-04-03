@@ -1,17 +1,17 @@
+import useParams from 'components/NextJsMigration/useParams';
+import useRouter from 'components/NextJsMigration/useRouter';
 import Tabs from 'components/Tabs/Tabs';
 import Items from 'components/UserProfile/Items';
 import { CLASSES } from 'constants/graphSettings';
-import PropTypes from 'prop-types';
-import { reverse } from 'named-urls';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useParams from 'components/NextJsMigration/useParams';
 import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
 
 function TabsContainer({ currentUserId, userId }) {
     const params = useParams();
     const { activeTab } = params;
     const router = useRouter();
-    const onTabChange = key => {
+    const onTabChange = (key) => {
         router.push(
             `${reverse(ROUTES.USER_PROFILE_TABS, {
                 userId,
@@ -23,7 +23,7 @@ function TabsContainer({ currentUserId, userId }) {
     return (
         <Tabs
             className="box rounded"
-            getPopupContainer={trigger => trigger.parentNode}
+            getPopupContainer={(trigger) => trigger.parentNode}
             destroyInactiveTabPane={true}
             onChange={onTabChange}
             activeKey={activeTab ?? 'comparisons'}
@@ -31,33 +31,43 @@ function TabsContainer({ currentUserId, userId }) {
                 {
                     label: 'Comparisons',
                     key: 'comparisons',
-                    children: <Items filterLabel="comparisons" filterClass={CLASSES.COMPARISON} userId={userId} />,
+                    children: <Items filterLabel="comparisons" filterClass={CLASSES.COMPARISON} filters={{ created_by: userId }} />,
                 },
 
                 {
                     label: 'Papers',
                     key: 'papers',
-                    children: <Items filterLabel="papers" filterClass={CLASSES.PAPER} userId={userId} showDelete={userId === currentUserId} />,
+                    children: (
+                        <Items
+                            filterLabel="papers"
+                            filterClass={CLASSES.PAPER}
+                            filters={{ created_by: userId }}
+                            showDelete={userId === currentUserId}
+                            notFoundMessage="This user hasn't added any comparisons to ORKG yet"
+                        />
+                    ),
                 },
                 {
                     label: 'Visualizations',
                     key: 'visualizations',
-                    children: <Items filterLabel="visualizations" filterClass={CLASSES.VISUALIZATION} userId={userId} showDelete={false} />,
+                    children: (
+                        <Items filterLabel="visualizations" filterClass={CLASSES.VISUALIZATION} filters={{ created_by: userId }} showDelete={false} />
+                    ),
                 },
                 {
                     label: 'Reviews',
                     key: 'reviews',
-                    children: <Items filterLabel="reviews" filterClass={CLASSES.SMART_REVIEW_PUBLISHED} userId={userId} showDelete={false} />,
+                    children: <Items filterLabel="reviews" filterClass={CLASSES.SMART_REVIEW} filters={{ created_by: userId }} showDelete={false} />,
                 },
                 {
                     label: 'Lists',
                     key: 'lists',
-                    children: <Items filterLabel="lists" filterClass={CLASSES.LITERATURE_LIST_PUBLISHED} userId={userId} showDelete={false} />,
+                    children: <Items filterLabel="lists" filterClass={CLASSES.LITERATURE_LIST} filters={{ created_by: userId }} showDelete={false} />,
                 },
                 {
                     label: 'Templates',
                     key: 'templates',
-                    children: <Items filterLabel="templates" filterClass={CLASSES.NODE_SHAPE} userId={userId} showDelete={false} />,
+                    children: <Items filterLabel="templates" filterClass={CLASSES.NODE_SHAPE} filters={{ created_by: userId }} showDelete={false} />,
                 },
             ]}
         />

@@ -5,7 +5,18 @@ import qs from 'qs';
 import { getClassById, getClasses } from 'services/backend/classes';
 import { getPredicate, getPredicates } from 'services/backend/predicates';
 import { getResource, getResources } from 'services/backend/resources';
-import { Class, PaginatedResponse, PaginationParams, Predicate, Resource, VerifiedParam, VisibilityParam } from 'services/backend/types';
+import {
+    Class,
+    CreatedByParam,
+    PaginatedResponse,
+    PaginationParams,
+    Predicate,
+    PublishedParam,
+    Resource,
+    SdgParam,
+    VerifiedParam,
+    VisibilityParam,
+} from 'services/backend/types';
 import { mergeAlternate } from 'utils';
 
 export const doisUrl = `${url}dois/`;
@@ -103,14 +114,17 @@ export const mergePaginateResponses = (
     last: response1.last && response2.last,
 });
 
-export const prepareParams = (params: PaginationParams & VerifiedParam & VisibilityParam): string =>
+export const prepareParams = (params: PaginationParams & VerifiedParam & VisibilityParam & CreatedByParam & SdgParam & PublishedParam): string =>
     qs.stringify(
         {
             page: params.page,
             size: params.size,
-            sort: params.sortBy?.map(p => `${p.property},${p.direction}`),
+            sort: params.sortBy?.map((p) => `${p.property},${p.direction}`),
             verified: params.verified,
             visibility: params.visibility,
+            created_by: params.created_by,
+            sdg: params.sdg,
+            published: params.published,
         },
         {
             skipNulls: true,

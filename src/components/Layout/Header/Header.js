@@ -47,35 +47,35 @@ const cookies = new Cookies();
 const GlobalStyle = createGlobalStyle`
     body.modal-open {
         #main-navbar, #paperHeaderBar {
-            right: ${props => props.$scrollbarWidth}px
+            right: ${(props) => props.$scrollbarWidth}px
         }
         #helpIcon {
-            padding-right: ${props => props.$scrollbarWidth}px
+            padding-right: ${(props) => props.$scrollbarWidth}px
         }
         .woot-widget-bubble, .woot-widget-holder {
-            margin-right: ${props => props.$scrollbarWidth}px
+            margin-right: ${(props) => props.$scrollbarWidth}px
         }
     }
     @media (min-width: 481px) and (max-width: 1100px) {
         .woot-widget-bubble.woot-elements--right{
-            bottom: ${props => (!props.$cookieInfoDismissed ? '80px' : '14px')}
+            bottom: ${(props) => (!props.$cookieInfoDismissed ? '80px' : '14px')}
         }
     }  
     @media (max-width: 480px) {
         .woot-widget-bubble.woot-elements--right{
-            bottom: ${props => (!props.$cookieInfoDismissed ? '150px' : '14px')}
+            bottom: ${(props) => (!props.$cookieInfoDismissed ? '150px' : '14px')}
         }
     }  
     
 `;
 
 const StyledTopBar = styled.div`
-    @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
+    @media (max-width: ${(props) => props.theme.gridBreakpoints.md}) {
         .navbar-collapse {
             margin-top: 0.4rem;
         }
         .nav-item {
-            border-top: 1px solid ${props => props.theme.light};
+            border-top: 1px solid ${(props) => props.theme.light};
         }
         .btn:not(.search-icon) {
             width: 100%;
@@ -94,7 +94,7 @@ const StyledTopBar = styled.div`
         }
         &.home-page {
             .nav-item {
-                border-top-color: ${props => props.theme.secondaryDarker};
+                border-top-color: ${(props) => props.theme.secondaryDarker};
             }
         }
     }
@@ -122,10 +122,10 @@ const StyledNavbar = styled(Navbar)`
         border: 0;
 
         .nav-link {
-            color: ${props => props.theme.secondary};
+            color: ${(props) => props.theme.secondary};
 
             &:hover {
-                color: ${props => props.theme.primary};
+                color: ${(props) => props.theme.primary};
             }
         }
 
@@ -135,13 +135,13 @@ const StyledNavbar = styled(Navbar)`
             }
 
             .search-icon {
-                color: ${props => props.theme.primary};
+                color: ${(props) => props.theme.primary};
             }
 
             button {
                 border: 1px solid #ced4da;
                 border-left: 0 !important;
-                background: ${props => props.theme.inputBg};
+                background: ${(props) => props.theme.inputBg};
             }
         }
 
@@ -168,10 +168,10 @@ const StyledNavbar = styled(Navbar)`
                 }
             }
             .search-box .search-icon {
-                color: ${props => props.theme.secondary};
+                color: ${(props) => props.theme.secondary};
             }
 
-            @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
+            @media (max-width: ${(props) => props.theme.gridBreakpoints.md}) {
                 background: #5f6474;
             }
         }
@@ -187,7 +187,7 @@ const Header = () => {
     const isHomePath = pathname === ROUTES.HOME || !!match(ROUTES.HOME_WITH_RESEARCH_FIELD)(pathname);
     const [isTransparentNavbar, setIsTransparentNavbar] = useState(isHomePath);
     const [isHomePage, setIsHomePage] = useState(isHomePath);
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -202,7 +202,7 @@ const Header = () => {
             const tokenExpiresIn = _cookies.get('token_expires_in') ? _cookies.get('token_expires_in') : null;
             if (token && !user) {
                 getUserInformation()
-                    .then(userData => {
+                    .then((userData) => {
                         dispatch(
                             updateAuth({
                                 user: {
@@ -383,6 +383,16 @@ const Header = () => {
                                 >
                                     Research fields
                                 </DropdownItem>
+                                <DropdownItem
+                                    tag={Link}
+                                    end
+                                    href={ROUTES.SUSTAINABLE_DEVELOPMENT_GOALS}
+                                    onClick={closeMenu}
+                                    active={pathname === ROUTES.SUSTAINABLE_DEVELOPMENT_GOALS}
+                                >
+                                    Sustainable <br />
+                                    development goals
+                                </DropdownItem>
                                 {/** <DropdownItem tag={Link} end to={ROUTES.DIAGRAMS} onClick={closeMenu}>
                                     Diagrams
                                 </DropdownItem> */}
@@ -406,7 +416,7 @@ const Header = () => {
                                     tag={Link}
                                     end
                                     href={reverse(ROUTES.ORGANIZATIONS, {
-                                        id: ORGANIZATIONS_TYPES.find(o => o.id === ORGANIZATIONS_MISC.GENERAL).label,
+                                        id: ORGANIZATIONS_TYPES.find((o) => o.id === ORGANIZATIONS_MISC.GENERAL).label,
                                     })}
                                     onClick={closeMenu}
                                 >
@@ -416,7 +426,7 @@ const Header = () => {
                                     tag={Link}
                                     end
                                     href={reverse(ROUTES.ORGANIZATIONS, {
-                                        id: ORGANIZATIONS_TYPES.find(o => o.id === ORGANIZATIONS_MISC.EVENT).label,
+                                        id: ORGANIZATIONS_TYPES.find((o) => o.id === ORGANIZATIONS_MISC.EVENT).label,
                                     })}
                                     onClick={closeMenu}
                                 >
@@ -453,7 +463,7 @@ const Header = () => {
                                     tag={Link}
                                     end
                                     href={ROUTES.CONTRIBUTION_EDITOR}
-                                    onClick={e => requireAuthentication(e, ROUTES.CONTRIBUTION_EDITOR)}
+                                    onClick={(e) => requireAuthentication(e, ROUTES.CONTRIBUTION_EDITOR)}
                                     active={pathname === ROUTES.CONTRIBUTION_EDITOR}
                                 >
                                     Contribution editor
@@ -462,7 +472,7 @@ const Header = () => {
                                     tag={Link}
                                     end
                                     href={ROUTES.CSV_IMPORT}
-                                    onClick={e => requireAuthentication(e, ROUTES.CSV_IMPORT)}
+                                    onClick={(e) => requireAuthentication(e, ROUTES.CSV_IMPORT)}
                                     active={pathname === ROUTES.CSV_IMPORT}
                                 >
                                     CSV import
@@ -471,7 +481,7 @@ const Header = () => {
                                     tag={Link}
                                     end
                                     href={ROUTES.PDF_ANNOTATION}
-                                    onClick={e => requireAuthentication(e, ROUTES.PDF_ANNOTATION)}
+                                    onClick={(e) => requireAuthentication(e, ROUTES.PDF_ANNOTATION)}
                                     active={pathname === ROUTES.PDF_ANNOTATION}
                                 >
                                     Survey table import
