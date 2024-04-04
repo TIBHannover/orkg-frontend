@@ -45,8 +45,8 @@ const ToolContainer = styled(Link)`
 `;
 
 const ImgContainer = styled.div`
-    border-top: 2px solid ${props => props.theme.lightDarker};
-    border-bottom: 2px solid ${props => props.theme.lightDarker};
+    border-top: 2px solid ${(props) => props.theme.lightDarker};
+    border-bottom: 2px solid ${(props) => props.theme.lightDarker};
     height: 160px;
     display: flex;
     align-items: center;
@@ -65,7 +65,7 @@ const Tools = () => (
             <ImgContainer>
                 <Image src={AddPaperWizard} style={{ width: '70%', height: 'auto' }} alt="Add paper form preview" />
             </ImgContainer>
-            <p className="my-2 px-2">The form guides you to the process of generating structured data for your paper</p>
+            <p className="my-2 px-2">The form guides you through the process of generating structured data for your paper</p>
         </ToolContainer>
 
         <ToolContainer href={ROUTES.CONTRIBUTION_EDITOR} className="box rounded text-decoration-none">
