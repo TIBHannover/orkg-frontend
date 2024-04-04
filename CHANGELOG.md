@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.138.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.137.0...v0.138.0) - 2024-04-04
+
+### Changes
+
+- wip [`#1299`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1299)
+- HelpCenter=&gt; typescript conversion [`#1282`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1282)
+
+---
 ## [v0.137.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.136.0...v0.137.0) - 2024-04-03
 
 ### Changes
