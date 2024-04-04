@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.138.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.138.0...v0.138.1) - 2024-04-04
+
+### Changes
+
+- tools/page =&gt; corrected the sentence [`#1301`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1301)
+- fix tests, fix(StatementBrowser): filter list of help articles [`#1300`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1300)
+
+---
 ## [v0.138.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.137.0...v0.138.0) - 2024-04-04
 
 ### Changes
