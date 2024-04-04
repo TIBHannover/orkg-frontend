@@ -9,7 +9,7 @@ const resources = [
         const MAPPING = {
             DCLocation: DClocationResources,
         };
-        console.log(include);
+
         if (MAPPING[include]) {
             return res(ctx.json(MAPPING[include]));
         }

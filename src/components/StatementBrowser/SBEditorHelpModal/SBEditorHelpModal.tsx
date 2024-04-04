@@ -23,7 +23,6 @@ const SBEditorHelpModal = () => {
     const [hasFailed, setHasFailed] = useState(false);
 
     useEffect(() => {
-        let isMounted = true;
         const fetchCategories = () => {
             if (helpCenterArticleId) {
                 const pagePromise = getHelpArticle(helpCenterArticleId);
@@ -36,10 +35,11 @@ const SBEditorHelpModal = () => {
                     where: HELP_CENTER_ARTICLES.SB_ARTICLES,
                 })
                     .then((result) => {
-                        if (isMounted) {
-                            setArticles(result.data);
-                            setIsLoading(false);
+                        if (!result.data) {
+                            return;
                         }
+                        setArticles(result.data);
+                        setIsLoading(false);
                     })
                     .catch((e) => {
                         setHasFailed(true);
@@ -49,9 +49,6 @@ const SBEditorHelpModal = () => {
         };
 
         fetchCategories();
-        return () => {
-            isMounted = false;
-        };
     }, [helpCenterArticleId, loadPage]);
 
     return (
@@ -91,7 +88,7 @@ const SBEditorHelpModal = () => {
                 )}
                 {!isLoading && articles.length > 0 && (
                     <Row className="mt-3">
-                        <ul>
+                        <ul className="ms-3">
                             {articles.map((article) => (
                                 <li key={article.id}>
                                     {/* @ts-expect-error */}
