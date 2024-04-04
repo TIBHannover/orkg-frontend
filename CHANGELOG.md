@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.138.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.138.1...v0.138.2) - 2024-04-04
+
+### Changes
+
+- fix(ResearchField): wrong dependency check [`#1303`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1303)
+
+---
 ## [v0.138.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.138.0...v0.138.1) - 2024-04-04
 
 ### Changes
