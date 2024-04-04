@@ -188,7 +188,7 @@ const Autocomplete = ({
     }, [selectedOntologies]);
 
     // Support home and end keys for text Input
-    const handleKeyDown = evt => {
+    const handleKeyDown = (evt) => {
         if (evt.key === 'Home') {
             evt.preventDefault();
             if (evt.shiftKey) {
@@ -307,8 +307,8 @@ const Autocomplete = ({
                     q: encodeURIComponent(value.trim()),
                     ontology: selectedOntologies
                         ? selectedOntologies
-                              .filter(c => c.ontologyId !== 'orkg' && c.ontologyId !== 'wikidata')
-                              ?.map(o => o.ontologyId.replace(':', ''))
+                              .filter((c) => c.ontologyId !== 'orkg' && c.ontologyId !== 'wikidata')
+                              ?.map((o) => o.ontologyId.replace(':', ''))
                               .join(',')
                         : null ?? null,
                 });
@@ -320,14 +320,14 @@ const Autocomplete = ({
             // list all external classes
             try {
                 if (
-                    selectedOntologies.filter(c => c.ontologyId !== 'orkg' && c.ontologyId !== 'wikidata') &&
-                    selectedOntologies.filter(c => c.ontologyId !== 'orkg' && c.ontologyId !== 'wikidata').length > 0
+                    selectedOntologies.filter((c) => c.ontologyId !== 'orkg' && c.ontologyId !== 'wikidata') &&
+                    selectedOntologies.filter((c) => c.ontologyId !== 'orkg' && c.ontologyId !== 'wikidata').length > 0
                 ) {
                     return await getOntologyTerms({
                         ontology_id:
                             selectedOntologies
-                                .filter(c => c.ontologyId !== 'orkg' && c.ontologyId !== 'wikidata')
-                                ?.map(s => s.ontologyId.replace(':', ''))[0] ?? '',
+                                .filter((c) => c.ontologyId !== 'orkg' && c.ontologyId !== 'wikidata')
+                                ?.map((s) => s.ontologyId.replace(':', ''))[0] ?? '',
                         page,
                         PAGE_SIZE,
                     });
@@ -378,7 +378,6 @@ const Autocomplete = ({
         try {
             const defaultOpts = defaultOptions ?? true;
             if ((!value || value === '' || value.trim() === '') && (!defaultOpts || !autoLoadOption)) {
-                console.log(autoLoadOption);
                 // if default options is disabled return empty result
                 return {
                     options: [],
@@ -397,7 +396,7 @@ const Autocomplete = ({
                 responseItems = result.content;
                 hasMore = !result.last;
             } else {
-                if (selectedOntologies.find(ontology => ontology.id === 'ORKG') || optionsClass) {
+                if (selectedOntologies.find((ontology) => ontology.id === 'ORKG') || optionsClass) {
                     const orkgResponseItems = await orkgLookup(value, page);
                     responseItems.push(...(orkgResponseItems?.content ?? []));
 
@@ -409,8 +408,8 @@ const Autocomplete = ({
                     hasMore = !orkgResponseItems.last;
                 }
                 if (
-                    selectedOntologies.filter(ontology => ontology.id !== 'ORKG' && ontology.id !== 'Wikidata' && ontology.id !== 'GeoNames').length >
-                        0 ||
+                    selectedOntologies.filter((ontology) => ontology.id !== 'ORKG' && ontology.id !== 'Wikidata' && ontology.id !== 'GeoNames')
+                        .length > 0 ||
                     entityType === ENTITIES.CLASS
                 ) {
                     const olsResponseItems = await olsLookup(value, page);
@@ -425,7 +424,7 @@ const Autocomplete = ({
 
             let options = [];
 
-            responseItems.map(item =>
+            responseItems.map((item) =>
                 options.push({
                     ...item,
                     ...(item.uri ? { uri: item.uri } : {}),
@@ -486,7 +485,7 @@ const Autocomplete = ({
      * @param {String} value Search input
      * @return {String} Text to display when there are no options
      */
-    const noResults = value => (value.inputValue !== '' ? 'No results found' : 'Start typing to find results');
+    const noResults = (value) => (value.inputValue !== '' ? 'No results found' : 'Start typing to find results');
 
     /**
      * Handle selecting external class
@@ -502,7 +501,7 @@ const Autocomplete = ({
         ) {
             let foundIndex;
             if (isMulti) {
-                foundIndex = selected.findIndex(x => x.id === action.option.id);
+                foundIndex = selected.findIndex((x) => x.id === action.option.id);
             }
             try {
                 const internalClass = await getClasses({
@@ -653,11 +652,11 @@ const Autocomplete = ({
         }
     };
 
-    const Control = useCallback(innerProps => {
+    const Control = useCallback((innerProps) => {
         if (eventListener) {
             return (
                 <NativeListener
-                    onMouseUp={e => {
+                    onMouseUp={(e) => {
                         e.stopPropagation();
                         innerRef.current.focus();
                     }}
@@ -671,11 +670,11 @@ const Autocomplete = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const DropdownIndicator = useCallback(innerProps => {
+    const DropdownIndicator = useCallback((innerProps) => {
         if (eventListener) {
             return (
                 <NativeListener
-                    onMouseUp={e => {
+                    onMouseUp={(e) => {
                         e.stopPropagation();
                         setMenuIsOpen(true);
                         innerRef.current.focus();
@@ -700,7 +699,7 @@ const Autocomplete = ({
                             <div className="ps-2 align-items-center d-flex">
                                 Sources
                                 <div className="overflow-hidden">
-                                    {selectedOntologies.map(ontology => (
+                                    {selectedOntologies.map((ontology) => (
                                         <Tippy
                                             key={ontology.id}
                                             content={
@@ -725,7 +724,7 @@ const Autocomplete = ({
                                         <Button
                                             color="light-darker"
                                             className="px-2 py-0 ms-2"
-                                            onClick={() => setOntologySelectorIsOpen(v => !v)}
+                                            onClick={() => setOntologySelectorIsOpen((v) => !v)}
                                             size="sm"
                                         >
                                             <Icon icon={faGear} size="sm" />
@@ -739,14 +738,14 @@ const Autocomplete = ({
             </components.Menu>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [selectedOntologies.map(o => o.id).join(','), inputValue, ols],
+        [selectedOntologies.map((o) => o.id).join(','), inputValue, ols],
     );
 
     const Option = useCallback(({ children, ...innerProps }) => {
         if (eventListener) {
             return (
                 <NativeListener
-                    onMouseDown={e => {
+                    onMouseDown={(e) => {
                         onChange(innerProps.data);
                     }}
                 >
@@ -775,7 +774,7 @@ const Autocomplete = ({
             },
             whiteSpace: 'nowrap' /* ensure the placeholder is not wrapped when animating the width */,
         }),
-        container: provided => ({
+        container: (provided) => ({
             ...provided,
             padding: 0,
             height: 'auto',
@@ -785,7 +784,7 @@ const Autocomplete = ({
             borderBottomRightRadius: disableBorderRadiusRight ? 0 : 'inherit',
             background: '#fff',
         }),
-        indicatorsContainer: provided => ({
+        indicatorsContainer: (provided) => ({
             ...provided,
             cursor: 'pointer',
             '&>div:last-of-type': {
@@ -797,7 +796,7 @@ const Autocomplete = ({
                 ...(cssClasses && cssClasses.includes('form-control-sm') && !isDisabled && isClearable ? { padding: '4px !important' } : {}),
             },
         }),
-        menu: provided => ({
+        menu: (provided) => ({
             ...provided,
             zIndex: 10,
             fontSize: '0.875rem',
@@ -805,7 +804,7 @@ const Autocomplete = ({
             minWidth: '100%',
             maxWidth: 700,
         }),
-        option: provided => ({
+        option: (provided) => ({
             ...provided,
             cursor: 'pointer',
             whiteSpace: 'normal',
@@ -820,7 +819,7 @@ const Autocomplete = ({
             ...(state.data.isFixed ? { display: 'none' } : {}),
             cursor: 'pointer',
         }),
-        input: provided => ({
+        input: (provided) => ({
             ...provided,
             visibility: 'visible',
         }),
@@ -828,13 +827,13 @@ const Autocomplete = ({
 
     // Creatable with adding new options : https://codesandbox.io/s/6pznz
     const Select = useMemo(() => (allowCreate ? withAsyncPaginate(Creatable) : AsyncPaginate), [allowCreate]);
-    const Input = useCallback(props => <components.Input {...props} maxLength={MAX_LENGTH_INPUT} />, []);
+    const Input = useCallback((props) => <components.Input {...props} maxLength={MAX_LENGTH_INPUT} />, []);
 
     return (
         <ConditionalWrapper
             condition={copyValueButton || showTreeSelector}
-            wrapper={children => (
-                <ConditionalWrapper condition={inputGroup} wrapper={children => <InputGroup size="sm">{children}</InputGroup>}>
+            wrapper={(children) => (
+                <ConditionalWrapper condition={inputGroup} wrapper={(children) => <InputGroup size="sm">{children}</InputGroup>}>
                     {children}
                     {showTreeSelector && value && value.id && (
                         <TreeSelector value={value} handleExternalSelect={handleExternalSelect} isDisabled={isDisabled} />
@@ -866,14 +865,14 @@ const Autocomplete = ({
                 <OntologiesModal
                     selectedOntologies={selectedOntologies}
                     setSelectedOntologies={setSelectedOntologies}
-                    toggle={() => setOntologySelectorIsOpen(v => !v)}
+                    toggle={() => setOntologySelectorIsOpen((v) => !v)}
                 />
             )}
             <StyledAutoCompleteInputFormControl className={`form-control ${cssClasses || 'default'} border-0`}>
                 <SelectGlobalStyle />
                 <Select
-                    key={JSON.stringify(selectedOntologies.map(o => o.id))}
-                    value={isMulti && fixedOptions?.length ? value?.map?.(v => ({ ...v, isFixed: fixedOptions.includes(v.id) })) : value}
+                    key={JSON.stringify(selectedOntologies.map((o) => o.id))}
+                    value={isMulti && fixedOptions?.length ? value?.map?.((v) => ({ ...v, isFixed: fixedOptions.includes(v.id) })) : value}
                     loadOptions={loadOptions}
                     debounceTimeout={300}
                     additional={defaultAdditional}
@@ -930,8 +929,8 @@ const Autocomplete = ({
                         }
                         return !(
                             !inputValue ||
-                            selectValue.some(option => compareOption(inputValue, option)) ||
-                            selectOptions.some(option => compareOption(inputValue, option))
+                            selectValue.some((option) => compareOption(inputValue, option)) ||
+                            selectOptions.some((option) => compareOption(inputValue, option))
                         );
                     }}
                 />
