@@ -5,7 +5,7 @@ export default {
     component: ShareCreatedContent,
 };
 
-const Template = args => <ShareCreatedContent {...args} />;
+const Template = (args) => <ShareCreatedContent {...args} />;
 
 export const Default = Template.bind({});
 

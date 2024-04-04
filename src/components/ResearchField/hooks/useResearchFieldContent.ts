@@ -174,7 +174,8 @@ function useResearchFieldContent({
                 { replace: true },
             );
         }
-    }, [researchFieldId, sort, includeSubFields, classesFilter, updateURL, slug, router]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [researchFieldId, sort, includeSubFields, classesFilter, updateURL, slug]);
 
     useEffect(() => {
         loadData(0, 0);

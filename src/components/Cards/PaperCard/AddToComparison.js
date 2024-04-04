@@ -25,7 +25,7 @@ const CustomInputStyled = styled(Input)`
 
 const SelectStyled = styled(Select)`
     width: 300px;
-    color: ${props => props.theme.bodyColor};
+    color: ${(props) => props.theme.bodyColor};
 `;
 
 Option.propTypes = {
@@ -36,15 +36,15 @@ Option.propTypes = {
 const AddToComparison = ({ contributionId, paper, showLabel = false }) => {
     const dispatch = useDispatch();
     const inputCheckboxRef = useRef();
-    const comparison = useSelector(state => state.viewPaper.comparison);
-    const isSelected = useSelector(state => {
+    const comparison = useSelector((state) => state.viewPaper.comparison);
+    const isSelected = useSelector((state) => {
         if (!contributionId && paper.contributions.length === 0) {
             return false;
         }
         if (!contributionId && paper.contributions?.length > 1) {
-            return paper.contributions.every(c => comparison.allIds?.includes(c.id))
+            return paper.contributions.every((c) => comparison.allIds?.includes(c.id))
                 ? true
-                : paper.contributions.some(c => comparison.allIds?.includes(c.id))
+                : paper.contributions.some((c) => comparison.allIds?.includes(c.id))
                 ? 'half' // for papers with multiple contributions
                 : false;
         }
@@ -56,7 +56,7 @@ const AddToComparison = ({ contributionId, paper, showLabel = false }) => {
         value: contribution.id,
     }));
 
-    const toggleCompare = cId => {
+    const toggleCompare = (cId) => {
         if (comparison.allIds.includes(cId)) {
             dispatch(removeFromComparison(cId));
         } else {
@@ -65,8 +65,8 @@ const AddToComparison = ({ contributionId, paper, showLabel = false }) => {
                     contributionId: cId,
                     contributionData: {
                         paperId: paper.id,
-                        paperTitle: paper.label,
-                        contributionTitle: paper.contributions.find(c => c.id === cId)?.label ?? '',
+                        paperTitle: paper.label || paper.title,
+                        contributionTitle: paper.contributions.find((c) => c.id === cId)?.label ?? '',
                     },
                 }),
             );
@@ -75,13 +75,13 @@ const AddToComparison = ({ contributionId, paper, showLabel = false }) => {
 
     const toggleAllCompare = () => {
         if (!isSelected || isSelected !== 'half') {
-            paper.contributions.forEach(c => {
+            paper.contributions.forEach((c) => {
                 toggleCompare(c.id);
             });
         } else {
             paper.contributions
-                .filter(s => comparison.allIds.includes(s.id))
-                .forEach(c => {
+                .filter((s) => comparison.allIds.includes(s.id))
+                .forEach((c) => {
                     toggleCompare(c.id);
                 });
         }
@@ -109,7 +109,7 @@ const AddToComparison = ({ contributionId, paper, showLabel = false }) => {
                     <>
                         <SelectGlobalStyle />
                         <SelectStyled
-                            value={options.filter(o => comparison.allIds.includes(o.value))}
+                            value={options.filter((o) => comparison.allIds.includes(o.value))}
                             onChange={(selected, { action, option, removedValue }) => {
                                 if (option) {
                                     toggleCompare(option.value);
@@ -118,8 +118,8 @@ const AddToComparison = ({ contributionId, paper, showLabel = false }) => {
                                 } else if (action === 'clear') {
                                     // Deleted all contributions from comparison
                                     options
-                                        .filter(o => comparison.allIds.includes(o.value))
-                                        .forEach(s => {
+                                        .filter((o) => comparison.allIds.includes(o.value))
+                                        .forEach((s) => {
                                             toggleCompare(s.value);
                                         });
                                 }
