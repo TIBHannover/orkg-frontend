@@ -1,21 +1,30 @@
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { ValuesStyle } from 'components/StatementBrowser/styled';
-import ValidationRules from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/ValidationRules/ValidationRules';
+import ValidationRulesNumber from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/ValidationRules/ValidationRulesNumber';
+import ValidationRulesString from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/ValidationRules/ValidationRulesString';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import DATA_TYPES from 'constants/DataTypes.js';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { useRef, useState } from 'react';
+import { useRef, useState, FC, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Col, FormGroup, FormText, Input, InputGroup, Label } from 'reactstrap';
 import { updatePropertyShapes } from 'slices/templateEditorSlice';
+import { Class, PropertyShape } from 'services/backend/types';
+import { ActionMeta, SelectInstance } from 'react-select';
 
-const TemplateComponentValue = (props) => {
-    const propertyShape = useSelector((state) => state.templateEditor.propertyShapes[props.id]);
-    const strCardinality = `${propertyShape.minCount || '*'},${propertyShape.maxCount || '*'}`;
-    const mapOptions = {
+type TemplateComponentValueProps = {
+    id: number;
+    handleClassOfPropertySelect: (selected: Class, action: ActionMeta<Class>, index: number) => void;
+};
+
+const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleClassOfPropertySelect }) => {
+    // @ts-expect-error
+    const propertyShape: PropertyShape = useSelector((state) => state.templateEditor.properties[id]);
+    const strCardinality = `${propertyShape.min_count || '*'},${propertyShape.max_count || '*'}`;
+    const mapOptions: { [key: string]: string } = {
         '*,*': '0,*',
         '0,*': '0,*',
         '0,1': '0,1',
@@ -23,39 +32,49 @@ const TemplateComponentValue = (props) => {
         '1,*': '1,*',
     };
     const [cardinality, setCardinality] = useState(mapOptions[strCardinality] || 'range');
-    const classAutocompleteRef = useRef(null);
+    const classAutocompleteRef = useRef<SelectInstance<Class> | null>(null);
     const { isEditMode } = useIsEditMode();
 
     const dispatch = useDispatch();
-    const propertyShapes = useSelector((state) => state.templateEditor.propertyShapes);
+    // @ts-expect-error
+    const propertyShapes: PropertyShape[] = useSelector((state) => state.templateEditor.properties);
 
-    const onChange = (event) => {
+    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         const templatePropertyShapes = propertyShapes.map((item, j) => {
             const _item = { ...item };
-            if (j === props.id) {
-                _item[event.target.name] = event.target.value.toString();
+            if (j === id) {
+                // @ts-expect-error
+                _item[e.target.name] = e.target.value.toString();
             }
             return _item;
         });
         dispatch(updatePropertyShapes(templatePropertyShapes));
     };
 
-    const onChangeCardinality = (event) => {
-        setCardinality(event.target.value);
+    const onChangeCardinality = (e: ChangeEvent<HTMLInputElement>) => {
+        setCardinality(e.target.value);
 
-        if (event.target.value !== 'range') {
-            const [minCount, maxCount] = event.target.value.split(',');
+        if (e.target.value !== 'range') {
+            const [minCount, maxCount] = e.target.value.split(',');
             const templatePropertyShapes = propertyShapes.map((item, j) => {
                 const _item = { ...item };
-                if (j === props.id) {
-                    _item.minCount = minCount;
-                    _item.maxCount = maxCount !== '*' ? maxCount : '';
+                if (j === id) {
+                    _item.min_count = parseInt(minCount, 10);
+                    _item.max_count = maxCount !== '*' ? parseInt(maxCount, 10) : undefined;
                 }
                 return _item;
             });
             dispatch(updatePropertyShapes(templatePropertyShapes));
         }
     };
+
+    let range = null;
+
+    if ('class' in propertyShape && propertyShape.class !== undefined) {
+        range = propertyShape.class;
+    } else if ('datatype' in propertyShape && propertyShape.datatype !== undefined) {
+        range = propertyShape.datatype;
+    }
 
     return (
         <ValuesStyle className="col-8 valuesList">
@@ -64,12 +83,12 @@ const TemplateComponentValue = (props) => {
                     <AutoComplete
                         entityType={ENTITIES.CLASS}
                         placeholder={isEditMode ? 'Select or type to enter a class' : 'No Class'}
-                        onChange={(selected, action) => {
+                        onChange={(selected: Class, action: ActionMeta<Class>) => {
                             // blur the field allows to focus and open the menu again
                             classAutocompleteRef.current && classAutocompleteRef.current.blur();
-                            props.handleClassOfPropertySelect(selected, action, props.id);
+                            handleClassOfPropertySelect(selected, action, id);
                         }}
-                        value={propertyShape.value}
+                        value={range}
                         autoLoadOption={true}
                         openMenuOnFocus={true}
                         allowCreate={true}
@@ -78,7 +97,7 @@ const TemplateComponentValue = (props) => {
                         isClearable
                         defaultOptions={DATA_TYPES.filter((dt) => dt.classId !== CLASSES.RESOURCE).map((dt) => ({ label: dt.name, id: dt.classId }))}
                         innerRef={classAutocompleteRef}
-                        linkButton={propertyShape.value && propertyShape.value.id ? reverse(ROUTES.CLASS, { id: propertyShape.value.id }) : ''}
+                        linkButton={range && range.id ? reverse(ROUTES.CLASS, { id: range.id }) : ''}
                         linkButtonTippy="Go to class page"
                         cssClasses="form-control-sm"
                         autoFocus={false}
@@ -113,18 +132,18 @@ const TemplateComponentValue = (props) => {
                         <div className="mt-2">
                             <FormGroup row>
                                 <Label className="text-end text-muted" for="minCountValueInput" sm={3}>
-                                    <small>Minimum Occurence</small>
+                                    <small>Minimum Occurrence</small>
                                 </Label>
                                 <Col sm={9}>
                                     <Input
                                         disabled={!isEditMode}
                                         onChange={onChange}
                                         bsSize="sm"
-                                        value={propertyShape.minCount}
+                                        value={propertyShape.min_count || ''}
                                         type="number"
                                         min="0"
                                         step="1"
-                                        name="minCount"
+                                        name="min_count"
                                         id="minCountValueInput"
                                         placeholder="Minimum number of occurrences in the resource"
                                     />
@@ -132,18 +151,18 @@ const TemplateComponentValue = (props) => {
                             </FormGroup>
                             <FormGroup row>
                                 <Label className="text-end text-muted" for="maxCountValueInput" sm={3}>
-                                    <small>Maximum Occurence</small>
+                                    <small>Maximum Occurrence</small>
                                 </Label>
                                 <Col sm={9}>
                                     <Input
                                         disabled={!isEditMode}
                                         onChange={onChange}
                                         bsSize="sm"
-                                        value={propertyShape.maxCount !== null ? propertyShape.maxCount : ''}
+                                        value={propertyShape.max_count !== null ? propertyShape.max_count : ''}
                                         type="number"
                                         min="0"
                                         step="1"
-                                        name="maxCount"
+                                        name="max_count"
                                         id="maxCountValueInput"
                                         placeholder="Maximum number of occurrences in the resource"
                                     />
@@ -164,7 +183,7 @@ const TemplateComponentValue = (props) => {
                             disabled={!isEditMode}
                             onChange={onChange}
                             bsSize="sm"
-                            value={propertyShape.placeholder}
+                            value={propertyShape.placeholder || ''}
                             type="text"
                             name="placeholder"
                             id="placeholderInput"
@@ -182,7 +201,7 @@ const TemplateComponentValue = (props) => {
                             disabled={!isEditMode}
                             onChange={onChange}
                             bsSize="sm"
-                            value={propertyShape.description}
+                            value={propertyShape.description || ''}
                             type="textarea"
                             name="description"
                             id="descriptionInput"
@@ -191,15 +210,8 @@ const TemplateComponentValue = (props) => {
                     </Col>
                 </FormGroup>
 
-                {propertyShape.value && ['Decimal', 'Integer', 'String'].includes(propertyShape.value.id) && (
-                    <ValidationRules
-                        minInclusive={propertyShape.minInclusive}
-                        maxInclusive={propertyShape.maxInclusive}
-                        pattern={propertyShape.pattern}
-                        id={props.id}
-                        value={propertyShape.value}
-                    />
-                )}
+                {range && ['Decimal', 'Integer'].includes(range.id) && <ValidationRulesNumber id={id} />}
+                {range && ['String'].includes(range.id) && <ValidationRulesString id={id} />}
             </div>
         </ValuesStyle>
     );

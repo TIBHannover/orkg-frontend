@@ -29,16 +29,16 @@ export const StyledContainer = styled(Container)`
 
 function TabsContainer({ id }) {
     const { activeTab } = useParams();
-    const countPropertyShapes = useSelector(state => state.templateEditor.propertyShapes.length ?? 0);
-    const targetClassId = useSelector(state => state.templateEditor.class?.id);
-    const isSaving = useSelector(state => state.templateEditor.isSaving);
-    const isLoading = useSelector(state => state.templateEditor.isLoading);
+    const countPropertyShapes = useSelector((state) => state.templateEditor.properties.length ?? 0);
+    const targetClassId = useSelector((state) => state.templateEditor.target_class?.id);
+    const isSaving = useSelector((state) => state.templateEditor.isSaving);
+    const isLoading = useSelector((state) => state.templateEditor.isLoading);
     const { isEditMode } = useIsEditMode();
     const router = useRouter();
 
     const { countInstances, isLoading: isLoadingCount } = useCountInstances(targetClassId);
 
-    const onTabChange = key => {
+    const onTabChange = (key) => {
         router.push(
             `${reverse(ROUTES.TEMPLATE_TABS, {
                 id,
@@ -66,7 +66,7 @@ function TabsContainer({ id }) {
             >
                 <Tabs
                     className="box rounded"
-                    getPopupContainer={trigger => trigger.parentNode}
+                    getPopupContainer={(trigger) => trigger.parentNode}
                     destroyInactiveTabPane={false}
                     onChange={onTabChange}
                     activeKey={activeTab ?? 'description'}

@@ -198,7 +198,7 @@ ValueItem.propTypes = {
     propertyId: PropTypes.string.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
-    contextStyle: PropTypes.string.isRequired,
+    contextStyle: PropTypes.string,
     showHelp: PropTypes.bool,
     shouldDisableValueItemStyle: PropTypes.bool,
 };

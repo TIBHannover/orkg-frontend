@@ -1,11 +1,9 @@
 import { CLASSES, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { url } from 'constants/misc';
-import { flatten } from 'lodash';
 import { submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
-import { getResource } from 'services/backend/resources';
-import { PaginatedResponse, Resource, Statement } from 'services/backend/types';
-import { filterObjectOfStatementsByPredicateAndClass, filterStatementsBySubjectId, getPropertyShapeData, sortMethod } from 'utils';
+import { PaginatedResponse, PropertyShapeResourceType, Resource, Statement } from 'services/backend/types';
+import { getTemplate } from 'services/backend/templates';
 
 export const statementsUrl = `${url}statements/`;
 
@@ -294,113 +292,6 @@ export const getStatementsByPredicateAndLiteral = ({
 };
 
 /**
- * Load template by ID
- *
- * @param {String} templateId Template Id
- */
-export const getTemplateById = async (templateId: string) => {
-    const subject = await getResource(templateId);
-    let response: {
-        root: string;
-        statements: Statement[];
-    };
-    try {
-        response = await getStatementsBundleBySubject({ id: templateId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD] });
-    } catch (e) {
-        return Promise.reject(e);
-    }
-
-    if (!subject) {
-        return Promise.reject(new Error('Template not found'));
-    }
-    // use @ts-expect-error because of the filterObjectOfStatementsByPredicateAndClass is still in JS instead of TS
-    const statements: Statement[] = filterStatementsBySubjectId(response.statements, templateId);
-    const templatePredicate = filterObjectOfStatementsByPredicateAndClass(
-        response.statements,
-        PREDICATES.TEMPLATE_OF_PREDICATE,
-        true,
-        // @ts-expect-error
-        null,
-        templateId,
-    );
-    // @ts-expect-error
-    const targetClass = filterObjectOfStatementsByPredicateAndClass(response.statements, PREDICATES.SHACL_TARGET_CLASS, true, null, templateId);
-    const templateFormatLabel = filterObjectOfStatementsByPredicateAndClass(
-        response.statements,
-        PREDICATES.TEMPLATE_LABEL_FORMAT,
-        true,
-        // @ts-expect-error
-        null,
-        templateId,
-    );
-    // @ts-expect-error
-    const descriptionLabel = filterObjectOfStatementsByPredicateAndClass(response.statements, PREDICATES.DESCRIPTION, true, null, templateId);
-    // @ts-expect-error
-    const templateIsClosed = filterObjectOfStatementsByPredicateAndClass(response.statements, PREDICATES.SHACL_CLOSED, true, null, templateId);
-    const templatePropertyShapes: Resource[] = filterObjectOfStatementsByPredicateAndClass(
-        response.statements,
-        PREDICATES.SHACL_PROPERTY,
-        false,
-        // @ts-expect-error
-        null,
-        templateId,
-    );
-
-    const researchFields: Resource[] = filterObjectOfStatementsByPredicateAndClass(
-        response.statements,
-        PREDICATES.TEMPLATE_OF_RESEARCH_FIELD,
-        false,
-        // @ts-expect-error
-        null,
-        templateId,
-    );
-
-    const researchProblems: Resource[] = filterObjectOfStatementsByPredicateAndClass(
-        response.statements,
-        PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM,
-        false,
-        // @ts-expect-error
-        null,
-        templateId,
-    );
-
-    const propertyShapes = templatePropertyShapes.map((propertyShape) =>
-        getPropertyShapeData(propertyShape, filterStatementsBySubjectId(response.statements, propertyShape.id)),
-    );
-
-    const propertyShapesStatements = templatePropertyShapes.map((propertyShape) =>
-        // @ts-expect-error
-        filterStatementsBySubjectId(response.statements, propertyShape.id).map((s) => s.id),
-    );
-
-    return {
-        ...subject,
-        statements: [...statements.map((s) => s.id), ...flatten(propertyShapesStatements)],
-        predicate: templatePredicate,
-        labelFormat: templateFormatLabel ? templateFormatLabel.label : '',
-        description: descriptionLabel ? descriptionLabel.label : '',
-        hasLabelFormat: !!templateFormatLabel,
-        isClosed: templateIsClosed?.label === 'true' || templateIsClosed?.label === 'True',
-        propertyShapes: propertyShapes?.length > 0 ? propertyShapes.sort((c1, c2) => sortMethod(c1.order, c2.order)) : [],
-        class: targetClass
-            ? {
-                  id: targetClass.id,
-                  label: targetClass.label,
-                  uri: targetClass.uri,
-              }
-            : {},
-        researchFields: researchFields.map((statement) => ({
-            id: statement.id,
-            label: statement.label,
-        })),
-        researchProblems: researchProblems.map((statement) => ({
-            id: statement.id,
-            label: statement.label,
-        })),
-    };
-};
-
-/**
  * Get Parents of research field
  *
  * @param {String} researchFieldId research field Id
@@ -492,11 +383,11 @@ export const getTemplatesByClass = (classID: string): Promise<string[]> =>
 export const loadTemplateFlowByID = (id: string, loadedNodes: Set<any>): Promise<object> => {
     if (!loadedNodes.has(id)) {
         loadedNodes.add(id);
-        return getTemplateById(id).then((t) => {
-            const promises: Promise<any>[] = t.propertyShapes
-                .filter((ps) => ps.value)
+        return getTemplate(id).then((t) => {
+            const promises: Promise<any>[] = t.properties
+                .filter((ps) => 'class' in ps && ps.class !== undefined)
                 .map((ps) =>
-                    getTemplatesByClass(ps.value?.id).then((templateIds) => {
+                    getTemplatesByClass((ps as PropertyShapeResourceType).class?.id ?? '').then((templateIds) => {
                         if (templateIds.length) {
                             return loadTemplateFlowByID(templateIds[0], loadedNodes);
                         }

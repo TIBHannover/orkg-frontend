@@ -7,21 +7,21 @@ import { ENTITIES } from 'constants/graphSettings';
 const useValueItem = ({ valueId, propertyId }) => {
     const dispatch = useDispatch();
 
-    const value = useSelector(state => state.statementBrowser.values.byId[valueId]);
-    const property = useSelector(state => state.statementBrowser.properties.byId[propertyId]);
-    const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
-    const resource = useSelector(state => state.statementBrowser.resources.byId[value.resourceId]);
-    const resourcesAsLinks = useSelector(state => state.statementBrowser.resourcesAsLinks);
-    const level = useSelector(state => state.statementBrowser.level);
+    const value = useSelector((state) => state.statementBrowser.values.byId[valueId]);
+    const property = useSelector((state) => state.statementBrowser.properties.byId[propertyId]);
+    const openExistingResourcesInDialog = useSelector((state) => state.statementBrowser.openExistingResourcesInDialog);
+    const resource = useSelector((state) => state.statementBrowser.resources.byId[value.resourceId]);
+    const resourcesAsLinks = useSelector((state) => state.statementBrowser.resourcesAsLinks);
+    const level = useSelector((state) => state.statementBrowser.level);
 
     const [modal, setModal] = useState(false);
     const [dialogResourceId, setDialogResourceId] = useState(null);
     const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
 
-    const { hasLabelFormat, labelFormat } = useSelector(state => {
+    const { hasLabelFormat, labelFormat } = useSelector((state) => {
         // get all template ids
         let templateIds = [];
-        const filter_classes = value?.classes?.filter(c => c) ?? [];
+        const filter_classes = value?.classes?.filter((c) => c) ?? [];
         for (const c of filter_classes) {
             if (state.statementBrowser?.classes?.[c]) {
                 templateIds = templateIds.concat(state.statementBrowser?.classes[c]?.templateIds);
@@ -33,15 +33,15 @@ const useValueItem = ({ valueId, propertyId }) => {
         let labelFormat = '';
         for (const templateId of templateIds) {
             const template = state.statementBrowser.templates[templateId];
-            if (template && template.hasLabelFormat) {
+            if (template && !!template.formatted_label) {
                 hasLabelFormat = true;
-                labelFormat = template.labelFormat;
+                labelFormat = template.formatted_label;
             }
         }
         return { hasLabelFormat, labelFormat };
     });
 
-    const handleResourceClick = async e => {
+    const handleResourceClick = async (e) => {
         const { existingResourceId } = resource;
 
         if (existingResourceId) {

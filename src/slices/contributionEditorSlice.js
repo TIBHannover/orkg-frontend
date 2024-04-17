@@ -21,10 +21,10 @@ import {
     getStatementsByObjectAndPredicate,
     getStatementsBySubject,
     getStatementsBySubjectAndPredicate,
-    getTemplateById,
     getTemplatesByClass,
     updateStatement,
 } from 'services/backend/statements';
+import { getTemplate } from 'services/backend/templates';
 import format from 'string-format';
 import { LOCATION_CHANGE, filterObjectOfStatementsByPredicateAndClass, guid } from 'utils';
 
@@ -136,10 +136,10 @@ export const contributionEditorSlice = createSlice({
         },
         templateAdded: (state, { payload }) => {
             state.templates[payload.id] = { ...payload, isLoading: false };
-            if (payload.class.id) {
-                state.classes[payload.class.id] = {
-                    ...(state.classes[payload.class.id] ?? {}),
-                    templateIds: [...(state.classes[payload.class.id]?.templateIds ?? []), payload.id],
+            if (payload.target_class.id) {
+                state.classes[payload.target_class.id] = {
+                    ...(state.classes[payload.target_class.id] ?? {}),
+                    templateIds: [...(state.classes[payload.target_class.id]?.templateIds ?? []), payload.id],
                 };
             }
         },
@@ -169,7 +169,7 @@ export const contributionEditorSlice = createSlice({
             state.previousInputDataType = payload;
         },
     },
-    extraReducers: builder => {
+    extraReducers: (builder) => {
         builder.addCase(LOCATION_CHANGE, () => initialState);
     },
 });
@@ -223,7 +223,7 @@ const getOrCreateProperty = async ({ action, id, label }) => {
 };
 // END TODO
 
-export const loadContributions = contributionIds => async dispatch => {
+export const loadContributions = (contributionIds) => async (dispatch) => {
     const resources = {};
     const literals = {};
     const statements = {};
@@ -239,10 +239,10 @@ export const loadContributions = contributionIds => async dispatch => {
         // we are using getStatementsBundleBySubject to support formatted labels
         const contributionStatements = (await getStatementsBundleBySubject({ id: contributionId, maxLevel: 2, blacklist: [] })).statements;
         const paperStatements = await getStatementsByObjectAndPredicate({ objectId: contributionId, predicateId: PREDICATES.HAS_CONTRIBUTION });
-        const paper = paperStatements.find(statement => statement.subject.classes.includes(CLASSES.PAPER))?.subject;
+        const paper = paperStatements.find((statement) => statement.subject.classes.includes(CLASSES.PAPER))?.subject;
         const paperRF = await getStatementsBySubjectAndPredicate({ subjectId: paper?.id, predicateId: PREDICATES.HAS_RESEARCH_FIELD });
         const researchField = filterObjectOfStatementsByPredicateAndClass(paperRF, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD);
-        const contribution = paperStatements.find(statement => statement.object.classes.includes(CLASSES.CONTRIBUTION))?.object;
+        const contribution = paperStatements.find((statement) => statement.object.classes.includes(CLASSES.CONTRIBUTION))?.object;
 
         // show error if: corresponding paper not found, or provided ID is not a contribution ID
         if (!paper?.id || !contribution?.classes.includes(CLASSES.CONTRIBUTION)) {
@@ -254,7 +254,7 @@ export const loadContributions = contributionIds => async dispatch => {
         contributions[contributionId] = { ...contribution, paperId: paper.id };
         papers[paper.id] = { ...paper, researchField };
 
-        for (const { id, predicate: property, object, Added_by } of contributionStatements.filter(s => s.subject.id === contributionId)) {
+        for (const { id, predicate: property, object, Added_by } of contributionStatements.filter((s) => s.subject.id === contributionId)) {
             statements[id] = {
                 contributionId,
                 Added_by,
@@ -267,9 +267,9 @@ export const loadContributions = contributionIds => async dispatch => {
                 staticRowId: guid(),
             };
             if (object._class === ENTITIES.RESOURCE) {
-                resources[object.id] = { ...object, statements: contributionStatements.filter(s => s.subject.id === object.id) };
+                resources[object.id] = { ...object, statements: contributionStatements.filter((s) => s.subject.id === object.id) };
                 objects_classes.push(
-                    contributionStatements.filter(s => s.subject.id === object.id && s.subject?.classes?.length).map(s => s.subject.classes),
+                    contributionStatements.filter((s) => s.subject.id === object.id && s.subject?.classes?.length).map((s) => s.subject.classes),
                 );
             }
             if (object._class === ENTITIES.LITERAL) {
@@ -278,9 +278,9 @@ export const loadContributions = contributionIds => async dispatch => {
         }
     }
     // Collect the list of classes
-    const allClasses = uniq(flatten([...Object.keys(contributions).map(c => contributions[c].classes), ...objects_classes]));
+    const allClasses = uniq(flatten([...Object.keys(contributions).map((c) => contributions[c].classes), ...objects_classes]));
     // 3 - load templates
-    const templatesOfClassesLoading = allClasses && allClasses?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+    const templatesOfClassesLoading = allClasses && allClasses?.map((classID) => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
 
     await dispatch(
         contributionsAdded({
@@ -295,12 +295,12 @@ export const loadContributions = contributionIds => async dispatch => {
 
     // create properties
     await Promise.all(templatesOfClassesLoading).then(() => {
-        Object.keys(contributions).map(c => dispatch(createRequiredPropertiesInContribution(contributions[c].id)));
+        Object.keys(contributions).map((c) => dispatch(createRequiredPropertiesInContribution(contributions[c].id)));
     });
     dispatch(setIsLoading(false));
 };
 
-export const updateLiteral = payload => async dispatch => {
+export const updateLiteral = (payload) => async (dispatch) => {
     const { id, label, datatype } = payload;
     dispatch(setIsLoading(true));
     updateLiteralApi(id, label, datatype)
@@ -315,7 +315,7 @@ export const updateLiteral = payload => async dispatch => {
         });
 };
 
-export const updateResourceLabel = payload => async dispatch => {
+export const updateResourceLabel = (payload) => async (dispatch) => {
     const { id, label } = payload;
     dispatch(setIsLoading(true));
     updateResourceApi(id, label)
@@ -330,7 +330,7 @@ export const updateResourceLabel = payload => async dispatch => {
         });
 };
 
-export const deleteStatement = id => dispatch => {
+export const deleteStatement = (id) => (dispatch) => {
     deleteStatementById(id)
         .then(() => {
             dispatch(statementDeleted(id));
@@ -344,7 +344,7 @@ export const deleteStatement = id => dispatch => {
  * @param {Array} data array of statement
  * @return {Object} object of statements to use as an entry for fillStatements action
  */
-const generateStatementsFromExternalData = data => {
+const generateStatementsFromExternalData = (data) => {
     const statements = [];
     for (const statement of data) {
         statements.push({
@@ -367,7 +367,7 @@ const generateStatementsFromExternalData = data => {
  * @param {Boolean} value.external - If the value is coming from external resource (eg: GeoNames API)
  * @param {string} value.statements - Statement to create after adding the value (e.g when we create a new location from GeoNames we have to add url of that resource)
  */
-export const addValue = (entityType, value, valueClass, contributionId, propertyId) => async dispatch => {
+export const addValue = (entityType, value, valueClass, contributionId, propertyId) => async (dispatch) => {
     let newEntity = { _class: entityType, id: value.id, label: value.label, shared: value.shared, classes: value.classes, datatype: value.datatype };
 
     let apiCall;
@@ -400,14 +400,14 @@ export const addValue = (entityType, value, valueClass, contributionId, property
     }
 
     await apiCall
-        .then(response => {
+        .then((response) => {
             newEntity = response;
             if (newEntity._class === 'list') {
                 newEntity._class = entityType;
             }
             return createResourceStatement(contributionId, propertyId, newEntity.id);
         })
-        .then(newStatement => {
+        .then((newStatement) => {
             switch (entityType) {
                 case ENTITIES.RESOURCE:
                     dispatch(
@@ -444,7 +444,7 @@ export const addValue = (entityType, value, valueClass, contributionId, property
             }
             dispatch(setIsLoading(false));
         })
-        .catch(e => {
+        .catch((e) => {
             console.error(e);
             toast.error('Something went wrong while creating the resource.');
             dispatch(setIsLoading(false));
@@ -463,7 +463,7 @@ export const addValue = (entityType, value, valueClass, contributionId, property
 
 export const createResource =
     ({ contributionId, propertyId, action, classes = [], resourceId = null, resourceLabel = null }) =>
-    async dispatch => {
+    async (dispatch) => {
         dispatch(setIsLoading(true));
 
         const resource = await getOrCreateResource({
@@ -479,7 +479,7 @@ export const createResource =
 
         // create the new statement
         return createResourceStatement(contributionId, propertyId, resource.id)
-            .then(newStatement => {
+            .then((newStatement) => {
                 dispatch(
                     resourceAdded({
                         statementId: newStatement.id,
@@ -499,7 +499,7 @@ export const createResource =
 
 export const createLiteral =
     ({ contributionId, propertyId, label, datatype }) =>
-    async dispatch => {
+    async (dispatch) => {
         dispatch(setIsLoading(true));
 
         // fetch the selected resource id
@@ -511,7 +511,7 @@ export const createLiteral =
 
         // create the new statement
         createLiteralStatement(contributionId, propertyId, literal.id)
-            .then(newStatement => {
+            .then((newStatement) => {
                 dispatch(
                     literalAdded({
                         statementId: newStatement.id,
@@ -530,7 +530,7 @@ export const createLiteral =
 
 export const createProperty =
     ({ action, id = null, label = null }) =>
-    async dispatch => {
+    async (dispatch) => {
         const property = await getOrCreateProperty({ action, id, label });
         if (!property) {
             return;
@@ -540,7 +540,7 @@ export const createProperty =
 
 export const deleteProperty =
     ({ id, statementIds }) =>
-    dispatch => {
+    (dispatch) => {
         (statementIds?.length > 0 ? deleteStatementsByIds(statementIds) : Promise.resolve())
             .then(() => {
                 dispatch(
@@ -557,7 +557,7 @@ export const deleteProperty =
 
 export const updateProperty =
     ({ id, statementIds, action, newId = null, newLabel = null }) =>
-    async dispatch => {
+    async (dispatch) => {
         dispatch(setIsLoading(true));
         const property = await getOrCreateProperty({ action, id: newId, label: newLabel });
         if (!property) {
@@ -604,7 +604,7 @@ export function fetchTemplateIfNeeded(templateID) {
     return async (dispatch, getState) => {
         if (shouldFetchTemplate(getState(), templateID)) {
             dispatch(setIsLoadingTemplate({ templateID, status: true }));
-            const template = await getTemplateById(templateID);
+            const template = await getTemplate(templateID);
             // Add template to the global state
             dispatch(templateAdded(template));
             return template;
@@ -656,7 +656,7 @@ export function fetchTemplatesOfClassIfNeeded(classID) {
             dispatch(setIsLoadingTemplateClass({ classID, status: true }));
             const templateIds = await getTemplatesByClass(classID);
             dispatch(setIsLoadingTemplateClass({ classID, status: false }));
-            const templates = await Promise.all(templateIds.map(templateId => dispatch(fetchTemplateIfNeeded(templateId)))).catch(e => []);
+            const templates = await Promise.all(templateIds.map((templateId) => dispatch(fetchTemplateIfNeeded(templateId)))).catch((e) => []);
             return templates;
         }
         // Let the calling code know there's nothing to wait for.
@@ -700,8 +700,8 @@ export function getTemplateIDsByContributionID(state, contributionId) {
  * @param {String} contributionId Resource ID
  * @return {{
  * id: String,
- * minCount: Number,
- * maxCount: Number,
+ * min_count: Number,
+ * max_count: Number,
  * property: Object,
  * value: Object=,
  * minInclusive:Number,
@@ -725,8 +725,8 @@ export function getPropertyShapesByContributionID(state, contributionId, classId
     let propertyShapes = [];
     for (const templateId of templateIds) {
         const template = state.contributionEditor.templates[templateId];
-        if (template && template.propertyShapes && (!classId || classId === template.class?.id)) {
-            propertyShapes = propertyShapes.concat(template.propertyShapes);
+        if (template && template.properties && (!classId || classId === template.target_class?.id)) {
+            propertyShapes = propertyShapes.concat(template.properties);
         }
     }
     return propertyShapes;
@@ -744,12 +744,12 @@ export function createRequiredPropertiesInContribution(contributionId) {
         // Get the list of existing predicate ids
         const existingPropertyIds = Object.keys(getState().contributionEditor.properties);
 
-        // Add required properties (minCount >= 1)
+        // Add required properties (min_count >= 1)
         propertyShapes
-            .filter(x => !existingPropertyIds.includes(x.property.id))
-            .map(mp => {
-                if (mp.minCount >= 1) {
-                    dispatch(propertyAdded(mp.property));
+            .filter((x) => !existingPropertyIds.includes(x.path.id))
+            .map((mp) => {
+                if (mp.min_count >= 1) {
+                    dispatch(propertyAdded(mp.path));
                 }
                 return null;
             });
@@ -773,16 +773,16 @@ export const updateContributionClasses =
             dispatch(
                 contributionUpdated({
                     ...resource,
-                    classes: uniq(classes?.filter(c => c) ?? []),
+                    classes: uniq(classes?.filter((c) => c) ?? []),
                 }),
             );
 
             // Fetch templates
-            const templatesOfClassesLoading = classes && classes?.filter(c => c).map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+            const templatesOfClassesLoading = classes && classes?.filter((c) => c).map((classID) => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
             // Add required properties
             Promise.all(templatesOfClassesLoading).then(() => dispatch(createRequiredPropertiesInContribution(contributionId)));
 
-            return updateResourceClassesApi(contributionId, uniq(classes?.filter(c => c) ?? []));
+            return updateResourceClassesApi(contributionId, uniq(classes?.filter((c) => c) ?? []));
         }
         return Promise.resolve();
     };
@@ -796,36 +796,36 @@ export const updateContributionClasses =
 
 export function fillContributionsWithTemplate({ templateID }) {
     return async (dispatch, getState) =>
-        dispatch(fetchTemplateIfNeeded(templateID)).then(async templateDate => {
+        dispatch(fetchTemplateIfNeeded(templateID)).then(async (templateDate) => {
             const contributionsIds = Object.keys(getState().contributionEditor.contributions);
             const template = templateDate;
             // Check if it's a template
-            if (template && template?.propertyShapes?.length > 0) {
+            if (template && template?.properties?.length > 0) {
                 // TODO : handle the case where the template isFetching
-                if (!template.predicate || template?.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
+                if (!template.relations.predicate || template?.relations.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
                     // update the class of the current resource
-                    contributionsIds.map(contributionId =>
+                    contributionsIds.map((contributionId) =>
                         dispatch(
                             updateContributionClasses({
                                 contributionId,
-                                classes: [...getState().contributionEditor.contributions[contributionId].classes, template.class.id],
+                                classes: [...getState().contributionEditor.contributions[contributionId].classes, template.target_class.id],
                             }),
                         ),
                     );
                     // Add properties
-                    for (const propertyShape of template?.propertyShapes.filter(mp => mp.minCount >= 1)) {
-                        dispatch(propertyAdded(propertyShape.property));
+                    for (const propertyShape of template?.properties.filter((mp) => mp.min_count >= 1)) {
+                        dispatch(propertyAdded(propertyShape.path));
                     }
-                } else if (template.predicate) {
+                } else if (template.relations.predicate) {
                     // Add template to the contribution
-                    dispatch(propertyAdded(template.predicate));
-                    contributionsIds.map(async contributionId => {
-                        const newObject = await createResourceApi(template.label, template.class ? [template.class.id] : []);
+                    dispatch(propertyAdded(template.relations.predicate));
+                    contributionsIds.map(async (contributionId) => {
+                        const newObject = await createResourceApi(template.label, template.target_class ? [template.target_class.id] : []);
                         const instanceResourceId = newObject.id;
                         await dispatch(
                             createResource({
                                 contributionId,
-                                propertyId: template.predicate.id,
+                                propertyId: template.relations.predicate.id,
                                 action: 'select-option',
                                 resourceId: instanceResourceId,
                             }),
@@ -844,8 +844,8 @@ export function fillContributionsWithTemplate({ templateID }) {
  * @param {String} predicateId Existing Predicate ID
  * @return {{
  * id: String,
- * minCount: Number,
- * maxCount: Number,
+ * min_count: Number,
+ * max_count: Number,
  * property: Object,
  * value: Object=,
  * minInclusive:Number,
@@ -858,7 +858,7 @@ export function getPropertyShapesByResourceIDAndPredicateID(state, resourceId, p
     if (resourcePropertyShapes.length === 0) {
         return [];
     }
-    return resourcePropertyShapes.filter(c => c.property.id === predicateId);
+    return resourcePropertyShapes.filter((c) => c.path.id === predicateId);
 }
 
 /**
@@ -870,9 +870,9 @@ export function getPropertyShapesByResourceIDAndPredicateID(state, resourceId, p
  */
 export function getSuggestedProperties(state) {
     const existingPropertyIds = Object.keys(state.contributionEditor.properties);
-    const comp = Object.keys(state.contributionEditor.contributions).map(contributionId => {
+    const comp = Object.keys(state.contributionEditor.contributions).map((contributionId) => {
         const propertyShapes = getPropertyShapesByContributionID(state, contributionId);
-        return propertyShapes.filter(x => !existingPropertyIds.includes(x.property.id));
+        return propertyShapes.filter((x) => !existingPropertyIds.includes(x.path.id));
     });
     return uniqBy(flatten(comp), 'property.id');
 }
@@ -884,10 +884,10 @@ export function getSuggestedProperties(state) {
  * @return {Object[]} list of research problems
  */
 export function getResearchProblems(state) {
-    const problems = Object.keys(state.contributionEditor.contributions).map(cId =>
+    const problems = Object.keys(state.contributionEditor.contributions).map((cId) =>
         Object.values(state.contributionEditor.statements)
-            .filter(s => s.contributionId === cId && s.propertyId === PREDICATES.HAS_RESEARCH_PROBLEM)
-            .map(s => s.objectId),
+            .filter((s) => s.contributionId === cId && s.propertyId === PREDICATES.HAS_RESEARCH_PROBLEM)
+            .map((s) => s.objectId),
     );
     return uniq(flatten(problems));
 }
@@ -900,8 +900,8 @@ export function getResearchProblems(state) {
  */
 export function getResearchFields(state) {
     const fields = Object.values(state.contributionEditor.papers)
-        .filter(p => p.researchField)
-        .map(p => p.researchField.id);
+        .filter((p) => p.researchField)
+        .map((p) => p.researchField.id);
     return uniq(flatten(fields));
 }
 
@@ -912,7 +912,7 @@ export function getResearchFields(state) {
  * @return {Object[]} list of classes Ids
  */
 export function getCommonClasses(state) {
-    const classes = Object.values(state.contributionEditor.contributions).map(p => p.classes);
+    const classes = Object.values(state.contributionEditor.contributions).map((p) => p.classes);
     return uniq(intersection(...classes));
 }
 
@@ -925,18 +925,18 @@ export function getCommonClasses(state) {
 export function removeEmptyPropertiesOfClass({ classId }) {
     return (dispatch, getState) => {
         const propertyShapes = flatten(
-            Object.keys(getState().contributionEditor.contributions).map(contributionId =>
+            Object.keys(getState().contributionEditor.contributions).map((contributionId) =>
                 getPropertyShapesByContributionID(getState(), contributionId, classId),
             ),
         );
-        const existingPropertyIdsToRemove = propertyShapes.map(mp => mp.property?.id).filter(p => p);
+        const existingPropertyIdsToRemove = propertyShapes.map((mp) => mp.path?.id).filter((p) => p);
 
-        return existingPropertyIdsToRemove.map(propertyId => {
+        return existingPropertyIdsToRemove.map((propertyId) => {
             // count statements and delete if number of statements == 0
             const countStatements = Object.keys(getState().contributionEditor.contributions).filter(
-                contributionId =>
+                (contributionId) =>
                     Object.values(getState().contributionEditor.statements).filter(
-                        s => s.propertyId === propertyId && s.contributionId === contributionId,
+                        (s) => s.propertyId === propertyId && s.contributionId === contributionId,
                     ).length,
             );
             if (countStatements?.length === 0) {
@@ -960,11 +960,11 @@ export function removeClassFromContributionResource({ classId }) {
     return (dispatch, getState) => {
         const contributionsIds = Object.keys(getState().contributionEditor.contributions);
         return Promise.all(
-            contributionsIds.map(contributionId =>
+            contributionsIds.map((contributionId) =>
                 dispatch(
                     updateContributionClasses({
                         contributionId,
-                        classes: [...(getState().contributionEditor.contributions[contributionId].classes?.filter(c => c !== classId) ?? [])],
+                        classes: [...(getState().contributionEditor.contributions[contributionId].classes?.filter((c) => c !== classId) ?? [])],
                     }),
                 ),
             ),
@@ -974,7 +974,7 @@ export function removeClassFromContributionResource({ classId }) {
 
 /**
  * Can add value to a property in a contribution
- * (compare the number of values with maxCount)
+ * (compare the number of values with max_count)
  * @param {Object} state Current state of the Store
  * @param {String} contributionId Resource ID
  * @param {String} propertyId Property ID
@@ -984,9 +984,9 @@ export function canAddValueAction(state, contributionId, propertyId) {
     const typePropertyShapes = getPropertyShapesByResourceIDAndPredicateID(state, contributionId, propertyId);
     if (typePropertyShapes?.length > 0) {
         const countStatements = Object.values(state.contributionEditor.statements).filter(
-            s => s.propertyId === propertyId && s.contributionId === contributionId,
+            (s) => s.propertyId === propertyId && s.contributionId === contributionId,
         ).length;
-        if (typePropertyShapes[0].maxCount && countStatements >= parseInt(typePropertyShapes[0].maxCount)) {
+        if (typePropertyShapes[0].max_count && countStatements >= parseInt(typePropertyShapes[0].max_count)) {
             return false;
         }
         return true;
@@ -996,7 +996,7 @@ export function canAddValueAction(state, contributionId, propertyId) {
 
 /**
  * Can delete property
- * (check all templates do not have minCount>=1 for the property)
+ * (check all templates do not have min_count>=1 for the property)
  * @param {Object} state Current state of the Store
  * @param {String} propertyId Property ID
  * @return {Boolean} Whether it's possible to delete the property
@@ -1005,17 +1005,17 @@ export function canDeletePropertyAction(state, propertyId) {
     const contributionsIds = Object.keys(state.contributionEditor.contributions);
     return (
         contributionsIds
-            .map(contributionId => {
+            .map((contributionId) => {
                 const typePropertyShapes = getPropertyShapesByResourceIDAndPredicateID(state, contributionId, propertyId);
                 if (typePropertyShapes?.length > 0) {
-                    if (typePropertyShapes[0].minCount >= 1) {
+                    if (typePropertyShapes[0].min_count >= 1) {
                         return false;
                     }
                     return true;
                 }
                 return true;
             })
-            ?.every(can => can === true) ?? true
+            ?.every((can) => can === true) ?? true
     );
 }
 
@@ -1042,9 +1042,9 @@ export const fillStatements =
  */
 export function generatedFormattedLabel(resource, labelFormat) {
     const valueObject = {};
-    const properties = uniqBy(resource.statements?.map(s => s.predicate.id));
+    const properties = uniqBy(resource.statements?.map((s) => s.predicate.id));
     for (const propertyId of properties) {
-        valueObject[propertyId] = resource?.statements?.find(s => propertyId === s.predicate.id)?.object.label;
+        valueObject[propertyId] = resource?.statements?.find((s) => propertyId === s.predicate.id)?.object.label;
     }
     if (Object.keys(valueObject).length > 0) {
         return format(labelFormat, valueObject);
@@ -1058,9 +1058,9 @@ export function generatedFormattedLabel(resource, labelFormat) {
  * @return {String} Formatted label
  */
 export function updateResourceStatementsAction(resourceId) {
-    return async dispatch => {
+    return async (dispatch) => {
         const resource = await getResource(resourceId);
-        return await getStatementsBySubject({ id: resourceId }).then(async statements => {
+        return await getStatementsBySubject({ id: resourceId }).then(async (statements) => {
             dispatch(
                 resourceStatementsUpdated({
                     id: resourceId,
@@ -1068,7 +1068,7 @@ export function updateResourceStatementsAction(resourceId) {
                 }),
             );
             // load templates
-            resource?.classes?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+            resource?.classes?.map((classID) => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
         });
     };
 }

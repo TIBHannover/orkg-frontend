@@ -45,7 +45,7 @@ describe('AddValue', () => {
         // Basic reproduction number
         await waitFor(() => expect(screen.getByTestId('add-value-P23140-true')).toBeInTheDocument());
         fireEvent.click(screen.getByTestId('add-value-P23140-true'));
-        await waitFor(() => expect(screen.getByText(/has value/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText(/value/i)).toBeInTheDocument());
         await waitFor(() => expect(screen.getByText(/Confidence interval/i)).toBeInTheDocument());
     });
 });
@@ -59,7 +59,7 @@ describe('AddValue', () => {
         // Basic reproduction number
         await waitFor(() => expect(screen.getByTestId('add-value-P23140-true')).toBeInTheDocument());
         fireEvent.click(screen.getByTestId('add-value-P23140-true'));
-        await waitFor(() => expect(screen.getByText(/has value/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText(/value/i)).toBeInTheDocument());
         fireEvent.click(screen.getByText(/back/i));
         const addR0Value = screen.getByTestId('add-value-P23140-true');
         expect(addR0Value).toBeInTheDocument();

@@ -9,10 +9,12 @@ import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { FC, useState } from 'react';
+import { ConnectDragSource } from 'react-dnd';
 import { useSelector } from 'react-redux';
+import { ActionMeta } from 'react-select';
 import { InputGroup } from 'reactstrap';
+import { Predicate } from 'services/backend/types';
 import styled from 'styled-components';
 
 const DragHandler = styled.div`
@@ -21,21 +23,30 @@ const DragHandler = styled.div`
     padding: 10px;
 `;
 
-function TemplateComponentProperty(props) {
+type TemplateComponentPropertyProps = {
+    id: number;
+    dragRef: ConnectDragSource;
+    handleDeletePropertyShape: (_index: number) => void;
+    handlePropertiesSelect: (_selected: Predicate, _action: ActionMeta<Predicate>, _index: number) => void;
+};
+
+const TemplateComponentProperty: FC<TemplateComponentPropertyProps> = ({ id, dragRef, handleDeletePropertyShape, handlePropertiesSelect }) => {
     const [isEditing, setIsEditing] = useState(false);
-    const property = useSelector(state => state.templateEditor.propertyShapes[props.id].property);
+    // @ts-expect-error
+    const property = useSelector((state) => state.templateEditor.properties[id].path);
     const { isEditMode } = useIsEditMode();
 
     return (
-        <PropertyStyle className="col-4" tabIndex="0">
+        <PropertyStyle className="col-4">
             {isEditMode && (
-                <DragHandler ref={props.dragRef}>
+                <DragHandler ref={dragRef}>
                     <Icon icon={faArrowsAlt} />
                 </DragHandler>
             )}
             {!isEditing ? (
                 <div className="propertyLabel">
                     {property?.id ? (
+                        // @ts-expect-error
                         <Link href={reverse(ROUTES.PROPERTY, { id: property.id })} target="_blank" className="text-dark">
                             <DescriptionTooltip id={property.id} _class={ENTITIES.PREDICATE}>
                                 {property.label}
@@ -51,7 +62,7 @@ function TemplateComponentProperty(props) {
                             <StatementActionButton
                                 title="Delete property"
                                 icon={faTrash}
-                                action={() => props.handleDeletePropertyShape(props.id)}
+                                action={() => handleDeletePropertyShape(id)}
                                 requireConfirmation={true}
                                 confirmationMessage="Are you sure to delete?"
                                 confirmationButtons={[
@@ -59,7 +70,7 @@ function TemplateComponentProperty(props) {
                                         title: 'Delete',
                                         color: 'danger',
                                         icon: faCheck,
-                                        action: () => props.handleDeletePropertyShape(props.id),
+                                        action: () => handleDeletePropertyShape(id),
                                     },
                                     {
                                         title: 'Cancel',
@@ -77,8 +88,8 @@ function TemplateComponentProperty(props) {
                         <AutoComplete
                             entityType={ENTITIES.PREDICATE}
                             placeholder={isEditing ? 'Select or type to enter a property' : 'No properties'}
-                            onChange={(selected, action) => {
-                                props.handlePropertiesSelect(selected, action, props.id);
+                            onChange={(selected: Predicate, action: ActionMeta<Predicate>) => {
+                                handlePropertiesSelect(selected, action, id);
                                 setIsEditing(false);
                             }}
                             value={property}
@@ -95,13 +106,6 @@ function TemplateComponentProperty(props) {
             )}
         </PropertyStyle>
     );
-}
-
-TemplateComponentProperty.propTypes = {
-    id: PropTypes.number.isRequired,
-    handleDeletePropertyShape: PropTypes.func.isRequired,
-    handlePropertiesSelect: PropTypes.func.isRequired,
-    dragRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
 };
 
 export default TemplateComponentProperty;

@@ -21,14 +21,14 @@ import { ENTITIES, MISC } from 'constants/graphSettings';
 
 const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
     const dispatch = useDispatch();
-    const property = useSelector(state => state.statementBrowser.properties.byId[propertyId]);
-    const valueClass = useSelector(state =>
+    const property = useSelector((state) => state.statementBrowser.properties.byId[propertyId]);
+    const valueClass = useSelector((state) =>
         getValueClass(getPropertyShapesByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)),
     );
-    const isLiteralField = useSelector(state =>
+    const isLiteralField = useSelector((state) =>
         isLiteral(getPropertyShapesByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)),
     );
-    const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
+    const openExistingResourcesInDialog = useSelector((state) => state.statementBrowser.openExistingResourcesInDialog);
     const [modal, setModal] = useState(false);
     const [dialogResourceId, setDialogResourceId] = useState(null);
     const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
@@ -41,14 +41,14 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
         }
     }, [dispatch, valueClass]);
 
-    const isBlankNode = useSelector(state => {
+    const isBlankNode = useSelector((state) => {
         if (valueClass && !isLiteralField) {
             if (state.statementBrowser.classes[valueClass.id]?.templateIds) {
                 const { templateIds } = state.statementBrowser.classes[valueClass.id];
                 // check if it's an inline resource
                 for (const templateId of templateIds) {
                     const template = state.statementBrowser.templates[templateId];
-                    if (template && template.hasLabelFormat) {
+                    if (template && !!template.formatted_label) {
                         return template.label;
                     }
                 }
@@ -68,7 +68,7 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
      * @param {Array} data array of statement
      * @return {Object} object of statements to use as an entry for fillStatements action
      */
-    const generateStatementsFromExternalData = data => {
+    const generateStatementsFromExternalData = (data) => {
         const statements = { properties: [], values: [] };
         const createdProperties = {};
         for (const statement of data) {
@@ -95,7 +95,7 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
         // is the valueType is literal, it's not possible to set it as an object of a statement
         // 1 - create a resource
         dispatch(setIsAddingValue({ id: propertyId, status: true }));
-        handleAddValue(ENTITIES.RESOURCE, { label: isBlankNode, shared: 0 }).then(newResourceId => {
+        handleAddValue(ENTITIES.RESOURCE, { label: isBlankNode, shared: 0 }).then((newResourceId) => {
             // 2 - open the dialog on that resource
             if (openExistingResourcesInDialog) {
                 dispatch(

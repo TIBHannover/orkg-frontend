@@ -4,8 +4,8 @@ import REGEX from 'constants/regex';
 
 export default function validationSchema(propertyShape) {
     let schema;
-    if (propertyShape.value) {
-        switch (propertyShape.value.id) {
+    if (propertyShape.datatype) {
+        switch (propertyShape.datatype.id) {
             case CLASSES.DATE:
                 schema = Joi.date().iso();
                 break;
@@ -27,15 +27,15 @@ export default function validationSchema(propertyShape) {
             default:
                 break;
         }
-        if (propertyShape.minInclusive) {
-            schema = schema.min(parseFloat(propertyShape.minInclusive));
+        if (propertyShape.min_inclusive) {
+            schema = schema.min(parseFloat(propertyShape.min_inclusive));
         }
-        if (propertyShape.maxInclusive) {
-            schema = schema.max(parseFloat(propertyShape.maxInclusive));
+        if (propertyShape.max_inclusive) {
+            schema = schema.max(parseFloat(propertyShape.max_inclusive));
         }
         if (propertyShape.pattern) {
             schema = schema.regex(new RegExp(propertyShape.pattern));
         }
     }
-    return schema.label(propertyShape.property.label);
+    return schema.label(propertyShape.path.label);
 }

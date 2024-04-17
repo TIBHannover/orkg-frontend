@@ -1,12 +1,12 @@
-import Link from 'components/NextJsMigration/Link';
 import Tippy from '@tippyjs/react';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import Link from 'components/NextJsMigration/Link';
 import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
+import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { Fragment } from 'react';
-import pluralize from 'pluralize';
 import { AccordionBody, AccordionHeader, AccordionItem, Badge, Table } from 'reactstrap';
 
 const ViewShapes = ({ data }) => (
@@ -105,7 +105,7 @@ const ViewShapes = ({ data }) => (
                                     <td>
                                         <>
                                             {nodesShape.researchFields
-                                                .map(researchField => (
+                                                .map((researchField) => (
                                                     <Fragment key={researchField.id}>
                                                         {researchField?.id ? (
                                                             <DescriptionTooltip id={researchField.id} _class={ENTITIES.RESOURCE}>
@@ -129,7 +129,7 @@ const ViewShapes = ({ data }) => (
                                     <td>
                                         <>
                                             {nodesShape.researchProblems
-                                                .map(researchProblem => (
+                                                .map((researchProblem) => (
                                                     <Fragment key={researchProblem.id}>
                                                         {researchProblem?.id ? (
                                                             <DescriptionTooltip id={researchProblem.id} _class={ENTITIES.RESOURCE}>
@@ -166,14 +166,14 @@ const ViewShapes = ({ data }) => (
                             {nodesShape.propertyShapes.map((propertyShape, i) => (
                                 <tr key={i.toString()}>
                                     <td>
-                                        {propertyShape.property?.id ? (
-                                            <DescriptionTooltip id={propertyShape.property.id} _class={ENTITIES.PREDICATE}>
-                                                <Link target="_blank" href={reverse(ROUTES.PROPERTY, { id: propertyShape.property.id })}>
-                                                    {propertyShape.property.label}
+                                        {propertyShape.path?.id ? (
+                                            <DescriptionTooltip id={propertyShape.path.id} _class={ENTITIES.PREDICATE}>
+                                                <Link target="_blank" href={reverse(ROUTES.PROPERTY, { id: propertyShape.path.id })}>
+                                                    {propertyShape.path.label}
                                                 </Link>
                                             </DescriptionTooltip>
                                         ) : (
-                                            <>{propertyShape.property.label}</>
+                                            <>{propertyShape.path.label}</>
                                         )}
                                     </td>
                                     <td>
@@ -207,15 +207,15 @@ const ViewShapes = ({ data }) => (
                                                 <br />
                                             </>
                                         )}
-                                        {propertyShape.minInclusive && (
+                                        {propertyShape.min_inclusive && (
                                             <>
-                                                minInclusive: {propertyShape.minInclusive}
+                                                min Inclusive: {propertyShape.min_inclusive}
                                                 <br />
                                             </>
                                         )}
-                                        {propertyShape.maxInclusive && (
+                                        {propertyShape.max_inclusive && (
                                             <>
-                                                maxInclusive: {propertyShape.maxInclusive}
+                                                max Inclusive: {propertyShape.max_inclusive}
                                                 <br />
                                             </>
                                         )}

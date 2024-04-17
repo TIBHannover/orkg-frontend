@@ -1,20 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
-import { uniqBy } from 'lodash';
 import { match } from 'path-to-regexp';
 import { toast } from 'react-toastify';
-import { createClass, getClasses } from 'services/backend/classes';
-import { createLiteral } from 'services/backend/literals';
-import { createObject } from 'services/backend/misc';
-import { updateResource } from 'services/backend/resources';
-import {
-    createLiteralStatement,
-    createResourceStatement,
-    deleteStatementsByIds,
-    getTemplateById,
-    getTemplatesByClass,
-} from 'services/backend/statements';
+import { getTemplatesByClass } from 'services/backend/statements';
+import { getTemplate, updateTemplate } from 'services/backend/templates';
 import { LOCATION_CHANGE } from 'utils';
 
 const initialState = {
@@ -23,20 +13,20 @@ const initialState = {
     created_by: null,
     created_at: null,
     diagramMode: false,
-    researchFields: [],
-    researchProblems: [],
-    predicate: null,
-    class: null,
-    templateID: '',
-    isClosed: false,
+    relations: {
+        researchFields: [],
+        researchProblems: [],
+        predicate: null,
+    },
+    target_class: null,
+    is_closed: false,
     hasLabelFormat: false,
-    labelFormat: '',
+    formatted_label: '',
     error: null,
-    propertyShapes: [],
+    properties: [],
     isLoading: false,
     failureStatus: '',
     hasFailed: false,
-    statements: [],
     isSaving: false,
     templateFlow: null,
 };
@@ -52,48 +42,36 @@ export const templateEditorSlice = createSlice({
             state.description = payload;
         },
         updatePredicate: (state, { payload }) => {
-            state.predicate = payload;
+            state.relations.predicate = payload;
         },
         updateIsClosed: (state, { payload }) => {
-            state.isClosed = payload;
+            state.is_closed = payload;
         },
         updateHasLabelFormat: (state, { payload }) => {
             state.hasLabelFormat = payload;
         },
         updateLabelFormat: (state, { payload }) => {
-            state.labelFormat = payload;
+            state.formatted_label = payload;
         },
-        updateClass: (state, { payload }) => {
-            state.class = payload;
+        updateTargetClass: (state, { payload }) => {
+            state.target_class = payload;
         },
         updateResearchProblems: (state, { payload }) => {
-            state.researchProblems = payload;
+            state.relations.research_problems = payload;
         },
         updateResearchFields: (state, { payload }) => {
-            state.researchFields = payload;
+            state.relations.research_fields = payload;
         },
         setDiagramMode: (state, { payload }) => {
             state.diagramMode = payload;
         },
         updatePropertyShapes: (state, { payload }) => {
-            state.propertyShapes = payload;
+            state.properties = payload;
         },
         initTemplate: (state, { payload }) => ({
             ...initialState,
-            templateID: payload.templateID,
-            created_by: payload.created_by,
-            created_at: payload.created_at,
-            label: payload.label,
-            description: payload.description,
-            labelFormat: payload.labelFormat,
-            hasLabelFormat: payload.hasLabelFormat,
-            isClosed: payload.isClosed,
-            statements: payload.statements,
-            predicate: payload.predicate,
-            class: payload.class,
-            propertyShapes: payload.propertyShapes,
-            researchFields: payload.researchFields,
-            researchProblems: payload.researchProblems,
+            hasLabelFormat: !!payload.formatted_label,
+            ...payload,
         }),
         setIsLoading: (state, { payload }) => {
             state.isLoading = payload;
@@ -110,9 +88,6 @@ export const templateEditorSlice = createSlice({
         setHasFailedSaving: (state, { payload }) => {
             state.hasFailedSaving = payload;
         },
-        setTemplateId: (state, { payload }) => {
-            state.templateID = payload;
-        },
         setTemplateFlow: (state, { payload }) => {
             state.templateFlow = payload;
         },
@@ -123,10 +98,7 @@ export const templateEditorSlice = createSlice({
             const matchTemplate = match(ROUTES.TEMPLATE);
             const parsedPayloadTabs = matchTemplateTabs(payload.location.pathname);
             const parsedPayload = matchTemplate(payload.location.pathname);
-            if (
-                (parsedPayloadTabs && parsedPayloadTabs.params?.id === state.templateID) ||
-                (parsedPayload && parsedPayload.params?.id === state.templateID)
-            ) {
+            if ((parsedPayloadTabs && parsedPayloadTabs.params?.id === state.id) || (parsedPayload && parsedPayload.params?.id === state.id)) {
                 // when it's the same template  (just the tab changed) do not init
                 return state;
             }
@@ -142,7 +114,7 @@ export const {
     updateIsClosed,
     updateHasLabelFormat,
     updateLabelFormat,
-    updateClass,
+    updateTargetClass,
     updateResearchProblems,
     updateResearchFields,
     setDiagramMode,
@@ -153,7 +125,6 @@ export const {
     setHasFailed,
     setIsSaving,
     setHasFailedSaving,
-    setTemplateId,
     setTemplateFlow,
 } = templateEditorSlice.actions;
 
@@ -162,14 +133,9 @@ export default templateEditorSlice.reducer;
 export const loadTemplate = (data) => (dispatch) => {
     dispatch(setIsLoading(true));
 
-    return getTemplateById(data)
+    return getTemplate(data)
         .then((templateData) => {
-            dispatch(
-                initTemplate({
-                    templateID: data,
-                    ...templateData,
-                }),
-            );
+            dispatch(initTemplate(templateData));
             dispatch(setIsLoading(false));
         })
         .catch((e) => {
@@ -191,207 +157,67 @@ export const saveTemplate = (toggleIsEditMode) => async (dispatch, getState) => 
         return null;
     }
 
-    if (data.class && data.class.id) {
+    if (!data.target_class) {
+        // Make the template target class mandatory
+        dispatch(setHasFailedSaving(true));
+        dispatch(setIsSaving(false));
+        toast.error('Please select a target class');
+        return null;
+    }
+
+    if (data.properties.length === 0) {
+        // Make the template properties mandatory
+        dispatch(setHasFailedSaving(true));
+        dispatch(setIsSaving(false));
+        toast.error('Please add at least one property');
+        return null;
+    }
+
+    if (data.target_class && data.target_class.id) {
         //  Check if the template of the class if already defined
-        const templates = await getTemplatesByClass(data.class.id);
-        if (templates.length > 0 && !templates.includes(data.templateID)) {
+        const templates = await getTemplatesByClass(data.target_class.id);
+        if (templates.length > 0 && !templates.includes(data.id)) {
             dispatch(setHasFailedSaving(true));
             dispatch(setIsSaving(false));
             toast.error('The template of this class is already defined');
             return null;
         }
     }
+    const dataToSubmit = {
+        label: data.label,
+        description: data.description || null,
+        formatted_label: data.hasLabelFormat && data.formatted_label ? data.formatted_label : null,
+        target_class: data.target_class.id,
+        relations: {
+            research_fields: data.relations.research_fields?.map((rf) => rf.id) || [],
+            research_problems: data.relations.research_problems?.map((rf) => rf.id) || [],
+            predicate: data.relations.predicate?.id,
+        },
+        properties: data.properties.map((ps) => ({
+            label: ps.label || 'Property shape',
+            placeholder: ps.placeholder,
+            description: ps.description,
+            min_count: ps.min_count,
+            max_count: ps.max_count,
+            path: ps.path.id,
+            ...(ps.datatype?.id && { datatype: ps.datatype?.id }),
+            ...(ps.datatype?.id === CLASSES.STRING && { pattern: ps.pattern }),
+            ...([CLASSES.INTEGER, CLASSES.DECIMAL].includes(ps.datatype?.id) && { max_inclusive: ps.max_inclusive, min_inclusive: ps.min_inclusive }),
+            ...(ps.class?.id && { class: ps.class?.id }),
+        })),
+        is_closed: data.is_closed,
+    };
     try {
-        const promises = [];
-
-        const templateResource = data.templateID;
-        await updateResource(templateResource, data.label);
-
-        if (data.isClosed) {
-            // set the statement that says this is strict template
-            const strictLiteral = await createLiteral('true', 'xsd:boolean');
-            promises.push(createResourceStatement(templateResource, PREDICATES.SHACL_CLOSED, strictLiteral.id));
-        }
-
-        // save template class
-        if (data.class && data.class.id) {
-            promises.push(createResourceStatement(templateResource, PREDICATES.SHACL_TARGET_CLASS, data.class.id));
-        } else {
-            // Generate class for the template
-            let templateClass = await getClasses({
-                q: templateResource,
-                exact: true,
-            });
-            if (templateClass && templateClass.totalElements === 1) {
-                promises.push(createResourceStatement(templateResource, PREDICATES.SHACL_TARGET_CLASS, templateClass.content[0].id));
-            } else {
-                templateClass = await createClass(templateResource);
-                promises.push(createResourceStatement(templateResource, PREDICATES.SHACL_TARGET_CLASS, templateClass.id));
-            }
-        }
-
-        // save template description
-        if (data.description) {
-            const descriptionLiteral = await createLiteral(data.description);
-            promises.push(createLiteralStatement(templateResource, PREDICATES.DESCRIPTION, descriptionLiteral.id));
-        }
-
-        // save template predicate
-        if (data.predicate && data.predicate.id) {
-            promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_PREDICATE, data.predicate.id));
-        }
-
-        // We use reverse() to create statements to keep the order of elements inside the input field
-        // save template research fields
-        if (data.researchFields && data.researchFields.length > 0) {
-            for (const researchField of [...data.researchFields].reverse()) {
-                promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD, researchField.id));
-            }
-        }
-        // save template research problems
-        if (data.researchProblems && data.researchProblems.length > 0) {
-            for (const researchProblem of [...data.researchProblems].reverse()) {
-                promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM, researchProblem.id));
-            }
-        }
-
-        // save template properties
-        if (data.propertyShapes && data.propertyShapes.length > 0) {
-            const propertyShapesAPICalls = [];
-            for (const [index, propertyShape] of uniqBy(data.propertyShapes, 'property.id').entries()) {
-                const propertyShapeObject = {
-                    predicates: [],
-                    resource: {
-                        name: `Property shape for ${templateResource}`,
-                        classes: [CLASSES.PROPERTY_SHAPE],
-                        values: {
-                            [PREDICATES.SHACL_PATH]: [
-                                {
-                                    '@id': propertyShape.property.id,
-                                },
-                            ],
-                            ...(propertyShape.value?.id && {
-                                [['Decimal', 'Integer', 'String', 'Boolean', 'Date', 'URI'].includes(propertyShape.value.id)
-                                    ? PREDICATES.SHACL_DATATYPE
-                                    : PREDICATES.SHACL_CLASS]: [
-                                    {
-                                        '@id': propertyShape.value.id,
-                                    },
-                                ],
-                            }),
-                            ...((propertyShape.minCount || propertyShape.minCount === 0) && {
-                                [PREDICATES.SHACL_MIN_COUNT]: [
-                                    {
-                                        text: propertyShape.minCount,
-                                        datatype: 'xsd:integer',
-                                    },
-                                ],
-                            }),
-                            ...((propertyShape.maxCount || propertyShape.maxCount === 0) && {
-                                [PREDICATES.SHACL_MAX_COUNT]: [
-                                    {
-                                        text: propertyShape.maxCount,
-                                        datatype: 'xsd:integer',
-                                    },
-                                ],
-                            }),
-                            [PREDICATES.SHACL_ORDER]: [
-                                {
-                                    text: index,
-                                    datatype: 'xsd:integer',
-                                },
-                            ],
-                            ...(propertyShape.placeholder && {
-                                [PREDICATES.PLACEHOLDER]: [
-                                    {
-                                        text: propertyShape.placeholder,
-                                        datatype: 'xsd:string',
-                                    },
-                                ],
-                            }),
-                            ...(propertyShape.description && {
-                                [PREDICATES.DESCRIPTION]: [
-                                    {
-                                        text: propertyShape.description,
-                                        datatype: 'xsd:string',
-                                    },
-                                ],
-                            }),
-                            ...(['Decimal', 'Integer', 'String'].includes(propertyShape.value?.id)
-                                ? {
-                                      ...((propertyShape.minInclusive || propertyShape.minInclusive === 0) && {
-                                          [PREDICATES.SHACL_MIN_INCLUSIVE]: [
-                                              {
-                                                  text: propertyShape.minInclusive,
-                                                  datatype: 'xsd:integer',
-                                              },
-                                          ],
-                                      }),
-                                      ...((propertyShape.maxInclusive || propertyShape.maxInclusive === 0) && {
-                                          [PREDICATES.SHACL_MAX_INCLUSIVE]: [
-                                              {
-                                                  text: propertyShape.maxInclusive,
-                                                  datatype: 'xsd:integer',
-                                              },
-                                          ],
-                                      }),
-                                      ...((propertyShape.pattern || propertyShape.pattern === 0) && {
-                                          [PREDICATES.SHACL_PATTERN]: [
-                                              {
-                                                  text: propertyShape.pattern,
-                                                  datatype: 'xsd:string',
-                                              },
-                                          ],
-                                      }),
-                                  }
-                                : {}),
-                        },
-                    },
-                };
-                // create the propertyShape using createObject endpoint
-                propertyShapesAPICalls.push(createObject(propertyShapeObject));
-            }
-            const propertyShapes = await Promise.all(propertyShapesAPICalls);
-            // link components to the template
-            propertyShapes.map((c) => promises.push(createResourceStatement(templateResource, PREDICATES.SHACL_PROPERTY, c.id)));
-        }
-
-        // save Label Format
-        if (data.hasLabelFormat && data.labelFormat) {
-            const labelFormatLiteral = await createLiteral(data.labelFormat);
-            promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_LABEL_FORMAT, labelFormatLiteral.id));
-        }
-
-        return Promise.all(promises)
-            .then(async (responses) => {
-                // delete all the statement old
-                if (data.templateID) {
-                    if (data.statements.length > 0) {
-                        await deleteStatementsByIds(data.statements.filter((s) => !responses.map((r) => r.id).includes(s))); // filter on the newly created statements
-                    }
-                }
-                if (data.templateID) {
-                    toast.success('Template updated successfully');
-                } else {
-                    toast.success('Template created successfully');
-                }
-                dispatch(setIsSaving(false));
-                toggleIsEditMode(false);
-                dispatch(setTemplateId(templateResource));
-                dispatch(loadTemplate(templateResource)); // reload the template
-                return templateResource;
-            })
-            .catch(() => {
-                dispatch(setHasFailedSaving(true));
-                dispatch(setIsSaving(false));
-                toggleIsEditMode(false);
-                toast.error('Template failed saving!');
-            });
-    } catch {
+        await updateTemplate(data.id, dataToSubmit);
+        toast.success('Template updated successfully');
+        dispatch(loadTemplate(data.id)); // reload the template
+    } catch (e) {
         dispatch(setHasFailedSaving(true));
-        dispatch(setIsSaving(false));
         toggleIsEditMode(false);
         toast.error('Template failed saving!');
-        return Promise.reject();
     }
+    dispatch(setIsSaving(false));
+    toggleIsEditMode(false);
+
+    return data.id;
 };

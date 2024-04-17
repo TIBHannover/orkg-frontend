@@ -45,10 +45,10 @@ const Statements = ({
     enableEdit = false,
     showExternalDescriptions = true,
 }) => {
-    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
-    const level = useSelector(state => state.statementBrowser.level);
-    const suggestedProperties = useSelector(state => getSuggestedProperties(state, selectedResource));
-    const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
+    const selectedResource = useSelector((state) => state.statementBrowser.selectedResource);
+    const level = useSelector((state) => state.statementBrowser.level);
+    const suggestedProperties = useSelector((state) => getSuggestedProperties(state, selectedResource));
+    const resource = useSelector((state) => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const dispatch = useDispatch();
 
     // If the resource exist, all changes are synced to the backend automatically
@@ -117,7 +117,7 @@ const Statements = ({
         return (
             <ConditionalWrapper
                 condition={!resourcesAsLinks && resource?.classes}
-                wrapper={children => (
+                wrapper={(children) => (
                     <ItemPreviewFactory id={selectedResource} classes={resource?.classes}>
                         {children}
                     </ItemPreviewFactory>
@@ -209,7 +209,7 @@ const Statements = ({
 
 Statements.propTypes = {
     rootNodeType: PropTypes.string,
-    enableEdit: PropTypes.bool.isRequired,
+    enableEdit: PropTypes.bool,
     openExistingResourcesInDialog: PropTypes.bool,
     initialSubjectId: PropTypes.string,
     initialSubjectLabel: PropTypes.string,
@@ -219,7 +219,7 @@ Statements.propTypes = {
             label: PropTypes.string.isRequired,
         }),
     ),
-    syncBackend: PropTypes.bool.isRequired,
+    syncBackend: PropTypes.bool,
     newStore: PropTypes.bool,
     propertiesAsLinks: PropTypes.bool,
     resourcesAsLinks: PropTypes.bool,

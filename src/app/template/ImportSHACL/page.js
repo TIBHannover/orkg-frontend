@@ -1,19 +1,17 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
 import StepContainer from 'components/StepContainer';
 import ViewShapes from 'components/Templates/ImportSHACL/ViewShapes';
 import useImportSHACL from 'components/Templates/ImportSHACL/hooks/useImportSHACL';
-import ROUTES from 'constants/routes.js';
-import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
-import { Accordion, Button } from 'reactstrap';
+import { Accordion, Button, ListGroup } from 'reactstrap';
 import styled from 'styled-components';
 
 const DragRDF = styled.div`
@@ -60,7 +58,7 @@ function ImportSHACL() {
     const onDrop = async ([file]) => {
         setIsLoading(true);
         const reader = new FileReader();
-        reader.onload = async e => {
+        reader.onload = async (e) => {
             const content = e.target.result;
             try {
                 const parsed = await parseTemplates(content);
@@ -84,7 +82,7 @@ function ImportSHACL() {
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, onDropRejected, accept: { 'text/n3': ['.n3'] } });
 
     const [open, setOpen] = useState('0');
-    const toggle = id => {
+    const toggle = (id) => {
         if (open === id) {
             setOpen();
         } else {
@@ -92,7 +90,7 @@ function ImportSHACL() {
         }
     };
 
-    const activeImport = data?.some(nodesShape => !nodesShape.targetClassHasAlreadyTemplate);
+    const activeImport = data?.some((nodesShape) => !nodesShape.targetClassHasAlreadyTemplate);
     return (
         <>
             <StepContainer
@@ -164,9 +162,14 @@ function ImportSHACL() {
                     color="primary"
                     onClick={async () => {
                         setIsImporting(true);
-                        const result = await importTemplates(data);
-                        setImportedTemplates(result);
-                        setIsImporting(false);
+                        try {
+                            const result = await importTemplates(data);
+                            setImportedTemplates(result);
+                            setIsImporting(false);
+                        } catch {
+                            toast.error('Error while importing templates');
+                            setIsImporting(false);
+                        }
                     }}
                 >
                     Import
@@ -182,15 +185,11 @@ function ImportSHACL() {
                 {!isImporting && importedTemplates.length > 0 && (
                     <>
                         Imported templates:
-                        <ul className="list-group mt-2">
-                            {importedTemplates.map(template => (
-                                <li key={template.id} className="list-group-item">
-                                    <Link href={reverse(ROUTES.TEMPLATE, { id: template.id })}>
-                                        {template.label ? template.label : <em>No title</em>}
-                                    </Link>
-                                </li>
+                        <ListGroup className="mt-2 rounded">
+                            {importedTemplates.map((template) => (
+                                <TemplateCard key={template.id} template={template} />
                             ))}
-                        </ul>
+                        </ListGroup>
                     </>
                 )}
             </StepContainer>
