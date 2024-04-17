@@ -12,7 +12,7 @@ const PROPERTIES_LIMIT = 3;
 
 const PropertySuggestions = ({ selectedResource }) => {
     const dispatch = useDispatch();
-    const store = useSelector(state => state);
+    const store = useSelector((state) => state);
     const suggestedProperties = useMemo(() => getSuggestedProperties(store, selectedResource), [store, selectedResource]);
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -26,28 +26,28 @@ const PropertySuggestions = ({ selectedResource }) => {
         <div className="border border-top-0 p-2 bg-light-lighter">
             <h3 className="mt-1 h6 text-muted">Suggested properties</h3>
             <div className="list-group" style={{ maxHeight: !isExpanded ? 400 : 5000, overflowY: 'auto' }}>
-                {filteredSuggestions.map(c => (
+                {filteredSuggestions.map((c) => (
                     <ListGroupItem
                         action
                         onClick={() => {
                             dispatch(
                                 createProperty({
                                     resourceId: selectedResource,
-                                    existingPredicateId: c.property.id,
-                                    label: c.property.label,
+                                    existingPredicateId: c.path.id,
+                                    label: c.path.label,
                                     isTemplate: false,
                                     createAndSelect: true,
                                 }),
                             );
                         }}
-                        key={`suggested-property-${c.property.id}`}
+                        key={`suggested-property-${c.path.id}`}
                         className="py-2 px-3"
                         style={{ cursor: 'pointer' }}
                     >
-                        <DescriptionTooltip id={c.property.id} _class={ENTITIES.PREDICATE}>
+                        <DescriptionTooltip id={c.path.id} _class={ENTITIES.PREDICATE}>
                             <div className="d-flex">
                                 <div className="flex-grow-1" style={{ fontSize: '90%' }}>
-                                    <Icon icon={faPlus} className="me-1 text-muted" /> {c.property.label}
+                                    <Icon icon={faPlus} className="me-1 text-muted" /> {c.path.label}
                                 </div>
                             </div>
                         </DescriptionTooltip>
@@ -57,7 +57,7 @@ const PropertySuggestions = ({ selectedResource }) => {
             </div>
             {suggestedProperties.length > PROPERTIES_LIMIT && (
                 <div className="justify-content-center d-flex mt-2">
-                    <Button color="link" size="sm" className="p-0" onClick={() => setIsExpanded(v => !v)}>
+                    <Button color="link" size="sm" className="p-0" onClick={() => setIsExpanded((v) => !v)}>
                         {isExpanded ? 'Hide' : 'Show'} all
                     </Button>
                 </div>

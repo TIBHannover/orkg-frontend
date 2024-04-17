@@ -21,8 +21,8 @@ import { convertTreeToFlat } from 'utils';
 function ShaclFlowModal() {
     useAutoLayout({ direction: 'LR' });
     const dispatch = useDispatch();
-    const diagramMode = useSelector(state => state.templateEditor.diagramMode);
-    const templateID = useSelector(state => state.templateEditor.templateID);
+    const diagramMode = useSelector((state) => state.templateEditor.diagramMode);
+    const templateID = useSelector((state) => state.templateEditor.id);
     const toggle = () => dispatch(setDiagramMode(false));
     const nodeTypes = useMemo(() => ({ [CLASSES.NODE_SHAPE]: Node }), []);
     const { exportSHACL, isConvertingToSHACL } = useExportSHACL();
@@ -31,11 +31,11 @@ function ShaclFlowModal() {
     const [edges, setEdges] = useState([]);
 
     const loadFlow = useCallback(
-        async id => {
+        async (id) => {
             setIsLoading(true);
             try {
                 const templatesFlow = await loadTemplateFlowByID(id, new Set());
-                const flattenNodes = [templatesFlow, ...convertTreeToFlat(templatesFlow, 'neighbors').filter(n => !isEmpty(n))];
+                const flattenNodes = [templatesFlow, ...convertTreeToFlat(templatesFlow, 'neighbors').filter((n) => !isEmpty(n))];
                 dispatch(setTemplateFlow(flattenNodes));
                 // We need this root node to make sure the algorithm of useAutoLayout always use as a root node if the selected template doesn't have a root (not a Tree) like qudt:Unit template
                 const startNode = {
@@ -43,20 +43,20 @@ function ShaclFlowModal() {
                     data: { label: 'Current Template' },
                     position: { x: 0, y: 0 },
                 };
-                setNodes([startNode, ...flattenNodes.map(n => ({ id: n.id, data: n, type: CLASSES.NODE_SHAPE, position: { x: 0, y: 0 } }))]);
+                setNodes([startNode, ...flattenNodes.map((n) => ({ id: n.id, data: n, type: CLASSES.NODE_SHAPE, position: { x: 0, y: 0 } }))]);
 
                 const _edges = [{ id: 'startingEdge', type: 'straight', source: startNode.id, target: id }];
-                flattenNodes.map(cn => {
-                    cn.propertyShapes
-                        .filter(ps => ps.value)
-                        .map(ps => {
-                            const targetNode = flattenNodes.find(c => c.class.id === ps.value.id);
+                flattenNodes.map((cn) => {
+                    cn.properties
+                        .filter((ps) => ps.class)
+                        .map((ps) => {
+                            const targetNode = flattenNodes.find((c) => c.target_class.id === ps.class.id);
                             if (targetNode) {
                                 _edges.push({
                                     style: { strokeWidth: 3 },
                                     id: `${cn.id}-${targetNode.id}-${ps.id}`,
                                     source: cn.id,
-                                    sourceHandle: ps.property.id,
+                                    sourceHandle: ps.path.id,
                                     target: targetNode.id,
                                 });
                             }
@@ -77,8 +77,8 @@ function ShaclFlowModal() {
         loadFlow(templateID);
     }, [loadFlow, templateID]);
 
-    const onNodesChange = useCallback(changes => setNodes(nds => applyNodeChanges(changes, nds)), []);
-    const onEdgesChange = useCallback(changes => setEdges(eds => applyEdgeChanges(changes, eds)), []);
+    const onNodesChange = useCallback((changes) => setNodes((nds) => applyNodeChanges(changes, nds)), []);
+    const onEdgesChange = useCallback((changes) => setEdges((eds) => applyEdgeChanges(changes, eds)), []);
     const modalHeight = window.innerHeight - 250;
 
     return (

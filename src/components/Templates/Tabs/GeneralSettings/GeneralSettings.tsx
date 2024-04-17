@@ -5,43 +5,41 @@ import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
-import { useRef, useState } from 'react';
+import { ChangeEvent, FC, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ActionMeta, SelectInstance } from 'react-select';
 import { FormGroup, FormText, Input, Label } from 'reactstrap';
-import {
-    updateClass,
-    updateDescription,
-    updateLabel,
-    updatePredicate,
-    updateResearchFields,
-    updateResearchProblems,
-} from 'slices/templateEditorSlice';
+import { Class, Predicate, Resource } from 'services/backend/types';
+import { updateDescription, updatePredicate, updateResearchFields, updateResearchProblems, updateTargetClass } from 'slices/templateEditorSlice';
 
 export const MAX_DESCRIPTION_LENGTH = 350;
 
-const GeneralSettings = () => {
-    const inputRef = useRef(null);
-    const classAutocompleteRef = useRef(null);
-    const predicateAutocompleteRef = useRef(null);
+const GeneralSettings: FC<{}> = () => {
+    const classAutocompleteRef = useRef<SelectInstance<Class> | null>(null);
+    const predicateAutocompleteRef = useRef<SelectInstance<Predicate> | null>(null);
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
     const [propertyLabel, setPropertyLabel] = useState('');
     const { isEditMode } = useIsEditMode();
 
     const dispatch = useDispatch();
-    const { label, description, predicate, class: clasS, researchProblems, researchFields } = useSelector(state => state.templateEditor);
+    // @ts-expect-error
+    const { description, target_class: targetClass } = useSelector((state) => state.templateEditor);
 
-    const handleChangeLabel = event => {
-        dispatch(updateLabel(event.target.value));
+    const {
+        research_problems: researchProblems,
+        research_fields: researchFields,
+        predicate,
+        // @ts-expect-error
+    } = useSelector((state) => state.templateEditor.relations);
+
+    const handleChangeDescription = (e: ChangeEvent<HTMLInputElement>) => {
+        dispatch(updateDescription(e.target.value));
     };
 
-    const handleChangeDescription = event => {
-        dispatch(updateDescription(event.target.value));
-    };
-
-    const handlePropertySelect = async (selected, { action }) => {
+    const handlePropertySelect = async (selected: Predicate | null, { action }: ActionMeta<Predicate>) => {
         if (action === 'select-option') {
             dispatch(updatePredicate(selected));
-        } else if (action === 'create-option') {
+        } else if (action === 'create-option' && selected) {
             setIsOpenConfirmModal(true);
             setPropertyLabel(selected.label);
         } else if (action === 'clear') {
@@ -49,34 +47,34 @@ const GeneralSettings = () => {
         }
     };
 
-    const handleCreate = ({ id }) => {
+    const handleCreate = ({ id }: { id: string }) => {
         dispatch(updatePredicate({ label: propertyLabel, id }));
         setIsOpenConfirmModal(false);
     };
 
-    const handleClassSelect = async (selected, { action }) => {
+    const handleClassSelect = async (selected: Class | null, { action }: ActionMeta<Class>) => {
         if (action === 'select-option') {
-            dispatch(updateClass(selected));
-        } else if (action === 'create-option') {
+            dispatch(updateTargetClass(selected));
+        } else if (action === 'create-option' && selected) {
             const newClass = await ConfirmClass({
                 label: selected.label,
             });
             if (newClass) {
                 selected.id = newClass.id;
-                dispatch(updateClass(selected));
+                dispatch(updateTargetClass(selected));
             }
             // blur the field allows to focus and open the menu again
             classAutocompleteRef.current && classAutocompleteRef.current.blur();
         } else if (action === 'clear') {
-            dispatch(updateClass(null));
+            dispatch(updateTargetClass(null));
         }
     };
 
-    const handleResearchFieldSelect = selected => {
+    const handleResearchFieldSelect = (selected: Resource[] | null) => {
         dispatch(updateResearchFields(!selected ? [] : selected));
     };
 
-    const handleResearchProblemSelect = selected => {
+    const handleResearchProblemSelect = (selected: Resource[] | null) => {
         dispatch(updateResearchProblems(!selected ? [] : selected));
     };
     return (
@@ -85,43 +83,36 @@ const GeneralSettings = () => {
                 <ConfirmCreatePropertyModal
                     onCreate={handleCreate}
                     label={propertyLabel}
-                    toggle={() => setIsOpenConfirmModal(v => !v)}
+                    toggle={() => setIsOpenConfirmModal((v) => !v)}
                     shouldPerformCreate
                 />
             )}
-            <FormGroup className="mb-4">
-                <Label for="template-name">Name of template</Label>
-                <Input innerRef={inputRef} value={label} onChange={handleChangeLabel} disabled={!isEditMode} id="template-name" />
-            </FormGroup>
 
             <FormGroup className="mb-4">
-                <Label for="target-class">
-                    Target class <span className="text-muted fst-italic">(optional)</span>
-                </Label>
+                <Label for="target-class">Target class</Label>
                 <AutoComplete
                     entityType={ENTITIES.CLASS}
                     placeholder={isEditMode ? 'Select or type to enter a class' : 'No Classes'}
                     onChange={handleClassSelect}
-                    value={clasS}
+                    value={targetClass}
                     autoLoadOption={true}
                     openMenuOnFocus={true}
                     allowCreate={true}
                     isDisabled={!isEditMode}
                     copyValueButton={true}
-                    isClearable
+                    isClearable={false}
                     innerRef={classAutocompleteRef}
                     autoFocus={false}
-                    linkButton={clasS && clasS.id ? reverse(ROUTES.CLASS, { id: clasS.id }) : ''}
+                    linkButton={targetClass && targetClass.id ? reverse(ROUTES.CLASS, { id: targetClass.id }) : ''}
                     linkButtonTippy="Go to class page"
                     inputId="target-class"
                 />
-                {isEditMode && <FormText>Specify the class of this template. If not specified, a class is generated automatically.</FormText>}
             </FormGroup>
             <FormGroup className="mb-4">
                 <Label for="template-description">Description</Label>
                 <Input
                     type="textarea"
-                    value={description}
+                    value={description || ''}
                     onChange={handleChangeDescription}
                     disabled={!isEditMode}
                     id="template-description"

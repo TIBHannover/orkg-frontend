@@ -28,18 +28,18 @@ import { guid } from 'utils';
 const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     const dispatch = useDispatch();
     const editMode = Boolean(valueId);
-    const value = useSelector(state => (valueId ? state.statementBrowser.values.byId[valueId] : null));
-    const property = useSelector(state => state.statementBrowser.properties.byId[editMode ? value.propertyId : propertyId]);
-    const values = useSelector(state => state.statementBrowser.values);
-    const subjectId = useSelector(state => (editMode ? getSubjectIdByValue(state, valueId) : resourceId));
-    const isList = useSelector(state => checkIfIsList({ state, propertyId }));
-    const propertyShape = useSelector(state => getPropertyShapesByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)?.[0]);
+    const value = useSelector((state) => (valueId ? state.statementBrowser.values.byId[valueId] : null));
+    const property = useSelector((state) => state.statementBrowser.properties.byId[editMode ? value.propertyId : propertyId]);
+    const values = useSelector((state) => state.statementBrowser.values);
+    const subjectId = useSelector((state) => (editMode ? getSubjectIdByValue(state, valueId) : resourceId));
+    const isList = useSelector((state) => checkIfIsList({ state, propertyId }));
+    const propertyShape = useSelector((state) => getPropertyShapesByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)?.[0]);
 
     // refactoring: Can be replaced with the id class
-    const valueClass = useSelector(state =>
+    const valueClass = useSelector((state) =>
         getValueClass(getPropertyShapesByResourceIDAndPredicateID(state, subjectId, property?.existingPredicateId)),
     );
-    const isLiteralField = useSelector(state =>
+    const isLiteralField = useSelector((state) =>
         editMode
             ? value._class === ENTITIES.LITERAL
             : isLiteral(getPropertyShapesByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)),
@@ -99,7 +99,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
         }
     };
 
-    const schema = useSelector(state => {
+    const schema = useSelector((state) => {
         const propertyShapes = getPropertyShapesByResourceIDAndPredicateID(state, subjectId, property?.existingPredicateId);
         if (valueClass && [CLASSES.DATE, CLASSES.DECIMAL, CLASSES.STRING, CLASSES.BOOLEAN, CLASSES.INTEGER, CLASSES.URI].includes(valueClass.id)) {
             let propertyShape;
@@ -108,10 +108,10 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
             }
             if (!propertyShape) {
                 propertyShape = {
-                    value: valueClass,
-                    property: { id: property.id, label: property.label },
-                    minInclusive: property.minInclusive,
-                    maxInclusive: property.maxInclusive,
+                    datatype: valueClass,
+                    path: { id: property.id, label: property.label },
+                    min_inclusive: property.min_inclusive,
+                    max_inclusive: property.max_inclusive,
                     pattern: property.pattern,
                 };
             }
@@ -126,14 +126,14 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
         dispatch(fetchTemplatesOfClassIfNeeded(valueClass.id));
     }
 
-    const isBlankNode = useSelector(state => {
+    const isBlankNode = useSelector((state) => {
         if (valueClass && !isLiteralField) {
             if (state.statementBrowser.classes[valueClass.id]?.templateIds) {
                 const { templateIds } = state.statementBrowser.classes[valueClass.id];
                 // check if it's an inline resource
                 for (const templateId of templateIds) {
                     const template = state.statementBrowser.templates[templateId];
-                    if (template && template.hasLabelFormat) {
+                    if (template && !!template.formatted_label) {
                         return template.label;
                     }
                 }
@@ -147,7 +147,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
         }
     });
 
-    const newResources = useSelector(state => {
+    const newResources = useSelector((state) => {
         const newResourcesList = [];
 
         for (const key in state.statementBrowser.resources.byId) {
@@ -198,7 +198,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
      * @param {Array} data array of statement
      * @return {Object} object of statements to use as an entry for fillStatements action
      */
-    const generateStatementsFromExternalData = data => {
+    const generateStatementsFromExternalData = (data) => {
         const statements = { properties: [], values: [] };
         const createdProperties = {};
         for (const statement of data) {
@@ -273,12 +273,12 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                     apiCall = Promise.resolve(newEntity);
                 }
                 await apiCall
-                    .then(async response => {
+                    .then(async (response) => {
                         newEntity = response;
                         if (isList) {
                             await updateList({
                                 id: resourceId,
-                                elements: [...property.valueIds.map(id => values.byId[id].resourceId), newEntity.id],
+                                elements: [...property.valueIds.map((id) => values.byId[id].resourceId), newEntity.id],
                             });
                             // fetch the just created statement to get the ID (the statement ID is not returned when updating the list)
                             // this method might fail if in the mean time another statement is created
@@ -294,7 +294,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                         }
                         return createResourceStatement(resourceId, property?.existingPredicateId, newEntity.id);
                     })
-                    .then(newS => {
+                    .then((newS) => {
                         newStatement = newS;
                     })
                     .catch(() => {
@@ -337,7 +337,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
         if (
             isUniqLabel &&
             inputValue &&
-            selectOptions.map(s => String(s.label).trim().toLowerCase()).includes(String(inputValue).trim().toLowerCase())
+            selectOptions.map((s) => String(s.label).trim().toLowerCase()).includes(String(inputValue).trim().toLowerCase())
         ) {
             setDisabledCreate(true);
         } else {

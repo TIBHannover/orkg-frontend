@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getCountInstances } from 'services/backend/classes';
 
-const useCountInstances = id => {
+const useCountInstances = (id) => {
     const [isLoading, setIsLoading] = useState(false);
     const [countInstances, setCountInstances] = useState(0);
 
@@ -9,9 +9,14 @@ const useCountInstances = id => {
         const getCount = async () => {
             setIsLoading(true);
 
-            const count = await getCountInstances(id);
-            setCountInstances(count.count);
-            setIsLoading(false);
+            try {
+                const count = await getCountInstances(id);
+                setCountInstances(count.count);
+                setIsLoading(false);
+            } catch {
+                setCountInstances(0);
+                setIsLoading(false);
+            }
         };
         getCount();
     }, [id]);

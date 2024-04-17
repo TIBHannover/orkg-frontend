@@ -2,7 +2,7 @@ import { render, screen, waitFor, waitForElementToBeRemoved } from 'testUtils';
 import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
-import { statementBrowserStrictTemplate } from 'components/StatementBrowser/AddProperty/__mocks__/StatementBrowserDataAddProperty';
+import statementBrowserStrictTemplate from 'components/StatementBrowser/AddProperty/__mocks__/StatementBrowserDataAddProperty';
 
 jest.mock(
     'react-flip-move',

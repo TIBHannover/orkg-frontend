@@ -1,4 +1,4 @@
-import { faDiagramProject, faPen, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faDiagramProject, faPen, faSave, faSpinner, faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Title } from 'components/EditModeHeader/EditModeHeader';
 import useParams from 'components/NextJsMigration/useParams';
@@ -6,7 +6,7 @@ import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import { Button, ButtonGroup, Container } from 'reactstrap';
-import { saveTemplate, setDiagramMode } from 'slices/templateEditorSlice';
+import { saveTemplate, setDiagramMode, loadTemplate } from 'slices/templateEditorSlice';
 import styled from 'styled-components';
 
 const PaperHeaderBarContainer = styled.div`
@@ -19,7 +19,7 @@ const PaperHeaderBarContainer = styled.div`
     border-bottom: 1px #d1d3d9 solid;
     box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.13);
     & .title {
-        color: ${props => props.theme.secondaryDarker};
+        color: ${(props) => props.theme.secondaryDarker};
     }
 `;
 
@@ -40,8 +40,8 @@ const AnimationContainer = styled(CSSTransition)`
 const TemplateEditorHeaderBar = () => {
     const dispatch = useDispatch();
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
-    const isSaving = useSelector(state => state.templateEditor.isSaving);
-    const label = useSelector(state => state.templateEditor.label);
+    const isSaving = useSelector((state) => state.templateEditor.isSaving);
+    const label = useSelector((state) => state.templateEditor.label);
     const { id } = useParams();
 
     return (
@@ -56,7 +56,7 @@ const TemplateEditorHeaderBar = () => {
                                 className="float-start"
                                 disabled={isSaving}
                                 style={{ marginLeft: 1 }}
-                                color="secondary"
+                                color="secondary-darker"
                                 onClick={() => {
                                     window.scrollTo({
                                         behavior: 'smooth',
@@ -68,6 +68,17 @@ const TemplateEditorHeaderBar = () => {
                                 {isSaving && <Icon icon={faSpinner} spin />}
                                 {isEditMode && <Icon icon={faSave} />}
                                 {!isSaving ? ' Save' : ' Saving'}
+                            </Button>
+                            <Button
+                                style={{ marginLeft: 1 }}
+                                color="secondary"
+                                size="sm"
+                                onClick={() => {
+                                    dispatch(loadTemplate(id));
+                                    toggleIsEditMode(false);
+                                }}
+                            >
+                                <Icon icon={faClose} className="ms-1" /> Cancel
                             </Button>
                         </ButtonGroup>
                     ) : (

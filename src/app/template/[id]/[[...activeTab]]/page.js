@@ -1,12 +1,13 @@
 'use client';
 
-import { faDiagramProject, faEllipsisV, faPen, faQuestionCircle, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faClose, faDiagramProject, faEllipsisV, faPen, faQuestionCircle, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import NotFound from 'app/not-found';
 import InternalServerError from 'app/error';
+import NotFound from 'app/not-found';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { EditModeContainer, Title } from 'components/EditModeHeader/EditModeHeader';
+import EditableHeader from 'components/EditableHeader';
 import ExportCitation from 'components/ExportCitation/ExportCitation';
 import Link from 'components/NextJsMigration/Link';
 import useParams from 'components/NextJsMigration/useParams';
@@ -20,7 +21,7 @@ import TemplateEditorHeaderBar from 'components/Templates/TemplateEditorHeaderBa
 import TitleBar from 'components/TitleBar/TitleBar';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import useContributor from 'components/hooks/useContributor';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
@@ -38,7 +39,7 @@ import {
     ModalBody,
     ModalHeader,
 } from 'reactstrap';
-import { loadTemplate, saveTemplate, setDiagramMode } from 'slices/templateEditorSlice';
+import { loadTemplate, saveTemplate, setDiagramMode, updateLabel } from 'slices/templateEditorSlice';
 
 const Template = () => {
     const { id } = useParams();
@@ -77,7 +78,7 @@ const Template = () => {
     }, [dispatch, id]);
 
     useEffect(() => {
-        document.title = `${label ? `${label} - ` : ''}Contribution Template - ORKG`;
+        document.title = `${label ? `${label} - ` : ''}Template - ORKG`;
     }, [label]);
 
     if (!isLoading && hasFailed && failureStatus === 500) {
@@ -87,6 +88,10 @@ const Template = () => {
     if (!isLoading && hasFailed) {
         return <NotFound />;
     }
+
+    const handleChangeLabel = (value) => {
+        dispatch(updateLabel(value));
+    };
 
     return (
         <>
@@ -124,26 +129,39 @@ const Template = () => {
                                 </Button>
                             </ButtonGroup>
                         ) : (
-                            <ButtonWithLoading
-                                disabled={isSaving}
-                                style={{ marginLeft: 1 }}
-                                color="secondary-darker"
-                                size="sm"
-                                onClick={async () => {
-                                    window.scrollTo({
-                                        behavior: 'smooth',
-                                        top: 0,
-                                    });
-                                    const tID = await dispatch(saveTemplate(toggleIsEditMode));
-                                    if (tID) {
-                                        router.push(reverse(ROUTES.TEMPLATE, { id: tID }));
-                                    }
-                                }}
-                                isLoading={isSaving}
-                                loadingMessage="Saving"
-                            >
-                                <Icon icon={faSave} className="ms-1" /> Save
-                            </ButtonWithLoading>
+                            <ButtonGroup size="sm">
+                                <ButtonWithLoading
+                                    disabled={isSaving}
+                                    style={{ marginLeft: 1 }}
+                                    color="secondary-darker"
+                                    size="sm"
+                                    onClick={async () => {
+                                        window.scrollTo({
+                                            behavior: 'smooth',
+                                            top: 0,
+                                        });
+                                        const tID = await dispatch(saveTemplate(toggleIsEditMode));
+                                        if (tID) {
+                                            router.push(reverse(ROUTES.TEMPLATE, { id: tID }));
+                                        }
+                                    }}
+                                    isLoading={isSaving}
+                                    loadingMessage="Saving"
+                                >
+                                    <Icon icon={faSave} className="ms-1" /> Save
+                                </ButtonWithLoading>
+                                <Button
+                                    style={{ marginLeft: 1 }}
+                                    color="secondary"
+                                    size="sm"
+                                    onClick={() => {
+                                        dispatch(loadTemplate(id));
+                                        toggleIsEditMode(false);
+                                    }}
+                                >
+                                    <Icon icon={faClose} className="ms-1" /> Cancel
+                                </Button>
+                            </ButtonGroup>
                         )}
                         <ButtonDropdown className="flex-shrink-0" isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                             <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
@@ -180,24 +198,28 @@ const Template = () => {
 
                     <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
                         <div className="mb-2">
-                            <>
-                                <h3 className="pb-2 mb-3" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                            {!editMode ? (
+                                <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                     {label}
                                 </h3>
-                                <ItemMetadata
-                                    item={{
-                                        id,
-                                        created_by: createdBy,
-                                        created_at: createdAt,
-                                        organization_id: organizationId,
-                                        observatory_id: observatoryId,
-                                    }}
-                                    showCreatedAt={true}
-                                    showCreatedBy={true}
-                                    showProvenance={true}
-                                    editMode={editMode}
-                                />
-                            </>
+                            ) : (
+                                <>
+                                    <EditableHeader id={id} value={label} onChange={handleChangeLabel} entityType={ENTITIES.RESOURCE} />
+                                </>
+                            )}
+                            <ItemMetadata
+                                item={{
+                                    id,
+                                    created_by: createdBy,
+                                    created_at: createdAt,
+                                    organization_id: organizationId,
+                                    observatory_id: observatoryId,
+                                }}
+                                showCreatedAt={true}
+                                showCreatedBy={true}
+                                showProvenance={true}
+                                editMode={editMode}
+                            />
                         </div>
                     </div>
                 </Container>

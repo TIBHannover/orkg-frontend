@@ -2,19 +2,26 @@ import { FormGroup, Label, FormText, Input, Table } from 'reactstrap';
 import { updateHasLabelFormat, updateLabelFormat } from 'slices/templateEditorSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+import { FC, ChangeEvent } from 'react';
+import { PropertyShape } from 'services/backend/types';
 
-const Format = () => {
+const Format: FC<{}> = () => {
     const dispatch = useDispatch();
-    const propertyShapes = useSelector(state => state.templateEditor.propertyShapes);
-    const hasLabelFormat = useSelector(state => state.templateEditor.hasLabelFormat);
-    const labelFormat = useSelector(state => state.templateEditor.labelFormat);
+
+    // @ts-expect-error
+    const propertyShapes = useSelector((state) => state.templateEditor.properties);
+    // @ts-expect-error
+    const hasLabelFormat = useSelector((state) => state.templateEditor.hasLabelFormat);
+    // @ts-expect-error
+    const formattedLabel = useSelector((state) => state.templateEditor.formatted_label);
     const { isEditMode } = useIsEditMode();
-    const handleChangeLabelFormat = event => {
-        dispatch(updateLabelFormat(event.target.value));
+
+    const handleChangeLabelFormat = (e: ChangeEvent<HTMLInputElement>) => {
+        dispatch(updateLabelFormat(e.target.value));
     };
 
-    const handleSwitchHasLabelFormat = event => {
-        dispatch(updateHasLabelFormat(event.target.checked));
+    const handleSwitchHasLabelFormat = (e: ChangeEvent<HTMLInputElement>) => {
+        dispatch(updateHasLabelFormat(e.target.checked));
     };
 
     return (
@@ -26,7 +33,6 @@ const Format = () => {
                         checked={hasLabelFormat}
                         id="switchHasLabelFormat"
                         type="switch"
-                        name="customSwitch"
                         disabled={!isEditMode}
                     />{' '}
                     <Label for="switchHasLabelFormat" className="mb-0">
@@ -39,7 +45,7 @@ const Format = () => {
                             <Label for="formatted-label">Formatted label</Label>
                             <Input
                                 placeholder="{P123} to {P456}"
-                                value={labelFormat}
+                                value={formattedLabel}
                                 onChange={handleChangeLabelFormat}
                                 disabled={!isEditMode}
                                 id="formatted-label"
@@ -65,11 +71,11 @@ const Format = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {propertyShapes.map(propertyShape => (
-                                    <tr key={`row${propertyShape.property.id}`}>
-                                        <th scope="row">{propertyShape.property.id}</th>
+                                {propertyShapes.map((propertyShape: PropertyShape) => (
+                                    <tr key={`row${propertyShape.path.id}`}>
+                                        <th scope="row">{propertyShape.path.id}</th>
                                         <td style={{}}>{propertyShape.placeholder}</td>
-                                        <td style={{}}>{propertyShape.property.label}</td>
+                                        <td style={{}}>{propertyShape.path.label}</td>
                                     </tr>
                                 ))}
                             </tbody>

@@ -242,6 +242,70 @@ export type Paper = {
     sdgs: Node[];
 };
 
+export type PropertyShapeUntypedType = {
+    id?: string;
+    label?: string;
+    placeholder: string;
+    description: string;
+    min_count?: number;
+    max_count?: number;
+    path: Node;
+    created_at?: string;
+    created_by?: string;
+};
+
+export type PropertyShapeLiteralType = PropertyShapeUntypedType & {
+    datatype?: Node;
+};
+
+export type PropertyShapeStringType = PropertyShapeLiteralType & {
+    pattern: string;
+};
+
+export type PropertyShapeNumberType = PropertyShapeLiteralType & {
+    min_inclusive: number;
+    max_inclusive: number;
+};
+
+export type PropertyShapeResourceType = PropertyShapeUntypedType & {
+    class?: Node;
+};
+
+export type PropertyShape =
+    | PropertyShapeUntypedType
+    | PropertyShapeLiteralType
+    | PropertyShapeStringType
+    | PropertyShapeNumberType
+    | PropertyShapeResourceType;
+
+export type Template = {
+    id: string;
+    label: string;
+    description: string;
+    formatted_label: string;
+    target_class: Node;
+    relations: { research_fields: Node[]; research_problems: Node[]; predicate?: Node };
+    properties: PropertyShape[];
+    is_closed: boolean;
+    organizations: string[];
+    observatories: string[];
+    created_at: string;
+    created_by: string;
+    visibility: Visibility;
+    unlisted_by: string;
+};
+
+export type CreateTemplateParams = {
+    label: string;
+    target_class: string;
+    relations: { research_fields: string[]; research_problems: string[]; predicate?: string };
+    properties: PropertyShape[];
+    organizations: string[];
+    observatories: string[];
+};
+
+export type UpdateTemplateParams = Partial<Omit<Template, 'id' | 'created_at' | 'created_by' | 'visibility' | 'unlisted_by'>>;
+
 export type ContributionContentsStatements = {
     [key: string]: {
         id: string;

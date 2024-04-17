@@ -100,11 +100,11 @@ StatementBrowserDialog.propTypes = {
     show: PropTypes.bool.isRequired,
     toggleModal: PropTypes.func.isRequired,
     onCloseModal: PropTypes.func,
-    newStore: PropTypes.bool.isRequired,
+    newStore: PropTypes.bool,
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool.isRequired,
-    showExternalDescriptions: PropTypes.bool.isRequired,
+    showExternalDescriptions: PropTypes.bool,
     updateSettings: PropTypes.func.isRequired,
     type: PropTypes.string,
     initialPath: PropTypes.arrayOf(
@@ -116,10 +116,10 @@ StatementBrowserDialog.propTypes = {
     canEditSharedRootLevel: PropTypes.bool,
 };
 
-const mapStateToProps = state => ({ openExistingResourcesInDialog: state.statementBrowser.openExistingResourcesInDialog });
+const mapStateToProps = (state) => ({ openExistingResourcesInDialog: state.statementBrowser.openExistingResourcesInDialog });
 
-const mapDispatchToProps = dispatch => ({
-    updateSettings: data => dispatch(updateSettings(data)),
+const mapDispatchToProps = (dispatch) => ({
+    updateSettings: (data) => dispatch(updateSettings(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(StatementBrowserDialog);

@@ -4,7 +4,7 @@ import StatementActionButton from 'components/StatementBrowser/StatementActionBu
 import { StyledButton } from 'components/StatementBrowser/styled';
 import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Input, InputGroup } from 'reactstrap';
@@ -18,7 +18,7 @@ const EditableHeader = ({ entityType, id, onChange, curatorsOnly = false, value 
     const [isLoading, setIsLoading] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [isOpenCuratorModal, setIsOpenCuratorModal] = useState(false);
-    const isCurator = useSelector(state => state.auth.user?.isCurationAllowed);
+    const isCurator = useSelector((state) => state.auth.user?.isCurationAllowed);
 
     const handleSubmitClick = async () => {
         setIsLoading(true);
@@ -40,6 +40,10 @@ const EditableHeader = ({ entityType, id, onChange, curatorsOnly = false, value 
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        setLabel(value);
+    }, [value]);
 
     const handleCancelClick = () => {
         setIsEditMode(false);
@@ -71,7 +75,7 @@ const EditableHeader = ({ entityType, id, onChange, curatorsOnly = false, value 
             {isEditMode && (
                 <div className="clearfix">
                     <InputGroup>
-                        <Input type="text" maxLength={MAX_LENGTH_INPUT} value={label} onChange={e => setLabel(e.target.value)} />
+                        <Input type="text" maxLength={MAX_LENGTH_INPUT} value={label} onChange={(e) => setLabel(e.target.value)} />
                         <StyledButton className="px-3" outline onClick={handleCancelClick}>
                             Cancel
                         </StyledButton>
@@ -82,7 +86,7 @@ const EditableHeader = ({ entityType, id, onChange, curatorsOnly = false, value 
                 </div>
             )}
             {isLoading && <span className="fa fa-spinner fa-spin" />}
-            {isOpenCuratorModal && <CuratorModal toggle={() => setIsOpenCuratorModal(v => !v)} />}
+            {isOpenCuratorModal && <CuratorModal toggle={() => setIsOpenCuratorModal((v) => !v)} />}
         </div>
     );
 };

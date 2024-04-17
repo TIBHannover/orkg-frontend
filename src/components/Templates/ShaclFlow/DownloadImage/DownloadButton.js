@@ -15,7 +15,7 @@ function downloadImage(dataUrl, imageName) {
 function DownloadButton() {
     const { getNodes } = useReactFlow();
     const [isConvertingToImage, setIsConvertingToImage] = useState(false);
-    const templateID = useSelector(state => state.templateEditor.templateID);
+    const templateID = useSelector((state) => state.templateEditor.id);
 
     const convertFlowToImage = () => {
         // we calculate a transform for the nodes so that all nodes are visible

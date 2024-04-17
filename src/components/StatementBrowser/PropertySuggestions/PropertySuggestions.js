@@ -35,8 +35,8 @@ const AnimationContainer = styled(CSSTransition)`
 
 const PropertySuggestions = () => {
     const dispatch = useDispatch();
-    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
-    const suggestedProperties = useSelector(state => getSuggestedProperties(state, selectedResource));
+    const selectedResource = useSelector((state) => state.statementBrowser.selectedResource);
+    const suggestedProperties = useSelector((state) => getSuggestedProperties(state, selectedResource));
 
     return (
         <Col lg="12">
@@ -44,9 +44,9 @@ const PropertySuggestions = () => {
 
             <ListGroup>
                 <TransitionGroup component={null}>
-                    {suggestedProperties.map(c => (
+                    {suggestedProperties.map((c) => (
                         <AnimationContainer
-                            key={`suggested-property-${c.property.id}`}
+                            key={`suggested-property-${c.path.id}`}
                             classNames="slide-up"
                             className="py-2 d-flex align-items-center px-2"
                             timeout={{ enter: 600, exit: 600 }}
@@ -57,8 +57,8 @@ const PropertySuggestions = () => {
                                     dispatch(
                                         createProperty({
                                             resourceId: selectedResource,
-                                            existingPredicateId: c.property.id,
-                                            label: c.property.label,
+                                            existingPredicateId: c.path.id,
+                                            label: c.path.label,
                                             isTemplate: false,
                                             createAndSelect: true,
                                         }),
@@ -67,14 +67,14 @@ const PropertySuggestions = () => {
                                 className="py-2 px-3"
                                 style={{ cursor: 'pointer' }}
                             >
-                                <DescriptionTooltip id={c.property.id} _class={ENTITIES.PREDICATE}>
+                                <DescriptionTooltip id={c.path.id} _class={ENTITIES.PREDICATE}>
                                     <div className="d-flex">
                                         <div className="flex-grow-1">
-                                            <Icon icon={faPlus} className="me-1 text-muted" /> {c.property.label}
+                                            <Icon icon={faPlus} className="me-1 text-muted" /> {c.path.label}
                                         </div>
                                         <small className="float-end">
                                             <Badge pill className="ms-2">
-                                                {c.value?.label ?? ''}
+                                                {(c.class?.label || c.datatype?.label) ?? ''}
                                             </Badge>
                                         </small>
                                     </div>

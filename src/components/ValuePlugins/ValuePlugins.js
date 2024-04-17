@@ -28,7 +28,7 @@ const ValuePlugins = ({ options = {}, type, children }) => (
 ValuePlugins.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.node]).isRequired,
     type: PropTypes.oneOf([ENTITIES.RESOURCE, ENTITIES.LITERAL]),
-    options: PropTypes.object.isRequired,
+    options: PropTypes.object,
 };
 
 export default ValuePlugins;

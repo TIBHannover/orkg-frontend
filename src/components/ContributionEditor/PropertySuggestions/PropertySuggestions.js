@@ -8,7 +8,7 @@ import { ENTITIES } from 'constants/graphSettings';
 
 const PropertySuggestions = () => {
     const dispatch = useDispatch();
-    const suggestedProperties = useSelector(state => getSuggestedProperties(state));
+    const suggestedProperties = useSelector((state) => getSuggestedProperties(state));
 
     return (
         <>
@@ -22,8 +22,8 @@ const PropertySuggestions = () => {
                                 onClick={() => {
                                     dispatch(
                                         createProperty({
-                                            id: c.property.id,
-                                            label: c.property.label,
+                                            id: c.path.id,
+                                            label: c.path.label,
                                             action: 'select-option',
                                         }),
                                     );
@@ -32,14 +32,14 @@ const PropertySuggestions = () => {
                                 className="py-2 px-3"
                                 style={{ cursor: 'pointer' }}
                             >
-                                <DescriptionTooltip id={c.property.id} _class={ENTITIES.PREDICATE}>
+                                <DescriptionTooltip id={c.path.id} _class={ENTITIES.PREDICATE}>
                                     <div className="d-flex">
                                         <div className="flex-grow-1">
-                                            <Icon icon={faPlus} className="me-1 text-muted" /> {c.property.label}
+                                            <Icon icon={faPlus} className="me-1 text-muted" /> {c.path.label}
                                         </div>
                                         <small className="float-end">
                                             <Badge pill className="ms-2">
-                                                {c.value?.label ?? ''}
+                                                {(c.class?.label || c.datatype?.label) ?? ''}
                                             </Badge>
                                         </small>
                                     </div>

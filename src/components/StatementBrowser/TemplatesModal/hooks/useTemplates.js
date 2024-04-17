@@ -1,12 +1,14 @@
 import useUsedTemplates from 'components/StatementBrowser/TemplatesModal/hooks/useUsedTemplates';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { debounce, differenceBy, uniqBy } from 'lodash';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getResources } from 'services/backend/resources';
-import { getParentResearchFields, getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { getParentResearchFields, statementsUrl } from 'services/backend/statements';
+import { getTemplates, templatesUrl, getFeaturedTemplates } from 'services/backend/templates';
 import { getCommonClasses, getResearchFields, getResearchProblems } from 'slices/contributionEditorSlice';
 import { getResearchProblemsOfContribution } from 'slices/statementBrowserSlice';
+import useSWRInfinite from 'swr/infinite';
+import useSWR from 'swr';
 
 const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => {
     const filterOptions = [
@@ -33,81 +35,79 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
     const [targetFilter, setTargetFilter] = useState(null);
     const pageSize = 25;
     const [templates, setTemplates] = useState([]);
-    const [featuredTemplates, setFeaturedTemplates] = useState([]);
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
-    const [isLoadingFeatured, setIsLoadingFeatured] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [page, setPage] = useState(0);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     const [totalElements, setTotalElements] = useState(0);
 
-    const selectedResource = useSelector(state => (!isContributionEditor ? state.statementBrowser.selectedResource : null));
-
-    // in case of contribution editor, we consider only the research field of the first contribution
-    const researchField = useSelector(state => (!isContributionEditor ? state.viewPaper.researchField?.id : getResearchFields(state)?.[0]));
-    const resource = useSelector(state =>
+    const selectedResource = useSelector((state) => (!isContributionEditor ? state.statementBrowser.selectedResource : null));
+    const resource = useSelector((state) =>
         !isContributionEditor ? selectedResource && state.statementBrowser.resources.byId[selectedResource] : { classes: getCommonClasses(state) },
     );
 
-    const researchProblems = useSelector(state =>
-        !isContributionEditor
-            ? resource?.classes?.includes(CLASSES.CONTRIBUTION)
-                ? getResearchProblemsOfContribution(state, selectedResource)
-                : []
-            : getResearchProblems(state),
+    // in case of contribution editor, we consider only the research field of the first contribution
+    const researchField = useSelector((state) =>
+        !isContributionEditor ? state.viewPaper.paper.research_fields?.[0]?.id : getResearchFields(state)?.[0],
     );
 
-    const { usedTemplates, isLoadingUsedTemplates } = useUsedTemplates({ resourceId: selectedResource });
-    /**
-     * Fetch the templates of a resource
-     *
-     * @param {String} resourceId Resource Id
-     * @param {String} predicateId Predicate Id
-     */
-    const getTemplatesOfResourceId = useCallback(
-        (resourceId, predicateId, p = null) =>
-            getStatementsByObjectAndPredicate({
-                objectId: resourceId,
-                predicateId,
-                page: p !== null ? p : 0,
-                size: pageSize,
-                sortBy: 'created_at',
-                desc: true,
-                returnContent: false,
-            }).then(
-                statements =>
-                    // Filter statement with subjects of type Template
-                    ({
-                        ...statements,
-                        content: statements.content
-                            .filter(statement => statement.subject.classes.includes(CLASSES.NODE_SHAPE))
-                            .map(st => ({ id: st.subject.id, label: st.subject.label })),
-                    }), // return the template Object
-            ),
-        [],
+    const { data: researchFieldParents } = useSWR(researchField ? [researchField, statementsUrl, 'getParentResearchFields'] : null, ([params]) =>
+        getParentResearchFields(params),
     );
+
+    const researchProblems = useSelector((state) => {
+        if (!isContributionEditor) {
+            return resource?.classes?.includes(CLASSES.CONTRIBUTION) ? getResearchProblemsOfContribution(state, selectedResource) : [];
+        }
+        return getResearchProblems(state);
+    });
+
+    const getKey = (pageIndex) => ({
+        page: pageIndex,
+        size: pageSize,
+        researchFields: researchFieldParents.map((r) => r.id),
+        researchProblems,
+    });
+
+    const {
+        data: featuredTemplates,
+        isLoading: isLoadingFeatured,
+        isValidating: isValidatingFeatured,
+    } = useSWRInfinite(
+        (pageIndex) => [getKey(pageIndex), templatesUrl, 'getFeaturedTemplates'],
+        ([params]) => getFeaturedTemplates(params),
+    );
+
+    const isLoadingFeaturedTemplates = isLoadingFeatured || isValidatingFeatured;
+    const { usedTemplates, isLoadingUsedTemplates } = useUsedTemplates({ resourceId: selectedResource });
 
     const loadMoreTemplates = (sf, target, label) => {
         if (label || target || !onlyFeatured) {
             setIsNextPageLoading(true);
             let searchCall = Promise.resolve();
             if (target) {
-                searchCall = getTemplatesOfResourceId(target.id, sf.predicate, page);
-            } else {
-                searchCall = getResources({
-                    include: [CLASSES.NODE_SHAPE],
+                searchCall = getTemplates({
                     page,
+                    ...(sf.predicate === PREDICATES.SHACL_TARGET_CLASS && { targetClass: target.id }),
+                    ...(sf.predicate === PREDICATES.TEMPLATE_OF_RESEARCH_FIELD && { researchField: target.id, includeSubfields: true }),
+                    ...(sf.predicate === PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM && { researchProblem: target.id }),
+                    includeSubfields: true,
+                    size: pageSize,
+                });
+            } else {
+                searchCall = getTemplates({
                     q: label?.trim(),
                     size: pageSize,
+                    page,
                 });
             }
 
-            searchCall.then(result => {
-                setTemplates(prevTemplates => [...prevTemplates, ...result.content]);
+            searchCall.then((result) => {
+                setTemplates((prevTemplates) => [...prevTemplates, ...result.content]);
                 setIsNextPageLoading(false);
                 setHasNextPage(!result.last);
                 setIsLastPageReached(result.last);
-                setPage(prevPage => prevPage + 1);
+                setPage((prevPage) => prevPage + 1);
                 setTotalElements(result.totalElements);
             });
         } else {
@@ -118,44 +118,6 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
         }
     };
 
-    useEffect(() => {
-        const loadFeaturedTemplates = async () => {
-            setIsLoadingFeatured(true);
-            const researchFieldTemplates = researchField
-                ? await getParentResearchFields(researchField).then(parents => [
-                      ...parents.map(rf => getTemplatesOfResourceId(rf.id, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD, 0)),
-                  ])
-                : [];
-
-            const researchProblemsTemplates =
-                researchProblems?.length > 0
-                    ? researchProblems.map(rp => getTemplatesOfResourceId(rp, PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM, 0))
-                    : [];
-
-            Promise.all([...researchFieldTemplates, ...researchProblemsTemplates])
-                .then(fT => {
-                    setFeaturedTemplates(
-                        uniqBy(
-                            fT
-                                .map(c => c.content)
-                                .filter(r => r.length)
-                                .flat(),
-                            'id',
-                        ),
-                    );
-                    setIsLoadingFeatured(false);
-                })
-                .catch(e => {
-                    setFeaturedTemplates([]);
-                    setIsLoadingFeatured(false);
-                });
-        };
-        if (researchField || researchProblems?.length > 0) {
-            loadFeaturedTemplates();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [researchField, getTemplatesOfResourceId, JSON.stringify(researchProblems)]);
-
     const debouncedGetLoadMoreResults = useRef(debounce(loadMoreTemplates, 500));
 
     useEffect(() => {
@@ -163,14 +125,14 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
         debouncedGetLoadMoreResults.current(selectedFilter, targetFilter, labelFilter);
     }, [labelFilter, onlyFeatured, selectedFilter, targetFilter]);
 
-    const handleSelectedFilterChange = selected => {
+    const handleSelectedFilterChange = (selected) => {
         setTemplates([]);
         setLabelFilter('');
         setTargetFilter(null);
         setSelectedFilter(selected);
     };
 
-    const handleLabelFilterChange = e => {
+    const handleLabelFilterChange = (e) => {
         setTemplates([]);
         setIsNextPageLoading(true);
         setHasNextPage(false);
@@ -180,7 +142,7 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
         setLabelFilter(e.target.value);
     };
 
-    const handleTargetFilterChange = selected => {
+    const handleTargetFilterChange = (selected) => {
         setTemplates([]);
         setIsNextPageLoading(true);
         setHasNextPage(false);
@@ -193,13 +155,13 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
     return {
         filterOptions,
         templates: differenceBy(uniqBy(templates, 'id'), usedTemplates, 'id'),
-        featuredTemplates: differenceBy(featuredTemplates, usedTemplates, 'id'),
+        featuredTemplates: differenceBy(featuredTemplates?.[0] ?? [], usedTemplates, 'id'),
         // Hide the delete button for contribution template
-        usedTemplates: usedTemplates.filter(t => t?.classId !== CLASSES.CONTRIBUTION),
+        usedTemplates: usedTemplates.filter((t) => t?.classId !== CLASSES.CONTRIBUTION),
         isLoadingUsedTemplates,
         researchField,
         isNextPageLoading,
-        isLoadingFeatured,
+        isLoadingFeatured: isLoadingFeaturedTemplates,
         hasNextPage,
         labelFilter,
         targetFilter,

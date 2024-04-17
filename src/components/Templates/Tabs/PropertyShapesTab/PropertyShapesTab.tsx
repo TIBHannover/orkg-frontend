@@ -4,35 +4,39 @@ import AddPropertyView from 'components/StatementBrowser/AddProperty/AddProperty
 import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
 import PropertyShape from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/PropertyShape';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, FC, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ActionMeta } from 'react-select';
 import { Col, FormGroup, Input, Label, Row } from 'reactstrap';
+import { Class, Predicate, PropertyShape as PropertyShapeType, PropertyShapeLiteralType, PropertyShapeResourceType } from 'services/backend/types';
 import { updateIsClosed, updatePropertyShapes } from 'slices/templateEditorSlice';
 
-const PropertyShapesTab = () => {
+const PropertyShapesTab: FC<{}> = () => {
     const [showAddProperty, setShowAddProperty] = useState(false);
     const dispatch = useDispatch();
-    const propertyShapes = useSelector(state => state.templateEditor.propertyShapes);
+    // @ts-expect-error
+    const propertyShapes: PropertyShapeType[] = useSelector((state) => state.templateEditor.properties);
     const { isEditMode } = useIsEditMode();
-    const isClosedTemplate = useSelector(state => state.templateEditor.isClosed);
+    // @ts-expect-error
+    const isClosedTemplate = useSelector((state) => state.templateEditor.is_closed);
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
     const [propertyLabel, setPropertyLabel] = useState('');
-    const [propertyIndex, setPropertyIndex] = useState(null);
+    const [propertyIndex, setPropertyIndex] = useState<number | null>(null);
 
-    const handleDeletePropertyShape = index => {
-        dispatch(updatePropertyShapes(propertyShapes.filter((item, j) => index !== j)));
+    const handleDeletePropertyShape = (index: number) => {
+        dispatch(updatePropertyShapes(propertyShapes.filter((item, j: number) => index !== j)));
     };
 
-    const handlePropertiesSelect = async (selected, action, index) => {
+    const handlePropertiesSelect = async (selected: Predicate, action: ActionMeta<Predicate>, index: number) => {
         if (action.action === 'create-option') {
             setIsOpenConfirmModal(true);
             setPropertyLabel(selected.label);
             setPropertyIndex(index);
         } else {
-            const templatePropertyShapes = propertyShapes.map((item, j) => {
+            const templatePropertyShapes = propertyShapes.map((item, j: number) => {
                 const _item = { ...item };
                 if (j === index) {
-                    _item.property = !selected ? null : selected;
+                    _item.path = selected;
                 }
                 return _item;
             });
@@ -40,16 +44,16 @@ const PropertyShapesTab = () => {
         }
     };
 
-    const handleCreate = ({ id }) => {
+    const handleCreate = ({ id }: { id: string }) => {
         let templatePropertyShapes = [];
 
         // when updating existing components the propertyIndex is set, otherwise a new component is added
         if (propertyIndex) {
             const selected = { id, label: propertyLabel };
-            templatePropertyShapes = propertyShapes.map((item, j) => {
+            templatePropertyShapes = propertyShapes.map((item, j: number) => {
                 const _item = { ...item };
                 if (j === propertyIndex) {
-                    _item.property = !selected ? null : selected;
+                    _item.path = selected;
                 }
                 return _item;
             });
@@ -57,13 +61,13 @@ const PropertyShapesTab = () => {
             templatePropertyShapes = [
                 ...propertyShapes,
                 {
-                    property: { id, label: propertyLabel },
+                    path: { id, label: propertyLabel },
                     value: {},
-                    minCount: '0',
-                    maxCount: null,
+                    min_count: '0',
+                    max_count: null,
                     order: null,
-                    maxInclusive: null,
-                    minInclusive: null,
+                    max_inclusive: null,
+                    min_inclusive: null,
                     placeholder: '',
                     description: '',
                 },
@@ -75,21 +79,27 @@ const PropertyShapesTab = () => {
         setPropertyIndex(null);
     };
 
-    const handleClassOfPropertySelect = async (selected, action, index) => {
+    const handleClassOfPropertySelect = async (selected: Class, action: ActionMeta<Class>, index: number) => {
         if (action.action === 'create-option') {
             const newClass = await ConfirmClass({
                 label: selected.label,
             });
             if (newClass) {
-                selected = { id: newClass.id, label: newClass.label };
+                selected = { id: newClass.id, label: newClass.label } as Class;
             } else {
                 return null;
             }
         }
-        const templatePropertyShapes = propertyShapes.map((item, j) => {
+        const templatePropertyShapes = propertyShapes.map((item, j: number) => {
             const _item = { ...item };
             if (j === index) {
-                _item.value = !selected ? null : selected;
+                if (['Decimal', 'Integer', 'String', 'Boolean', 'Date', 'URI'].includes(selected?.id)) {
+                    if ('class' in _item) delete _item.class;
+                    (_item as PropertyShapeLiteralType).datatype = selected;
+                } else {
+                    (_item as PropertyShapeResourceType).class = selected;
+                    if ('datatype' in _item) delete _item.datatype;
+                }
             }
             return _item;
         });
@@ -97,27 +107,27 @@ const PropertyShapesTab = () => {
         dispatch(updatePropertyShapes(templatePropertyShapes));
     };
 
-    const handleSelectNewProperty = ({ id, value: label }) => {
-        const templatePropertyShapes = [...propertyShapes, { property: { id, label }, value: {}, minCount: '0', maxCount: null, order: null }];
+    const handleSelectNewProperty = ({ id, value: label }: { id: string; value: string }) => {
+        const templatePropertyShapes = [...propertyShapes, { path: { id, label }, value: {}, min_count: '0', max_count: null, order: null }];
         dispatch(updatePropertyShapes(templatePropertyShapes));
         setShowAddProperty(false);
     };
 
-    const toggleConfirmNewProperty = async label => {
+    const toggleConfirmNewProperty = async (label: string) => {
         setIsOpenConfirmModal(true);
         setPropertyLabel(label);
         setPropertyIndex(null);
     };
 
     const moveCard = useCallback(
-        (dragIndex, hoverIndex) => {
+        (dragIndex: number, hoverIndex: number) => {
             dispatch(updatePropertyShapes(arrayMove(propertyShapes, dragIndex, hoverIndex)));
         },
         [propertyShapes, dispatch],
     );
 
-    const handleSwitchIsClosedTemplate = event => {
-        dispatch(updateIsClosed(event.target.checked));
+    const handleSwitchIsClosedTemplate = (e: ChangeEvent<HTMLInputElement>) => {
+        dispatch(updateIsClosed(e.target.checked));
     };
 
     return (
@@ -126,7 +136,7 @@ const PropertyShapesTab = () => {
                 <ConfirmCreatePropertyModal
                     onCreate={handleCreate}
                     label={propertyLabel}
-                    toggle={() => setIsOpenConfirmModal(v => !v)}
+                    toggle={() => setIsOpenConfirmModal((v) => !v)}
                     shouldPerformCreate
                 />
             )}
@@ -139,10 +149,10 @@ const PropertyShapesTab = () => {
                 )}
                 {propertyShapes &&
                     propertyShapes.length > 0 &&
-                    propertyShapes.map((templateProperty, index) => (
+                    propertyShapes.map((templateProperty, index: number) => (
                         <PropertyShape
                             id={index}
-                            key={`tc${templateProperty.property.id}`}
+                            key={`tc${templateProperty.path.id}`}
                             handleDeletePropertyShape={handleDeletePropertyShape}
                             moveCard={moveCard}
                             handlePropertiesSelect={handlePropertiesSelect}
@@ -157,7 +167,7 @@ const PropertyShapesTab = () => {
                             handlePropertySelect={handleSelectNewProperty}
                             toggleConfirmNewProperty={toggleConfirmNewProperty}
                             setShowAddProperty={setShowAddProperty}
-                            key={showAddProperty}
+                            key={`p${showAddProperty}`}
                         />
                     </>
                 )}
@@ -168,7 +178,6 @@ const PropertyShapesTab = () => {
                             checked={isClosedTemplate}
                             id="switchIsClosedTemplate"
                             type="switch"
-                            name="customSwitch"
                             disabled={!isEditMode}
                         />{' '}
                         <Label for="switchIsClosedTemplate" className="mb-0">

@@ -12,10 +12,10 @@ const TableCellValueResource = ({ value }) => {
 
     const dispatch = useDispatch();
 
-    const { hasLabelFormat, labelFormat } = useSelector(state => {
+    const { hasLabelFormat, labelFormat } = useSelector((state) => {
         // get all template ids
         let templateIds = [];
-        const filter_classes = value?.classes?.filter(c => c) ?? [];
+        const filter_classes = value?.classes?.filter((c) => c) ?? [];
         for (const c of filter_classes) {
             if (state.contributionEditor?.classes?.[c]) {
                 templateIds = templateIds.concat(state.contributionEditor?.classes[c]?.templateIds);
@@ -27,9 +27,9 @@ const TableCellValueResource = ({ value }) => {
         let labelFormat = '';
         for (const templateId of templateIds) {
             const template = state.contributionEditor.templates[templateId];
-            if (template && template.hasLabelFormat) {
+            if (template && !!template.formatted_label) {
                 hasLabelFormat = true;
-                labelFormat = template.labelFormat;
+                labelFormat = template.formatted_label;
             }
         }
         return { hasLabelFormat, labelFormat };
@@ -52,7 +52,7 @@ const TableCellValueResource = ({ value }) => {
             </Button>
             {isModelOpen && (
                 <StatementBrowserDialog
-                    toggleModal={v => setIsModalOpen(!v)}
+                    toggleModal={(v) => setIsModalOpen(!v)}
                     id={value.id}
                     label={value.label}
                     show

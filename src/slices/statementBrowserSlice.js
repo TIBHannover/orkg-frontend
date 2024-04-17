@@ -11,19 +11,14 @@ import { createLiteral } from 'services/backend/literals';
 import { getEntity } from 'services/backend/misc';
 import { createPredicate } from 'services/backend/predicates';
 import { createResource as createResourceApi, updateResourceClasses as updateResourceClassesApi } from 'services/backend/resources';
-import {
-    createLiteralStatement,
-    createResourceStatement,
-    getStatementsBundleBySubject,
-    getTemplateById,
-    getTemplatesByClass,
-} from 'services/backend/statements';
+import { createLiteralStatement, createResourceStatement, getStatementsBundleBySubject, getTemplatesByClass } from 'services/backend/statements';
+import { getTemplate } from 'services/backend/templates';
 import format from 'string-format';
 import { filterStatementsBySubjectId, guid, LOCATION_CHANGE } from 'utils';
 
 const cookies = new Cookies();
 
-const getPreferenceFromCookies = p => {
+const getPreferenceFromCookies = (p) => {
     const cookieName = `preferences.${p}`;
     return cookies.get(cookieName) ? cookies.get(cookieName) === 'true' : undefined;
 };
@@ -260,7 +255,7 @@ export const statementBrowserSlice = createSlice({
                 }
             }
         },
-        resetLevel: state => {
+        resetLevel: (state) => {
             state.level = 0;
         },
         addResourceHistory: (state, { payload }) => {
@@ -291,10 +286,10 @@ export const statementBrowserSlice = createSlice({
             if (lastResourceId) {
                 state.resourceHistory.byId[lastResourceId] = {
                     ...state.resourceHistory.byId[lastResourceId],
-                    propertyLabel: last(payload.filter(pt => pt._class === ENTITIES.PREDICATE))?.label,
+                    propertyLabel: last(payload.filter((pt) => pt._class === ENTITIES.PREDICATE))?.label,
                 };
             }
-            state.resourceHistory.allIds.unshift(...payload.filter(pt => pt._class !== ENTITIES.PREDICATE).map(pt => pt.id));
+            state.resourceHistory.allIds.unshift(...payload.filter((pt) => pt._class !== ENTITIES.PREDICATE).map((pt) => pt.id));
             payload.map((pt, index) => {
                 if (pt._class !== ENTITIES.PREDICATE) {
                     state.resourceHistory.byId[pt.id] = {
@@ -337,7 +332,7 @@ export const statementBrowserSlice = createSlice({
                 typeof payload.initOnLocationChange === 'boolean' ? payload.initOnLocationChange : state.initOnLocationChange;
             state.keyToKeepStateOnLocationChange = payload.keyToKeepStateOnLocationChange ? payload.keyToKeepStateOnLocationChange : null;
         },
-        clearResourceHistory: state => {
+        clearResourceHistory: (state) => {
             state.level = 0;
             state.resourceHistory = {
                 allIds: [],
@@ -371,7 +366,7 @@ export const statementBrowserSlice = createSlice({
         doneFetchingStatements: (state, { payload: { resourceId } }) => {
             state.isFetchingStatements = false;
         },
-        resetStatementBrowser: state => ({
+        resetStatementBrowser: (state) => ({
             ...initialState,
             preferences: {
                 showClasses: getPreferenceFromCookies('showClasses') ?? false,
@@ -409,10 +404,10 @@ export const statementBrowserSlice = createSlice({
         // templateEngine
         createTemplate: (state, { payload }) => {
             state.templates[payload.id] = payload;
-            if (state.classes[payload.class.id]?.templateIds) {
-                state.classes[payload.class.id]?.templateIds.push(payload.id);
+            if (state.classes[payload.target_class.id]?.templateIds) {
+                state.classes[payload.target_class.id]?.templateIds.push(payload.id);
             } else {
-                state.classes[payload.class.id] = { ...payload.class, templateIds: [payload.id] };
+                state.classes[payload.target_class.id] = { ...payload.target_class, templateIds: [payload.id] };
             }
         },
         setIsFetchingTemplatesOfClass: (state, { payload: { classID, status } }) => {
@@ -431,7 +426,7 @@ export const statementBrowserSlice = createSlice({
             state.templates[templateID].isFetching = status;
         },
     },
-    extraReducers: builder => {
+    extraReducers: (builder) => {
         builder.addCase(LOCATION_CHANGE, (state, { payload }) => {
             // prevent reset location that is triggered by the edit mode query param change
             if (
@@ -506,7 +501,7 @@ export const {
 
 export default statementBrowserSlice.reducer;
 
-export const setInitialPath = data => dispatch => {
+export const setInitialPath = (data) => (dispatch) => {
     data?.length > 0 && dispatch(setResourceHistory(data));
 };
 
@@ -517,7 +512,7 @@ export const setInitialPath = data => dispatch => {
  * @param {string} data.label - The label of the resource.
  * @param {string} data.resourceId - The resource id.
  */
-export const initializeWithoutContribution = data => dispatch => {
+export const initializeWithoutContribution = (data) => (dispatch) => {
     // To initialize:
     // 1. Create a resource (the one that is requested), so properties can be connected to this
     // 2. Select this resource (only a selected resource is shown)
@@ -570,7 +565,7 @@ export const initializeWithoutContribution = data => dispatch => {
  * @return {Promise} Promise object of creating the required properties
  */
 export function initializeWithResource(data) {
-    return dispatch => {
+    return (dispatch) => {
         const { label } = data;
         const { resourceId } = data;
 
@@ -625,11 +620,11 @@ export function getExistingPredicatesByResource(state, resourceId) {
     let { propertyIds } = resource;
     if (propertyIds) {
         propertyIds = resource.propertyIds ? resource.propertyIds : [];
-        propertyIds = propertyIds.map(propertyId => {
+        propertyIds = propertyIds.map((propertyId) => {
             const property = state.statementBrowser.properties.byId[propertyId];
             return property.existingPredicateId;
         });
-        return propertyIds.filter(p => p); // return a list without null values (predicates that aren't in the database)
+        return propertyIds.filter((p) => p); // return a list without null values (predicates that aren't in the database)
     }
     return [];
 }
@@ -735,7 +730,7 @@ export function getPropertyIdByByResourceAndPredicateId(state, resourceId, exist
     const propertyIds = resource.propertyIds ?? [];
     let propertyId;
     if (propertyIds?.length > 0) {
-        propertyId = propertyIds.find(propertyId => {
+        propertyId = propertyIds.find((propertyId) => {
             const property = state.statementBrowser.properties.byId[propertyId];
             return property.existingPredicateId === existingPredicateId;
         });
@@ -753,7 +748,7 @@ export function getPropertyIdByByResourceAndPredicateId(state, resourceId, exist
 export function removeEmptyPropertiesOfClass({ resourceId, classId }) {
     return (dispatch, getState) => {
         const propertyShapes = getPropertyShapesByResourceID(getState(), resourceId, classId);
-        const existingPropertyIdsToRemove = propertyShapes.map(mp => mp.property?.id).filter(p => p);
+        const existingPropertyIdsToRemove = propertyShapes.map((mp) => mp.path?.id).filter((p) => p);
         const resource = getState().statementBrowser.resources.byId[resourceId];
         if (!resource) {
             return [];
@@ -790,24 +785,24 @@ export function createRequiredPropertiesInResource(resourceId) {
         const propertyShapes = getPropertyShapesByResourceID(getState(), resourceId);
         const existingPropertyIds = getExistingPredicatesByResource(getState(), resourceId);
 
-        // Add required properties (minCount >= 1)
+        // Add required properties (min_count >= 1)
         propertyShapes
-            .filter(x => !existingPropertyIds.includes(x.property.id))
-            .map(mp => {
-                if (mp.minCount >= 1) {
+            .filter((x) => !existingPropertyIds.includes(x.path.id))
+            .map((mp) => {
+                if (mp.min_count >= 1) {
                     const propertyId = guid();
                     dispatch(
                         createProperty({
                             propertyId,
                             resourceId,
-                            existingPredicateId: mp.property.id,
-                            label: mp.property.label,
+                            existingPredicateId: mp.path.id,
+                            label: mp.path.label,
                             isExistingProperty: true,
                             isTemplate: false,
                         }),
                     );
                     createdProperties.push({
-                        existingPredicateId: mp.property.id,
+                        existingPredicateId: mp.path.id,
                         propertyId,
                     });
                 }
@@ -835,12 +830,12 @@ export function getResearchProblemsOfContribution(state, resourceId) {
     }
     if (resource && resource.propertyIds) {
         const researchProblemProperty = resource.propertyIds.find(
-            p => state.statementBrowser.properties.byId[p].existingPredicateId === PREDICATES.HAS_RESEARCH_PROBLEM,
+            (p) => state.statementBrowser.properties.byId[p].existingPredicateId === PREDICATES.HAS_RESEARCH_PROBLEM,
         );
         if (researchProblemProperty) {
             const resourcesId = state.statementBrowser.properties.byId[researchProblemProperty].valueIds
-                .filter(v => state.statementBrowser.values.byId[v].isExistingValue)
-                .map(v => state.statementBrowser.values.byId[v].resourceId);
+                .filter((v) => state.statementBrowser.values.byId[v].isExistingValue)
+                .map((v) => state.statementBrowser.values.byId[v].resourceId);
             return uniq(resourcesId);
         }
     }
@@ -881,8 +876,8 @@ export function getTemplateIDsByResourceID(state, resourceId) {
  * @param {String} resourceId Resource ID
  * @return {{
  * id: String,
- * minCount: Number,
- * maxCount: Number,
+ * min_count: Number,
+ * max_count: Number,
  * property: Object,
  * value: Object=,
  * minInclusive:Number,
@@ -906,8 +901,8 @@ export function getPropertyShapesByResourceID(state, resourceId, classId = null)
     let propertyShapes = [];
     for (const templateId of templateIds) {
         const template = state.statementBrowser.templates[templateId];
-        if (template && template.propertyShapes && (!classId || classId === template.class?.id)) {
-            propertyShapes = propertyShapes.concat(template.propertyShapes);
+        if (template && template.properties && (!classId || classId === template.target_class?.id)) {
+            propertyShapes = propertyShapes.concat(template.properties);
         }
     }
     return propertyShapes;
@@ -921,8 +916,8 @@ export function getPropertyShapesByResourceID(state, resourceId, classId = null)
  * @param {String} predicateId Existing Predicate ID
  * @return {{
  * id: String,
- * minCount: Number,
- * maxCount: Number,
+ * min_count: Number,
+ * max_count: Number,
  * property: Object,
  * value: Object=,
  * minInclusive:Number,
@@ -935,10 +930,10 @@ export function getPropertyShapesByResourceIDAndPredicateID(state, resourceId, p
     if (resourcePropertyShapes.length === 0) {
         return [];
     }
-    return resourcePropertyShapes.filter(c => c.property.id === predicateId);
+    return resourcePropertyShapes.filter((c) => c.path.id === predicateId);
 }
 
-export const loadStatementBrowserData = data => dispatch => {
+export const loadStatementBrowserData = (data) => (dispatch) => {
     dispatch(loadData(data));
 };
 
@@ -957,7 +952,7 @@ export function createPropertyAction(data) {
             const resource = getState().statementBrowser.resources.byId[data.resourceId];
 
             if (resource && resource.propertyIds) {
-                const isExistingProperty = resource.propertyIds.find(p => {
+                const isExistingProperty = resource.propertyIds.find((p) => {
                     if (getState().statementBrowser.properties.byId[p].existingPredicateId === data.existingPredicateId) {
                         return true;
                     }
@@ -993,7 +988,7 @@ export function canAddProperty(state, resourceId) {
     // Check if one of the template is strict
     for (const templateId of templateIds) {
         const template = state.statementBrowser.templates[templateId];
-        if (template && template.isClosed) {
+        if (template && template.is_closed) {
             return false;
         }
     }
@@ -1002,7 +997,7 @@ export function canAddProperty(state, resourceId) {
 
 /**
  * Can add value in property resource
- * (compare the number of values with maxCount)
+ * (compare the number of values with max_count)
  * @param {Object} state Current state of the Store
  * @param {String} resourceId Resource ID
  * @param {String} propertyId Property ID
@@ -1013,7 +1008,7 @@ export function canAddValue(state, resourceId, propertyId) {
     if (property) {
         const typePropertyShapes = getPropertyShapesByResourceIDAndPredicateID(state, resourceId, property.existingPredicateId);
         if (typePropertyShapes && typePropertyShapes.length > 0) {
-            if (typePropertyShapes[0].maxCount && property.valueIds.length >= parseInt(typePropertyShapes[0].maxCount)) {
+            if (typePropertyShapes[0].max_count && property.valueIds.length >= parseInt(typePropertyShapes[0].max_count)) {
                 return false;
             }
             return true;
@@ -1025,7 +1020,7 @@ export function canAddValue(state, resourceId, propertyId) {
 
 /**
  * Can delete property in resource
- * (check if minCount>=1)
+ * (check if min_count>=1)
  * @param {Object} state Current state of the Store
  * @param {String} resourceId Resource ID
  * @param {String} propertyId Property ID
@@ -1036,7 +1031,7 @@ export function canDeleteProperty(state, resourceId, propertyId) {
     if (property) {
         const typePropertyShapes = getPropertyShapesByResourceIDAndPredicateID(state, resourceId, property.existingPredicateId);
         if (typePropertyShapes && typePropertyShapes.length > 0) {
-            if (typePropertyShapes[0].minCount >= 1) {
+            if (typePropertyShapes[0].min_count >= 1) {
                 return false;
             }
             return true;
@@ -1057,7 +1052,7 @@ export function getSuggestedProperties(state, resourceId) {
     const propertyShapes = getPropertyShapesByResourceID(state, resourceId);
     const existingPropertyIds = getExistingPredicatesByResource(state, resourceId);
 
-    return propertyShapes.filter(x => !existingPropertyIds.includes(x.property.id));
+    return propertyShapes.filter((x) => !existingPropertyIds.includes(x.path.id));
 }
 
 /**
@@ -1075,11 +1070,12 @@ export const updateResourceClassesAction =
         if (resource) {
             try {
                 if (syncBackend) {
-                    apiResponse = await updateResourceClassesApi(resourceId, uniq(classes?.filter(c => c) ?? []));
+                    apiResponse = await updateResourceClassesApi(resourceId, uniq(classes?.filter((c) => c) ?? []));
                 }
-                dispatch(updateResourceClasses({ resourceId, classes: uniq(classes?.filter(c => c) ?? []) }));
+                dispatch(updateResourceClasses({ resourceId, classes: uniq(classes?.filter((c) => c) ?? []) }));
                 // Fetch templates
-                const templatesOfClassesLoading = classes && classes?.filter(c => c).map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+                const templatesOfClassesLoading =
+                    classes && classes?.filter((c) => c).map((classID) => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
                 // Add required properties
                 Promise.all(templatesOfClassesLoading).then(() => dispatch(createRequiredPropertiesInResource(resourceId)));
             } catch (e) {
@@ -1099,7 +1095,7 @@ export const updateResourceClassesAction =
  * @param {Array=} data.classes - Classes of value
  */
 export function createValueAction(data) {
-    return dispatch => {
+    return (dispatch) => {
         const resourceId = data.existingResourceId ? data.existingResourceId : data._class === ENTITIES.RESOURCE ? guid() : null;
 
         dispatch(
@@ -1111,7 +1107,7 @@ export function createValueAction(data) {
         );
 
         // Dispatch loading template of classes
-        data.classes && data.classes.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+        data.classes && data.classes.map((classID) => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
         return Promise.resolve();
     };
 }
@@ -1126,7 +1122,7 @@ export function createValueAction(data) {
  * @param {Number} data.shared - Indicator number of incoming links to this resource
  * @param {Array} data.classes - Classes of the resource
  */
-export const createResourceAction = data => dispatch => {
+export const createResourceAction = (data) => (dispatch) => {
     dispatch(
         createResource({
             resourceId: data.resourceId ? data.resourceId : guid(),
@@ -1164,7 +1160,7 @@ export function fetchTemplateIfNeeded(templateID) {
     return async (dispatch, getState) => {
         if (shouldFetchTemplate(getState(), templateID)) {
             dispatch(setIsFetchingTemplateData({ templateID, status: true }));
-            const template = await getTemplateById(templateID);
+            const template = await getTemplate(templateID);
 
             // Add template to the global state
             dispatch(createTemplate(template));
@@ -1184,7 +1180,7 @@ export function fetchTemplateIfNeeded(templateID) {
  * @param {String} propertyId - Property ID
  */
 export function isTemplateContextProperty(state, propertyId) {
-    // template.predicate && template?.predicate.id !== PREDICATES.HAS_CONTRIBUTION;
+    // template.relations.predicate && template?.relations.predicate.id !== PREDICATES.HAS_CONTRIBUTION;
     const property = state.statementBrowser.properties.byId[propertyId];
     if (property) {
         for (const valueId of property.valueIds) {
@@ -1195,7 +1191,7 @@ export function isTemplateContextProperty(state, propertyId) {
             for (const templateId of templateIds) {
                 const template = state.statementBrowser.templates[templateId];
 
-                if (template && template?.predicate?.id === property.existingPredicateId) {
+                if (template && template?.relations.predicate?.id === property.existingPredicateId) {
                     return true;
                 }
             }
@@ -1214,30 +1210,30 @@ export function isTemplateContextProperty(state, propertyId) {
  */
 export function fillResourceWithTemplate({ templateID, resourceId, syncBackend = false }) {
     return async (dispatch, getState) =>
-        dispatch(fetchTemplateIfNeeded(templateID)).then(async templateDate => {
+        dispatch(fetchTemplateIfNeeded(templateID)).then(async (templateDate) => {
             const template = templateDate;
             // Check if it's a template
-            if (template && template?.propertyShapes?.length > 0) {
+            if (template && template?.properties?.length > 0) {
                 // TODO : handle the case where the template isFetching
-                if (!template.predicate || template?.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
+                if (!template.relations.predicate || template?.relations.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
                     // update the class of the current resource
                     dispatch(
                         updateResourceClassesAction({
                             resourceId,
-                            classes: [...getState().statementBrowser.resources.byId[resourceId].classes, template.class.id],
+                            classes: [...getState().statementBrowser.resources.byId[resourceId].classes, template.target_class.id],
                             syncBackend,
                         }),
                     );
                     // Add properties
                     const statements = { properties: [], values: [] };
-                    for (const propertyShape of template?.propertyShapes) {
+                    for (const propertyShape of template?.properties) {
                         statements.properties.push({
-                            existingPredicateId: propertyShape.property.id,
-                            label: propertyShape.property.label,
+                            existingPredicateId: propertyShape.path.id,
+                            label: propertyShape.path.label,
                         });
                     }
                     dispatch(fillStatements({ statements, resourceId, syncBackend }));
-                } else if (template.predicate) {
+                } else if (template.relations.predicate) {
                     // Add template to the statement browser
                     const statements = { properties: [], values: [] };
                     const pID = guid();
@@ -1245,13 +1241,13 @@ export function fillResourceWithTemplate({ templateID, resourceId, syncBackend =
                     let instanceResourceId = guid();
                     statements.properties.push({
                         propertyId: pID,
-                        existingPredicateId: template.predicate.id,
-                        label: template.predicate.label,
+                        existingPredicateId: template.relations.predicate.id,
+                        label: template.relations.predicate.label,
                         isAnimated: false,
                         canDuplicate: true,
                     });
                     if (syncBackend) {
-                        const newObject = await createResourceApi(template.label, template.class ? [template.class.id] : []);
+                        const newObject = await createResourceApi(template.label, template.target_class ? [template.target_class.id] : []);
                         instanceResourceId = newObject.id;
                     }
                     statements.values.push({
@@ -1260,15 +1256,15 @@ export function fillResourceWithTemplate({ templateID, resourceId, syncBackend =
                         existingResourceId: instanceResourceId,
                         _class: ENTITIES.RESOURCE,
                         propertyId: pID,
-                        classes: template.class ? [template.class.id] : [],
+                        classes: template.target_class ? [template.target_class.id] : [],
                     });
                     await dispatch(fillStatements({ statements, resourceId, syncBackend }));
                     // Add properties
                     const instanceStatements = { properties: [], values: [] };
-                    for (const propertyShape of template?.propertyShapes) {
+                    for (const propertyShape of template?.properties) {
                         instanceStatements.properties.push({
-                            existingPredicateId: propertyShape.property.id,
-                            label: propertyShape.property.label,
+                            existingPredicateId: propertyShape.path.id,
+                            label: propertyShape.path.label,
                         });
                     }
                     await dispatch(
@@ -1310,7 +1306,7 @@ export function fetchTemplatesOfClassIfNeeded(classID) {
             dispatch(setIsFetchingTemplatesOfClass({ classID, status: true }));
             const templateIds = await getTemplatesByClass(classID);
             dispatch(setIsFetchingTemplatesOfClass({ classID, status: false }));
-            const templates = await Promise.all(templateIds.map(templateId => dispatch(fetchTemplateIfNeeded(templateId)))).catch(e => []);
+            const templates = await Promise.all(templateIds.map((templateId) => dispatch(fetchTemplateIfNeeded(templateId)))).catch((e) => []);
             return templates;
         }
         // Let the calling code know there's nothing to wait for.
@@ -1329,7 +1325,7 @@ export function fetchTemplatesOfClassIfNeeded(classID) {
  * @return {Promise} Promise object of creating the required properties
  */
 export function selectResourceAction(data) {
-    return dispatch => {
+    return (dispatch) => {
         // use redux thunk for async action, for capturing the resource properties
         dispatch(
             selectResource({
@@ -1354,7 +1350,7 @@ export function selectResourceAction(data) {
     };
 }
 
-export const goToResourceHistory = data => (dispatch, getState) => {
+export const goToResourceHistory = (data) => (dispatch, getState) => {
     if (!getState().statementBrowser.resources.byId[data.id]) {
         dispatch(
             createResource({
@@ -1400,7 +1396,7 @@ function shouldFetchStatementsForResource(state, resourceId, depth, nodeType) {
  * @return {Boolean} if the statement should be added or not
  */
 function statementExists(state, statementId) {
-    return !!state.statementBrowser.values.allIds.find(id => state.statementBrowser.values.byId[id].statementId === statementId);
+    return !!state.statementBrowser.values.allIds.find((id) => state.statementBrowser.values.byId[id].statementId === statementId);
 }
 
 /**
@@ -1417,15 +1413,15 @@ export function addStatements(statements, resourceId, depth) {
         resourceStatements = orderBy(
             resourceStatements,
             [
-                resourceStatements => resourceStatements.predicate.label.toLowerCase(),
-                resourceStatements => resourceStatements.index, // in case the statement is part of a list
-                resourceStatements => resourceStatements.object.label.toLowerCase(),
+                (resourceStatements) => resourceStatements.predicate.label.toLowerCase(),
+                (resourceStatements) => resourceStatements.index, // in case the statement is part of a list
+                (resourceStatements) => resourceStatements.object.label.toLowerCase(),
             ],
             ['asc'],
         );
 
         return Promise.all(
-            resourceStatements.map(async statement => {
+            resourceStatements.map(async (statement) => {
                 let addStatement = Promise.resolve();
                 if (!statementExists(getState(), statement.id)) {
                     // Check whether there already exist a property for this, then combine
@@ -1474,7 +1470,7 @@ export function addStatements(statements, resourceId, depth) {
                             .then(() =>
                                 dispatch(
                                     addStatements(
-                                        statements.filter(s => s.subject.id !== resourceId),
+                                        statements.filter((s) => s.subject.id !== resourceId),
                                         statement.object.id,
                                         depth - 1,
                                     ),
@@ -1512,7 +1508,7 @@ export const fetchStatementsForResource =
             dispatch(setIsFetchingStatements({ resourceId }));
             // Get the resource classes
             return getEntity(rootNodeType, resourceId)
-                .then(root => {
+                .then((root) => {
                     // We have custom templates for predicates and classes
                     // so add the corresponding classes on the root node
                     const mapEntitiesClasses = {
@@ -1532,19 +1528,20 @@ export const fetchStatementsForResource =
                         }),
                     );
                     // fetch the statements
-                    return getStatementsBundleBySubject({ id: resourceId, maxLevel: depth }).then(response => {
+                    return getStatementsBundleBySubject({ id: resourceId, maxLevel: depth }).then((response) => {
                         // 1 - collect all classes Ids
                         allClasses = uniq([
                             ...allClasses,
                             ...flatten(
                                 response.statements
-                                    .map(s => s.object)
-                                    .filter(o => o.classes)
-                                    .map(o => o.classes),
+                                    .map((s) => s.object)
+                                    .filter((o) => o.classes)
+                                    .map((o) => o.classes),
                             ),
                         ]);
                         // 3 - load templates
-                        const templatesOfClassesLoading = allClasses && allClasses?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+                        const templatesOfClassesLoading =
+                            allClasses && allClasses?.map((classID) => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
                         return Promise.all(templatesOfClassesLoading)
                             .then(() => dispatch(createRequiredPropertiesInResource(resourceId))) // Add required properties
                             .then(() => dispatch(addStatements(response.statements, resourceId, depth))) // Add statements
@@ -1560,7 +1557,7 @@ export const fetchStatementsForResource =
                             });
                     });
                 })
-                .catch(e => {
+                .catch((e) => {
                     console.log(e);
                     dispatch(
                         setFailedFetchingStatements({
@@ -1578,12 +1575,12 @@ export const fetchStatementsForResource =
  * @param {Object[]} propertyShapes Array of propertyShapes
  * @return {Boolean} if this input field is Literal
  */
-export const isLiteral = propertyShapes => {
+export const isLiteral = (propertyShapes) => {
     let _isLiteral = false;
-    for (const typeId of propertyShapes.map(tc => tc.value?.id)) {
+    for (const typeId of propertyShapes.map((tc) => tc.datatype?.id)) {
         if (
-            DATA_TYPES.filter(dt => dt._class === ENTITIES.LITERAL)
-                .map(t => t.classId)
+            DATA_TYPES.filter((dt) => dt._class === ENTITIES.LITERAL)
+                .map((t) => t.classId)
                 .includes(typeId)
         ) {
             _isLiteral = true;
@@ -1598,8 +1595,12 @@ export const isLiteral = propertyShapes => {
  * @param {Object[]} propertyShapes Array of propertyShapes
  * @return {Object=} the class of value or null
  */
-export const getValueClass = propertyShapes =>
-    propertyShapes && propertyShapes.length > 0 && propertyShapes[0].value && propertyShapes[0].value.id ? propertyShapes[0].value : null;
+export const getValueClass = (propertyShapes) =>
+    propertyShapes &&
+    propertyShapes.length > 0 &&
+    ((propertyShapes[0].class && propertyShapes[0].class.id) || (propertyShapes[0].datatype && propertyShapes[0].datatype.id))
+        ? propertyShapes[0].class || propertyShapes[0].datatype
+        : null;
 
 /**
  * Check if the class has an inline format
@@ -1611,8 +1612,8 @@ export const getValueClass = propertyShapes =>
 export function isInlineResource(state, valueClass) {
     if (
         valueClass &&
-        !DATA_TYPES.filter(dt => dt._class === ENTITIES.LITERAL)
-            .map(t => t.classId)
+        !DATA_TYPES.filter((dt) => dt._class === ENTITIES.LITERAL)
+            .map((t) => t.classId)
             .includes(valueClass.id)
     ) {
         if (state.statementBrowser.classes[valueClass.id] && state.statementBrowser.classes[valueClass.id].templateIds) {
@@ -1620,7 +1621,7 @@ export function isInlineResource(state, valueClass) {
             // check if it's an inline resource
             for (const templateId of templateIds) {
                 const template = state.statementBrowser.templates[templateId];
-                if (template && template.hasLabelFormat) {
+                if (template && !!template.formatted_label) {
                     return template.label;
                 }
             }
@@ -1638,7 +1639,7 @@ export function isInlineResource(state, valueClass) {
  */
 export function isValueHasFormattedLabel(state, valueId) {
     const value = state.statementBrowser.values.byId[valueId];
-    return value.classes?.some(elt => isInlineResource(state, elt));
+    return value.classes?.some((elt) => isInlineResource(state, elt));
 }
 
 /**
@@ -1688,20 +1689,20 @@ export function getTableByValueId(state, valueId) {
     const rowsPropertyId = getPropertyIdByByResourceAndPredicateId(state, value.resourceId, PREDICATES.CSVW_ROWS);
     let cols = state.statementBrowser.properties.byId[columnsPropertyId];
     cols =
-        cols?.valueIds?.map(v => {
+        cols?.valueIds?.map((v) => {
             const c = state.statementBrowser.values.byId[v];
             const titlesPropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_TITLES);
             const numberPropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_NUMBER);
             let titles = state.statementBrowser.properties.byId[titlesPropertyId];
             let number = state.statementBrowser.properties.byId[numberPropertyId];
-            titles = titles?.valueIds?.map(n => state.statementBrowser.values.byId[n])?.[0] ?? {};
-            number = number?.valueIds?.map(n => state.statementBrowser.values.byId[n])?.[0] ?? {};
+            titles = titles?.valueIds?.map((n) => state.statementBrowser.values.byId[n])?.[0] ?? {};
+            number = number?.valueIds?.map((n) => state.statementBrowser.values.byId[n])?.[0] ?? {};
             return { ...c, titles, number };
         }) ?? [];
     let lines = state.statementBrowser.properties.byId[rowsPropertyId];
     let isTitlesColumnsExist = false;
     lines =
-        lines?.valueIds?.map(v => {
+        lines?.valueIds?.map((v) => {
             const r = state.statementBrowser.values.byId[v];
             const cellsPropertyId = getPropertyIdByByResourceAndPredicateId(state, r.resourceId, PREDICATES.CSVW_CELLS);
             const numberPropertyId = getPropertyIdByByResourceAndPredicateId(state, r.resourceId, PREDICATES.CSVW_NUMBER);
@@ -1711,15 +1712,15 @@ export function getTableByValueId(state, valueId) {
             }
             let cells = state.statementBrowser.properties.byId[cellsPropertyId];
             let number = state.statementBrowser.properties.byId[numberPropertyId];
-            number = number?.valueIds?.map(n => state.statementBrowser.values.byId[n])?.[0] ?? {};
+            number = number?.valueIds?.map((n) => state.statementBrowser.values.byId[n])?.[0] ?? {};
             let titles = state.statementBrowser.properties.byId[titlesPropertyId];
-            titles = titles?.valueIds?.map(n => state.statementBrowser.values.byId[n])?.[0] ?? {};
+            titles = titles?.valueIds?.map((n) => state.statementBrowser.values.byId[n])?.[0] ?? {};
             cells =
-                cells?.valueIds?.map(w => {
+                cells?.valueIds?.map((w) => {
                     const c = state.statementBrowser.values.byId[w];
                     const valuePropertyId = getPropertyIdByByResourceAndPredicateId(state, c.resourceId, PREDICATES.CSVW_VALUE);
                     let _value = state.statementBrowser.properties.byId[valuePropertyId];
-                    _value = _value?.valueIds.map(l => state.statementBrowser.values.byId[l])?.[0] ?? {};
+                    _value = _value?.valueIds.map((l) => state.statementBrowser.values.byId[l])?.[0] ?? {};
                     return { ...c, value: _value, row: r };
                 }) ?? [];
             return { ...r, cells, number, titles };
@@ -1727,7 +1728,7 @@ export function getTableByValueId(state, valueId) {
     // Assumption : If the row title is Row X it essentially means that no row title was given by the user
     // Row X is the "default" row title automatically assigned by the Python and R libs.
     if (isTitlesColumnsExist) {
-        const findTitleNotRowX = lines.find(r => !REGEX.CSW_ROW_TITLES_VALUE.test(r.titles?.label?.toLowerCase?.() ?? ''));
+        const findTitleNotRowX = lines.find((r) => !REGEX.CSW_ROW_TITLES_VALUE.test(r.titles?.label?.toLowerCase?.() ?? ''));
         if (!findTitleNotRowX) {
             isTitlesColumnsExist = false;
         }
@@ -1753,7 +1754,7 @@ export function getTableByValueId(state, valueId) {
                   ...cols,
               ]
             : cols,
-        lines: sortBy(lines, obj => parseInt(obj.number.label ?? '0', 10)),
+        lines: sortBy(lines, (obj) => parseInt(obj.number.label ?? '0', 10)),
         isTitlesColumnsExist,
     };
 }

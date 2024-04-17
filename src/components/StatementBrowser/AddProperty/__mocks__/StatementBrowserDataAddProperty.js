@@ -1,4 +1,4 @@
-export const statementBrowserStrictTemplate = {
+const statementBrowserStrictTemplate = {
     statementBrowser: {
         selectedResource: 'R142012',
         selectedProperty: '',
@@ -45,18 +45,14 @@ export const statementBrowserStrictTemplate = {
             R142011: {
                 id: 'R142011',
                 label: 'test',
-                statements: ['S543044', 'S543043'],
-                predicate: null,
-                labelFormat: '',
-                hasLabelFormat: false,
-                isClosed: true,
-                components: [],
-                class: {
+                formatted_label: null,
+                is_closed: true,
+                properties: [],
+                target_class: {
                     id: 'C19000',
                     label: 'test',
                 },
-                researchFields: [],
-                researchProblems: [],
+                relations: { researchFields: [], researchProblems: [], predicate: null },
             },
         },
         classes: {
@@ -69,3 +65,5 @@ export const statementBrowserStrictTemplate = {
         selectedContributionId: '',
     },
 };
+
+export default statementBrowserStrictTemplate;

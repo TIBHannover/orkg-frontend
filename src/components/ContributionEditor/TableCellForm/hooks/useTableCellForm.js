@@ -18,14 +18,14 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
     const dispatch = useDispatch();
     const editMode = Boolean(value);
 
-    const property = useSelector(state => state.contributionEditor.properties[propertyId]);
-    const { previousInputDataType } = useSelector(state => state.contributionEditor);
-    const valueClass = useSelector(state => getValueClass(getPropertyShapesByResourceIDAndPredicateID(state, contributionId, propertyId)));
-    const propertyShape = useSelector(state => getPropertyShapesByResourceIDAndPredicateID(state, contributionId, propertyId)?.[0]);
+    const property = useSelector((state) => state.contributionEditor.properties[propertyId]);
+    const { previousInputDataType } = useSelector((state) => state.contributionEditor);
+    const valueClass = useSelector((state) => getValueClass(getPropertyShapesByResourceIDAndPredicateID(state, contributionId, propertyId)));
+    const propertyShape = useSelector((state) => getPropertyShapesByResourceIDAndPredicateID(state, contributionId, propertyId)?.[0]);
 
-    const canAddValue = useSelector(state => canAddValueAction(state, contributionId, propertyId));
+    const canAddValue = useSelector((state) => canAddValueAction(state, contributionId, propertyId));
 
-    const isLiteralField = useSelector(state => {
+    const isLiteralField = useSelector((state) => {
         if (editMode) {
             return value._class === ENTITIES.LITERAL;
         }
@@ -59,14 +59,14 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
     const [dialogResourceId, setDialogResourceId] = useState(null);
     const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
 
-    const isBlankNode = useSelector(state => {
+    const isBlankNode = useSelector((state) => {
         if (valueClass && !isLiteralField) {
             if (state.contributionEditor.classes[valueClass.id]?.templateIds) {
                 const { templateIds } = state.contributionEditor.classes[valueClass.id];
                 // check if it's an inline resource
                 for (const templateId of templateIds) {
                     const template = state.contributionEditor.templates[templateId];
-                    if (template && template.hasLabelFormat) {
+                    if (template && !!template.formatted_label) {
                         return template.label;
                     }
                 }
@@ -91,13 +91,13 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
                 classes: valueClass ? [valueClass.id] : [],
             }),
         )
-            .then(newResourceId => {
+            .then((newResourceId) => {
                 // 2 - open the dialog on that resource
                 setDialogResourceId(newResourceId);
                 setDialogResourceLabel(isBlankNode);
                 setIsModalOpen(true);
             })
-            .catch(error => {});
+            .catch((error) => {});
     };
 
     useEffect(() => {
@@ -106,7 +106,7 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
         }
     }, [dispatch, valueClass]);
 
-    const schema = useSelector(state => {
+    const schema = useSelector((state) => {
         const propertyShapes = getPropertyShapesByResourceIDAndPredicateID(state, contributionId, propertyId);
         if (valueClass && [CLASSES.DATE, CLASSES.DECIMAL, CLASSES.STRING, CLASSES.BOOLEAN, CLASSES.INTEGER, CLASSES.URI].includes(valueClass.id)) {
             let propertyShape;
@@ -117,8 +117,8 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
                 propertyShape = {
                     value: valueClass,
                     property: { id: property.id, label: property.label },
-                    minInclusive: property.minInclusive,
-                    maxInclusive: property.maxInclusive,
+                    min_inclusive: property.min_inclusive,
+                    max_inclusive: property.max_inclusive,
                     pattern: property.pattern,
                 };
             }
@@ -155,7 +155,7 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
         }
     };
 
-    const updateResourceStatements = resourceId => dispatch(updateResourceStatementsAction(resourceId));
+    const updateResourceStatements = (resourceId) => dispatch(updateResourceStatementsAction(resourceId));
 
     const commitChangeLabel = async (draftLabel, draftDataType) => {
         // Check if the user changed the label
