@@ -49,6 +49,7 @@ const initialState = {
         predicatesList: [],
         fullWidth: cookies.get('useFullWidthForComparisonTable') === 'true' ? cookies.get('useFullWidthForComparisonTable') : false,
         viewDensity: cookies.get('viewDensityComparisonTable') ? cookies.get('viewDensityComparisonTable') : 'spacious',
+        columnWidth: cookies.get('comparisonColumnWidth') ? parseInt(cookies.get('comparisonColumnWidth'), 10) : null,
     },
     properties: [],
     contributions: [],
