@@ -35,6 +35,10 @@ const Link = (props) => {
                             {content}
                         </a>
                     ),
+                    validate: {
+                        // ensure only URLs starting with http(s) are matched
+                        url: (value) => /^https?:\/\//.test(value),
+                    },
                 }}
             >
                 {labelToText}
