@@ -15,6 +15,7 @@ import { useSticky } from 'react-table-sticky';
 import { useMedia } from 'react-use';
 import { Alert } from 'reactstrap';
 import { ReactTableWrapper } from 'components/Comparison/styled';
+import { DEFAULT_COLUMN_WIDTH } from 'components/Comparison/ComparisonHeader/ColumnWidth';
 
 const ComparisonTable = props => {
     const filterControlData = useSelector(state => state.comparison.filterControlData);
@@ -22,6 +23,7 @@ const ComparisonTable = props => {
     const properties = useSelector(state => state.comparison.properties);
     const contributions = useSelector(state => state.comparison.contributions);
     const viewDensity = useSelector(state => state.comparison.configuration.viewDensity);
+    const columnWidth = useSelector(state => state.comparison.configuration.columnWidth);
     const comparisonType = useSelector(state => state.comparison.configuration.comparisonType);
     const transpose = useSelector(state => state.comparison.configuration.transpose);
     const hiddenGroups = useSelector(state => state.comparison.hiddenGroups ?? []);
@@ -107,6 +109,7 @@ const ComparisonTable = props => {
                     <RowHeader cell={cell.value} property={comparisonType === 'MERGE' ? cell.value : getPropertyObjectFromData(data, cell.value)} />
                 ),
                 sticky: !isSmallScreen ? 'left' : undefined,
+                minWidth: DEFAULT_COLUMN_WIDTH,
             },
             // remaining columns
             ...(!transpose ? contributions : properties.filter(property => property.active && data[property.id]))
@@ -131,14 +134,15 @@ const ComparisonTable = props => {
                 })
                 .filter(Boolean),
         ];
-    }, [comparisonType, contributions, data, filterControlData.length, isSmallScreen, properties, transpose]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- columnWidth should be included to ensure that the table is re-rendered when the column width changes
+    }, [comparisonType, contributions, data, filterControlData.length, isSmallScreen, properties, transpose, columnWidth]);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
             columns,
             data: tableData,
             defaultColumn: {
-                minWidth: 250,
+                minWidth: columnWidth ? parseInt(columnWidth, 10) : 250,
                 width: 1,
                 maxWidth: 2,
             },

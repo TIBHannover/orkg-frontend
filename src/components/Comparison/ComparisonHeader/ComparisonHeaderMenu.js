@@ -49,6 +49,7 @@ import {
     setIsOpenVisualizationModal,
     setUseReconstructedDataInVisualization,
 } from 'slices/comparisonSlice';
+import ColumnWidth from 'components/Comparison/ComparisonHeader/ColumnWidth';
 
 const ComparisonHeaderMenu = props => {
     const dispatch = useDispatch();
@@ -254,6 +255,8 @@ const ComparisonHeaderMenu = props => {
                                             <DropdownItem active={viewDensity === 'compact'} onClick={() => handleViewDensity('compact')}>
                                                 Compact
                                             </DropdownItem>
+                                            <DropdownItem divider />
+                                            <ColumnWidth />
                                         </DropdownMenu>
                                     </Dropdown>
                                     <DropdownItem divider />
@@ -458,7 +461,11 @@ const ComparisonHeaderMenu = props => {
             {showPublishDialog && (
                 <Publish toggle={() => setShowPublishDialog(v => !v)} nextVersions={!isLoadingVersions && hasNextVersion ? versions : []} />
             )}
-            <AddContribution onAddContributions={addContributions} showDialog={showAddContribution} toggle={() => setShowAddContribution(v => !v)} />
+            <AddContribution
+                onAddContributions={addContributions}
+                showDialog={showAddContribution}
+                toggle={() => setShowAddContribution(v => !v)}
+            />
             <ExportToLatex showDialog={showLatexDialog} toggle={() => setShowLatexDialog(v => !v)} s />
             <ExportCitation
                 showDialog={showExportCitationsDialog}

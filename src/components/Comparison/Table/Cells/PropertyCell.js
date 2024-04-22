@@ -1,27 +1,28 @@
-import { useState } from 'react';
-import { Button } from 'reactstrap';
-import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import FilterWrapper from 'components/Comparison/Filters/FilterWrapper';
-import FilterModal from 'components/Comparison/Filters/FilterModal';
-import { updateRulesOfProperty, handleToggleGroupVisibility } from 'slices/comparisonSlice';
 import { faFilter, faLevelUpAlt, faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { getRuleByProperty, getDataByProperty, getValuesByProperty } from 'components/Comparison/Filters/helpers';
-import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
-import { ENTITIES } from 'constants/graphSettings';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import FilterModal from 'components/Comparison/Filters/FilterModal';
+import FilterWrapper from 'components/Comparison/Filters/FilterWrapper';
+import { getDataByProperty, getRuleByProperty, getValuesByProperty } from 'components/Comparison/Filters/helpers';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
+import { ENTITIES } from 'constants/graphSettings';
+import { truncate } from 'lodash';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button } from 'reactstrap';
+import { handleToggleGroupVisibility, updateRulesOfProperty } from 'slices/comparisonSlice';
+import styled from 'styled-components';
 
 const FilterButton = styled(Button)`
     &&& {
         position: relative;
         padding: 0 5px;
-        color: ${props => props.theme.lightDarker};
+        color: ${(props) => props.theme.lightDarker};
         &:hover,
         &.active {
-            color: ${props => props.theme.secondaryDarker};
+            color: ${(props) => props.theme.secondaryDarker};
         }
 
         & .cross {
@@ -41,7 +42,7 @@ const FilterButton = styled(Button)`
             content: ' ';
             height: 12px;
             width: 2px;
-            background-color: ${props => props.theme.secondaryDarker};
+            background-color: ${(props) => props.theme.secondaryDarker};
         }
         & .cross:before {
             transform: rotate(45deg);
@@ -56,11 +57,12 @@ const PropertyCell = ({ id, label, property, similar, group, grouped = false, gr
     const [showStatementBrowser, setShowStatementBrowser] = useState(false);
     const [showFilterDialog, setShowFilterDialog] = useState(false);
     const dispatch = useDispatch();
-    const updateRulesFactory = newRules => dispatch(updateRulesOfProperty(newRules, id));
-    const filterControlData = useSelector(state => state.comparison.filterControlData);
-    const isEmbeddedMode = useSelector(state => state.comparison.isEmbeddedMode);
-    const hiddenGroups = useSelector(state => state.comparison.hiddenGroups);
-
+    const updateRulesFactory = (newRules) => dispatch(updateRulesOfProperty(newRules, id));
+    const filterControlData = useSelector((state) => state.comparison.filterControlData);
+    const isEmbeddedMode = useSelector((state) => state.comparison.isEmbeddedMode);
+    const hiddenGroups = useSelector((state) => state.comparison.hiddenGroups);
+    const transpose = useSelector((state) => state.comparison.configuration.transpose);
+    const columnWidth = useSelector((state) => state.comparison.configuration.columnWidth);
     const handleOpenStatementBrowser = () => {
         setShowStatementBrowser(true);
     };
@@ -81,18 +83,26 @@ const PropertyCell = ({ id, label, property, similar, group, grouped = false, gr
                             id={property?.id}
                             _class={ENTITIES.PREDICATE}
                             extraContent={
-                                similar && similar.length ? (
-                                    <tr>
-                                        <td colSpan="2">This property is merged with: {similar?.join?.(', ')}</td>
-                                    </tr>
-                                ) : (
-                                    ''
-                                )
+                                <>
+                                    {similar && similar.length ? (
+                                        <tr>
+                                            <td colSpan="2">This property is merged with: {similar?.join?.(', ')}</td>
+                                        </tr>
+                                    ) : (
+                                        ''
+                                    )}
+                                    {columnWidth && columnWidth < 100 && transpose && (
+                                        <tr>
+                                            <td>Label</td>
+                                            <td>{label}</td>
+                                        </tr>
+                                    )}
+                                </>
                             }
                         >
                             <div className={grouped ? 'ms-2' : ''}>
                                 {grouped && <Icon icon={faLevelUpAlt} rotation={90} className="me-2" />}
-                                {label}
+                                {columnWidth && columnWidth < 100 && transpose ? truncate(label, { length: 10 }) : label}
                                 {similar && similar.length > 0 && '*'}
                             </div>
                         </DescriptionTooltip>
@@ -108,7 +118,7 @@ const PropertyCell = ({ id, label, property, similar, group, grouped = false, gr
                                 <FilterButton
                                     color="link"
                                     disabled={getValuesNr() <= 1}
-                                    onClick={() => setShowFilterDialog(v => !v)}
+                                    onClick={() => setShowFilterDialog((v) => !v)}
                                     className={filterButtonClasses}
                                 >
                                     <Icon size="xs" icon={faFilter} />
@@ -120,7 +130,7 @@ const PropertyCell = ({ id, label, property, similar, group, grouped = false, gr
                                 data={getDataByProperty(filterControlData, id)}
                                 updateRulesOfProperty={updateRulesFactory}
                                 showFilterDialog={showFilterDialog}
-                                toggleFilterDialog={() => setShowFilterDialog(v => !v)}
+                                toggleFilterDialog={() => setShowFilterDialog((v) => !v)}
                             />
                         </>
                     )}
@@ -131,7 +141,7 @@ const PropertyCell = ({ id, label, property, similar, group, grouped = false, gr
                 <Button
                     color="link"
                     className="px-1 py-0 m-0 text-light-darker"
-                    onClick={e => {
+                    onClick={(e) => {
                         e.stopPropagation();
                         dispatch(handleToggleGroupVisibility?.(groupId));
                     }}
@@ -143,7 +153,7 @@ const PropertyCell = ({ id, label, property, similar, group, grouped = false, gr
                 <StatementBrowserDialog
                     show={true}
                     type={ENTITIES.PREDICATE}
-                    toggleModal={() => setShowStatementBrowser(v => !v)}
+                    toggleModal={() => setShowStatementBrowser((v) => !v)}
                     id={property.id}
                     label={property.label}
                 />

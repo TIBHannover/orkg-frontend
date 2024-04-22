@@ -159,7 +159,7 @@ const ComparisonMetaData = () => {
                             )}
                         </div>
 
-                        <div className="d-flex flex-column align-items-end w-100 gap-3">
+                        <div className="d-flex flex-column align-items-end gap-3">
                             {comparisonResource.id && <OrganizationBanner />}
                             <div style={{ marginRight: -25 }}>
                                 <SdgBox sdgs={comparisonResource.sdgs} maxWidth="100%" />
