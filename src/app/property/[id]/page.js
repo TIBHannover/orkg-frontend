@@ -26,8 +26,12 @@ function Property() {
     const [isLoading, setIsLoading] = useState(true);
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
     const params = useParams();
+    const user = useSelector((state) => state.auth.user);
+    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
+    const isUserIsCreator = property.created_by === user?.id;
+    const isDeletionAllowed = isUserIsCreator || isCurationAllowed;
     const propertyId = params.id;
-    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
+
     const { deleteProperty } = useDeleteProperty({ propertyId, redirect: true });
     useEffect(() => {
         const findPredicate = async () => {
@@ -48,8 +52,8 @@ function Property() {
         findPredicate();
     }, [propertyId]);
 
-    const handleHeaderChange = value => {
-        setProperty(prev => ({ ...prev, label: value }));
+    const handleHeaderChange = (value) => {
+        setProperty((prev) => ({ ...prev, label: value }));
     };
 
     return (
@@ -98,7 +102,7 @@ function Property() {
                                     entityType={ENTITIES.PREDICATE}
                                     curatorsOnly={true}
                                 />
-                                {isCurationAllowed && (
+                                {isDeletionAllowed && (
                                     <Button color="danger" size="sm" className="mt-2 mb-3" style={{ marginLeft: 'auto' }} onClick={deleteProperty}>
                                         <Icon icon={faTrash} /> Delete property
                                     </Button>
@@ -108,10 +112,8 @@ function Property() {
                         <ItemMetadata item={property} showCreatedAt={true} showCreatedBy={true} />
                     </Container>
                     <Container className="mt-3 p-1 box rounded">
-
                         <h3 className="ps-4 pt-4">Statements</h3>
                         <div className="ps-4 pb-4 pe-4">
-
                             <StatementBrowser
                                 rootNodeType={ENTITIES.PREDICATE}
                                 enableEdit={isEditMode}
@@ -125,7 +127,6 @@ function Property() {
                             />
                             <PropertyStatements propertyId={propertyId} />
                         </div>
-
                     </Container>
                 </>
             )}
