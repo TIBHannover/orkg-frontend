@@ -3,6 +3,17 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.139.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.138.2...v0.139.0) - 2024-04-22
+
+### Changes
+
+- feat(Comparison): support customizable column width [`#1305`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1305)
+- fix(LinkValuePlugin): exclude text without protocol [`#1308`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1308)
+- feat(UploadPdfModal): disable Grobid extraction when SciKGTeX annotations are present [`#1309`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1309)
+- feat(Property): support deletion of own unused properties [`#1310`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1310)
+- Templates: use new backend endpoints [`#1297`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1297)
+
+---
 ## [v0.138.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.138.1...v0.138.2) - 2024-04-04
 
 ### Changes

@@ -1,6 +1,6 @@
 {
     "name": "orkg-frontend",
-    "version": "0.138.2",
+    "version": "0.139.0",
     "private": true,
     "homepage": "/",
     "dependencies": {
