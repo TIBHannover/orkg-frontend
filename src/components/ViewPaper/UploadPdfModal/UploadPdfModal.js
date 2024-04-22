@@ -6,44 +6,42 @@ import processPdf from 'services/grobid';
 import { extractMetadataPdf } from 'services/orkgNlp';
 
 const UploadPdfModal = ({ toggle, onUpdateData }) => {
-    const handleOnDrop = async files => {
+    const handleOnDrop = async (files) => {
         let title = '';
         let authors = [];
         let extractedContributionData = [];
         let researchField = null;
         let doi = null;
-        try {
-            const processedPdf = await new window.DOMParser().parseFromString(await processPdf({ pdf: files[0] }), 'text/xml');
-            title = processedPdf.querySelector('fileDesc titleStmt title')?.textContent;
-            authors = [...processedPdf.querySelectorAll('fileDesc biblStruct author')].map(author => ({
-                label: [...author.querySelectorAll('forename, surname')].map(name => name?.textContent).join(' '),
-                orcid: author.querySelector('idno[type="ORCID"]')?.textContent ?? undefined,
-            }));
-            doi = processedPdf.querySelector('fileDesc biblStruct idno[type="DOI"]')?.textContent ?? '';
-        } catch (e) {
-            console.error(e);
-        }
+        let hasSciKGTeXAnnotations = false;
 
         try {
-            // Create a new FormData object
             const form = new FormData();
-
-            // Append the PDF file to the FormData object
             form.append('file', files[0]);
-
-            // Make the POST request
             const responseData = await extractMetadataPdf(form);
-
-            // extract ResearchField label
             const extractedResearchField = await getResource(responseData.payload.paper.researchField);
             title = responseData.payload.paper.title;
-            authors = responseData.payload.paper.authors.map(author => author);
+            authors = responseData.payload.paper.authors.map((author) => author);
             extractedContributionData = responseData.payload.paper.contributions;
             researchField = extractedResearchField;
+            hasSciKGTeXAnnotations = true;
         } catch (error) {
-            // Handle errors related to the PDF handling and API request as needed.
             console.error('Something went wrong while parsing the PDF', error);
         }
+
+        if (!hasSciKGTeXAnnotations) {
+            try {
+                const processedPdf = await new window.DOMParser().parseFromString(await processPdf({ pdf: files[0] }), 'text/xml');
+                title = processedPdf.querySelector('fileDesc titleStmt title')?.textContent;
+                authors = [...processedPdf.querySelectorAll('fileDesc biblStruct author')].map((author) => ({
+                    label: [...author.querySelectorAll('forename, surname')].map((name) => name?.textContent).join(' '),
+                    orcid: author.querySelector('idno[type="ORCID"]')?.textContent ?? undefined,
+                }));
+                doi = processedPdf.querySelector('fileDesc biblStruct idno[type="DOI"]')?.textContent ?? '';
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
         onUpdateData({
             extractedContributionData,
             researchField,
