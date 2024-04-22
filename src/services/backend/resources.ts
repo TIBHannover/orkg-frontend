@@ -28,9 +28,28 @@ export const createResource = (label: string, classes: string[] = [], id: string
 
 export const getResource = (id: string): Promise<Resource> => submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`);
 
-export const getResourcesByIds = (ids: string[]): Promise<Resource[]> => Promise.all(ids.map(id => getResource(id)));
+export const getResourcesByIds = (ids: string[]): Promise<Resource[]> => Promise.all(ids.map((id) => getResource(id)));
 
 export const deleteResource = (id: string): Promise<null> => submitDeleteRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' });
+
+export type getResourcesParams = {
+    q?: string | null;
+    exact?: boolean;
+    visibility?: VisibilityFilter;
+    createdBy?: string | null;
+    createdAtStart?: string | null;
+    createdAtEnd?: string | null;
+    include?: string[];
+    exclude?: string[];
+    observatoryId?: string | null;
+    organizationId?: string | null;
+    page?: number;
+    size?: number;
+    sortBy?: SortByOptions;
+    desc?: boolean;
+    baseClass?: string | null;
+    returnContent?: boolean;
+};
 
 /**
  * Fetches resources based on various filter and sorting criteria.
@@ -70,24 +89,7 @@ export const getResources = ({
     desc = true,
     baseClass = null,
     returnContent = false,
-}: {
-    q?: string | null;
-    exact?: boolean;
-    visibility?: VisibilityFilter;
-    createdBy?: string | null;
-    createdAtStart?: string | null;
-    createdAtEnd?: string | null;
-    include?: string[];
-    exclude?: string[];
-    observatoryId?: string | null;
-    organizationId?: string | null;
-    page?: number;
-    size?: number;
-    sortBy?: SortByOptions;
-    desc?: boolean;
-    baseClass?: string | null;
-    returnContent?: boolean;
-}): Promise<PaginatedResponse<Resource> | Resource[]> => {
+}: getResourcesParams): Promise<PaginatedResponse<Resource> | Resource[]> => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
         {
