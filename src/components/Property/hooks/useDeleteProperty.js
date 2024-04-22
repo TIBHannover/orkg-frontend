@@ -25,12 +25,7 @@ function useDeleteProperty({ propertyId, redirect = false }) {
                     router.push(ROUTES.PROPERTIES);
                 }
             } catch (err) {
-                toast.error(
-                    <>
-                        An error occurred, property not deleted <br />
-                        The property cannot be deleted if it is used in statements
-                    </>,
-                );
+                toast.error(err.message);
             }
 
             setIsLoading(false);
