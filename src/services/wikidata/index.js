@@ -1,8 +1,8 @@
 import env from 'components/NextJsMigration/env';
 import { submitGetRequest } from 'network';
 
-export const wikidataUrl = env('WIKIDATA_URL');
-export const wikidataSparql = env('WIKIDATA_SPARQL');
+export const wikidataUrl = env('NEXT_PUBLIC_WIKIDATA_URL');
+export const wikidataSparql = env('NEXT_PUBLIC_WIKIDATA_SPARQL');
 
 export const searchEntity = async ({ value, page, pageSize, type }) => {
     if (!type) {

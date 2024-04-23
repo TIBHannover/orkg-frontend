@@ -1,7 +1,7 @@
-import Link from 'components/NextJsMigration/Link';
 import { faClipboard, faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import Link from 'components/NextJsMigration/Link';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';

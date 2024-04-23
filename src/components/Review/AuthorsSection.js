@@ -10,7 +10,7 @@ import { Button } from 'reactstrap';
 import { convertAuthorsToNewFormat } from 'utils';
 
 const AuthorsSection = () => {
-    const authorResources = useSelector(state => state.review.authorResources);
+    const authorResources = useSelector((state) => state.review.authorResources);
     const [showModal, setShowModal] = useState(false);
 
     return (
@@ -25,7 +25,7 @@ const AuthorsSection = () => {
                 <Icon icon={faPen} /> Edit authors
             </Button>
 
-            <AuthorsModal show={showModal} toggle={() => setShowModal(v => !v)} />
+            <AuthorsModal show={showModal} toggle={() => setShowModal((v) => !v)} />
         </SectionStyled>
     );
 };

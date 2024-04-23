@@ -20,7 +20,7 @@ const TableHeaderRow = ({ property }) => {
     const statements = useSelector(state => state.contributionEditor.statements);
     const statementIds = Object.keys(statements).filter(statementId => statements[statementId].propertyId === property.id);
     const pwcStatementIds = Object.keys(statements).filter(
-        statementId => statements[statementId].propertyId === property.id && statements[statementId].created_by === env('PWC_USER_ID'),
+        statementId => statements[statementId].propertyId === property.id && statements[statementId].created_by === env('NEXT_PUBLIC_PWC_USER_ID'),
     );
 
     const canDeleteProperty = useSelector(state => canDeletePropertyAction(state, property.id));

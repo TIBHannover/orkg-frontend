@@ -6,7 +6,7 @@ export default {
     component: ColoredStatsBox,
 };
 
-const Template: StoryFn<typeof ColoredStatsBox> = args => <ColoredStatsBox {...args} />;
+const Template: StoryFn<typeof ColoredStatsBox> = (args) => <ColoredStatsBox {...args} />;
 
 export const Default = Template.bind({});
 

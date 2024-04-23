@@ -21,12 +21,12 @@ import { Alert, Button } from 'reactstrap';
 import { getAltMetrics } from 'services/altmetric/index';
 import { loadPaper } from 'slices/viewPaperSlice';
 
-const PaperHeader = props => {
+const PaperHeader = (props) => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
-    const viewPaper = useSelector(state => state.viewPaper.paper, shallowEqual);
-    const version = useSelector(state => state.viewPaper.version);
-    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
-    const userId = useSelector(state => state.auth.user?.id);
+    const viewPaper = useSelector((state) => state.viewPaper.paper, shallowEqual);
+    const version = useSelector((state) => state.viewPaper.version);
+    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
+    const userId = useSelector((state) => state.auth.user?.id);
     const [deletePapers] = useDeletePapers({ paperIds: [viewPaper.id], redirect: true });
     const [altMetrics, setAltMetrics] = useState(null);
     const dispatch = useDispatch();
@@ -50,7 +50,7 @@ const PaperHeader = props => {
         loadAltMetrics();
     }, [viewPaper.identifiers?.doi]);
 
-    const handleUpdatePaper = data => {
+    const handleUpdatePaper = (data) => {
         dispatch(loadPaper(data));
         setIsOpenEditModal(false);
     };
@@ -127,7 +127,7 @@ const PaperHeader = props => {
                     {props.editMode && (
                         <ConditionalWrapper
                             condition={isMetadataDisabled}
-                            wrapper={children => (
+                            wrapper={(children) => (
                                 <Tippy content="The metadata cannot be edited because the correctness is manually verified by a human curator">
                                     {children}
                                 </Tippy>
@@ -176,7 +176,7 @@ const PaperHeader = props => {
                     }}
                     afterUpdate={handleUpdatePaper}
                     isOpen={isOpenEditModal}
-                    toggle={v => setIsOpenEditModal(!v)}
+                    toggle={(v) => setIsOpenEditModal(!v)}
                 />
             )}
         </>

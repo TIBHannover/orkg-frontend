@@ -1,4 +1,3 @@
-import fetch, { Headers } from 'cross-fetch';
 import { Cookies } from 'react-cookie';
 
 export const submitGetRequest = (url, headers, send_token = false) => {

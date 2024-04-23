@@ -28,7 +28,7 @@ export default function SignUp() {
     const [dataProtectionIsChecked, setDataProtectionIsChecked] = useState(false);
     const { trackEvent } = useMatomo();
 
-    const signUp = async e => {
+    const signUp = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         let userToken;
@@ -37,15 +37,15 @@ export default function SignUp() {
             registerWithEmailAndPassword(email, password, matchingPassword, name)
                 .then(() => {
                     signInWithEmailAndPassword(email, password)
-                        .then(token => {
+                        .then((token) => {
                             userToken = token.access_token;
-                            cookies.set('token', token.access_token, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
+                            cookies.set('token', token.access_token, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: token.expires_in });
                             tokenExpiresIn = new Date(Date.now() + token.expires_in * 1000).toUTCString();
-                            cookies.set('token_expires_in', tokenExpiresIn, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
+                            cookies.set('token_expires_in', tokenExpiresIn, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: token.expires_in });
                             return getUserInformation();
                             // window.location.reload();
                         })
-                        .then(userData => {
+                        .then((userData) => {
                             dispatch(
                                 updateAuth({
                                     user: {
@@ -68,8 +68,8 @@ export default function SignUp() {
                         })
                         .catch(() => {
                             if (checkCookie()) {
-                                cookies.remove('token', { path: env('PUBLIC_URL') });
-                                cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
+                                cookies.remove('token', { path: env('NEXT_PUBLIC_PUBLIC_URL') });
+                                cookies.remove('token_expires_in', { path: env('NEXT_PUBLIC_PUBLIC_URL') });
                                 setIsLoading(false);
                                 setErrors({ message: 'Something went wrong, please try again' });
                             } else {
@@ -78,7 +78,7 @@ export default function SignUp() {
                             }
                         });
                 })
-                .catch(_e => {
+                .catch((_e) => {
                     setIsLoading(false);
                     if (password !== matchingPassword) {
                         setErrors({ message: 'Your password and confirmation password do not match.' });
@@ -101,7 +101,7 @@ export default function SignUp() {
                 <FormGroup>
                     <Label for="name">Display name</Label>
                     <Input
-                        onChange={e => setName(e.target.value)}
+                        onChange={(e) => setName(e.target.value)}
                         value={name}
                         type="text"
                         name="name"
@@ -115,7 +115,7 @@ export default function SignUp() {
                 <FormGroup>
                     <Label for="Email">Email address</Label>
                     <Input
-                        onChange={e => setEmail(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value)}
                         value={email}
                         type="text"
                         name="email"
@@ -129,7 +129,7 @@ export default function SignUp() {
                 <FormGroup>
                     <Label for="Password">Password</Label>
                     <Input
-                        onChange={e => setPassword(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                         value={password}
                         type="password"
                         name="password"
@@ -142,7 +142,7 @@ export default function SignUp() {
                 <FormGroup>
                     <Label for="matching_password">Confirm Password</Label>
                     <Input
-                        onChange={e => setMatchingPassword(e.target.value)}
+                        onChange={(e) => setMatchingPassword(e.target.value)}
                         value={matchingPassword}
                         type="password"
                         name="matching_password"
@@ -158,7 +158,7 @@ export default function SignUp() {
                     <Input
                         type="checkbox"
                         id="termsConditionIsChecked"
-                        onChange={e => setTermsConditionIsChecked(e.target.checked)}
+                        onChange={(e) => setTermsConditionIsChecked(e.target.checked)}
                         checked={termsConditionIsChecked}
                     />{' '}
                     <Label check for="termsConditionIsChecked" className="mb-0">
@@ -172,7 +172,7 @@ export default function SignUp() {
                     <Input
                         type="checkbox"
                         id="dataProtectionIsChecked"
-                        onChange={e => setDataProtectionIsChecked(e.target.checked)}
+                        onChange={(e) => setDataProtectionIsChecked(e.target.checked)}
                         checked={dataProtectionIsChecked}
                     />{' '}
                     <Label check for="dataProtectionIsChecked" className="mb-0">

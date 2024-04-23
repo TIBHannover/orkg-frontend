@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { LOCATION_CHANGE } from 'components/ResetStoreOnNavigate/ResetStoreOnNavigate';
 import { MISC } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { match } from 'path-to-regexp';
@@ -10,7 +11,7 @@ import {
     loadContributionHistory,
     selectResourceAction as selectResource,
 } from 'slices/statementBrowserSlice';
-import { LOCATION_CHANGE, asyncLocalStorage, guid } from 'utils';
+import { asyncLocalStorage, guid } from 'utils';
 
 const initialState = {
     paper: {

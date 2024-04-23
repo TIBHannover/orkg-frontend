@@ -15,7 +15,7 @@ const PaperHeaderBarContainer = styled.div`
     border-bottom: 1px #d1d3d9 solid;
     box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.13);
     & .title {
-        color: ${props => props.theme.secondaryDarker};
+        color: ${(props) => props.theme.secondaryDarker};
     }
 `;
 
@@ -34,7 +34,7 @@ const AnimationContainer = styled(CSSTransition)`
 `;
 
 function PaperHeaderBar(props) {
-    const title = useSelector(state => state.viewPaper.paper.title);
+    const title = useSelector((state) => state.viewPaper.paper.title);
 
     return (
         <AnimationContainer in={true} appear={true} classNames="fade" timeout={500}>

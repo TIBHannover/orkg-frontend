@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { getFieldChildren } from 'services/backend/researchFields';
+import useParams from 'components/NextJsMigration/useParams';
 import { RESOURCES } from 'constants/graphSettings';
-import { getResearchFieldsStatsWithSubfields } from 'services/backend/stats';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getFieldChildren } from 'services/backend/researchFields';
 import { getResource } from 'services/backend/resources';
+import { getResearchFieldsStatsWithSubfields } from 'services/backend/stats';
 
 function useResearchFieldSelector() {
     const params = useParams();
@@ -15,6 +15,9 @@ function useResearchFieldSelector() {
     const [isLoadingStats, setIsLoadingStats] = useState(true);
 
     const getFieldStats = async fields => {
+        if (!fields) {
+            return;
+        }
         setIsLoadingStats(true);
         const stats = await Promise.all(fields.map(field => getResearchFieldsStatsWithSubfields(field.id)));
         setResearchFieldStats(stats);
@@ -36,7 +39,7 @@ function useResearchFieldSelector() {
             getFieldChildren({ fieldId: selectedFieldId })
                 .then(async fields => {
                     // sort research fields alphabetically
-                    const _fields = fields.map(field => field.resource).sort((a, b) => a.label.localeCompare(b.label));
+                    const _fields = fields?.map(field => field.resource).sort((a, b) => a.label.localeCompare(b.label));
                     setResearchFields(_fields);
                     getFieldStats(_fields);
                     setIsLoading(false);

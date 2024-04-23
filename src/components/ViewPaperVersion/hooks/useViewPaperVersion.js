@@ -20,14 +20,14 @@ const useViewPaperVersion = ({ paperId }) => {
     const loadPaperData = useCallback(() => {
         setIsLoading(true);
         getResource(paperId)
-            .then(async paperResource => {
+            .then(async (paperResource) => {
                 if (!paperResource.classes.includes(CLASSES.PAPER_VERSION)) {
                     setIsLoadingFailed(true);
                     setIsLoading(false);
                     return;
                 }
                 // Load the paper metadata but skip the research field and contribution data
-                getThing({ thingType: THING_TYPES.PAPER_VERSION, thingKey: paperId }).then(async r => {
+                getThing({ thingType: THING_TYPES.PAPER_VERSION, thingKey: paperId }).then(async (r) => {
                     setPaperStatements(r.data.statements);
                     const contributionsNodes = filterSubjectOfStatementsByPredicateAndClass(
                         r.data.statements,
@@ -49,7 +49,7 @@ const useViewPaperVersion = ({ paperId }) => {
                 setIsLoading(false);
                 document.title = paper.title;
             })
-            .catch(e => {
+            .catch((e) => {
                 console.error(e);
                 setIsLoadingFailed(true);
                 setIsLoading(false);

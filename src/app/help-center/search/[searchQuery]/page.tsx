@@ -20,7 +20,7 @@ const HelpCenterSearch = () => {
         const getData = async () => {
             try {
                 setIsLoading(true);
-                const words = searchQuery?.split(' ');
+                const words = searchQuery?.toString().split(' ');
                 let whereCount = 0;
                 const whereString = words
                     ?.map((word) => {

@@ -7,7 +7,7 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
 const PREVENT_EDIT_CASES = [
     {
-        condition: resource => env('PWC_USER_ID') === resource.created_by,
+        condition: resource => env('NEXT_PUBLIC_PWC_USER_ID') === resource.created_by,
         preventModalProps: resource => ({
             header: 'We are working on it!',
             content: (

@@ -19,7 +19,7 @@ const SortableAuthorItem = ({ author, authorIndex, editAuthor, removeAuthor, ite
     const [{ isDragging }, drag, preview] = useDrag({
         type: ItemTypes.AUTHOR_TAG,
         item: { index: authorIndex },
-        collect: monitor => ({
+        collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
         canDrag: () => true && !isDisabled,
@@ -37,7 +37,7 @@ const SortableAuthorItem = ({ author, authorIndex, editAuthor, removeAuthor, ite
             <div
                 className="name"
                 onClick={() => !isDisabled && editAuthor(authorIndex)}
-                onKeyDown={e => (e.key === 'Enter' && !isDisabled ? editAuthor(authorIndex) : undefined)}
+                onKeyDown={(e) => (e.key === 'Enter' && !isDisabled ? editAuthor(authorIndex) : undefined)}
                 role="button"
                 tabIndex={0}
             >
@@ -49,7 +49,7 @@ const SortableAuthorItem = ({ author, authorIndex, editAuthor, removeAuthor, ite
                     <div
                         style={{ padding: '8px' }}
                         onClick={() => editAuthor(authorIndex)}
-                        onKeyDown={e => (e.key === 'Enter' ? editAuthor(authorIndex) : undefined)}
+                        onKeyDown={(e) => (e.key === 'Enter' ? editAuthor(authorIndex) : undefined)}
                         role="button"
                         tabIndex={0}
                     >
@@ -59,7 +59,7 @@ const SortableAuthorItem = ({ author, authorIndex, editAuthor, removeAuthor, ite
                         title={`Delete ${itemLabel}`}
                         className="delete"
                         onClick={() => removeAuthor(authorIndex)}
-                        onKeyDown={e => (e.key === 'Enter' ? removeAuthor(authorIndex) : undefined)}
+                        onKeyDown={(e) => (e.key === 'Enter' ? removeAuthor(authorIndex) : undefined)}
                         role="button"
                         tabIndex={0}
                     >

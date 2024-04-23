@@ -24,7 +24,7 @@ const HelpCenterCategory = () => {
         const getData = async () => {
             try {
                 setIsLoading(true);
-                setCategory((await getHelpCategory(id)).data);
+                setCategory((await getHelpCategory(id.toString())).data);
             } catch (e) {
                 setIsNotFound(true);
             } finally {

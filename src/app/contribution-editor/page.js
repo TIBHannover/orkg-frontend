@@ -39,7 +39,7 @@ const ContributionEditor = () => {
     const numPWCStatement = useSelector(
         state =>
             Object.keys(state.contributionEditor?.statements).filter?.(
-                statementId => state.contributionEditor?.statements[statementId]?.created_by === env('PWC_USER_ID'),
+                statementId => state.contributionEditor?.statements[statementId]?.created_by === env('NEXT_PUBLIC_PWC_USER_ID'),
             )?.length ?? 0,
     );
     const hasPreviousVersion = searchParams.get('hasPreviousVersion');

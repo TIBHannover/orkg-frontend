@@ -15,8 +15,11 @@ body {
 }
 
 .box {
-    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.13);
+    @extend .box-shadow;
     background: #fff;
+}
+.box-shadow {
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.13);
 }
 
 .page {

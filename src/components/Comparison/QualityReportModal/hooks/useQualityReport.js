@@ -19,34 +19,34 @@ const useQualityReport = () => {
     const [feedbacks, setFeedbacks] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    const comparisonResource = useSelector(state => state.comparison.comparisonResource);
-    const properties = useSelector(state => state.comparison.properties);
-    const data = useSelector(state => state.comparison.data);
-    const versions = useSelector(state => state.comparison.versions);
+    const comparisonResource = useSelector((state) => state.comparison.comparisonResource);
+    const properties = useSelector((state) => state.comparison.properties);
+    const data = useSelector((state) => state.comparison.data);
+    const versions = useSelector((state) => state.comparison.versions);
 
     const performQualityEvaluation = useCallback(async () => {
         try {
             setIsLoading(true);
             // get the feedbacks from all different comparison versions
-            const feedbackStatementsPromises = versions.map(version =>
+            const feedbackStatementsPromises = versions.map((version) =>
                 getStatementsBySubjectAndPredicate({ subjectId: version.id, predicateId: PREDICATES.QUALITY_FEEDBACK }),
             );
             const feedbackDataPromises = (await Promise.all(feedbackStatementsPromises)).reduce(
                 (acc, _feedbacks) => [
                     ...acc,
-                    ..._feedbacks.map(feedback => getThing({ thingType: THING_TYPES.QUALITY_REVIEW, thingKey: feedback.object.id })),
+                    ..._feedbacks.map((feedback) => getThing({ thingType: THING_TYPES.QUALITY_REVIEW, thingKey: feedback.object.id })),
                 ],
                 [],
             );
 
-            const _feedbacks = (await Promise.all(feedbackDataPromises)).map(feedback => feedback.data.answers) ?? [];
+            const _feedbacks = (await Promise.all(feedbackDataPromises)).map((feedback) => feedback.data.answers) ?? [];
 
             setFeedbacks(_feedbacks);
 
             // suggestions
             const resourcesAndLiterals = reject(flattenDeep(values(data)), isEmpty);
-            const activeProperties = properties.filter(property => property.active).map(property => getPropertyObjectFromData(data, property));
-            const descriptionPromises = activeProperties.map(property =>
+            const activeProperties = properties.filter((property) => property.active).map((property) => getPropertyObjectFromData(data, property));
+            const descriptionPromises = activeProperties.map((property) =>
                 getStatementsBySubjectAndPredicate({ subjectId: property.id, predicateId: PREDICATES.DESCRIPTION }),
             );
             const propertiesWithoutDescription = (await Promise.all(descriptionPromises))
@@ -55,7 +55,7 @@ const useQualityReport = () => {
                     label: activeProperties[index].label,
                     description: property[0]?.object?.label ?? null,
                 }))
-                .filter(property => !property.description);
+                .filter((property) => !property.description);
 
             const qualityCriteria = [
                 {
@@ -121,8 +121,8 @@ const useQualityReport = () => {
                         'Visit the resources in your comparison and add a "same as" relation to external ontologies. Alternatively, you can replace resources by selecting their Wikidata counterparts instead.',
                     performEvaluation: () => {
                         const passing = !!properties
-                            .map(property => getPropertyObjectFromData(data, property))
-                            .find(property => property.id === PREDICATES.SAME_AS);
+                            .map((property) => getPropertyObjectFromData(data, property))
+                            .find((property) => property.id === PREDICATES.SAME_AS);
                         return {
                             passing,
                             evaluation: passing
@@ -152,8 +152,8 @@ const useQualityReport = () => {
                     solution:
                         'Edit the contributions and add resources instead of literals. Ensure the resource labels are short, making them more suitable to be reused.',
                     performEvaluation: () => {
-                        const resources = resourcesAndLiterals.filter(entity => entity._class === ENTITIES.RESOURCE);
-                        const literals = resourcesAndLiterals.filter(entity => entity._class === ENTITIES.LITERAL);
+                        const resources = resourcesAndLiterals.filter((entity) => entity._class === ENTITIES.RESOURCE);
+                        const literals = resourcesAndLiterals.filter((entity) => entity._class === ENTITIES.LITERAL);
                         const passing = resources.length > 0 && literals.length > 0;
                         return {
                             passing,
@@ -167,8 +167,8 @@ const useQualityReport = () => {
                     solution: 'Update the resource labels in the contributions, or change the resources all together.',
                     performEvaluation: () => {
                         const MAX_LENGTH = 100;
-                        const resources = resourcesAndLiterals.filter(entity => entity._class === ENTITIES.RESOURCE);
-                        const resourcesWithTooLongLabels = resources.filter(resource => resource.label.length > MAX_LENGTH);
+                        const resources = resourcesAndLiterals.filter((entity) => entity._class === ENTITIES.RESOURCE);
+                        const resourcesWithTooLongLabels = resources.filter((resource) => resource.label.length > MAX_LENGTH);
                         const passing = resourcesWithTooLongLabels.length === 0;
                         return {
                             passing,
@@ -227,8 +227,8 @@ const useQualityReport = () => {
                 ...performEvaluation(),
             }));
 
-            setIssueRecommendations(suggestions.filter(suggestion => !suggestion.passing));
-            setPassingRecommendations(suggestions.filter(suggestion => suggestion.passing));
+            setIssueRecommendations(suggestions.filter((suggestion) => !suggestion.passing));
+            setPassingRecommendations(suggestions.filter((suggestion) => suggestion.passing));
             setIsLoading(false);
         } catch (e) {
             console.log(e);
@@ -256,7 +256,7 @@ const useQualityReport = () => {
             feedbacks.length > 0
                 ? feedbacks.reduce((acc, questions) => {
                       const likertQuestions = Object.keys(questions).filter(
-                          questionId => FEEDBACK_QUESTIONS.find(question => question.id === parseInt(questionId, 10))?.input === 'likert',
+                          (questionId) => FEEDBACK_QUESTIONS.find((question) => question.id === parseInt(questionId, 10))?.input === 'likert',
                       );
                       return (
                           acc +

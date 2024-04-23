@@ -1,4 +1,5 @@
 import { faEllipsis, faPen } from '@fortawesome/free-solid-svg-icons';
+import Image from 'components/NextJsMigration/Image';
 import Link from 'components/NextJsMigration/Link';
 import ActionButtonView from 'components/StatementBrowser/StatementActionButton/ActionButtonView';
 import SdgModal from 'components/SustainableDevelopmentGoals/SdgModal/SdgModal';
@@ -46,9 +47,9 @@ const SdgBox: FC<SdgBoxProps> = ({ handleSave, sdgs = [], maxWidth = 200, maxIte
                             className="position-relative position-relative me-1 mb-1"
                             key={sdg.id}
                         >
-                            <img
+                            <Image
                                 src={getImage(sdg.id)}
-                                style={{ width: 65 }}
+                                style={{ width: 65, height: 'auto' }}
                                 className="rounded"
                                 alt={`Sustainable Development Goal ${getSdgNumber(sdg.id)}`}
                             />

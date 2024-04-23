@@ -61,7 +61,7 @@ const TableCellButtons = ({ onEdit = null, onDelete = null, backgroundColor, sty
                     title="Edit"
                     icon={faPen}
                     action={onEdit}
-                    isDisabled={env('PWC_USER_ID') === value?.created_by}
+                    isDisabled={env('NEXT_PUBLIC_PWC_USER_ID') === value?.created_by}
                 />
             )}
 

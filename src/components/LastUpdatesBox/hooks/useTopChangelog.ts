@@ -20,15 +20,15 @@ function useTopChangelog({ researchFieldId, pageSize = 30 }: { researchFieldId: 
                 page: _page,
                 size: pageSize,
             })
-                .then(result => {
-                    setActivities(prevResources => orderBy([...prevResources, ...(result.content || [])], ['created_at'], ['desc']));
+                .then((result) => {
+                    setActivities((prevResources) => orderBy([...prevResources, ...(result.content || [])], ['created_at'], ['desc']));
                     setIsLoading(false);
                     setHasNextPage(!result.last);
                     setIsLastPageReached(result.last);
                     setTotalElements(result.totalElements);
                     setPage(page + 1);
                 })
-                .catch(error => {
+                .catch((error) => {
                     setIsLoading(false);
                     setHasNextPage(false);
                     setIsLastPageReached(page > 1);

@@ -43,7 +43,7 @@ const ContributorsBox: FC<ContributorsBoxProps> = ({ researchFieldId }) => {
                 )}
                 {!isLoading && contributors?.length > 4 && (
                     <div className="text-center mt-3">
-                        <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
+                        <Button size="sm" onClick={() => setOpenModal((v) => !v)} color="light">
                             View more
                         </Button>
                         {openModal && <ContributorsModal openModal={openModal} setOpenModal={setOpenModal} researchFieldId={researchFieldId} />}

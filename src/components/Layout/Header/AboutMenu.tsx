@@ -73,7 +73,7 @@ const AboutMenu = (closeMenu: () => void) => {
                         return null;
                     }
                     return (
-                        <StyledButtonDropdown key={category.attributes.label} direction="right" className="w-100 nav inNavbar">
+                        <StyledButtonDropdown key={category.attributes.label} direction="end" className="w-100 nav inNavbar">
                             <DropdownToggle
                                 onClick={() => (subItems.length > 0 ? null : closeMenu())}
                                 href={reverse(ROUTES.ABOUT_NO_SLUG_ID, {})}
@@ -89,7 +89,6 @@ const AboutMenu = (closeMenu: () => void) => {
                                         <DropdownItem
                                             key={id}
                                             tag={Link}
-                                            end
                                             href={reverseWithSlug(ROUTES.ABOUT, { id, slug: title })}
                                             active={pathname === reverseWithSlug(ROUTES.ABOUT, { id, slug: title })}
                                             onClick={() => closeMenu()}

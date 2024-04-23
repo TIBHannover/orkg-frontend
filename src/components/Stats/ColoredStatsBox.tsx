@@ -6,25 +6,25 @@ import CountUp from 'react-countup';
 import { FC } from 'react';
 
 const StatsBoxStyled = styled(Col)`
-    color: ${props => props.theme.bodyColor};
+    color: ${(props) => props.theme.bodyColor};
     padding: 0 !important;
     display: flex;
     min-height: 74px !important;
     position: relative;
     & a:hover {
         text-decoration: none;
-        color: ${props => props.theme.primary};
+        color: ${(props) => props.theme.primary};
         .number {
-            color: ${props => props.theme.primary};
+            color: ${(props) => props.theme.primary};
         }
     }
     & a {
-        color: ${props => props.theme.bodyColor};
+        color: ${(props) => props.theme.bodyColor};
     }
     .number {
         font-size: 26px;
         line-height: 1;
-        color: ${props => props.theme.dark};
+        color: ${(props) => props.theme.dark};
         white-space: nowrap;
     }
     transition: color 0.5s ease;

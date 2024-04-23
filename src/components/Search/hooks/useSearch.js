@@ -31,7 +31,7 @@ export const useSearch = () => {
     const [currentPage, setCurrentPage] = useState({});
     const [, setIsLastPageReached] = useState({});
 
-    const isLoading = () => Object.keys(isNextPageLoading).every(v => isNextPageLoading[v] === true) || isLoadingFilterClasses;
+    const isLoading = () => Object.keys(isNextPageLoading).every((v) => isNextPageLoading[v] === true) || isLoadingFilterClasses;
 
     const loadMoreResults = async (filterType, page = 0) => {
         if (!searchTerm || searchTerm.length === 0) {
@@ -44,7 +44,7 @@ export const useSearch = () => {
             searchQuery = searchTerm;
         }
 
-        setIsNextPageLoading(prev => ({ ...prev, [filterType]: true }));
+        setIsNextPageLoading((prev) => ({ ...prev, [filterType]: true }));
 
         let resultsResponse = [];
 
@@ -61,7 +61,7 @@ export const useSearch = () => {
                     page,
                     size: itemsPerFilter,
                     q: searchQuery,
-                    exclude: DEFAULT_FILTERS.map(df => df.id).concat(IGNORED_CLASSES),
+                    exclude: DEFAULT_FILTERS.map((df) => df.id).concat(IGNORED_CLASSES),
                     returnContent: true,
                 });
             } else if (filterType === ENTITIES.CLASS) {
@@ -101,7 +101,7 @@ export const useSearch = () => {
                 });
                 const statements = listStatements.length > 0 ? await getStatementsByObject({ id: listStatements[0].subject.id }) : null;
                 if (statements) {
-                    const hasAuthorsStatements = statements.find(statement => statement.predicate.id === PREDICATES.HAS_AUTHORS);
+                    const hasAuthorsStatements = statements.find((statement) => statement.predicate.id === PREDICATES.HAS_AUTHORS);
                     if (hasAuthorsStatements) {
                         resultsResponse.push({
                             label: searchQuery,
@@ -118,14 +118,14 @@ export const useSearch = () => {
         }
 
         if (resultsResponse.length > 0) {
-            setResults(prev => ({ ...prev, [filterType]: [...(page > 0 ? prev[filterType] : []), ...resultsResponse] }));
-            setIsNextPageLoading(prev => ({ ...prev, [filterType]: false }));
-            setHasNextPage(prev => ({ ...prev, [filterType]: !(resultsResponse.length < itemsPerFilter) }));
-            setCurrentPage(prev => ({ ...prev, [filterType]: page + 1 }));
+            setResults((prev) => ({ ...prev, [filterType]: [...(page > 0 ? prev[filterType] : []), ...resultsResponse] }));
+            setIsNextPageLoading((prev) => ({ ...prev, [filterType]: false }));
+            setHasNextPage((prev) => ({ ...prev, [filterType]: !(resultsResponse.length < itemsPerFilter) }));
+            setCurrentPage((prev) => ({ ...prev, [filterType]: page + 1 }));
         } else {
-            setIsNextPageLoading(prev => ({ ...prev, [filterType]: false }));
-            setHasNextPage(prev => ({ ...prev, [filterType]: false }));
-            setIsLastPageReached(prev => ({ ...prev, [filterType]: true }));
+            setIsNextPageLoading((prev) => ({ ...prev, [filterType]: false }));
+            setHasNextPage((prev) => ({ ...prev, [filterType]: false }));
+            setIsLastPageReached((prev) => ({ ...prev, [filterType]: true }));
         }
     };
 
@@ -135,19 +135,19 @@ export const useSearch = () => {
             const _selectedFilters = !isEmpty(searchParams.get('types')) ? searchParams.get('types')?.split(',') : [];
             if (!_selectedFilters || _selectedFilters.length === 0) {
                 setIsLoadingFilterClasses(false);
-                const _classes = searchParams.get('createdBy') ? DEFAULT_FILTERS.filter(df => df.isCreatedByActive) : DEFAULT_FILTERS;
+                const _classes = searchParams.get('createdBy') ? DEFAULT_FILTERS.filter((df) => df.isCreatedByActive) : DEFAULT_FILTERS;
                 setSelectedFilters(_classes);
                 for (const filter of _classes) {
                     loadMoreResults(filter.id);
                 }
             } else {
-                const classesCalls = _selectedFilters.map(classID => {
-                    if (DEFAULT_FILTERS.map(df => df.id).includes(classID)) {
-                        return DEFAULT_FILTERS.find(df => df.id === classID);
+                const classesCalls = _selectedFilters.map((classID) => {
+                    if (DEFAULT_FILTERS.map((df) => df.id).includes(classID)) {
+                        return DEFAULT_FILTERS.find((df) => df.id === classID);
                     }
                     return getClassById(classID);
                 });
-                return Promise.all(classesCalls).then(classes => {
+                return Promise.all(classesCalls).then((classes) => {
                     setIsLoadingFilterClasses(false);
                     setSelectedFilters(classes);
                     for (const filter of _selectedFilters) {

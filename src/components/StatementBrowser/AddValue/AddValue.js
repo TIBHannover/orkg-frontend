@@ -19,9 +19,9 @@ const AddValue = ({ isDisabled = false, propertyId, resourceId, syncBackend }) =
     });
 
     const [showAddValue, setShowAddValue] = useState(false);
-    const isAddingValue = useSelector(state => state.statementBrowser.properties.byId[propertyId].isAddingValue ?? false);
-    const paperTitle = useSelector(state => state.viewPaper.title);
-    const abstract = useSelector(state => state.viewPaper.abstract);
+    const isAddingValue = useSelector((state) => state.statementBrowser.properties.byId[propertyId].isAddingValue ?? false);
+    const paperTitle = useSelector((state) => state.viewPaper.title);
+    const abstract = useSelector((state) => state.viewPaper.abstract);
 
     const [templateIsLoading] = useState(false); // to show loading indicator of the template if the value class has a template
 
@@ -30,7 +30,7 @@ const AddValue = ({ isDisabled = false, propertyId, resourceId, syncBackend }) =
             {modal && (
                 <StatementBrowserDialog
                     show={modal}
-                    toggleModal={() => setModal(prev => !prev)}
+                    toggleModal={() => setModal((prev) => !prev)}
                     id={dialogResourceId}
                     label={dialogResourceLabel}
                     newStore={false}

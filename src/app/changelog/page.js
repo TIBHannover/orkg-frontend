@@ -4,7 +4,7 @@ import { Component } from 'react';
 import { Container } from 'reactstrap';
 import { marked } from 'marked';
 import TitleBar from 'components/TitleBar/TitleBar';
-import changelogPath from 'app/changelog/CHANGELOG.md';
+import changelogPath from '../../../CHANGELOG.md';
 
 class Changelog extends Component {
     state = {
@@ -15,18 +15,18 @@ class Changelog extends Component {
         document.title = 'Changelog - ORKG';
 
         // NEXT-CODE
-        // this.setState({
-        //     changelogText: marked(changelogPath),
-        // });
+        this.setState({
+            changelogText: marked(changelogPath),
+        });
 
         // CRA-CODE
-        fetch(changelogPath)
-            .then(response => response.text())
-            .then(text => {
-                this.setState({
-                    changelogText: marked(text),
-                });
-            });
+        // fetch(changelogPath)
+        //     .then(response => response.text())
+        //     .then(text => {
+        //         this.setState({
+        //             changelogText: marked(text),
+        //         });
+        //     });
     };
 
     render() {

@@ -7,7 +7,7 @@ import { getOrganization } from 'services/backend/organizations';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 
 function useProvenance() {
-    const viewPaper = useSelector(state => state.viewPaper.paper);
+    const viewPaper = useSelector((state) => state.viewPaper.paper);
     const [isLoadingProvenance, setIsLoadingProvenance] = useState(true);
     const [observatoryInfo, setObservatoryInfo] = useState(null);
     const [organizationInfo, setOrganizationInfo] = useState(null);
@@ -39,7 +39,7 @@ function useProvenance() {
         const loadCreator = () => {
             if (viewPaper.created_by && viewPaper.created_by !== MISC.UNKNOWN_ID) {
                 getContributorInformationById(viewPaper.created_by)
-                    .then(creator => {
+                    .then((creator) => {
                         setCreatedBy(creator);
                     })
                     .catch(() => setCreatedBy(null));
@@ -50,9 +50,9 @@ function useProvenance() {
 
         const loadVersions = (resourceId, list) => {
             getStatementsBySubjectAndPredicate({ subjectId: resourceId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION })
-                .then(response => {
+                .then((response) => {
                     if (response.length > 0) {
-                        getContributorInformationById(response[0].object.created_by).then(user => {
+                        getContributorInformationById(response[0].object.created_by).then((user) => {
                             list.push({ created_at: response[0].object.created_at, created_by: user, publishedResource: response[0].object });
                         });
                         loadVersions(response[0].object.id, list);

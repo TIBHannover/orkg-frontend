@@ -26,7 +26,7 @@ const useViewPaper = ({ paperId }) => {
             dispatch(
                 setPaperContributions(
                     sortBy(
-                        contributions.map(statement => ({ ...statement.object, statementId: statement.id })),
+                        contributions.map((statement) => ({ ...statement.object, statementId: statement.id })),
                         'label',
                     ),
                 ),
@@ -48,14 +48,14 @@ const useViewPaper = ({ paperId }) => {
         loadPaperData();
     }, [loadPaperData, paperId]);
 
-    const handleShowHeaderBar = isVisible => {
+    const handleShowHeaderBar = (isVisible) => {
         setShowHeaderBar(!isVisible);
     };
 
-    const toggle = type => {
+    const toggle = (type) => {
         switch (type) {
             case 'showGraphModal':
-                setShowGraphModal(v => !v);
+                setShowGraphModal((v) => !v);
                 break;
             case 'editMode':
                 toggleIsEditMode();

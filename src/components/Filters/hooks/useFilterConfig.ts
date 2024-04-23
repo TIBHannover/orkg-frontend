@@ -31,7 +31,7 @@ const useFilterConfig = ({
 
     // Parse filters from sources
     let urlFilters = JSON.parse(searchParams.get('filter_config') || '[]') as FilterConfig[];
-    urlFilters = urlFilters.map(f => ({ ...f, source: FILTER_SOURCE.URL }));
+    urlFilters = urlFilters.map((f) => ({ ...f, source: FILTER_SOURCE.URL }));
     // Combine filters based on priority
     // Combine url filters with default filters
     let initial = mergeFilters(urlFilters, defaultFilters ?? []);
@@ -49,8 +49,8 @@ const useFilterConfig = ({
     // Apply the filters
     const showResult = () => {
         const activeFilters = filters
-            ?.filter(f => f.values && f.values?.length > 0)
-            .map(f => ({
+            ?.filter((f) => f.values && f.values?.length > 0)
+            .map((f) => ({
                 label: f.label,
                 path: f.path,
                 range: f.range,
@@ -64,7 +64,7 @@ const useFilterConfig = ({
 
     const resetFilters = () => {
         const params = new URLSearchParams(searchParams.toString());
-        setFilters(prev => prev.map(f => ({ ...f, values: [] })));
+        setFilters((prev) => prev.map((f) => ({ ...f, values: [] })));
         params.delete('filter_config');
         router.push(`?${params.toString()}`);
     };
@@ -82,7 +82,7 @@ const useFilterConfig = ({
         setFilters(_newValues);
     };
 
-    const canReset = urlFilters.length > 0 || urlFilters.length !== filters?.filter(f => f.values && f.values?.length > 0).length;
+    const canReset = urlFilters.length > 0 || urlFilters.length !== filters?.filter((f) => f.values && f.values?.length > 0).length;
 
     const refreshFilters = () => {
         refreshLocalStorageFilters();

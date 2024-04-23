@@ -27,7 +27,7 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
     const user = useSelector((state: RootStore) => state.auth.user);
 
     // @ts-expect-error
-    const annotations = useSelector(state => state.pdfTextAnnotation.annotations);
+    const annotations = useSelector((state) => state.pdfTextAnnotation.annotations);
     const [title, setTitle] = useState('');
     const [doi, setDoi] = useState('');
     const [paperId, setPaperId] = useState<string | null>(null);
@@ -154,7 +154,7 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
                 return null;
             })
             // @ts-expect-error
-            .then(paper => {
+            .then((paper) => {
                 if (paper) {
                     const parseResult = parseCiteResult(paper);
                     const { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi: _doi, publishedIn } = parseResult;
@@ -199,7 +199,7 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
                                 <FormGroup>
                                     <Label for="exampleUrl">Paper DOI</Label>
                                     <InputGroup id="doiInputGroup">
-                                        <Input type="url" name="url" value={doi} onChange={e => setDoi(e.target.value)} />
+                                        <Input type="url" name="url" value={doi} onChange={(e) => setDoi(e.target.value)} />
 
                                         <Button
                                             outline
@@ -223,7 +223,7 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
                         {saveBy === 'title' && (
                             <FormGroup>
                                 <Label for="exampleUrl">Paper title</Label>
-                                <Input type="url" name="url" value={title} onChange={e => setTitle(e.target.value)} />
+                                <Input type="url" name="url" value={title} onChange={(e) => setTitle(e.target.value)} />
                             </FormGroup>
                         )}
                     </>

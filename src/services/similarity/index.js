@@ -7,7 +7,7 @@ import env from 'components/NextJsMigration/env';
 import { submitGetRequest, submitPostRequest } from 'network';
 import qs from 'qs';
 
-export const simCompServiceUrl = env('SIMILARITY_SERVICE_URL');
+export const simCompServiceUrl = env('NEXT_PUBLIC_SIMILARITY_SERVICE_URL');
 
 /**
  * Queries Similar Contributions

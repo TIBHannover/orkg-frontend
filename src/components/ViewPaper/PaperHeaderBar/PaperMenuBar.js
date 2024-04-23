@@ -20,9 +20,9 @@ function PaperMenuBar(props) {
     const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
     const [isOpenDiscussionModal, setIsOpenDiscussionModal] = useState(false);
-    const id = useSelector(state => state.viewPaper.paper.id);
-    const title = useSelector(state => state.viewPaper.paper.title);
-    const doi = useSelector(state => state.viewPaper.paper.identifiers?.doi?.[0]);
+    const id = useSelector((state) => state.viewPaper.paper.id);
+    const title = useSelector((state) => state.viewPaper.paper.title);
+    const doi = useSelector((state) => state.viewPaper.paper.identifiers?.doi?.[0]);
     const paperLink = useSelector(getPaperLink);
     const { discussionCount, isLoading, getCount: refreshCount } = useDiscussionCount(id);
 
@@ -57,12 +57,12 @@ function PaperMenuBar(props) {
                     <Icon icon={faTimes} /> Stop editing
                 </Button>
             )}
-            <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+            <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                 <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                     <Icon icon={faEllipsisV} />
                 </DropdownToggle>
                 <DropdownMenu end>
-                    <RequireAuthentication component={DropdownItem} onClick={() => setShowPublishDialog(v => !v)}>
+                    <RequireAuthentication component={DropdownItem} onClick={() => setShowPublishDialog((v) => !v)}>
                         Publish
                     </RequireAuthentication>
                     <DropdownItem divider />
@@ -74,7 +74,7 @@ function PaperMenuBar(props) {
             </ButtonDropdown>
             <PreventModal
                 isOpen={isOpenPWCModal}
-                toggle={() => setIsOpenPWCModal(v => !v)}
+                toggle={() => setIsOpenPWCModal((v) => !v)}
                 header="We are working on it!"
                 content={
                     <>
@@ -92,8 +92,10 @@ function PaperMenuBar(props) {
                     </>
                 }
             />
-            <Publish showDialog={showPublishDialog} toggle={() => setShowPublishDialog(v => !v)} />
-            {isOpenDiscussionModal && <DiscussionModal entityId={id} toggle={() => setIsOpenDiscussionModal(v => !v)} refreshCount={refreshCount} />}
+            <Publish showDialog={showPublishDialog} toggle={() => setShowPublishDialog((v) => !v)} />
+            {isOpenDiscussionModal && (
+                <DiscussionModal entityId={id} toggle={() => setIsOpenDiscussionModal((v) => !v)} refreshCount={refreshCount} />
+            )}
         </>
     );
 }

@@ -165,7 +165,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
             component: ItemResource,
             allowWhitespace: true,
             output: item =>
-                `[${item.resource.label}](${env('URL')}${reverse(ROUTES.RESOURCE, {
+                `[${item.resource.label}](${env('NEXT_PUBLIC_URL')}${reverse(ROUTES.RESOURCE, {
                     id: item.resource.id,
                 })})`,
         },

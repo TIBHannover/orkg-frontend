@@ -22,21 +22,21 @@ import { Container } from 'reactstrap';
 
 const ViewPaper = () => {
     const { resourceId } = useParams();
-    const viewPaper = useSelector(state => state.viewPaper.paper);
+    const viewPaper = useSelector((state) => state.viewPaper.paper);
     const { isLoading, isLoadingFailed, showHeaderBar, isEditMode, showGraphModal, toggle, handleShowHeaderBar, setShowGraphModal } = useViewPaper({
         paperId: resourceId,
     });
     const getSEODescription = () =>
         `Published: ${viewPaper.publication_info?.published_month ? moment(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''} ${
             viewPaper.publication_info?.published_year ? viewPaper.publication_info?.published_year : ''
-        } • Research field: ${viewPaper?.research_fields?.[0]?.label} • Authors: ${viewPaper?.authors?.map(author => author.name).join(', ')}`;
+        } • Research field: ${viewPaper?.research_fields?.[0]?.label} • Authors: ${viewPaper?.authors?.map((author) => author.name).join(', ')}`;
 
     const ldJson = {
         mainEntity: {
             headline: viewPaper.title,
             description: getSEODescription(),
             ...(viewPaper?.identifiers?.doi?.[0] ? { sameAs: `https://doi.org/${viewPaper?.identifiers?.doi?.[0]}` } : {}),
-            author: viewPaper?.authors?.map(author => ({
+            author: viewPaper?.authors?.map((author) => ({
                 name: author.name,
                 ...(author?.identifiers?.orcid?.[0] ? { url: `http://orcid.org/${author?.identifiers?.orcid?.[0]}` } : {}),
                 '@type': 'Person',
@@ -58,7 +58,7 @@ const ViewPaper = () => {
             {!isLoadingFailed && (
                 <>
                     {showHeaderBar && (
-                        <PaperHeaderBar disableEdit={env('PWC_USER_ID') === viewPaper.createdBy} editMode={isEditMode} toggle={toggle} />
+                        <PaperHeaderBar disableEdit={env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper.createdBy} editMode={isEditMode} toggle={toggle} />
                     )}
                     <Breadcrumbs researchFieldId={viewPaper.research_fields.length > 0 ? viewPaper.research_fields?.[0]?.id : null} />
 
@@ -73,7 +73,11 @@ const ViewPaper = () => {
                     <VisibilitySensor onChange={handleShowHeaderBar}>
                         <TitleBar
                             buttonGroup={
-                                <PaperMenuBar disableEdit={env('PWC_USER_ID') === viewPaper.createdBy} editMode={isEditMode} toggle={toggle} />
+                                <PaperMenuBar
+                                    disableEdit={env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper.createdBy}
+                                    editMode={isEditMode}
+                                    toggle={toggle}
+                                />
                             }
                         >
                             Paper
@@ -119,7 +123,7 @@ const ViewPaper = () => {
                 </>
             )}
 
-            {showGraphModal && <GraphViewModal toggle={() => setShowGraphModal(v => !v)} resourceId={resourceId} />}
+            {showGraphModal && <GraphViewModal toggle={() => setShowGraphModal((v) => !v)} resourceId={resourceId} />}
         </div>
     );
 };

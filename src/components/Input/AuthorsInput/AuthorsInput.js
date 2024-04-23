@@ -24,7 +24,7 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
     const [editIndex, setEditIndex] = useState(0);
     const inputRef = useRef(null);
 
-    const handleChange = selected => {
+    const handleChange = (selected) => {
         let v;
         if (selected.__isNew__) {
             v = { ...selected, label: selected.value };
@@ -34,16 +34,16 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
         setAuthorInput(v);
     };
 
-    const isORCID = value => Boolean(value && value.replaceAll('−', '-').match(REGEX.ORCID_URL));
+    const isORCID = (value) => Boolean(value && value.replaceAll('−', '-').match(REGEX.ORCID_URL));
 
-    const saveAuthor = async _authorInput => {
+    const saveAuthor = async (_authorInput) => {
         if (_authorInput && _authorInput.label) {
             if (isORCID(_authorInput.label)) {
                 setAuthorNameLoading(true);
                 // Get the full name from ORCID API
                 const orcid = _authorInput.label.replaceAll('−', '-').match(REGEX.ORCID)[0];
                 getPersonFullNameByORCID(orcid)
-                    .then(authorFullName => {
+                    .then((authorFullName) => {
                         const newAuthor = {
                             name: authorFullName,
                             identifiers: {
@@ -59,7 +59,7 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                         setAuthorNameLoading(false);
                         setAuthorInput('');
                         setEditMode(false);
-                        setShowAuthorForm(v => !v);
+                        setShowAuthorForm((v) => !v);
                     })
                     .catch(() => {
                         setAuthorNameLoading(false);
@@ -69,7 +69,7 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                 let orcids = [];
                 if (_authorInput.id) {
                     orcids = (await getStatementsBySubjectAndPredicate({ subjectId: _authorInput.id, predicateId: PREDICATES.HAS_ORCID })).map(
-                        statement => statement.object.label,
+                        (statement) => statement.object.label,
                     );
                 }
                 const newAuthor = {
@@ -84,22 +84,22 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                 }
                 setAuthorInput('');
                 setEditMode(false);
-                setShowAuthorForm(v => !v);
+                setShowAuthorForm((v) => !v);
             }
         } else {
             toast.error(`Please enter the ${itemLabel} name`);
         }
     };
 
-    const removeAuthor = indexToRemove => {
+    const removeAuthor = (indexToRemove) => {
         handler(value.filter((_, index) => index !== indexToRemove));
     };
 
-    const editAuthor = key => {
+    const editAuthor = (key) => {
         setEditIndex(key);
         setAuthorInput({ ...value[key], label: value[key].identifiers?.orcid?.[0] ? value[key].identifiers?.orcid?.[0] : value[key].name });
         setEditMode(true);
-        setShowAuthorForm(v => !v);
+        setShowAuthorForm((v) => !v);
     };
 
     const handleUpdate = ({ dragIndex, hoverIndex }) => {
@@ -111,7 +111,7 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
             <GlobalStyle />
             <div>
                 {value.length > 0 && (
-                    <AuthorTags onClick={value.length === 0 && !isDisabled ? () => setShowAuthorForm(v => !v) : undefined}>
+                    <AuthorTags onClick={value.length === 0 && !isDisabled ? () => setShowAuthorForm((v) => !v) : undefined}>
                         {value.map((author, index) => (
                             <SortableAuthorItem
                                 key={`author-${index}`}
@@ -137,14 +137,14 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                         setAuthorNameLoading(false);
                         setAuthorInput('');
                         setEditMode(false);
-                        setShowAuthorForm(v => !v);
+                        setShowAuthorForm((v) => !v);
                     }}
                 >
                     <Icon icon={faPlus} className="me-2" /> Add {itemLabel}
                 </AddAuthor>
             </div>
-            <Modal onOpened={() => inputRef?.current?.focus()} isOpen={showAuthorForm} toggle={() => setShowAuthorForm(v => !v)}>
-                <Form onSubmit={e => e.preventDefault()}>
+            <Modal onOpened={() => inputRef?.current?.focus()} isOpen={showAuthorForm} toggle={() => setShowAuthorForm((v) => !v)}>
+                <Form onSubmit={(e) => e.preventDefault()}>
                     <ModalHeader>{editMode ? `Edit ${itemLabel}` : `Add ${itemLabel}`}</ModalHeader>
                     <ModalBody>
                         <FormGroup>
@@ -161,13 +161,13 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                                 autoLoadOption={false}
                                 innerRef={inputRef}
                                 inputId="authorInput"
-                                onChangeInputValue={value => setAuthorAutocompleteLabel(value)}
+                                onChangeInputValue={(value) => setAuthorAutocompleteLabel(value)}
                                 ols={false}
                             />
                         </FormGroup>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="light" onClick={() => setShowAuthorForm(v => !v)}>
+                        <Button color="light" onClick={() => setShowAuthorForm((v) => !v)}>
                             Cancel
                         </Button>
                         <ButtonWithLoading type="submit" isLoading={authorNameLoading} color="primary" onClick={() => saveAuthor(authorInput)}>

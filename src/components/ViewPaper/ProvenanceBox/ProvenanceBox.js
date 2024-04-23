@@ -25,7 +25,7 @@ const ProvenanceBox = () => {
 
     return (
         <div>
-            {env('PWC_USER_ID') === viewPaper.created_by && (
+            {env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper.created_by && (
                 <div className="mb-2">
                     <PWCProvenanceBox />
                 </div>
@@ -36,7 +36,7 @@ const ProvenanceBox = () => {
                         id="div1"
                         className={`h6 col-md-6 text-center tab ${activeTab === 1 ? 'active' : ''}`}
                         onClick={() => setActiveTab(1)}
-                        onKeyDown={e => (e.key === 'Enter' ? setActiveTab(1) : undefined)}
+                        onKeyDown={(e) => (e.key === 'Enter' ? setActiveTab(1) : undefined)}
                         role="button"
                         tabIndex={0}
                     >
@@ -46,7 +46,7 @@ const ProvenanceBox = () => {
                         id="div2"
                         className={`h6 col-md-6 text-center tab ${activeTab === 2 ? 'active' : ''}`}
                         onClick={() => setActiveTab(2)}
-                        onKeyDown={e => (e.key === 'Enter' ? setActiveTab(2) : undefined)}
+                        onKeyDown={(e) => (e.key === 'Enter' ? setActiveTab(2) : undefined)}
                         role="button"
                         tabIndex={0}
                     >

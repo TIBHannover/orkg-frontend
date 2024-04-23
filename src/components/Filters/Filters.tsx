@@ -15,7 +15,7 @@ export const Separator = styled.div`
     @media (max-width: 480px) {
         display: none;
     }
-    background: ${props => props.theme.secondary};
+    background: ${(props) => props.theme.secondary};
     width: 2px;
     height: 20px;
     margin: 3px 5px 3px 0px;
@@ -35,7 +35,7 @@ const Filters: FC<FiltersProps> = ({ id }) => {
 
     const [showEditPanel, setShowEditPanel] = useState(false);
 
-    const isShowResultActive = filters?.some(f => f.values && f.values?.length > 0);
+    const isShowResultActive = filters?.some((f) => f.values && f.values?.length > 0);
 
     if (isLoadingFilters) {
         return (
@@ -85,7 +85,7 @@ const Filters: FC<FiltersProps> = ({ id }) => {
                             ))}
                             {filters && filters?.length > 2 && (
                                 <Col>
-                                    <Button size="sm" onClick={() => setShowEditPanel(v => !v)}>
+                                    <Button size="sm" onClick={() => setShowEditPanel((v) => !v)}>
                                         All filters
                                     </Button>
                                 </Col>
@@ -128,7 +128,7 @@ const Filters: FC<FiltersProps> = ({ id }) => {
                         </>
 
                         <Col className="ms-auto">
-                            <StatementActionButton title="All filters" icon={faFilter} action={() => setShowEditPanel(v => !v)} />
+                            <StatementActionButton title="All filters" icon={faFilter} action={() => setShowEditPanel((v) => !v)} />
                         </Col>
                     </Row>
                 </CardFooter>
@@ -136,7 +136,7 @@ const Filters: FC<FiltersProps> = ({ id }) => {
             <AllFiltersOffCanvas
                 id={id}
                 isOpen={showEditPanel}
-                toggle={() => setShowEditPanel(v => !v)}
+                toggle={() => setShowEditPanel((v) => !v)}
                 filters={filters ?? []}
                 refreshFilters={refreshFilters}
                 setFilters={setFilters}

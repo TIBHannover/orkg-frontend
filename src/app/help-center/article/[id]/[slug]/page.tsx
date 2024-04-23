@@ -23,7 +23,7 @@ const HelpCenterArticle = () => {
         if (!id) {
             return;
         }
-        const pagePromise = getHelpArticle(id);
+        const pagePromise = getHelpArticle(id.toString());
         loadPage({ pagePromise });
     }, [id, loadPage]);
 

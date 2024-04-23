@@ -18,7 +18,7 @@ const Page = () => {
         if (!url) {
             return;
         }
-        const pagePromise = getPageByUrl(url);
+        const pagePromise = getPageByUrl(url.toString());
         loadPage({ pagePromise });
     }, [url, loadPage]);
 

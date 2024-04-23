@@ -8,16 +8,16 @@ import { Button } from 'reactstrap';
 
 const Bioassays = () => {
     const [isOpenBioassays, setIsOpenBioassays] = useState(false);
-    const researchFieldId = useSelector(state => state.viewPaper.paper.research_fields?.[0])?.id ?? null;
-    const selectedContributionId = useSelector(state => state.viewPaper.selectedContributionId);
+    const researchFieldId = useSelector((state) => state.viewPaper.paper.research_fields?.[0])?.id ?? null;
+    const selectedContributionId = useSelector((state) => state.viewPaper.selectedContributionId);
     const isBioassayField = BIOASSAYS_FIELDS_LIST.includes(researchFieldId);
 
     return isBioassayField ? (
         <>
-            <Button onClick={() => setIsOpenBioassays(v => !v)} outline size="sm" color="smart">
+            <Button onClick={() => setIsOpenBioassays((v) => !v)} outline size="sm" color="smart">
                 <Icon icon={faFlask} /> Add Bioassay
             </Button>
-            <BioassaysModal selectedResource={selectedContributionId} showDialog={isOpenBioassays} toggle={() => setIsOpenBioassays(v => !v)} />
+            <BioassaysModal selectedResource={selectedContributionId} showDialog={isOpenBioassays} toggle={() => setIsOpenBioassays((v) => !v)} />
         </>
     ) : null;
 };

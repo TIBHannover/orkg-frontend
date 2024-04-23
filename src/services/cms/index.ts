@@ -16,7 +16,7 @@ import {
     NewsCard,
 } from 'services/cms/types';
 
-export const url = env('CMS_URL');
+export const url = env('NEXT_PUBLIC_CMS_URL');
 
 export const getPageByUrl = (_url: string): Promise<CmsResponsePaginated<HelpArticle>> => submitGetRequest(`${url}pages?filters[url]=${_url}`);
 

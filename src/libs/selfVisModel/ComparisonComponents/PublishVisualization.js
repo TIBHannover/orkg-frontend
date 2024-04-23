@@ -21,13 +21,13 @@ function PublishVisualization(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const displayName = useSelector(state => state.auth.user.displayName);
+    const displayName = useSelector((state) => state.auth.user.displayName);
 
     const [visualizationCreators, setVisualizationCreators] = useState(
         props.authors ?? [{ label: displayName, id: displayName, orcid: '', statementId: '', __isNew__: true }],
     );
 
-    const handleCreatorsChange = creators => {
+    const handleCreatorsChange = (creators) => {
         const _creators = creators || [];
         setVisualizationCreators(_creators);
     };
@@ -38,7 +38,7 @@ function PublishVisualization(props) {
         return reconstructionData !== undefined;
     };
 
-    const createReconstructionModel = resourceId => {
+    const createReconstructionModel = (resourceId) => {
         const currModel = new SelfVisDataModel();
         // collect Data
         const metaVisData = {};
@@ -64,7 +64,7 @@ function PublishVisualization(props) {
         }
     };
 
-    const handleSubmit = async e => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         if (!props.comparisonId) {
@@ -126,7 +126,7 @@ function PublishVisualization(props) {
                             name="title"
                             value={title}
                             id="title"
-                            onChange={e => setTitle(e.target.value)}
+                            onChange={(e) => setTitle(e.target.value)}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -139,7 +139,7 @@ function PublishVisualization(props) {
                             name="description"
                             value={description}
                             id="description"
-                            onChange={e => setDescription(e.target.value)}
+                            onChange={(e) => setDescription(e.target.value)}
                             maxLength={MAX_LENGTH_INPUT}
                         />
                     </FormGroup>
@@ -151,7 +151,7 @@ function PublishVisualization(props) {
                         </Label>
                         <AuthorsInput
                             itemLabel="creator"
-                            handler={authors => handleCreatorsChange(convertAuthorsToOldFormat(authors))}
+                            handler={(authors) => handleCreatorsChange(convertAuthorsToOldFormat(authors))}
                             value={convertAuthorsToNewFormat(visualizationCreators)}
                         />
                     </FormGroup>

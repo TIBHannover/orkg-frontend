@@ -104,7 +104,7 @@ const DraftComparisons = () => {
                     {draftComparisons.map(draftComparison => (
                         <ListGroupItem key={draftComparison.id} className="d-flex justify-content-between align-items-center px-4 py-3">
                             <div>
-                                <Link to={reverse(ROUTES.COMPARISON_NOT_PUBLISHED) + getComparisonURLFromConfig(draftComparison.config)}>
+                                <Link href={reverse(ROUTES.COMPARISON_NOT_PUBLISHED) + getComparisonURLFromConfig(draftComparison.config)}>
                                     {draftComparison.label}
                                 </Link>{' '}
                                 <br />

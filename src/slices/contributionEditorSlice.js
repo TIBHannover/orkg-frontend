@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { LOCATION_CHANGE } from 'components/ResetStoreOnNavigate/ResetStoreOnNavigate';
 import { CLASSES, ENTITIES, MISC, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { flatten, intersection, uniq, uniqBy } from 'lodash';
 import { toast } from 'react-toastify';
@@ -26,7 +27,7 @@ import {
 } from 'services/backend/statements';
 import { getTemplate } from 'services/backend/templates';
 import format from 'string-format';
-import { LOCATION_CHANGE, filterObjectOfStatementsByPredicateAndClass, guid } from 'utils';
+import { filterObjectOfStatementsByPredicateAndClass, guid } from 'utils';
 
 const initialState = {
     contributions: {},

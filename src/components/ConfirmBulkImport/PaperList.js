@@ -17,7 +17,7 @@ const PaperCardStyled = styled.div`
     }
 
     &.selected {
-        background: ${props => props.theme.bodyBg};
+        background: ${(props) => props.theme.bodyBg};
     }
 
     &:hover .options,
@@ -29,11 +29,11 @@ const PaperCardStyled = styled.div`
 const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} }) => {
     const [showContributions, setShowContributions] = useState([]);
 
-    const handleCardClick = i => {
+    const handleCardClick = (i) => {
         if (showContributions.includes(i)) {
-            setShowContributions(state => state.filter(j => j !== i));
+            setShowContributions((state) => state.filter((j) => j !== i));
         } else {
-            setShowContributions(state => [...state, i]);
+            setShowContributions((state) => [...state, i]);
         }
     };
 
@@ -45,8 +45,8 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
         setShowContributions([]);
     };
 
-    const hasValidationErrorsForPaper = i =>
-        validationErrors?.[i] && Object.keys(validationErrors?.[i]).find(property => validationErrors?.[i][property]?.find(error => error));
+    const hasValidationErrorsForPaper = (i) =>
+        validationErrors?.[i] && Object.keys(validationErrors?.[i]).find((property) => validationErrors?.[i][property]?.find((error) => error));
 
     const hasValidationErrors = validationErrors && Object.keys(validationErrors).find((_, i) => hasValidationErrorsForPaper(i));
 
@@ -109,7 +109,11 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
                             </div>
                             <small>
                                 <Icon size="sm" icon={faUser} />{' '}
-                                {paper.authors.length > 0 ? paper.authors.map(a => a.name).join(' • ') : <i className="ms-1">No authors provided</i>}
+                                {paper.authors.length > 0 ? (
+                                    paper.authors.map((a) => a.name).join(' • ')
+                                ) : (
+                                    <i className="ms-1">No authors provided</i>
+                                )}
                                 {(paper.publicationMonth || paper.publicationYear) && <Icon size="sm" icon={faCalendar} className="ms-2 me-1" />}
                                 {paper.publicationMonth && paper.publicationMonth > 0 ? moment(paper.publicationMonth, 'M').format('MMMM') : ''}{' '}
                                 {paper.publicationYear}
@@ -120,7 +124,7 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
                                 <ListGroup className="listGroupEnlarge" style={{ fontSize: '90%' }}>
                                     {Object.keys(paper.contents[0].statements).length > 0 && (
                                         <>
-                                            {Object.keys(paper.contents[0].statements).map(property => (
+                                            {Object.keys(paper.contents[0].statements).map((property) => (
                                                 <StatementList
                                                     key={property}
                                                     property={property}

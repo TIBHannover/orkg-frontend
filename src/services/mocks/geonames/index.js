@@ -1,4 +1,4 @@
-import { rest } from 'msw';
+import { http } from 'msw';
 import { geonamesUrl } from 'services/geoNames/index';
 
 const getGeoNames = (req, res, ctx) =>
@@ -79,6 +79,6 @@ const getGeoNames = (req, res, ctx) =>
 </rdf:RDF>
 `),
     );
-const geonames = [rest.get(`${geonamesUrl}*`, getGeoNames)];
+const geonames = [http.get(`${geonamesUrl}*`, getGeoNames)];
 
 export default geonames;

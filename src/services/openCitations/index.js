@@ -1,7 +1,7 @@
 import env from 'components/NextJsMigration/env';
 import { submitGetRequest } from 'network';
 
-export const openCitationsUrl = env('OPEN_CITATIONS_URL');
+export const openCitationsUrl = env('NEXT_PUBLIC_OPEN_CITATIONS_URL');
 
 export const getCitationCount = async doi => {
     try {

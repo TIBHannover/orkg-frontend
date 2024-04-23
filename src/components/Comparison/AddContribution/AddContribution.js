@@ -42,7 +42,7 @@ const StyledListGroupItem = styled(ListGroupItem)`
     overflow-wrap: anywhere;
 
     &:last-child {
-        border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
+        border-bottom-right-radius: ${(props) => (props.rounded === 'true' ? '0 !important' : '')};
     }
 `;
 
@@ -77,19 +77,19 @@ export default function AddContribution({
         // The entry is a DOI, check if it exists in the database
         if (doi?.trim().match(new RegExp(REGEX.DOI_ID))) {
             getPaperByDoi(doi.trim())
-                .then(result =>
+                .then((result) =>
                     getStatementsBySubjectAndPredicate({
                         subjectId: result.id,
                         predicateId: PREDICATES.HAS_CONTRIBUTION,
                     })
-                        .then(contributions => ({
+                        .then((contributions) => ({
                             ...result,
                             contributions: contributions
                                 .sort((a, b) => a.object.label.localeCompare(b.object.label))
-                                .map(contribution => ({ ...contribution.object, checked: false })),
+                                .map((contribution) => ({ ...contribution.object, checked: false })),
                             label: result.title,
                         }))
-                        .then(paperData => {
+                        .then((paperData) => {
                             setPaperResult([paperData]);
                             setIsNextPageLoading(false);
                             setHasNextPage(false);
@@ -111,20 +111,20 @@ export default function AddContribution({
                 include: [CLASSES.PAPER],
                 returnContent: true,
             })
-                .then(results => {
+                .then((results) => {
                     if (results.length > 0) {
-                        const paper = results.map(resource =>
+                        const paper = results.map((resource) =>
                             getStatementsBySubjectAndPredicate({
                                 subjectId: resource.id,
                                 predicateId: PREDICATES.HAS_CONTRIBUTION,
-                            }).then(contributions => ({
+                            }).then((contributions) => ({
                                 ...resource,
                                 contributions: contributions
                                     .sort((a, b) => a.object.label.localeCompare(b.object.label))
-                                    .map(contribution => ({ ...contribution.object, checked: false })),
+                                    .map((contribution) => ({ ...contribution.object, checked: false })),
                             })),
                         );
-                        Promise.all(paper).then(paperData => {
+                        Promise.all(paper).then((paperData) => {
                             setPaperResult([...(page === 0 ? [] : paperResult), ...paperData]);
                             setIsNextPageLoading(false);
                             setHasNextPage(!(results.length < numberOfPaper));
@@ -138,7 +138,7 @@ export default function AddContribution({
                         setHasNextPage(false);
                     }
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
                     toast.error('Something went wrong while loading search results.');
                 });
@@ -148,22 +148,22 @@ export default function AddContribution({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedGetLoadMoreResults = useCallback(debounce(loadMoreResults, 500), []);
 
-    const toggleContribution = contributionsID => {
+    const toggleContribution = (contributionsID) => {
         if (!selectedContributions.includes(contributionsID)) {
-            setSelectedContributions(prev => [...prev, contributionsID]);
+            setSelectedContributions((prev) => [...prev, contributionsID]);
         } else {
-            setSelectedContributions(selectedContributions.filter(i => i !== contributionsID));
+            setSelectedContributions(selectedContributions.filter((i) => i !== contributionsID));
         }
     };
 
     const togglePaper = (paper, e) => {
         let newSelectedContributions = selectedContributions;
         if (paper.contributions.length > 0) {
-            paper.contributions.map(contribution => {
+            paper.contributions.map((contribution) => {
                 if (e.target.checked && !selectedContributions.includes(contribution.id)) {
                     newSelectedContributions = [...newSelectedContributions, contribution.id];
                 } else if (!e.target.checked) {
-                    newSelectedContributions = [...newSelectedContributions.filter(i => i !== contribution.id)];
+                    newSelectedContributions = [...newSelectedContributions.filter((i) => i !== contribution.id)];
                 }
                 return null;
             });
@@ -196,7 +196,7 @@ export default function AddContribution({
                             type="text"
                             name="title"
                             id="title"
-                            onChange={e => setSearchPaper(e.target.value)}
+                            onChange={(e) => setSearchPaper(e.target.value)}
                             maxLength={MAX_LENGTH_INPUT}
                         />
                     </InputGroup>
@@ -248,7 +248,7 @@ export default function AddContribution({
                                 {paperResult.map((paper, index) => (
                                     <StyledListGroupItem key={`result-${index}`} className="pt-2 pb-2">
                                         <Label check className="pe-2 ps-2">
-                                            <Input type="checkbox" onChange={e => togglePaper(paper, e)} /> {paper.label}{' '}
+                                            <Input type="checkbox" onChange={(e) => togglePaper(paper, e)} /> {paper.label}{' '}
                                             <Tippy content="Open paper in new window">
                                                 <span>
                                                     <Link
@@ -272,7 +272,7 @@ export default function AddContribution({
                                         </Label>
                                         {paper.contributions.length > 1 && (
                                             <ul style={{ listStyle: 'none' }}>
-                                                {paper.contributions.map(contribution => (
+                                                {paper.contributions.map((contribution) => (
                                                     <li key={`ccb${contribution.id}`}>
                                                         <Input
                                                             type="checkbox"
@@ -297,7 +297,7 @@ export default function AddContribution({
                             <div
                                 className="btn btn-link btn-sm"
                                 onClick={() => loadMoreResults(searchPaper, currentPage + 1)}
-                                onKeyDown={e => (e.keyCode === 13 ? loadMoreResults(searchPaper, currentPage + 1) : undefined)}
+                                onKeyDown={(e) => (e.keyCode === 13 ? loadMoreResults(searchPaper, currentPage + 1) : undefined)}
                                 role="button"
                                 tabIndex={0}
                             >

@@ -38,7 +38,7 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
     const [selectedFileFormat, setSelectedFileFormat] = useState('JPGformat');
     const [caption, enableCaption] = useState(true);
 
-    const downloadChart = chart => {
+    const downloadChart = (chart) => {
         if (selectedFileFormat === 'JPGformat') downloadJPG(chart, data.label);
         else if (selectedFileFormat === 'PDFformat') downloadPDF(chart, data.label);
         setChartToDownload(null);
@@ -128,7 +128,7 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                             </FormGroup>
                             <div className="text-center">
                                 <Button
-                                    onClick={e => {
+                                    onClick={(e) => {
                                         e.preventDefault();
                                         initChartDownload();
                                     }}

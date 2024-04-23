@@ -5,8 +5,8 @@ import { ListGroupItem, DropdownItem, Button, DropdownToggle } from 'reactstrap'
 export const StyledStatementItem = styled(ListGroupItem)`
     padding: 0.5rem 0.75rem !important;
     cursor: default;
-    background-color: ${props => props.theme.lightLighter} !important;
-    border-color: ${props => props.theme.lightDarker} !important;
+    background-color: ${(props) => props.theme.lightLighter} !important;
+    border-color: ${(props) => props.theme.lightDarker} !important;
     overflow-wrap: anywhere;
     flex: 1;
 
@@ -17,7 +17,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
     & > .statementItemIcon {
         font-size: 18px;
         margin-top: 3px;
-        color: ${props => props.theme.primary};
+        color: ${(props) => props.theme.primary};
 
         &.open {
             color: #fff;
@@ -34,8 +34,8 @@ export const StyledStatementItem = styled(ListGroupItem)`
     }
 
     &.statementActive {
-        background-color: ${props => props.theme.secondary} !important;
-        border-color: ${props => props.theme.secondary} !important;
+        background-color: ${(props) => props.theme.secondary} !important;
+        border-color: ${(props) => props.theme.secondary} !important;
         color: #fff;
 
         & .deletePredicate {
@@ -48,7 +48,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
 export const StyledLevelBox = styled.div`
     // The hierarchy indicator doesn't look nice when properties have a space between them
     /*border-color: #dfdfdf; //don't use default color, since it is partially transparent $list-group-border-color;
-    border-radius: ${props => props.theme.borderRadius};
+    border-radius: ${(props) => props.theme.borderRadius};
     padding-left: 8px;
     border-style: solid;
     border-width: 1px;
@@ -82,27 +82,27 @@ export const StyledDropdownItem = styled(DropdownItem)`
 /* Template Wizard */
 export const StyledButton = styled(Button)`
     border-color: #ced4da !important;
-    color: ${props => props.theme.dark} !important;
-    background: ${props => props.theme.lightDarker} !important;
+    color: ${(props) => props.theme.dark} !important;
+    background: ${(props) => props.theme.lightDarker} !important;
     &:hover {
         color: #fff !important;
-        background-color: ${props => props.theme.secondary} !important;
-        border-color: ${props => props.theme.secondary} !important;
+        background-color: ${(props) => props.theme.secondary} !important;
+        border-color: ${(props) => props.theme.secondary} !important;
     }
 `;
 
 export const StyledDropdownToggle = styled(DropdownToggle)`
-    border-top-left-radius: ${props => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
-    border-bottom-left-radius: ${props => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
-    border-top-right-radius: ${props => (props.disableBorderRadiusRight ? '0' : '4px !important')};
-    border-bottom-right-radius: ${props => (props.disableBorderRadiusRight ? '0' : '4px !important')};
-    background: ${props => props.theme.lightDarker} !important;
-    color: ${props => props.theme.dark} !important;
+    border-top-left-radius: ${(props) => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
+    border-bottom-left-radius: ${(props) => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
+    border-top-right-radius: ${(props) => (props.disableBorderRadiusRight ? '0' : '4px !important')};
+    border-bottom-right-radius: ${(props) => (props.disableBorderRadiusRight ? '0' : '4px !important')};
+    background: ${(props) => props.theme.lightDarker} !important;
+    color: ${(props) => props.theme.dark} !important;
     border-color: #ced4da !important;
     &:hover {
         color: #fff !important;
-        background-color: ${props => props.theme.secondary} !important;
-        border-color: ${props => props.theme.secondary} !important;
+        background-color: ${(props) => props.theme.secondary} !important;
+        border-color: ${(props) => props.theme.secondary} !important;
     }
 `;
 
@@ -174,16 +174,16 @@ export const ValueItemStyle = styled.li.attrs({
         text-align: center;
         color: white;
         display: inline-block;
-        border: 1px ${props => props.theme.secondaryDarker} solid;
+        border: 1px ${(props) => props.theme.secondaryDarker} solid;
         margin-right: 3px;
         border-radius: 100%;
         font-size: 9px;
         font-weight: bold;
-        background: ${props => props.theme.secondary};
+        background: ${(props) => props.theme.secondary};
     }
 
     &:hover .typeCircle {
-        background: ${props => props.theme.primary};
+        background: ${(props) => props.theme.primary};
     }
 `;
 
@@ -204,7 +204,7 @@ export const AddPropertyContentStyle = styled.span`
     border-radius: 4px;
     max-width: 33.33%;
     font-size: 0.875rem;
-    color: ${props => props.theme.secondary};
+    color: ${(props) => props.theme.secondary};
     transition: 0.3s max-width;
     cursor: pointer;
 
@@ -232,7 +232,7 @@ export const AddPropertyContentStyle = styled.span`
             padding: 0;
             border: 0 !important;
             .icon {
-                color: ${props => props.theme.secondary};
+                color: ${(props) => props.theme.secondary};
             }
         }
     }
@@ -260,8 +260,8 @@ export const StatementsGroupStyle = styled.div`
     }
 
     &.inTemplate:last-of-type {
-        border-bottom-left-radius: ${props => (!props.enableEdit ? '4px' : '0')};
-        border-bottom-right-radius: ${props => (!props.enableEdit ? '4px' : '0')};
+        border-bottom-left-radius: ${(props) => (!props.enableEdit ? '4px' : '0')};
+        border-bottom-right-radius: ${(props) => (!props.enableEdit ? '4px' : '0')};
     }
 
     &.inTemplate:first-of-type {
@@ -283,11 +283,11 @@ export const StatementsGroupStyle = styled.div`
 `;
 
 export const PropertyStyle = styled.div`
-    background-color: ${props => props.theme.lightLighter};
+    background-color: ${(props) => props.theme.lightLighter};
     overflow-wrap: break-word;
     border-radius: 3px 0 0 3px;
 
-    @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
+    @media (max-width: ${(props) => props.theme.gridBreakpoints.md}) {
         width: 100%;
         max-width: 100%;
         flex: auto;
@@ -332,7 +332,7 @@ export const PropertyStyle = styled.div`
         opacity: 1;
         pointer-events: auto;
         span {
-            color: ${props => props.theme.dark};
+            color: ${(props) => props.theme.dark};
         }
         span:hover {
             color: #fff;
@@ -342,7 +342,7 @@ export const PropertyStyle = styled.div`
         opacity: 1;
         pointer-events: auto;
         span {
-            color: ${props => props.theme.dark};
+            color: ${(props) => props.theme.dark};
         }
     }
 `;
@@ -354,7 +354,7 @@ export const ValuesStyle = styled.div`
     background-color: #fff;
     border-radius: 0 3px 3px 0;
 
-    @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
+    @media (max-width: ${(props) => props.theme.gridBreakpoints.md}) {
         width: 100%;
         max-width: 100%;
         flex: auto;
@@ -364,8 +364,8 @@ export const ValuesStyle = styled.div`
 
 export const TemplateHeaderStyle = styled.div`
     cursor: default;
-    background-color: ${props => props.theme.secondary};
-    border-color: ${props => props.theme.secondary};
+    background-color: ${(props) => props.theme.secondary};
+    border-color: ${(props) => props.theme.secondary};
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     color: #fff;
@@ -400,17 +400,17 @@ export const TemplateHeaderStyle = styled.div`
 
         &:focus {
             outline: 0;
-            border: 1px dashed ${props => props.theme.lightDarker};
+            border: 1px dashed ${(props) => props.theme.lightDarker};
             box-shadow: none;
         }
     }
     & .type {
         font-size: 0.9rem;
-        color: ${props => props.theme.lightDarker};
+        color: ${(props) => props.theme.lightDarker};
         opacity: 0.9;
         .span {
-            background-color: ${props => props.theme.dark};
-            color: ${props => props.theme.secondary};
+            background-color: ${(props) => props.theme.dark};
+            color: ${(props) => props.theme.secondary};
         }
     }
 `;

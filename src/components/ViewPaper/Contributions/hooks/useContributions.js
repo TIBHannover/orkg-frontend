@@ -21,9 +21,9 @@ import {
 } from 'slices/viewPaperSlice';
 
 const useContributions = ({ paperId, contributionId }) => {
-    const contributions = useSelector(state => state.viewPaper.contributions);
-    const paperTitle = useSelector(state => state.viewPaper.paper.title);
-    const selectedContributionId = useSelector(state => state.viewPaper.selectedContributionId);
+    const contributions = useSelector((state) => state.viewPaper.contributions);
+    const paperTitle = useSelector((state) => state.viewPaper.paper.title);
+    const selectedContributionId = useSelector((state) => state.viewPaper.selectedContributionId);
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingContributionFailed, setLoadingContributionFailed] = useState(false);
@@ -35,10 +35,10 @@ const useContributions = ({ paperId, contributionId }) => {
         if (contributions?.length && (selectedContributionId !== contributionId || !contributionId)) {
             try {
                 // apply selected contribution
-                if (contributionId && !contributions.some(el => el.id === contributionId)) {
+                if (contributionId && !contributions.some((el) => el.id === contributionId)) {
                     throw new Error('Contribution not found');
                 }
-                const selected = contributionId && contributions.some(el => el.id === contributionId) ? contributionId : contributions[0].id;
+                const selected = contributionId && contributions.some((el) => el.id === contributionId) ? contributionId : contributions[0].id;
                 dispatch(setSelectedContributionId(selected));
             } catch {
                 setLoadingContributionFailed(true);
@@ -47,10 +47,10 @@ const useContributions = ({ paperId, contributionId }) => {
     }, [contributionId, contributions, dispatch, selectedContributionId]);
 
     useEffect(() => {
-        const handleSelectContribution = cId => {
+        const handleSelectContribution = (cId) => {
             setIsLoading(true);
             // get the contribution label
-            const contributionResource = contributions?.find(c => c.id === selectedContributionId);
+            const contributionResource = contributions?.find((c) => c.id === selectedContributionId);
             if (contributionResource) {
                 setLoadingContributionFailed(false);
                 dispatch(
@@ -69,7 +69,7 @@ const useContributions = ({ paperId, contributionId }) => {
 
     const handleChangeContributionLabel = (cId, label) => {
         // find the index of contribution
-        const objIndex = contributions.findIndex(obj => obj.id === cId);
+        const objIndex = contributions.findIndex((obj) => obj.id === cId);
         if (contributions[objIndex].label !== label) {
             // set the label of the contribution
             const updatedObj = { ...contributions[objIndex], label };
@@ -90,7 +90,7 @@ const useContributions = ({ paperId, contributionId }) => {
         }
     };
 
-    const handleAutomaticContributionVerification = cId => {
+    const handleAutomaticContributionVerification = (cId) => {
         dispatch(setContributionExtractionMethod({ id: cId, extractionMethod: EXTRACTION_METHODS.MANUAL }));
         dispatch(setIsSavingContribution({ id: cId, status: true }));
         updateResource(cId, undefined, null, EXTRACTION_METHODS.MANUAL)
@@ -107,8 +107,8 @@ const useContributions = ({ paperId, contributionId }) => {
     const handleCreateContribution = () => {
         dispatch(setIsAddingContribution(true));
         createResource(`Contribution ${contributions.length + 1}`, [CLASSES.CONTRIBUTION])
-            .then(newContribution => createResourceStatement(paperId, PREDICATES.HAS_CONTRIBUTION, newContribution.id))
-            .then(statement => {
+            .then((newContribution) => createResourceStatement(paperId, PREDICATES.HAS_CONTRIBUTION, newContribution.id))
+            .then((statement) => {
                 dispatch(setPaperContributions([...contributions, { ...statement.object, statementId: statement.id }]));
                 dispatch(setIsAddingContribution(false));
                 router.push(
@@ -125,16 +125,16 @@ const useContributions = ({ paperId, contributionId }) => {
             });
     };
 
-    const toggleDeleteContribution = async contributionId => {
+    const toggleDeleteContribution = async (contributionId) => {
         const result = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure you want to delete this contribution?',
         });
 
         if (result) {
-            const objIndex = contributions.findIndex(obj => obj.id === contributionId);
+            const objIndex = contributions.findIndex((obj) => obj.id === contributionId);
             const { statementId } = contributions[objIndex];
-            const newContributions = contributions.filter(contribution => contribution.id !== contributionId);
+            const newContributions = contributions.filter((contribution) => contribution.id !== contributionId);
             dispatch(setIsDeletingContribution({ id: contributionId, status: true }));
             deleteStatementById(statementId)
                 .then(() => {

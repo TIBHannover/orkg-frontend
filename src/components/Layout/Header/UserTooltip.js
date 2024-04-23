@@ -98,8 +98,8 @@ const UserTooltip = () => {
     const handleSignOut = () => {
         dispatch(resetAuth());
         const cookies = new Cookies();
-        cookies.remove('token', { path: env('PUBLIC_URL') });
-        cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
+        cookies.remove('token', { path: env('NEXT_PUBLIC_PUBLIC_URL') });
+        cookies.remove('token_expires_in', { path: env('NEXT_PUBLIC_PUBLIC_URL') });
         setIsVisibleTooltip(false);
         toast.success('You have been signed out successfully');
         router.push('/');

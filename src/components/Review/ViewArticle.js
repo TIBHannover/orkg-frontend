@@ -42,7 +42,7 @@ const ViewArticle = () => {
     const latestVersionId = versions?.[0]?.id;
     const newVersionAvailable = isPublished && latestVersionId !== id;
     const toggleHistoryModal = () => dispatch(toggleHistoryModalAction());
-    const url = env('URL') + reverse(ROUTES.REVIEW, { id });
+    const url = env('NEXT_PUBLIC_URL') + reverse(ROUTES.REVIEW, { id });
 
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: id,
@@ -55,7 +55,7 @@ const ViewArticle = () => {
             <Container className="print-only p-0" style={{ position: 'relative' }}>
                 <Outline />
                 {!isPublished && (
-                    <Alert color="warning" fade={false} className="box">
+                    <Alert color="warning" fade={false} className="box-shadow">
                         Warning: you are viewing an unpublished version of this article. The content can be changed by anyone.{' '}
                         <Button color="link" className="p-0" onClick={toggleHistoryModal}>
                             View publish history
@@ -63,7 +63,7 @@ const ViewArticle = () => {
                     </Alert>
                 )}
                 {newVersionAvailable && (
-                    <Alert color="warning" fade={false} className="box">
+                    <Alert color="warning" fade={false} className="box-shadow">
                         Warning: a newer version of this article is available.{' '}
                         <Link href={reverse(ROUTES.REVIEW, { id: latestVersionId })}>View latest version</Link> or{' '}
                         <Link href={reverse(ROUTES.REVIEW_DIFF, { oldId: id, newId: latestVersionId })}>compare to latest version</Link>.

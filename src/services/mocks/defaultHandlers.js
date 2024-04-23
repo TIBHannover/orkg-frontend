@@ -1,12 +1,12 @@
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 // in case no handler are available, fallback to these handlers
 const defaultHandlers = [
-    rest.get('*', (req, res, ctx) => res(ctx.status(200), ctx.json({}))),
-    rest.post('*', (req, res, ctx) => res(ctx.status(200), ctx.json({}))),
-    rest.patch('*', (req, res, ctx) => res(ctx.status(200), ctx.json({}))),
-    rest.put('*', (req, res, ctx) => res(ctx.status(200), ctx.json({}))),
-    rest.delete('*', (req, res, ctx) => res(ctx.status(200), ctx.json({}))),
+    http.get('*', () => HttpResponse.json({}, { status: 200 })),
+    http.post('*', () => HttpResponse.json({}, { status: 200 })),
+    http.patch('*', () => HttpResponse.json({}, { status: 200 })),
+    http.put('*', () => HttpResponse.json({}, { status: 200 })),
+    http.delete('*', () => HttpResponse.json({}, { status: 200 })),
 ];
 
 export default defaultHandlers;

@@ -37,12 +37,12 @@ import {
 
 const ViewPaperVersion = () => {
     const { resourceId } = useParams();
-    const paper = useSelector(state => state.viewPaper.paper);
-    const originalPaperId = useSelector(state => state.viewPaper.originalPaperId);
+    const paper = useSelector((state) => state.viewPaper.paper);
+    const originalPaperId = useSelector((state) => state.viewPaper.originalPaperId);
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
-    const dataCiteDoi = useSelector(state => state.viewPaper.dataCiteDoi);
+    const dataCiteDoi = useSelector((state) => state.viewPaper.dataCiteDoi);
 
     const { isLoading, isLoadingFailed, contributions, paperStatements } = useViewPaperVersion({
         paperId: resourceId,
@@ -57,15 +57,15 @@ const ViewPaperVersion = () => {
                     <TitleBar
                         buttonGroup={
                             <>
-                                <Button size="sm" onClick={() => setShowExportCitationsDialog(v => !v)}>
+                                <Button size="sm" onClick={() => setShowExportCitationsDialog((v) => !v)}>
                                     Export citations
                                 </Button>
-                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu>
-                                        <DropdownItem onClick={() => setShowPublishDialog(v => !v)}>Publish</DropdownItem>
+                                        <DropdownItem onClick={() => setShowPublishDialog((v) => !v)}>Publish</DropdownItem>
                                         <DropdownItem divider />
                                         <DropdownItem tag={Link} href={`${reverse(ROUTES.RESOURCE, { id: resourceId })}?noRedirect`}>
                                             View resource
@@ -124,10 +124,10 @@ const ViewPaperVersion = () => {
                 </>
             )}
             {dataCiteDoi && (
-                <ExportCitation showDialog={showExportCitationsDialog} toggle={() => setShowExportCitationsDialog(v => !v)} DOI={dataCiteDoi} />
+                <ExportCitation showDialog={showExportCitationsDialog} toggle={() => setShowExportCitationsDialog((v) => !v)} DOI={dataCiteDoi} />
             )}
-            <Modal size="lg" isOpen={showPublishDialog} toggle={() => setShowPublishDialog(v => !v)}>
-                <ModalHeader toggle={() => setShowPublishDialog(v => !v)}>Publish ORKG paper</ModalHeader>
+            <Modal size="lg" isOpen={showPublishDialog} toggle={() => setShowPublishDialog((v) => !v)}>
+                <ModalHeader toggle={() => setShowPublishDialog((v) => !v)}>Publish ORKG paper</ModalHeader>
                 <ModalBody>
                     {dataCiteDoi && originalPaperId && (
                         <Alert color="info">

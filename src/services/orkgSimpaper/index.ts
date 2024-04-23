@@ -3,7 +3,7 @@ import { submitGetRequest } from 'network';
 import qs from 'qs';
 import { SimilarPaper } from 'services/orkgSimpaper/types';
 
-export const similarPaperURL = env('SIMILAR_PAPER_URL');
+export const similarPaperURL = env('NEXT_PUBLIC_SIMILAR_PAPER_URL');
 
 export type GetSimilarPapersParams = { contributionIds: string[]; mode?: 'STATIC' | 'DYNAMIC' | null };
 

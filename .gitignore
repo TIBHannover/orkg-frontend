@@ -18,3 +18,5 @@ build/
 public/env.js
 public/__ENV.js
 public/storybook
+.next
+tsconfig.tsbuildinfo

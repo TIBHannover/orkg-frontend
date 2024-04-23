@@ -18,7 +18,7 @@ const ExportCitation = ({ isOpen, toggle, id, title, authors, classId }) => {
         },
     };
 
-    const link = `${env('URL')}${getResourceLink(classId, id)}`;
+    const link = `${env('NEXT_PUBLIC_URL')}${getResourceLink(classId, id)}`;
 
     const latex = new Cite(
         {

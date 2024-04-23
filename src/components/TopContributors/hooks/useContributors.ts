@@ -38,8 +38,8 @@ function useContributors({
             });
 
             contributorsCall
-                .then(result => {
-                    setContributors(prevResources => [...prevResources, ...(result.content || [])]);
+                .then((result) => {
+                    setContributors((prevResources) => [...prevResources, ...(result.content || [])]);
                     setIsLoading(false);
                     setHasNextPage(!result.last);
                     setIsLastPageReached(result.last);

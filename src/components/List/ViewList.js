@@ -47,7 +47,7 @@ const ViewList = ({ isEmbedded }) => {
     return (
         <Container className="embed-only p-0 position-relative">
             {!isPublished && (
-                <Alert color="warning" fade={false} className="box border-0">
+                <Alert color="warning" fade={false} className="box-shadow border-0">
                     Warning: you are viewing an unpublished version of this list. The content can be changed by anyone.{' '}
                     <Button color="link" className="p-0" onClick={toggleHistoryModal}>
                         View publish history
@@ -55,7 +55,7 @@ const ViewList = ({ isEmbedded }) => {
                 </Alert>
             )}
             {newVersionAvailable && (
-                <Alert color="warning" fade={false} className="box border-0">
+                <Alert color="warning" fade={false} className="box-shadow border-0">
                     Warning: a newer version of this list is available.{' '}
                     <Link href={reverse(ROUTES.LIST, { id: latestVersionId })}>View latest version</Link> or{' '}
                     <Link href={reverse(ROUTES.LIST_DIFF, { oldId: id, newId: latestVersionId })}>compare to latest version</Link>.

@@ -12,10 +12,10 @@ export const mergeFilters = (initialFilters: FilterConfig[], newFilters: FilterC
         return initialFilters;
     }
     let _initialFilters = initialFilters;
-    const mergedFilters = newFilters.map(newFilter => {
-        const existingFilter = _initialFilters.find(f => areFiltersEqual(newFilter, f));
+    const mergedFilters = newFilters.map((newFilter) => {
+        const existingFilter = _initialFilters.find((f) => areFiltersEqual(newFilter, f));
         if (existingFilter) {
-            _initialFilters = _initialFilters.filter(f => !areFiltersEqual(existingFilter, f));
+            _initialFilters = _initialFilters.filter((f) => !areFiltersEqual(existingFilter, f));
             return { ...newFilter, persisted: existingFilter.persisted, values: existingFilter.values };
         }
         return { ...newFilter, values: [] };

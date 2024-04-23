@@ -1,4 +1,4 @@
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 import { templatesUrl } from 'services/backend/templates';
 import {
     templateR0TemplateR40006,
@@ -11,8 +11,8 @@ import {
 } from 'services/mocks/backend/__mocks__/Templates';
 
 const templates = [
-    rest.get(`${templatesUrl}:id`, (req, res, ctx) => {
-        const { id } = req.params;
+    http.get(`${templatesUrl}:id`, ({ params }) => {
+        const { id } = params;
         if (!id) {
             throw new Error();
         }
@@ -26,9 +26,9 @@ const templates = [
             R54009: templateR54009,
         };
         if (MAPPING[id]) {
-            return res(ctx.json(MAPPING[id]));
+            return HttpResponse.json(MAPPING[id]);
         }
-        return res(ctx.json({ id, label: id, properties: [] }));
+        return HttpResponse.json({ id, label: id, properties: [] });
     }),
 ];
 

@@ -94,7 +94,7 @@ const ComparisonHeaderMenu = props => {
     const user = useSelector(state => state.auth.user);
 
     const handleFullWidth = () => {
-        setCookie('useFullWidthForComparisonTable', !fullWidth, { path: env('PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
+        setCookie('useFullWidthForComparisonTable', !fullWidth, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
         dispatch(setConfigurationAttribute({ attribute: 'fullWidth', value: !fullWidth }));
     };
 
@@ -107,7 +107,7 @@ const ComparisonHeaderMenu = props => {
     };
 
     const handleViewDensity = density => {
-        setCookie('viewDensityComparisonTable', density, { path: env('PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
+        setCookie('viewDensityComparisonTable', density, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
         dispatch(setConfigurationAttribute({ attribute: 'viewDensity', value: density }));
     };
 

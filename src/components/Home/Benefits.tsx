@@ -21,7 +21,7 @@ const CarouselContainer = styled.div`
         width: 10px !important;
         height: 10px !important;
         border-radius: 100% !important;
-        background-color: ${props => props.theme.primary} !important;
+        background-color: ${(props) => props.theme.primary} !important;
     }
 `;
 
@@ -149,8 +149,8 @@ export default function Benefits() {
                                     <Card style={{ border: 0, minHeight: 250 }}>
                                         <CardBody className="pt-0 mb-0 d-flex justify-content-center align-items-center flex-column">
                                             <CardTitle tag="h5" className="pt-0 d-flex">
-                                                <div className="flex-shrink-0" style={{ width: 50 }}>
-                                                    <Image src={item.Icon} />
+                                                <div className="flex-shrink-0">
+                                                    <Image src={item.Icon} width="50" alt="Icon representing benefits of using ORKG" />
                                                 </div>
                                                 <div className="align-items-center d-flex">{item.title}</div>
                                             </CardTitle>

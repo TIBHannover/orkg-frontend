@@ -20,7 +20,7 @@ import { convertPaperToNewFormat } from 'utils';
 
 const Toolbar = styled.div`
     width: 200px;
-    background: ${props => props.theme.secondary};
+    background: ${(props) => props.theme.secondary};
     height: 30px;
     left: 50%;
     margin-left: -100px;
@@ -44,10 +44,10 @@ const SortableHandle = sortableHandle(() => <Icon icon={faBars} className="text-
 const EditSectionListItem = ({ entry, sectionId, statementId }) => {
     const [isHovering, setIsHovering] = useState(false);
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
-    const contentType = useSelector(state => state.list.contentTypes[entry.contentTypeId]);
+    const contentType = useSelector((state) => state.list.contentTypes[entry.contentTypeId]);
     const dispatch = useDispatch();
     const isPaper = contentType?.classes?.includes(CLASSES.PAPER);
-    const contentTypeClass = contentType?.classes?.filter(classId => supportedContentTypes.find(c => c.id === classId))?.[0];
+    const contentTypeClass = contentType?.classes?.filter((classId) => supportedContentTypes.find((c) => c.id === classId))?.[0];
     const [paperData, setPaperData] = useState({});
 
     useEffect(() => {
@@ -70,13 +70,13 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
         }
     };
 
-    const handleUpdatePaper = async data => {
+    const handleUpdatePaper = async (data) => {
         dispatch(
             listEntryUpdated({
                 // TODO: the data model of lists should be updated to use the same model as the paper form, then this mapping of updated data is not needed anymore
                 contentType: { id: contentType.id },
                 label: data.title,
-                authors: data.authors.map(author => ({
+                authors: data.authors.map((author) => ({
                     id: author.id,
                     label: author.name,
                 })),
@@ -137,7 +137,7 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
                 />
             </div>
             {isOpenEditModal && (
-                <EditPaperModal paperData={paperData} afterUpdate={handleUpdatePaper} toggle={v => setIsOpenEditModal(!v)} isPaperLinkVisible />
+                <EditPaperModal paperData={paperData} afterUpdate={handleUpdatePaper} toggle={(v) => setIsOpenEditModal(!v)} isPaperLinkVisible />
             )}
         </ListGroupItem>
     );

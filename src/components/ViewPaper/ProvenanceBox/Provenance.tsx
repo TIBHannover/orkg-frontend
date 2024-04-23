@@ -40,7 +40,7 @@ const Provenance: FC<ProvenanceProps> = ({
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
     const user = useSelector((state: RootStore) => state.auth.user);
     // @ts-expect-error
-    const dataCiteDoi = useSelector(state => state.viewPaper.dataCiteDoi);
+    const dataCiteDoi = useSelector((state) => state.viewPaper.dataCiteDoi);
     const dispatch = useDispatch();
 
     return (
@@ -129,7 +129,7 @@ const Provenance: FC<ProvenanceProps> = ({
                     {!isLoadingContributors &&
                         contributors?.length > 0 &&
                         contributors
-                            .filter(c => c.created_by.id !== MISC.UNKNOWN_ID)
+                            .filter((c) => c.created_by.id !== MISC.UNKNOWN_ID)
                             .map((contributor, index) => (
                                 <div key={`cntbrs-${contributor.created_by.id}${index}`}>
                                     {/* @ts-expect-error */}
@@ -171,7 +171,7 @@ const Provenance: FC<ProvenanceProps> = ({
                 resourceId={paperResource.id}
                 observatory={observatoryInfo}
                 organization={organizationInfo}
-                toggle={() => setShowAssignObservatory(v => !v)}
+                toggle={() => setShowAssignObservatory((v) => !v)}
             />
         </div>
     );

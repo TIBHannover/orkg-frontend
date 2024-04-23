@@ -48,7 +48,7 @@ const BibTexModal = ({ toggle, onUpdateData }) => {
                     className="form-control ps-2 pe-2"
                     minRows={8}
                     value={bibTex}
-                    onChange={e => setBibTex(e.target.value)}
+                    onChange={(e) => setBibTex(e.target.value)}
                     placeholder={`@book{texbook,
     author = {Donald E. Knuth},
     year = {1986},

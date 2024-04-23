@@ -28,7 +28,7 @@ const LastUpdatesBox: FC<LastUpdatesBoxProps> = ({ researchFieldId }) => {
                     <div>
                         {!isLoading &&
                             activities?.length > 0 &&
-                            activities.slice(0, 3).map(activity => (
+                            activities.slice(0, 3).map((activity) => (
                                 <StyledActivity key={`log${activity.id}`} className="ps-3 pb-3">
                                     <div className="time">{moment(activity.created_at).fromNow()}</div>
                                     <div className="action">
@@ -54,7 +54,7 @@ const LastUpdatesBox: FC<LastUpdatesBoxProps> = ({ researchFieldId }) => {
                     </div>
                     {!isLoading && activities.length > 3 && (
                         <div className="text-center">
-                            <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
+                            <Button size="sm" onClick={() => setOpenModal((v) => !v)} color="light">
                                 View more
                             </Button>
                         </div>

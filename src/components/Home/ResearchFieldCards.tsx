@@ -7,15 +7,15 @@ import useRouter from 'components/NextJsMigration/useRouter';
 import { CLASSES, RESOURCES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import pluralize from 'pluralize';
-import { useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Button } from 'reactstrap';
 import { resourcesUrl } from 'services/backend/resources';
+import { ResearchFieldStat } from 'services/backend/stats';
 import { Node } from 'services/backend/types';
 import styled from 'styled-components';
 import { reverseWithSlug } from 'utils';
-import { ResearchFieldStat } from 'services/backend/stats';
 
 /* Bootstrap card column is not working correctly working with vertical alignment,
 thus used custom styling here */
@@ -97,8 +97,8 @@ const AnimationContainer = styled(CSSTransition)`
 `;
 
 const ShowMore = styled(Card)`
-    background: ${props => props.theme.light}!important;
-    color: ${props => props.theme.bodyColor} !important;
+    background: ${(props) => props.theme.light}!important;
+    color: ${(props) => props.theme.bodyColor} !important;
     text-align: center;
 `;
 type SelectedType = {
@@ -128,7 +128,7 @@ const ResearchFieldCards = ({
     const [showMoreFields, setShowMoreFields] = useState(false);
     const router = useRouter();
     const researchFieldsSliced = showMoreFields ? researchFields : researchFields.slice(0, MAX_FIELDS);
-
+    const instanceId = useId();
     return (
         <>
             <div className="row" style={{ position: 'relative' }}>
@@ -165,6 +165,7 @@ const ResearchFieldCards = ({
                             cssClasses="form-control-sm"
                             isDisabled={isLoading}
                             innerRef={rfAutocompleteRef}
+                            instanceId={instanceId}
                         />
                     </div>
                     {selectedFieldId !== RESOURCES.RESEARCH_FIELD_MAIN && (
@@ -200,7 +201,7 @@ const ResearchFieldCards = ({
                                     {/* @ts-expect-error */}
                                     <Card
                                         disabled={researchFieldStats?.[index]?.total === 0}
-                                        to={reverseWithSlug(ROUTES.HOME_WITH_RESEARCH_FIELD, {
+                                        href={reverseWithSlug(ROUTES.HOME_WITH_RESEARCH_FIELD, {
                                             researchFieldId: field.id,
                                             slug: field.label,
                                         })}
@@ -219,10 +220,9 @@ const ResearchFieldCards = ({
                                     </Card>
                                 </AnimationContainer>
                             ))}
-
                             {researchFields.length > MAX_FIELDS && (
                                 <AnimationContainer classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
-                                    <ShowMore role="button" onClick={() => setShowMoreFields(v => !v)} as="div">
+                                    <ShowMore role="button" onClick={() => setShowMoreFields((v) => !v)} as="div">
                                         {showMoreFields ? 'Show less fields' : 'Show more fields...'}
                                     </ShowMore>
                                 </AnimationContainer>

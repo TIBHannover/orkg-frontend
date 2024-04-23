@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { match } from 'path-to-regexp';
+import ROUTES from 'constants/routes';
 import arrayMove from 'array-move';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
-import { match } from 'path-to-regexp';
 import { createLiteral, updateLiteral } from 'services/backend/literals';
 import { createResource, updateResource, updateResourceClasses } from 'services/backend/resources';
 import {
@@ -15,7 +15,7 @@ import {
     getStatementsBySubjectAndPredicate,
     updateStatement,
 } from 'services/backend/statements';
-import { LOCATION_CHANGE } from 'utils';
+import { LOCATION_CHANGE } from 'components/ResetStoreOnNavigate/ResetStoreOnNavigate';
 
 const initialState = {
     articleId: null,

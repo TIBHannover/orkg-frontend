@@ -1,9 +1,8 @@
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import env from 'components/NextJsMigration/env';
-import fetch from 'cross-fetch';
 
-export const geonamesUrl = env('GEONAMES_API_SEARCH_URL');
-export const geonamesUsername = env('GEONAMES_API_USERNAME');
+export const geonamesUrl = env('NEXT_PUBLIC_GEONAMES_API_SEARCH_URL');
+export const geonamesUsername = env('NEXT_PUBLIC_GEONAMES_API_USERNAME');
 
 /**
  * Fetch 10 autocomplete options from geonames.org API
