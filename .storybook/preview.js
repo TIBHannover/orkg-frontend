@@ -4,7 +4,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import styled, { createGlobalStyle } from 'styled-components';
 import 'tippy.js/dist/tippy.css';
 import { Wrapper } from '../src/testUtils';
-import '../public/__ENV';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 
@@ -27,7 +26,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 export const decorators = [
-    Story => (
+    (Story) => (
         <DndProvider backend={HTML5Backend}>
             <Wrapper>
                 <GlobalStyle />
