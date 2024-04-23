@@ -1,26 +1,26 @@
 'use client';
 
-import { Container, Row, Col } from 'reactstrap';
-import ResearchFieldCards from 'components/Home/ResearchFieldCards';
-import ObservatoriesBox from 'components/Home/ObservatoriesBox';
-import LastUpdatesBox from 'components/LastUpdatesBox/LastUpdatesBox';
 import Benefits from 'components/Home/Benefits';
-import News from 'components/Home/News';
-import ContributorsBox from 'components/TopContributors/ContributorsBox';
-import useResearchFieldSelector from 'components/Home/hooks/useResearchFieldSelector';
-import { RESOURCES } from 'constants/graphSettings';
-import { Helmet } from 'react-helmet';
-import env from 'components/NextJsMigration/env';
-import HomeAlerts from 'components/HomeAlerts/HomeAlerts';
 import HelpTour from 'components/Home/HelpTour';
 import MastodonTimeline from 'components/Home/MastodonTimeline';
+import News from 'components/Home/News';
+import ObservatoriesBox from 'components/Home/ObservatoriesBox';
+import ResearchFieldCards from 'components/Home/ResearchFieldCards';
+import useResearchFieldSelector from 'components/Home/hooks/useResearchFieldSelector';
+import HomeAlerts from 'components/HomeAlerts/HomeAlerts';
+import LastUpdatesBox from 'components/LastUpdatesBox/LastUpdatesBox';
+import env from 'components/NextJsMigration/env';
 import HomeTabsContainer from 'components/Tabs/HomeTabsContainer';
+import ContributorsBox from 'components/TopContributors/ContributorsBox';
+import { RESOURCES } from 'constants/graphSettings';
+import { Helmet } from 'react-helmet';
+import { Col, Container, Row } from 'reactstrap';
 
 export default function Home() {
     const { selectedFieldId, selectedFieldLabel, researchFields, researchFieldStats, isLoadingFields, isLoadingStats } = useResearchFieldSelector();
 
     return (
-        <Container style={{ marginTop: env('IS_TESTING_SERVER') === 'true' ? -20 : -70 }}>
+        <Container style={{ marginTop: env('NEXT_PUBLIC_IS_TESTING_SERVER') === 'true' ? 20 : -70 }}>
             <Helmet>
                 <title>Open Research Knowledge Graph</title>
                 <meta property="og:title" content="Open Research Knowledge Graph" />
@@ -36,7 +36,7 @@ export default function Home() {
                     <div className="box rounded-3 p-3" id="research-field-cards">
                         <ResearchFieldCards
                             selectedFieldLabel={selectedFieldLabel}
-                            selectedFieldId={selectedFieldId}
+                            selectedFieldId={selectedFieldId.toString()}
                             researchFields={researchFields}
                             researchFieldStats={researchFieldStats}
                             isLoading={isLoadingFields}
@@ -49,7 +49,7 @@ export default function Home() {
             <Row>
                 <Col md="8">
                     <div className="mt-3">
-                        <HomeTabsContainer researchFieldId={selectedFieldId} researchFieldLabel={selectedFieldLabel} />
+                        <HomeTabsContainer researchFieldId={selectedFieldId.toString()} researchFieldLabel={selectedFieldLabel} />
                     </div>
                 </Col>
                 <Col md="4">
@@ -73,15 +73,15 @@ export default function Home() {
                     </div>
 
                     <div className="mt-3 d-flex flex-column">
-                        <ObservatoriesBox researchFieldId={selectedFieldId} />
+                        <ObservatoriesBox researchFieldId={selectedFieldId.toString()} />
                     </div>
 
                     <div className="mt-3 d-flex flex-column">
-                        <ContributorsBox researchFieldId={selectedFieldId} />
+                        <ContributorsBox researchFieldId={selectedFieldId.toString()} />
                     </div>
 
                     <div className="mt-3 d-flex flex-column">
-                        <LastUpdatesBox researchFieldId={selectedFieldId} />
+                        <LastUpdatesBox researchFieldId={selectedFieldId.toString()} />
                     </div>
                 </Col>
             </Row>

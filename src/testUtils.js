@@ -5,20 +5,17 @@ import MATH_JAX_CONFIG from 'constants/mathJax';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
-import { HistoryRouter as Router } from 'redux-first-history/rr6';
 import configureStore from 'store';
 import { ThemeProvider } from 'styled-components';
 
 const Wrapper = ({ children, initialState = {}, store = configureStore(initialState) }) => {
-    const { store: _store, history } = store;
+    const { store: _store } = store;
 
     return (
         <Provider store={_store}>
             <ThemeProvider theme={theme}>
                 <MathJaxContext config={MATH_JAX_CONFIG}>
-                    <Router history={history} noInitialPop>
-                        {children}
-                    </Router>
+                    {children}
                     <ToastContainer position="top-right" autoClose={5000} hideProgressBar className="toast-container" icon={false} theme="colored" />
                 </MathJaxContext>
             </ThemeProvider>
@@ -47,4 +44,4 @@ const render = (ui, { initialState, store, ...renderOptions } = {}) => {
 // re-export everything
 export * from '@testing-library/react';
 // override render method
-export { render, Wrapper };
+export { Wrapper, render };

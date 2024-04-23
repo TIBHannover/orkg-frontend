@@ -66,8 +66,8 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
                 });
             }
             problemsService
-                .then(result => {
-                    setProblems(prevResources => [...prevResources, ...result.content]);
+                .then((result) => {
+                    setProblems((prevResources) => [...prevResources, ...result.content]);
                     setIsLoading(false);
                     setHasNextPage(!result.last);
                     setIsLastPageReached(result.last);
@@ -84,11 +84,11 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
         [sort, id, pageSize, by, includeSubFields],
     );
 
-    const deleteResearchProblem = async researchProblem => {
+    const deleteResearchProblem = async (researchProblem) => {
         await addResourceToObservatory({ observatory_id: MISC.UNKNOWN_ID, organization_id: MISC.UNKNOWN_ID, id: researchProblem.id })
             .then(() => {
-                setProblems(v => v.filter(t => t.id !== researchProblem.id));
-                setTotalElements(r => r - 1);
+                setProblems((v) => v.filter((t) => t.id !== researchProblem.id));
+                setTotalElements((r) => r - 1);
                 toast.success('Research problem deleted successfully');
             })
             .catch(() => {

@@ -57,13 +57,13 @@ const useOverwriteValuesModal = () => {
     const OverwriteValuesModal = useCallback(
         () =>
             isOpenModal && (
-                <Modal isOpen toggle={() => setIsOpenModal(v => !v)}>
-                    <ModalHeader toggle={() => setIsOpenModal(v => !v)}>Values will be overwritten</ModalHeader>
+                <Modal isOpen toggle={() => setIsOpenModal((v) => !v)}>
+                    <ModalHeader toggle={() => setIsOpenModal((v) => !v)}>Values will be overwritten</ModalHeader>
                     <ModalBody>
                         <p>The following values will be overwritten if you continue</p>
                         <Table bordered size="sm">
                             <tbody>
-                                {valuesToBeOverwritten.map(value => (
+                                {valuesToBeOverwritten.map((value) => (
                                     <Fragment key={value.key}>
                                         <tr className="bg-light">
                                             <th colSpan="2">{labels[value.key]}</th>

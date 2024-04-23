@@ -48,7 +48,7 @@ const AllFiltersOffCanvas: FC<AllFiltersOffCanvasProps> = ({
 
     const openEditFilterModal = (filter: FilterConfig | null) => {
         setCurrentFilter(filter);
-        setShowEditDialog(v => !v);
+        setShowEditDialog((v) => !v);
     };
 
     return (
@@ -109,7 +109,7 @@ const AllFiltersOffCanvas: FC<AllFiltersOffCanvasProps> = ({
                 isSaving={isSaving}
                 filter={currentFilter}
                 isOpen={showEditDialog}
-                toggle={() => setShowEditDialog(v => !v)}
+                toggle={() => setShowEditDialog((v) => !v)}
                 handleSave={handleSaveFilter}
             />
         </Offcanvas>

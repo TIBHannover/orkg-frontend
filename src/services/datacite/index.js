@@ -4,7 +4,7 @@ export const getCitationByDOI = (DOI, style = '', header = 'text/x-bibliography'
     let headers = '';
     headers = { Accept: `${header}` };
     const myHeaders = headers ? new Headers(headers) : {};
-    const url = `${env('DATACITE_URL')}/${DOI}?style=${style}`;
+    const url = `${env('NEXT_PUBLIC_DATACITE_URL')}/${DOI}?style=${style}`;
 
     return new Promise((resolve, reject) => {
         fetch(url, {

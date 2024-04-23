@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect } from 'react';
 import ROUTES from 'constants/routes.js';
 import { match } from 'path-to-regexp';

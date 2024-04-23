@@ -38,7 +38,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
         }
     };
 
-    const handleUpdatePaper = newData => {
+    const handleUpdatePaper = (newData) => {
         setData(newData);
         setIsOpenEditModal(false);
         dispatch(
@@ -50,23 +50,23 @@ const TableHeaderColumn = ({ contribution, paper }) => {
         );
     };
 
-    const handleUpdateContribution = newContribution => {
+    const handleUpdateContribution = (newContribution) => {
         setIsOpenEditModal(false);
         dispatch(contributionUpdated(newContribution));
         // Fetch templates of the classes
-        newContribution?.classes?.filter(c => c).map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+        newContribution?.classes?.filter((c) => c).map((classID) => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
         toast.success('Contribution updated successfully');
     };
 
     return (
         <ItemHeader key={contribution.id}>
             <ItemHeaderInner className="position-relative contribution-editor">
-                <Tippy content="Edit paper's metadata" disabled={env('PWC_USER_ID') === contribution.created_by}>
+                <Tippy content="Edit paper's metadata" disabled={env('NEXT_PUBLIC_PWC_USER_ID') === contribution.created_by}>
                     <span>
                         <Button
                             color="link"
                             className="text-secondary-darker p-0 text-start text-decoration-none user-select-auto"
-                            onClick={env('PWC_USER_ID') !== contribution.created_by ? handleEditPaper : undefined}
+                            onClick={env('NEXT_PUBLIC_PWC_USER_ID') !== contribution.created_by ? handleEditPaper : undefined}
                         >
                             {paper.label || <em>No title</em>}
                         </Button>
@@ -131,14 +131,14 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                 <EditResourceDialog
                     resource={contribution}
                     afterUpdate={handleUpdateContribution}
-                    toggle={v => setIsOpenContributionModal(!v)}
+                    toggle={(v) => setIsOpenContributionModal(!v)}
                     isOpen
                     showResourceLink
                     fixedClasses={[CLASSES.CONTRIBUTION]}
                 />
             )}
             {isOpenEditModal && (
-                <EditPaperModal paperData={data} afterUpdate={handleUpdatePaper} toggle={v => setIsOpenEditModal(!v)} isPaperLinkVisible />
+                <EditPaperModal paperData={data} afterUpdate={handleUpdatePaper} toggle={(v) => setIsOpenEditModal(!v)} isPaperLinkVisible />
             )}
         </ItemHeader>
     );

@@ -1,6 +1,6 @@
 import env from 'components/NextJsMigration/env';
 
-const grobidUrl = env('GROBID_URL');
+const grobidUrl = env('NEXT_PUBLIC_GROBID_URL');
 
 export default async function processPdf({ pdf }) {
     const form = new FormData();

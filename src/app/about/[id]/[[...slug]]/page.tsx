@@ -21,21 +21,15 @@ const About = () => {
     const [menuItems, setMenuItems] = useState<HelpArticle[]>([]);
     const { loadPage, page, isLoading, isNotFound } = usePage();
     const params = useParams();
-    const id = params.id ? parseInt(params.id, 10) : null;
+    const id = parseInt(params.id.toString(), 10);
 
     // load page content
     useEffect(() => {
         const load = async () => {
-            let aboutPageId = id;
-            // if not page ID is specified, load the first page from the menu
-            if (!id) {
-                const _menuItems = await getAboutPages();
-                aboutPageId = _menuItems?.data?.[0]?.id;
-            }
-            if (!aboutPageId || aboutPageId === page?.id) {
+            if (id === page?.id) {
                 return;
             }
-            const pagePromise = getAboutPage(aboutPageId);
+            const pagePromise = getAboutPage(id);
             loadPage({ pagePromise });
         };
         load();
@@ -53,7 +47,7 @@ const About = () => {
             try {
                 setMenuItems((await getAboutPages(page?.attributes?.category?.data?.id)).data);
             } catch (e) {
-                console.log(e);
+                console.error(e);
                 setIsFailedLoadingMenu(true);
             } finally {
                 setIsLoadingMenu(false);

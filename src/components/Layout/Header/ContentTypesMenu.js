@@ -27,7 +27,7 @@ const ContentTypesMenu = ({ closeMenu }) => (
         </DropdownToggle>
         <DropdownMenu>
             {supportedContentTypes.map(({ id, label }) => (
-                <DropdownItem key={id} tag={Link} end href={reverse(ROUTES.CONTENT_TYPES, { type: id })} onClick={closeMenu}>
+                <DropdownItem key={id} tag={Link} href={reverse(ROUTES.CONTENT_TYPES, { type: id })} onClick={closeMenu}>
                     {upperFirst(pluralize(label || '', 0, false))}
                 </DropdownItem>
             ))}

@@ -116,11 +116,7 @@ export const SmartPropertySuggestions = ({ properties, handleCreate }) => {
             handleReload={getChatResponse}
         >
             <Tippy content="Get suggestions for new properties">
-                <button
-                    className="btn btn-smart px-3 btn-sm"
-                    style={{ marginLeft: 1 }}
-                    onClick={() => setIsOpenSmartTooltip(v => !v)}
-                >
+                <button className="btn btn-smart px-3 btn-sm" style={{ marginLeft: 1 }} onClick={() => setIsOpenSmartTooltip(v => !v)}>
                     <Icon icon={faLightbulb} style={{ fontSize: '120%' }} />
                 </button>
             </Tippy>

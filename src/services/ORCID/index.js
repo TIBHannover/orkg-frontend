@@ -1,7 +1,7 @@
 import { submitGetRequest } from 'network';
 import env from 'components/NextJsMigration/env';
 
-const url = env('ORCID_API_URL');
+const url = env('NEXT_PUBLIC_ORCID_API_URL');
 
 const getFullName = name => {
     let fullName = name['family-name'] && name['family-name'].value ? name['family-name'].value : '';

@@ -46,7 +46,7 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
 
         await handleSave(filter?.id ?? null, {
             label,
-            path: path?.map(p => (p as Predicate).id),
+            path: path?.map((p) => (p as Predicate).id),
             range: (range as Class).id ?? null,
             featured: persisted && featured,
             exact,
@@ -103,7 +103,7 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
                             type="text"
                             placeholder="Enter label for the filter"
                             value={label}
-                            onChange={e => setLabel(e.target.value)}
+                            onChange={(e) => setLabel(e.target.value)}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -111,7 +111,7 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
                         <AutoComplete
                             entityType={ENTITIES.PREDICATE}
                             placeholder="Select or type to enter a property"
-                            onChange={selected => {
+                            onChange={(selected) => {
                                 // blur the field allows to focus and open the menu again
                                 if (pathAutocompleteRef.current) {
                                     pathAutocompleteRef.current.blur();
@@ -137,7 +137,7 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
                         <AutoComplete
                             entityType={ENTITIES.CLASS}
                             placeholder="Select or type to enter a class"
-                            onChange={selected => {
+                            onChange={(selected) => {
                                 // blur the field allows to focus and open the menu again
                                 if (classAutocompleteRef.current) {
                                     classAutocompleteRef.current.blur();
@@ -150,7 +150,10 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
                             allowCreate={false}
                             copyValueButton={false}
                             isClearable
-                            defaultOptions={DATA_TYPES.filter(dt => dt.classId !== CLASSES.RESOURCE).map(dt => ({ label: dt.name, id: dt.classId }))}
+                            defaultOptions={DATA_TYPES.filter((dt) => dt.classId !== CLASSES.RESOURCE).map((dt) => ({
+                                label: dt.name,
+                                id: dt.classId,
+                            }))}
                             innerRef={classAutocompleteRef}
                             linkButton={(range as Class)?.id ? reverse(ROUTES.CLASS, { id: (range as Class).id }) : ''}
                             linkButtonTippy="Go to class page"

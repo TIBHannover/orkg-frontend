@@ -47,11 +47,13 @@ const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, h
                                                     <small>
                                                         DOI:{' '}
                                                         <a
-                                                            href={`https://doi.org/${env('DATACITE_DOI_PREFIX')}/${version.publishedResource.id}`}
+                                                            href={`https://doi.org/${env('NEXT_PUBLIC_DATACITE_DOI_PREFIX')}/${
+                                                                version.publishedResource.id
+                                                            }`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                         >
-                                                            https://doi.org/{env('DATACITE_DOI_PREFIX')}/{version.publishedResource.id}
+                                                            https://doi.org/{env('NEXT_PUBLIC_DATACITE_DOI_PREFIX')}/{version.publishedResource.id}
                                                         </a>
                                                     </small>
                                                 </>

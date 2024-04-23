@@ -1,5 +1,5 @@
 import { createReference, setUsedReferences as setUsedReferencesAction } from 'slices/reviewSlice';
-import { sanitize } from 'dompurify';
+import { sanitize } from 'isomorphic-dompurify';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

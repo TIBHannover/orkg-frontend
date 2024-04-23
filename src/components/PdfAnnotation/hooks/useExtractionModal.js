@@ -16,11 +16,11 @@ function useExtractionModal(props) {
     const editorRef = createRef();
     const dispatch = useDispatch();
     const { readString } = usePapaParse();
-    const pdf = useSelector(state => state.pdfAnnotation.pdf);
-    const tableData = useSelector(state => state.pdfAnnotation.tableData[props.id]);
+    const pdf = useSelector((state) => state.pdfAnnotation.pdf);
+    const tableData = useSelector((state) => state.pdfAnnotation.tableData[props.id]);
     const extractionSuccessful = tableData && tableData.length > 0;
 
-    const pxToPoint = x => (x * 72) / 96;
+    const pxToPoint = (x) => (x * 72) / 96;
 
     useEffect(() => {
         const performTableExtraction = async () => {
@@ -34,22 +34,22 @@ function useExtractionModal(props) {
             const { x, y, w, h } = props.region;
 
             const form = new FormData();
-            form.append('file', await fetch(pdf).then(content => content.blob()));
+            form.append('file', await fetch(pdf).then((content) => content.blob()));
             form.append(
                 'payload',
                 JSON.stringify({ page_number: props.pageNumber, region: [pxToPoint(y), pxToPoint(x), pxToPoint(y + h), pxToPoint(x + w)] }),
             );
             extractTable(form)
-                .then(data => {
+                .then((data) => {
                     dispatch(
                         setTableData({
                             id: props.id,
-                            tableData: zip(...Object.values(data.payload.table)).map(i => i.map(j => (j !== 'nan' ? j : ''))),
+                            tableData: zip(...Object.values(data.payload.table)).map((i) => i.map((j) => (j !== 'nan' ? j : ''))),
                         }),
                     );
                     setLoading(false);
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         };
@@ -77,7 +77,7 @@ function useExtractionModal(props) {
         }
     };
 
-    const confirmationModal = papers => (
+    const confirmationModal = (papers) => (
         <div>
             A contribution will be added for the following papers
             <ListGroup className="mt-4">
@@ -149,7 +149,7 @@ function useExtractionModal(props) {
             const title = getFirstValue(rowObject, 'paper:title');
             const authors = getFirstValue(rowObject, 'paper:authors')
                 .split(';')
-                .map(name => ({ label: name }));
+                .map((name) => ({ label: name }));
             const publicationMonth = getFirstValue(rowObject, 'paper:publication_month');
             const publicationYear = getFirstValue(rowObject, 'paper:publication_year');
             const doi = getFirstValue(rowObject, 'paper:doi');

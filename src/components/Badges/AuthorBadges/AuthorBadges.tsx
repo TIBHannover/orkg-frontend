@@ -51,7 +51,7 @@ const AuthorBadges: FC<AuthorBadgesProps> = ({ authors }) => {
                 ),
             )}
             {authors.length > AUTHOR_LIMIT && (
-                <Button color="light" size="sm" className="py-0" onClick={() => setIsExpanded(v => !v)}>
+                <Button color="light" size="sm" className="py-0" onClick={() => setIsExpanded((v) => !v)}>
                     {isExpanded ? 'Show less' : `Show ${authors.length - AUTHOR_LIMIT} more`}
                 </Button>
             )}

@@ -36,7 +36,7 @@ const IntegratedListHeader: FC<IntegratedListHeaderProps> = ({ id, page, isLoadi
             const params = new URLSearchParams(searchParams.toString());
             params.set(
                 'classesFilter',
-                (classesFilter?.includes(_id) ? classesFilter.filter(v => v !== _id) : [...(classesFilter ?? []), _id]).join(','),
+                (classesFilter?.includes(_id) ? classesFilter.filter((v) => v !== _id) : [...(classesFilter ?? []), _id]).join(','),
             );
             router.push(`?${params.toString()}`);
         }

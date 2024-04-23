@@ -16,7 +16,7 @@ const usePredicatesRecommendation = ({ title, abstract }) => {
     useEffect(() => {
         const fetchRecommendation = () => {
             // disable this feature in production
-            if (env('IS_TESTING_SERVER') !== 'true') {
+            if (env('NEXT_PUBLIC_IS_TESTING_SERVER') !== 'true') {
                 return;
             }
             setIsLoadingRP(true);

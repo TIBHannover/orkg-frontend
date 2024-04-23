@@ -4,7 +4,7 @@ import env from 'components/NextJsMigration/env';
 import { Contributor, User } from 'services/backend/types';
 
 export const userUrl = `${url}user/`;
-export const authenticationUrl = env('BACKEND_URL');
+export const authenticationUrl = env('NEXT_PUBLIC_BACKEND_URL');
 
 export const getUserInformation = () => submitGetRequest(`${userUrl}`, {}, true);
 
@@ -57,7 +57,7 @@ export const signInWithEmailAndPassword = async (
     const data = {
         username: email,
         grant_type: 'password',
-        client_id: `${env('AUTHENTICATION_CLIENT_ID')}`,
+        client_id: `${env('NEXT_PUBLIC_AUTHENTICATION_CLIENT_ID')}`,
         password,
     };
 

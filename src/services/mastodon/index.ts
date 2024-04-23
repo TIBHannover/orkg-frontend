@@ -1,8 +1,8 @@
 import { submitGetRequest } from 'network';
 import env from 'components/NextJsMigration/env';
 
-export const mastodonUrl = `${env('MASTODON_URL')}`;
-const accountId = env('MASTODON_ACCOUNT_ID');
+export const mastodonUrl = `${env('NEXT_PUBLIC_MASTODON_URL')}`;
+const accountId = env('NEXT_PUBLIC_MASTODON_ACCOUNT_ID');
 
 export type Message = {
     reblog?: Message;

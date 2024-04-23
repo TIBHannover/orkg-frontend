@@ -1,5 +1,5 @@
 import showdownVideoPlugin from 'components/ArticleBuilder/MarkdownEditor/showdownVideoPlugin';
-import { sanitize } from 'dompurify';
+import { sanitize } from 'isomorphic-dompurify';
 import PropTypes from 'prop-types';
 import * as Showdown from 'showdown';
 import footnotes from 'showdown-footnotes';

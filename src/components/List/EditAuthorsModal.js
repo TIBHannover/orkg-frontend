@@ -10,13 +10,13 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { authorsUpdated, listLoaded } from 'slices/listSlice';
 import { convertAuthorsToNewFormat, convertAuthorsToOldFormat } from 'utils';
 
-const EditAuthorsModal = props => {
+const EditAuthorsModal = (props) => {
     const { show, toggle } = props;
     const [authors, setAuthors] = useState([]);
     const [isSaving, setIsSaving] = useState(false);
-    const authorResources = useSelector(state => state.list.authorResources);
-    const authorListResource = useSelector(state => state.list.authorListResource);
-    const list = useSelector(state => state.list.list);
+    const authorResources = useSelector((state) => state.list.authorResources);
+    const authorListResource = useSelector((state) => state.list.authorListResource);
+    const list = useSelector((state) => state.list.list);
 
     const dispatch = useDispatch();
 
@@ -28,7 +28,7 @@ const EditAuthorsModal = props => {
         setAuthors(_authors);
     }, [show, authorResources]);
 
-    const onChange = _authors => {
+    const onChange = (_authors) => {
         setAuthors(_authors);
     };
 
@@ -63,7 +63,7 @@ const EditAuthorsModal = props => {
                         </AuthorTag>
                     ))}
                 {!isSaving && (
-                    <AuthorsInput value={convertAuthorsToNewFormat(authors)} handler={_authors => onChange(convertAuthorsToOldFormat(_authors))} />
+                    <AuthorsInput value={convertAuthorsToNewFormat(authors)} handler={(_authors) => onChange(convertAuthorsToOldFormat(_authors))} />
                 )}
             </ModalBody>
             <ModalFooter>

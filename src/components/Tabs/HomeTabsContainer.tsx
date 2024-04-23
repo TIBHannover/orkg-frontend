@@ -1,27 +1,28 @@
 import FeaturedItems from 'components/Home/FeaturedItems';
+import useParams from 'components/NextJsMigration/useParams';
+import useRouter from 'components/NextJsMigration/useRouter';
 import useSearchParams from 'components/NextJsMigration/useSearchParams';
 import Tabs from 'components/Tabs/Tabs';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
-import { useNavigate, useParams } from 'react-router-dom';
 
 function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFieldId: string; researchFieldLabel: string }) {
     const params = useParams();
+    const router = useRouter();
     const searchParams = useSearchParams();
     const { slug } = params;
-    const navigate = useNavigate();
 
     const onTabChange = (tab: string) => {
         if (researchFieldId && slug) {
-            navigate(
+            router.push(
                 `${`${reverse(ROUTES.HOME_WITH_RESEARCH_FIELD, {
                     researchFieldId,
                     slug,
                 })}`}?tab=${tab}`,
             );
         } else {
-            navigate(
+            router.push(
                 `${`${reverse(ROUTES.HOME, {
                     researchFieldId,
                     slug,
@@ -53,7 +54,7 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFi
         },
     ];
 
-    const activeKey = items.map(i => i.label.toLowerCase()).includes(searchParams.get('tab') ?? '') ? searchParams.get('tab') : 'comparisons';
+    const activeKey = items.map((i) => i.label.toLowerCase()).includes(searchParams.get('tab') ?? '') ? searchParams.get('tab') : 'comparisons';
 
     return (
         // @ts-expect-error

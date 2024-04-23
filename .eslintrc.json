@@ -7,6 +7,9 @@
         "plugin:react/recommended",
         "plugin:react/jsx-runtime"
     ],
+    "globals": {
+        "globalThis": false
+    },
     "plugins": ["prettier", "jsx-a11y", "no-relative-import-paths"],
     "rules": {
         "prettier/prettier": 1,
@@ -117,7 +120,8 @@
         "prefer-regex-literals": 1,
         "wrap-iife": 1,
         "no-constructor-return": 1,
-        "react/display-name": 1
+        "react/display-name": 1,
+        "react/no-unknown-property": 1
     },
     "overrides": [
         {

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { Button, ListGroup, ListGroupItem } from 'reactstrap';
 import { loadMastodonTimeline, Message } from 'services/mastodon';
-import { sanitize } from 'dompurify';
+import { sanitize } from 'isomorphic-dompurify';
 import moment from 'moment';
 import styled from 'styled-components';
 
@@ -23,7 +23,7 @@ const MastodonTimeline = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [messages, setMessages] = useState<Message[]>([]);
 
-    const handleLoadTimeline = () => setCookie(COOKIE_NAME, true, { path: env('PUBLIC_URL'), maxAge: 604800 });
+    const handleLoadTimeline = () => setCookie(COOKIE_NAME, true, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 604800 });
 
     const isVisible = cookies[COOKIE_NAME];
 
@@ -39,7 +39,7 @@ const MastodonTimeline = () => {
         }
     }, [isVisible]);
 
-    if (!env('MASTODON_URL') || !env('MASTODON_ACCOUNT_ID')) {
+    if (!env('NEXT_PUBLIC_MASTODON_URL') || !env('NEXT_PUBLIC_MASTODON_ACCOUNT_ID')) {
         return null;
     }
 

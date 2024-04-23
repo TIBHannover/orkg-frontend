@@ -1,10 +1,10 @@
-// import { usePathname as usePathnameNext } from 'next/navigation';
+import { usePathname as usePathnameNext } from 'next/navigation';
 
 // CRA-CODE
-const usePathname = () => window.location.pathname;
-export default usePathname;
+// const usePathname = () => window.location.pathname;
+// export default usePathname;
 
 // NEXT-CODE
-// const usePathname = () => usePathnameNext();
+const usePathname = () => usePathnameNext();
 
-// export default usePathname;
+export default usePathname;

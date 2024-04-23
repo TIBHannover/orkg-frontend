@@ -9,6 +9,7 @@ import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import Link from 'components/NextJsMigration/Link';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
 import REGEX from 'constants/regex';
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
@@ -28,7 +29,6 @@ import { createLiteralStatement } from 'services/backend/statements';
 import { getAllOntologies, getOntologyTerms, getTermMatchingAcrossOntologies, olsBaseUrl, selectTerms } from 'services/ols/index';
 import styled, { withTheme } from 'styled-components';
 import { asyncLocalStorage, compareOption } from 'utils';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 export const StyledAutoCompleteInputFormControl = styled.div`
     padding-top: 0 !important;
@@ -103,6 +103,7 @@ const Autocomplete = ({
     allowCreate,
     linkButtonTippy,
     handleCreateExistingLabel,
+    instanceId = undefined,
 }) => {
     const [inputValue, setInputValue] = useState(typeof value !== 'object' || value === null ? value : null);
     const [menuIsOpen, setMenuIsOpen] = useState(false);
@@ -915,6 +916,7 @@ const Autocomplete = ({
                     isDisabled={isDisabled}
                     isMulti={isMulti}
                     inputId={inputId}
+                    instanceId={instanceId}
                     classNamePrefix="react-select"
                     isValidNewOption={(inputValue, selectValue, selectOptions) => {
                         if (handleCreateExistingLabel) {
@@ -983,6 +985,7 @@ Autocomplete.propTypes = {
     fixedOptions: PropTypes.array,
     onOntologySelectorIsOpenStatusChange: PropTypes.func,
     showTreeSelector: PropTypes.bool,
+    instanceId: PropTypes.string,
 };
 
 export default withTheme(Autocomplete);

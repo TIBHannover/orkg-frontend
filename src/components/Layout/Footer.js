@@ -138,11 +138,9 @@ const Footer = () => (
                             </li>
                             <li>
                                 <i className="me-3">Version</i>
-                                <Tippy content="GIT_VERSION_LONG">
-                                    <span>
-                                        <Badge color="secondary">GIT_VERSION</Badge>
-                                    </span>
-                                </Tippy>
+                                <span>
+                                    <Badge color="secondary">{process.env.version}</Badge>
+                                </span>
                             </li>
                         </ul>
                     </FooterCol>

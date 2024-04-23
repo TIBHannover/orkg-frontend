@@ -32,7 +32,7 @@ const TableCell = ({ values, contributionId, propertyId }) => {
                         );
                     })}
                 </FlipMove>
-                {env('PWC_USER_ID') !== contribution?.created_by && (
+                {env('NEXT_PUBLIC_PWC_USER_ID') !== contribution?.created_by && (
                     <TableCellValueCreate
                         isVisible={!disableCreate}
                         contributionId={contributionId}

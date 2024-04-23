@@ -15,7 +15,7 @@ import GeneralSettings from 'components/UserSettings/GeneralSettings';
 import Password from 'components/UserSettings/Password';
 import requireAuthentication from 'requireAuthentication';
 
-export const StyledSettingsMenu = styled.div`
+const StyledSettingsMenu = styled.div`
     padding: 0;
     padding-top: 15px;
 

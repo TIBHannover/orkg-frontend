@@ -64,14 +64,14 @@ const NumberInputField: FC<NumberInputFieldProps> = ({ filter, updateValue }) =>
         <div style={{ minWidth: '250px' }}>
             <SelectGlobalStyle />
             <CreatableSelect
-                onChange={selected => {
+                onChange={(selected) => {
                     updateValue(selected.map((v: { label: string; value: string; __isNew__?: boolean }) => convertString2FilterConfigValue(v)));
                 }}
                 classNamePrefix="react-select"
                 isClearable={true}
                 isSearchable={true}
                 isMulti={true}
-                value={values.map(v => convertFilterConfigValue2String(v))}
+                value={values.map((v) => convertFilterConfigValue2String(v))}
                 noOptionsMessage={noOptionsMessage}
                 formatCreateLabel={formatCreateLabel}
                 isValidNewOption={isValidNewOption}

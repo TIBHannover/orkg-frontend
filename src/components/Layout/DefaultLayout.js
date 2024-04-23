@@ -1,18 +1,22 @@
-import { useEffect, useState } from 'react';
-import 'assets/scss/DefaultLayout.scss';
-import { ToastContainer, Slide } from 'react-toastify';
-import { Alert, Button } from 'reactstrap';
-import { useCookies } from 'react-cookie';
-import Header from 'components/Layout/Header/Header';
-import Footer from 'components/Layout/Footer';
-import PropTypes from 'prop-types';
+'use client';
+
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import styled from 'styled-components';
-import ROUTES from 'constants/routes';
+import 'assets/scss/DefaultLayout.scss';
+import Footer from 'components/Layout/Footer';
+import Header from 'components/Layout/Header/Header';
 import env from 'components/NextJsMigration/env';
 import usePathname from 'components/NextJsMigration/usePathname';
+import ROUTES from 'constants/routes';
+import { detect } from 'detect-browser';
+import PropTypes from 'prop-types';
+import { Suspense, useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
+import { Helmet } from 'react-helmet';
+import { Slide, ToastContainer } from 'react-toastify';
+import { Alert, Button } from 'reactstrap';
+import styled from 'styled-components';
 
 const StyledBody = styled.div`
     display: flex;
@@ -73,11 +77,11 @@ const StyledAlertCookie = styled(Alert)`
 
 const CloseToastButton = ({ closeToast }) => (
     <span
-        onClick={e => {
+        onClick={(e) => {
             e.stopPropagation();
             closeToast(e);
         }}
-        onKeyDown={e => {
+        onKeyDown={(e) => {
             if (e.keyCode === 13) {
                 e.stopPropagation();
                 closeToast(e);
@@ -100,9 +104,13 @@ export default function DefaultLayout(props) {
     const [cookies, setCookie] = useCookies(['cookieInfoDismissed']);
     const [visible, setVisible] = useState(false);
     const { trackPageView } = useMatomo();
+    const browser = detect();
+    const showBrowserWarning = browser && browser.name === 'ie';
+
+    const alertStyle = { borderRadius: 0, zIndex: 1000, marginBottom: 0 };
 
     const onDismissCookieInfo = () => {
-        setCookie('cookieInfoDismissed', true, { path: env('PUBLIC_URL'), maxAge: 365 * 24 * 60 * 60 * 1000 });
+        setCookie('cookieInfoDismissed', true, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 365 * 24 * 60 * 60 * 1000 });
         setVisible(false);
     };
 
@@ -116,6 +124,25 @@ export default function DefaultLayout(props) {
     useEffect(() => {
         setVisible(!cookies.cookieInfoDismissed);
     }, [cookies.cookieInfoDismissed]);
+
+    useEffect(() => {
+        if (env('NEXT_PUBLIC_CHATWOOT_WEBSITE_TOKEN')) {
+            // eslint-disable-next-line wrap-iife
+            ((d, t) => {
+                const BASE_URL = 'https://app.chatwoot.com';
+                const g = d.createElement(t);
+                const s = d.getElementsByTagName(t)[0];
+                g.src = `${BASE_URL}/packs/js/sdk.js`;
+                s.parentNode.insertBefore(g, s);
+                g.onload = () => {
+                    window.chatwootSDK.run({
+                        websiteToken: env('NEXT_PUBLIC_CHATWOOT_WEBSITE_TOKEN'),
+                        baseUrl: BASE_URL,
+                    });
+                };
+            })(document, 'script');
+        }
+    }, []);
 
     return (
         <StyledBody className="body">
@@ -132,7 +159,25 @@ export default function DefaultLayout(props) {
                 />
             </ToastContainerStyled>
             <Header />
-            <StyledAppContent>{props.children}</StyledAppContent>
+            {showBrowserWarning && (
+                <Alert color="danger" style={alertStyle} className="text-center">
+                    <strong>Outdated browser</strong> You are using Internet Explorer which is not supported. Please upgrade your browser for the best
+                    experience
+                </Alert>
+            )}
+            {env('NEXT_PUBLIC_IS_TESTING_SERVER') === 'true' && (
+                <>
+                    <Helmet>
+                        <meta name="robots" content="noindex" /> {/* make sure search engines are not indexing our test server */}
+                    </Helmet>
+                    <Alert color="warning" style={alertStyle} className="text-center" fade={false}>
+                        <strong>Warning:</strong> You are using a testing environment. Data you enter in the system can be deleted without any notice.
+                    </Alert>
+                </>
+            )}
+            <Suspense fallback={<div className="mt-5 mb-2 text-center">Loading...</div>}>
+                <StyledAppContent>{props.children}</StyledAppContent>
+            </Suspense>
             {showFooter && (
                 <StyledFooter>
                     <Footer />
@@ -152,5 +197,5 @@ export default function DefaultLayout(props) {
 }
 
 DefaultLayout.propTypes = {
-    children: PropTypes.array.isRequired,
+    children: PropTypes.object.isRequired,
 };

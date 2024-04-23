@@ -9,7 +9,6 @@ import { isString, sortBy, uniqBy } from 'lodash';
 import { reverse } from 'named-urls';
 import qs from 'qs';
 import { Cookies } from 'react-cookie';
-import { LOCATION_CHANGE as LOCATION_CHANGE_RFH } from 'redux-first-history';
 import { getStatementsByObjectAndPredicate, getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
 import slugifyString from 'slugify';
 
@@ -152,9 +151,9 @@ export const filterDoiObjects = (objects, isDataCite = false) => {
         return '';
     }
     if (isDataCite) {
-        return objects.find((doi) => doi.label?.startsWith(env('DATACITE_DOI_PREFIX'))) ?? '';
+        return objects.find((doi) => doi.label?.startsWith(env('NEXT_PUBLIC_DATACITE_DOI_PREFIX'))) ?? '';
     }
-    return objects.find((doi) => doi.label?.startsWith('10.') && !doi.label?.startsWith(env('DATACITE_DOI_PREFIX'))) ?? '';
+    return objects.find((doi) => doi.label?.startsWith('10.') && !doi.label?.startsWith(env('NEXT_PUBLIC_DATACITE_DOI_PREFIX'))) ?? '';
 };
 
 export const getAuthorsInList = ({ resourceId, statements }) => {
@@ -847,7 +846,7 @@ export const slugify = (input) => slugifyString(input.replace('/', ' '), '_');
  * Get base url of the application
  */
 export const getPublicUrl = () => {
-    const publicURL = env('PUBLIC_URL').endsWith('/') ? env('PUBLIC_URL').slice(0, -1) : env('PUBLIC_URL');
+    const publicURL = env('NEXT_PUBLIC_PUBLIC_URL').endsWith('/') ? env('NEXT_PUBLIC_PUBLIC_URL').slice(0, -1) : env('NEXT_PUBLIC_PUBLIC_URL');
     return `${window.location.protocol}//${window.location.host}${publicURL}`;
 };
 
@@ -864,7 +863,7 @@ export const reverseWithSlug = (route, params) => reverse(route, { ...params, sl
  * @return {Boolean}
  */
 export const checkCookie = () => {
-    cookies.set('testcookie', 1, { path: env('PUBLIC_URL'), maxAge: 5 });
+    cookies.set('testcookie', 1, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 5 });
     const cookieEnabled = cookies.get('testcookie') ? cookies.get('testcookie') : null;
     return !!cookieEnabled;
 };
@@ -894,9 +893,6 @@ export const getDataBasedOnType = (resource, statements) => {
     }
     return undefined;
 };
-
-const isInTest = typeof global.it === 'function';
-export const LOCATION_CHANGE = !isInTest ? LOCATION_CHANGE_RFH : 'NoReset';
 
 export const handleSortableHoverReactDnd = ({ item, monitor, currentRef, hoverIndex, handleUpdate }) => {
     if (!currentRef) {

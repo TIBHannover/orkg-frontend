@@ -219,8 +219,8 @@ const Header = () => {
                         );
                     })
                     .catch(() => {
-                        _cookies.remove('token', { path: env('PUBLIC_URL') });
-                        _cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
+                        _cookies.remove('token', { path: env('NEXT_PUBLIC_PUBLIC_URL') });
+                        _cookies.remove('token_expires_in', { path: env('NEXT_PUBLIC_PUBLIC_URL') });
                         dispatch(resetAuth());
                     });
             }
@@ -251,8 +251,8 @@ const Header = () => {
     useEffect(() => {
         const tokenExpired = () => {
             toast.warn('User session expired, please sign in again!');
-            cookies.remove('token', { path: env('PUBLIC_URL') });
-            cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
+            cookies.remove('token', { path: env('NEXT_PUBLIC_PUBLIC_URL') });
+            cookies.remove('token_expires_in', { path: env('NEXT_PUBLIC_PUBLIC_URL') });
             dispatch(resetAuth());
             dispatch(openAuthDialog({ action: 'signin' }));
             // logoutTimeoutId = null;
@@ -325,29 +325,22 @@ const Header = () => {
                 <Collapse isOpen={isOpenNavBar} navbar>
                     <Nav className="me-auto flex-shrink-0" navbar>
                         {/* view menu */}
-                        <ButtonDropdown nav isOpen={isOpenViewMenu} toggle={toggleViewMenu} id="tour-views">
-                            <DropdownToggle nav className="ms-2">
+                        <ButtonDropdown isOpen={isOpenViewMenu} toggle={toggleViewMenu} id="tour-views">
+                            <DropdownToggle className="ms-2 nav-link bg-transparent border-0 text-start">
                                 View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                             </DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem tag={Link} end href={ROUTES.COMPARISONS} onClick={closeMenu} active={pathname === ROUTES.COMPARISONS}>
+                                <DropdownItem tag={Link} href={ROUTES.COMPARISONS} onClick={closeMenu} active={pathname === ROUTES.COMPARISONS}>
                                     Comparisons
                                 </DropdownItem>
-                                <DropdownItem tag={Link} end href={ROUTES.PAPERS} onClick={closeMenu} active={pathname === ROUTES.PAPERS}>
+                                <DropdownItem tag={Link} href={ROUTES.PAPERS} onClick={closeMenu} active={pathname === ROUTES.PAPERS}>
                                     Papers
                                 </DropdownItem>
-                                <DropdownItem
-                                    tag={Link}
-                                    end
-                                    href={ROUTES.VISUALIZATIONS}
-                                    onClick={closeMenu}
-                                    active={pathname === ROUTES.VISUALIZATIONS}
-                                >
+                                <DropdownItem tag={Link} href={ROUTES.VISUALIZATIONS} onClick={closeMenu} active={pathname === ROUTES.VISUALIZATIONS}>
                                     Visualizations
                                 </DropdownItem>
                                 <DropdownItem
                                     tag={Link}
-                                    end
                                     href={ROUTES.REVIEWS}
                                     onClick={closeMenu}
                                     className="d-flex justify-content-between"
@@ -360,7 +353,6 @@ const Header = () => {
                                 </DropdownItem>
                                 <DropdownItem
                                     tag={Link}
-                                    end
                                     href={ROUTES.LISTS}
                                     onClick={closeMenu}
                                     className="d-flex justify-content-between"
@@ -371,12 +363,11 @@ const Header = () => {
                                         <Badge color="info">Beta</Badge>
                                     </small>
                                 </DropdownItem>
-                                <DropdownItem tag={Link} end href={ROUTES.BENCHMARKS} onClick={closeMenu} active={pathname === ROUTES.BENCHMARKS}>
+                                <DropdownItem tag={Link} href={ROUTES.BENCHMARKS} onClick={closeMenu} active={pathname === ROUTES.BENCHMARKS}>
                                     Benchmarks
                                 </DropdownItem>
                                 <DropdownItem
                                     tag={Link}
-                                    end
                                     href={ROUTES.RESEARCH_FIELDS}
                                     onClick={closeMenu}
                                     active={pathname === ROUTES.RESEARCH_FIELDS}
@@ -401,7 +392,6 @@ const Header = () => {
                                 <DropdownItem divider />
                                 <DropdownItem
                                     tag={Link}
-                                    end
                                     href={ROUTES.OBSERVATORIES}
                                     onClick={closeMenu}
                                     className="d-flex justify-content-between"
@@ -414,7 +404,6 @@ const Header = () => {
                                 </DropdownItem>
                                 <DropdownItem
                                     tag={Link}
-                                    end
                                     href={reverse(ROUTES.ORGANIZATIONS, {
                                         id: ORGANIZATIONS_TYPES.find((o) => o.id === ORGANIZATIONS_MISC.GENERAL).label,
                                     })}
@@ -424,7 +413,6 @@ const Header = () => {
                                 </DropdownItem>
                                 <DropdownItem
                                     tag={Link}
-                                    end
                                     href={reverse(ROUTES.ORGANIZATIONS, {
                                         id: ORGANIZATIONS_TYPES.find((o) => o.id === ORGANIZATIONS_MISC.EVENT).label,
                                     })}
@@ -436,32 +424,31 @@ const Header = () => {
 
                                 <DropdownItem header>Advanced views</DropdownItem>
 
-                                <DropdownItem tag={Link} end href={ROUTES.RESOURCES} onClick={closeMenu} active={pathname === ROUTES.RESOURCES}>
+                                <DropdownItem tag={Link} href={ROUTES.RESOURCES} onClick={closeMenu} active={pathname === ROUTES.RESOURCES}>
                                     Resources
                                 </DropdownItem>
-                                <DropdownItem tag={Link} end href={ROUTES.PROPERTIES} onClick={closeMenu} active={pathname === ROUTES.PROPERTIES}>
+                                <DropdownItem tag={Link} href={ROUTES.PROPERTIES} onClick={closeMenu} active={pathname === ROUTES.PROPERTIES}>
                                     Properties
                                 </DropdownItem>
-                                <DropdownItem tag={Link} end href={ROUTES.CLASSES} onClick={closeMenu} active={pathname === ROUTES.CLASSES}>
+                                <DropdownItem tag={Link} href={ROUTES.CLASSES} onClick={closeMenu} active={pathname === ROUTES.CLASSES}>
                                     Classes
                                 </DropdownItem>
                             </DropdownMenu>
                         </ButtonDropdown>
 
                         {/* tools menu */}
-                        <ButtonDropdown nav>
-                            <DropdownToggle nav className="ms-2">
+                        <ButtonDropdown>
+                            <DropdownToggle className="ms-2 nav-link bg-transparent border-0 text-start">
                                 Tools <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                             </DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem tag={Link} end href={ROUTES.TOOLS} onClick={closeMenu} active={pathname === ROUTES.TOOLS}>
+                                <DropdownItem tag={Link} href={ROUTES.TOOLS} onClick={closeMenu} active={pathname === ROUTES.TOOLS}>
                                     Tools overview
                                 </DropdownItem>
                                 <DropdownItem divider />
                                 <DropdownItem header>Data entry</DropdownItem>
                                 <DropdownItem
                                     tag={Link}
-                                    end
                                     href={ROUTES.CONTRIBUTION_EDITOR}
                                     onClick={(e) => requireAuthentication(e, ROUTES.CONTRIBUTION_EDITOR)}
                                     active={pathname === ROUTES.CONTRIBUTION_EDITOR}
@@ -470,7 +457,6 @@ const Header = () => {
                                 </DropdownItem>
                                 <DropdownItem
                                     tag={Link}
-                                    end
                                     href={ROUTES.CSV_IMPORT}
                                     onClick={(e) => requireAuthentication(e, ROUTES.CSV_IMPORT)}
                                     active={pathname === ROUTES.CSV_IMPORT}
@@ -479,14 +465,13 @@ const Header = () => {
                                 </DropdownItem>
                                 <DropdownItem
                                     tag={Link}
-                                    end
                                     href={ROUTES.PDF_ANNOTATION}
                                     onClick={(e) => requireAuthentication(e, ROUTES.PDF_ANNOTATION)}
                                     active={pathname === ROUTES.PDF_ANNOTATION}
                                 >
                                     Survey table import
                                 </DropdownItem>
-                                <DropdownItem tag={Link} end href={ROUTES.TEMPLATES} onClick={closeMenu} active={pathname === ROUTES.TEMPLATES}>
+                                <DropdownItem tag={Link} href={ROUTES.TEMPLATES} onClick={closeMenu} active={pathname === ROUTES.TEMPLATES}>
                                     Templates
                                 </DropdownItem>
                                 <DropdownItem divider />
@@ -498,14 +483,14 @@ const Header = () => {
                         </ButtonDropdown>
 
                         {/* about menu */}
-                        <ButtonDropdown isOpen={isOpenAboutMenu} toggle={toggleAboutMenu} nav id="about">
-                            <DropdownToggle nav className="ms-2" onClick={toggleAboutMenu}>
+                        <ButtonDropdown isOpen={isOpenAboutMenu} toggle={toggleAboutMenu} id="about">
+                            <DropdownToggle className="ms-2 nav-link bg-transparent border-0 text-start" onClick={toggleAboutMenu}>
                                 About <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                             </DropdownToggle>
                             <DropdownMenu>
                                 <AboutMenu closeMenu={closeMenu} />
                                 <DropdownItem divider />
-                                <DropdownItem tag={Link} end href={ROUTES.HELP_CENTER} onClick={closeMenu} active={pathname === ROUTES.HELP_CENTER}>
+                                <DropdownItem tag={Link} href={ROUTES.HELP_CENTER} onClick={closeMenu} active={pathname === ROUTES.HELP_CENTER}>
                                     Help center
                                 </DropdownItem>
                                 <DropdownItem
@@ -518,7 +503,7 @@ const Header = () => {
                                     GitLab <Icon size="sm" icon={faExternalLinkAlt} />
                                 </DropdownItem>
                                 <DropdownItem divider />
-                                <DropdownItem tag={Link} end href={ROUTES.STATS} onClick={closeMenu} active={pathname === ROUTES.STATS}>
+                                <DropdownItem tag={Link} href={ROUTES.STATS} onClick={closeMenu} active={pathname === ROUTES.STATS}>
                                     Statistics
                                 </DropdownItem>
                             </DropdownMenu>

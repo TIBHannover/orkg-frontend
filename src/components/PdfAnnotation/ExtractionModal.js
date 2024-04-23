@@ -9,15 +9,15 @@ import { reverse } from 'named-urls';
 import ExtractReferencesModal from 'components/PdfAnnotation/ExtractReferencesModal';
 import useExtractionModal from 'components/PdfAnnotation/hooks/useExtractionModal';
 import useTableEditor from 'components/PdfAnnotation/hooks/useTableEditor';
-// import dynamic from 'next/dynamic';
+import dynamic from 'next/dynamic';
 
 // CRA-CODE
-import TableEditor from 'components/PdfAnnotation/TableEditor';
+// import TableEditor from 'components/PdfAnnotation/TableEditor';
 
 // NEXT-CODE
-// const TableEditor = dynamic(() => import('components/PdfAnnotation/TableEditor'), {
-//     ssr: false,
-// });
+const TableEditor = dynamic(() => import('components/PdfAnnotation/TableEditor'), {
+    ssr: false,
+});
 
 const ExtractionModal = props => {
     const [

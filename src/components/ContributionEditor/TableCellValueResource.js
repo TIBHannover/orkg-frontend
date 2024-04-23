@@ -56,7 +56,7 @@ const TableCellValueResource = ({ value }) => {
                     id={value.id}
                     label={value.label}
                     show
-                    enableEdit={env('PWC_USER_ID') !== value.created_by ? true : undefined}
+                    enableEdit={env('NEXT_PUBLIC_PWC_USER_ID') !== value.created_by ? true : undefined}
                     syncBackend
                     canEditSharedRootLevel={false}
                     onCloseModal={() => dispatch(updateResourceStatementsAction(value.id))}

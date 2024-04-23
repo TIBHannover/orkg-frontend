@@ -2,7 +2,7 @@ import { submitGetRequest } from 'network';
 import qs from 'qs';
 import env from 'components/NextJsMigration/env';
 
-export const olsBaseUrl = env('OLS_BASE_URL');
+export const olsBaseUrl = env('NEXT_PUBLIC_OLS_BASE_URL');
 
 export const selectTerms = ({ page = 0, pageSize = 10, type = 'ontology', q = null, ontology = null }) => {
     const params = qs.stringify(

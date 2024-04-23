@@ -1,44 +1,60 @@
-# Building the application
-FROM node:lts-buster as build
+FROM node:18-alpine AS base
 
+# Install dependencies only when needed
+FROM base AS deps
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-ENV PATH /app/node_modules/.bin:$PATH
-# Increate node max memory, the default memory limit is too low for building 
-ENV NODE_OPTIONS --max-old-space-size=8192 
-
+# Install dependencies based on the preferred package manager
 COPY package.json package-lock.json ./
-
-# NOTE: opencollective is not required but leads to warnings if missing
-RUN npm install react-scripts@5.0.1 opencollective --location=global
-
-# install the dependencies
 RUN npm install --force
 
-COPY . ./
+# Check https://nextjs.org/docs/messages/sharp-missing-in-production
+RUN npm install sharp --force
 
-# Include default values; override in deployment image
-RUN cp default.env .env
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
-# Build
-RUN ./pre-release.sh
+# Next.js collects completely anonymous telemetry data about general usage.
+# Learn more here: https://nextjs.org/telemetry
+# Uncomment the following line in case you want to disable telemetry during the build.
+ENV NEXT_TELEMETRY_DISABLED 1
+
 RUN npm run build
 
-# Serve the built application with nginx
-FROM nginx:stable-alpine
+# Production image, copy all the files and run next
+FROM base AS runner
+WORKDIR /app
 
-RUN apk add --no-cache nodejs npm bash
+ENV NODE_ENV production
+# Uncomment the following line in case you want to disable telemetry during runtime.
+ENV NEXT_TELEMETRY_DISABLED 1
 
-SHELL ["/bin/bash", "-c"]
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-RUN npm install -g @beam-australia/react-env
+COPY --from=builder /app/public ./public
 
-ADD entrypoint.sh /docker-entrypoint.d/80-react-env.sh
+# Set the correct permission for prerender cache
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
 
-RUN chmod +x /docker-entrypoint.d/80-react-env.sh
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY --from=build /app/build /usr/share/nginx/html
+USER nextjs
 
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 3000
+
+ENV PORT 3000
+# set hostname to localhost
+ENV HOSTNAME "0.0.0.0"
+
+CMD [ "node", "server.js" ]

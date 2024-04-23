@@ -12,7 +12,7 @@ const HelpCenterSearchInput = () => {
     const [value, setValue] = useState(params.searchQuery ?? '');
 
     const handleSearch = () => {
-        router.push(reverse(ROUTES.HELP_CENTER_SEARCH, { searchQuery: encodeURIComponent(value) }));
+        router.push(reverse(ROUTES.HELP_CENTER_SEARCH, { searchQuery: encodeURIComponent(value.toString()) }));
     };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {

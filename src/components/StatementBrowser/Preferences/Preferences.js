@@ -24,7 +24,7 @@ export default function Preferences({ closeTippy }) {
     const dispatch = useDispatch();
 
     const settingsInputSwitched = e => {
-        cookies.set(`preferences.${e.target.name}`, e.target.checked.toString(), { path: env('PUBLIC_URL'), maxAge: 604800 });
+        cookies.set(`preferences.${e.target.name}`, e.target.checked.toString(), { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 604800 });
         dispatch(updatePreferences({ [e.target.name]: e.target.checked }));
     };
 

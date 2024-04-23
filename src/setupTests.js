@@ -1,5 +1,5 @@
-import 'jest-canvas-mock';
 import '@testing-library/jest-dom/extend-expect';
+import 'jest-canvas-mock';
 import { server } from 'services/mocks/server';
 
 beforeAll(async () => {
@@ -19,6 +19,30 @@ jest.mock('react-dnd', () => ({
     useDrag: jest.fn().mockImplementation(() => [jest.fn(), jest.fn(), jest.fn()]),
     useDrop: jest.fn().mockImplementation(() => [jest.fn(), jest.fn(), jest.fn()]),
 }));
+
+const nextRouterMock = require('next-router-mock');
+
+jest.mock('next/router', () => nextRouterMock);
+
+jest.mock('next/navigation', () => {
+    const { useRouter } = nextRouterMock;
+    const usePathname = () => {
+        const router = useRouter();
+        return router.pathname;
+    };
+
+    const useSearchParams = () => {
+        const router = useRouter();
+        return new URLSearchParams(router.query);
+    };
+
+    return {
+        useRouter,
+        usePathname,
+        useSearchParams,
+        useParams: () => ({}),
+    };
+});
 
 jest.setTimeout(20000);
 

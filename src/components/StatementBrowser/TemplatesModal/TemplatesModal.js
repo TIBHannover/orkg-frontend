@@ -40,14 +40,14 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
-const TemplatesModal = props => {
+const TemplatesModal = (props) => {
     const [source, target] = useSingleton();
-    const isTemplatesModalOpen = useSelector(state => state.statementBrowser.isTemplatesModalOpen);
-    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
-    const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
+    const isTemplatesModalOpen = useSelector((state) => state.statementBrowser.isTemplatesModalOpen);
+    const selectedResource = useSelector((state) => state.statementBrowser.selectedResource);
+    const resource = useSelector((state) => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
-    const title = useSelector(state => state.viewPaper.paper.title);
-    const abstract = useSelector(state => state.viewPaper.abstract);
+    const title = useSelector((state) => state.viewPaper.paper.title);
+    const abstract = useSelector((state) => state.viewPaper.abstract);
 
     const { recommendedTemplates, isLoadingRT } = useTemplatesRecommendation({ title, abstract });
 
@@ -88,7 +88,7 @@ const TemplatesModal = props => {
                         <AnimationContainer in={usedTemplates?.length > 0} timeout={600} classNames="zoom" unmountOnExit>
                             <div>
                                 <p>Used templates:</p>
-                                {usedTemplates.map(template => (
+                                {usedTemplates.map((template) => (
                                     <TemplateButton
                                         addMode={false}
                                         tippyTarget={target}
@@ -122,7 +122,7 @@ const TemplatesModal = props => {
                                 {selectedFilter.id !== CLASSES.NODE_SHAPE && (
                                     <ConditionalWrapper
                                         condition={selectedFilter.id === CLASSES.RESEARCH_FIELD}
-                                        wrapper={children => (
+                                        wrapper={(children) => (
                                             <>
                                                 {children}
 
@@ -133,7 +133,7 @@ const TemplatesModal = props => {
                                                 {isOpenResearchFieldModal && (
                                                     <ResearchFieldSelectorModal
                                                         isOpen
-                                                        toggle={v => setIsOpenResearchFieldModal(v => !v)}
+                                                        toggle={(v) => setIsOpenResearchFieldModal((v) => !v)}
                                                         onSelectField={handleSelectField}
                                                     />
                                                 )}
@@ -197,7 +197,7 @@ const TemplatesModal = props => {
                                     </Tooltip>
                                 </p>
                                 <div>
-                                    {recommendedTemplates.map(template => (
+                                    {recommendedTemplates.map((template) => (
                                         <TemplateButton
                                             tippyTarget={target}
                                             key={`t${template.id}`}
@@ -235,7 +235,7 @@ const TemplatesModal = props => {
                             <FormGroup>
                                 <p>Featured templates:</p>
                                 <div>
-                                    {featuredTemplates.map(template => (
+                                    {featuredTemplates.map((template) => (
                                         <TemplateButton
                                             tippyTarget={target}
                                             key={`t${template.id}`}
@@ -275,7 +275,7 @@ const TemplatesModal = props => {
                                     </p>
                                 )}
                                 <div>
-                                    {templates.map(template => (
+                                    {templates.map((template) => (
                                         <TemplateButton
                                             tippyTarget={target}
                                             key={`t${template.id}`}

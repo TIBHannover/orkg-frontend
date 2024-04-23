@@ -8,12 +8,12 @@ import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { setAuthorListResource, updateAuthors } from 'slices/reviewSlice';
 import { convertAuthorsToNewFormat, convertAuthorsToOldFormat } from 'utils';
 
-const AuthorsModal = props => {
+const AuthorsModal = (props) => {
     const { show, toggle } = props;
     const [authors, setAuthors] = useState([]);
-    const authorResources = useSelector(state => state.review.authorResources);
-    const authorListResource = useSelector(state => state.review.authorListResource);
-    const paper = useSelector(state => state.review.paper);
+    const authorResources = useSelector((state) => state.review.authorResources);
+    const authorListResource = useSelector((state) => state.review.authorListResource);
+    const paper = useSelector((state) => state.review.paper);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -24,7 +24,7 @@ const AuthorsModal = props => {
         setAuthors(_authors);
     }, [show, authorResources]);
 
-    const onChange = _authors => {
+    const onChange = (_authors) => {
         setAuthors(_authors);
     };
 
@@ -51,7 +51,7 @@ const AuthorsModal = props => {
         <Modal isOpen={show} toggle={toggle}>
             <ModalHeader toggle={toggle}>Article authors</ModalHeader>
             <ModalBody>
-                <AuthorsInput value={convertAuthorsToNewFormat(authors)} handler={_authors => onChange(convertAuthorsToOldFormat(_authors))} />
+                <AuthorsInput value={convertAuthorsToNewFormat(authors)} handler={(_authors) => onChange(convertAuthorsToOldFormat(_authors))} />
             </ModalBody>
             <ModalFooter>
                 <Button color="primary" onClick={handleSave}>

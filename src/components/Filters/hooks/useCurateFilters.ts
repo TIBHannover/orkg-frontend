@@ -35,12 +35,12 @@ const useCurateFilters = ({
         setIsSaving(true);
         if (isCurator && filter.persisted) {
             if (filterId) {
-                await updateFiltersOfObservatory(oId, filterId, filter).catch(e => {
+                await updateFiltersOfObservatory(oId, filterId, filter).catch((e) => {
                     toast.error(`Something went wrong while saving the filter! ${getErrorMessage(e) ?? e?.message}`);
                     setIsSaving(false);
                 });
             } else {
-                await createFiltersInObservatory(oId, filter).catch(e => {
+                await createFiltersInObservatory(oId, filter).catch((e) => {
                     toast.error(`Something went wrong while saving the filter! ${getErrorMessage(e) ?? e?.message}`);
                     setIsSaving(false);
                 });
@@ -58,10 +58,10 @@ const useCurateFilters = ({
                 asyncLocalStorage.setItem(
                     FILTERS_LOCAL_STORAGE_NAME,
                     JSON.stringify(
-                        _localStorage.map(f => (f.id === filterId ? { id: filterId, ...filter, source: FILTER_SOURCE.LOCAL_STORAGE } : f)),
+                        _localStorage.map((f) => (f.id === filterId ? { id: filterId, ...filter, source: FILTER_SOURCE.LOCAL_STORAGE } : f)),
                     ),
                 );
-                setFilters(filters.map(f => (f.id === filterId ? { id: filterId, ...filter, source: FILTER_SOURCE.LOCAL_STORAGE } : f)));
+                setFilters(filters.map((f) => (f.id === filterId ? { id: filterId, ...filter, source: FILTER_SOURCE.LOCAL_STORAGE } : f)));
             }
         }
         refreshFilters();
@@ -81,9 +81,9 @@ const useCurateFilters = ({
             }
             if (filter.source === FILTER_SOURCE.LOCAL_STORAGE && filter.id) {
                 const _localStorage = await loadFiltersFromLocalStorage();
-                asyncLocalStorage.setItem(FILTERS_LOCAL_STORAGE_NAME, JSON.stringify(_localStorage.filter(f => f.id !== filter.id)));
+                asyncLocalStorage.setItem(FILTERS_LOCAL_STORAGE_NAME, JSON.stringify(_localStorage.filter((f) => f.id !== filter.id)));
             }
-            setFilters(filters.filter(f => f.id !== filter.id || (!f.id && !areFiltersEqual(filter, f))));
+            setFilters(filters.filter((f) => f.id !== filter.id || (!f.id && !areFiltersEqual(filter, f))));
             refreshFilters();
         }
     };

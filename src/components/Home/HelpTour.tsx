@@ -10,7 +10,7 @@ import { Steps } from 'intro.js-react';
 
 type HelpButtonProps = {
     id: string;
-    woochat: string;
+    woochat?: string;
 };
 
 const HelpButton = styled.div<HelpButtonProps>`
@@ -21,8 +21,8 @@ const HelpButton = styled.div<HelpButtonProps>`
     padding-left: 0;
     list-style: none;
     padding: 0;
-    bottom: ${props => (props.woochat ? '100px' : '24px')};
-    right: ${props => (props.woochat ? '8px' : '24px')};
+    bottom: ${(props) => (props.woochat ? '100px' : '24px')};
+    right: ${(props) => (props.woochat ? '8px' : '24px')};
 
     color: #80869b;
 
@@ -45,7 +45,7 @@ const HelpIcon = styled(Icon)`
     height: 28px;
     width: 28px !important;
     z-index: 9999;
-    background-color: ${props => props.theme.primary};
+    background-color: ${(props) => props.theme.primary};
     display: inline-flex;
     -webkit-justify-content: center;
     justify-content: center;
@@ -210,7 +210,7 @@ const HelpTour = () => {
 
     const closeTooltip = () => {
         setIsTooltipVisible(false);
-        cookies.set('isHiddenHomeTour', true, { path: env('PUBLIC_URL'), maxAge: 60 * 60 * 24 * 365 });
+        cookies.set('isHiddenHomeTour', true, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 60 * 60 * 24 * 365 });
     };
 
     return (
@@ -223,7 +223,7 @@ const HelpTour = () => {
                 options={{ tooltipClass: 'introjs-ORKG-tooltip' }}
             />
 
-            <HelpButton id="helpIcon" woochat={env('CHATWOOT_WEBSITE_TOKEN')}>
+            <HelpButton id="helpIcon" woochat={env('NEXT_PUBLIC_CHATWOOT_WEBSITE_TOKEN')}>
                 <Tippy
                     visible={isTooltipVisible}
                     appendTo={typeof window !== 'undefined' ? document.body : undefined}

@@ -1,7 +1,7 @@
 import env from 'components/NextJsMigration/env';
 import { submitGetRequest } from 'network';
 
-export const semanticScholarUrl = env('SEMANTIC_SCHOLAR_URL');
+export const semanticScholarUrl = env('NEXT_PUBLIC_SEMANTIC_SCHOLAR_URL');
 
 export const getPapersByTitle = async ({ title, limit = 10, offset = 0, fields = ['title', 'authors'] }) => {
     let paperSearchResult = [];

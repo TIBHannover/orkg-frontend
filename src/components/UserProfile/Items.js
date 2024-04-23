@@ -68,6 +68,7 @@ const Items = ({ showDelete = false, filterClass, filterLabel, filters = {} }) =
             setHasNextPage(!response.last);
             setPage((prevPage) => prevPage + 1);
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [filterClass],
     );
 
@@ -160,10 +161,12 @@ const Items = ({ showDelete = false, filterClass, filterLabel, filters = {} }) =
                         if (filterClass === CLASSES.VISUALIZATION) {
                             return <VisualizationCard visualization={resource} showBadge={false} showCurationFlags={true} key={`pc${resource.id}`} />;
                         }
-                        if (filterClass === CLASSES.LITERATURE_LIST) {
-                            return <ListCard list={resource} showBadge={false} showCurationFlags={true} />;
+                        if (filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
+                            return <ListCard key={`pc${resource.id}`} versions={resource} showBadge={false} showCurationFlags={true} />;
                         }
-
+                        if (filterClass === CLASSES.LITERATURE_LIST) {
+                            return <ListCard key={`pc${resource.id}`} list={resource} showBadge={false} showCurationFlags={true} />;
+                        }
                         return null;
                     })}
                     {!isLoading && hasNextPage && (

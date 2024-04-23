@@ -98,11 +98,13 @@ export const getTopContributors = async ({
         apiCall = await submitGetRequest(`${statsUrl}top/contributors?${params}`);
     }
 
-    const uniqContributorsInfosRequests = apiCall.content.map(c => getContributorInformationById(c.contributor).catch(() => null));
+    const uniqContributorsInfosRequests = apiCall.content.map((c) => getContributorInformationById(c.contributor).catch(() => null));
     const uniqContributorsInfos = await Promise.all(uniqContributorsInfosRequests);
     return {
         ...apiCall,
-        content: apiCall.content.map(c => ({ ...c, ...uniqContributorsInfos.filter(i => i).find(i => c.contributor === i?.id) })).filter(u => u.id),
+        content: apiCall.content
+            .map((c) => ({ ...c, ...uniqContributorsInfos.filter((i) => i).find((i) => c.contributor === i?.id) }))
+            .filter((u) => u.id),
     };
 };
 

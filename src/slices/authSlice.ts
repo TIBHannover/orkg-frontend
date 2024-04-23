@@ -21,7 +21,7 @@ export const authSlice = createSlice({
             ...state,
             ...payload,
         }),
-        resetAuth: state => {
+        resetAuth: (state) => {
             state.user = null; // ensure user is null (signedout) not 0 (first load)
         },
         openAuthDialog: (state, { payload }) => {
@@ -30,7 +30,7 @@ export const authSlice = createSlice({
             state.signInRequired = payload.signInRequired;
             state.redirectRoute = payload.redirectRoute;
         },
-        toggleAuthDialog: state => {
+        toggleAuthDialog: (state) => {
             state.dialogIsOpen = !state.dialogIsOpen;
             state.redirectRoute = !state.dialogIsOpen ? state.redirectRoute : null; // reset redirectRoute on close
         },
@@ -47,7 +47,7 @@ export function firstLoad() {
         const token = cookies.get('token') ? cookies.get('token') : null;
         const tokenExpiresIn = cookies.get('token_expires_in') ? cookies.get('token_expires_in') : null;
         return getUserInformation()
-            .then(userData => {
+            .then((userData) => {
                 dispatch(
                     updateAuth({
                         user: {
@@ -65,8 +65,8 @@ export function firstLoad() {
                 return Promise.resolve();
             })
             .catch(() => {
-                cookies.remove('token', { path: env('PUBLIC_URL') });
-                cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
+                cookies.remove('token', { path: env('NEXT_PUBLIC_PUBLIC_URL') });
+                cookies.remove('token_expires_in', { path: env('NEXT_PUBLIC_PUBLIC_URL') });
                 dispatch(resetAuth());
             })
             .then(() => Promise.resolve());

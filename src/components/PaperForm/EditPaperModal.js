@@ -39,7 +39,7 @@ const EditPaperModal = ({ paperData, toggle, afterUpdate = null, isPaperLinkVisi
         abstract,
     } = useEditPaper({ paperData, afterUpdate });
 
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
 
     return (
         <ModalWithLoading isLoading={isLoadingEdit} isOpen toggle={toggle} size="lg">
@@ -85,7 +85,7 @@ const EditPaperModal = ({ paperData, toggle, afterUpdate = null, isPaperLinkVisi
                                     type="checkbox"
                                     id="replaceTitles"
                                     name="verified"
-                                    onChange={e => setIsVerified(e.target.checked)}
+                                    onChange={(e) => setIsVerified(e.target.checked)}
                                     checked={isVerified}
                                 />
                                 <Label check for="replaceTitles" className="mb-0">

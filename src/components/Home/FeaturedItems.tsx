@@ -50,7 +50,7 @@ const FeaturedItems: FC<FeaturedItemsProps> = ({ researchFieldId, researchFieldL
                         <FormGroup check className="mb-0">
                             <Label check className="mb-0">
                                 <Input
-                                    onChange={e => setIncludeSubFields(e.target.checked)}
+                                    onChange={(e) => setIncludeSubFields(e.target.checked)}
                                     checked={includeSubFields}
                                     type="checkbox"
                                     disabled={isLoading}
@@ -64,7 +64,7 @@ const FeaturedItems: FC<FeaturedItemsProps> = ({ researchFieldId, researchFieldL
                     <div className="mb-0">
                         <Input
                             value={sort}
-                            onChange={e => setSort(e.target.value)}
+                            onChange={(e) => setSort(e.target.value)}
                             bsSize="sm"
                             type="select"
                             name="sort"
@@ -82,7 +82,7 @@ const FeaturedItems: FC<FeaturedItemsProps> = ({ researchFieldId, researchFieldL
                 (items.length > 0 ? (
                     <>
                         <ListGroupStyled>
-                            {items.map(item => (
+                            {items.map((item) => (
                                 <CardFactory
                                     showBadge={false}
                                     showCurationFlags={false}

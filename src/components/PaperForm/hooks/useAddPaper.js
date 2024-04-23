@@ -20,8 +20,8 @@ const useAddPaper = ({ onCreate = null }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [url, setUrl] = useState('');
     const [extractedContributionData, setExtractedContributionData] = useState([]);
-    const organizationId = useSelector(state => state.auth.user?.organization_id);
-    const observatoryId = useSelector(state => state.auth.user?.observatory_id);
+    const organizationId = useSelector((state) => state.auth.user?.organization_id);
+    const observatoryId = useSelector((state) => state.auth.user?.observatory_id);
 
     const { checkIfPaperExists, ExistingPaperModels } = useExistingPaper();
 

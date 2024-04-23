@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { asyncLocalStorage } from 'utils';
 import arrayMove from 'array-move';
 import { applyRule, getRuleByProperty } from 'components/Comparison/Filters/helpers';
 import {
@@ -14,7 +15,7 @@ import ROUTES from 'constants/routes';
 import { cloneDeep, findIndex, flatten, intersection, isEmpty, isEqual } from 'lodash';
 import { match } from 'path-to-regexp';
 import { Cookies } from 'react-cookie';
-import { LOCATION_CHANGE, asyncLocalStorage } from 'utils';
+import { LOCATION_CHANGE } from 'components/ResetStoreOnNavigate/ResetStoreOnNavigate';
 
 const cookies = new Cookies();
 

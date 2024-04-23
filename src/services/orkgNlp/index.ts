@@ -11,7 +11,7 @@ import { getPredicate } from 'services/backend/predicates';
 import { getResources } from 'services/backend/resources';
 import { getParentResearchFields } from 'services/backend/statements';
 import { COMPUTER_SCIENCE_FIELDS_LIST, AGRICULTURE_FIELDS_LIST } from 'constants/nlpFieldLists';
-import fetch from 'cross-fetch';
+// import fetch from 'cross-fetch';
 import { Resource } from 'services/backend/types';
 
 type NlpResponse<T> = {
@@ -20,7 +20,7 @@ type NlpResponse<T> = {
     payload: T;
 };
 
-export const nlpServiceUrl = env('NLP_SERVICE_URL');
+export const nlpServiceUrl = env('NEXT_PUBLIC_NLP_SERVICE_URL');
 
 // https://gitlab.com/TIBHannover/orkg/nlp/orkg-nlp-api/-/blob/main/app/__init__.py#L13
 export const SERVICE_MAPPING: {

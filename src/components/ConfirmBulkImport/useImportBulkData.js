@@ -33,15 +33,15 @@ const useImportBulkData = ({ data, onFinish }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [validationErrors, setValidationErrors] = useState({});
     const [createdContributions, setCreatedContributions] = useState([]);
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
 
     const getFirstValue = (object, key, defaultValue = '') => (key in object && object[key].length && object[key][0] ? object[key][0] : defaultValue);
 
-    const findDataType = literal => DATA_TYPES.find(type => literal.endsWith(`<${type.name.toLowerCase()}>`));
+    const findDataType = (literal) => DATA_TYPES.find((type) => literal.endsWith(`<${type.name.toLowerCase()}>`));
 
     const removeDataTypeLiteral = ({ literal, datatype }) => literal.replace(new RegExp(`<${datatype.name.toLowerCase()}>$`), '');
 
-    const removeDataTypeHeader = useCallback(label => {
+    const removeDataTypeHeader = useCallback((label) => {
         const datatype = findDataType(label);
         return datatype ? removeDataTypeLiteral({ literal: label, datatype }) : label;
     }, []);
@@ -56,7 +56,7 @@ const useImportBulkData = ({ data, onFinish }) => {
     }, []);
 
     const cleanLabelProperty = useCallback(
-        label =>
+        (label) =>
             removeDataTypeHeader(label)
                 .replace(/^(resource:)/, '')
                 .replace(/^(orkg:)/, ''),
@@ -90,7 +90,7 @@ const useImportBulkData = ({ data, onFinish }) => {
 
             let title = getFirstValue(rowObject, 'paper:title');
             let authors = getFirstValue(rowObject, 'paper:authors', []);
-            authors = authors.length ? authors.split(';').map(name => ({ name })) : [];
+            authors = authors.length ? authors.split(';').map((name) => ({ name })) : [];
             let publicationMonth = getFirstValue(rowObject, 'paper:publication_month');
             let publicationYear = getFirstValue(rowObject, 'paper:publication_year');
             const doi = getFirstValue(rowObject, 'paper:doi');
@@ -307,15 +307,15 @@ const useImportBulkData = ({ data, onFinish }) => {
         return paperResources.length ? paperResources[0].id : null;
     };
 
-    const cleanLabel = label => label.replace(/^(orkg:)/, '');
+    const cleanLabel = (label) => label.replace(/^(orkg:)/, '');
 
-    const propertyHasMapping = value => isString(value) && (value.startsWith('orkg:') || value.replace(/^(resource:)/, '').startsWith('orkg:'));
+    const propertyHasMapping = (value) => isString(value) && (value.startsWith('orkg:') || value.replace(/^(resource:)/, '').startsWith('orkg:'));
 
-    const hasMapping = value => isString(value) && value.startsWith('orkg:');
+    const hasMapping = (value) => isString(value) && value.startsWith('orkg:');
 
-    const isNewResource = value => isString(value) && value.startsWith('resource:');
+    const isNewResource = (value) => isString(value) && value.startsWith('resource:');
 
-    const cleanNewResource = label => label.replace(/^(resource:)/, '');
+    const cleanNewResource = (label) => label.replace(/^(resource:)/, '');
 
     const handleImport = async () => {
         if (createdContributions.length > 0) {
@@ -331,7 +331,7 @@ const useImportBulkData = ({ data, onFinish }) => {
         const newResources = {};
         const newLiterals = {};
 
-        for (const paper of papers.filter(_paper => Object.keys(_paper.contents[0].statements).length > 0)) {
+        for (const paper of papers.filter((_paper) => Object.keys(_paper.contents[0].statements).length > 0)) {
             try {
                 // create new properties for the ones that do not yet exist
                 for (let property in paper.contents[0].statements) {
@@ -398,7 +398,7 @@ const useImportBulkData = ({ data, onFinish }) => {
 
                 for (const statement of paperStatements) {
                     if (statement.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
-                        setCreatedContributions(state => [
+                        setCreatedContributions((state) => [
                             ...state,
                             {
                                 paperId: _paper,

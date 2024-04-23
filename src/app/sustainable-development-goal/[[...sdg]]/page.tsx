@@ -1,6 +1,7 @@
 'use client';
 
 import NotFound from 'app/not-found';
+import Image from 'components/NextJsMigration/Image';
 import Link from 'components/NextJsMigration/Link';
 import useParams from 'components/NextJsMigration/useParams';
 import IntegratedList from 'components/SustainableDevelopmentGoals/IntegratedList/IntegratedList';
@@ -46,12 +47,17 @@ const SustainableDevelopmentGoal = () => {
                     >
                         {/* @ts-expect-error */}
                         <Link href={reverse(ROUTES.SUSTAINABLE_DEVELOPMENT_GOAL, { sdg })}>
-                            <img src={getImage(sdg)} style={{ width: '100%' }} className="rounded m-1" alt={`Sustainable Development Goals ${sdg}`} />
+                            <Image
+                                src={getImage(sdg)}
+                                style={{ width: '100%', height: 'auto' }}
+                                className="rounded m-1"
+                                alt={`Sustainable Development Goals ${sdg}`}
+                            />
                         </Link>
                     </motion.div>
                 ))}
             </Container>
-            <IntegratedList key={selectedSdg} sdgId={selectedSdg} />
+            <IntegratedList key={selectedSdg.toString()} sdgId={selectedSdg.toString()} />
         </>
     );
 };

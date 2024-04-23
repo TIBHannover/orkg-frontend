@@ -27,9 +27,9 @@ export const BreadcrumbStyled = styled.ul`
     & > li {
         float: left;
         & > a {
-            color: ${props => props.theme.secondary};
+            color: ${(props) => props.theme.secondary};
             display: block;
-            background: ${props => props.theme.lightDarker};
+            background: ${(props) => props.theme.lightDarker};
             text-decoration: none;
             position: relative;
             line-height: 20px;
@@ -63,7 +63,7 @@ export const BreadcrumbStyled = styled.ul`
                 content: '';
                 position: absolute;
                 top: 0;
-                border: 0 solid ${props => props.theme.lightDarker};
+                border: 0 solid ${(props) => props.theme.lightDarker};
                 border-width: 10px 6px;
                 width: 0;
                 height: 0;
@@ -75,18 +75,18 @@ export const BreadcrumbStyled = styled.ul`
             &:after {
                 left: 100%;
                 border-color: transparent;
-                border-left-color: ${props => props.theme.lightDarker};
+                border-left-color: ${(props) => props.theme.lightDarker};
             }
             &:hover,
             &:active {
-                background-color: ${props => props.theme.primary};
+                background-color: ${(props) => props.theme.primary};
                 color: #fff;
                 &:before {
-                    border-color: ${props => props.theme.primary};
+                    border-color: ${(props) => props.theme.primary};
                     border-left-color: transparent;
                 }
                 &:after {
-                    border-left-color: ${props => props.theme.primary};
+                    border-left-color: ${(props) => props.theme.primary};
                 }
             }
         }
@@ -98,7 +98,7 @@ export const TippyContentStyled = styled.div`
     a {
         color: #fff;
         &:hover {
-            color: ${props => props.theme.primary};
+            color: ${(props) => props.theme.primary};
         }
     }
 `;
@@ -112,7 +112,7 @@ const RelativeBreadcrumbs = ({ researchField }) => {
         if (!isLoaded && researchField) {
             setIsLoading(true);
             getParentResearchFields(researchField.id)
-                .then(result => {
+                .then((result) => {
                     setParentResearchFields(result.reverse());
                     setIsLoading(false);
                     setIsLoaded(true);

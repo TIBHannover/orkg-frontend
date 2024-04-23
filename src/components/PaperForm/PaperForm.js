@@ -119,7 +119,7 @@ const PaperForm = ({
         }
     };
 
-    const handleTitleOptionClick = async paper => {
+    const handleTitleOptionClick = async (paper) => {
         if (
             await shouldUpdateValues({
                 currentData: {
@@ -140,7 +140,7 @@ const PaperForm = ({
         ) {
             setDoi(paper.externalIds?.DOI);
             setTitle(paper.label);
-            setAuthors(paper?.authors?.length > 0 ? paper.authors.map(author => ({ name: author.name })) : []);
+            setAuthors(paper?.authors?.length > 0 ? paper.authors.map((author) => ({ name: author.name })) : []);
             setPublicationYear(paper.year || '');
             setPublishedIn({ label: paper.venue || '' });
             setUrl(paper.externalIds?.ArXiv ? `https://arxiv.org/abs/${paper.externalIds?.ArXiv}` : '');
@@ -151,13 +151,13 @@ const PaperForm = ({
     const formId = useId();
 
     return (
-        <Form onSubmit={e => e.preventDefault()}>
+        <Form onSubmit={(e) => e.preventDefault()}>
             <FormGroup className="bg-light p-3 rounded">
                 <Label for={`${formId}-doi`}>
                     <Tooltip message="Automatically fetch the details of your paper by providing a DOI">DOI</Tooltip>
                 </Label>
                 <InputGroup>
-                    <Input id={`${formId}-doi`} value={doi} onChange={e => setDoi(e.target.value)} />
+                    <Input id={`${formId}-doi`} value={doi} onChange={(e) => setDoi(e.target.value)} />
                     <ButtonWithLoading disabled={isLoadingParsing} color="primary" outline onClick={handleLookupClick} isLoading={false}>
                         {!isLoadingParsing ? 'Lookup' : <FontAwesomeIcon icon={faSpinner} spin />}
                     </ButtonWithLoading>
@@ -166,11 +166,11 @@ const PaperForm = ({
             </FormGroup>
             {isNewPaper && (
                 <div className="d-flex mb-3">
-                    <Button color="light" size="sm" onClick={() => setIsMetadataExpanded(v => !v)}>
+                    <Button color="light" size="sm" onClick={() => setIsMetadataExpanded((v) => !v)}>
                         {!isMetadataExpanded ? 'Show' : 'Hide'} metadata fields
                     </Button>
                     {!isMetadataExpanded && !doi && (
-                        <Button color="link" onClick={() => setIsMetadataExpanded(v => !v)} className="ms-2 mt-1 p-0 ms-3">
+                        <Button color="link" onClick={() => setIsMetadataExpanded((v) => !v)} className="ms-2 mt-1 p-0 ms-3">
                             Click here if you don't have a DOI
                         </Button>
                     )}
@@ -196,7 +196,7 @@ const PaperForm = ({
                             <PaperTitleInput
                                 inputId={`${formId}-title`}
                                 value={title}
-                                onChange={value => setTitle(value)}
+                                onChange={(value) => setTitle(value)}
                                 onOptionClick={handleTitleOptionClick}
                                 isDisabled={isLoadingParsing}
                             />
@@ -265,7 +265,7 @@ const PaperForm = ({
                             <Label for={`${formId}-url`}>
                                 <Tooltip message="Add the URL to the paper PDF (optional)">Paper URL</Tooltip>
                             </Label>
-                            <Input id={`${formId}-url`} value={url} onChange={e => setUrl(e.target.value)} disabled={isLoadingParsing} />
+                            <Input id={`${formId}-url`} value={url} onChange={(e) => setUrl(e.target.value)} disabled={isLoadingParsing} />
                         </FormGroup>
                     </motion.div>
                 )}

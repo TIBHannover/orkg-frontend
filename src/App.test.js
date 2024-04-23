@@ -1,5 +1,5 @@
+import Index from 'app/page';
 import { render, screen } from 'testUtils';
-import App from 'App';
 
 jest.mock('d3-hierarchy', () => ({
     stratify: jest.fn().mockImplementation(() => [jest.fn(), jest.fn(), jest.fn()]),
@@ -16,11 +16,12 @@ jest.mock('d3-hierarchy', () => ({
 window.scrollTo = jest.fn();
 
 const setup = () => {
-    render(<App />);
+    render(<Index />);
 };
+
 describe('App', () => {
     it('renders without crashing', () => {
         setup();
-        expect(screen.getByText(/The Open Research Knowledge Graph aims to describe research papers/i)).toBeInTheDocument();
+        expect(screen.getByText(/Browse by research field/i)).toBeInTheDocument();
     });
 });

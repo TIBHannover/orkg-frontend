@@ -9,7 +9,6 @@ import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 
 const ValuePlugins = ({ options = {}, type, children }) => (
-    // Link exclude videos and images pattern
     <Boolean>
         <MathJax type={type}>
             <Doi type={type}>

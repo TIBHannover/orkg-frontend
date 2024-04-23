@@ -32,7 +32,7 @@ const IntegratedListWrapper: FC<IntegratedListWrapperProps> = ({ id, boxShadow =
                                 style={{ cursor: 'pointer' }}
                                 className="list-group-item list-group-item-action text-center"
                                 onClick={!isLoading ? handleLoadMore : undefined}
-                                onKeyDown={e => {
+                                onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
                                         if (!isLoading) {
                                             handleLoadMore();

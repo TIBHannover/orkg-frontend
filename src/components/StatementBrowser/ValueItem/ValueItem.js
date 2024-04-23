@@ -58,7 +58,7 @@ const ValueItem = ({
     }
 
     const dismissResourceTooltip = () => {
-        cookies.set('showedValueHelp', true, { path: env('PUBLIC_URL'), maxAge: 2628000 });
+        cookies.set('showedValueHelp', true, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 2628000 });
         setIsTooltipVisible(false);
     };
 

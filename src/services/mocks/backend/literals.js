@@ -1,4 +1,4 @@
-import { rest } from 'msw';
+import { http } from 'msw';
 import { literalsUrl } from 'services/backend/literals';
 import { MISC } from 'constants/graphSettings';
 
@@ -18,6 +18,6 @@ const literalPostAndPut = async (req, res, ctx) => {
     );
 };
 
-const literals = [rest.put(`${literalsUrl}:id`, literalPostAndPut), rest.post(literalsUrl, literalPostAndPut)];
+const literals = [http.put(`${literalsUrl}:id`, literalPostAndPut), http.post(literalsUrl, literalPostAndPut)];
 
 export default literals;

@@ -30,7 +30,7 @@ const HomeAlerts = () => {
 
     return alerts.map((alert) =>
         !alert.attributes?.hideAfterDate || moment() < moment(alert.attributes?.hideAfterDate) ? (
-            <AlertStyled key={alert.id} color={alert.attributes?.color} className="box mt-2">
+            <AlertStyled key={alert.id} color={alert.attributes?.color} className="box-shadow mt-2">
                 <div dangerouslySetInnerHTML={{ __html: converter.makeHtml(alert.attributes?.message) }} />
             </AlertStyled>
         ) : null,
