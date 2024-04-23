@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.139.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.139.0...v0.139.1) - 2024-04-23
+
+### Changes
+
+- fix: listing instances [`#1311`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1311)
+
+---
 ## [v0.139.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.138.2...v0.139.0) - 2024-04-22
 
 ### Changes
