@@ -53,8 +53,8 @@ function Resource() {
         featured: resource?.featured,
     });
 
-    const isShared = resource.shared > 0;
-    const isUserIsCreator = resource.created_by === user.id;
+    const isShared = resource?.shared > 0;
+    const isUserIsCreator = resource?.created_by === user?.id;
     const { isCurationAllowed } = user;
     const isDeletionAllowed = !isShared && (isUserIsCreator || isCurationAllowed);
 
