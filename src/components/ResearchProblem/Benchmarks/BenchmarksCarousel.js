@@ -39,7 +39,7 @@ function BenchmarksCarousel(props) {
         prevArrow: <Icon icon={faArrowCircleLeft} />,
         rows: 1,
         lazyLoad: true,
-        onLazyLoad: slidesLoaded => {
+        onLazyLoad: (slidesLoaded) => {
             if (props.hasNextPage) {
                 props.loadNextPage();
             }

@@ -16,13 +16,13 @@ import { determineActiveNERService, getNerResults, saveFeedback } from 'services
 import { setNerProperties, setNerRawResponse, setNerResources } from 'slices/viewPaperSlice';
 
 function NERSuggestions({ title = '', abstract = '' }) {
-    const nerProperties = useSelector(state => state.viewPaper.nerProperties);
+    const nerProperties = useSelector((state) => state.viewPaper.nerProperties);
     const dispatch = useDispatch();
     const { handleInsertData } = useInsertData();
     const [activeNERService, setActiveNERService] = useState(null);
 
     const { suggestions } = useEntityRecognition({ activeNERService, title, abstract });
-    const researchField = useSelector(state => state.viewPaper.researchField);
+    const researchField = useSelector((state) => state.viewPaper.researchField);
 
     useEffect(() => {
         (async () => setActiveNERService(await determineActiveNERService(researchField?.id)))();
@@ -72,7 +72,7 @@ function NERSuggestions({ title = '', abstract = '' }) {
         <div>
             {Object.keys(suggestions).length > 0 && <h6 className="mt-2">Statements</h6>}
             <ListGroup>
-                {Object.keys(suggestions).map(key => (
+                {Object.keys(suggestions).map((key) => (
                     <Fragment key={key}>
                         {suggestions[key].length > 0 && (
                             <PropertyItem color="smart" className="py-1">
@@ -82,7 +82,7 @@ function NERSuggestions({ title = '', abstract = '' }) {
                             </PropertyItem>
                         )}
                         <TransitionGroup component={null}>
-                            {suggestions[key].map(item => (
+                            {suggestions[key].map((item) => (
                                 <AnimationContainer
                                     key={item.id || item.label}
                                     classNames="slide-left"

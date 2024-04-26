@@ -17,7 +17,7 @@ import SmartResourceLabelCheck from 'components/SmartSuggestions/SmartResourceLa
 import SmartLiteralTypeCheck from 'components/SmartSuggestions/SmartLiteralTypeCheck';
 import useValueForm from 'components/StatementBrowser/ValueForm/hooks/useValueForm';
 
-const ValueForm = props => {
+const ValueForm = (props) => {
     const editMode = Boolean(props.id);
     const {
         propertyShape,
@@ -126,7 +126,7 @@ const ValueForm = props => {
         setEntityType(getConfigByType(inputDataType)._class);
         setInputFormType(getConfigByType(inputDataType).inputFormType);
         if (inputDataType === 'xsd:boolean') {
-            setInputValue(v => Boolean(v === 'true').toString());
+            setInputValue((v) => Boolean(v === 'true').toString());
         }
     }, [inputDataType, setEntityType, setInputFormType, setInputValue]);
 
@@ -166,7 +166,7 @@ const ValueForm = props => {
                         }
                         optionsClass={optionsClass}
                         placeholder={propertyShape?.placeholder ? propertyShape.placeholder : `Enter a ${entityType}`}
-                        onItemSelected={i => {
+                        onItemSelected={(i) => {
                             handleAddValue(entityType, { ...i, label: i.value, selected: true });
                             props.setShowAddValue?.(false);
                         }}
@@ -179,7 +179,7 @@ const ValueForm = props => {
                         disableBorderRadiusRight
                         disableBorderRadiusLeft={!valueClass}
                         cssClasses="form-control-sm"
-                        onKeyDown={e => {
+                        onKeyDown={(e) => {
                             if (e.keyCode === 27) {
                                 // escape
                                 props.setShowAddValue?.(false);
@@ -188,7 +188,7 @@ const ValueForm = props => {
                                 props.setShowAddValue?.(false);
                             }
                         }}
-                        innerRef={ref => (autocompleteInputRef.current = ref)}
+                        innerRef={(ref) => (autocompleteInputRef.current = ref)}
                         handleCreateExistingLabel={handleCreateExistingLabel}
                     />
                 ) : (
@@ -199,7 +199,7 @@ const ValueForm = props => {
                         inputDataType={inputDataType}
                         isValid={isValid}
                         literalInputRef={literalInputRef}
-                        onKeyDown={e => {
+                        onKeyDown={(e) => {
                             if (e.keyCode === 27) {
                                 // escape
                                 props.setShowAddValue?.(false);
@@ -236,7 +236,7 @@ const ValueForm = props => {
                     ) : (
                         <Tippy
                             onShown={onShown}
-                            onCreate={instance => (confirmConversion.current = instance)}
+                            onCreate={(instance) => (confirmConversion.current = instance)}
                             content={
                                 <ConfirmationTooltip
                                     message={

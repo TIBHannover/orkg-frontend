@@ -130,7 +130,7 @@ function Diagram() {
                             </Button>
                         )}
                         {id && (
-                            <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                            <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                                 <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                     <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
@@ -174,11 +174,11 @@ function Diagram() {
                     nodesConnectable={editMode}
                     nodesDraggable={editMode}
                     nodes={nodes}
-                    edges={edges.map(edge => ({ ...edge, markerEnd: { type: MarkerType.Arrow } }))}
+                    edges={edges.map((edge) => ({ ...edge, markerEnd: { type: MarkerType.Arrow } }))}
                     onNodesChange={editMode ? onNodesChange : null}
                     onEdgesChange={editMode ? onEdgesChange : null}
                     onConnect={editMode ? onConnect : null}
-                    onInit={inst => setReactFlowInstance(inst)}
+                    onInit={(inst) => setReactFlowInstance(inst)}
                     ref={diagramRef}
                     connectionLineStyle={{ strokeWidth: 5 }}
                     nodeTypes={nodeTypes}
@@ -205,7 +205,7 @@ function Diagram() {
                     addNode={addNode}
                     saveNode={saveNode}
                     isEditNodeModalOpen={isEditNodeModalOpen}
-                    setIsEditNodeModalOpen={() => setIsEditNodeModalOpen(v => !v)}
+                    setIsEditNodeModalOpen={() => setIsEditNodeModalOpen((v) => !v)}
                 />
 
                 <EditGroup
@@ -213,28 +213,28 @@ function Diagram() {
                     addGroup={addGroup}
                     saveGroup={saveGroup}
                     isEditGroupModalOpen={isEditGroupModalOpen}
-                    setIsEditGroupModalOpen={() => setIsEditGroupModalOpen(v => !v)}
+                    setIsEditGroupModalOpen={() => setIsEditGroupModalOpen((v) => !v)}
                 />
                 <EditEdge
                     edge={currentEdge}
                     addEdge={handleAddEdge}
                     saveEdge={saveEdge}
                     isEditEdgeModalOpen={isEditEdgeModalOpen}
-                    setIsEditEdgeModalOpen={() => setIsEditEdgeModalOpen(v => !v)}
+                    setIsEditEdgeModalOpen={() => setIsEditEdgeModalOpen((v) => !v)}
                 />
                 <SaveDiagram
                     diagram={reactFlowInstance?.toObject() ?? {}}
                     diagramResource={diagramResource}
                     isSaveDiagramModalOpen={isSaveDiagramModalOpen}
-                    setIsSaveDiagramModalOpen={() => setIsSaveDiagramModalOpen(v => !v)}
+                    setIsSaveDiagramModalOpen={() => setIsSaveDiagramModalOpen((v) => !v)}
                 />
                 <ExportDiagram
                     diagramResource={diagramResource}
                     diagram={reactFlowInstance?.toObject() ?? {}}
                     isExportDiagramModalOpen={isExportDiagramModalOpen}
-                    setIsExportDiagramModalOpen={() => setIsExportDiagramModalOpen(v => !v)}
+                    setIsExportDiagramModalOpen={() => setIsExportDiagramModalOpen((v) => !v)}
                 />
-                <HelpModal isHelpModalOpen={isHelpModalOpen} setIsHelpModalOpen={() => setIsHelpModalOpen(v => !v)} />
+                <HelpModal isHelpModalOpen={isHelpModalOpen} setIsHelpModalOpen={() => setIsHelpModalOpen((v) => !v)} />
             </Container>
         </>
     );

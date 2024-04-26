@@ -6,7 +6,7 @@ import Select from 'react-select';
 import { ModalBody } from 'reactstrap';
 import stopwords from 'stopwords-en';
 
-const TextFilterRule = props => {
+const TextFilterRule = (props) => {
     const { property, values, rules, updateRulesOfProperty, toggleFilterDialog } = props.dataController;
     const { label: propertyName, id: propertyId } = property;
 
@@ -21,17 +21,17 @@ const TextFilterRule = props => {
                 .split(' '),
         ),
     ]
-        .filter(val => val.length > 1 && !stopwords.includes(val))
-        .map(val => ({ value: val, label: val }));
+        .filter((val) => val.length > 1 && !stopwords.includes(val))
+        .map((val) => ({ value: val, label: val }));
 
-    const keyWordRule = rules.find(item => item.propertyId === propertyId && item.type === FILTER_TYPES.INC);
+    const keyWordRule = rules.find((item) => item.propertyId === propertyId && item.type === FILTER_TYPES.INC);
     const selectedOptions = typeof keyWordRule === 'undefined' ? null : options.filter(({ value }) => keyWordRule.value.includes(value));
     const [selectedKeys, setSelectedKeys] = useState(selectedOptions);
 
-    const calRules = selectedVals =>
+    const calRules = (selectedVals) =>
         selectedVals ? [{ propertyId, propertyName, type: FILTER_TYPES.INC, value: selectedVals.map(({ value }) => value) }] : [];
 
-    const handleChange = selectedOption => {
+    const handleChange = (selectedOption) => {
         setSelectedKeys(selectedOption);
     };
 

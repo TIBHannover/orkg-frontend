@@ -59,14 +59,14 @@ const Organization = () => {
     const [logo, setLogo] = useState(null);
     const [createdBy, setCreatedBy] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
-    const typeName = ORGANIZATIONS_TYPES.find(t => t.label === orgType).alternateLabel;
-    const user = useSelector(state => state.auth.user);
+    const typeName = ORGANIZATIONS_TYPES.find((t) => t.label === orgType).alternateLabel;
+    const user = useSelector((state) => state.auth.user);
 
     useEffect(() => {
         const findOrg = () => {
             setIsLoading(true);
             getOrganization(id)
-                .then(responseJson => {
+                .then((responseJson) => {
                     document.title = `${responseJson.name} - ${typeName} - ORKG`;
                     setOrganizationId(responseJson.id);
                     setLabel(responseJson.name);
@@ -75,7 +75,7 @@ const Organization = () => {
                     setIsLoading(false);
                     setCreatedBy(responseJson.created_by);
                 })
-                .catch(_error => {
+                .catch((_error) => {
                     setIsLoading(false);
                     setError(_error);
                 });
@@ -112,7 +112,7 @@ const Organization = () => {
                                     >
                                         <Icon icon={faPlus} /> Create {typeName === 'organization' ? 'observatory' : 'conference event'}
                                     </Button>
-                                    <Button color="secondary" size="sm" onClick={() => setShowEditDialog(v => !v)}>
+                                    <Button color="secondary" size="sm" onClick={() => setShowEditDialog((v) => !v)}>
                                         <Icon icon={faPen} /> Edit
                                     </Button>
                                 </>
@@ -141,24 +141,24 @@ const Organization = () => {
                                 )}
                             </Row>
                         </StyledOrganizationHeader>
-                        {ORGANIZATIONS_MISC.GENERAL === ORGANIZATIONS_TYPES.find(t => t.label === orgType)?.id && (
+                        {ORGANIZATIONS_MISC.GENERAL === ORGANIZATIONS_TYPES.find((t) => t.label === orgType)?.id && (
                             <>
                                 <hr />
                                 <Members organizationsId={organizationId} />
                             </>
                         )}
                     </Container>
-                    {ORGANIZATIONS_MISC.EVENT === ORGANIZATIONS_TYPES.find(t => t.label === orgType)?.id && (
+                    {ORGANIZATIONS_MISC.EVENT === ORGANIZATIONS_TYPES.find((t) => t.label === orgType)?.id && (
                         <ConferenceEvents conferenceId={organizationId} conferenceName={label} />
                     )}
-                    {ORGANIZATIONS_MISC.GENERAL === ORGANIZATIONS_TYPES.find(t => t.label === orgType)?.id && (
+                    {ORGANIZATIONS_MISC.GENERAL === ORGANIZATIONS_TYPES.find((t) => t.label === orgType)?.id && (
                         <Observatories organizationsId={organizationId} />
                     )}
                 </>
             )}
             <EditOrganization
                 showDialog={showEditDialog}
-                toggle={() => setShowEditDialog(v => !v)}
+                toggle={() => setShowEditDialog((v) => !v)}
                 label={label ?? ''}
                 id={organizationId}
                 url={url}

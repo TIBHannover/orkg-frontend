@@ -28,8 +28,8 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const SortableSectionsList = () => {
-    const sections = useSelector(state => state.list.sections);
-    const list = useSelector(state => state.list.list);
+    const sections = useSelector((state) => state.list.sections);
+    const list = useSelector((state) => state.list.list);
     const [isSorting, setIsSorting] = useState(false);
     const dispatch = useDispatch();
 
@@ -41,7 +41,7 @@ const SortableSectionsList = () => {
     };
 
     const handleManualSort = ({ id, direction }) => {
-        const oldIndex = sections.findIndex(section => section.id === id);
+        const oldIndex = sections.findIndex((section) => section.id === id);
         const newIndex = direction === 'up' ? oldIndex - 1 : oldIndex + 1;
         if (newIndex < 0) {
             return;

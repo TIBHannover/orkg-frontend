@@ -22,7 +22,7 @@ import { removeEmptyPropertiesOfClass, updateResourceClassesAction as updateReso
 import styled from 'styled-components';
 
 export const ClassesStyle = styled.div`
-    background-color: ${props => props.theme.lightLighter};
+    background-color: ${(props) => props.theme.lightLighter};
     overflow-wrap: break-word;
     margin-top: -2px;
     margin-right: -2px;
@@ -53,24 +53,24 @@ const AnimationContainer = styled(CSSTransition)`
 `;
 
 const ClassesItem = ({ enableEdit = false, syncBackend = false }) => {
-    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
-    const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
+    const selectedResource = useSelector((state) => state.statementBrowser.selectedResource);
+    const resource = useSelector((state) => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const [editMode, setEditMode] = useState(false);
     const classesAutocompleteRef = useRef(null);
     const [classes, setClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const dispatch = useDispatch();
-    const preferences = useSelector(state => state.statementBrowser.preferences);
+    const preferences = useSelector((state) => state.statementBrowser.preferences);
     const { usedTemplates, isLoadingUsedTemplates } = useUsedTemplates({ resourceId: selectedResource });
 
     useEffect(() => {
         let isMounted = true;
         const findClasses = async () => {
             setIsLoading(true);
-            const classesCalls = resource.classes?.map(c => getClassById(c)) ?? [];
+            const classesCalls = resource.classes?.map((c) => getClassById(c)) ?? [];
             await Promise.all(classesCalls)
-                .then(resClasses => {
+                .then((resClasses) => {
                     if (isMounted) {
                         setIsLoading(false);
                         setClasses(resClasses ?? []);
@@ -94,12 +94,12 @@ const ClassesItem = ({ enableEdit = false, syncBackend = false }) => {
     const handleChangeClasses = async (selected, action) => {
         setIsSaving(true);
         if (action.action === 'create-option') {
-            const foundIndex = selected.findIndex(x => x.__isNew__);
+            const foundIndex = selected.findIndex((x) => x.__isNew__);
             const newClass = await Confirm({
                 label: selected[foundIndex].label,
             });
             if (newClass) {
-                const _foundIndex = selected.findIndex(x => x.__isNew__);
+                const _foundIndex = selected.findIndex((x) => x.__isNew__);
                 selected[_foundIndex] = newClass;
             } else {
                 setIsSaving(false);
@@ -111,7 +111,7 @@ const ClassesItem = ({ enableEdit = false, syncBackend = false }) => {
             dispatch(removeEmptyPropertiesOfClass({ resourceId: selectedResource, classId: action.removedValue?.id }));
         }
         const newClasses = !selected ? [] : selected;
-        dispatch(updateResourceClasses({ resourceId: selectedResource, classes: newClasses?.map(c => c.id) ?? [], syncBackend }))
+        dispatch(updateResourceClasses({ resourceId: selectedResource, classes: newClasses?.map((c) => c.id) ?? [], syncBackend }))
             .then(() => {
                 setClasses(newClasses);
                 setIsSaving(false);

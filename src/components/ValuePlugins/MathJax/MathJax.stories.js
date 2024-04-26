@@ -5,7 +5,7 @@ export default {
     component: MathJax,
 };
 
-const Template = args => <MathJax {...args} />;
+const Template = (args) => <MathJax {...args} />;
 
 export const Default = Template.bind({});
 

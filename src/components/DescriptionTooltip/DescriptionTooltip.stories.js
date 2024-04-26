@@ -5,7 +5,7 @@ export default {
     component: DescriptionTooltip,
 };
 
-const Template = args => <DescriptionTooltip {...args} />;
+const Template = (args) => <DescriptionTooltip {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

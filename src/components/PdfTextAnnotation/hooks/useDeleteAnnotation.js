@@ -4,7 +4,7 @@ import { deleteAnnotation as deleteAnnotationAction } from 'slices/pdfTextAnnota
 const useDeleteAnnotation = () => {
     const dispatch = useDispatch();
 
-    const deleteAnnotation = id => {
+    const deleteAnnotation = (id) => {
         if (window.confirm('Are you sure?')) {
             dispatch(deleteAnnotationAction(id));
         }

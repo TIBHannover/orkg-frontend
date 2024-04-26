@@ -19,16 +19,16 @@ const useContributionEditor = () => {
 
     const hasPreviousVersion = searchParams.get('hasPreviousVersion');
 
-    const handleAddContributions = ids => {
+    const handleAddContributions = (ids) => {
         const idsQueryString = [...getContributionIds(), ...ids].join(',');
         router.push(
             `${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''}`,
         );
     };
 
-    const handleRemoveContribution = id => {
+    const handleRemoveContribution = (id) => {
         const idsQueryString = getContributionIds()
-            .filter(_id => _id !== id)
+            .filter((_id) => _id !== id)
             .join(',');
         router.push(
             `${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''}`,
@@ -36,7 +36,7 @@ const useContributionEditor = () => {
     };
 
     // make an object that supports retrieving statements by propertyId and contributionId
-    const getStatementsByPropertyIdAndContributionId = statements => {
+    const getStatementsByPropertyIdAndContributionId = (statements) => {
         const statementsObject = {};
         for (const [statementId, statement] of Object.entries(statements)) {
             if (!(statement.propertyId in statementsObject)) {
@@ -51,7 +51,7 @@ const useContributionEditor = () => {
     };
 
     const Cell = useCallback(
-        cell => <TableCell values={cell.value} contributionId={cell.column.id} propertyId={cell.row.original.property.id} />,
+        (cell) => <TableCell values={cell.value} contributionId={cell.column.id} propertyId={cell.row.original.property.id} />,
         [],
     );
 
@@ -62,23 +62,23 @@ const useContributionEditor = () => {
             let data = [];
             let columns = [];
 
-            data = Object.keys(properties).map(propertyId => ({
+            data = Object.keys(properties).map((propertyId) => ({
                 property: properties[propertyId],
                 values: Object.keys(contributions).map(
-                    contributionId =>
+                    (contributionId) =>
                         sortBy(
-                            statementsByPropertyIdAndContributionId?.[propertyId]?.[contributionId]?.map(statementId => ({
+                            statementsByPropertyIdAndContributionId?.[propertyId]?.[contributionId]?.map((statementId) => ({
                                 ...(statements[statementId].type === 'resource'
                                     ? resources[statements[statementId].objectId]
                                     : literals[statements[statementId].objectId]),
                                 statementId,
                             })),
-                            value => value?.label?.trim().toLowerCase(),
+                            (value) => value?.label?.trim().toLowerCase(),
                         ) || [{}],
                 ),
             }));
 
-            data = sortBy(data, date => date.property.label.trim().toLowerCase());
+            data = sortBy(data, (date) => date.property.label.trim().toLowerCase());
 
             columns = [
                 {
@@ -86,14 +86,14 @@ const useContributionEditor = () => {
                     accessor: 'property',
                     sticky: 'left',
                     minWidth: 250,
-                    Cell: cell => <TableHeaderRow property={cell.value} />,
+                    Cell: (cell) => <TableHeaderRow property={cell.value} />,
                 },
                 ...Object.keys(contributions).map((contributionId, i) => {
                     const contribution = contributions[contributionId];
                     return {
                         id: contributionId,
                         Header: () => <TableHeaderColumn contribution={contribution} paper={papers[contribution.paperId]} key={contributionId} />,
-                        accessor: d => d.values[i],
+                        accessor: (d) => d.values[i],
                         Cell,
                     };
                 }),

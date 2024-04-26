@@ -17,7 +17,7 @@ function AddMember(props) {
         setIsLoading(true);
         if (selectedOrganization && email.length > 0) {
             await addUserToObservatory(email, props.observatoryId, selectedOrganization.id)
-                .then(member => {
+                .then((member) => {
                     toast.success('Member added successfully');
                     props.updateObservatoryMembers(member);
                     setIsLoading(false);
@@ -25,7 +25,7 @@ function AddMember(props) {
                     setEmail('');
                     props.toggle();
                 })
-                .catch(error => {
+                .catch((error) => {
                     toast.error(`Error adding member! ${getErrorMessage(error, 'user_email') ?? error?.message}`);
                     setIsLoading(false);
                 });
@@ -50,7 +50,7 @@ function AddMember(props) {
                             <Select
                                 value={props.organizationsList.length === 1 ? props.organizationsList[0] : selectedOrganization}
                                 options={props.organizationsList}
-                                onChange={selected => setSelectedOrganization(selected)}
+                                onChange={(selected) => setSelectedOrganization(selected)}
                                 getOptionValue={({ id }) => id}
                                 getOptionLabel={({ name }) => name}
                                 inputId="organization"
@@ -62,7 +62,7 @@ function AddMember(props) {
                             <Label for="userEmail">User email</Label>
 
                             <InputGroup>
-                                <Input id="userEmail" onChange={e => setEmail(e.target.value)} type="email" value={email} />
+                                <Input id="userEmail" onChange={(e) => setEmail(e.target.value)} type="email" value={email} />
                             </InputGroup>
                         </FormGroup>
                     </>

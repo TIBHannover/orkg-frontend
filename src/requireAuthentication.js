@@ -6,7 +6,7 @@ import Unauthorized from 'components/Unauthorized/Unauthorized';
 
 export default function requireAuthentication(Component) {
     function AuthenticatedComponent(props) {
-        const user = useSelector(state => state.auth.user);
+        const user = useSelector((state) => state.auth.user);
         const [isLoadingUser, setIsLoadingUser] = useState(true);
         const dispatch = useDispatch();
         useEffect(() => {

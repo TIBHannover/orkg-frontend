@@ -19,7 +19,7 @@ export default class AbstractRenderer extends Component {
         }
     }
 
-    componentDidUpdate = prevProps => {
+    componentDidUpdate = (prevProps) => {
         // always make sure that you have the pointer to the data;
         // this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
         if (prevProps.isInputTableExpanded !== this.props.isInputTableExpanded) {
@@ -34,7 +34,7 @@ export default class AbstractRenderer extends Component {
         this.setState({ updateFlipFlop: !this.state.updateFlipFlop });
     };
 
-    setCustomizationState = state => {
+    setCustomizationState = (state) => {
         this.customizationState = state;
         this.setState({ updateFlipFlop: !this.state.updateFlipFlop });
     };

@@ -28,7 +28,7 @@ function EditTitleModal({ isOpen, toggle, editItem, onChange }) {
             <ModalBody>
                 <FormGroup>
                     <Label for="draft-title">Title</Label>
-                    <Input type="text" maxLength={MAX_LENGTH_INPUT} id="draft-title" value={title} onChange={e => setTitle(e.target.value)} />
+                    <Input type="text" maxLength={MAX_LENGTH_INPUT} id="draft-title" value={title} onChange={(e) => setTitle(e.target.value)} />
                 </FormGroup>
             </ModalBody>
             <ModalFooter>

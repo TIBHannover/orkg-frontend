@@ -12,11 +12,11 @@ function useResearchFieldObservatories({ researchFieldId }: { researchFieldId: s
         if (rfId) {
             setIsLoading(true);
             const observatories = getObservatories({ researchFieldId: rfId !== RESOURCES.RESEARCH_FIELD_MAIN ? rfId : null }).then(
-                res => res.content,
+                (res) => res.content,
             );
 
             observatories
-                .then(_data => {
+                .then((_data) => {
                     setData(_data);
                     setIsLoading(false);
                     setIsFailedLoading(false);

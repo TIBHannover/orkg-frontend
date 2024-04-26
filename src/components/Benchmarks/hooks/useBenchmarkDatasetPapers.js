@@ -20,7 +20,7 @@ function useBenchmarkDatasetPapers({ datasetId, problemId }) {
         ])
             .then(([benchmark, problems]) => {
                 // TODO: this trim needs to be done on the data itself
-                let trimResult = benchmark.content.map(s => {
+                let trimResult = benchmark.content.map((s) => {
                     s.metric = s.metric.trim();
                     return s;
                 });

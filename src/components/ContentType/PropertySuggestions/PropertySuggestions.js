@@ -13,15 +13,17 @@ const PropertySuggestions = () => {
     const [isOverflowing, setIsOverflowing] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
     const dispatch = useDispatch();
-    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
-    const store = useSelector(state => state);
+    const selectedResource = useSelector((state) => state.statementBrowser.selectedResource);
+    const store = useSelector((state) => state);
     const suggestedProperties = useMemo(() => getSuggestedProperties(store, selectedResource), [store, selectedResource]);
     const [filteredSuggestions, setFilteredSuggestions] = useState([]);
     const ref = createRef(null);
 
     useEffect(() => {
         if (filterValue) {
-            setFilteredSuggestions(suggestedProperties.filter(property => property.property.label.toLowerCase().includes(filterValue.toLowerCase())));
+            setFilteredSuggestions(
+                suggestedProperties.filter((property) => property.property.label.toLowerCase().includes(filterValue.toLowerCase())),
+            );
         } else {
             setFilteredSuggestions(suggestedProperties);
         }
@@ -43,11 +45,11 @@ const PropertySuggestions = () => {
                     placeholder="Filter..."
                     className="mt-3 mb-2"
                     value={filterValue}
-                    onChange={e => setFilterValue(e.target.value)}
+                    onChange={(e) => setFilterValue(e.target.value)}
                     maxLength={MAX_LENGTH_INPUT}
                 />
                 <div className="list-group" style={{ maxHeight: !isExpanded ? 400 : 5000, overflowY: 'auto' }} ref={ref}>
-                    {filteredSuggestions.map(c => (
+                    {filteredSuggestions.map((c) => (
                         <ListGroupItem
                             action
                             onClick={() => {
@@ -78,7 +80,7 @@ const PropertySuggestions = () => {
                 </div>
                 {(isOverflowing || isExpanded) && (
                     <div className="justify-content-center d-flex mt-2">
-                        <Button color="link" size="sm" className="p-0" onClick={() => setIsExpanded(v => !v)}>
+                        <Button color="link" size="sm" className="p-0" onClick={() => setIsExpanded((v) => !v)}>
                             {isExpanded ? 'Hide' : 'Show'} all
                         </Button>
                     </div>

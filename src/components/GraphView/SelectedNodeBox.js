@@ -17,8 +17,8 @@ const StyledBox = styled.div`
     position: absolute;
     right: 10px;
     top: 10px;
-    border-radius: ${props => props.theme.borderRadius};
-    background: ${props => props.theme.light};
+    border-radius: ${(props) => props.theme.borderRadius};
+    background: ${(props) => props.theme.light};
     width: 300px;
     z-index: 1;
     padding: 10px;
@@ -67,13 +67,13 @@ const SelectedNodeBox = ({ nodes, selectedNode, getExpandButtonLabel, toggleExpa
                 <hr />
                 <ButtonGroup className="d-flex">
                     <Button
-                        disabled={!nodes.find(node => node.id === selectedNode.id).data.hasObjectStatements}
+                        disabled={!nodes.find((node) => node.id === selectedNode.id).data.hasObjectStatements}
                         color="primary"
                         size="sm"
                         onClick={() => toggleExpandNode(selectedNode.id)}
                         style={{ marginRight: 2 }}
                     >
-                        {getExpandButtonLabel(nodes.find(node => node.id === selectedNode.id).data)}
+                        {getExpandButtonLabel(nodes.find((node) => node.id === selectedNode.id).data)}
                     </Button>
                     <Button color="primary" size="sm" onClick={() => fetchIncomingStatements(selectedNode.id)}>
                         Fetching incoming

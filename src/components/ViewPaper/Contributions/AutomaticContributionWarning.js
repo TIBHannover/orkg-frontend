@@ -3,7 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Button, Alert } from 'reactstrap';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
-const AutomaticContributionWarning = props => {
+const AutomaticContributionWarning = (props) => {
     function handleVerify() {
         props.onVerifyHandler(props.contribution.id);
     }

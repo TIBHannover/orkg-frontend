@@ -7,15 +7,15 @@ export default {
     component: ModalWithLoading,
 };
 
-const Template = args => {
+const Template = (args) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
         <>
-            <button onClick={() => setIsOpen(v => !v)}>Trigger confirm</button>
+            <button onClick={() => setIsOpen((v) => !v)}>Trigger confirm</button>
 
-            <ModalWithLoading {...args} isOpen={isOpen} toggle={() => setIsOpen(v => !v)}>
-                <ModalHeader toggle={() => setIsOpen(v => !v)}>Test</ModalHeader>
+            <ModalWithLoading {...args} isOpen={isOpen} toggle={() => setIsOpen((v) => !v)}>
+                <ModalHeader toggle={() => setIsOpen((v) => !v)}>Test</ModalHeader>
                 <ModalBody>Content</ModalBody>
             </ModalWithLoading>
         </>

@@ -5,9 +5,9 @@ import { createPredicate, getPredicate, getPredicates } from 'services/backend/p
 import { getResource } from 'services/backend/resources';
 import { getStatementsByPredicateAndLiteral } from 'services/backend/statements';
 
-export const isORKGDefaultPredicate = id => Object.keys(PREDICATES).find(c => PREDICATES[c] === id);
+export const isORKGDefaultPredicate = (id) => Object.keys(PREDICATES).find((c) => PREDICATES[c] === id);
 
-export const isORKGDefaultClass = id => Object.keys(CLASSES).find(c => CLASSES[c] === id);
+export const isORKGDefaultClass = (id) => Object.keys(CLASSES).find((c) => CLASSES[c] === id);
 
 /**
  * Match triple from the RDF graph
@@ -23,7 +23,7 @@ export const isORKGDefaultClass = id => Object.keys(CLASSES).find(c => CLASSES[c
 export const extractConcept = (g, concept = 'object', subject = null, predicate = null, object = null, isUnique = true) => {
     const triples = g.match(subject, predicate, object);
     let result = isUnique ? null : [];
-    triples.forEach(s => {
+    triples.forEach((s) => {
         if (isUnique) {
             result = s[concept];
         } else {
@@ -33,7 +33,7 @@ export const extractConcept = (g, concept = 'object', subject = null, predicate 
     return result;
 };
 
-export const extractLabelFromRdfURI = uri => {
+export const extractLabelFromRdfURI = (uri) => {
     // Check if the URI has a fragment identifier
     const fragmentIndex = uri.indexOf('#');
     if (fragmentIndex !== -1) {

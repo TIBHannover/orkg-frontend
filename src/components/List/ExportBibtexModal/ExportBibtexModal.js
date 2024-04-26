@@ -19,14 +19,14 @@ const bibtexOptions = {
 const ExportBibtexModal = ({ isOpen, toggle }) => {
     const [bibtex, setBibtex] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const contentTypes = useSelector(state => state.list.contentTypes);
+    const contentTypes = useSelector((state) => state.list.contentTypes);
 
-    const getCite = paper =>
+    const getCite = (paper) =>
         new Cite({
             type: 'article',
             id: paper.paper.id,
             title: paper.label,
-            author: paper.authors?.length > 0 ? paper.authors.map(author => ({ name: author.label })) : null,
+            author: paper.authors?.length > 0 ? paper.authors.map((author) => ({ name: author.label })) : null,
             year: paper.publicationYear?.label,
         });
 
@@ -35,7 +35,7 @@ const ExportBibtexModal = ({ isOpen, toggle }) => {
             setIsLoading(true);
             const bibtexPromises =
                 Object.keys(contentTypes).length > 0
-                    ? Object.keys(contentTypes).map(contentTypeId => {
+                    ? Object.keys(contentTypes).map((contentTypeId) => {
                           const contentType = contentTypes[contentTypeId];
 
                           if (contentType?.doi?.label) {
@@ -46,12 +46,12 @@ const ExportBibtexModal = ({ isOpen, toggle }) => {
                       })
                     : [];
             Promise.all(bibtexPromises)
-                .then(citations => {
-                    const bibtex = citations.map(citation => citation.options(bibtexOptions).get()).join('\n');
+                .then((citations) => {
+                    const bibtex = citations.map((citation) => citation.options(bibtexOptions).get()).join('\n');
                     setBibtex(bibtex);
                     setIsLoading(false);
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error(error);
                     setIsLoading(false);
                 });

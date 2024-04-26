@@ -6,7 +6,7 @@ export default {
     component: AuthorBadgesComponent,
 };
 
-const Template = args => <AuthorBadgesComponent {...args} />;
+const Template = (args) => <AuthorBadgesComponent {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

@@ -55,7 +55,7 @@ function CreateClassModal({ label: newLabel, uri: newUri, onClose, showParentFie
 
     return (
         <Modal isOpen toggle={() => onClose(false)} size="lg">
-            <Form onSubmit={e => e.preventDefault()}>
+            <Form onSubmit={(e) => e.preventDefault()}>
                 <ModalHeader toggle={() => onClose(false)}>Are you sure you need a new class?</ModalHeader>
                 <ModalBody>
                     <p>Often there are existing classes that you can use as well. It is better to use existing classes than new ones.</p>
@@ -67,7 +67,7 @@ function CreateClassModal({ label: newLabel, uri: newUri, onClose, showParentFie
                             name="label"
                             id="labelInput"
                             value={label}
-                            onChange={e => setLabel(e.target.value)}
+                            onChange={(e) => setLabel(e.target.value)}
                             maxLength={MAX_LENGTH_INPUT}
                         />
                     </FormGroup>
@@ -81,7 +81,7 @@ function CreateClassModal({ label: newLabel, uri: newUri, onClose, showParentFie
                             id="URIInput"
                             value={uri}
                             placeholder="Enter the URI of the class"
-                            onChange={e => setUri(e.target.value)}
+                            onChange={(e) => setUri(e.target.value)}
                             invalid={Boolean(getErrorMessage(errors, 'uri'))}
                         />
                         {Boolean(getErrorMessage(errors, 'uri')) && <FormFeedback>{getErrorMessage(errors, 'uri')}</FormFeedback>}
@@ -117,7 +117,7 @@ function CreateClassModal({ label: newLabel, uri: newUri, onClose, showParentFie
                     <FormGroup className="mt-4">
                         <Label for="property-description">Description</Label>
                         <Input
-                            onChange={e => setDescription(e.target.value)}
+                            onChange={(e) => setDescription(e.target.value)}
                             value={description}
                             type="text"
                             id="property-description"

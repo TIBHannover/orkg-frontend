@@ -35,7 +35,7 @@ const AddObservatory = () => {
     const publicObservatoryRoute = `${getPublicUrl()}${reverse(ROUTES.OBSERVATORY, { id: ' ' })}`;
     const [isLoadingOrganization, setIsLoadingOrganization] = useState(true);
     const [errorLoadingOrganization, setErrorLoadingOrganization] = useState(null);
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -75,7 +75,7 @@ const AddObservatory = () => {
         }
     };
 
-    const navigateToObservatory = display_id => {
+    const navigateToObservatory = (display_id) => {
         setEditorState('edit');
         setName('');
         setDescription('');
@@ -85,15 +85,15 @@ const AddObservatory = () => {
     };
 
     useEffect(() => {
-        const loadOrganization = id => {
+        const loadOrganization = (id) => {
             setIsLoadingOrganization(true);
             getOrganization(id)
-                .then(organization => {
+                .then((organization) => {
                     document.title = `${organization.name} - ORKG`;
                     setOrganizationName(organization.name);
                     setIsLoadingOrganization(false);
                 })
-                .catch(err => {
+                .catch((err) => {
                     setErrorLoadingOrganization(err);
                     setIsLoadingOrganization(false);
                     setOrganizationName('');
@@ -123,7 +123,7 @@ const AddObservatory = () => {
                                 <FormGroup>
                                     <Label for="ObservatoryName">Name</Label>
                                     <Input
-                                        onChange={e => {
+                                        onChange={(e) => {
                                             setName(e.target.value);
                                             setPermalink(
                                                 slugify(e.target.value.trim(), {
@@ -150,7 +150,7 @@ const AddObservatory = () => {
                                         <InputGroup>
                                             <span className="input-group-text">{publicObservatoryRoute}</span>
                                             <Input
-                                                onChange={e => setPermalink(e.target.value)}
+                                                onChange={(e) => setPermalink(e.target.value)}
                                                 type="text"
                                                 name="permalink"
                                                 id="observatoryPermalink"
@@ -168,7 +168,7 @@ const AddObservatory = () => {
                                     <AutoComplete
                                         entityType={ENTITIES.RESOURCE}
                                         optionsClass={CLASSES.RESEARCH_FIELD}
-                                        onItemSelected={async rf => {
+                                        onItemSelected={async (rf) => {
                                             setResearchField({ ...rf, label: rf.value });
                                         }}
                                         value={researchField}
@@ -182,7 +182,7 @@ const AddObservatory = () => {
                                 <FormGroup>
                                     <Label for="ObservatoryDescription">Observatory description</Label>
                                     <Input
-                                        onChange={e => setDescription(e.target.value)}
+                                        onChange={(e) => setDescription(e.target.value)}
                                         type="textarea"
                                         name="description"
                                         value={description}

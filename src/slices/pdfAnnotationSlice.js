@@ -53,11 +53,11 @@ export const pdfAnnotationSlice = createSlice({
         setLabelCache: (state, { payload }) => {
             state.cachedLabels[payload.id] = payload.label;
         },
-        fetchPDFParseRequest: state => {
+        fetchPDFParseRequest: (state) => {
             state.pdfParseIsFetching = true;
             state.pdfParseFailed = false;
         },
-        fetchPDFParseFailure: state => {
+        fetchPDFParseFailure: (state) => {
             state.pdfParseIsFetching = false;
             state.pdfParseFailed = true;
             state.parsedPdfData = document.createElement('div'); // create an empty parsing result
@@ -74,15 +74,15 @@ export const pdfAnnotationSlice = createSlice({
             state.pages = payload.pages;
             state.styles = payload.styles;
         },
-        fetchPDFConvertRequest: state => {
+        fetchPDFConvertRequest: (state) => {
             state.pdfConvertIsFetching = true;
             state.pdfConvertFailed = false;
         },
-        failedToConvertPdf: state => {
+        failedToConvertPdf: (state) => {
             state.pdfConvertIsFetching = false;
             state.pdfConvertFailed = true;
         },
-        resetPdfAnnotation: state => {
+        resetPdfAnnotation: (state) => {
             window.URL.revokeObjectURL(state.pdf);
             return initialState;
         },
@@ -114,7 +114,7 @@ export default pdfAnnotationSlice.reducer;
  */
 export const convertPdf =
     ({ files }) =>
-    dispatch => {
+    (dispatch) => {
         dispatch(fetchPDFConvertRequest());
 
         if (files.length === 0) {
@@ -125,19 +125,19 @@ export const convertPdf =
         const form = new FormData();
         form.append('file', pdf);
         convertPdfAPI(form)
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Error while converting PDF to HTML');
                 } else {
                     return response.text();
                 }
             })
-            .then(data => {
+            .then((data) => {
                 const parseData = parse(data, {
                     style: true, // retrieve content in <style> (hurts performance but required)
                 });
-                const pages = parseData.querySelectorAll('.pf').map(page => page.outerHTML);
-                const styles = parseData.querySelectorAll('style').map(style => style.outerHTML);
+                const pages = parseData.querySelectorAll('.pf').map((page) => page.outerHTML);
+                const styles = parseData.querySelectorAll('style').map((style) => style.outerHTML);
 
                 dispatch(
                     setFile({
@@ -149,7 +149,7 @@ export const convertPdf =
 
                 dispatch(parsePdf({ pdf }));
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
                 toast.error('Unexpected error occurred, the PDF could not be converted. Please try it again');
                 dispatch(failedToConvertPdf());
@@ -163,7 +163,7 @@ export const convertPdf =
  */
 export const parsePdf =
     ({ pdf }) =>
-    async dispatch => {
+    async (dispatch) => {
         dispatch(fetchPDFParseRequest());
 
         const form = new FormData();

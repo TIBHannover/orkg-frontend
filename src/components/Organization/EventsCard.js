@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 const EventsCardStyled = styled.li`
     &:last-child {
-        border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
+        border-bottom-right-radius: ${(props) => (props.rounded === 'true' ? '0 !important' : '')};
     }
 `;
 

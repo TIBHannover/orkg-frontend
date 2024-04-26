@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
 const ClassesBadgesFilter = ({ disabled = false, classesFilter, setClassesFilter, initialClassFilterOptions }) => {
-    const handleSelect = value => {
+    const handleSelect = (value) => {
         if (value.length < 1) {
             toast.dismiss();
             toast.info('At least one type should be selected');
@@ -25,7 +25,7 @@ const ClassesBadgesFilter = ({ disabled = false, classesFilter, setClassesFilter
     );
 
     const CustomOption = useCallback(
-        innerProps => (
+        (innerProps) => (
             <div>
                 <components.Option {...innerProps}>
                     <div className="d-flex">
@@ -39,7 +39,7 @@ const ClassesBadgesFilter = ({ disabled = false, classesFilter, setClassesFilter
     );
 
     const customStyles = {
-        container: provided => ({
+        container: (provided) => ({
             ...provided,
             padding: '0',
             border: '0',
@@ -47,38 +47,38 @@ const ClassesBadgesFilter = ({ disabled = false, classesFilter, setClassesFilter
             position: 'relative',
             zIndex: '99',
         }),
-        control: provided => ({
+        control: (provided) => ({
             ...provided,
             height: 'calc(1.5em + 0.5rem + 2px)',
             minHeight: 'calc(1.5em + 0.5rem + 2px)',
             fontSize: '100%',
         }),
-        valueContainer: provided => ({
+        valueContainer: (provided) => ({
             ...provided,
             marginTop: '0',
             marginLeft: '6px',
             padding: '0',
             border: '0',
         }),
-        input: provided => ({
+        input: (provided) => ({
             ...provided,
             color: 'transparent ',
         }),
-        dropdownIndicator: provided => ({
+        dropdownIndicator: (provided) => ({
             ...provided,
             marginTop: '0',
             padding: '0',
             border: '0',
             width: '16px',
         }),
-        clearIndicator: provided => ({
+        clearIndicator: (provided) => ({
             ...provided,
             marginTop: '0',
             padding: '0',
             border: '0',
             width: '16px',
         }),
-        indicatorsContainer: provided => ({
+        indicatorsContainer: (provided) => ({
             ...provided,
             paddingRight: '4px',
             border: '0',

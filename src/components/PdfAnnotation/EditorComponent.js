@@ -47,8 +47,8 @@ class EditorComponent extends BaseEditorComponent {
         return this.state.value;
     }
 
-    toggle = type => {
-        this.setState(prevState => ({
+    toggle = (type) => {
+        this.setState((prevState) => ({
             [type]: !prevState[type],
         }));
     };
@@ -72,7 +72,7 @@ class EditorComponent extends BaseEditorComponent {
             valueClass = CLASSES.PROBLEM;
         }
 
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             row: this.row,
             col: this.col,
             type,
@@ -112,15 +112,15 @@ class EditorComponent extends BaseEditorComponent {
         });
     }
 
-    stopMousedownPropagation = e => {
+    stopMousedownPropagation = (e) => {
         e.stopPropagation();
     };
 
-    handleInputChange = value => {
+    handleInputChange = (value) => {
         this.setState({ value });
     };
 
-    confirmCreatePredicate = async label => {
+    confirmCreatePredicate = async (label) => {
         const result = window.confirm('Are you sure you want to create a new property?');
 
         if (result) {
@@ -178,7 +178,7 @@ class EditorComponent extends BaseEditorComponent {
                             bsSize="sm"
                             innerRef={this.literalInputRef}
                             value={value}
-                            onKeyDown={e => e.keyCode === 13 && this.finishEditing()}
+                            onKeyDown={(e) => e.keyCode === 13 && this.finishEditing()}
                             aria-label="Select publication month"
                         >
                             <option value="" key="">
@@ -208,14 +208,14 @@ class EditorComponent extends BaseEditorComponent {
                             bsSize="sm"
                             innerRef={this.literalInputRef}
                             value={value}
-                            onKeyDown={e => e.keyCode === 13 && this.finishEditing()}
+                            onKeyDown={(e) => e.keyCode === 13 && this.finishEditing()}
                         >
                             <option value="" key="">
                                 Year
                             </option>
                             {range(1900, moment().year())
                                 .reverse()
-                                .map(year => (
+                                .map((year) => (
                                     <option key={year}>{year}</option>
                                 ))}
                         </Input>
@@ -241,7 +241,7 @@ class EditorComponent extends BaseEditorComponent {
                                 ]}
                                 optionsClass={this.state.valueClass ? this.state.valueClass : undefined}
                                 placeholder={this.state.type === 'property' ? 'Enter a property' : 'Enter a resource'}
-                                onChange={async i => {
+                                onChange={async (i) => {
                                     let valueID;
                                     if (i.__isNew__ && this.state.type === 'property') {
                                         valueID = await this.confirmCreatePredicate(i.value);
@@ -279,7 +279,7 @@ class EditorComponent extends BaseEditorComponent {
                                 value={value}
                                 onChange={(e, value) => this.handleInputChange(e ? e.target.value : value)}
                                 innerRef={this.literalInputRef}
-                                onKeyDown={e => e.keyCode === 13 && this.finishEditing()}
+                                onKeyDown={(e) => e.keyCode === 13 && this.finishEditing()}
                                 autoFocus
                                 maxLength={MAX_LENGTH_INPUT}
                             />
@@ -311,12 +311,12 @@ class EditorComponent extends BaseEditorComponent {
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     cachedLabels: state.pdfAnnotation.cachedLabels,
 });
 
-const mapDispatchToProps = dispatch => ({
-    setLabelCache: payload => dispatch(setLabelCache(payload)),
+const mapDispatchToProps = (dispatch) => ({
+    setLabelCache: (payload) => dispatch(setLabelCache(payload)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditorComponent);

@@ -23,7 +23,7 @@ const ListNew = () => {
         document.title = 'Create list - ORKG';
     });
 
-    const handleCreate = async e => {
+    const handleCreate = async (e) => {
         e.preventDefault();
         if (!title) {
             toast.error('Enter a title');
@@ -59,7 +59,7 @@ const ListNew = () => {
                             </span>
                         </Tippy>
 
-                        <Input type="text" id="articleTitle" value={title} maxLength={MAX_LENGTH_INPUT} onChange={e => setTitle(e.target.value)} />
+                        <Input type="text" id="articleTitle" value={title} maxLength={MAX_LENGTH_INPUT} onChange={(e) => setTitle(e.target.value)} />
                     </FormGroup>
                     <div className="text-end">
                         <ButtonWithLoading type="submit" color="primary" onClick={handleCreate} isLoading={isLoading}>

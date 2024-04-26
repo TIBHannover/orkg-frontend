@@ -11,6 +11,6 @@ import { useRouter as useRouterNext } from 'next/navigation';
 // export default useRouter;
 
 // NEXT-CODE
-const useRouter = params => useRouterNext(params);
+const useRouter = (params) => useRouterNext(params);
 
 export default useRouter;

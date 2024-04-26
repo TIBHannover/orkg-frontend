@@ -8,9 +8,9 @@ import { useSelector } from 'react-redux';
 
 const StatementItemWrapper = forwardRef(
     ({ propertyId, resourceId, syncBackend, enableEdit, isFirstItem, openExistingResourcesInDialog, renderTemplateBox = false }, ref) => {
-        const isTemplate = useSelector(state => isTemplateContextProperty(state, propertyId) && renderTemplateBox);
-        const property = useSelector(state => state.statementBrowser.properties.byId[propertyId]);
-        const values = useSelector(state => state.statementBrowser.values);
+        const isTemplate = useSelector((state) => isTemplateContextProperty(state, propertyId) && renderTemplateBox);
+        const property = useSelector((state) => state.statementBrowser.properties.byId[propertyId]);
+        const values = useSelector((state) => state.statementBrowser.values);
         const [cookies] = useCookies(['showedValueHelp']);
 
         // If property is not checked an error will be raised because of FlipMove component
@@ -32,7 +32,7 @@ const StatementItemWrapper = forwardRef(
         }
         return (
             <div ref={ref}>
-                {property.valueIds.map(valueId => {
+                {property.valueIds.map((valueId) => {
                     const value = values.byId[valueId];
                     return (
                         <Template

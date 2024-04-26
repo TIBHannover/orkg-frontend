@@ -18,7 +18,7 @@ const OntologyItem = ({ id, label, type, isEditable, sectionId }) => {
                 }),
             );
         }
-        setIsModalOpen(v => !v);
+        setIsModalOpen((v) => !v);
     };
     return (
         <>

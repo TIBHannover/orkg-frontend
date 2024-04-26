@@ -27,7 +27,7 @@ import { searchEntity } from 'services/wikidata';
  */
 export default function getExternalData({ value, page, pageSize, options, optionsClass, entityType, selectedOntologies }) {
     const promises = [];
-    const ontologyIds = selectedOntologies.map(ontology => ontology.id);
+    const ontologyIds = selectedOntologies.map((ontology) => ontology.id);
 
     switch (optionsClass) {
         case CLASSES.LOCATION:

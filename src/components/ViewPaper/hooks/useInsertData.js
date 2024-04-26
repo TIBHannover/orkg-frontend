@@ -10,34 +10,34 @@ import { guid } from 'utils';
 // TODO: also use this hook for the abstract annotator (needs refactoring to functional component)
 
 const useInsertData = () => {
-    const selectedContributionId = useSelector(state => state.viewPaper.selectedContributionId);
-    const { properties, values } = useSelector(state => state.statementBrowser);
+    const selectedContributionId = useSelector((state) => state.viewPaper.selectedContributionId);
+    const { properties, values } = useSelector((state) => state.statementBrowser);
     const dispatch = useDispatch();
 
-    const getExistingPropertyId = property => {
+    const getExistingPropertyId = (property) => {
         if (properties.allIds.length > 0) {
-            return properties.allIds.find(pId => properties.byId[pId].label === property.label);
+            return properties.allIds.find((pId) => properties.byId[pId].label === property.label);
         }
         return false;
     };
 
-    const getExistingStatement = statement => {
+    const getExistingStatement = (statement) => {
         if (properties.allIds.length > 0) {
-            const existingProperty = properties.allIds.find(pId => properties.byId[pId].label === statement.property.label);
+            const existingProperty = properties.allIds.find((pId) => properties.byId[pId].label === statement.property.label);
             if (existingProperty) {
-                return properties.byId[existingProperty].valueIds.find(id => (values.byId[id].label === statement.object.label ? id : false));
+                return properties.byId[existingProperty].valueIds.find((id) => (values.byId[id].label === statement.object.label ? id : false));
             }
         }
         return false;
     };
 
-    const handleInsertData = statements => {
+    const handleInsertData = (statements) => {
         const classesID = {};
         const createdProperties = {};
         const insertStatements = { properties: [], values: [] };
 
         if (statements.length > 0) {
-            statements.map(statement => {
+            statements.map((statement) => {
                 let propertyId;
                 if (!getExistingStatement(statement) && statement.property.id) {
                     if (classesID[statement.property.id]) {

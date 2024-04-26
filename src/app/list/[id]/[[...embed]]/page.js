@@ -63,17 +63,17 @@ const List = () => {
     const [isOpenGraphViewModal, setIsOpenGraphViewModal] = useState(false);
 
     const { id, embed } = useParams();
-    const isPublished = useSelector(state => state.list.isPublished);
-    const list = useSelector(state => state.list.list);
-    const isEditing = useSelector(state => state.list.isEditing);
-    const isOpenHistoryModal = useSelector(state => state.list.isOpenHistoryModal);
-    const researchField = useSelector(state => state.list.researchField);
-    const isLoadingInline = useSelector(state => state.list.isLoading);
-    const isLoadingSortSection = useSelector(state => state.list.isLoadingSortSection);
-    const versions = useSelector(state => state.list.versions);
-    const version = versions.find(version => version.id === id);
+    const isPublished = useSelector((state) => state.list.isPublished);
+    const list = useSelector((state) => state.list.list);
+    const isEditing = useSelector((state) => state.list.isEditing);
+    const isOpenHistoryModal = useSelector((state) => state.list.isOpenHistoryModal);
+    const researchField = useSelector((state) => state.list.researchField);
+    const isLoadingInline = useSelector((state) => state.list.isLoading);
+    const isLoadingSortSection = useSelector((state) => state.list.isLoadingSortSection);
+    const versions = useSelector((state) => state.list.versions);
+    const version = versions.find((version) => version.id === id);
     const publicationDate = version ? moment(version.date).format('DD MMMM YYYY') : null;
-    const versionNumber = versions.length ? versions.length - versions.findIndex(version => version.id === id) : null;
+    const versionNumber = versions.length ? versions.length - versions.findIndex((version) => version.id === id) : null;
     const dispatch = useDispatch();
     const router = useRouter();
     const toggleHistoryModal = () => dispatch(historyModalToggled());
@@ -234,13 +234,13 @@ const List = () => {
             {!isLoading && isEditing && <EditList />}
             {isLoading && <LoadingArticle />}
             {isOpenPublishModal && (
-                <PublishModal toggle={() => setIsOpenPublishModal(v => !v)} id={id} getVersions={getVersions} listId={list.id} show />
+                <PublishModal toggle={() => setIsOpenPublishModal((v) => !v)} id={id} getVersions={getVersions} listId={list.id} show />
             )}
             {isOpenHistoryModal && <HistoryModal toggle={toggleHistoryModal} id={id} show />}
-            {isOpenEmbedModal && <EmbedModal toggle={() => setIsOpenEmbedModal(v => !v)} isOpen={isOpenEmbedModal} id={id} />}
+            {isOpenEmbedModal && <EmbedModal toggle={() => setIsOpenEmbedModal((v) => !v)} isOpen={isOpenEmbedModal} id={id} />}
             {isEmbedded && <GlobalEmbedStyle />}
-            {isOpenExportBibtexModal && <ExportBibtexModal toggle={() => setIsOpenExportBibtexModal(v => !v)} isOpen />}
-            {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal(v => !v)} resourceId={id} />}
+            {isOpenExportBibtexModal && <ExportBibtexModal toggle={() => setIsOpenExportBibtexModal((v) => !v)} isOpen />}
+            {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal((v) => !v)} resourceId={id} />}
         </div>
     );
 };

@@ -7,7 +7,7 @@ import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 const useUsedTemplates = ({ resourceId = null, resourceObject = null }) => {
     const [usedTemplates, setUsedTemplates] = useState([]);
     const [isLoadingUsedTemplates, setIsLoadingUsedTemplates] = useState(false);
-    const resource = useSelector(state => (resourceId && state.statementBrowser.resources.byId[resourceId]) || resourceObject);
+    const resource = useSelector((state) => (resourceId && state.statementBrowser.resources.byId[resourceId]) || resourceObject);
     const pageSize = 25;
 
     /**
@@ -27,13 +27,13 @@ const useUsedTemplates = ({ resourceId = null, resourceObject = null }) => {
                 desc: true,
                 returnContent: false,
             }).then(
-                statements =>
+                (statements) =>
                     // Filter statement with subjects of type Template
                     ({
                         ...statements,
                         content: statements.content
-                            .filter(statement => statement.subject.classes.includes(CLASSES.NODE_SHAPE))
-                            .map(st => ({ id: st.subject.id, label: st.subject.label })),
+                            .filter((statement) => statement.subject.classes.includes(CLASSES.NODE_SHAPE))
+                            .map((st) => ({ id: st.subject.id, label: st.subject.label })),
                     }), // return the template Object
             ),
         [],
@@ -41,13 +41,13 @@ const useUsedTemplates = ({ resourceId = null, resourceObject = null }) => {
 
     useDeepCompareEffect(() => {
         setIsLoadingUsedTemplates(true);
-        const apiCalls = resource?.classes?.map(c => getTemplatesOfResourceId(c, PREDICATES.SHACL_TARGET_CLASS, 0));
+        const apiCalls = resource?.classes?.map((c) => getTemplatesOfResourceId(c, PREDICATES.SHACL_TARGET_CLASS, 0));
         Promise.all(apiCalls)
-            .then(tmpl => {
+            .then((tmpl) => {
                 setUsedTemplates(
                     tmpl
-                        .map((c, index) => c.content.map(t => ({ ...t, classId: resource?.classes[index] })))
-                        .filter(r => r.length)
+                        .map((c, index) => c.content.map((t) => ({ ...t, classId: resource?.classes[index] })))
+                        .filter((r) => r.length)
                         .flat(),
                 );
                 setIsLoadingUsedTemplates(false);

@@ -45,19 +45,19 @@ const IntegratedList = ({ id, slug, boxShadow = false }) => {
         initialSort: searchParams.get('sort') ?? 'combined',
         initialClassFilterOptions: DEFAULT_CLASSES_FILTER,
         initClassesFilter: searchParams.get('classesFilter')
-            ? DEFAULT_CLASSES_FILTER.filter(i => searchParams.get('classesFilter')?.split(',').includes(i.id))
+            ? DEFAULT_CLASSES_FILTER.filter((i) => searchParams.get('classesFilter')?.split(',').includes(i.id))
             : DEFAULT_CLASSES_FILTER,
         initialIncludeSubFields: searchParams.get('classesFilter') ? Boolean(searchParams.get('includeSubFields') === 'true') : true,
         updateURL: true,
     });
 
-    const handleSelect = classFilter => {
-        if (classesFilter.map(i => i.id).includes(classFilter.id) && classesFilter.length === 1) {
+    const handleSelect = (classFilter) => {
+        if (classesFilter.map((i) => i.id).includes(classFilter.id) && classesFilter.length === 1) {
             toast.dismiss();
             toast.info('At least one type should be selected');
         } else {
-            setClassesFilter(prev =>
-                prev.map(i => i.id).includes(classFilter.id) ? prev.filter(item => item.id !== classFilter.id) : [...prev, classFilter],
+            setClassesFilter((prev) =>
+                prev.map((i) => i.id).includes(classFilter.id) ? prev.filter((item) => item.id !== classFilter.id) : [...prev, classFilter],
             );
         }
     };
@@ -92,7 +92,7 @@ const IntegratedList = ({ id, slug, boxShadow = false }) => {
                             <Label check className="mb-0 ms-2" style={{ fontSize: '0.875rem' }}>
                                 <Input
                                     onChange={() => handleSelect({ id: _id, label })}
-                                    checked={classesFilter.map(i => i.id).includes(_id)}
+                                    checked={classesFilter.map((i) => i.id).includes(_id)}
                                     type="checkbox"
                                     disabled={isLoading}
                                 />
@@ -108,7 +108,7 @@ const IntegratedList = ({ id, slug, boxShadow = false }) => {
                     <FormGroup check className="mb-0">
                         <Label check className="mb-0">
                             <Input
-                                onChange={e => setIncludeSubFields(e.target.checked)}
+                                onChange={(e) => setIncludeSubFields(e.target.checked)}
                                 checked={includeSubFields}
                                 type="checkbox"
                                 disabled={isLoading}
@@ -121,7 +121,7 @@ const IntegratedList = ({ id, slug, boxShadow = false }) => {
                     <div className="mb-0">
                         <Input
                             value={sort}
-                            onChange={e => setSort(e.target.value)}
+                            onChange={(e) => setSort(e.target.value)}
                             bsSize="sm"
                             type="select"
                             name="sort"
@@ -139,7 +139,7 @@ const IntegratedList = ({ id, slug, boxShadow = false }) => {
             <Container className="p-0">
                 {items.length > 0 && (
                     <ListGroup className={boxShadow ? 'box' : ''}>
-                        {items.map(item => (
+                        {items.map((item) => (
                             <CardFactory showBadge={true} showCurationFlags={true} showAddToComparison={true} key={`item${item.id}`} item={item} />
                         ))}
                         {!isLoading && hasNextPage && (
@@ -147,7 +147,7 @@ const IntegratedList = ({ id, slug, boxShadow = false }) => {
                                 style={{ cursor: 'pointer' }}
                                 className="list-group-item list-group-item-action text-center"
                                 onClick={!isLoading ? handleLoadMore : undefined}
-                                onKeyDown={e => {
+                                onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
                                         if (!isLoading) {
                                             handleLoadMore();
@@ -166,7 +166,7 @@ const IntegratedList = ({ id, slug, boxShadow = false }) => {
                 {items.length === 0 && !isLoading && (
                     <div className={boxShadow ? 'container box rounded' : ''}>
                         <div className="p-5 text-center mt-4 mb-4">
-                            There are no {visibilityText} {classesFilter.map(c => c.label).join(', ')} for this research field, yet
+                            There are no {visibilityText} {classesFilter.map((c) => c.label).join(', ')} for this research field, yet
                             <br />
                             <br />
                         </div>

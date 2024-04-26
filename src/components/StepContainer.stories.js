@@ -5,7 +5,7 @@ export default {
     component: StepContainer,
 };
 
-const Template = args => (
+const Template = (args) => (
     <>
         <StepContainer {...args} />
         <StepContainer step="2" topLine bottomLine />

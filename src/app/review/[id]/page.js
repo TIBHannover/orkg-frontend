@@ -84,23 +84,23 @@ const Review = () => {
     const [isOpenGraphViewModal, setIsOpenGraphViewModal] = useState(false);
     const [showExportCitation, setShowExportCitation] = useState(false);
 
-    const isLoadingInline = useSelector(state => state.review.isLoading);
-    const isLoadingSortSection = useSelector(state => state.review.isLoadingSortSection);
-    const isEditing = useSelector(state => state.review.isEditing);
-    const isPublished = useSelector(state => state.review.isPublished);
-    const paper = useSelector(state => state.review.paper);
-    const isOpenHistoryModal = useSelector(state => state.review.isOpenHistoryModal);
-    const researchField = useSelector(state => state.review.researchField);
-    const versions = useSelector(state => state.review.versions);
-    const authors = useSelector(state => state.review.authorResources);
+    const isLoadingInline = useSelector((state) => state.review.isLoading);
+    const isLoadingSortSection = useSelector((state) => state.review.isLoadingSortSection);
+    const isEditing = useSelector((state) => state.review.isEditing);
+    const isPublished = useSelector((state) => state.review.isPublished);
+    const paper = useSelector((state) => state.review.paper);
+    const isOpenHistoryModal = useSelector((state) => state.review.isOpenHistoryModal);
+    const researchField = useSelector((state) => state.review.researchField);
+    const versions = useSelector((state) => state.review.versions);
+    const authors = useSelector((state) => state.review.authorResources);
     const prevIsEditing = usePrevious(isEditing);
     const prevIsOpenPublishModal = usePrevious(isOpenPublishModal);
     const dispatch = useDispatch();
     const router = useRouter();
     const { load, isLoading, isNotFound, hasFailed, getVersions } = useLoad();
     const { id } = useParams();
-    const version = versions.find(_version => _version.id === id);
-    const versionNumber = versions.length ? versions.length - versions.findIndex(_version => _version.id === id) : null;
+    const version = versions.find((_version) => _version.id === id);
+    const versionNumber = versions.length ? versions.length - versions.findIndex((_version) => _version.id === id) : null;
     const publicationDate = version ? moment(version.date).format('DD MMMM YYYY') : null;
 
     useEffect(() => {
@@ -152,7 +152,7 @@ const Review = () => {
         mainEntity: {
             headline: `${paper?.title ?? ''} - Review - ORKG`,
             description: version?.description,
-            author: authors?.map(author => ({
+            author: authors?.map((author) => ({
                 name: author?.label,
                 ...(author?.orcid ? { url: `http://orcid.org/${author.orcid}` } : {}),
                 '@type': 'Person',
@@ -286,7 +286,7 @@ const Review = () => {
                                 <Icon icon={faEllipsisV} />
                             </DropdownToggle>
                             <DropdownMenu end>
-                                <DropdownItem onClick={() => setShowExportCitation(v => !v)}>Export citation</DropdownItem>
+                                <DropdownItem onClick={() => setShowExportCitation((v) => !v)}>Export citation</DropdownItem>
                                 <DropdownItem onClick={() => setIsOpenGraphViewModal(true)}>View graph</DropdownItem>
                                 <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                                     View resource
@@ -323,22 +323,22 @@ const Review = () => {
             {!isLoading && !isEditing && <ViewArticle />}
             {isLoading && <LoadingArticle />}
             {isOpenPublishModal && (
-                <PublishModal toggle={() => setIsOpenPublishModal(v => !v)} id={id} getVersions={getVersions} paperId={paper.id} show />
+                <PublishModal toggle={() => setIsOpenPublishModal((v) => !v)} id={id} getVersions={getVersions} paperId={paper.id} show />
             )}
             {isOpenHistoryModal && <HistoryModal toggle={toggleHistoryModal} id={id} show />}
-            {isOpenReferencesModal && <ReferencesModal toggle={() => setIsOpenReferencesModal(v => !v)} id={id} show />}
+            {isOpenReferencesModal && <ReferencesModal toggle={() => setIsOpenReferencesModal((v) => !v)} id={id} show />}
             {isOpenShouldPublishModal && (
-                <ShouldPublishModal toggle={() => setIsOpenShouldPublishModal(v => !v)} show openPublishModal={() => setIsOpenPublishModal(true)} />
+                <ShouldPublishModal toggle={() => setIsOpenShouldPublishModal((v) => !v)} show openPublishModal={() => setIsOpenPublishModal(true)} />
             )}
-            {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal(v => !v)} resourceId={id} />}
+            {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal((v) => !v)} resourceId={id} />}
             {showExportCitation && (
                 <ExportCitation
                     id={id}
                     title={paper?.title}
-                    authors={authors.map(author => author?.label)}
+                    authors={authors.map((author) => author?.label)}
                     classId={CLASSES.SMART_REVIEW_PUBLISHED}
                     isOpen={showExportCitation}
-                    toggle={() => setShowExportCitation(v => !v)}
+                    toggle={() => setShowExportCitation((v) => !v)}
                 />
             )}
         </div>

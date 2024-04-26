@@ -6,7 +6,7 @@ export default {
     argTypes: { onClick: { action: 'clicked' } },
 };
 
-const Template = args => <ButtonWithLoading {...args} />;
+const Template = (args) => <ButtonWithLoading {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

@@ -3,10 +3,10 @@ import { openAuthDialog } from 'slices/authSlice';
 import PropTypes from 'prop-types';
 
 const RequireAuthentication = ({ component: Component, ...rest }) => {
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
     const dispatch = useDispatch();
 
-    const requireAuthentication = e => {
+    const requireAuthentication = (e) => {
         if (!user) {
             const redirectRoute = rest.to || null;
             dispatch(openAuthDialog({ action: 'signin', signInRequired: true, redirectRoute }));

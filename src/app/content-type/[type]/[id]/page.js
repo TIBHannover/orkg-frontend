@@ -28,7 +28,7 @@ function ContentType() {
     const [isLoading, setIsLoading] = useState(true);
     const params = useParams();
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
     const resourceId = params.id;
 
     useEffect(() => {
@@ -36,14 +36,14 @@ function ContentType() {
             setIsLoading(true);
             try {
                 const _resource = await getResource(resourceId);
-                const contentTypes = _resource.classes.filter(classId => supportedContentTypes.find(c => c.id === classId));
+                const contentTypes = _resource.classes.filter((classId) => supportedContentTypes.find((c) => c.id === classId));
                 if (!contentTypes.length === 0) {
                     throw new Error('Content type not supported');
                 }
                 if (!contentTypes.length > 1) {
                     throw new Error('Multiple content types not supported');
                 }
-                const _contentType = supportedContentTypes.find(c => c.id === contentTypes[0]);
+                const _contentType = supportedContentTypes.find((c) => c.id === contentTypes[0]);
                 setContentType(_contentType);
                 document.title = `${_resource.label} - ${_contentType.label} - ORKG`;
                 setResource(_resource);
@@ -58,8 +58,8 @@ function ContentType() {
         load();
     }, [params.id, resourceId]);
 
-    const handleHeaderChange = val => {
-        setResource(prev => ({ ...prev, label: val }));
+    const handleHeaderChange = (val) => {
+        setResource((prev) => ({ ...prev, label: val }));
     };
 
     if (!isLoading && !user && isEditMode) {

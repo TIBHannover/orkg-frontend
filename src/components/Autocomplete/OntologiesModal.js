@@ -10,7 +10,7 @@ import { isEqual } from 'lodash';
 
 function OntologiesModal(props) {
     const [value, setValue] = useState('');
-    const defaultSelection = DEFAULT_SOURCES.filter(ontology => ontology.id === 'ORKG' || ontology.id === 'Wikidata');
+    const defaultSelection = DEFAULT_SOURCES.filter((ontology) => ontology.id === 'ORKG' || ontology.id === 'Wikidata');
 
     useEffect(() => {
         setValue(props.selectedOntologies);
@@ -44,7 +44,7 @@ function OntologiesModal(props) {
                 <div className="mb-3 mt-1">
                     <AutoComplete
                         requestUrl={olsBaseUrl}
-                        onChange={selected => {
+                        onChange={(selected) => {
                             setValue(selected || []);
                         }}
                         placeholder="Select or type to enter an ontology"

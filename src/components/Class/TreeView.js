@@ -14,11 +14,11 @@ const treeify = (arr, arrChildren) => {
     const lookup = {};
     // Initialize lookup table with each array item's id as key and
     // its children initialized to its children without the one in the hierarchy
-    arr.forEach(o => {
+    arr.forEach((o) => {
         lookup[o.id] = o;
         lookup[o.id].children = arrChildren[o.id] ?? [];
     });
-    arr.forEach(o => {
+    arr.forEach((o) => {
         // If the item has a parent we do following:
         // 1. access it in constant time now that we have a lookup table
         // 2. since children is preconfigured, we simply push the item
@@ -63,12 +63,12 @@ function TreeView({ id, label, reloadTree, ...props }) {
 
     useEffect(() => {
         // Recursive function to sort the tree nodes by a property
-        const sortChildrenByLabel = _value => {
+        const sortChildrenByLabel = (_value) => {
             const result = _value;
             if (result.children?.length > 0) {
                 result.children = orderBy(
-                    result.children.map(c => sortChildrenByLabel(c)),
-                    [c => c[SORT_NODES_BY].toLowerCase()],
+                    result.children.map((c) => sortChildrenByLabel(c)),
+                    [(c) => c[SORT_NODES_BY].toLowerCase()],
                     ['asc'],
                 );
             }
@@ -78,17 +78,17 @@ function TreeView({ id, label, reloadTree, ...props }) {
         const loadTree = async () => {
             setIsLoadingTrue(true);
             let _hierarchy = await getHierarchyByID({ id });
-            _hierarchy = _hierarchy.content.map(c => ({ ...c.class, parent_id: c.parent_id }));
+            _hierarchy = _hierarchy.content.map((c) => ({ ...c.class, parent_id: c.parent_id }));
             setHierarchy(_hierarchy);
             const parentsCalls = [];
-            _hierarchy.map(p => parentsCalls.push(getChildrenByID({ id: p.id })));
+            _hierarchy.map((p) => parentsCalls.push(getChildrenByID({ id: p.id })));
             const result = await Promise.all(parentsCalls);
             const list = {};
             result.map((r, index) => {
                 list[_hierarchy[index].id] = r.content
                     // remove the children that exist in the hierarchy
-                    .filter(c => !_hierarchy.map(p => p.id).includes(c.class.id))
-                    .map(d => ({
+                    .filter((c) => !_hierarchy.map((p) => p.id).includes(c.class.id))
+                    .map((d) => ({
                         ...d.class,
                         child_count: d.child_count,
                         isLeaf: d.child_count === 0,
@@ -98,8 +98,8 @@ function TreeView({ id, label, reloadTree, ...props }) {
             const _data = treeify(_hierarchy, list);
             setTreeData(
                 orderBy(
-                    _data.map(c => sortChildrenByLabel(c)),
-                    [c => c[SORT_NODES_BY].toLowerCase()],
+                    _data.map((c) => sortChildrenByLabel(c)),
+                    [(c) => c[SORT_NODES_BY].toLowerCase()],
                     ['asc'],
                 ),
             );
@@ -122,35 +122,35 @@ function TreeView({ id, label, reloadTree, ...props }) {
             result[property] = value;
         }
         if (result.children?.length > 0) {
-            result.children = result.children.map(cn => updatePropertyNodeById(_id, cn, property, value));
+            result.children = result.children.map((cn) => updatePropertyNodeById(_id, cn, property, value));
         }
         return result;
     };
 
     // Load data asynchronously
-    const onLoadData = node => {
+    const onLoadData = (node) => {
         if (!node.loaded) {
-            return getChildrenByID({ id: node.id }).then(_children => {
+            return getChildrenByID({ id: node.id }).then((_children) => {
                 // Sort children by label
                 const sChildren = orderBy(
-                    _children.content.map(n => ({
+                    _children.content.map((n) => ({
                         ...n.class,
                         child_count: n.child_count,
                         isLeaf: n.child_count === 0,
                         loaded: false,
                     })),
-                    [c => c[SORT_NODES_BY].toLowerCase()],
+                    [(c) => c[SORT_NODES_BY].toLowerCase()],
                     ['asc'],
                 );
                 // Update the current tree by setting the children at right node
-                setTreeData(prevTreeData => prevTreeData.map(n => updatePropertyNodeById(node.id, n, 'children', sChildren)));
+                setTreeData((prevTreeData) => prevTreeData.map((n) => updatePropertyNodeById(node.id, n, 'children', sChildren)));
             });
         }
         return Promise().resolve();
     };
 
     // Customize tree node title render
-    const titleRender = nodeData => (
+    const titleRender = (nodeData) => (
         <DescriptionTooltip id={nodeData.id} _class={ENTITIES.CLASS}>
             {nodeData.label}
         </DescriptionTooltip>
@@ -163,7 +163,7 @@ function TreeView({ id, label, reloadTree, ...props }) {
             ) : (
                 <AnimatedTree
                     fieldNames={fieldNames}
-                    defaultExpandedKeys={hierarchy.map(p => p.id)}
+                    defaultExpandedKeys={hierarchy.map((p) => p.id)}
                     selectedKeys={[selectedNodeId]}
                     showLine={true}
                     titleRender={titleRender}

@@ -40,8 +40,8 @@ const RangeItemOption = styled.div`
 const StyledStatementItem = styled(ListGroupItem)`
     padding: 0.5rem 0.75rem !important;
     cursor: default;
-    background-color: ${props => props.theme.lightLighter} !important;
-    border-color: ${props => props.theme.lightDarker} !important;
+    background-color: ${(props) => props.theme.lightLighter} !important;
+    border-color: ${(props) => props.theme.lightDarker} !important;
     overflow-wrap: anywhere;
     flex: 1;
 
@@ -52,7 +52,7 @@ const StyledStatementItem = styled(ListGroupItem)`
     & > .statementItemIcon {
         font-size: 18px;
         margin-top: 3px;
-        color: ${props => props.theme.primary};
+        color: ${(props) => props.theme.primary};
 
         &.open {
             color: #fff;
@@ -69,8 +69,8 @@ const StyledStatementItem = styled(ListGroupItem)`
     }
 
     &.statementActive {
-        background-color: ${props => props.theme.secondary} !important;
-        border-color: ${props => props.theme.secondary} !important;
+        background-color: ${(props) => props.theme.secondary} !important;
+        border-color: ${(props) => props.theme.secondary} !important;
         color: #fff;
 
         & .deletePredicate {
@@ -80,7 +80,7 @@ const StyledStatementItem = styled(ListGroupItem)`
 `;
 
 function AbstractRangesList(props) {
-    const ranges = useSelector(state => state.viewPaper.ranges);
+    const ranges = useSelector((state) => state.viewPaper.ranges);
 
     const dispatch = useDispatch();
     const [defaultOptions, setDefaultOptions] = useState([]);
@@ -102,13 +102,13 @@ function AbstractRangesList(props) {
             dispatch(removeAnnotation(range));
         }
     };
-    const rangeArray = toArray(ranges).filter(r => r.certainty >= props.certaintyThreshold);
+    const rangeArray = toArray(ranges).filter((r) => r.certainty >= props.certaintyThreshold);
 
     return (
         <div>
             <ListGroup>
                 {rangeArray.length > 0 ? (
-                    rangeArray.map(range => (
+                    rangeArray.map((range) => (
                         <ListGroupItemStyle key={`r${range.id}`} onClick={() => null}>
                             <div className="flex-grow-1">
                                 {!range.isEditing ? (
@@ -163,7 +163,7 @@ function AbstractRangesList(props) {
                                         onBlur={() => {
                                             dispatch(toggleEditAnnotation(range.id));
                                         }}
-                                        key={value => value}
+                                        key={(value) => value}
                                         isClearable
                                         openMenuOnFocus={true}
                                         autoLoadOption={true}

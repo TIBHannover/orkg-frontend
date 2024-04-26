@@ -20,11 +20,11 @@ const useGraphView = ({ resourceId }) => {
 
     const graphRef = useRef(null);
 
-    const formatNodeLabel = label => (label.length > MAX_NODE_LABEL_LENGTH ? `${label.substring(0, MAX_NODE_LABEL_LENGTH)}...` : label);
+    const formatNodeLabel = (label) => (label.length > MAX_NODE_LABEL_LENGTH ? `${label.substring(0, MAX_NODE_LABEL_LENGTH)}...` : label);
 
     const setIsLoadingNode = ({ nodeId, isLoading }) => {
-        setNodes(_nodes =>
-            _nodes.map(node => ({
+        setNodes((_nodes) =>
+            _nodes.map((node) => ({
                 ...node,
                 data: {
                     ...node.data,
@@ -34,7 +34,7 @@ const useGraphView = ({ resourceId }) => {
         );
     };
 
-    const checkIsLoadingNode = id => !!nodes.find(node => node.id === id).data.isLoading;
+    const checkIsLoadingNode = (id) => !!nodes.find((node) => node.id === id).data.isLoading;
 
     const processStatements = useCallback(({ statements, isFetchingIncoming = false }) => {
         const _nodes = [];
@@ -95,18 +95,18 @@ const useGraphView = ({ resourceId }) => {
             const bundle = await getStatementsBundleBySubject({
                 id: nodeId,
                 maxLevel: parseInt(maxLevel, 10) + 1,
-                blacklist: blackList.map(c => c.id),
+                blacklist: blackList.map((c) => c.id),
             });
 
             const statements = addStatementsLevel({ subjectId: nodeId, statements: bundle.statements, maxLevel }).filter(
-                statement => statement.level <= maxLevel,
+                (statement) => statement.level <= maxLevel,
             );
 
             // if no statements found, just fetch the single subject resource then
             const subjectNode = statements.length > 0 ? statements[0].subject : await getResource(nodeId);
             const result = processStatements({ statements });
 
-            setNodes(_nodes =>
+            setNodes((_nodes) =>
                 uniqBy(
                     [
                         ...(shouldAddSubject
@@ -124,7 +124,7 @@ const useGraphView = ({ resourceId }) => {
                               ]
                             : []),
                         ...(!resetNodes
-                            ? _nodes.map(node => ({
+                            ? _nodes.map((node) => ({
                                   ...node,
                                   data: {
                                       ...node.data,
@@ -139,7 +139,7 @@ const useGraphView = ({ resourceId }) => {
                 ),
             );
 
-            setEdges(_edges =>
+            setEdges((_edges) =>
                 uniqWith(
                     [...(!resetNodes ? _edges : []), ...result.edges],
                     (edgeA, edgeB) => edgeA.source === edgeB.source && edgeA.target === edgeB.target,
@@ -150,7 +150,7 @@ const useGraphView = ({ resourceId }) => {
         [addStatementsLevel, depth, processStatements],
     );
 
-    const fetchIncomingStatements = async nodeId => {
+    const fetchIncomingStatements = async (nodeId) => {
         if (checkIsLoadingNode(nodeId)) {
             return;
         }
@@ -165,11 +165,11 @@ const useGraphView = ({ resourceId }) => {
         setEdges(uniqWith([...edges, ...result.edges], (edgeA, edgeB) => edgeA.source === edgeB.source && edgeA.target === edgeB.target));
     };
 
-    const toggleExpandNode = async nodeId => {
+    const toggleExpandNode = async (nodeId) => {
         if (checkIsLoadingNode(nodeId)) {
             return;
         }
-        const resource = nodes.find(node => node.id === nodeId);
+        const resource = nodes.find((node) => node.id === nodeId);
 
         if (!resource.data.hasObjectStatements) {
             return;
@@ -177,9 +177,9 @@ const useGraphView = ({ resourceId }) => {
 
         if (!resource.data.hasFetchedObjectStatements) {
             const fetchedData = await fetchStatements({ nodeId, depth: 1 });
-            setTimeout(() => graphRef.current?.centerGraph([nodeId, ...fetchedData.nodes.map(node => node.id)]), 500);
+            setTimeout(() => graphRef.current?.centerGraph([nodeId, ...fetchedData.nodes.map((node) => node.id)]), 500);
         } else if (collapsed.includes(nodeId)) {
-            setCollapsed(collapsed.filter(n => n !== nodeId));
+            setCollapsed(collapsed.filter((n) => n !== nodeId));
         } else if (!collapsed.includes(nodeId)) {
             setCollapsed([...collapsed, nodeId]);
         }

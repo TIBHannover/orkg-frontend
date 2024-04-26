@@ -3,9 +3,9 @@ import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from 'constants/graphSettings';
 
 function DataSources() {
-    const isLoadingMetadata = useSelector(state => state.comparison.isLoadingMetadata);
-    const isFailedLoadingMetadata = useSelector(state => state.comparison.isFailedLoadingMetadata);
-    const references = useSelector(state => state.comparison.comparisonResource.references);
+    const isLoadingMetadata = useSelector((state) => state.comparison.isLoadingMetadata);
+    const isFailedLoadingMetadata = useSelector((state) => state.comparison.isFailedLoadingMetadata);
+    const references = useSelector((state) => state.comparison.comparisonResource.references);
 
     return (
         <div>

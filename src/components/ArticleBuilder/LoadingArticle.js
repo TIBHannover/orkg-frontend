@@ -15,7 +15,7 @@ const LoadingArticle = () => (
                 <rect x="32" y="6" rx="0" ry="0" width="15" height="3" />
                 <rect x="32" y="6" rx="0" ry="0" width="15" height="3" />
                 {/* 2 sections */}
-                {times(2, i => (
+                {times(2, (i) => (
                     <Fragment key={i}>
                         <rect x="0" y={13 + i * 17} rx="0" ry="0" width="100" height="4" />
                         <rect x="0" y={18 + i * 17} rx="0" ry="0" width="30" height="1" />

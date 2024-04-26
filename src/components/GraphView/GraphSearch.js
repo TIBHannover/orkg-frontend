@@ -20,25 +20,25 @@ const GraphSearch = ({ nodes, edges, setSelections, collapsed, setCollapsed, gra
     });
 
     const hiddenNodeIds = useMemo(() => {
-        const visibleNodeIds = visibleNodes.map(n => n.id);
-        const hiddenNodes = nodes.filter(n => !visibleNodeIds.includes(n.id));
-        return hiddenNodes.map(n => n.id);
+        const visibleNodeIds = visibleNodes.map((n) => n.id);
+        const hiddenNodes = nodes.filter((n) => !visibleNodeIds.includes(n.id));
+        return hiddenNodes.map((n) => n.id);
     }, [nodes, visibleNodes]);
 
-    const handleSearch = item => {
+    const handleSearch = (item) => {
         // for input is cleared
         if (!item) {
             return;
         }
 
         const toExpandIds = getExpandPathIds(item.id);
-        const newCollapsed = collapsed.filter(id => !toExpandIds.includes(id));
+        const newCollapsed = collapsed.filter((id) => !toExpandIds.includes(id));
         setCollapsed(newCollapsed);
         setFoundNodeId(item.id);
     };
 
     useEffect(() => {
-        if (foundNodeId && visibleNodes.find(node => node.id === foundNodeId)) {
+        if (foundNodeId && visibleNodes.find((node) => node.id === foundNodeId)) {
             // dirty hack: the timeout is required to ensure that the node is rendered before centering
             setTimeout(() => {
                 if (graphRef?.current?.getGraph()?._nodes.get(foundNodeId)) {
@@ -54,14 +54,14 @@ const GraphSearch = ({ nodes, edges, setSelections, collapsed, setCollapsed, gra
         <>
             <Select
                 onChange={handleSearch}
-                options={nodes.map(node => ({ label: node.data.label, id: node.id }))}
+                options={nodes.map((node) => ({ label: node.data.label, id: node.id }))}
                 placeholder="Search in graph..."
                 classNamePrefix="react-select"
                 isClearable
                 getOptionValue={({ id }) => id}
                 getOptionLabel={({ label }) => label}
                 styles={{
-                    menu: provided => ({ ...provided, zIndex: 2 }),
+                    menu: (provided) => ({ ...provided, zIndex: 2 }),
                 }}
             />
             <SelectGlobalStyle />

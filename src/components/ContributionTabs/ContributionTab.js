@@ -10,9 +10,9 @@ import { ActionButton } from 'components/ContributionTabs/styled';
 
 export const StyledInput = styled(Input)`
     background: #fff;
-    color: ${props => props.theme.primary};
+    color: ${(props) => props.theme.primary};
     outline: 0;
-    border: dotted 2px ${props => props.theme.listGroupBorderColor};
+    border: dotted 2px ${(props) => props.theme.listGroupBorderColor};
     border-radius: 0;
     padding: 0 4px;
     display: block;
@@ -21,23 +21,23 @@ export const StyledInput = styled(Input)`
 
     &:focus {
         background: #fff;
-        color: ${props => props.theme.primary};
+        color: ${(props) => props.theme.primary};
         outline: 0;
-        border: dotted 2px ${props => props.theme.listGroupBorderColor};
+        border: dotted 2px ${(props) => props.theme.listGroupBorderColor};
         padding: 0 4px;
         border-radius: 0;
         display: block;
     }
 `;
 
-const ContributionTab = props => {
+const ContributionTab = (props) => {
     const [isEditing, setIsEditing] = useState(false);
     const [draftLabel, setDraftLabel] = useState(props.contribution.label);
 
     const refInput = useRef(null);
 
     const toggleEditLabelContribution = () => {
-        setIsEditing(v => !v);
+        setIsEditing((v) => !v);
     };
 
     useEffect(() => {
@@ -58,12 +58,12 @@ const ContributionTab = props => {
                     type="text"
                     innerRef={refInput}
                     value={draftLabel}
-                    onChange={e => setDraftLabel(e.target.value)}
-                    onKeyDown={e => {
+                    onChange={(e) => setDraftLabel(e.target.value)}
+                    onKeyDown={(e) => {
                         e.stopPropagation();
                         e.keyCode === 13 && e.target.blur();
                     }} // Disable multiline Input
-                    onBlur={e => {
+                    onBlur={(e) => {
                         e.stopPropagation();
                         toggleEditLabelContribution();
                         props.handleChangeContributionLabel(props.contribution.id, draftLabel);
@@ -78,7 +78,7 @@ const ContributionTab = props => {
             {!isEditing && (
                 <ConditionalWrapper
                     condition={props.contribution.label?.length > 40}
-                    wrapper={children => <Tippy content={props.contribution.label}>{children}</Tippy>}
+                    wrapper={(children) => <Tippy content={props.contribution.label}>{children}</Tippy>}
                 >
                     <div className="text-truncate d-inline-block" style={{ maxWidth: 300 }}>
                         {props.contribution.label}
@@ -94,7 +94,7 @@ const ContributionTab = props => {
                                     <ActionButton
                                         color="link"
                                         disabled={props.contribution.isSaving || props.contribution.isDeleting}
-                                        onClick={e => {
+                                        onClick={(e) => {
                                             e.stopPropagation();
                                             props.toggleDeleteContribution(props.contribution.id);
                                         }}
@@ -112,7 +112,7 @@ const ContributionTab = props => {
                                     <ActionButton
                                         color="link"
                                         disabled={props.contribution.isSaving || props.contribution.isDeleting}
-                                        onClick={e => {
+                                        onClick={(e) => {
                                             e.stopPropagation();
                                             toggleEditLabelContribution(props.contribution.id, e);
                                         }}

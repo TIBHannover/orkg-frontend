@@ -17,7 +17,7 @@ const EditSection = ({ section, handleManualSort, atIndex }) => {
     const [title, setTitle] = useState(titleProp);
     const dispatch = useDispatch();
 
-    const handleBlurTitle = e => {
+    const handleBlurTitle = (e) => {
         if (e.target.value !== titleProp) {
             dispatch(
                 updateSectionTitle({
@@ -39,7 +39,7 @@ const EditSection = ({ section, handleManualSort, atIndex }) => {
         }
     };
 
-    const handleUpdateMarkdown = markdown => {
+    const handleUpdateMarkdown = (markdown) => {
         dispatch(
             updateSectionMarkdown({
                 id: content.id,
@@ -48,7 +48,7 @@ const EditSection = ({ section, handleManualSort, atIndex }) => {
         );
     };
 
-    const handleUpdateHeadingLevel = level =>
+    const handleUpdateHeadingLevel = (level) =>
         dispatch(
             updateSectionHeadingLevel({
                 id: heading?.id,
@@ -58,7 +58,7 @@ const EditSection = ({ section, handleManualSort, atIndex }) => {
 
     return (
         <section>
-            <SortableSection handleDelete={handleDelete} handleSort={direction => handleManualSort({ id, direction })}>
+            <SortableSection handleDelete={handleDelete} handleSort={(direction) => handleManualSort({ id, direction })}>
                 {type !== CLASSES.LIST_SECTION && (
                     <div className="d-flex align-items-center  border-bottom pb-1 mb-3">
                         <Input
@@ -67,7 +67,7 @@ const EditSection = ({ section, handleManualSort, atIndex }) => {
                             type="select"
                             style={{ width: 70 }}
                             value={heading?.level}
-                            onChange={e => handleUpdateHeadingLevel(e.target.value)}
+                            onChange={(e) => handleUpdateHeadingLevel(e.target.value)}
                         >
                             <option value="1">H1</option>
                             <option value="2">H2</option>
@@ -80,7 +80,7 @@ const EditSection = ({ section, handleManualSort, atIndex }) => {
                             <EditableTitle
                                 value={title}
                                 className="focus-primary"
-                                onChange={e => setTitle(e.target.value)}
+                                onChange={(e) => setTitle(e.target.value)}
                                 onBlur={handleBlurTitle}
                                 placeholder="Enter a section title..."
                                 resize="false"

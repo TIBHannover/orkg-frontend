@@ -17,17 +17,17 @@ import { Alert } from 'reactstrap';
 import { ReactTableWrapper } from 'components/Comparison/styled';
 import { DEFAULT_COLUMN_WIDTH } from 'components/Comparison/ComparisonHeader/ColumnWidth';
 
-const ComparisonTable = props => {
-    const filterControlData = useSelector(state => state.comparison.filterControlData);
-    const data = useSelector(state => state.comparison.data);
-    const properties = useSelector(state => state.comparison.properties);
-    const contributions = useSelector(state => state.comparison.contributions);
-    const viewDensity = useSelector(state => state.comparison.configuration.viewDensity);
-    const columnWidth = useSelector(state => state.comparison.configuration.columnWidth);
-    const comparisonType = useSelector(state => state.comparison.configuration.comparisonType);
-    const transpose = useSelector(state => state.comparison.configuration.transpose);
-    const hiddenGroups = useSelector(state => state.comparison.hiddenGroups ?? []);
-    const isEditing = useSelector(state => state.comparison.isEditing);
+const ComparisonTable = (props) => {
+    const filterControlData = useSelector((state) => state.comparison.filterControlData);
+    const data = useSelector((state) => state.comparison.data);
+    const properties = useSelector((state) => state.comparison.properties);
+    const contributions = useSelector((state) => state.comparison.contributions);
+    const viewDensity = useSelector((state) => state.comparison.configuration.viewDensity);
+    const columnWidth = useSelector((state) => state.comparison.configuration.columnWidth);
+    const comparisonType = useSelector((state) => state.comparison.configuration.comparisonType);
+    const transpose = useSelector((state) => state.comparison.configuration.transpose);
+    const hiddenGroups = useSelector((state) => state.comparison.hiddenGroups ?? []);
+    const isEditing = useSelector((state) => state.comparison.isEditing);
 
     const scrollContainerHead = useRef(null);
     const smallerFontSize = viewDensity === 'compact';
@@ -37,8 +37,8 @@ const ComparisonTable = props => {
         let dataFrame = [
             ...(!transpose
                 ? properties
-                      .filter(property => property.active && data[property.id])
-                      .map(property => ({
+                      .filter((property) => property.active && data[property.id])
+                      .map((property) => ({
                           property,
                           values: contributions.map((contribution, index2) => {
                               const _data = cloneDeep(data?.[property.id] ? data[property.id]?.[index2] : null);
@@ -48,19 +48,19 @@ const ComparisonTable = props => {
                 : contributions.map((contribution, index) => ({
                       property: contribution,
                       values: properties
-                          .filter(property => property.active)
-                          .map(property => {
+                          .filter((property) => property.active)
+                          .map((property) => {
                               const _data = cloneDeep(data[property.id] ? data[property.id]?.[index] : null);
                               return _data?.sort((a, b) => a?.label?.localeCompare(b?.label));
                           }),
                   }))),
         ];
         if (!transpose && comparisonType === 'PATH' && !isEditing) {
-            let groups = omit(groupArrayByDirectoryPrefix(dataFrame.map(dO => dO.property.id)), '');
+            let groups = omit(groupArrayByDirectoryPrefix(dataFrame.map((dO) => dO.property.id)), '');
             groups = Object.keys(groups);
             const shownGroups = [];
-            groups.map(key => {
-                const labels = dataFrame.map(dO => dO.property.label);
+            groups.map((key) => {
+                const labels = dataFrame.map((dO) => dO.property.label);
                 let index = 0;
                 let found = false;
                 labels.map((l, i) => {
@@ -79,8 +79,8 @@ const ComparisonTable = props => {
             });
             shownGroups
                 .sort((a, b) => b.length - a.length)
-                .map(key => {
-                    dataFrame = dataFrame.map(row => {
+                .map((key) => {
+                    dataFrame = dataFrame.map((row) => {
                         if (row.property.label.startsWith(key)) {
                             return {
                                 values: row.values,
@@ -91,7 +91,7 @@ const ComparisonTable = props => {
                     });
                     return null;
                 });
-            dataFrame = dataFrame.filter(row => !hiddenGroups.includes(row.property.inGroupId) || row.property.group);
+            dataFrame = dataFrame.filter((row) => !hiddenGroups.includes(row.property.inGroupId) || row.property.group);
         }
         return dataFrame;
     }, [comparisonType, contributions, data, properties, hiddenGroups, transpose, isEditing]);
@@ -105,19 +105,19 @@ const ComparisonTable = props => {
             {
                 Header: () => <ColumnHeaderFirstColumn />,
                 accessor: 'property',
-                Cell: cell => (
+                Cell: (cell) => (
                     <RowHeader cell={cell.value} property={comparisonType === 'MERGE' ? cell.value : getPropertyObjectFromData(data, cell.value)} />
                 ),
                 sticky: !isSmallScreen ? 'left' : undefined,
                 minWidth: DEFAULT_COLUMN_WIDTH,
             },
             // remaining columns
-            ...(!transpose ? contributions : properties.filter(property => property.active && data[property.id]))
+            ...(!transpose ? contributions : properties.filter((property) => property.active && data[property.id]))
                 .map((headerData, index) => {
                     if (headerData.active) {
                         return {
                             id: headerData.id,
-                            Header: column => (
+                            Header: (column) => (
                                 <ColumnHeader
                                     index={column.index}
                                     headerData={headerData}
@@ -126,8 +126,8 @@ const ComparisonTable = props => {
                                     property={comparisonType === 'MERGE' ? headerData : getPropertyObjectFromData(data, headerData)}
                                 />
                             ),
-                            accessor: d => d.values[index],
-                            Cell: cell => <TableCell entities={cell.value} />,
+                            accessor: (d) => d.values[index],
+                            Cell: (cell) => <TableCell entities={cell.value} />,
                         };
                     }
                     return null;

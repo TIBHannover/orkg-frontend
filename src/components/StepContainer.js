@@ -7,7 +7,7 @@ const StepStyled = styled.div`
     height: 29px;
     width: 29px;
     border-radius: 25px;
-    background: ${props => props.theme.secondary};
+    background: ${(props) => props.theme.secondary};
     color: rgb(255, 255, 255);
     font-size: 20px;
     text-align: center;
@@ -17,7 +17,7 @@ const StepStyled = styled.div`
     top: -2px;
 
     &.active {
-        background: ${props => props.theme.primary};
+        background: ${(props) => props.theme.primary};
     }
 `;
 
@@ -25,7 +25,7 @@ const LineStyled = styled.div`
     height: 35px;
     width: 4px;
     display: inline-block;
-    background: ${props => props.theme.secondary};
+    background: ${(props) => props.theme.secondary};
     position: absolute;
     left: 13px;
     top: 25px;
@@ -36,7 +36,7 @@ const LineStyled = styled.div`
         top: -25px;
     }
     &.active {
-        background: ${props => props.theme.primary};
+        background: ${(props) => props.theme.primary};
     }
 `;
 
@@ -45,7 +45,7 @@ const TitleStyled = styled.h1`
     margin-left: 35px;
 
     &:not(.active) {
-        color: ${props => props.theme.secondary};
+        color: ${(props) => props.theme.secondary};
     }
 `;
 

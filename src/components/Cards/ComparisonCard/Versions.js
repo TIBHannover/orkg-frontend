@@ -12,13 +12,13 @@ import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { getComparisonData } from 'utils';
 
-const VersionTooltip = props => {
+const VersionTooltip = (props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [version, setVersion] = useState(props.version);
     useEffect(() => {
         if (!version?.contributions?.length) {
             setIsLoading(true);
-            getStatementsBySubject({ id: version.id }).then(statements => {
+            getStatementsBySubject({ id: version.id }).then((statements) => {
                 setVersion(getComparisonData(version, statements));
                 setIsLoading(false);
             });
@@ -69,7 +69,7 @@ const Versions = ({ id, versions }) => {
         <div>
             <small>
                 <Icon size="sm" icon={faCodeBranch} className="me-1" /> Versions:{' '}
-                {versions.slice(1).map(version => (
+                {versions.slice(1).map((version) => (
                     <span key={version.id}>
                         <Tippy content={<VersionTooltip version={version} />}>
                             <Link href={reverse(ROUTES.COMPARISON, { comparisonId: version.id })}>
@@ -88,7 +88,7 @@ const Versions = ({ id, versions }) => {
                     View history
                 </div>
                 {isOpenHistoryModal && (
-                    <HistoryModal comparisonId={id} toggle={() => setIsOpenHistoryModal(v => !v)} showDialog={isOpenHistoryModal} />
+                    <HistoryModal comparisonId={id} toggle={() => setIsOpenHistoryModal((v) => !v)} showDialog={isOpenHistoryModal} />
                 )}
             </small>
         </div>

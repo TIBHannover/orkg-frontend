@@ -37,7 +37,7 @@ const TableCellLiteral = ({ entity }) => {
             {showButton && (
                 <Tippy content={entity.label} disabled={isExpanded}>
                     <span>
-                        <Button color="secondary" outline size="sm" className="mt-1 border-0" onClick={() => setIsExpanded(v => !v)}>
+                        <Button color="secondary" outline size="sm" className="mt-1 border-0" onClick={() => setIsExpanded((v) => !v)}>
                             {isExpanded ? 'Hide more' : 'Show more'} <Icon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
                         </Button>
                     </span>

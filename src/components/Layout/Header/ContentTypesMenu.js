@@ -11,7 +11,7 @@ import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown 
 import styled from 'styled-components';
 
 const StyledButtonDropdown = styled(UncontrolledButtonDropdown)`
-    @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
+    @media (max-width: ${(props) => props.theme.gridBreakpoints.md}) {
         .dropdown-menu {
             position: relative !important;
             transform: none !important;

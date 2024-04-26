@@ -16,11 +16,11 @@ import { createResourceStatement, getStatementsByPredicateAndLiteral } from 'ser
  * @returns list of authors
  */
 
-const prepareNewAuthors = async newAuthors => {
+const prepareNewAuthors = async (newAuthors) => {
     let authors = [...newAuthors];
     // Search authors by ORCID
     authors = await Promise.all(
-        authors.map(async author => {
+        authors.map(async (author) => {
             if (author.orcid) {
                 const s = await getStatementsByPredicateAndLiteral({
                     predicateId: PREDICATES.HAS_ORCID,
@@ -35,7 +35,7 @@ const prepareNewAuthors = async newAuthors => {
     );
     // Create authors for the new ORCID
     authors = await Promise.all(
-        authors.map(async author => {
+        authors.map(async (author) => {
             if (author.orcid && author._class !== ENTITIES.RESOURCE) {
                 const newAuthor = await createObject({
                     predicates: [],
@@ -61,7 +61,7 @@ const prepareNewAuthors = async newAuthors => {
     );
     // Create the new literals for authors
     authors = await Promise.all(
-        authors.map(author => {
+        authors.map((author) => {
             if (!author.orcid && author._class !== ENTITIES.RESOURCE) {
                 return createLiteral(author.label);
             }
@@ -78,13 +78,13 @@ export const updateAuthorsList = async ({ prevAuthors, newAuthors, listId }) => 
     }
 
     const authors = await prepareNewAuthors(newAuthors);
-    await updateList({ id: listId, elements: authors.map(author => author.id) });
+    await updateList({ id: listId, elements: authors.map((author) => author.id) });
     return authors;
 };
 
 export const createAuthorsList = async ({ resourceId, authors }) => {
     const preparedAuthors = await prepareNewAuthors(authors);
-    const list = await createList({ label: 'authors', elements: preparedAuthors.map(author => author.id) });
+    const list = await createList({ label: 'authors', elements: preparedAuthors.map((author) => author.id) });
     await createResourceStatement(resourceId, PREDICATES.HAS_AUTHORS, list.id);
     return {
         authors: preparedAuthors,

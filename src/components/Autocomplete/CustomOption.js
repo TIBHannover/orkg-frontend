@@ -62,7 +62,7 @@ export default function CustomOption(props) {
         if (!isLoaded && props.data.id) {
             setIsLoading(true);
             getStatementsBySubject({ id: props.data.id })
-                .then(result => {
+                .then((result) => {
                     setStatements(result);
                     setIsLoading(false);
                     setIsLoaded(true);
@@ -148,7 +148,7 @@ export default function CustomOption(props) {
                                         {props.data.statements &&
                                             props.data.statements
                                                 .filter(
-                                                    statement =>
+                                                    (statement) =>
                                                         statement.predicate.id === PREDICATES.URL || statement.predicate.id === PREDICATES.SAME_AS,
                                                 )
                                                 .map((statement, index) => (
@@ -184,7 +184,7 @@ export default function CustomOption(props) {
                                                     <>
                                                         Statements:
                                                         <ul className="px-3 mb-0">
-                                                            {statements.slice(0, 5).map(s => (
+                                                            {statements.slice(0, 5).map((s) => (
                                                                 <li key={s.id}>
                                                                     {s.predicate.label}:{' '}
                                                                     {truncate(s.object.label ? s.object.label : '', {
@@ -221,7 +221,7 @@ export default function CustomOption(props) {
                     )}
                     <ConditionalWrapper
                         condition={props.data.id}
-                        wrapper={children => (
+                        wrapper={(children) => (
                             <Tippy
                                 interactive
                                 appendTo={document.body}

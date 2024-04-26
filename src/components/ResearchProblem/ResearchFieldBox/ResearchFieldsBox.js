@@ -16,7 +16,7 @@ const AuthorsBox = ({ isLoading, researchFields }) => (
             <div className="mb-4 mt-4 ps-3 pe-3">
                 {researchFields.length > 0 ? (
                     <ul className="ps-1">
-                        {researchFields.map(researchField => (
+                        {researchFields.map((researchField) => (
                             <li key={`rf${researchField.field.id}`}>
                                 <Link
                                     href={reverseWithSlug(ROUTES.RESEARCH_FIELD, {

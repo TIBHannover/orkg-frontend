@@ -16,7 +16,7 @@ function ConferenceMetadataBox({ url, metadata, isLoading }) {
                     <br />
                     <b>Conference date</b>: {metadata.start_date}
                     <br />
-                    <b>Review process</b>: {CONFERENCE_REVIEW_TYPE.find(t => t.id === metadata.review_process)?.label}
+                    <b>Review process</b>: {CONFERENCE_REVIEW_TYPE.find((t) => t.id === metadata.review_process)?.label}
                 </div>
             ) : (
                 <div className="text-center mt-4 mb-4">Loading conference information ...</div>

@@ -8,12 +8,12 @@ import { Button } from 'reactstrap';
 import { updateResearchField } from 'slices/listSlice';
 
 const EditResearchField = () => {
-    const researchField = useSelector(state => state.list.researchField);
-    const list = useSelector(state => state.list.list);
+    const researchField = useSelector((state) => state.list.researchField);
+    const list = useSelector((state) => state.list.list);
     const dispatch = useDispatch();
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
 
-    const handleSelectField = researchField => {
+    const handleSelectField = (researchField) => {
         dispatch(
             updateResearchField({
                 researchField,
@@ -39,7 +39,7 @@ const EditResearchField = () => {
                 </span>
             </Tippy>
             {isOpenResearchFieldModal && (
-                <ResearchFieldSelectorModal isOpen toggle={v => setIsOpenResearchFieldModal(v => !v)} onSelectField={handleSelectField} />
+                <ResearchFieldSelectorModal isOpen toggle={(v) => setIsOpenResearchFieldModal((v) => !v)} onSelectField={handleSelectField} />
             )}
         </div>
     );

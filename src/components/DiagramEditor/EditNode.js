@@ -24,10 +24,10 @@ function EditNode({ isEditNodeModalOpen, setIsEditNodeModalOpen, saveNode, addNo
                         placeholder="Select or type to enter a resource"
                         allowCreate={true}
                         inputGroup={false}
-                        onItemSelected={i => {
+                        onItemSelected={(i) => {
                             setValue({ ...i, label: i.value, _class: ENTITIES.RESOURCE, linked: true });
                         }}
-                        onNewItemSelected={item => {
+                        onNewItemSelected={(item) => {
                             setValue({ id: item, label: item, value: item, _class: ENTITIES.RESOURCE, linked: false });
                         }}
                         value={value}

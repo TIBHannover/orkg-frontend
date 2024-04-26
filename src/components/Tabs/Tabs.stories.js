@@ -13,7 +13,7 @@ export default {
     },
 };
 
-const Template = args => {
+const Template = (args) => {
     const [activeKey, setActiveKey] = useState(args.activeKey ?? 1);
 
     return (

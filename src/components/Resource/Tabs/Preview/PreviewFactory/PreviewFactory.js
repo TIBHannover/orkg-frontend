@@ -4,7 +4,7 @@ import { CLASSES } from 'constants/graphSettings';
 import VisualizationPreview from 'components/Resource/Tabs/Preview/VisualizationPreview/VisualizationPreview';
 
 const PreviewFactory = ({ id, classes }) => {
-    const findClass = useCallback(classId => classes?.includes(classId), [classes]);
+    const findClass = useCallback((classId) => classes?.includes(classId), [classes]);
 
     if (findClass(CLASSES.VISUALIZATION)) {
         return <VisualizationPreview id={id} />;

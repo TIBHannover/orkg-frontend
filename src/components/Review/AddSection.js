@@ -19,7 +19,7 @@ const InvisibleByDefault = styled.div`
 `;
 
 const AddSectionStyled = styled(Button)`
-    color: ${props => props.theme.secondary}!important;
+    color: ${(props) => props.theme.secondary}!important;
     font-size: 140% !important;
     margin: 5px 0 !important;
 `;
@@ -33,17 +33,17 @@ const Toolbar = styled.div`
     }
 `;
 
-const AddSection = props => {
+const AddSection = (props) => {
     const [isToolbarVisible, setIsToolbarVisible] = useState(false);
     const dispatch = useDispatch();
-    const contributionId = useSelector(state => state.review.contributionId);
+    const contributionId = useSelector((state) => state.review.contributionId);
     const refToolbar = useRef(null);
 
     const handleShowToolbar = () => {
         setIsToolbarVisible(true);
     };
 
-    const handleAddSection = sectionType => {
+    const handleAddSection = (sectionType) => {
         setIsToolbarVisible(false);
 
         dispatch(

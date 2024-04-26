@@ -38,7 +38,7 @@ const StatementItem = forwardRef(({ resourceId = null, showValueHelp = false, id
         syncBackend,
     });
 
-    const preferences = useSelector(state => state.statementBrowser.preferences);
+    const preferences = useSelector((state) => state.statementBrowser.preferences);
 
     return (
         <StatementsGroupStyle ref={ref} className={`${inTemplate ? 'inTemplate' : 'noTemplate'} list-group-item`}>
@@ -141,7 +141,7 @@ const StatementItem = forwardRef(({ resourceId = null, showValueHelp = false, id
                                         handleChange(selectedOption, a);
                                         dispatch(toggleEditPropertyLabel({ id }));
                                     }}
-                                    onKeyDown={e => e.keyCode === 27 && e.target.blur()}
+                                    onKeyDown={(e) => e.keyCode === 27 && e.target.blur()}
                                     disableBorderRadiusRight
                                     allowCreate
                                     defaultOptions={defaultProperties}
@@ -162,7 +162,7 @@ const StatementItem = forwardRef(({ resourceId = null, showValueHelp = false, id
                                     <ConditionalWrapper
                                         key={valueId}
                                         condition={property.existingPredicateId === PREDICATES.HAS_LIST_ELEMENT}
-                                        wrapper={children => (
+                                        wrapper={(children) => (
                                             <SortableValueItem index={index} id={valueId} enableEdit={enableEdit} propertyId={id}>
                                                 {children}
                                             </SortableValueItem>

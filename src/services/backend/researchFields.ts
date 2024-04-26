@@ -92,4 +92,4 @@ export const getResearchProblemsByResearchFieldId = ({
 };
 
 export const getFieldChildren = ({ fieldId }: { fieldId: string }) =>
-    submitGetRequest(`${researchFieldUrl}${fieldId}/children`).then(res => res.content);
+    submitGetRequest(`${researchFieldUrl}${fieldId}/children`).then((res) => res.content);

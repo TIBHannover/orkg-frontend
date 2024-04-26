@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Alert, ListGroup, ListGroupItem, Progress } from 'reactstrap';
 
 const Feedback = ({ feedbacks, comparisonId }) => {
-    const questions = FEEDBACK_QUESTIONS.map(question => ({
+    const questions = FEEDBACK_QUESTIONS.map((question) => ({
         ...question,
         score:
             question.input === 'likert'
@@ -22,7 +22,7 @@ const Feedback = ({ feedbacks, comparisonId }) => {
                     <InviteResearchersButton comparisonId={comparisonId} />
                 </div>
             </div>
-            {questions.map(question => (
+            {questions.map((question) => (
                 <div key={question.id} className="border-top w-100 py-2">
                     {question.question}
                     {question.input === 'likert' && (

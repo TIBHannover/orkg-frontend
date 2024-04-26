@@ -3,7 +3,7 @@ import { Input } from 'reactstrap';
 import PropTypes from 'prop-types';
 
 const PublicationMonthInput = ({ value = '', onChange, inputId = null, isDisabled = false }) => (
-    <Input id={inputId} type="select" value={value} onChange={e => onChange(e.target.value)} disabled={isDisabled}>
+    <Input id={inputId} type="select" value={value} onChange={(e) => onChange(e.target.value)} disabled={isDisabled}>
         <option value="">Month</option>
         {moment.months().map((el, index) => (
             <option value={index + 1} key={index + 1}>

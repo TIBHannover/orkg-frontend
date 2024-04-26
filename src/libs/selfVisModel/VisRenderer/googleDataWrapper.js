@@ -13,7 +13,7 @@ export default class DataForChart {
         rows: this.rowls,
     });
 
-    createDataFromSharedCustomizer = customizer => {
+    createDataFromSharedCustomizer = (customizer) => {
         if (customizer.errorDataNotSupported || !customizer.xAxisSelector || !customizer.yAxisSelector || customizer.yAxisSelector.length === 0) {
             return {
                 cols: [],
@@ -43,7 +43,7 @@ export default class DataForChart {
             xSelectorIndex = 0;
         }
 
-        customizer.yAxisSelector.forEach(yax => {
+        customizer.yAxisSelector.forEach((yax) => {
             // find yAx in headerMap;
             if (headerMap[yax.axis.label]) {
                 newHeaders.push(oldHeaders[headerMap[yax.axis.label]]);
@@ -65,7 +65,7 @@ export default class DataForChart {
         const newRows = [];
 
         // fetch the data from the table itself;
-        this.rowls.forEach(row => {
+        this.rowls.forEach((row) => {
             const newR = [];
             newR.push(row.c[xSelectorIndex].v);
             for (let i = 0; i < ySelectorIndices.length; i++) {
@@ -82,7 +82,7 @@ export default class DataForChart {
         };
     };
 
-    createDataFromSelectors = state => {
+    createDataFromSelectors = (state) => {
         if (state.xAxis === undefined || state.yAxis.length === 0) {
             return {
                 cols: [],
@@ -134,7 +134,7 @@ export default class DataForChart {
         const newRows = [];
 
         // fetch the data from the table itself;
-        this.rowls?.forEach(row => {
+        this.rowls?.forEach((row) => {
             const newR = [];
             if (xSelectorIndex && row?.c[xSelectorIndex]?.v) {
                 newR.push(row.c[xSelectorIndex].v);

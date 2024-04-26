@@ -15,7 +15,7 @@ export const getPapersByTitle = async ({ title, limit = 10, offset = 0, fields =
     } catch (e) {}
 };
 
-export const getAbstractByDoi = async doi => {
+export const getAbstractByDoi = async (doi) => {
     const result = await submitGetRequest(`${semanticScholarUrl}v1/paper/${doi}`).then((data, reject) => {
         if (!data.abstract) {
             return reject;
@@ -25,7 +25,7 @@ export const getAbstractByDoi = async doi => {
     return result;
 };
 
-export const getAbstractByTitle = async title =>
+export const getAbstractByTitle = async (title) =>
     getPapersByTitle({ title, limit: 1, fields: ['abstract', 'title'] }).then((data, reject) => data?.data?.[0] ?? reject);
 
 export const getAuthorsByLabel = ({ label, limit }) =>

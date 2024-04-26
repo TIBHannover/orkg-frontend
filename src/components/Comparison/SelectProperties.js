@@ -18,17 +18,17 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
-const SelectProperties = props => {
+const SelectProperties = (props) => {
     const dispatch = useDispatch();
-    const properties = useSelector(state => state.comparison.properties);
+    const properties = useSelector((state) => state.comparison.properties);
 
     /**
      * Toggle a property from the table
      *
      * @param {String} id Property id to toggle
      */
-    const toggleProperty = id => {
-        const newProperties = properties.map(property => (property.id === id ? { ...property, active: !property.active } : property));
+    const toggleProperty = (id) => {
+        const newProperties = properties.map((property) => (property.id === id ? { ...property, active: !property.active } : property));
         dispatch(setProperties(newProperties));
         dispatch(setConfigurationAttribute({ attribute: 'predicatesList', value: activatedPropertiesToList(newProperties) }));
     };

@@ -16,8 +16,8 @@ export default function CheckPaperVersion() {
     const params = useParams();
 
     useEffect(() => {
-        getResource(params.resourceId).then(r => {
-            const type = r.classes.find(c => c === CLASSES.PAPER || c === CLASSES.PAPER_VERSION);
+        getResource(params.resourceId).then((r) => {
+            const type = r.classes.find((c) => c === CLASSES.PAPER || c === CLASSES.PAPER_VERSION);
             setPaperType(type);
         });
     }, [params]);

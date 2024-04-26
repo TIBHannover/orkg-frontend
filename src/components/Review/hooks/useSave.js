@@ -5,7 +5,7 @@ import { CLASSES, PREDICATES } from 'constants/graphSettings';
 const useSave = () => {
     const [isLoading, setIsLoading] = useState(false);
 
-    const create = async title => {
+    const create = async (title) => {
         setIsLoading(true);
 
         const paper = {

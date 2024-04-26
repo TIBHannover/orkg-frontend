@@ -9,7 +9,7 @@ import { useParams as useParamsNext } from 'next/navigation';
 // export default useParams;
 
 // NEXT-CODE
-const useParams = params => {
+const useParams = (params) => {
     const urlParams = useParamsNext(params);
 
     // catch-all routes are returned as array, we are currently not using multiple values for routes, so we just take the first value

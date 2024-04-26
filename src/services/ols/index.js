@@ -19,7 +19,7 @@ export const selectTerms = ({ page = 0, pageSize = 10, type = 'ontology', q = nu
         },
     );
     const options = [];
-    return submitGetRequest(`${olsBaseUrl}select?${params}`).then(res => {
+    return submitGetRequest(`${olsBaseUrl}select?${params}`).then((res) => {
         if (res.response.numFound > 0) {
             for (const item of res.response.docs) {
                 options.push({
@@ -53,7 +53,7 @@ export const getAllOntologies = ({ page = 0, pageSize = 10 }) => {
     );
     const options = [];
 
-    return submitGetRequest(`${olsBaseUrl}ontologies?${params}`).then(res => {
+    return submitGetRequest(`${olsBaseUrl}ontologies?${params}`).then((res) => {
         if (res._embedded.ontologies.length > 0) {
             for (const item of res._embedded.ontologies) {
                 options.push({
@@ -80,7 +80,7 @@ export const getOntologyTerms = ({ ontology_id, page = 0, pageSize = 10 }) => {
     );
     const options = [];
 
-    return submitGetRequest(`${olsBaseUrl}ontologies/${ontology_id}/terms?${params}`).then(res => {
+    return submitGetRequest(`${olsBaseUrl}ontologies/${ontology_id}/terms?${params}`).then((res) => {
         if (res._embedded.terms.length > 0) {
             for (const item of res._embedded.terms) {
                 options.push({
@@ -110,7 +110,7 @@ export const getTermMatchingAcrossOntologies = ({ page = 0, pageSize = 10 }) => 
     );
     const options = [];
 
-    return submitGetRequest(`${olsBaseUrl}terms/?${params}`).then(res => {
+    return submitGetRequest(`${olsBaseUrl}terms/?${params}`).then((res) => {
         if (res._embedded.terms.length > 0) {
             for (const item of res._embedded.terms) {
                 options.push({

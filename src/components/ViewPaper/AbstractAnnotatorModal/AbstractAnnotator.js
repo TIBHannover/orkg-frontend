@@ -19,18 +19,20 @@ function AbstractAnnotator(props) {
 
     const dispatch = useDispatch();
 
-    const abstract = useSelector(state => state.viewPaper.abstract);
-    const ranges = useSelector(state => state.viewPaper.ranges);
+    const abstract = useSelector((state) => state.viewPaper.abstract);
+    const ranges = useSelector((state) => state.viewPaper.ranges);
 
-    const renderCharNode = charIndex => (
+    const renderCharNode = (charIndex) => (
         <span key={`c${charIndex}`} data-position={charIndex}>
             {abstract[charIndex]}
         </span>
     );
 
-    const getRange = charPosition =>
+    const getRange = (charPosition) =>
         ranges &&
-        Object.values(ranges).find(range => charPosition >= range.start && charPosition <= range.end && range.certainty >= props.certaintyThreshold);
+        Object.values(ranges).find(
+            (range) => charPosition >= range.start && charPosition <= range.end && range.certainty >= props.certaintyThreshold,
+        );
 
     const tooltipRenderer = (lettersNode, range) => (
         <AnnotationTooltip

@@ -37,7 +37,7 @@ class WikipediaSummary extends Component {
         const self = this;
 
         fetch(url)
-            .then(response => response.json())
+            .then((response) => response.json())
             .then(function (data) {
                 if (data.extract) {
                     self.setState({
@@ -49,13 +49,13 @@ class WikipediaSummary extends Component {
                     this.setState({ isLoading: false, loadingFailed: true });
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 this.setState({ isLoading: false, loadingFailed: true });
             });
     };
 
     handleReadMore = () => {
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             collapsed: !prevState.collapsed,
         }));
     };

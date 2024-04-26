@@ -4,7 +4,7 @@ import { cloneDeep } from 'lodash';
 
 function useTableEditor(tableId, tableRef) {
     const dispatch = useDispatch();
-    const tableData = useSelector(state => state.pdfAnnotation.tableData[tableId]);
+    const tableData = useSelector((state) => state.pdfAnnotation.tableData[tableId]);
 
     const removeEmptyRows = () => {
         const tableInstance = tableRef.current.hotInstance;

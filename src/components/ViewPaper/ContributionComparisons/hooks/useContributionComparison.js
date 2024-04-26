@@ -13,7 +13,7 @@ function useContributionComparison(contributionId) {
     const [comparisons, setComparisons] = useState([]);
 
     const loadComparisons = useCallback(
-        page => {
+        (page) => {
             setIsLoading(true);
 
             // Get the statements that contains the contribution as an object
@@ -24,25 +24,25 @@ function useContributionComparison(contributionId) {
                 size: pageSize,
                 sortBy: 'created_at',
                 desc: true,
-            }).then(result => {
+            }).then((result) => {
                 // Comparisons
-                if (result.filter(contribution => contribution.subject.classes.includes(CLASSES.COMPARISON)).length > 0) {
+                if (result.filter((contribution) => contribution.subject.classes.includes(CLASSES.COMPARISON)).length > 0) {
                     // Fetch the data of each comparison
                     getStatementsBySubjects({
-                        ids: result.filter(contribution => contribution.subject.classes.includes(CLASSES.COMPARISON)).map(c => c.subject.id),
-                    }).then(resourcesStatements => {
-                        const comparisonsData = resourcesStatements.map(resourceStatements => {
+                        ids: result.filter((contribution) => contribution.subject.classes.includes(CLASSES.COMPARISON)).map((c) => c.subject.id),
+                    }).then((resourcesStatements) => {
+                        const comparisonsData = resourcesStatements.map((resourceStatements) => {
                             const comparisonSubject = find(
-                                result.filter(contribution => contribution.subject.classes.includes(CLASSES.COMPARISON)).map(c => c.subject),
+                                result.filter((contribution) => contribution.subject.classes.includes(CLASSES.COMPARISON)).map((c) => c.subject),
                                 {
                                     id: resourceStatements.id,
                                 },
                             );
                             return getComparisonData(comparisonSubject, resourceStatements.statements);
                         });
-                        Promise.all(comparisonsData).then(results => {
-                            setComparisons(prevResources =>
-                                groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...results]),
+                        Promise.all(comparisonsData).then((results) => {
+                            setComparisons((prevResources) =>
+                                groupVersionsOfComparisons([...flatten([...prevResources.map((c) => c.versions), ...prevResources]), ...results]),
                             );
                             setIsLoading(false);
                             // use result instead of results because filtering by contribution class might reduce the number of items

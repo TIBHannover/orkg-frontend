@@ -49,7 +49,7 @@ export default class VisualizationWidget extends Component {
         }
     };
 
-    customizerPropagateUpdates = state => {
+    customizerPropagateUpdates = (state) => {
         if (this.refAbstractRenderer.current) {
             this.refAbstractRenderer.current.setCustomizationState(state);
         }
@@ -214,21 +214,21 @@ const expandContainerAnimation = ({ expanded, parentWidth, totalWidth, initialRe
 const InputTableContainer = styled.div`
     animation-name: ${expandAndHideContentContainerAnimation};
     animation-duration: 400ms;
-    left: ${props => (props.expanded ? 0 : -props.width)}px;
+    left: ${(props) => (props.expanded ? 0 : -props.width)}px;
 `;
 
 const ControlWidgetContainer = styled.div`
     animation-name: ${expandContainerAnimation};
     animation-duration: 400ms;
-    left: ${props => (props.expanded ? props.parentWidth : 0)}px;
-    width: ${props => (props.expanded ? props.totalWidth - props.parentWidth : props.totalWidth)}px;
+    left: ${(props) => (props.expanded ? props.parentWidth : 0)}px;
+    width: ${(props) => (props.expanded ? props.totalWidth - props.parentWidth : props.totalWidth)}px;
 `;
 
 const SideBar = styled.div`
     width: 320px;
     min-width: 320px;
     overflow: auto;
-    background-color: ${props => props.theme.lightLighter} !important;
-    border: 1px solid ${props => props.theme.lightDarker} !important;
-    border-radius: ${props => props.theme.borderRadius};
+    background-color: ${(props) => props.theme.lightLighter} !important;
+    border: 1px solid ${(props) => props.theme.lightDarker} !important;
+    border-radius: ${(props) => props.theme.borderRadius};
 `;

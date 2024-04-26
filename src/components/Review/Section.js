@@ -13,14 +13,14 @@ import { SortableElement } from 'react-sortable-hoc';
 import Confirm from 'components/Confirmation/Confirmation';
 import MarkdownEditor from 'components/ArticleBuilder/MarkdownEditor/MarkdownEditor';
 
-const Section = props => {
+const Section = (props) => {
     const { type, markdown, title: titleProp } = props.section;
     const sectionId = titleProp.id;
     const [title, setTitle] = useState(titleProp.label);
-    const references = useSelector(state => state.review.references);
+    const references = useSelector((state) => state.review.references);
     const dispatch = useDispatch();
 
-    const handleBlurTitle = e => {
+    const handleBlurTitle = (e) => {
         dispatch(
             updateSectionTitle({
                 sectionId,
@@ -29,7 +29,7 @@ const Section = props => {
         );
     };
 
-    const handleUpdateMarkdown = value => {
+    const handleUpdateMarkdown = (value) => {
         dispatch(
             updateSectionMarkdown({
                 id: markdown.id,
@@ -67,13 +67,13 @@ const Section = props => {
 
     return (
         <section>
-            <SortableSection handleDelete={handleDelete} handleSort={direction => props.handleManualSort({ id: sectionId, direction })}>
+            <SortableSection handleDelete={handleDelete} handleSort={(direction) => props.handleManualSort({ id: sectionId, direction })}>
                 <SectionType type={type.id} sectionId={sectionId} isDisabled={isContentLinkSection || isOntologySection} />
                 <h2 id={`section-${sectionId}`} className="h4 border-bottom pb-1 mb-3" placeholder="trd">
                     <EditableTitle
                         value={title}
                         className="focus-primary"
-                        onChange={e => setTitle(e.target.value)}
+                        onChange={(e) => setTitle(e.target.value)}
                         onBlur={handleBlurTitle}
                         placeholder="Enter a section title..."
                         resize="false"

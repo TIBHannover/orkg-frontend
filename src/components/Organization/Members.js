@@ -21,7 +21,7 @@ const Members = ({ organizationsId }) => {
         const loadMembers = () => {
             setIsLoadingMembers(true);
             getUsersByOrganizationId(organizationsId)
-                .then(_members => {
+                .then((_members) => {
                     setMembers(_members);
                     setIsLoadingMembers(false);
                 })
@@ -53,7 +53,7 @@ const Members = ({ organizationsId }) => {
                     ))}
                     {members.length > 18 && (
                         <Tippy key="contributor" content="View More">
-                            <StyledDotGravatar onClick={() => setOpenModal(v => !v)} className="rounded-circle">
+                            <StyledDotGravatar onClick={() => setOpenModal((v) => !v)} className="rounded-circle">
                                 <Icon icon={faEllipsisH} />
                             </StyledDotGravatar>
                         </Tippy>

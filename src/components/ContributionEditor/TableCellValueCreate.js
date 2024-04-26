@@ -70,7 +70,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
             )}
             {isModelOpen && (
                 <StatementBrowserDialog
-                    toggleModal={v => setIsModalOpen(!v)}
+                    toggleModal={(v) => setIsModalOpen(!v)}
                     id={dialogResourceId}
                     label={dialogResourceLabel}
                     show

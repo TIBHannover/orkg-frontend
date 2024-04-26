@@ -16,7 +16,7 @@ import styled from 'styled-components';
 const FieldItem = styled(Button)`
     &&& {
         // &&& https://styled-components.com/docs/faqs#how-can-i-override-styles-with-higher-specificity
-        background: ${props => props.theme.light};
+        background: ${(props) => props.theme.light};
         border-radius: 6px;
         padding: 6px 7px;
         margin-bottom: 4px;
@@ -28,7 +28,7 @@ const FieldItem = styled(Button)`
         transition: none;
 
         &.active {
-            background: ${props => props.theme.secondary};
+            background: ${(props) => props.theme.secondary};
             color: #fff;
         }
     }
@@ -52,7 +52,7 @@ const IndicatorContainer = styled.div`
 
 const CollapseButton = styled(Button)`
     && {
-        color: ${props => props.theme.secondary};
+        color: ${(props) => props.theme.secondary};
     }
 `;
 
@@ -71,7 +71,7 @@ const ResearchFieldSelector = ({
 
     const handleFieldSelect = (selected, submit = false) => {
         setIsLoading(true);
-        getParentResearchFields(selected.id).then(async _parents => {
+        getParentResearchFields(selected.id).then(async (_parents) => {
             const parents = _parents.reverse();
             let fields = cloneDeep(researchFields);
 
@@ -113,7 +113,7 @@ const ResearchFieldSelector = ({
         for (const { id, statements } of subfieldStatements) {
             const hasChildren = statements.length > 0;
             if (hasChildren) {
-                statements.map(statement =>
+                statements.map((statement) =>
                     statement.object.classes && statement.object.classes.length && statement.object.classes.includes(CLASSES.RESEARCH_FIELD) // Make sure that the object is research field
                         ? fields.push({
                               label: statement.object.label,
@@ -126,7 +126,7 @@ const ResearchFieldSelector = ({
                 );
             }
 
-            const fieldIndex = fields.findIndex(field => field.id === id);
+            const fieldIndex = fields.findIndex((field) => field.id === id);
             if (fieldIndex !== -1) {
                 fields[fieldIndex].hasChildren = hasChildren;
             }
@@ -137,7 +137,7 @@ const ResearchFieldSelector = ({
     const getChildFields = useCallback(
         async (fieldId, previousFields, toggleExpand = false) => {
             const fields = cloneDeep(previousFields);
-            const fieldIndex = fields.findIndex(field => field.id === fieldId);
+            const fieldIndex = fields.findIndex((field) => field.id === fieldId);
 
             if (fieldIndex !== -1) {
                 const field = fields[fieldIndex];
@@ -145,8 +145,8 @@ const ResearchFieldSelector = ({
                 fields[fieldIndex].isExpanded = toggleExpand ? !field.isExpanded : true;
             }
 
-            const children = fields.filter(field => field.parent === fieldId && field.hasChildren === null);
-            const childrenIds = children.map(field => field.id);
+            const children = fields.filter((field) => field.parent === fieldId && field.hasChildren === null);
+            const childrenIds = children.map((field) => field.id);
 
             if (!childrenIds.length) {
                 return fields;
@@ -175,12 +175,12 @@ const ResearchFieldSelector = ({
         }
     }, [getChildFields, getFieldsByIds, selectedResearchField, updateResearchField]);
 
-    const fieldList = selectedField => {
-        const subFields = researchFields.filter(field => field.parent === selectedField);
+    const fieldList = (selectedField) => {
+        const subFields = researchFields.filter((field) => field.parent === selectedField);
         if (subFields.length === 0) {
             return null;
         }
-        return subFields.map(field => {
+        return subFields.map((field) => {
             const _isLoading = loadingId === field.id;
             let icon;
             if (_isLoading) {
@@ -193,14 +193,14 @@ const ResearchFieldSelector = ({
 
             return (
                 <li key={field.id}>
-                    <FieldItem onClick={e => handleFieldClick(e, field.id)} color="link" className={selectedResearchField === field.id && 'active'}>
+                    <FieldItem onClick={(e) => handleFieldClick(e, field.id)} color="link" className={selectedResearchField === field.id && 'active'}>
                         <div className="flex-grow-1 d-flex">
-                            <IndicatorContainer onClick={e => handleFieldClick(e, field.id, false)}>
+                            <IndicatorContainer onClick={(e) => handleFieldClick(e, field.id, false)}>
                                 {field.hasChildren && (
                                     <Icon icon={icon} spin={_isLoading} className={selectedResearchField !== field.id ? 'text-secondary' : ''} />
                                 )}
                             </IndicatorContainer>
-                            {find(parents, p => p.id === field.id) ? <b>{field.label}</b> : field.label}
+                            {find(parents, (p) => p.id === field.id) ? <b>{field.label}</b> : field.label}
                         </div>
                         {researchFieldStats && (
                             <Tippy content="Number of content items in this field">
@@ -219,7 +219,7 @@ const ResearchFieldSelector = ({
     };
 
     const getParents = (field, parents) => {
-        const f = field ? find(researchFields, _f => _f.id === field.parent) : null;
+        const f = field ? find(researchFields, (_f) => _f.id === field.parent) : null;
         if (f) {
             parents.push(f);
             return getParents(f, parents);
@@ -230,7 +230,7 @@ const ResearchFieldSelector = ({
     let researchFieldLabel;
     let parents = [];
     if (researchFields && researchFields.length > 0) {
-        const field = researchFields.find(rf => rf.id === selectedResearchField);
+        const field = researchFields.find((rf) => rf.id === selectedResearchField);
         researchFieldLabel = field ? field.label : selectedResearchField;
         parents = getParents(field, []);
     }
@@ -264,12 +264,12 @@ const ResearchFieldSelector = ({
                         <CollapseButton
                             size="sm"
                             color="link"
-                            disabled={!find(researchFields, f => f.isExpanded)}
+                            disabled={!find(researchFields, (f) => f.isExpanded)}
                             className="ms-auto text-decoration-none p-0"
                             onClick={() => {
                                 const fields = cloneDeep(researchFields);
                                 updateResearchField({
-                                    researchFields: fields.map(f => set(f, 'isExpanded', false)),
+                                    researchFields: fields.map((f) => set(f, 'isExpanded', false)),
                                 });
                             }}
                         >

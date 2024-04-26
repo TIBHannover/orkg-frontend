@@ -30,7 +30,7 @@ const VenuePage = () => {
     useEffect(() => {
         const loadVenueData = () => {
             // Get the venue
-            getResource(params.venueId).then(result => {
+            getResource(params.venueId).then((result) => {
                 setVenue(result);
                 setLoading(false);
                 document.title = `${result.label} - ORKG`;
@@ -50,7 +50,7 @@ const VenuePage = () => {
                 <div>
                     <TitleBar
                         buttonGroup={
-                            <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                            <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                                 <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                     <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
@@ -68,7 +68,7 @@ const VenuePage = () => {
                     <Container className="p-0">
                         {papers.length > 0 && (
                             <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
-                                {papers.map(resource => (
+                                {papers.map((resource) => (
                                     <PaperCard paper={convertPaperToNewFormat(resource)} key={`pc${resource.id}`} />
                                 ))}
                             </ListGroup>

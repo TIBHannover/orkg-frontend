@@ -24,7 +24,7 @@ const StyledSettingsMenu = styled.div`
         padding: 9px 10px 9px 15px;
         margin-bottom: 5px;
         transition: 0.3s background;
-        border-radius: ${props => props.theme.borderRadius};
+        border-radius: ${(props) => props.theme.borderRadius};
         cursor: pointer;
         width: 100%;
         text-decoration: none !important;
@@ -32,7 +32,7 @@ const StyledSettingsMenu = styled.div`
 
         &.active,
         &:hover {
-            background: ${props => props.theme.primary};
+            background: ${(props) => props.theme.primary};
             color: #fff;
         }
         &.active a {

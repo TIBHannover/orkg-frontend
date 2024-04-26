@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 export const VisualizationCard = styled.div`
     cursor: pointer;
-    border: ${props => (!props.isHovered ? '1px solid rgb(219,221,229)' : '1px solid #e8616169')};
+    border: ${(props) => (!props.isHovered ? '1px solid rgb(219,221,229)' : '1px solid #e8616169')};
     border-radius: 5px;
     width: 100%;
     height: 122px;
@@ -21,7 +21,7 @@ export const StyledChart = styled(Chart)`
     }
 `;
 
-const SingleVisualizationComponent = props => {
+const SingleVisualizationComponent = (props) => {
     const [isOpenViewModal, setIsOpenViewModal] = useState(false);
     const [renderingData, setRenderingData] = useState(undefined);
     const [selfVisModel] = useState(new SelfVisDataModel());
@@ -67,7 +67,7 @@ const SingleVisualizationComponent = props => {
             {isOpenViewModal && (
                 <ViewVisualizationModal
                     isOpen={isOpenViewModal}
-                    toggle={() => setIsOpenViewModal(v => !v)}
+                    toggle={() => setIsOpenViewModal((v) => !v)}
                     data={props.input}
                     onEditVisualization={handleEditVisualization}
                 />

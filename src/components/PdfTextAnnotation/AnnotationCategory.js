@@ -56,16 +56,16 @@ const SentenceWarning = styled(Icon)`
     }
 `;
 
-const updateHash = highlight => {
+const updateHash = (highlight) => {
     if (!document?.location?.hash) {
         return;
     }
     document.location.hash = `annotation-${highlight.id}`;
 };
 
-const AnnotationCategory = props => {
+const AnnotationCategory = (props) => {
     const { annotationClass } = props;
-    const annotations = useSelector(state => state.pdfTextAnnotation.annotations);
+    const annotations = useSelector((state) => state.pdfTextAnnotation.annotations);
     const annotationsFiltered = filter(annotations, { type: annotationClass.iri });
     const amount = annotationsFiltered.length;
     const { deleteAnnotation } = useDeleteAnnotation();
@@ -100,7 +100,7 @@ const AnnotationCategory = props => {
                     </AnnotationAmount>
                 </Tippy>
             </h2>
-            {annotationsFiltered.map(annotation => {
+            {annotationsFiltered.map((annotation) => {
                 const sentences = tokenizer.sentences(annotation.content.text);
                 const sentenceAmount = sentences.length;
                 const hasTooManySentences = sentenceAmount > MAX_SENTENCES_PER_ANNOTATION;
@@ -122,14 +122,14 @@ const AnnotationCategory = props => {
                         <div className="float-end">
                             <Tippy content="Edit annotation text">
                                 <span>
-                                    <Button className="p-0 text-body" color="link" onClick={e => handleEditClick(e, annotation.id)}>
+                                    <Button className="p-0 text-body" color="link" onClick={(e) => handleEditClick(e, annotation.id)}>
                                         <Icon icon={faPen} />
                                     </Button>
                                 </span>
                             </Tippy>{' '}
                             <Tippy content="Delete this annotation">
                                 <span>
-                                    <Button className="p-0 text-body" color="link" onClick={e => handleDeleteClick(e, annotation.id)}>
+                                    <Button className="p-0 text-body" color="link" onClick={(e) => handleDeleteClick(e, annotation.id)}>
                                         <Icon icon={faTrash} />
                                     </Button>
                                 </span>

@@ -17,7 +17,7 @@ const Classes = () => {
         document.title = 'Classes list - ORKG';
     });
 
-    const renderListItem = classItem => (
+    const renderListItem = (classItem) => (
         <ShortRecord key={classItem.id} header={classItem.label} href={reverse(ROUTES.CLASS, { id: classItem.id })}>
             {classItem.id}
         </ShortRecord>

@@ -16,7 +16,7 @@ const Observatories = ({ organizationsId }) => {
         const loadObservatories = () => {
             setIsLoadingObservatories(true);
             getAllObservatoriesByOrganizationId(organizationsId)
-                .then(observatories => {
+                .then((observatories) => {
                     if (observatories.length > 0) {
                         setObservatories(observatories);
                         setIsLoadingObservatories(false);
@@ -24,7 +24,7 @@ const Observatories = ({ organizationsId }) => {
                         setIsLoadingObservatories(false);
                     }
                 })
-                .catch(error => {
+                .catch((error) => {
                     setIsLoadingObservatories(false);
                 });
         };

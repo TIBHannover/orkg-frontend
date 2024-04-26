@@ -93,9 +93,9 @@ export default function TemplateHeader(props) {
                         <>
                             <Input
                                 value={draftLabel}
-                                onChange={e => setDraftLabel(e.target.value)}
-                                onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
-                                onBlur={e => {
+                                onChange={(e) => setDraftLabel(e.target.value)}
+                                onKeyDown={(e) => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
+                                onBlur={(e) => {
                                     commitChangeLabel();
                                     dispatch(toggleEditValue({ id: props.id }));
                                 }}

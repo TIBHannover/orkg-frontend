@@ -5,11 +5,11 @@ import { useSelector } from 'react-redux';
 import { Badge } from 'reactstrap';
 
 export default function ListEntryAmount() {
-    const sections = useSelector(state => state.list.sections);
+    const sections = useSelector((state) => state.list.sections);
 
     const entryAmount = sections
-        .filter(section => section.type === 'ListSection')
-        .map(section => section.entries.length)
+        .filter((section) => section.type === 'ListSection')
+        .map((section) => section.entries.length)
         .reduce((a, b) => a + b, 0);
 
     return (

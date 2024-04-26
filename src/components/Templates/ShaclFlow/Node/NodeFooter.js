@@ -7,10 +7,10 @@ import styled from 'styled-components';
 import { Badge } from 'reactstrap';
 
 const NodeFooterStyled = styled.div`
-    background: ${props => props.theme.lightDarker};
-    color: ${props => props.theme.secondaryDarker};
-    border-bottom-left-radius: ${props => props.theme.borderRadius};
-    border-bottom-right-radius: ${props => props.theme.borderRadius};
+    background: ${(props) => props.theme.lightDarker};
+    color: ${(props) => props.theme.secondaryDarker};
+    border-bottom-left-radius: ${(props) => props.theme.borderRadius};
+    border-bottom-right-radius: ${(props) => props.theme.borderRadius};
     font-size: 12px;
 `;
 

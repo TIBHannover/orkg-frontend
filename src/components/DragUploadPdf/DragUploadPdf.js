@@ -38,7 +38,7 @@ const FilePlaceholder = styled(Icon)`
 const DragUploadPdf = ({ pdf = null, onDrop: _onDrop }) => {
     const [isLoading, setIsLoading] = useState(false);
 
-    const onDrop = files => {
+    const onDrop = (files) => {
         _onDrop(files);
         setIsLoading(true);
     };

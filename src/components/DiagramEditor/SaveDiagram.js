@@ -65,7 +65,7 @@ function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagra
                 <>
                     Enter a diagram label
                     <div className="mt-2">
-                        <Input type="text" maxLength={MAX_LENGTH_INPUT} value={value} onChange={e => setValue(e.target.value)} />
+                        <Input type="text" maxLength={MAX_LENGTH_INPUT} value={value} onChange={(e) => setValue(e.target.value)} />
                     </div>
                 </>
             </ModalBody>

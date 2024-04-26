@@ -31,7 +31,7 @@ const ObservatoryCardStyled = styled(Card)`
 
 const CardFooterStyled = styled(CardFooter)`
     && {
-        background: ${props => props.theme.lightLighter};
+        background: ${(props) => props.theme.lightLighter};
     }
 `;
 
@@ -82,7 +82,7 @@ const ObservatoryItem = ({ observatory, onExiting, onExited, active }: Observato
                         {!isLoadingStats && pluralize('paper', stats.papers, true)}
                     </small>
                     <div className="float-end" style={{ height: '25px' }}>
-                        {observatory.members.slice(0, 5).map(contributor => (
+                        {observatory.members.slice(0, 5).map((contributor) => (
                             <UserAvatar key={contributor} userId={contributor} size={24} />
                         ))}
                     </div>

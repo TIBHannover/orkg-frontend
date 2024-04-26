@@ -13,7 +13,7 @@ export default {
     },
 };
 
-const Template = args => <ImagesAsFigures {...args} />;
+const Template = (args) => <ImagesAsFigures {...args} />;
 
 export const Default = Template.bind({});
 

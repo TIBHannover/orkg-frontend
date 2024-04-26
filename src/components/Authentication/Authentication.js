@@ -23,7 +23,7 @@ const AnimationContainer = styled(CSSTransition)`
 
 function Authentication() {
     const dispatch = useDispatch();
-    const { dialogIsOpen, action, user } = useSelector(state => state.auth);
+    const { dialogIsOpen, action, user } = useSelector((state) => state.auth);
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();

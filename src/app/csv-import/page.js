@@ -13,11 +13,11 @@ import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
 const TableContainerStyled = styled.div`
     overflow: auto;
-    background: ${props => props.theme.lightLighter};
+    background: ${(props) => props.theme.lightLighter};
     font-size: 90%;
     max-height: 500px;
-    border: 2px solid ${props => props.theme.secondary};
-    border-radius: ${props => props.theme.borderRadius};
+    border: 2px solid ${(props) => props.theme.secondary};
+    border-radius: ${(props) => props.theme.borderRadius};
 `;
 
 const PARSER_OPTIONS = {
@@ -32,13 +32,13 @@ const CsvImport = () => {
     const [isFinished, setIsFinished] = useState(false);
     const { CSVReader } = useCSVReader();
 
-    const validateCsv = _data => {
+    const validateCsv = (_data) => {
         const validations = checkDataValidation(_data);
         return setError(validations);
     };
 
     const handleOnFileLoaded = ({ _data }) => {
-        setData(_data.map(r => r.map(s => (s ? s.trim() : ''))));
+        setData(_data.map((r) => r.map((s) => (s ? s.trim() : ''))));
         setIsFinished(false);
         validateCsv(_data);
     };
@@ -77,7 +77,7 @@ const CsvImport = () => {
                             <CSVReader
                                 accept=".csv, text/csv"
                                 config={PARSER_OPTIONS}
-                                onUploadAccepted={result => handleOnFileLoaded({ _data: result.data })}
+                                onUploadAccepted={(result) => handleOnFileLoaded({ _data: result.data })}
                             >
                                 {({ getRootProps, acceptedFile, ProgressBar }) => (
                                     <>
@@ -162,7 +162,7 @@ const CsvImport = () => {
                     <ConfirmBulkImport
                         data={data}
                         isOpen={isOpenConfirmModal}
-                        toggle={() => setIsOpenConfirmModal(v => !v)}
+                        toggle={() => setIsOpenConfirmModal((v) => !v)}
                         onFinish={() => setIsFinished(true)}
                     />
                 )}

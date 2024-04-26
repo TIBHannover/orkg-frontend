@@ -5,14 +5,14 @@ import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/
 
 function useAddProperty({ resourceId, syncBackend }) {
     const [showAddProperty, setShowAddProperty] = useState(false);
-    const canAddProperty = useSelector(state => canAddPropertyAction(state, resourceId));
-    const newProperties = useSelector(state => getNewPropertiesList(state));
+    const canAddProperty = useSelector((state) => canAddPropertyAction(state, resourceId));
+    const newProperties = useSelector((state) => getNewPropertiesList(state));
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
     const [propertyLabel, setPropertyLabel] = useState('');
 
     const dispatch = useDispatch();
 
-    const toggleConfirmNewProperty = useCallback(async label => {
+    const toggleConfirmNewProperty = useCallback(async (label) => {
         setPropertyLabel(label);
         setIsOpenConfirmModal(true);
     }, []);
@@ -42,7 +42,7 @@ function useAddProperty({ resourceId, syncBackend }) {
         if (isOpenConfirmModal) {
             setShowAddProperty(false);
         }
-        setIsOpenConfirmModal(v => !v);
+        setIsOpenConfirmModal((v) => !v);
     };
 
     const ConfirmPropertyModal = () =>

@@ -24,7 +24,7 @@ export const getSimilarContribution = ({ contributionId, nbResults = 5 }) => {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${simCompServiceUrl}/contribution/similar/?${params}`).then(response => response.payload.contributions);
+    return submitGetRequest(`${simCompServiceUrl}/contribution/similar/?${params}`).then((response) => response.payload.contributions);
 };
 
 /**
@@ -46,7 +46,7 @@ export const getComparison = ({ contributionIds = [], type = null, format = null
             arrayFormat: 'repeat',
         },
     );
-    return submitGetRequest(`${simCompServiceUrl}contribution/compare/?${params}`).then(response => response.payload.comparison);
+    return submitGetRequest(`${simCompServiceUrl}contribution/compare/?${params}`).then((response) => response.payload.comparison);
 };
 /**
  * Get saved thing result
@@ -66,7 +66,7 @@ export const getThing = ({ thingType, thingKey }) => {
     );
     return submitGetRequest(`${simCompServiceUrl}thing/?${params}`, {
         'Content-Type': 'application/json',
-    }).then(response => response.payload.thing);
+    }).then((response) => response.payload.thing);
 };
 
 /**

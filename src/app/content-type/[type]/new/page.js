@@ -49,7 +49,7 @@ const ContentTypeNew = () => {
         setSelectedClassId(params.type || TYPES[0].id);
     }, [params.type]);
 
-    const handleCreate = async e => {
+    const handleCreate = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         const _resource = await createResource(title, [selectedClassId]);
@@ -61,7 +61,7 @@ const ContentTypeNew = () => {
         <>
             <TitleBar>Add to ORKG</TitleBar>
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                {TYPES.map(type => (
+                {TYPES.map((type) => (
                     <Button
                         key={type.id}
                         color={type.id === selectedClassId ? 'primary' : 'link'}
@@ -84,7 +84,7 @@ const ContentTypeNew = () => {
                             <InputGroup>
                                 <Input
                                     value={title}
-                                    onChange={e => setTitle(e.target.value)}
+                                    onChange={(e) => setTitle(e.target.value)}
                                     type="text"
                                     maxLength={MAX_LENGTH_INPUT}
                                     name="value"

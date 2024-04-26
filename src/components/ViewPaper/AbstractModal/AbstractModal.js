@@ -9,7 +9,7 @@ import { setAbstract as setAbstractStore } from 'slices/viewPaperSlice';
 
 const AbstractModal = ({ toggle }) => {
     const [abstract, setAbstract] = useState('');
-    const abstractStore = useSelector(state => state.viewPaper.abstract);
+    const abstractStore = useSelector((state) => state.viewPaper.abstract);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -21,7 +21,7 @@ const AbstractModal = ({ toggle }) => {
         toggle();
     };
 
-    const stripLineBreaks = event => {
+    const stripLineBreaks = (event) => {
         event.preventDefault();
         let text = '';
         if (event.clipboardData || event.originalEvent.clipboardData) {
@@ -51,7 +51,7 @@ const AbstractModal = ({ toggle }) => {
                     className="form-control ps-2 pe-2"
                     minRows={8}
                     value={abstract}
-                    onChange={e => setAbstract(e.target.value)}
+                    onChange={(e) => setAbstract(e.target.value)}
                     onPaste={stripLineBreaks}
                 />
             </ModalBody>

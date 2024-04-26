@@ -30,17 +30,17 @@ const AddConference = () => {
     const [reviewType, setReviewType] = useState('');
     const [editorState, setEditorState] = useState('edit');
     const publicConferenceRoute = `${getPublicUrl()}${reverse(ROUTES.EVENT_SERIES, { id: ' ' })}`;
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
     const dispatch = useDispatch();
     const router = useRouter();
 
     useEffect(() => {
         document.title = 'Create conference series - ORKG';
         // make single-blind the default option
-        setReviewType(CONFERENCE_REVIEW_TYPE.find(t => t.label === 'Single-blind')?.id);
+        setReviewType(CONFERENCE_REVIEW_TYPE.find((t) => t.label === 'Single-blind')?.id);
     }, []);
 
-    const navigateToConference = displayId => {
+    const navigateToConference = (displayId) => {
         setEditorState('edit');
         setName('');
         setWebsite('');
@@ -103,7 +103,7 @@ const AddConference = () => {
                         <FormGroup>
                             <Label for="conferenceName">Name</Label>
                             <Input
-                                onChange={e => {
+                                onChange={(e) => {
                                     setName(e.target.value);
                                     setPermalink(
                                         slugify(e.target.value.trim(), {
@@ -131,7 +131,7 @@ const AddConference = () => {
                                 <InputGroup>
                                     <span className="input-group-text">{publicConferenceRoute}</span>
                                     <Input
-                                        onChange={e => setPermalink(e.target.value)}
+                                        onChange={(e) => setPermalink(e.target.value)}
                                         type="text"
                                         name="permalink"
                                         id="conferencePermalink"
@@ -146,7 +146,7 @@ const AddConference = () => {
                         <FormGroup>
                             <Label for="conferenceWebsite">Website</Label>
                             <Input
-                                onChange={e => setWebsite(e.target.value)}
+                                onChange={(e) => setWebsite(e.target.value)}
                                 type="text"
                                 name="website"
                                 id="conferenceWebsite"
@@ -159,7 +159,7 @@ const AddConference = () => {
                         <FormGroup>
                             <Label for="conferenceDate">Conference date</Label>
                             <Input
-                                onChange={e => setStartDate(e.target.value)}
+                                onChange={(e) => setStartDate(e.target.value)}
                                 type="date"
                                 name="date"
                                 id="conferenceDate"
@@ -170,15 +170,15 @@ const AddConference = () => {
                         <FormGroup>
                             <Label for="conferenceReviewType">Review process</Label>
                             <Input
-                                onChange={e => {
-                                    setReviewType(CONFERENCE_REVIEW_TYPE.find(t => t.id === e.target.value)?.id);
+                                onChange={(e) => {
+                                    setReviewType(CONFERENCE_REVIEW_TYPE.find((t) => t.id === e.target.value)?.id);
                                 }}
                                 value={reviewType}
                                 name="reviewType"
                                 type="select"
                                 id="conferenceReviewType"
                             >
-                                {CONFERENCE_REVIEW_TYPE.map(option => (
+                                {CONFERENCE_REVIEW_TYPE.map((option) => (
                                     <option key={option.id} value={option.id}>
                                         {option.label}
                                     </option>

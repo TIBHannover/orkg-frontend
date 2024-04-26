@@ -15,7 +15,7 @@ function EditGroup({ isEditGroupModalOpen, setIsEditGroupModalOpen, saveGroup, a
             <ModalBody>
                 {!currentGroup?.id && "Enter an group label in the input below and click the 'Add group' button."}
                 <div className="mt-2">
-                    <Input value={value} onChange={event => setValue(event.target.value)} />
+                    <Input value={value} onChange={(event) => setValue(event.target.value)} />
                 </div>
             </ModalBody>
             <ModalFooter>

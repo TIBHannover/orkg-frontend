@@ -13,7 +13,7 @@ export default function BioassaySelectItem(props) {
             </div>
             <ListGroup className="listGroupEnlarge">
                 <div>
-                    {props.data.labels.map(labelKey => (
+                    {props.data.labels.map((labelKey) => (
                         <StatementsGroupStyle key={`p${labelKey.property.id}`} className="noTemplate">
                             <div className="row g-0">
                                 <PropertyStyle className="col-4" tabIndex="0">
@@ -27,7 +27,7 @@ export default function BioassaySelectItem(props) {
                                 </PropertyStyle>
                                 <ValuesStyle className="col-8 valuesList">
                                     <ListGroup flush className="px-3">
-                                        {labelKey.resources.map(resource => (
+                                        {labelKey.resources.map((resource) => (
                                             <ValueItemStyle key={`p${resource.id}`} className="suggested_value d-flex">
                                                 <div className="flex-grow-1">
                                                     <Label>
@@ -39,7 +39,7 @@ export default function BioassaySelectItem(props) {
                                                 <div>
                                                     <Input
                                                         type="checkbox"
-                                                        onChange={e => props.handleSelect(labelKey, resource)}
+                                                        onChange={(e) => props.handleSelect(labelKey, resource)}
                                                         checked={!!props.selectedItems?.[labelKey.property.id]?.includes(resource.id)}
                                                     />
                                                 </div>

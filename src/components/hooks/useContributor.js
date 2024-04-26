@@ -9,7 +9,7 @@ const useContributor = ({ userId }) => {
         if (userId) {
             setIsLoadingContributor(true);
             getContributorInformationById(userId)
-                .then(result => {
+                .then((result) => {
                     setContributor(result);
                     setIsLoadingContributor(false);
                 })

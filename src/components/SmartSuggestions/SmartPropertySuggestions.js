@@ -33,7 +33,7 @@ export const SmartPropertySuggestions = ({ properties, handleCreate }) => {
                 taskName: LLM_TASK_NAMES.RECOMMEND_PROPERTIES,
                 placeholders: { properties },
             });
-            const propertyPromises = llmResponse?.properties.map(propertyLabel =>
+            const propertyPromises = llmResponse?.properties.map((propertyLabel) =>
                 getPredicates({ q: propertyLabel, exact: true, size: 1, returnContent: true }),
             );
             const fetchedProperties = (await Promise.all(propertyPromises)).map((_properties, index) =>
@@ -57,7 +57,7 @@ export const SmartPropertySuggestions = ({ properties, handleCreate }) => {
         getChatResponse();
     }, [getChatResponse, isOpenSmartTooltip]);
 
-    const handleProblemClick = async property => {
+    const handleProblemClick = async (property) => {
         const selectedProperty = property;
         if (!property.id) {
             const _property = await createPredicate(property.label);
@@ -81,7 +81,7 @@ export const SmartPropertySuggestions = ({ properties, handleCreate }) => {
                     )}
                     {!isLoading && !isFailed && recommendedProperties.length > 0 && (
                         <div>
-                            {recommendedProperties.map(property => (
+                            {recommendedProperties.map((property) => (
                                 <DescriptionTooltip key={property.label} _class={ENTITIES.PREDICATE} id={property.id}>
                                     <Button
                                         color="smart-darker"
@@ -116,7 +116,7 @@ export const SmartPropertySuggestions = ({ properties, handleCreate }) => {
             handleReload={getChatResponse}
         >
             <Tippy content="Get suggestions for new properties">
-                <button className="btn btn-smart px-3 btn-sm" style={{ marginLeft: 1 }} onClick={() => setIsOpenSmartTooltip(v => !v)}>
+                <button className="btn btn-smart px-3 btn-sm" style={{ marginLeft: 1 }} onClick={() => setIsOpenSmartTooltip((v) => !v)}>
                     <Icon icon={faLightbulb} style={{ fontSize: '120%' }} />
                 </button>
             </Tippy>

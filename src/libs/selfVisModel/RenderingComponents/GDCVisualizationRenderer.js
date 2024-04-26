@@ -8,7 +8,7 @@ export const StyledChart = styled(Chart)`
     }
 `;
 
-const GDCVisualizationRenderer = props => {
+const GDCVisualizationRenderer = (props) => {
     // adding pre-processing step to render date items correctly;
 
     // this replace the date string with a new Date() obj
@@ -16,7 +16,7 @@ const GDCVisualizationRenderer = props => {
     const strModel = props.model.data.googleChartsData;
     strModel?.cols?.forEach((item, index) => {
         if (item.type === 'date') {
-            strModel?.rows?.forEach(rowItem => {
+            strModel?.rows?.forEach((rowItem) => {
                 const dateItem = rowItem.c[index];
                 dateItem.v = new Date(dateItem.v); // overwrite the date item
             });

@@ -19,7 +19,7 @@ class Password extends Component {
         };
     }
 
-    handleInputChange = e => {
+    handleInputChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value,
         });
@@ -51,7 +51,7 @@ class Password extends Component {
             new_password,
             new_matching_password,
         })
-            .then(response => {
+            .then((response) => {
                 toast.success('Your changes have been saved successfully');
                 this.setState({
                     errors: '',
@@ -61,7 +61,7 @@ class Password extends Component {
                     new_matching_password: '',
                 });
             })
-            .catch(err => {
+            .catch((err) => {
                 this.setState({
                     loading: false,
                     errors: err,

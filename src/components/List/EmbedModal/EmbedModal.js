@@ -13,8 +13,8 @@ import Tippy from '@tippyjs/react';
 
 function EmbedModal({ isOpen, toggle, id }) {
     const [width, setWidth] = useState('600px');
-    const list = useSelector(state => state.list.list);
-    const isPublished = useSelector(state => state.list.isPublished);
+    const list = useSelector((state) => state.list.list);
+    const isPublished = useSelector((state) => state.list.isPublished);
     const title = `ORKG list - ${list?.title}`;
     const src = `${env('NEXT_PUBLIC_URL')}${reverse(ROUTES.LIST_EMBED, {
         id,
@@ -53,7 +53,7 @@ function EmbedModal({ isOpen, toggle, id }) {
                             <Col md={6}>
                                 <FormGroup>
                                     <Label for="iframe-width">Width</Label>
-                                    <Input id="iframe-width" name="select" type="select" value={width} onChange={e => setWidth(e.target.value)}>
+                                    <Input id="iframe-width" name="select" type="select" value={width} onChange={(e) => setWidth(e.target.value)}>
                                         <option value="400px">Small</option>
                                         <option value="600px">Medium</option>
                                         <option value="800px">Large</option>

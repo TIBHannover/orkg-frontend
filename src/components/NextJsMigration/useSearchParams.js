@@ -11,6 +11,6 @@ import { useSearchParams as useSearchParamsNext } from 'next/navigation';
 // export default useSearchParams;
 
 // NEXT-CODE
-const useSearchParams = params => useSearchParamsNext(params);
+const useSearchParams = (params) => useSearchParamsNext(params);
 
 export default useSearchParams;

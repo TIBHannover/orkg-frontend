@@ -11,7 +11,7 @@ const useSuggestions = () => {
     const [suggestedClasses, setSuggestedClasses] = useState([]);
 
     const getSuggestedClasses = useCallback(
-        async _sentence => {
+        async (_sentence) => {
             if (isLoading || _sentence === sentence) {
                 return;
             }
@@ -19,12 +19,12 @@ const useSuggestions = () => {
             setIsLoading(true);
             setSentence(_sentence);
 
-            const labels = classes.filter(_class => _class.suggestedProperty).map(_class => _class.label);
+            const labels = classes.filter((_class) => _class.suggestedProperty).map((_class) => _class.label);
             classifySentence({
                 sentence: _sentence,
                 labels,
             })
-                .then(result => {
+                .then((result) => {
                     let _suggestedClasses = result.labels
                         .filter((_, index) => result.scores[index] > SCORE_THRESHOLD)
                         .map((label, index) => findByLabel(label));
@@ -35,7 +35,7 @@ const useSuggestions = () => {
                     setSuggestedClasses(_suggestedClasses);
                     setIsLoading(false);
                 })
-                .catch(e => {
+                .catch((e) => {
                     setSuggestedClasses([]);
                     setIsLoading(false);
                 });

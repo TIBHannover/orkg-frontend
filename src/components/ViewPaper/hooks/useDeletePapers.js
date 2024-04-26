@@ -25,15 +25,15 @@ function useDeletePapers({ paperIds, redirect = false, finishLoadingCallback = (
         if (confirm) {
             setIsLoading(true);
 
-            const promises = paperIds.map(id => {
+            const promises = paperIds.map((id) => {
                 // set the class of paper to DeletedPapers
                 const promisePaper = updateResourceClasses(id, [CLASSES.PAPER_DELETED]);
                 // set the class of paper of contributions to DeletedContribution
                 const promisesContributions = getStatementsBySubjectAndPredicate({
                     subjectId: id,
                     predicateId: PREDICATES.HAS_CONTRIBUTION,
-                }).then(contributions =>
-                    Promise.all(contributions.map(contribution => updateResourceClasses(contribution.object.id, [CLASSES.CONTRIBUTION_DELETED]))),
+                }).then((contributions) =>
+                    Promise.all(contributions.map((contribution) => updateResourceClasses(contribution.object.id, [CLASSES.CONTRIBUTION_DELETED]))),
                 );
                 return Promise.all([promisePaper, promisesContributions]);
             });

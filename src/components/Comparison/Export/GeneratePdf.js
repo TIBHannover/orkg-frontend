@@ -9,7 +9,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 // FIXME: svg icons look ugly while exporting, so hide them before generating the PDF
 // TODO: currently the PDF file has dimensions based on the table, it is better to
 // have A4 landscape dimensions and fit the table by resizing it
-const GeneratePdf = props => {
+const GeneratePdf = (props) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleExport = async () => {
@@ -34,7 +34,7 @@ const GeneratePdf = props => {
         pdf.addImage(imgData, 'PNG', 5, 5);
 
         // Body
-        const promises = allRows.map(row => html2canvas(row));
+        const promises = allRows.map((row) => html2canvas(row));
         const allCanvasRows = await Promise.all(promises);
         allCanvasRows.map((can, i) => {
             const imgData2 = can.toDataURL('image/png');

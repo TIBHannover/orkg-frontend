@@ -20,7 +20,7 @@ const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate = null, show
         const updatedResource = await updateResource(
             resource.id,
             label,
-            classes.map(c => c.id),
+            classes.map((c) => c.id),
         );
         if (updatedResource && afterUpdate) {
             afterUpdate(updatedResource);
@@ -57,7 +57,7 @@ const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate = null, show
                         type="text"
                         maxLength={MAX_LENGTH_INPUT}
                         value={label}
-                        onChange={e => setLabel(e.target.value)}
+                        onChange={(e) => setLabel(e.target.value)}
                     />
                 </FormGroup>
                 <FormGroup>

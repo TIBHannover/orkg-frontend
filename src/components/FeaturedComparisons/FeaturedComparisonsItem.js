@@ -11,7 +11,7 @@ const Comparison = styled(Card)`
     border-width: 1px !important; //TODO: remove once style of 1px border is applied globally
     cursor: pointer;
     background: #f7f7f7 !important;
-    color: ${props => props.theme.bodyColor};
+    color: ${(props) => props.theme.bodyColor};
     &:hover {
         text-decoration: none !important;
     }

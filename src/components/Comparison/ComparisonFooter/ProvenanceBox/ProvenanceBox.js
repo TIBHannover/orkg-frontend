@@ -48,9 +48,9 @@ const StyledOrganizationCard = styled.div`
 
 function ProvenanceBox() {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
-    const id = useSelector(state => state.comparison.comparisonResource.id);
-    const anonymized = useSelector(state => state.comparison.comparisonResource?.anonymized ?? false);
-    const user = useSelector(state => state.auth.user);
+    const id = useSelector((state) => state.comparison.comparisonResource.id);
+    const anonymized = useSelector((state) => state.comparison.comparisonResource?.anonymized ?? false);
+    const user = useSelector((state) => state.auth.user);
     const { createdBy } = useCreator();
     const { observatory, updateCallBack } = useProvenance();
 
@@ -113,7 +113,7 @@ function ProvenanceBox() {
                                 <Link
                                     className="logoContainer"
                                     href={reverse(ROUTES.ORGANIZATION, {
-                                        type: ORGANIZATIONS_TYPES.find(t => t.id === observatory.organization.type)?.label,
+                                        type: ORGANIZATIONS_TYPES.find((t) => t.id === observatory.organization.type)?.label,
                                         id: observatory.organization.display_id,
                                     })}
                                 >
@@ -134,7 +134,7 @@ function ProvenanceBox() {
                     resourceId={id}
                     observatory={!isEmpty(observatory) ? observatory : null}
                     organization={!isEmpty(observatory) && !isEmpty(observatory.organization) ? observatory.organization : null}
-                    toggle={() => setShowAssignObservatory(v => !v)}
+                    toggle={() => setShowAssignObservatory((v) => !v)}
                 />
             </Row>
         </div>

@@ -9,7 +9,7 @@ function HistoryModal({ comparedComparisonId, toggle, showDialog, comparisonId }
     const { versions: comparisonVersions, isLoading, loadVersions } = useComparisonVersions({ comparisonId });
 
     const versions = !isLoading
-        ? comparisonVersions.map(version => ({
+        ? comparisonVersions.map((version) => ({
               ...version,
               isSelected: comparisonId === version.id || comparedComparisonId === version.id,
               link: reverse(ROUTES.COMPARISON, { comparisonId: version.id }),

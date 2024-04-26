@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { stringifyType } from 'components/Comparison/Filters/helpers';
 import PropTypes from 'prop-types';
 
-const FilterWrapper = props => {
+const FilterWrapper = (props) => {
     const { rules, disabled } = props.data;
     const [content, setContent] = useState('');
 

@@ -24,7 +24,7 @@ const PaperOption = ({ children, ...innerProps }) => {
                     <Tippy content="Open existing ORKG entity">
                         <span className="ms-auto">
                             <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: innerProps?.data?.id })} target="_blank">
-                                <Badge onClick={e => e.stopPropagation()} color="light" className="px-2">
+                                <Badge onClick={(e) => e.stopPropagation()} color="light" className="px-2">
                                     {innerProps?.data?.id}
                                 </Badge>
                             </Link>

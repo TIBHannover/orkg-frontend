@@ -5,7 +5,7 @@ import REGEX from 'constants/regex';
 import PropTypes from 'prop-types';
 import { renderToString } from 'react-dom/server';
 
-const Doi = props => {
+const Doi = (props) => {
     const supportedValues = new RegExp(REGEX.DOI_ID);
     const label = props.children;
     const labelToText = renderToString(label);

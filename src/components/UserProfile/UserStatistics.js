@@ -47,7 +47,7 @@ const UserStatistics = ({ userId }) => {
             }
             try {
                 setIsLoading(true);
-                const statsPromises = STATISTICS.map(statistic => getResources({ include: [statistic.class], createdBy: userId }));
+                const statsPromises = STATISTICS.map((statistic) => getResources({ include: [statistic.class], createdBy: userId }));
                 const _stats = (await Promise.all(statsPromises)).map((statistic, index) => ({
                     number: statistic.totalElements,
                     label: STATISTICS[index].label,

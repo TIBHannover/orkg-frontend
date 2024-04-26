@@ -41,7 +41,7 @@ function useResearchProblemContent({
                     sortBy: 'created_at',
                     desc: true,
                     visibility: VISIBILITY_FILTERS.NON_FEATURED,
-                    classes: classesFilter.map(c => c.id),
+                    classes: classesFilter.map((c) => c.id),
                 });
                 const featuredContentService = getContentByResearchProblemIdAndClasses({
                     id: researchProblemId,
@@ -50,7 +50,7 @@ function useResearchProblemContent({
                     sortBy: 'created_at',
                     desc: true,
                     visibility: VISIBILITY_FILTERS.FEATURED,
-                    classes: classesFilter.map(c => c.id),
+                    classes: classesFilter.map((c) => c.id),
                 });
                 contentService = Promise.all([noFeaturedContentService, featuredContentService]).then(([noFeaturedContent, featuredContent]) => {
                     const combinedComparisons = mergeAlternate(noFeaturedContent.content, featuredContent.content);
@@ -68,36 +68,36 @@ function useResearchProblemContent({
                     sortBy: 'created_at',
                     desc: true,
                     visibility: sort,
-                    classes: classesFilter.map(c => c.id),
+                    classes: classesFilter.map((c) => c.id),
                 });
             }
 
             contentService
-                .then(result => {
+                .then((result) => {
                     // Fetch the data of each content
                     getStatementsBySubjects({
-                        ids: result.content.map(p => p.id),
+                        ids: result.content.map((p) => p.id),
                     })
-                        .then(statements => addAuthorsToStatementBundle(statements))
-                        .then(contentsStatements => {
-                            const dataObjects = contentsStatements.map(statements => {
+                        .then((statements) => addAuthorsToStatementBundle(statements))
+                        .then((contentsStatements) => {
+                            const dataObjects = contentsStatements.map((statements) => {
                                 const resourceSubject = find(result.content, {
                                     id: statements.id,
                                 });
                                 return getDataBasedOnType(resourceSubject, statements.statements);
                             });
-                            setItems(prevResources => {
+                            setItems((prevResources) => {
                                 let newItems = groupVersionsOfComparisons([
-                                    ...flatten([...prevResources.map(c => c.versions ?? []), ...prevResources]),
+                                    ...flatten([...prevResources.map((c) => c.versions ?? []), ...prevResources]),
                                     ...dataObjects,
                                 ]);
                                 if (sort === 'combined') {
                                     newItems = mergeAlternate(
-                                        newItems.filter(i => i.featured),
-                                        newItems.filter(i => !i.featured),
+                                        newItems.filter((i) => i.featured),
+                                        newItems.filter((i) => !i.featured),
                                     );
                                 }
-                                return flatten([...prevResources, newItems.filter(t => t && !prevResources.map(p => p.id).includes(t.id))]);
+                                return flatten([...prevResources, newItems.filter((t) => t && !prevResources.map((p) => p.id).includes(t.id))]);
                             });
 
                             setIsLoading(false);
@@ -143,7 +143,7 @@ function useResearchProblemContent({
                         : reverse(ROUTES.RESEARCH_PROBLEM_NO_SLUG, {
                               researchProblemId,
                           })
-                }?sort=${sort}&classesFilter=${classesFilter.map(c => c.id).join(',')}`,
+                }?sort=${sort}&classesFilter=${classesFilter.map((c) => c.id).join(',')}`,
                 { replace: true },
             );
         }

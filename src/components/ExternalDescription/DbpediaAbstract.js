@@ -33,20 +33,20 @@ class DbpediaAbstract extends Component {
         this.setState({ isLoading: true, loadingFailed: false });
         const resource = this.props.externalResource;
         getAbstractByURI(resource)
-            .then(_abstract => {
+            .then((_abstract) => {
                 this.setState({
                     abstract: _abstract,
                     isLoading: false,
                     loadingFailed: !_abstract,
                 });
             })
-            .catch(error => {
+            .catch((error) => {
                 this.setState({ isLoading: false, loadingFailed: true });
             });
     };
 
     handleReadMore = () => {
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             collapsed: !prevState.collapsed,
         }));
     };

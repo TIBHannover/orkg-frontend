@@ -10,7 +10,7 @@ function useResearchProblemContributors({ researchProblemId, pageSize = 30 }) {
     const [contributors, setContributors] = useState([]);
 
     const loadContributors = useCallback(
-        page => {
+        (page) => {
             setIsLoading(true);
             // Get the Contributors of research problem
             getContributorsByResearchProblemId({
@@ -18,9 +18,9 @@ function useResearchProblemContributors({ researchProblemId, pageSize = 30 }) {
                 page,
                 size: pageSize,
             })
-                .then(result => {
+                .then((result) => {
                     if (result.length > 0) {
-                        setContributors(prevResources => [...prevResources, ...result]);
+                        setContributors((prevResources) => [...prevResources, ...result]);
                         setIsLoading(false);
                         setHasNextPage(!(result.length < pageSize || result.length === 0));
                         setIsLastPageReached(false);
@@ -33,7 +33,7 @@ function useResearchProblemContributors({ researchProblemId, pageSize = 30 }) {
                         setIsLoadingFailed(false);
                     }
                 })
-                .catch(e => {
+                .catch((e) => {
                     setContributors([]);
                     setIsLoading(false);
                     setHasNextPage(false);

@@ -7,7 +7,7 @@ import CellRenderer from 'libs/selfVisModel/RenderingComponents/CellRenderer';
 import DropDownMapperSelector from 'libs/selfVisModel/RenderingComponents/DropdownMapperSelector';
 import CheckboxSelector from 'libs/selfVisModel/RenderingComponents/CheckBoxSelector';
 
-const CellSelector = props => {
+const CellSelector = (props) => {
     const [selfVisModel] = useState(new SelfVisDataModel());
     const [source, target] = useSingleton();
 
@@ -65,7 +65,7 @@ const CellSelector = props => {
                                             <CheckboxSelector
                                                 label=""
                                                 initializedValue={selfVisModel.mrrModel.propertyAnchors[j - 1]}
-                                                handleCheckboxChange={v => toggleCheckboxForCol(j - 1, v)}
+                                                handleCheckboxChange={(v) => toggleCheckboxForCol(j - 1, v)}
                                                 cbx_id={`useValue+${i}_${j}`}
                                                 key={`useValue+${i}_${j}`}
                                             />

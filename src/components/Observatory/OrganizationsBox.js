@@ -16,7 +16,7 @@ import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
 const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observatoryId, toggleOrganizationItem, isEditMode }) => {
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
     const [showAddOrganizationDialog, setShowAddOrganizationDialog] = useState(false);
     const [organizations, setOrganizations] = useState([]);
 
@@ -24,9 +24,9 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
         setOrganizations(organizationsList);
     }, [organizationsList]);
 
-    const deleteOrganization = async organization => {
+    const deleteOrganization = async (organization) => {
         await deleteOrganizationFromObservatory(observatoryId, organization.id)
-            .then(_ => {
+            .then((_) => {
                 toggleOrganizationItem(organization);
                 toast.success('Organization deleted successfully');
             })
@@ -40,7 +40,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
             <h5>
                 Organizations{' '}
                 {isEditMode && !!user && user.isCurationAllowed && (
-                    <Button outline size="sm" className="float-end" onClick={() => setShowAddOrganizationDialog(v => !v)}>
+                    <Button outline size="sm" className="float-end" onClick={() => setShowAddOrganizationDialog((v) => !v)}>
                         <Icon icon={faPlus} /> Add
                     </Button>
                 )}
@@ -99,7 +99,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
             )}
             <AddOrganization
                 showDialog={showAddOrganizationDialog}
-                toggle={() => setShowAddOrganizationDialog(v => !v)}
+                toggle={() => setShowAddOrganizationDialog((v) => !v)}
                 id={observatoryId}
                 organizations={organizations}
                 toggleOrganizationItem={toggleOrganizationItem}

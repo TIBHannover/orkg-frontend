@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import { Alert } from 'reactstrap';
 
 const TitleWarningAlert = () => {
-    const fetchAbstractTitle = useSelector(state => state.viewPaper.fetchAbstractTitle);
+    const fetchAbstractTitle = useSelector((state) => state.viewPaper.fetchAbstractTitle);
 
     return (
         fetchAbstractTitle && (

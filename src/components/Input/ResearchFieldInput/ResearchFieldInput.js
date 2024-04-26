@@ -30,7 +30,7 @@ const ResearchFieldInput = ({ value = '', onChange, inputId = '', isDisabled = f
                 value={value || null}
                 isClearable={false}
                 onBlur={() => setInputValue('')}
-                onChangeInputValue={e => setInputValue(e)}
+                onChangeInputValue={(e) => setInputValue(e)}
                 inputValue={inputValue}
                 isDisabled={isDisabled}
             />
@@ -42,7 +42,7 @@ const ResearchFieldInput = ({ value = '', onChange, inputId = '', isDisabled = f
             {isOpenResearchFieldModal && (
                 <ResearchFieldSelectorModal
                     isOpen
-                    toggle={() => setIsOpenResearchFieldModal(v => !v)}
+                    toggle={() => setIsOpenResearchFieldModal((v) => !v)}
                     onSelectField={handleSelectField}
                     title={title}
                     abstract={abstract}

@@ -34,22 +34,22 @@ class ExportCitation extends Component {
 
     getCitation = () => {
         Promise.all(
-            this.CITATION_STYLES.map(s =>
+            this.CITATION_STYLES.map((s) =>
                 getCitationByDOI(this.props.DOI, s.header ? undefined : s.styleID, s.header ? s.header : undefined).catch(
-                    error => 'Failed to load citation',
+                    (error) => 'Failed to load citation',
                 ),
             ),
-        ).then(citations => {
+        ).then((citations) => {
             this.setState({
                 citations: zipObject(
-                    this.CITATION_STYLES.map(s => s.styleID),
+                    this.CITATION_STYLES.map((s) => s.styleID),
                     citations,
                 ),
             });
         });
     };
 
-    selectTab = tab => {
+    selectTab = (tab) => {
         this.setState({
             selectedTab: tab,
         });
@@ -68,7 +68,7 @@ class ExportCitation extends Component {
                 <ModalHeader toggle={this.props.toggle}>Export Citation</ModalHeader>
                 <ModalBody>
                     <Nav tabs className="mb-4">
-                        {this.CITATION_STYLES.map(style => (
+                        {this.CITATION_STYLES.map((style) => (
                             <NavItem key={`navItem${style.styleTabID}`}>
                                 <NavLink
                                     href="#"
@@ -81,7 +81,7 @@ class ExportCitation extends Component {
                         ))}
                     </Nav>
                     <TabContent activeTab={this.state.selectedTab}>
-                        {this.CITATION_STYLES.map(style => (
+                        {this.CITATION_STYLES.map((style) => (
                             <TabPane key={`tabPane${style.styleTabID}`} tabId={style.styleTabID}>
                                 <p>
                                     <Textarea

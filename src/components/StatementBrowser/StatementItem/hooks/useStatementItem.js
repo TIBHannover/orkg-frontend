@@ -18,13 +18,15 @@ import classNames from 'classnames';
 
 function useStatementItem({ propertyId, resourceId, syncBackend }) {
     const dispatch = useDispatch();
-    const property = useSelector(state => state.statementBrowser.properties.byId[propertyId]);
-    const values = useSelector(state => state.statementBrowser.values);
+    const property = useSelector((state) => state.statementBrowser.properties.byId[propertyId]);
+    const values = useSelector((state) => state.statementBrowser.values);
     const [predicateLabel, setPredicateLabel] = useState(property.label);
-    const propertyShape = useSelector(state => getPropertyShapesByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)?.[0]);
-    const canAddValue = useSelector(state => canAddValueAction(state, resourceId || state.statementBrowser.selectedResource, propertyId));
-    const canDeleteProperty = useSelector(state => canDeletePropertyAction(state, resourceId || state.statementBrowser.selectedResource, propertyId));
-    const propertiesAsLinks = useSelector(state => state.statementBrowser.propertiesAsLinks);
+    const propertyShape = useSelector((state) => getPropertyShapesByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)?.[0]);
+    const canAddValue = useSelector((state) => canAddValueAction(state, resourceId || state.statementBrowser.selectedResource, propertyId));
+    const canDeleteProperty = useSelector((state) =>
+        canDeletePropertyAction(state, resourceId || state.statementBrowser.selectedResource, propertyId),
+    );
+    const propertiesAsLinks = useSelector((state) => state.statementBrowser.propertiesAsLinks);
 
     const propertyOptionsClasses = classNames({
         propertyOptions: true,
@@ -34,11 +36,11 @@ function useStatementItem({ propertyId, resourceId, syncBackend }) {
         const getPredicateLabel = () => {
             if (property.label.match(new RegExp('^R[0-9]*$'))) {
                 getResource(property.label)
-                    .catch(e => {
+                    .catch((e) => {
                         console.log(e);
                         setPredicateLabel(property.label);
                     })
-                    .then(r => {
+                    .then((r) => {
                         setPredicateLabel(`${r.label} (${property.label})`);
                     });
             } else {
@@ -71,7 +73,7 @@ function useStatementItem({ propertyId, resourceId, syncBackend }) {
                             `${property.valueIds.length} ${property.valueIds.length === 1 ? 'Statement' : 'Statements'} deleted successfully`,
                         );
                     })
-                    .catch(e => {
+                    .catch((e) => {
                         dispatch(setIsDeletingProperty({ id: propertyId, status: false }));
                         toast.error(`Something went wrong while deleting the ${property.valueIds.length === 1 ? 'statement' : 'statements'}.`);
                     });
@@ -94,7 +96,7 @@ function useStatementItem({ propertyId, resourceId, syncBackend }) {
     }, [dispatch, property, propertyId, resourceId, syncBackend, values.byId]);
 
     const changePredicate = useCallback(
-        async newProperty => {
+        async (newProperty) => {
             dispatch(setIsSavingProperty({ id: propertyId, status: true }));
             if (syncBackend) {
                 const predicate = property;

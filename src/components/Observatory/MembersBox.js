@@ -12,7 +12,7 @@ import { getUsersByObservatoryId } from 'services/backend/observatories';
 import { deleteUserFromObservatoryById } from 'services/backend/users';
 
 const MembersBox = ({ observatoryId, organizationsList, isEditMode }) => {
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
     const [openModal, setOpenModal] = useState(false);
     const [showAddMemberDialog, setShowAddMemberDialog] = useState(false);
     const [userData, setUserData] = useState('');
@@ -46,10 +46,10 @@ const MembersBox = ({ observatoryId, organizationsList, isEditMode }) => {
         setUserData(user);
     }, [user]);
 
-    const deleteObservatoryMember = async member => {
+    const deleteObservatoryMember = async (member) => {
         await deleteUserFromObservatoryById(member.id)
-            .then(_ => {
-                setMembers(v => v.filter(t => t !== member));
+            .then((_) => {
+                setMembers((v) => v.filter((t) => t !== member));
                 toast.success('Member deleted successfully');
             })
             .catch(() => {
@@ -61,7 +61,7 @@ const MembersBox = ({ observatoryId, organizationsList, isEditMode }) => {
         <div className="box rounded-3 p-3 flex-grow-1">
             <h5>Members</h5>
             {isEditMode && !!user && user.isCurationAllowed && (
-                <Button outline size="sm" style={{ float: 'right', marginTop: '-33px' }} onClick={() => setShowAddMemberDialog(v => !v)}>
+                <Button outline size="sm" style={{ float: 'right', marginTop: '-33px' }} onClick={() => setShowAddMemberDialog((v) => !v)}>
                     <Icon icon={faPlus} /> Add
                 </Button>
             )}
@@ -74,7 +74,7 @@ const MembersBox = ({ observatoryId, organizationsList, isEditMode }) => {
                                     <ContributorCard
                                         contributor={{
                                             ...member,
-                                            subTitle: organizationsList.find(o => o.id.includes(member.organization_id))?.name,
+                                            subTitle: organizationsList.find((o) => o.id.includes(member.organization_id))?.name,
                                         }}
                                         options={
                                             userData && userData.isCurationAllowed
@@ -94,7 +94,7 @@ const MembersBox = ({ observatoryId, organizationsList, isEditMode }) => {
                             ))}
                             {totalElements > 3 && (
                                 <div className="text-center mt-3">
-                                    <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
+                                    <Button size="sm" onClick={() => setOpenModal((v) => !v)} color="light">
                                         View more
                                     </Button>
                                 </div>
@@ -106,8 +106,8 @@ const MembersBox = ({ observatoryId, organizationsList, isEditMode }) => {
                 {isLoading && page === 0 && <div className="text-center mt-4 mb-4">Loading members ...</div>}
 
                 {openModal && (
-                    <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
-                        <ModalHeader toggle={() => setOpenModal(v => !v)}>Observatory members</ModalHeader>
+                    <Modal isOpen={openModal} toggle={() => setOpenModal((v) => !v)} size="lg">
+                        <ModalHeader toggle={() => setOpenModal((v) => !v)}>Observatory members</ModalHeader>
                         <ModalBody>
                             <div className="clearfix">
                                 {members.map((member, index) => (
@@ -115,7 +115,7 @@ const MembersBox = ({ observatoryId, organizationsList, isEditMode }) => {
                                         <ContributorCard
                                             contributor={{
                                                 ...member,
-                                                subTitle: organizationsList.find(o => o.id.includes(member.organization_id))?.name,
+                                                subTitle: organizationsList.find((o) => o.id.includes(member.organization_id))?.name,
                                             }}
                                             options={
                                                 isEditMode && userData && userData.isCurationAllowed
@@ -160,10 +160,10 @@ const MembersBox = ({ observatoryId, organizationsList, isEditMode }) => {
 
                 <AddMember
                     showDialog={showAddMemberDialog}
-                    toggle={() => setShowAddMemberDialog(v => !v)}
+                    toggle={() => setShowAddMemberDialog((v) => !v)}
                     observatoryId={observatoryId}
                     organizationsList={organizationsList}
-                    updateObservatoryMembers={member => setMembers(v => [member, ...v.filter(m => m.id !== member.id)])}
+                    updateObservatoryMembers={(member) => setMembers((v) => [member, ...v.filter((m) => m.id !== member.id)])}
                 />
             </div>
         </div>

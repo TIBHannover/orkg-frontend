@@ -27,7 +27,7 @@ const ResearchFieldSelectorModal = ({ isOpen, toggle, onSelectField, title = nul
     );
 
     const handleSelect = () => {
-        const field = researchFields.find(rf => rf.id === selectedResearchField);
+        const field = researchFields.find((rf) => rf.id === selectedResearchField);
         onSelectField({
             id: selectedResearchField,
             label: field.label || '',

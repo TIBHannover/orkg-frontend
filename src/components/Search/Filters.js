@@ -20,7 +20,7 @@ const Filters = () => {
         decodedValue = value;
     }
 
-    const handleSubmitSearch = _value => {
+    const handleSubmitSearch = (_value) => {
         if (isString(_value) && _value) {
             submitSearch(_value);
         }
@@ -33,11 +33,11 @@ const Filters = () => {
                 <Input
                     type="text"
                     value={decodedValue}
-                    onChange={e => setValue(e.target.value)}
+                    onChange={(e) => setValue(e.target.value)}
                     placeholder="Search..."
                     id="searchQuery"
                     name="value"
-                    onKeyDown={e => e.key === 'Enter' && handleSubmitSearch(value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSubmitSearch(value)}
                     maxLength={MAX_LENGTH_INPUT}
                 />
                 <Button onClick={() => handleSubmitSearch(value)} color="secondary" className="ps-2 pe-2">
@@ -48,7 +48,7 @@ const Filters = () => {
                 <>
                     <hr className="mt-3 mb-3" />
                     <FormGroup check className="mb-0">
-                        <Input type="checkbox" id="createdBy" onChange={e => setCreatedBy(createdBy ? null : user.id)} checked={!!createdBy} />
+                        <Input type="checkbox" id="createdBy" onChange={(e) => setCreatedBy(createdBy ? null : user.id)} checked={!!createdBy} />
                         <Label check for="createdBy" className="mb-0">
                             <span>
                                 Content created by <UserAvatar userId={createdBy || user.id} showDisplayName={true} />
@@ -62,7 +62,7 @@ const Filters = () => {
 
             <Label>Filter by type</Label>
 
-            {DEFAULT_FILTERS.map(filter => (
+            {DEFAULT_FILTERS.map((filter) => (
                 <FormGroup key={`filter-${filter.id}`} check className="mb-0">
                     <Tippy disabled={!(createdBy && !filter.isCreatedByActive)} content="This filter is not available for content created by a user.">
                         <span>
@@ -71,7 +71,7 @@ const Filters = () => {
                                 type="checkbox"
                                 id={`filter${filter.id}`}
                                 onChange={() => toggleFilter(filter)}
-                                checked={selectedFilters.map(sf => sf.id).includes(filter.id) && (filter.isCreatedByActive || !createdBy)}
+                                checked={selectedFilters.map((sf) => sf.id).includes(filter.id) && (filter.isCreatedByActive || !createdBy)}
                             />
                             <Label check for={`filter${filter.id}`} className="mb-0">
                                 <span>{filter.label}</span>
@@ -94,7 +94,7 @@ const Filters = () => {
                     }
                 }}
                 placeholder="Select a filter"
-                value={selectedFilters.filter(sf => !DEFAULT_FILTERS.map(df => df.id).includes(sf.id))}
+                value={selectedFilters.filter((sf) => !DEFAULT_FILTERS.map((df) => df.id).includes(sf.id))}
                 autoLoadOption={true}
                 openMenuOnFocus={true}
                 allowCreate={false}

@@ -18,7 +18,7 @@ const Diagrams = () => {
         document.title = 'Diagrams - ORKG';
     });
 
-    const renderListItem = diagram => <DiagramCard key={diagram?.id} diagram={diagram} />;
+    const renderListItem = (diagram) => <DiagramCard key={diagram?.id} diagram={diagram} />;
 
     const fetchItems = async ({ resourceClass, page, pageSize }) => {
         let items = [];
@@ -36,10 +36,10 @@ const Diagrams = () => {
         });
 
         if (resources.length) {
-            items = await getStatementsBySubjects({ ids: resources.map(item => item.id) }).then(statements =>
-                statements.map(statementsForSubject =>
+            items = await getStatementsBySubjects({ ids: resources.map((item) => item.id) }).then((statements) =>
+                statements.map((statementsForSubject) =>
                     getVisualizationData(
-                        resources.find(resource => resource.id === statementsForSubject.id),
+                        resources.find((resource) => resource.id === statementsForSubject.id),
                         statementsForSubject.statements,
                     ),
                 ),

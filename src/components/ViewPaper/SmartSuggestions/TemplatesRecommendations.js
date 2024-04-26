@@ -8,10 +8,10 @@ import { TransitionGroup } from 'react-transition-group';
 import { ListGroup } from 'reactstrap';
 
 function TemplatesRecommendations({ target, title = '', abstract = '' }) {
-    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
+    const selectedResource = useSelector((state) => state.statementBrowser.selectedResource);
 
     const isContributionLevel = useSelector(
-        state => selectedResource && state.statementBrowser.resources.byId[selectedResource]?.classes?.includes(CLASSES.CONTRIBUTION),
+        (state) => selectedResource && state.statementBrowser.resources.byId[selectedResource]?.classes?.includes(CLASSES.CONTRIBUTION),
     );
     const { recommendedTemplates } = useTemplatesRecommendation({ title, abstract });
 
@@ -21,7 +21,7 @@ function TemplatesRecommendations({ target, title = '', abstract = '' }) {
             {isContributionLevel && (
                 <ListGroup>
                     <TransitionGroup component={null} height="30px">
-                        {recommendedTemplates.map(template => (
+                        {recommendedTemplates.map((template) => (
                             <AnimationContainer
                                 key={`tr${template.id}`}
                                 classNames="slide-left"

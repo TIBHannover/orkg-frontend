@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { getDiscussionCountByEntityId } from 'services/backend/discussions';
 
-const useDiscussionCount = entityId => {
+const useDiscussionCount = (entityId) => {
     const [discussionCount, setDiscussionCount] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 

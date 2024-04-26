@@ -62,7 +62,7 @@ class CustomizationPieChart extends Component {
         return <Alert color="danger">{msg}</Alert>;
     };
 
-    setErrorCode = val => {
+    setErrorCode = (val) => {
         this.setState({ errorDataNotSupported: true, errorValue: val });
     };
 

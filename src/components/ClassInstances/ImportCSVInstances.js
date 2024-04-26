@@ -31,13 +31,13 @@ export default function ImportCSVInstances(props) {
     const handleImport = () => {
         if (data.length >= 2) {
             setIsImporting(true);
-            const dataCalls = data.slice(1).map(r => createResource(r[0], [props.classId]));
+            const dataCalls = data.slice(1).map((r) => createResource(r[0], [props.classId]));
             Promise.all(dataCalls)
-                .then(instances => {
+                .then((instances) => {
                     const statements = instances.map((newResource, index) => {
                         if (data[index + 1][1]) {
                             // add statement for URI
-                            return createLiteral(data[index + 1][1]).then(literal =>
+                            return createLiteral(data[index + 1][1]).then((literal) =>
                                 createLiteralStatement(newResource.id, PREDICATES.URL, literal.id),
                             );
                         }
@@ -65,7 +65,11 @@ export default function ImportCSVInstances(props) {
             <ModalBody>
                 Please import your CSV file that has two columns: <b>Label</b> and <b>URI</b> using the form below.
                 <div className="mt-3">
-                    <CSVReader accept=".csv, text/csv" config={PARSER_OPTIONS} onUploadAccepted={result => handleOnFileLoad({ _data: result.data })}>
+                    <CSVReader
+                        accept=".csv, text/csv"
+                        config={PARSER_OPTIONS}
+                        onUploadAccepted={(result) => handleOnFileLoad({ _data: result.data })}
+                    >
                         {({ getRootProps, acceptedFile, ProgressBar }) => (
                             <>
                                 <InputGroup>

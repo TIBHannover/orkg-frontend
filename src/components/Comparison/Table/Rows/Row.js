@@ -5,11 +5,11 @@ import { Draggable } from 'react-beautiful-dnd';
 import { useSelector } from 'react-redux';
 
 const Row = ({ row, index }) => {
-    const isEditing = useSelector(state => state.comparison.isEditing);
+    const isEditing = useSelector((state) => state.comparison.isEditing);
 
     return (
         <Draggable draggableId={row.id} key={row.getRowProps().key} index={index} isDragDisabled={!isEditing}>
-            {providedDraggable => (
+            {(providedDraggable) => (
                 <div
                     className="comparisonRow tr p-0"
                     ref={providedDraggable.innerRef}

@@ -23,7 +23,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
         pageSize: 10,
     });
     const [openModal, setOpenModal] = useState(false);
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
     const [showAddResearchProblemDialog, setShowAddResearchProblemDialog] = useState(false);
 
     return (
@@ -32,12 +32,12 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
                 <h5 className="flex-grow-1">Research problems</h5>{' '}
                 {isEditMode && !!user && user.isCurationAllowed && by === 'Observatory' && (
                     <>
-                        <Button outline size="sm" className="d-inline-block" onClick={() => setShowAddResearchProblemDialog(v => !v)}>
+                        <Button outline size="sm" className="d-inline-block" onClick={() => setShowAddResearchProblemDialog((v) => !v)}>
                             <Icon icon={faPlus} /> Add
                         </Button>
                         <AddResearchProblem
                             showDialog={showAddResearchProblemDialog}
-                            toggle={() => setShowAddResearchProblemDialog(v => !v)}
+                            toggle={() => setShowAddResearchProblemDialog((v) => !v)}
                             id={id}
                             setProblems={setProblems}
                             setTotalElements={setTotalElements}
@@ -48,7 +48,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
             <div className="flex-grow-1">
                 {!isLoading && totalElements > 0 && (
                     <ul className="ps-3 pt-2">
-                        {problems.slice(0, 5).map(rp => (
+                        {problems.slice(0, 5).map((rp) => (
                             <li key={`rp${rp.id}`}>
                                 <Tippy content={rp.label} disabled={rp.label?.length <= 70}>
                                     <Link href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>
@@ -97,7 +97,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
             )}
             {totalElements > 5 && (
                 <div className="text-center mt-2">
-                    <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
+                    <Button size="sm" onClick={() => setOpenModal((v) => !v)} color="light">
                         View more
                     </Button>
                     {openModal && <ResearchProblemsModal openModal={openModal} setOpenModal={setOpenModal} id={id} by={by} />}

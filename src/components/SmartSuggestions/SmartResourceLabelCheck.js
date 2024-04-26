@@ -79,7 +79,7 @@ export const SmartResourceLabelCheck = ({ label = '' }) => {
             handleReload={getChatResponse}
         >
             <Tippy content="Check if resource is properly structured">
-                <button className="btn btn-smart btn-sm px-3 " onClick={() => setIsOpenSmartTooltip(v => !v)}>
+                <button className="btn btn-smart btn-sm px-3 " onClick={() => setIsOpenSmartTooltip((v) => !v)}>
                     <Icon icon={faLightbulb} style={{ fontSize: '120%' }} />
                 </button>
             </Tippy>

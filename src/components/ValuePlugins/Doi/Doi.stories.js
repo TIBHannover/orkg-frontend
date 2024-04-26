@@ -13,7 +13,7 @@ export default {
     },
 };
 
-const Template = args => <Doi {...args} />;
+const Template = (args) => <Doi {...args} />;
 
 export const Default = Template.bind({});
 

@@ -23,12 +23,12 @@ const Comparison = () => {
     const { comparisonId } = useParams();
     const searchParams = useSearchParams();
     const { comparisonResource, navigateToNewURL } = useComparison({ id: comparisonId });
-    const isFailedLoadingMetadata = useSelector(state => state.comparison.isFailedLoadingMetadata);
-    const isLoadingResult = useSelector(state => state.comparison.isLoadingResult);
-    const isFailedLoadingResult = useSelector(state => state.comparison.isFailedLoadingResult);
-    const contributionsList = useSelector(state => state.comparison.configuration.contributionsList);
-    const fullWidth = useSelector(state => state.comparison.configuration.fullWidth);
-    const isEditing = useSelector(state => state.comparison.isEditing);
+    const isFailedLoadingMetadata = useSelector((state) => state.comparison.isFailedLoadingMetadata);
+    const isLoadingResult = useSelector((state) => state.comparison.isLoadingResult);
+    const isFailedLoadingResult = useSelector((state) => state.comparison.isFailedLoadingResult);
+    const contributionsList = useSelector((state) => state.comparison.configuration.contributionsList);
+    const fullWidth = useSelector((state) => state.comparison.configuration.fullWidth);
+    const isEditing = useSelector((state) => state.comparison.isEditing);
     const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 100px)' } : {};
     const [cookies] = useCookies(['useFullWidthForComparisonTable']);
     const isPublished = !!comparisonResource?.id || searchParams.get('noResource');

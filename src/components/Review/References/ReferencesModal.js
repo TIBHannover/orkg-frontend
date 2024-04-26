@@ -16,8 +16,8 @@ const ReferencesModal = ({ show, toggle }) => {
     const [isOpenReferenceModal, setIsOpenReferenceModal] = useState(false);
     const [editReference, setEditReference] = useState(null);
     const [referencesSorted, setReferencesSorted] = useState([]);
-    const references = useSelector(state => state.review.references);
-    const contributionId = useSelector(state => state.review.contributionId);
+    const references = useSelector((state) => state.review.references);
+    const contributionId = useSelector((state) => state.review.contributionId);
     const [isParsingBibtex, setIsParsingBibtex] = useState(false);
     const [isDeletingIDs, setIsDeletingIDs] = useState([]);
 
@@ -32,12 +32,12 @@ const ReferencesModal = ({ show, toggle }) => {
     const parseBibtex = useCallback(
         ({ bibtex, checkForDuplicate }) =>
             Cite.async(bibtex)
-                .then(parsedReference => {
+                .then((parsedReference) => {
                     const hasMultipleCitations = parsedReference.data.length > 1;
                     parsedReference = parsedReference.data[0];
 
                     if (checkForDuplicate) {
-                        const isKeyExisting = references.filter(reference => reference.parsedReference.id === parsedReference.id).length;
+                        const isKeyExisting = references.filter((reference) => reference.parsedReference.id === parsedReference.id).length;
                         if (isKeyExisting) {
                             throw new Error('Duplicate citation key');
                         }
@@ -49,7 +49,7 @@ const ReferencesModal = ({ show, toggle }) => {
                     setIsOpenReferenceModal(false);
                     return parsedReference;
                 })
-                .catch(e => {
+                .catch((e) => {
                     console.log(e);
                     toast.error(e.name === 'Error' ? e.message : 'An error occurred while parsing the BibTeX');
                     return null;
@@ -62,7 +62,7 @@ const ReferencesModal = ({ show, toggle }) => {
             setIsParsingBibtex(true);
 
             parseBibtex({ bibtex, checkForDuplicate: false })
-                .then(parsedReference => {
+                .then((parsedReference) => {
                     if (parsedReference) {
                         return dispatch(
                             updateReferenceAction({
@@ -81,11 +81,11 @@ const ReferencesModal = ({ show, toggle }) => {
     );
 
     const createReference = useCallback(
-        bibtex => {
+        (bibtex) => {
             setIsParsingBibtex(true);
 
             parseBibtex({ bibtex, checkForDuplicate: true })
-                .then(parsedReference => {
+                .then((parsedReference) => {
                     if (!parsedReference) {
                         setIsParsingBibtex(false);
                         return;
@@ -116,21 +116,21 @@ const ReferencesModal = ({ show, toggle }) => {
         [createReference, updateReference],
     );
 
-    const handleDelete = async statementId => {
+    const handleDelete = async (statementId) => {
         const isConfirmed = await Confirm({
             title: 'Are you sure?',
             message: 'Do you want to remove this reference? ',
         });
 
         if (isConfirmed) {
-            setIsDeletingIDs(prevIDs => uniq([...prevIDs, statementId]));
+            setIsDeletingIDs((prevIDs) => uniq([...prevIDs, statementId]));
             return dispatch(deleteReference(statementId)).then(() => {
-                setIsDeletingIDs(prevIDs => prevIDs.filter(id => id !== statementId));
+                setIsDeletingIDs((prevIDs) => prevIDs.filter((id) => id !== statementId));
             });
         }
     };
 
-    const handleEdit = reference => {
+    const handleEdit = (reference) => {
         setEditReference(reference);
         setIsOpenReferenceModal(true);
     };
@@ -150,7 +150,7 @@ const ReferencesModal = ({ show, toggle }) => {
                 </Alert>
 
                 <ListGroup>
-                    {referencesSorted.map(reference => (
+                    {referencesSorted.map((reference) => (
                         <ListGroupItem key={reference.literal.id} className="d-flex align-items-start pe-2">
                             <div className="flex-grow-1">
                                 <Badge color="light">@{reference.parsedReference['citation-label']}</Badge>{' '}
@@ -181,7 +181,7 @@ const ReferencesModal = ({ show, toggle }) => {
             </ModalBody>
 
             {isOpenReferenceModal && (
-                <ReferenceModal toggle={() => setIsOpenReferenceModal(v => !v)} onSave={handleSaveReference} show reference={editReference} />
+                <ReferenceModal toggle={() => setIsOpenReferenceModal((v) => !v)} onSave={handleSaveReference} show reference={editReference} />
             )}
         </Modal>
     );

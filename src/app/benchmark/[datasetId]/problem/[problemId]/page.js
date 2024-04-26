@@ -35,7 +35,7 @@ import useRouter from 'components/NextJsMigration/useRouter';
 import useParams from 'components/NextJsMigration/useParams';
 
 function getTicksAxisH(data) {
-    const dateRange = data.slice(1).map(value => value[0]);
+    const dateRange = data.slice(1).map((value) => value[0]);
     const maxDate = new Date(Math.max.apply(null, dateRange));
     const minDate = new Date(Math.min.apply(null, dateRange));
     const ticksAxisH = [];
@@ -96,7 +96,7 @@ function Benchmark() {
             {
                 Header: 'Paper Title',
                 accessor: 'paper_title',
-                Cell: cell => (
+                Cell: (cell) => (
                     <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: cell.row.original.paper_id })} style={{ textDecoration: 'none' }}>
                         {cell.row.original.paper_title ?? '-'}
                     </Link>
@@ -105,7 +105,7 @@ function Benchmark() {
             {
                 Header: 'Model',
                 accessor: 'model_name',
-                Cell: cell =>
+                Cell: (cell) =>
                     cell.value ? (
                         <Link href={reverse(ROUTES.RESOURCE, { id: cell.row.original.model_id })} style={{ textDecoration: 'none' }}>
                             {cell.value ?? '-'}
@@ -117,17 +117,17 @@ function Benchmark() {
             {
                 Header: 'Score',
                 accessor: 'score',
-                Cell: cell => cell.value ?? '-',
+                Cell: (cell) => cell.value ?? '-',
             },
             {
                 Header: 'Metric',
                 accessor: 'metric',
-                Cell: cell => cell.value ?? '-',
+                Cell: (cell) => cell.value ?? '-',
             },
             {
                 Header: 'Code',
                 accessor: 'code_urls',
-                Cell: cell => (
+                Cell: (cell) => (
                     <CodeURLsTooltip id={cell.row.original.paper_id} title={cell.row.original.paper_title} urls={cell.row.original.code_urls} />
                 ),
             },
@@ -160,7 +160,7 @@ function Benchmark() {
         ['Year', selectedMetric, { type: 'string', role: 'tooltip', p: { html: true } }],
         ...(benchmarkDatasetPapers[selectedMetric]
             ? benchmarkDatasetPapers[selectedMetric]
-                  .map(c => {
+                  .map((c) => {
                       const publishedOn = moment(`${c.paper_year}-${c.paper_month ? c.paper_month : '01'}`, 'YYYY-MM');
                       try {
                           return parseFloat(c.score)
@@ -176,7 +176,7 @@ function Benchmark() {
                           return null;
                       }
                   })
-                  .filter(v => v)
+                  .filter((v) => v)
             : []),
     ];
 
@@ -231,11 +231,11 @@ function Benchmark() {
                                     size="sm"
                                     color="secondary"
                                     className="float-end"
-                                    onClick={() => setEditMode(v => !v)}
+                                    onClick={() => setEditMode((v) => !v)}
                                 >
                                     <Icon icon={faPen} /> Edit
                                 </RequireAuthentication>
-                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
@@ -254,7 +254,7 @@ function Benchmark() {
                     {editMode && (
                         <StatementBrowserDialog
                             show={editMode}
-                            toggleModal={() => setEditMode(v => !v)}
+                            toggleModal={() => setEditMode((v) => !v)}
                             id={datasetId}
                             label={resourceData.label}
                             enableEdit={true}
@@ -403,10 +403,10 @@ function Benchmark() {
                         {rows?.length > 0 && (
                             <Table {...getTableProps()}>
                                 <thead>
-                                    {headerGroups.map(headerGroup => (
+                                    {headerGroups.map((headerGroup) => (
                                         // eslint-disable-next-line react/jsx-key
                                         <tr {...headerGroup.getHeaderGroupProps()}>
-                                            {headerGroup.headers.map(column => (
+                                            {headerGroup.headers.map((column) => (
                                                 <th key={column.getHeaderProps(column.getSortByToggleProps()).key}>
                                                     <div className="d-flex" {...column.getHeaderProps(column.getSortByToggleProps())}>
                                                         {column.render('Header')}
@@ -424,12 +424,12 @@ function Benchmark() {
                                 </thead>
                                 <tbody {...getTableBodyProps()}>
                                     {rows?.length > 0 &&
-                                        rows.map(row => {
+                                        rows.map((row) => {
                                             prepareRow(row);
                                             return (
                                                 // eslint-disable-next-line react/jsx-key
                                                 <tr {...row.getRowProps()}>
-                                                    {row.cells.map(cell => (
+                                                    {row.cells.map((cell) => (
                                                         // eslint-disable-next-line react/jsx-key
                                                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                                                     ))}

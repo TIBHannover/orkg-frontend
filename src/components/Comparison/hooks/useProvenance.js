@@ -7,15 +7,15 @@ import { getConferenceById } from 'services/backend/conferences-series';
 import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
 
 function useProvenance() {
-    const id = useSelector(state => state.comparison.comparisonResource.id);
-    const organizationId = useSelector(state => state.comparison.comparisonResource.organization_id);
-    const observatoryId = useSelector(state => state.comparison.comparisonResource.observatory_id);
-    const observatory = useSelector(state => state.comparison.observatory);
+    const id = useSelector((state) => state.comparison.comparisonResource.id);
+    const organizationId = useSelector((state) => state.comparison.comparisonResource.organization_id);
+    const observatoryId = useSelector((state) => state.comparison.comparisonResource.observatory_id);
+    const observatory = useSelector((state) => state.comparison.observatory);
     const dispatch = useDispatch();
 
-    const getConferenceAndOrganizationInformation = organizationId =>
+    const getConferenceAndOrganizationInformation = (organizationId) =>
         getConferenceById(organizationId)
-            .then(async confResponse => {
+            .then(async (confResponse) => {
                 try {
                     const orgResponse = await getOrganization(confResponse.organizationId);
                     return {
@@ -48,11 +48,11 @@ function useProvenance() {
          */
         const loadProvenanceInfos = () => {
             if (observatoryId && observatoryId !== MISC.UNKNOWN_ID) {
-                getObservatoryAndOrganizationInformation(observatoryId, organizationId).then(provenance => {
+                getObservatoryAndOrganizationInformation(observatoryId, organizationId).then((provenance) => {
                     dispatch(setProvenance(provenance));
                 });
             } else if (observatoryId === MISC.UNKNOWN_ID && organizationId && organizationId !== MISC.UNKNOWN_ID) {
-                getConferenceAndOrganizationInformation(organizationId).then(conference => {
+                getConferenceAndOrganizationInformation(organizationId).then((conference) => {
                     dispatch(setProvenance(conference));
                 });
             } else {

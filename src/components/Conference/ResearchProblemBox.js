@@ -18,14 +18,14 @@ const ResearchProblemBox = ({ id }) => {
     const [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
-        const loadProblems = id => {
+        const loadProblems = (id) => {
             setIsLoading(true);
             getProblemsByOrganizationId(id)
-                .then(response => {
+                .then((response) => {
                     setProblems(response.content);
                     setIsLoading(false);
                 })
-                .catch(error => {
+                .catch((error) => {
                     setIsLoading(false);
                     setError(error);
                 });
@@ -39,7 +39,7 @@ const ResearchProblemBox = ({ id }) => {
             <h5>Research problems </h5>
             {!isLoading && problems.length > 0 && (
                 <ul className="ps-3 pt-2">
-                    {problems.slice(0, 5).map(rp => (
+                    {problems.slice(0, 5).map((rp) => (
                         <li key={`p${rp.id}`}>
                             <Tippy content={rp.label} disabled={rp.label?.length <= 70}>
                                 <Link href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>
@@ -54,7 +54,7 @@ const ResearchProblemBox = ({ id }) => {
             {!isLoading && problems.length === 0 && <div className="text-center my-4">No research problems yet</div>}
             {problems.length > 5 && (
                 <div className="text-center mt-2">
-                    <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
+                    <Button size="sm" onClick={() => setOpenModal((v) => !v)} color="light">
                         View more
                     </Button>
                     {openModal && <ResearchProblemsModal openModal={openModal} setOpenModal={setOpenModal} problems={problems} />}

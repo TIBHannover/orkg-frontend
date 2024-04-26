@@ -14,7 +14,7 @@ function VisualizationPreview({ id }) {
     useEffect(() => {
         setIsLoading(true);
         getThing({ thingType: THING_TYPES.VISUALIZATION, thingKey: id })
-            .then(model => {
+            .then((model) => {
                 setIsLoading(false);
                 setIsLoadingFailed(false);
                 setVisualizationModelForGDC(model);

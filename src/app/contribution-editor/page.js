@@ -30,16 +30,16 @@ const ContributionEditor = () => {
     const [createContributionPaperId, setCreateContributionPaperId] = useState(null);
     const [initialValueCreatePaper, setInitialValueCreatePaper] = useState(null);
     const { getContributionIds, handleAddContributions } = useContributionEditor();
-    const contributions = useSelector(state => state.contributionEditor.contributions);
-    const isLoading = useSelector(state => state.contributionEditor.isLoading);
-    const hasFailed = useSelector(state => state.contributionEditor.hasFailed);
+    const contributions = useSelector((state) => state.contributionEditor.contributions);
+    const isLoading = useSelector((state) => state.contributionEditor.isLoading);
+    const hasFailed = useSelector((state) => state.contributionEditor.hasFailed);
     const dispatch = useDispatch();
     const searchParams = useSearchParams();
     const contributionIds = getContributionIds();
     const numPWCStatement = useSelector(
-        state =>
+        (state) =>
             Object.keys(state.contributionEditor?.statements).filter?.(
-                statementId => state.contributionEditor?.statements[statementId]?.created_by === env('NEXT_PUBLIC_PWC_USER_ID'),
+                (statementId) => state.contributionEditor?.statements[statementId]?.created_by === env('NEXT_PUBLIC_PWC_USER_ID'),
             )?.length ?? 0,
     );
     const hasPreviousVersion = searchParams.get('hasPreviousVersion');
@@ -54,31 +54,31 @@ const ContributionEditor = () => {
             return;
         }
         // check if new contributions should be loaded
-        const contributionIdsToLoad = contributionIds.filter(id => !(id in contributions));
+        const contributionIdsToLoad = contributionIds.filter((id) => !(id in contributions));
         if (contributionIdsToLoad.length) {
             dispatch(loadContributions(contributionIdsToLoad));
         }
 
         // check if contributions are removed
-        const contributionIdsToRemove = Object.keys(contributions).filter(id => !contributionIds.includes(id));
+        const contributionIdsToRemove = Object.keys(contributions).filter((id) => !contributionIds.includes(id));
         if (contributionIdsToRemove.length) {
             dispatch(contributionsRemoved(contributionIdsToRemove));
         }
     }, [contributionIds, contributions, dispatch, hasFailed, isLoading]);
 
-    const handleOpenCreateContributionModal = paperId => {
+    const handleOpenCreateContributionModal = (paperId) => {
         setIsOpenAddContribution(false);
         setCreateContributionPaperId(paperId);
         setIsOpenCreateContribution(true);
     };
 
-    const handleOpenCreatePaperModal = initialValue => {
+    const handleOpenCreatePaperModal = (initialValue) => {
         setIsOpenAddContribution(false);
         setIsOpenCreatePaper(true);
         setInitialValueCreatePaper(initialValue);
     };
 
-    const handleCreateContribution = id => {
+    const handleCreateContribution = (id) => {
         handleAddContributions([id]);
         setIsOpenCreateContribution(false);
     };
@@ -155,7 +155,7 @@ const ContributionEditor = () => {
                 <AddContribution
                     allowCreate
                     showDialog
-                    toggle={() => setIsOpenAddContribution(v => !v)}
+                    toggle={() => setIsOpenAddContribution((v) => !v)}
                     onAddContributions={handleAddContributions}
                     onCreateContribution={handleOpenCreateContributionModal}
                     onCreatePaper={handleOpenCreatePaperModal}
@@ -165,7 +165,7 @@ const ContributionEditor = () => {
                 <CreateContributionModal
                     isOpen
                     onCreateContribution={handleCreateContribution}
-                    toggle={() => setIsOpenCreateContribution(v => !v)}
+                    toggle={() => setIsOpenCreateContribution((v) => !v)}
                     paperId={createContributionPaperId}
                 />
             )}
@@ -173,7 +173,7 @@ const ContributionEditor = () => {
                 <AddPaperModal
                     isOpen
                     onCreatePaper={handleCreatePaper}
-                    toggle={() => setIsOpenCreatePaper(v => !v)}
+                    toggle={() => setIsOpenCreatePaper((v) => !v)}
                     initialValue={initialValueCreatePaper}
                 />
             )}

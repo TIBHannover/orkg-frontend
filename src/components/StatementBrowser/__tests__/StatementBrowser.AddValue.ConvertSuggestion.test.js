@@ -25,7 +25,7 @@ const setup = (
     render(<StatementBrowser {...props} />, { initialState });
 };
 
-const clickOnAddButton = async screen => {
+const clickOnAddButton = async (screen) => {
     const addButton = screen.getByRole('button', { name: 'Add value' });
     await waitFor(() => expect(addButton).toBeInTheDocument());
     fireEvent.click(addButton);

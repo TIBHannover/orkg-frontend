@@ -37,12 +37,12 @@ const FilePlaceholder = styled(Icon)`
 `;
 
 const DragUpload = () => {
-    const pdf = useSelector(state => state.pdfAnnotation.pdf);
-    const pdfConvertIsFetching = useSelector(state => state.pdfAnnotation.pdfConvertIsFetching);
-    const pdfParseIsFetching = useSelector(state => state.pdfAnnotation.pdfParseIsFetching);
+    const pdf = useSelector((state) => state.pdfAnnotation.pdf);
+    const pdfConvertIsFetching = useSelector((state) => state.pdfAnnotation.pdfConvertIsFetching);
+    const pdfParseIsFetching = useSelector((state) => state.pdfAnnotation.pdfParseIsFetching);
     const dispatch = useDispatch();
 
-    const onDrop = files => {
+    const onDrop = (files) => {
         dispatch(convertPdf({ files }));
     };
 

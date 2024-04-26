@@ -6,7 +6,7 @@ import { memo } from 'react';
 import { useSelector } from 'react-redux';
 
 const TableHeaderColumnFirst = () => {
-    const isLoading = useSelector(state => state.contributionEditor.isLoading);
+    const isLoading = useSelector((state) => state.contributionEditor.isLoading);
 
     return (
         <Properties>

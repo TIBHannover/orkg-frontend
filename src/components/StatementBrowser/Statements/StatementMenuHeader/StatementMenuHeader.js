@@ -13,9 +13,9 @@ import Preferences from 'components/StatementBrowser/Preferences/Preferences';
 import PropTypes from 'prop-types';
 
 export default function StatementMenuHeader(props) {
-    const isPreferencesOpen = useSelector(state => state.statementBrowser.isPreferencesOpen);
-    const isHelpModalOpen = useSelector(state => state.statementBrowser.isHelpModalOpen);
-    const isTemplatesModalOpen = useSelector(state => state.statementBrowser.isTemplatesModalOpen);
+    const isPreferencesOpen = useSelector((state) => state.statementBrowser.isPreferencesOpen);
+    const isHelpModalOpen = useSelector((state) => state.statementBrowser.isHelpModalOpen);
+    const isTemplatesModalOpen = useSelector((state) => state.statementBrowser.isTemplatesModalOpen);
     const dispatch = useDispatch();
     const preferencesTippy = useRef(null);
 
@@ -51,7 +51,7 @@ export default function StatementMenuHeader(props) {
 
                     <Button className="p-0" outline color={!props.enableEdit || !props.canEdit ? 'link' : 'secondary'} size="sm" onClick={() => null}>
                         <Tippy
-                            onCreate={instance => (preferencesTippy.current = instance)}
+                            onCreate={(instance) => (preferencesTippy.current = instance)}
                             onShow={() => dispatch(setIsPreferencesOpen(true))}
                             onHide={() => dispatch(setIsPreferencesOpen(false))}
                             trigger="click"

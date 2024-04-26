@@ -5,7 +5,7 @@ import { EXTRACTION_METHODS } from 'constants/misc';
 
 export default function checkDataValidation(data) {
     const header = data && data[0];
-    const values = data && data.slice(1).map(r => r.map(s => (s ? s.trim() : '')));
+    const values = data && data.slice(1).map((r) => r.map((s) => (s ? s.trim() : '')));
 
     // Check if paper:title or paper:doi column exists
     const columns = Joi.array()
@@ -22,7 +22,7 @@ export default function checkDataValidation(data) {
         return 'The CSV file should contain at least one paper.';
     }
 
-    const papersObjects = values.map(value => ({
+    const papersObjects = values.map((value) => ({
         title: header.indexOf('paper:title') !== -1 ? value[header.indexOf('paper:title')] : '',
         publication_month: header.indexOf('paper:publication_month') !== -1 ? value[header.indexOf('paper:publication_month')] : '',
         publication_year: header.indexOf('paper:publication_year') !== -1 ? value[header.indexOf('paper:publication_year')] : '',

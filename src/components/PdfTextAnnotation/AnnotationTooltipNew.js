@@ -45,7 +45,7 @@ Option.propTypes = {
     children: PropTypes.string.isRequired,
 };
 
-const AnnotationTooltipNew = props => {
+const AnnotationTooltipNew = (props) => {
     const { classes, recommendedClasses } = useOntology();
     const { getSuggestedClasses, suggestedClasses, isLoading: suggestionsIsLoading } = useSuggestions();
     const { content, position, hideTipAndSelection, handleAnnotate } = props;
@@ -56,7 +56,7 @@ const AnnotationTooltipNew = props => {
     const options = [
         {
             label: 'Recommended properties',
-            options: recommendedClasses.map(_class => ({
+            options: recommendedClasses.map((_class) => ({
                 label: upperFirst(_class.label),
                 value: _class.iri,
                 comment: _class.comment,
@@ -64,7 +64,7 @@ const AnnotationTooltipNew = props => {
         },
         {
             label: 'All properties',
-            options: classes.map(_class => ({
+            options: classes.map((_class) => ({
                 label: upperFirst(_class.label),
                 value: _class.iri,
                 comment: _class.comment,
@@ -90,7 +90,7 @@ const AnnotationTooltipNew = props => {
         hideTipAndSelection();
     };
 
-    const handleSuggestionClick = value => {
+    const handleSuggestionClick = (value) => {
         handleAnnotation(value);
     };
 
@@ -116,7 +116,7 @@ const AnnotationTooltipNew = props => {
             <div className="mb-1">Select type</div>
 
             <div style={{ color: '#000' }}>
-                <Select value={type} onChange={selected => setType(selected)} options={options} components={{ Option }} />
+                <Select value={type} onChange={(selected) => setType(selected)} options={options} components={{ Option }} />
             </div>
 
             <div className="mt-2 mb-1">Smart suggestions</div>
@@ -124,7 +124,7 @@ const AnnotationTooltipNew = props => {
             {!suggestionsIsLoading ? (
                 <div style={{ minHeight: 62 }}>
                     {suggestedClasses.length > 0 ? (
-                        suggestedClasses.map(suggestion => (
+                        suggestedClasses.map((suggestion) => (
                             <Button
                                 active={type && type.value === suggestion.iri}
                                 className="rounded-pill me-2 mb-1"

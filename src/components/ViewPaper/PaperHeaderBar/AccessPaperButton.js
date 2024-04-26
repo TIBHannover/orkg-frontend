@@ -34,7 +34,7 @@ const AccessPaperButton = ({ paperLink = null, doi = null, title = null }) => {
     )}`;
 
     return (
-        <ButtonDropdown isOpen={isMenuOpen} toggle={() => setIsMenuOpen(v => !v)}>
+        <ButtonDropdown isOpen={isMenuOpen} toggle={() => setIsMenuOpen((v) => !v)}>
             <DropdownToggle style={{ marginRight: 2 }} size="sm" color="secondary" className="px-3 d-flex align-items-center">
                 Access paper <Icon icon={faSortDown} style={{ margin: '-4px 0 0 6px' }} />
             </DropdownToggle>

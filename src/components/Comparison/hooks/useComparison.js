@@ -43,15 +43,15 @@ function useComparison({ id, isEmbeddedMode = false }) {
     const hiddenGroupsStorageName = comparisonId ? `comparison-${comparisonId}-hidden-rows` : null;
 
     const dispatch = useDispatch();
-    const comparisonResource = useSelector(state => state.comparison.comparisonResource);
-    const contributionsList = useSelector(state => state.comparison.configuration.contributionsList);
-    const predicatesList = useSelector(state => state.comparison.configuration.predicatesList);
-    const transpose = useSelector(state => state.comparison.configuration.transpose);
-    const comparisonType = useSelector(state => state.comparison.configuration.comparisonType);
-    const contributions = useSelector(state => state.comparison.contributions);
-    const isLoadingResult = useSelector(state => state.comparison.isLoadingResult);
-    const data = useSelector(state => state.comparison.data);
-    const properties = useSelector(state => state.comparison.properties);
+    const comparisonResource = useSelector((state) => state.comparison.comparisonResource);
+    const contributionsList = useSelector((state) => state.comparison.configuration.contributionsList);
+    const predicatesList = useSelector((state) => state.comparison.configuration.predicatesList);
+    const transpose = useSelector((state) => state.comparison.configuration.transpose);
+    const comparisonType = useSelector((state) => state.comparison.configuration.comparisonType);
+    const contributions = useSelector((state) => state.comparison.contributions);
+    const isLoadingResult = useSelector((state) => state.comparison.isLoadingResult);
+    const data = useSelector((state) => state.comparison.data);
+    const properties = useSelector((state) => state.comparison.properties);
 
     /**
      * Load comparison meta data and comparison config
@@ -59,31 +59,31 @@ function useComparison({ id, isEmbeddedMode = false }) {
      * @param {String} cId comparison ID
      */
     const loadComparisonMetaData = useCallback(
-        cId => {
+        (cId) => {
             if (cId) {
                 dispatch(setIsLoadingMetadata(true));
                 // Get the comparison resource and comparison config
                 // Get the comparison resource
                 getResource(cId)
-                    .then(_comparisonResource => {
+                    .then((_comparisonResource) => {
                         // Make sure that this resource is a comparison
                         if (!_comparisonResource.classes.includes(CLASSES.COMPARISON)) {
                             throw new Error(`The requested resource is not of class "${CLASSES.COMPARISON}".`);
                         }
                         return _comparisonResource;
                     })
-                    .then(_comparisonResource => {
+                    .then((_comparisonResource) => {
                         // Get meta data and config of a comparison
                         getStatementsBySubject({ id: cId })
-                            .then(statements => addAuthorsToStatements(statements))
-                            .then(statements => {
+                            .then((statements) => addAuthorsToStatements(statements))
+                            .then((statements) => {
                                 const comparisonObject = getComparisonData(_comparisonResource, statements);
                                 dispatch(setComparisonResource(comparisonObject));
                                 dispatch(setIsLoadingMetadata(false));
                                 dispatch(setIsFailedLoadingMetadata(false));
                             });
                     })
-                    .catch(error => {
+                    .catch((error) => {
                         let errorMessage = null;
                         if (error.statusCode && error.statusCode === 404) {
                             errorMessage = 'The requested resource is not found';
@@ -106,7 +106,7 @@ function useComparison({ id, isEmbeddedMode = false }) {
      * Call the comparison service to get the comparison result
      */
     const getComparisonResult = useCallback(
-        contributionsIDs => {
+        (contributionsIDs) => {
             dispatch(setIsLoadingResult(true));
             let simCompCall = null;
             if (comparisonId) {
@@ -119,7 +119,7 @@ function useComparison({ id, isEmbeddedMode = false }) {
             }
 
             simCompCall
-                .then(async _comparisonData => {
+                .then(async (_comparisonData) => {
                     let comparisonData;
                     if (comparisonId) {
                         comparisonData = _comparisonData.data;
@@ -156,7 +156,7 @@ function useComparison({ id, isEmbeddedMode = false }) {
                     dispatch(setIsLoadingResult(false));
                     dispatch(setIsFailedLoadingResult(false));
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
                     dispatch(setErrors(getErrorMessage(error)));
                     dispatch(setIsLoadingResult(false));
@@ -178,7 +178,7 @@ function useComparison({ id, isEmbeddedMode = false }) {
     }) => {
         const qParams = getComparisonURLFromConfig({
             contributions: _contributionsList,
-            predicates: _predicatesList.map(predicate => encodeURIComponent(predicate)),
+            predicates: _predicatesList.map((predicate) => encodeURIComponent(predicate)),
             type: _comparisonType,
             transpose: _transpose,
             hasPreviousVersion,
@@ -206,7 +206,7 @@ function useComparison({ id, isEmbeddedMode = false }) {
      */
     useEffect(() => {
         if (!comparisonId && searchParams.has('hasPreviousVersion')) {
-            getResource(searchParams.get('hasPreviousVersion')).then(prevVersion => dispatch(setHasPreviousVersion(prevVersion)));
+            getResource(searchParams.get('hasPreviousVersion')).then((prevVersion) => dispatch(setHasPreviousVersion(prevVersion)));
         }
     }, [comparisonId, dispatch, searchParams]);
 
@@ -219,7 +219,7 @@ function useComparison({ id, isEmbeddedMode = false }) {
             getStatementsBySubjectAndPredicate({
                 subjectId: contributions[0]?.paperId,
                 predicateId: PREDICATES.HAS_RESEARCH_FIELD,
-            }).then(s => {
+            }).then((s) => {
                 if (s.length && !comparisonResource?.researchField) {
                     dispatch(setResearchField(s[0].object));
                 }
@@ -258,7 +258,7 @@ function useComparison({ id, isEmbeddedMode = false }) {
             dispatch(
                 setConfigurationAttribute({
                     attribute: 'predicatesList',
-                    value: !isEmpty(parsedProperties) ? parsedProperties.map(p => decodeURIComponent(p)) : [],
+                    value: !isEmpty(parsedProperties) ? parsedProperties.map((p) => decodeURIComponent(p)) : [],
                 }),
             );
             getComparisonResult(contributionsIDs);

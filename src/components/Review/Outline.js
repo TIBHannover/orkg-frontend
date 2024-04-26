@@ -22,14 +22,14 @@ const Box = styled.div`
     width: 200px;
     background: #d7dae3;
     margin-bottom: 50px;
-    border-radius: ${props => (props.editMode ? '6px' : '6px 0 0 6px')};
-    margin-top: ${props => (props.editMode ? '0px' : '150px')};
+    border-radius: ${(props) => (props.editMode ? '6px' : '6px 0 0 6px')};
+    margin-top: ${(props) => (props.editMode ? '0px' : '150px')};
     padding: 10px;
     max-height: calc(100vh - 190px);
     overflow-y: auto;
 
     a:focus {
-        color: ${props => props.theme.secondary} !important;
+        color: ${(props) => props.theme.secondary} !important;
     }
 `;
 
@@ -47,15 +47,15 @@ const ListItem = styled.li`
 
 const Outline = ({ editMode = false }) => {
     useScroll();
-    const sections = useSelector(state => state.review.sections);
+    const sections = useSelector((state) => state.review.sections);
 
     return (
         <Wrapper>
             <Box editMode={editMode}>
                 <ol style={{ listStyle: 'none' }} className="p-0 m-0">
                     {sections
-                        .filter(section => section?.title?.label)
-                        .map(section => (
+                        .filter((section) => section?.title?.label)
+                        .map((section) => (
                             <ListItem key={section.id}>
                                 <Link href={`#section-${section.id}`} scroll={false}>
                                     {section.title.label}

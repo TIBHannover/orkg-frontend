@@ -22,13 +22,13 @@ import {
 } from 'slices/statementBrowserSlice';
 
 const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
-    const value = useSelector(state => state.statementBrowser.values.byId[id]);
-    const values = useSelector(state => state.statementBrowser.values);
-    const resource = useSelector(state => state.statementBrowser.resources.byId[value.resourceId]);
-    const property = useSelector(state => state.statementBrowser.properties.byId[resource.propertyId]);
-    const hasFormattedLabel = useSelector(state => isValueHasFormattedLabel(state, id));
-    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
-    const isList = useSelector(state => checkIfIsList({ state, propertyId: resource.propertyId }));
+    const value = useSelector((state) => state.statementBrowser.values.byId[id]);
+    const values = useSelector((state) => state.statementBrowser.values);
+    const resource = useSelector((state) => state.statementBrowser.resources.byId[value.resourceId]);
+    const property = useSelector((state) => state.statementBrowser.properties.byId[resource.propertyId]);
+    const hasFormattedLabel = useSelector((state) => isValueHasFormattedLabel(state, id));
+    const selectedResource = useSelector((state) => state.statementBrowser.selectedResource);
+    const isList = useSelector((state) => checkIfIsList({ state, propertyId: resource.propertyId }));
 
     const dispatch = useDispatch();
 
@@ -42,7 +42,7 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                 ? deleteStatementById(value.statementId)
                 : updateList({
                       id: selectedResource,
-                      elements: property.valueIds.map(_id => values.byId[_id].resourceId).filter(_id => value.id !== _id),
+                      elements: property.valueIds.map((_id) => values.byId[_id].resourceId).filter((_id) => value.id !== _id),
                   });
 
             deletePromise
@@ -78,7 +78,7 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
         <>
             {value.classes?.includes(CLASSES.QB_DATASET_CLASS) && (
                 <>
-                    {modalDataset && <RDFDataCube show={modalDataset} toggleModal={() => setModalDataset(prev => !prev)} id={id} />}
+                    {modalDataset && <RDFDataCube show={modalDataset} toggleModal={() => setModalDataset((prev) => !prev)} id={id} />}
                     <StatementActionButton title="Visualize data in tabular form" icon={faTable} action={handleDatasetClick} />
                 </>
             )}

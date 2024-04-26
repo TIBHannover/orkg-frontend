@@ -8,7 +8,7 @@ import usePathname from 'components/NextJsMigration/usePathname';
 
 /* Scrolls browser window to top when new page is visited,
 but preserves scroll position when previous page is visited */
-const ScrollToTop = props => {
+const ScrollToTop = (props) => {
     const pathname = usePathname();
     const prevPathname = usePrevious(pathname);
 

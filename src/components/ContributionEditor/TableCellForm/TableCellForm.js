@@ -139,11 +139,11 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
         setEntityType(getConfigByType(inputDataType)._class);
         setInputFormType(getConfigByType(inputDataType).inputFormType);
         if (inputDataType === 'xsd:boolean') {
-            setInputValue(v => Boolean(v === 'true').toString());
+            setInputValue((v) => Boolean(v === 'true').toString());
         }
     }, [inputDataType, setEntityType, setInputValue, setInputFormType]);
 
-    const handleSetValueType = type => {
+    const handleSetValueType = (type) => {
         dispatch(setPreviousInputDataType(type));
         setInputDataType(type);
     };
@@ -152,7 +152,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
         <div ref={refContainer} style={{ minHeight: 35 }}>
             <Tippy
                 onShown={onShown}
-                onCreate={instance => (confirmConversion.current = instance)}
+                onCreate={(instance) => (confirmConversion.current = instance)}
                 content={
                     <ConfirmationTooltip
                         message={
@@ -204,11 +204,11 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                 }
                                 optionsClass={entityType === ENTITIES.RESOURCE && valueClass ? valueClass.id : undefined}
                                 placeholder={propertyShape?.placeholder ? propertyShape.placeholder : `Enter a ${entityType}`}
-                                onItemSelected={i => {
+                                onItemSelected={(i) => {
                                     dispatch(addValue(entityType, { ...i, label: i.value, selected: true }, valueClass, contributionId, propertyId));
                                     closeForm?.(false);
                                 }}
-                                onNewItemSelected={label => {
+                                onNewItemSelected={(label) => {
                                     dispatch(
                                         addValue(
                                             entityType,
@@ -228,15 +228,15 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                 openMenuOnFocus={true}
                                 allowCreate
                                 allowCreateDuplicate={!isUniqLabel}
-                                onKeyDown={e => {
+                                onKeyDown={(e) => {
                                     if (e.keyCode === 27) {
                                         // escape
                                         closeForm?.(false);
                                     }
                                 }}
-                                innerRef={ref => (autocompleteInputRef.current = ref)}
+                                innerRef={(ref) => (autocompleteInputRef.current = ref)}
                                 cssClasses="form-control-sm"
-                                onOntologySelectorIsOpenStatusChange={status => setOntologyModalIsOpen(status)}
+                                onOntologySelectorIsOpenStatusChange={(status) => setOntologyModalIsOpen(status)}
                             />
                         ) : (
                             <>
@@ -247,7 +247,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                     inputDataType={inputDataType}
                                     isValid={isValid}
                                     literalInputRef={literalInputRef}
-                                    onKeyDown={e => {
+                                    onKeyDown={(e) => {
                                         if (e.keyCode === 27) {
                                             // escape
                                             closeForm?.(false);

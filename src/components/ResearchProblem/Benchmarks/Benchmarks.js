@@ -5,7 +5,7 @@ import ContentLoader from 'react-content-loader';
 import { Container } from 'reactstrap';
 import { getDatasetsBenchmarksByResearchProblemId } from 'services/backend/datasets';
 
-const Benchmarks = props => {
+const Benchmarks = (props) => {
     const fetchItems = async ({ id, page, pageSize }) => {
         const { content: items, last, totalElements } = await getDatasetsBenchmarksByResearchProblemId({ id, page, size: pageSize });
         return {

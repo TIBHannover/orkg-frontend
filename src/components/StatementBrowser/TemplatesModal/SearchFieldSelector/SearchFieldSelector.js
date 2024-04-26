@@ -8,7 +8,7 @@ const SearchFieldSelector = ({ disableBorderRadiusLeft = false, disableBorderRad
     const theme = useContext(ThemeContext);
 
     const customStyles = {
-        container: provided => ({
+        container: (provided) => ({
             ...provided,
             flexBasis: '100px',
             padding: '0',
@@ -16,7 +16,7 @@ const SearchFieldSelector = ({ disableBorderRadiusLeft = false, disableBorderRad
             fontSize: '0.875rem',
             position: 'relative',
         }),
-        control: provided => ({
+        control: (provided) => ({
             ...provided,
             borderTopLeftRadius: disableBorderRadiusLeft ? 0 : undefined,
             borderBottomLeftRadius: disableBorderRadiusLeft ? 0 : undefined,
@@ -26,37 +26,37 @@ const SearchFieldSelector = ({ disableBorderRadiusLeft = false, disableBorderRad
             backgroundColor: theme.light,
             color: theme.secondaryDarker,
         }),
-        valueContainer: provided => ({
+        valueContainer: (provided) => ({
             ...provided,
             marginTop: '0',
             marginLeft: '6px',
             padding: '0',
             border: '0',
         }),
-        input: provided => ({
+        input: (provided) => ({
             ...provided,
             color: theme.secondaryDarker,
         }),
-        dropdownIndicator: provided => ({
+        dropdownIndicator: (provided) => ({
             ...provided,
             marginTop: '0',
             padding: '0',
             border: '0',
             width: '16px',
         }),
-        clearIndicator: provided => ({
+        clearIndicator: (provided) => ({
             ...provided,
             marginTop: '0',
             padding: '0',
             border: '0',
             width: '16px',
         }),
-        indicatorsContainer: provided => ({
+        indicatorsContainer: (provided) => ({
             ...provided,
             paddingRight: '4px',
             border: '0',
         }),
-        menu: provided => ({
+        menu: (provided) => ({
             ...provided,
             fontSize: '0.875rem',
         }),
@@ -69,7 +69,7 @@ const SearchFieldSelector = ({ disableBorderRadiusLeft = false, disableBorderRad
                 classNamePrefix="react-select-dark"
                 value={value}
                 options={options}
-                onChange={v => setValue(v)}
+                onChange={(v) => setValue(v)}
                 getOptionValue={({ id }) => id}
                 getOptionLabel={({ label }) => `By ${label}`}
                 isClearable={false}

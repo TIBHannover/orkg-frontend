@@ -12,10 +12,10 @@ import AbstractAnnotator from 'components/ViewPaper/AbstractAnnotatorModal/Abstr
 import TitleWarningAlert from 'components/ViewPaper/AbstractModal/TitleWarningAlert';
 
 function AbstractAnnotatorView(props) {
-    const ranges = useSelector(state => state.viewPaper.ranges);
-    const abstract = useSelector(state => state.viewPaper.abstract);
-    const rangeArray = toArray(ranges).filter(r => r.certainty >= props.certaintyThreshold);
-    const rangesClasses = [...new Set(rangeArray.map(r => r.class.label))];
+    const ranges = useSelector((state) => state.viewPaper.ranges);
+    const abstract = useSelector((state) => state.viewPaper.abstract);
+    const rangeArray = toArray(ranges).filter((r) => r.certainty >= props.certaintyThreshold);
+    const rangesClasses = [...new Set(rangeArray.map((r) => r.class.label))];
     const theme = useContext(ThemeContext);
 
     return (
@@ -50,8 +50,8 @@ function AbstractAnnotatorView(props) {
                         </Tooltip>
                         <span className="me-1 ms-1" />
                         {rangesClasses.length > 0 &&
-                            rangesClasses.map(c => {
-                                const aconcept = c ? props.classOptions.filter(e => e.label.toLowerCase() === c.toLowerCase()) : [];
+                            rangesClasses.map((c) => {
+                                const aconcept = c ? props.classOptions.filter((e) => e.label.toLowerCase() === c.toLowerCase()) : [];
                                 if (c && aconcept.length > 0) {
                                     return (
                                         <Tippy key={`c${c}`} content={aconcept[0].description}>
@@ -68,7 +68,7 @@ function AbstractAnnotatorView(props) {
                                                 >
                                                     {c ? capitalize(c) : 'Unlabeled'}{' '}
                                                     <Badge pill color="secondary">
-                                                        {rangeArray.filter(rc => rc.class.label === c).length}
+                                                        {rangeArray.filter((rc) => rc.class.label === c).length}
                                                     </Badge>
                                                 </Badge>
                                             </span>
@@ -84,7 +84,7 @@ function AbstractAnnotatorView(props) {
                                     >
                                         {c ? capitalize(c) : 'Unlabeled'}{' '}
                                         <Badge pill color="secondary">
-                                            {rangeArray.filter(rc => rc.class.label === c).length}
+                                            {rangeArray.filter((rc) => rc.class.label === c).length}
                                         </Badge>
                                     </Badge>
                                 );
@@ -105,7 +105,7 @@ function AbstractAnnotatorView(props) {
                             min={0}
                             max={1}
                             values={props.certaintyThreshold}
-                            onChange={values => props.handleChangeCertaintyThreshold(values)}
+                            onChange={(values) => props.handleChangeCertaintyThreshold(values)}
                             renderTrack={({ props: innerProps, children }) => (
                                 <div
                                     {...innerProps}

@@ -6,8 +6,8 @@ import { Draggable } from 'react-beautiful-dnd';
 import { useSelector } from 'react-redux';
 
 const ColumnHeader = ({ headerData, columnId, columnStyle, property, index }) => {
-    const transpose = useSelector(state => state.comparison.configuration.transpose);
-    const isEditing = useSelector(state => state.comparison.isEditing);
+    const transpose = useSelector((state) => state.comparison.configuration.transpose);
+    const isEditing = useSelector((state) => state.comparison.isEditing);
 
     return (
         <>

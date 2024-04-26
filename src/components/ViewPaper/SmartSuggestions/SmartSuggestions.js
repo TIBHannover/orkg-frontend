@@ -74,8 +74,8 @@ const SmartSuggestions = ({ isLoadingAbstract, title = '', abstract = '' }) => {
             <NERSuggestions title={title} abstract={abstract} />
             <TemplatesRecommendations target={target} title={title} abstract={abstract} />
             <PredicatesRecommendations title={title} abstract={abstract} />
-            {isOpenAbstractModal && <AbstractModal toggle={() => setIsOpenAbstractModal(v => !v)} />}
-            {isOpenAbstractAnnotationModal && <AbstractAnnotatorModal toggle={() => setIsOpenAbstractAnnotationModal(v => !v)} />}
+            {isOpenAbstractModal && <AbstractModal toggle={() => setIsOpenAbstractModal((v) => !v)} />}
+            {isOpenAbstractAnnotationModal && <AbstractAnnotatorModal toggle={() => setIsOpenAbstractAnnotationModal((v) => !v)} />}
         </SuggestionsBox>
     );
 };

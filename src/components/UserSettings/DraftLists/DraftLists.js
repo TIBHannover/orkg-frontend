@@ -13,13 +13,13 @@ import { getResources } from 'services/backend/resources';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 
 const DraftLists = () => {
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
 
     useEffect(() => {
         document.title = 'Draft lists - ORKG';
     });
 
-    const renderListItem = list => (
+    const renderListItem = (list) => (
         <ShortRecord key={list.id} header={list.label} href={reverse(ROUTES.LIST, { id: list.id })}>
             <div className="time">
                 <Icon size="sm" icon={faCalendar} className="me-1" /> {list.created_at ? moment(list.created_at).format('DD MMMM YYYY') : ''}
@@ -43,11 +43,11 @@ const DraftLists = () => {
 
         if (resources.length) {
             return Promise.all(
-                resources.map(resource =>
+                resources.map((resource) =>
                     getStatementsBySubjectAndPredicate({ subjectId: resource.id, predicateId: PREDICATES.HAS_PUBLISHED_VERSION }),
                 ),
             )
-                .then(resourcesStatements =>
+                .then((resourcesStatements) =>
                     resourcesStatements.map((statements, idx) => {
                         if (!statements.length) {
                             return resources[idx];
@@ -55,8 +55,8 @@ const DraftLists = () => {
                         return null;
                     }),
                 )
-                .then(unpublishedItems => {
-                    const items = unpublishedItems.filter(v => v);
+                .then((unpublishedItems) => {
+                    const items = unpublishedItems.filter((v) => v);
                     return {
                         items,
                         last,

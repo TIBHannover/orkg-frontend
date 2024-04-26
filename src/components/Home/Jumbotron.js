@@ -65,7 +65,7 @@ export default class Jumbotron extends Component {
                                 <div className="col-md-5 motto ps-0">
                                     <span
                                         style={{ whiteSpace: 'pre' }}
-                                        ref={el => {
+                                        ref={(el) => {
                                             this.el = el;
                                         }}
                                     />

@@ -15,7 +15,7 @@ export const useObservatoryStats = ({ id }: { id: string }) => {
             setIsLoading(true);
             // Get the observatory stats
             getObservatoryStatsById(oId)
-                .then(result => {
+                .then((result) => {
                     setStats(result);
                     setIsLoading(false);
                 })

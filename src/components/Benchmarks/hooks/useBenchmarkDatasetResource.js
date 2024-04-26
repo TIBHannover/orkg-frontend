@@ -23,17 +23,17 @@ function useBenchmarkDatasetResource({ datasetId = null, problemId = null }) {
                     setIsFailedLoadingData(false);
                     document.title = `${problemResult.label} on ${datasetResult.label} - ORKG`;
                 })
-                .catch(error => {
+                .catch((error) => {
                     setIsLoadingData(false);
                     setIsFailedLoadingData(true);
                 });
 
             // Get description, same as of the dataset resource
             // we need to make a check if it has a description perhaps
-            getStatementsBySubject({ id: datasetId }).then(statements => {
+            getStatementsBySubject({ id: datasetId }).then((statements) => {
                 const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
                 // const sameAs = filterObjectOfStatementsByPredicate(statements, PREDICATES.SAME_AS, true);
-                setData(data => ({ ...data, description: description?.label }));
+                setData((data) => ({ ...data, description: description?.label }));
             });
         }
     }, [datasetId, problemId]);

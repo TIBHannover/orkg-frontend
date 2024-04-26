@@ -8,12 +8,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
 
 const ResearchField = () => {
-    const researchField = useSelector(state => state.review.researchField);
-    const paper = useSelector(state => state.review.paper);
+    const researchField = useSelector((state) => state.review.researchField);
+    const paper = useSelector((state) => state.review.paper);
     const dispatch = useDispatch();
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
 
-    const handleSelectField = researchField => {
+    const handleSelectField = (researchField) => {
         dispatch(
             setResearchField({
                 researchField,
@@ -39,7 +39,7 @@ const ResearchField = () => {
                 </span>
             </Tippy>
             {isOpenResearchFieldModal && (
-                <ResearchFieldSelectorModal isOpen toggle={v => setIsOpenResearchFieldModal(v => !v)} onSelectField={handleSelectField} />
+                <ResearchFieldSelectorModal isOpen toggle={(v) => setIsOpenResearchFieldModal((v) => !v)} onSelectField={handleSelectField} />
             )}
         </div>
     );

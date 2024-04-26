@@ -12,34 +12,34 @@ import Gravatar from 'react-gravatar';
 import styled from 'styled-components';
 
 const StyledGravatar = styled(Gravatar)`
-    border: 2px solid ${props => props.theme.lightDarker};
+    border: 2px solid ${(props) => props.theme.lightDarker};
     cursor: pointer;
     &:hover {
-        border: 2px solid ${props => props.theme.primary};
+        border: 2px solid ${(props) => props.theme.primary};
     }
 `;
 
 const StyledUserAvatar = styled.span`
     &:hover .react-gravatar {
-        border: 2px solid ${props => props.theme.primary};
+        border: 2px solid ${(props) => props.theme.primary};
     }
 `;
 
 const StyledSpinnerGravatar = styled.div`
-    width: ${props => props.size}px;
-    height: ${props => props.size}px;
+    width: ${(props) => props.size}px;
+    height: ${(props) => props.size}px;
     display: inline-block;
     text-align: center;
-    line-height: ${props => props.size}px;
-    color: ${props => props.theme.secondary};
-    border: 2px solid ${props => props.theme.lightDarker};
+    line-height: ${(props) => props.size}px;
+    color: ${(props) => props.theme.secondary};
+    border: 2px solid ${(props) => props.theme.lightDarker};
     cursor: pointer;
     vertical-align: sub;
     &:hover {
-        border: 2px solid ${props => props.theme.primary};
+        border: 2px solid ${(props) => props.theme.primary};
     }
 
-    background-color: ${props => props.theme.lightDarker};
+    background-color: ${(props) => props.theme.lightDarker};
 `;
 
 const UserAvatar = ({ userId, size = 28, appendToTooltip = '', showDisplayName = false, linkTarget = '_self' }) => {

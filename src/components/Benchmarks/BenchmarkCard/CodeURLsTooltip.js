@@ -29,8 +29,8 @@ const CodeURLsTooltip = ({ urls, title, id }) => {
     }
     return (
         <>
-            <Modal isOpen={showModal} toggle={() => setShowModal(v => !v)} size="lg">
-                <ModalHeader toggle={() => setShowModal(v => !v)}>
+            <Modal isOpen={showModal} toggle={() => setShowModal((v) => !v)} size="lg">
+                <ModalHeader toggle={() => setShowModal((v) => !v)}>
                     {' '}
                     <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: id })} style={{ textDecoration: 'none' }}>
                         {title}
@@ -57,7 +57,7 @@ const CodeURLsTooltip = ({ urls, title, id }) => {
                     </Table>
                 </ModalBody>
             </Modal>
-            <Button className="p-0" color="link" onClick={() => setShowModal(v => !v)}>
+            <Button className="p-0" color="link" onClick={() => setShowModal((v) => !v)}>
                 <Icon icon={faGithub} color="#e86161" className="icon ms-2 me-2" />
             </Button>
         </>

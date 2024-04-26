@@ -4,8 +4,8 @@ import { Button } from 'reactstrap';
 export const AddContribution = styled(Button)`
     &&& {
         padding: 0;
-        border: 1px solid ${props => props.theme.lightDarker};
-        background-color: ${props => props.theme.lightLighter};
+        border: 1px solid ${(props) => props.theme.lightDarker};
+        background-color: ${(props) => props.theme.lightLighter};
         border-radius: 60px;
         margin: 0 10px;
         cursor: pointer;
@@ -21,8 +21,8 @@ export const AddContribution = styled(Button)`
         }
 
         &:hover {
-            background-color: ${props => props.theme.primary};
-            border: 1px solid ${props => props.theme.primary};
+            background-color: ${(props) => props.theme.primary};
+            border: 1px solid ${(props) => props.theme.primary};
             color: #fff;
         }
     }

@@ -20,11 +20,11 @@ const Stats = () => {
         document.title = 'Stats - ORKG';
         setIsLoading(true);
         getStats([CLASSES.BENCHMARK])
-            .then(stats => {
+            .then((stats) => {
                 setIsLoading(false);
                 setStats(stats);
             })
-            .catch(e => {
+            .catch((e) => {
                 setIsLoading(false);
                 toast.error('Failed loading statistics data');
             });

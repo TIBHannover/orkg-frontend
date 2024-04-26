@@ -13,7 +13,7 @@ class ConfirmModal extends Component {
     }
 
     toggle = () => {
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             showModal: !prevState.showModal,
         }));
     };

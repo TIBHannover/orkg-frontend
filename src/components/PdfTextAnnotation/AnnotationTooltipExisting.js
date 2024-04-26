@@ -33,7 +33,7 @@ const AnnotationTooltipExisting = ({ type = null, id = null, deleteAnnotation })
     }
 
     return (
-        <Container onClick={e => e.stopPropagation()}>
+        <Container onClick={(e) => e.stopPropagation()}>
             <span className="pe-3">{label}</span>
             <IconWrapper>
                 <DeleteIcon icon={faTrash} onClick={() => deleteAnnotation(id)} />

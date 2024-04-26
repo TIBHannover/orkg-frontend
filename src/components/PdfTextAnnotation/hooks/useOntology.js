@@ -235,8 +235,8 @@ const useOntology = () => {
     const recommendedClasses = filter(classes, { recommendedProperty: true });
     const nonRecommendedClasses = filter(classes, { recommendedProperty: false });
 
-    const findByType = type => classes.find(_class => _class.iri === type);
-    const findByLabel = label => classes.find(_class => _class.label === label);
+    const findByType = (type) => classes.find((_class) => _class.iri === type);
+    const findByLabel = (label) => classes.find((_class) => _class.label === label);
 
     return { classes, recommendedClasses, nonRecommendedClasses, findByType, findByLabel };
 };

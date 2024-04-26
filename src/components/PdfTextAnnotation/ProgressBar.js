@@ -8,9 +8,9 @@ const RECOMMENDED_ANNOTATION_AMOUNT = 2;
 
 const ProgressBar = () => {
     const { recommendedClasses } = useOntology();
-    const annotations = useSelector(state => state.pdfTextAnnotation.annotations);
+    const annotations = useSelector((state) => state.pdfTextAnnotation.annotations);
 
-    const classesWithCompletion = recommendedClasses.map(_class => {
+    const classesWithCompletion = recommendedClasses.map((_class) => {
         const annotationsFiltered = filter(annotations, { type: _class.iri });
         const amount = annotationsFiltered.length;
         const percentage = amount >= RECOMMENDED_ANNOTATION_AMOUNT ? 100 : Math.round(100 * (amount / RECOMMENDED_ANNOTATION_AMOUNT));
@@ -22,7 +22,7 @@ const ProgressBar = () => {
         };
     });
 
-    const percentageTotal = Math.round(meanBy(classesWithCompletion, _class => _class.percentage));
+    const percentageTotal = Math.round(meanBy(classesWithCompletion, (_class) => _class.percentage));
 
     const completionTooltip = (
         <div style={{ fontSize: '110%' }}>

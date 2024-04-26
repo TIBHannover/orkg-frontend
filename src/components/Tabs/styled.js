@@ -8,7 +8,7 @@ export const TabHeaderStyle = styled.div`
     border: 0;
     border-radius: 0;
     border-bottom-width: 2px;
-    border-color: ${props => props.theme.lightDarker};
+    border-color: ${(props) => props.theme.lightDarker};
     border-style: solid;
 `;
 
@@ -270,8 +270,8 @@ export const ORKGTabsStyle = styled.div`
     }
     .rc-tabs-left > .rc-tabs-content-holder,
     .rc-tabs-left > div > .rc-tabs-content-holder {
-        border-radius: ${props => props.theme.borderRadius} !important;
-        border: ${props => props.theme.borderWidth} solid ${props => props.theme.primary} !important;
+        border-radius: ${(props) => props.theme.borderRadius} !important;
+        border: ${(props) => props.theme.borderWidth} solid ${(props) => props.theme.primary} !important;
         padding: 15px 30px;
     }
     .rc-tabs-left > .rc-tabs-content-holder > .rc-tabs-content > .rc-tabs-tabpane,
@@ -353,7 +353,7 @@ export const ORKGTabsStyle = styled.div`
         cursor: pointer;
     }
     .rc-tabs-dropdown .rc-tabs-dropdown-menu-item-remove:hover {
-        color: ${props => props.theme.primary};
+        color: ${(props) => props.theme.primary};
     }
     .rc-tabs-dropdown .rc-tabs-dropdown-menu-item:hover {
         background: rgba(0, 0, 0, 0.04);
@@ -374,7 +374,7 @@ export const ORKGTabsStyle = styled.div`
     }
     .rc-tabs-card > .rc-tabs-nav .rc-tabs-tab-active,
     .rc-tabs-card > div > .rc-tabs-nav .rc-tabs-tab-active {
-        color: ${props => props.theme.primary};
+        color: ${(props) => props.theme.primary};
         background: #ffffff;
     }
     .rc-tabs-card > .rc-tabs-nav .rc-tabs-ink-bar,
@@ -439,9 +439,9 @@ export const ORKGTabsStyle = styled.div`
         flex: none;
         align-items: center;
         background #fff;
-        border-radius: ${props => props.theme.borderRadius};
-        border-width: ${props => props.theme.borderWidth};
-        border-color: ${props => props.theme.lightDarker};
+        border-radius: ${(props) => props.theme.borderRadius};
+        border-width: ${(props) => props.theme.borderWidth};
+        border-color: ${(props) => props.theme.lightDarker};
         border-style: solid;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
@@ -517,13 +517,13 @@ export const ORKGTabsStyle = styled.div`
     }
     .rc-tabs > .rc-tabs-nav .rc-tabs-nav-add:hover,
     .rc-tabs > div > .rc-tabs-nav .rc-tabs-nav-add:hover {
-        color: ${props => props.theme.primary};
+        color: ${(props) => props.theme.primary};
     }
     .rc-tabs > .rc-tabs-nav .rc-tabs-nav-add:active,
     .rc-tabs > div > .rc-tabs-nav .rc-tabs-nav-add:active,
     .rc-tabs > .rc-tabs-nav .rc-tabs-nav-add:focus:not(:focus-visible),
     .rc-tabs > div > .rc-tabs-nav .rc-tabs-nav-add:focus:not(:focus-visible) {
-        color: ${props => props.theme.primary};
+        color: ${(props) => props.theme.primary};
     }
     .rc-tabs > .rc-tabs-nav .rc-tabs-nav-add:focus-visible,
     .rc-tabs > div > .rc-tabs-nav .rc-tabs-nav-add:focus-visible {
@@ -536,7 +536,7 @@ export const ORKGTabsStyle = styled.div`
     }
     .rc-tabs .rc-tabs-ink-bar {
         position: absolute;
-        background: ${props => props.theme.primary};
+        background: ${(props) => props.theme.primary};
         pointer-events: none;
     }
     .rc-tabs .rc-tabs-tab {
@@ -553,17 +553,17 @@ export const ORKGTabsStyle = styled.div`
     .rc-tabs-left .rc-tabs-tab {
         padding: 12px 10px 12px 15px;
         transition: 0.3s background;
-        border-top-left-radius: ${props => props.theme.borderRadius};
-        border-bottom-left-radius: ${props => props.theme.borderRadius};
-        border: 1px solid ${props => props.theme.lightDarker};
-        background-color: ${props => props.theme.lightLighter};
+        border-top-left-radius: ${(props) => props.theme.borderRadius};
+        border-bottom-left-radius: ${(props) => props.theme.borderRadius};
+        border: 1px solid ${(props) => props.theme.lightDarker};
+        background-color: ${(props) => props.theme.lightLighter};
     }
 
     .rc-tabs .rc-tabs-tab-btn:focus:not(:focus-visible),
     .rc-tabs .rc-tabs-tab-remove:focus:not(:focus-visible),
     .rc-tabs .rc-tabs-tab-btn:active,
     .rc-tabs .rc-tabs-tab-remove:active {
-        color: ${props => props.theme.primary};
+        color: ${(props) => props.theme.primary};
     }
     .rc-tabs .rc-tabs-tab-btn:focus-visible,
     .rc-tabs .rc-tabs-tab-remove:focus-visible {
@@ -591,16 +591,16 @@ export const ORKGTabsStyle = styled.div`
         color: rgba(0, 0, 0, 0.88);
     }
     .rc-tabs .rc-tabs-tab:hover {
-        color: ${props => props.theme.primary};
+        color: ${(props) => props.theme.primary};
     }
     .rc-tabs .rc-tabs-tab.rc-tabs-tab-active .rc-tabs-tab-btn {
-        color: ${props => props.theme.primary};
+        color: ${(props) => props.theme.primary};
     }
     .rc-tabs-left .rc-tabs-tab.rc-tabs-tab-active {
-        background: ${props => props.theme.primary};
+        background: ${(props) => props.theme.primary};
         color: #fff;
         cursor: initial !important;
-        border-color: ${props => props.theme.primary};
+        border-color: ${(props) => props.theme.primary};
     }
     .rc-tabs-left .rc-tabs-tab.rc-tabs-tab-active .rc-tabs-tab-btn {
         color: #fff;
@@ -633,9 +633,9 @@ export const ORKGTabsStyle = styled.div`
         min-width: 0;
         min-height: 0;
         background:#fff;
-        border-radius: ${props => props.theme.borderRadius};
-        border-width: ${props => props.theme.borderWidth};
-        border-color: ${props => props.theme.lightDarker};
+        border-radius: ${(props) => props.theme.borderRadius};
+        border-width: ${(props) => props.theme.borderWidth};
+        border-color: ${(props) => props.theme.lightDarker};
         border-style: solid;
         border-top-left-radius: 0;
         border-top-right-radius: 0;
@@ -743,8 +743,8 @@ export const ORKGTabsStyle = styled.div`
 export const AddContribution = styled(Button)`
     &&& {
         padding: 0;
-        border: 1px solid ${props => props.theme.lightDarker};
-        background-color: ${props => props.theme.lightLighter};
+        border: 1px solid ${(props) => props.theme.lightDarker};
+        background-color: ${(props) => props.theme.lightLighter};
         border-radius: 60px;
         margin: 0 5px;
         cursor: pointer;
@@ -760,8 +760,8 @@ export const AddContribution = styled(Button)`
         }
 
         &:hover {
-            background-color: ${props => props.theme.primary};
-            border: 1px solid ${props => props.theme.primary};
+            background-color: ${(props) => props.theme.primary};
+            border: 1px solid ${(props) => props.theme.primary};
             color: #fff;
         }
     }

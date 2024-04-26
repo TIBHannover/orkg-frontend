@@ -5,7 +5,7 @@ export default {
     component: ResearchFieldInput,
 };
 
-const Template = args => <ResearchFieldInput {...args} />;
+const Template = (args) => <ResearchFieldInput {...args} />;
 
 export const Default = Template.bind({});
 

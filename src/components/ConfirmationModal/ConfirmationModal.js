@@ -3,11 +3,11 @@ import theme from 'assets/scss/ThemeVariables';
 import { ThemeProvider } from 'styled-components';
 import NewClassConfirmationModal from 'components/ConfirmationModal/NewClassConfirmationModal';
 
-const confirm = props =>
-    new Promise(resolve => {
+const confirm = (props) =>
+    new Promise((resolve) => {
         let container = document.createElement('div');
         const root = createRoot(container);
-        const handleResolve = result => {
+        const handleResolve = (result) => {
             root.unmount();
             container = null;
             resolve(result);

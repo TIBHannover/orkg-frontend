@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux';
 import { saveFeedback, SERVICE_MAPPING } from 'services/orkgNlp';
 
 const useBioassays = () => {
-    const { bioassayRawResponse, bioassayText } = useSelector(state => state.viewPaper);
-    const selectedContributionId = useSelector(state => state.viewPaper.selectedContributionId);
-    const { properties, values } = useSelector(state => state.statementBrowser);
+    const { bioassayRawResponse, bioassayText } = useSelector((state) => state.viewPaper);
+    const selectedContributionId = useSelector((state) => state.viewPaper.selectedContributionId);
+    const { properties, values } = useSelector((state) => state.statementBrowser);
     const { getExistingStatement } = useInsertData();
 
     const handleSaveBioassaysFeedback = ({ selectedItems }) => {
@@ -27,14 +27,14 @@ const useBioassays = () => {
                         label: label.property.label,
                     },
                 });
-                const isSelected = selectedItems[label.property.id]?.find(resourceId => resourceId === resource.id);
+                const isSelected = selectedItems[label.property.id]?.find((resourceId) => resourceId === resource.id);
                 response[index].resources.splice(index2, 1, {
                     ...resource,
                     feedback: isExistingStatement || isSelected ? 'ACCEPT' : 'REJECT',
                 });
                 if (isExistingStatement) {
                     if (!contributionId) {
-                        const pId = properties.allIds.find(p => properties.byId[p].label === label.property.label);
+                        const pId = properties.allIds.find((p) => properties.byId[p].label === label.property.label);
                         contributionId = properties.byId[pId]?.resourceId ?? null;
                     }
                     accepted += 1;
@@ -47,7 +47,7 @@ const useBioassays = () => {
         for (const id of properties.allIds) {
             const property = properties.byId[id];
             if (selectedContributionId === property.resourceId) {
-                const label = response.find(l => l.property.label === property.label);
+                const label = response.find((l) => l.property.label === property.label);
                 if (!label) {
                     response.push({
                         property: {
@@ -55,7 +55,7 @@ const useBioassays = () => {
                             label: property.label,
                             feedback: 'ADD',
                         },
-                        resources: property.valueIds.map(valueId => {
+                        resources: property.valueIds.map((valueId) => {
                             const value = values.byId[valueId];
                             return {
                                 ...(value.id ? { id: value.id } : {}),
@@ -65,10 +65,10 @@ const useBioassays = () => {
                         }),
                     });
                 } else {
-                    const propertyIndex = response.findIndex(l => l.property.label === property.label);
+                    const propertyIndex = response.findIndex((l) => l.property.label === property.label);
                     for (const valueId of property.valueIds) {
                         const resource = values.byId[valueId];
-                        const isExistingResource = label.resources.find(r => r.label === resource.label);
+                        const isExistingResource = label.resources.find((r) => r.label === resource.label);
                         if (!isExistingResource) {
                             response[propertyIndex].resources.push({
                                 ...(resource.id ? { id: resource.id } : {}),

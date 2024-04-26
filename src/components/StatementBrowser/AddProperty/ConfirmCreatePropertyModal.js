@@ -37,7 +37,7 @@ const ConfirmCreatePropertyModal = ({ toggle, onCreate, shouldPerformCreate = fa
                     <FormGroup className="mt-4">
                         <Label for="property-description">Property description</Label>
                         <Input
-                            onChange={e => setDescription(e.target.value)}
+                            onChange={(e) => setDescription(e.target.value)}
                             value={description}
                             type="textarea"
                             id="property-description"

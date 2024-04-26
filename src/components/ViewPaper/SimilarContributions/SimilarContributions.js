@@ -19,11 +19,11 @@ const Card = styled(Link)`
     margin: 0 0;
     flex: 1;
     border-radius: 11px;
-    background: ${props => props.theme.secondary};
+    background: ${(props) => props.theme.secondary};
     cursor: pointer;
     font-size: 95%;
     padding: 10px 5px;
-    color: ${props => props.theme.bodyColor};
+    color: ${(props) => props.theme.bodyColor};
     text-decoration: none;
     color: #fff;
     font-size: 85%;
@@ -46,7 +46,7 @@ const Card = styled(Link)`
     }
 
     & .simContributionLabel {
-        color: ${props => props.theme.secondaryDarker};
+        color: ${(props) => props.theme.secondaryDarker};
         font-size: 84%;
     }
 `;
@@ -58,7 +58,7 @@ const Similarity = styled.span`
     display: block;
     float: left;
     text-align: center;
-    color: ${props => props.theme.secondaryDarker};
+    color: ${(props) => props.theme.secondaryDarker};
     font-weight: 700;
 
     margin-right: 10px;
@@ -141,7 +141,7 @@ const SimilarContributions = ({ contributionId }) => {
                         className="clearfix"
                         href={`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionId},${similarContributions
                             .slice(0, 3)
-                            .map(s => s.contributionId)
+                            .map((s) => s.contributionId)
                             .join(',')}`}
                     >
                         <span style={{ margin: '7px 5px 0 0', fontSize: '95%' }} className="float-end btn btn-link p-0 border-0 align-baseline">

@@ -30,11 +30,11 @@ const StyledListGroupItem = styled(ListGroupItem)`
     overflow-wrap: anywhere;
 
     &:last-child {
-        border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
+        border-bottom-right-radius: ${(props) => (props.rounded === 'true' ? '0 !important' : '')};
     }
 `;
 
-const Results = props => (
+const Results = (props) => (
     <div>
         {props.loading && props.currentPage === 0 && (
             <ContentLoader

@@ -65,19 +65,19 @@ function AutocompleteObservatory(props) {
         }
     };
 
-    const onChangeObservatory = async selected => {
+    const onChangeObservatory = async (selected) => {
         props.onChangeObservatory(selected ?? null);
-        const data = selected ? await Promise.all(selected?.organization_ids.map(o => getOrganization(o))) : null;
+        const data = selected ? await Promise.all(selected?.organization_ids.map((o) => getOrganization(o))) : null;
         // Select the first organization
         props.onChangeOrganization(data?.[0] ?? null);
         setOptionsOrganizations(selected ? data : conferences);
     };
 
-    const onChangeOrganization = selected => {
+    const onChangeOrganization = (selected) => {
         props.onChangeOrganization(selected ?? null);
     };
 
-    const CustomOptionObservatory = innerProps => (
+    const CustomOptionObservatory = (innerProps) => (
         <components.Option {...innerProps}>
             <div>{innerProps.data.name}</div>
             <small className={!innerProps.isSelected ? 'text-muted' : ''}>
@@ -86,7 +86,7 @@ function AutocompleteObservatory(props) {
         </components.Option>
     );
 
-    const CustomOptionOrganization = innerProps => (
+    const CustomOptionOrganization = (innerProps) => (
         <components.Option {...innerProps}>
             <div className="d-flex">
                 <LogoContainer className="me-2">

@@ -8,13 +8,13 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 const StyledIcon = styled(Icon)`
-    cursor: ${props => (props.$isButton ? 'pointer' : 'initial')};
+    cursor: ${(props) => (props.$isButton ? 'pointer' : 'initial')};
 `;
 
 const MarkUnlisted = ({ unlisted = false, size = '1x', handleChangeStatus }) => {
     const [over, setOver] = useState(false);
 
-    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
+    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
 
     const buttonTooltip = unlisted ? 'Remove unlisted badge' : 'Mark as unlisted';
 

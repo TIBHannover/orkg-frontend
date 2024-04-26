@@ -14,8 +14,8 @@ const LastUpdatesBox = ({ researchFieldId, openModal, setOpenModal }) => {
     const { activities, isLoading } = useTopChangelog({ researchFieldId, pageSize: 30 });
 
     return (
-        <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
-            <ModalHeader toggle={() => setOpenModal(v => !v)}>Last 30 updates</ModalHeader>
+        <Modal isOpen={openModal} toggle={() => setOpenModal((v) => !v)} size="lg">
+            <ModalHeader toggle={() => setOpenModal((v) => !v)}>Last 30 updates</ModalHeader>
             <ModalBody>
                 <div className="ps-3 pe-3">
                     {!isLoading &&

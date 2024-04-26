@@ -29,7 +29,7 @@ const Highlight = ({ position, isScrolledTo, type = null }) => {
 
     const { rects } = position;
     const { classes } = useOntology();
-    const ontologyType = type ? classes.find(_class => _class.iri === type) : {};
+    const ontologyType = type ? classes.find((_class) => _class.iri === type) : {};
     const backgroundColor = ontologyType.color ?? DEFAULT_HIGHLIGHT_COLOR;
 
     return (

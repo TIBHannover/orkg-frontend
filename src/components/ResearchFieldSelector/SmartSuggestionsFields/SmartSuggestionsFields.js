@@ -26,7 +26,7 @@ const SmartSuggestionsFields = ({ handleFieldSelect, title = null, abstract = nu
         getSuggestions();
     }, [title, abstract]);
 
-    const handleFieldLabelSelect = async fieldLabel => {
+    const handleFieldLabelSelect = async (fieldLabel) => {
         const fieldResources = await getResources({ q: fieldLabel, include: [CLASSES.RESEARCH_FIELD], returnContent: true });
 
         if (fieldResources.length === 0) {
@@ -55,7 +55,7 @@ const SmartSuggestionsFields = ({ handleFieldSelect, title = null, abstract = nu
                 </h3>
                 {!isLoading ? (
                     <div className="d-flex flex-wrap">
-                        {fields.map(field => (
+                        {fields.map((field) => (
                             <Button
                                 key={field.research_field}
                                 color="smart"

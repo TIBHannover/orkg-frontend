@@ -35,11 +35,11 @@ const SideBar = () => {
     const [saveModalIsOpen, setSaveModalIsOpen] = useState(false);
     const [saveDropdownIsOpen, setSaveDropdownIsOpen] = useState(false);
     const [helpIsOpen, setHelpIsOpen] = useState(false);
-    const isLoadedPdfViewer = useSelector(state => state.pdfTextAnnotation.isLoadedPdfViewer);
+    const isLoadedPdfViewer = useSelector((state) => state.pdfTextAnnotation.isLoadedPdfViewer);
     const dispatch = useDispatch();
 
     const toggleSaveModal = () => {
-        setSaveModalIsOpen(isOpen => !isOpen);
+        setSaveModalIsOpen((isOpen) => !isOpen);
     };
 
     const handleDiscardChanges = () => {
@@ -84,14 +84,14 @@ const SideBar = () => {
             {/* <SmartSentenceDetection pdfViewer={pdfViewer} /> */}
 
             <div id="annotation-categories">
-                {recommendedClasses.map(annotationClass => (
+                {recommendedClasses.map((annotationClass) => (
                     <AnnotationCategory annotationClass={annotationClass} hideEmpty={false} key={annotationClass.iri} />
                 ))}
             </div>
 
             <hr />
 
-            {nonRecommendedClasses.map(annotationClass => (
+            {nonRecommendedClasses.map((annotationClass) => (
                 <AnnotationCategory annotationClass={annotationClass} hideEmpty={true} key={annotationClass.iri} />
             ))}
 

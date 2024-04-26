@@ -15,7 +15,7 @@ import { Badge } from 'reactstrap';
 function ProvenanceBox({ item, editMode = false }) {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
     const { observatoryId, organizationId, provenance, updateCallBack } = useProvenance({ orgId: item.organization_id, obsId: item.observatory_id });
-    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
+    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
 
     if (!provenance && !editMode) {
         return null;
@@ -45,7 +45,7 @@ function ProvenanceBox({ item, editMode = false }) {
                 </Badge>
             )}
             {editMode && isCurationAllowed && (
-                <StatementActionButton title="Edit provenance" icon={faPen} action={() => setShowAssignObservatory(v => !v)} />
+                <StatementActionButton title="Edit provenance" icon={faPen} action={() => setShowAssignObservatory((v) => !v)} />
             )}
             <ObservatoryModal
                 callBack={updateCallBack}
@@ -53,7 +53,7 @@ function ProvenanceBox({ item, editMode = false }) {
                 observatory={provenance}
                 organization={provenance?.organization}
                 resourceId={item.id}
-                toggle={() => setShowAssignObservatory(v => !v)}
+                toggle={() => setShowAssignObservatory((v) => !v)}
             />
         </>
     );

@@ -24,7 +24,7 @@ export default function Visualization() {
         getStatementsByObjectAndPredicate({
             objectId: visualizationId,
             predicateId: PREDICATES.HAS_VISUALIZATION,
-        }).then(statements => {
+        }).then((statements) => {
             // check if statements are found and if "visualizationId" has the contribution class
             const comparison = filterSubjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_VISUALIZATION, true, CLASSES.COMPARISON);
             if (!comparison) {

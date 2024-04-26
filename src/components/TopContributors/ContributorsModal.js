@@ -16,8 +16,8 @@ const ContributorsModal = ({ researchFieldId, openModal, setOpenModal, initialSo
     });
 
     return (
-        <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
-            <ModalHeader toggle={() => setOpenModal(v => !v)}>
+        <Modal isOpen={openModal} toggle={() => setOpenModal((v) => !v)} size="lg">
+            <ModalHeader toggle={() => setOpenModal((v) => !v)}>
                 <Icon icon={faAward} className="text-primary" /> Top Contributors
                 <div style={{ display: 'inline-block', marginLeft: '20px' }}>
                     <ContributorsDropdownFilter

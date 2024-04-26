@@ -14,10 +14,10 @@ import { ListGroup } from 'reactstrap';
  */
 const ViewArticleStatementBrowser = ({ id }) => {
     const [properties, setProperties] = useState([]);
-    const statements = useSelector(state => state.review.statements);
+    const statements = useSelector((state) => state.review.statements);
 
     useEffect(() => {
-        const statementsForSubject = cloneDeep(statements.filter(statement => statement.subject.id === id));
+        const statementsForSubject = cloneDeep(statements.filter((statement) => statement.subject.id === id));
 
         let properties = {};
         for (const statement of statementsForSubject) {
@@ -32,17 +32,17 @@ const ViewArticleStatementBrowser = ({ id }) => {
             const property = properties[propertyId];
             properties[propertyId] = {
                 ...property,
-                values: orderBy(property.values, [_property => _property.label.toLowerCase()]),
+                values: orderBy(property.values, [(_property) => _property.label.toLowerCase()]),
             };
         }
 
-        properties = orderBy(properties, [property => property.label.toLowerCase()]);
+        properties = orderBy(properties, [(property) => property.label.toLowerCase()]);
         setProperties(properties);
     }, [statements, id]);
 
     return (
         <ListGroup className="listGroupEnlarge">
-            {Object.keys(properties).map(propertyId => {
+            {Object.keys(properties).map((propertyId) => {
                 const property = properties[propertyId];
                 return (
                     <StatementsGroupStyle className="noTemplate list-group-item" key={propertyId}>
@@ -59,7 +59,7 @@ const ViewArticleStatementBrowser = ({ id }) => {
                             <ValuesStyle className="col-8 valuesList">
                                 <ListGroup flush className="px-3">
                                     {property.values.length > 0 &&
-                                        property.values.map(value => (
+                                        property.values.map((value) => (
                                             <ValueItemStyle key={value.id}>
                                                 {value._class === 'resource' ? (
                                                     <Link href={`${reverse(ROUTES.RESOURCE, { id: value.id })}?noRedirect`}>{value.label}</Link>

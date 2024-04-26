@@ -11,11 +11,11 @@ function useTimeline(id) {
     const [contributors, setContributors] = useState([]);
 
     const loadMore = useCallback(
-        p => {
+        (p) => {
             setIsNextPageLoading(true);
             getTimelineByResourceId({ id, page: p, size: pageSize })
-                .then(result => {
-                    setContributors(prevContributors => [...prevContributors, ...result.content]);
+                .then((result) => {
+                    setContributors((prevContributors) => [...prevContributors, ...result.content]);
                     setIsNextPageLoading(false);
                     setHasNextPage(!result.last);
                     setIsLastPageReached(result.last);
@@ -23,7 +23,7 @@ function useTimeline(id) {
                     setPage(p + 1);
                 })
                 .catch(() => {
-                    setContributors(prevContributors => (p > 0 ? prevContributors : []));
+                    setContributors((prevContributors) => (p > 0 ? prevContributors : []));
                     setIsNextPageLoading(false);
                     setHasNextPage(false);
                     setIsLastPageReached(p > 1);

@@ -11,21 +11,21 @@ function FilterModal(props) {
     const { label: propertyName } = property;
 
     const isCategory = () => Object.keys(values).length > 1;
-    const isNum = () => Object.keys(values).length === Object.keys(values).filter(value => !isNaN(value) && !isNaN(parseFloat(value))).length;
+    const isNum = () => Object.keys(values).length === Object.keys(values).filter((value) => !isNaN(value) && !isNaN(parseFloat(value))).length;
     const isDate = () =>
         Object.keys(values).length ===
-        Object.keys(values).filter(value => {
+        Object.keys(values).filter((value) => {
             const { error } = Joi.date().required().validate(value);
             return !error;
         }).length;
     const isText = () =>
-        Object.keys(values).length > 3 && Object.keys(values).length !== Object.keys(values).filter(value => value.split(' ').length < 6).length;
+        Object.keys(values).length > 3 && Object.keys(values).length !== Object.keys(values).filter((value) => value.split(' ').length < 6).length;
 
     const generateCategoricalFilter = () => (
         <CategoricalFilterRule dataController={{ property, values, rules, updateRulesOfProperty, toggleFilterDialog }} />
     );
 
-    const generateOrdFilter = typeIsDate => (
+    const generateOrdFilter = (typeIsDate) => (
         <OrdinalFilterRule dataController={{ property, rules, updateRulesOfProperty, typeIsDate, toggleFilterDialog }} />
     );
 

@@ -14,8 +14,8 @@ const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
     });
 
     return (
-        <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
-            <ModalHeader toggle={() => setOpenModal(v => !v)}>
+        <Modal isOpen={openModal} toggle={() => setOpenModal((v) => !v)} size="lg">
+            <ModalHeader toggle={() => setOpenModal((v) => !v)}>
                 <Icon icon={faAward} className="text-primary me-2" />
                 Top 30 Contributors
             </ModalHeader>

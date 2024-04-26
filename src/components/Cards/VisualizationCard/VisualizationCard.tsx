@@ -73,7 +73,7 @@ const VisualizationCard: FC<VisualizationCardProps> = ({ visualization, showBadg
                         <small>
                             {visualization.authors && visualization.authors.length > 0 && (
                                 <>
-                                    <Icon size="sm" icon={faUser} /> {visualization.authors.map(a => a.name).join(', ')}
+                                    <Icon size="sm" icon={faUser} /> {visualization.authors.map((a) => a.name).join(', ')}
                                 </>
                             )}
                             {visualization.created_at && (
