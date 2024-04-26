@@ -16,8 +16,8 @@ import { deleteComment } from 'services/backend/discussions';
 
 const Comment = ({ comment, entityId, setComments, refreshCount }) => {
     const [username, setUsername] = useState('');
-    const userId = useSelector(state => state.auth.user?.id);
-    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
+    const userId = useSelector((state) => state.auth.user?.id);
+    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
 
     useEffect(() => {
         (async () => {
@@ -25,7 +25,7 @@ const Comment = ({ comment, entityId, setComments, refreshCount }) => {
         })();
     }, [comment.created_by]);
 
-    const handleDeleteComment = async commentId => {
+    const handleDeleteComment = async (commentId) => {
         const confirm = await Confirm({
             title: 'Are you sure?',
             message: 'You are about the remove this comment.',
@@ -34,7 +34,7 @@ const Comment = ({ comment, entityId, setComments, refreshCount }) => {
         if (confirm) {
             try {
                 await deleteComment({ entityId, commentId });
-                setComments(prevComments => prevComments.filter(_comment => _comment.id !== commentId));
+                setComments((prevComments) => prevComments.filter((_comment) => _comment.id !== commentId));
                 refreshCount();
                 toast.success('Comment deleted successfully');
             } catch (e) {

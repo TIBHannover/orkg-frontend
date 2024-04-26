@@ -47,7 +47,7 @@ const DatatypeSelector = ({
     const theme = useContext(ThemeContext);
 
     const CustomOption = useCallback(
-        innerProps => (
+        (innerProps) => (
             <components.Option {...innerProps}>
                 <Tippy content={innerProps.data.tooltip} disabled={!innerProps.data.tooltip}>
                     <div>{innerProps.data.name}</div>
@@ -57,14 +57,14 @@ const DatatypeSelector = ({
         [],
     );
     const customStyles = {
-        container: provided => ({
+        container: (provided) => ({
             ...provided,
             flexBasis: '100px',
             padding: '0',
             border: '0',
             fontSize: '0.875rem',
         }),
-        control: provided => ({
+        control: (provided) => ({
             ...provided,
             height: '100% !important',
             minHeight: 'calc(1.5em + 0.5rem + 2px)',
@@ -76,55 +76,55 @@ const DatatypeSelector = ({
             backgroundColor: theme.light,
             color: theme.secondaryDarker,
         }),
-        valueContainer: provided => ({
+        valueContainer: (provided) => ({
             ...provided,
             marginTop: '0',
             marginLeft: '6px',
             padding: '0',
             border: '0',
         }),
-        input: provided => ({
+        input: (provided) => ({
             ...provided,
             color: theme.secondaryDarker,
         }),
-        dropdownIndicator: provided => ({
+        dropdownIndicator: (provided) => ({
             ...provided,
             marginTop: '0',
             padding: '0',
             border: '0',
             width: '16px',
         }),
-        clearIndicator: provided => ({
+        clearIndicator: (provided) => ({
             ...provided,
             marginTop: '0',
             padding: '0',
             border: '0',
             width: '16px',
         }),
-        indicatorsContainer: provided => ({
+        indicatorsContainer: (provided) => ({
             ...provided,
             paddingRight: '4px',
             border: '0',
         }),
-        menu: provided => ({
+        menu: (provided) => ({
             ...provided,
             fontSize: '0.875rem',
         }),
     };
 
     // lists are not supported when changes are not synced with the backend
-    const availableDataTypes = !syncBackend ? DATA_TYPES.filter(dataType => dataType.type !== 'list') : DATA_TYPES;
+    const availableDataTypes = !syncBackend ? DATA_TYPES.filter((dataType) => dataType.type !== 'list') : DATA_TYPES;
 
     return (
         <>
             <ConditionalWrapper
                 condition={isDisabled}
-                wrapper={children => (
+                wrapper={(children) => (
                     <Tippy
                         interactive
                         content={
                             <TypeTooltipContent
-                                switchEntityType={entity && DATA_TYPES.filter(dt => dt._class === entity).length <= 1}
+                                switchEntityType={entity && DATA_TYPES.filter((dt) => dt._class === entity).length <= 1}
                                 entity={getConfigByType(valueType)._class}
                                 valueClass={valueClass}
                             />
@@ -139,8 +139,8 @@ const DatatypeSelector = ({
                     classNamePrefix="react-select-dark"
                     value={getConfigByType(valueType)}
                     components={{ Option: CustomOption }}
-                    options={!entity ? availableDataTypes : availableDataTypes.filter(dt => dt._class === entity)}
-                    onChange={v => setValueType(v.type)}
+                    options={!entity ? availableDataTypes : availableDataTypes.filter((dt) => dt._class === entity)}
+                    onChange={(v) => setValueType(v.type)}
                     getOptionValue={({ type }) => type}
                     getOptionLabel={({ name }) => name}
                     isClearable={false}

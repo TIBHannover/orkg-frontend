@@ -24,8 +24,8 @@ const Video = () => {
                 <Icon icon={faPlayCircle} /> Play video
             </PlayButton>
 
-            <Modal isOpen={isOpen} toggle={() => setIsOpen(v => !v)} size="lg">
-                <ModalHeader toggle={() => setIsOpen(v => !v)}>ORKG introduction video</ModalHeader>
+            <Modal isOpen={isOpen} toggle={() => setIsOpen((v) => !v)} size="lg">
+                <ModalHeader toggle={() => setIsOpen((v) => !v)}>ORKG introduction video</ModalHeader>
                 <ModalBody>
                     <div className="ratio ratio-16x9">
                         <iframe

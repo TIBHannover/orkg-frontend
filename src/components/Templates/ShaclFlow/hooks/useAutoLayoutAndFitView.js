@@ -29,8 +29,8 @@ const layout = tree()
     // this is needed for creating equal space between all nodes
     .separation(() => 1);
 
-const nodeCountSelector = state => state.nodeInternals.size;
-const nodesInitializedSelector = state => Array.from(state.nodeInternals.values()).every(node => node.width && node.height);
+const nodeCountSelector = (state) => state.nodeInternals.size;
+const nodesInitializedSelector = (state) => Array.from(state.nodeInternals.values()).every((node) => node.width && node.height);
 
 function useAutoLayoutAndFitView(options) {
     const { direction } = options;
@@ -50,10 +50,10 @@ function useAutoLayoutAndFitView(options) {
         let hierarchy;
         try {
             hierarchy = stratify()
-                .id(d => d.id)
+                .id((d) => d.id)
                 // get the id of each node by searching through the edges
                 // this only works if every node has one connection
-                .parentId(d => edges.find(e => e.target === d.id)?.source)(nodes);
+                .parentId((d) => edges.find((e) => e.target === d.id)?.source)(nodes);
         } catch {
             hierarchy = null;
         }
@@ -64,10 +64,10 @@ function useAutoLayoutAndFitView(options) {
         const root = layout(hierarchy);
 
         // set the React Flow nodes with the positions from the layout
-        setNodes(nodes =>
-            nodes.map(node => {
+        setNodes((nodes) =>
+            nodes.map((node) => {
                 // find the node in the hierarchy with the same id and get its coordinates
-                const { x, y } = root.find(d => d.id === node.id) || { x: node.position.x, y: node.position.y };
+                const { x, y } = root.find((d) => d.id === node.id) || { x: node.position.x, y: node.position.y };
 
                 return {
                     ...node,
@@ -80,8 +80,8 @@ function useAutoLayoutAndFitView(options) {
             }),
         );
 
-        setEdges(edges =>
-            edges.map(edge => ({ ...edge, ...(edge.source === 'ROOT' ? { hidden: true } : {}), style: { opacity: 1, strokeWidth: 3 } })),
+        setEdges((edges) =>
+            edges.map((edge) => ({ ...edge, ...(edge.source === 'ROOT' ? { hidden: true } : {}), style: { opacity: 1, strokeWidth: 3 } })),
         );
         setShouldFitView(true);
     }, [nodeCount, nodesInitialized, getNodes, getEdges, setNodes, setEdges, fitView, direction]);

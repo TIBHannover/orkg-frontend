@@ -41,7 +41,7 @@ const DefaultColumnFilter = ({ column: { filterValue, preFilteredRows, setFilter
         <Input
             bsSize="sm"
             value={filterValue || ''}
-            onChange={e => {
+            onChange={(e) => {
                 setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
             }}
             placeholder={`Search ${count} records...`}
@@ -49,7 +49,7 @@ const DefaultColumnFilter = ({ column: { filterValue, preFilteredRows, setFilter
     );
 };
 
-const RDFDataCube = props => {
+const RDFDataCube = (props) => {
     const [isDataCubeLoading, setIsDataCubeLoading] = useState(true);
     const [isDataCubeFailedLoading, setIsDataCubeFailedLoading] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -58,13 +58,13 @@ const RDFDataCube = props => {
     const [dimensions, setDimensions] = useState({});
     const [measures, setMeasures] = useState({});
     const [attributes, setAttributes] = useState({});
-    const value = useSelector(state => state.statementBrowser.values.byId[props.id]);
-    const resource = useSelector(state => state.statementBrowser.resources.byId[value.resourceId]);
-    const property = useSelector(state => state.statementBrowser.properties.byId[resource.propertyId]);
+    const value = useSelector((state) => state.statementBrowser.values.byId[props.id]);
+    const resource = useSelector((state) => state.statementBrowser.resources.byId[value.resourceId]);
+    const property = useSelector((state) => state.statementBrowser.properties.byId[resource.propertyId]);
     const { existingResourceId } = resource;
     const dispatch = useDispatch();
 
-    const handleResourceClick = r => {
+    const handleResourceClick = (r) => {
         dispatch(
             createResource({
                 label: r.rlabel ? r.rlabel : r.label,
@@ -95,7 +95,7 @@ const RDFDataCube = props => {
     }, []);
 
     const data = useMemo(() => {
-        const label2Resource = r => {
+        const label2Resource = (r) => {
             if ((typeof r === 'string' || r instanceof String) && r in resources) {
                 return resources[r];
             }
@@ -105,7 +105,7 @@ const RDFDataCube = props => {
             return { id: r, label: r, rlabel: r };
         };
         return !isDataCubeLoading && !isDataCubeFailedLoading
-            ? dataCube.rows.map(r => {
+            ? dataCube.rows.map((r) => {
                   const a = Object.assign({}, ...dataCube.header.map((n, index) => ({ [n]: label2Resource(r[index]) })));
                   return a;
               })
@@ -116,7 +116,7 @@ const RDFDataCube = props => {
     const columnsSortMethod = useCallback((rowA, rowB, id, desc) => sortMethod(rowA.original[id].label, rowB.original[id].label), []);
 
     const columns = useMemo(() => {
-        const handleCellClick = r => {
+        const handleCellClick = (r) => {
             if (r.type !== 'literal') {
                 handleResourceClick(r);
                 props.toggleModal();
@@ -124,15 +124,15 @@ const RDFDataCube = props => {
         };
 
         return !isDataCubeLoading && !isDataCubeFailedLoading
-            ? dataCube.header.map(h => ({
+            ? dataCube.header.map((h) => ({
                   id: h,
                   Header: { ...measures, ...dimensions, ...attributes }[h].label,
                   accessor: h,
                   sortType: columnsSortMethod,
                   filter: 'text',
-                  Cell: innerProps => (
+                  Cell: (innerProps) => (
                       <span
-                          onKeyDown={e => (e.keyCode === 13 ? handleCellClick(innerProps.value) : undefined)}
+                          onKeyDown={(e) => (e.keyCode === 13 ? handleCellClick(innerProps.value) : undefined)}
                           role="button"
                           tabIndex={0}
                           onClick={() => handleCellClick(innerProps.value)}
@@ -155,7 +155,7 @@ const RDFDataCube = props => {
     const filterTypes = useMemo(
         () => ({
             text: (rows, id, filterValue) =>
-                rows.filter(row => {
+                rows.filter((row) => {
                     const rowValue = row.values[id].label;
                     return rowValue !== undefined ? String(rowValue).toLowerCase().startsWith(String(filterValue).toLowerCase()) : true;
                 }),
@@ -204,10 +204,10 @@ const RDFDataCube = props => {
     );
 
     const toggleDropdown = () => {
-        setDropdownOpen(prevState => !prevState);
+        setDropdownOpen((prevState) => !prevState);
     };
 
-    const exportAsCsv = e => {
+    const exportAsCsv = (e) => {
         setDropdownOpen(false);
     };
 
@@ -218,39 +218,39 @@ const RDFDataCube = props => {
             // Get all the classes
             let classes = await getClasses({ q: 'qb:', returnContent: true });
             // Convert to an object { class_label: class_ID }
-            classes = Object.assign({}, ...classes.map(item => ({ [item.label]: item.id })));
+            classes = Object.assign({}, ...classes.map((item) => ({ [item.label]: item.id })));
             // Get Data Structure Definition (DSD)
             const dsd = await getStatementsBySubject({ id: existingResourceId }).then(
-                s_dataset => s_dataset.find(s => s.object.classes && s.object.classes.includes(classes['qb:DataStructureDefinition'])).object,
+                (s_dataset) => s_dataset.find((s) => s.object.classes && s.object.classes.includes(classes['qb:DataStructureDefinition'])).object,
             );
             // Get Component Specification
             let cSpecifications = await getStatementsBySubject({ id: dsd.id })
-                .then(s_dataset => s_dataset.filter(s => s.object.classes && s.object.classes.includes(classes['qb:ComponentSpecification'])))
-                .then(css => css.map(cs => cs.object));
+                .then((s_dataset) => s_dataset.filter((s) => s.object.classes && s.object.classes.includes(classes['qb:ComponentSpecification'])))
+                .then((css) => css.map((cs) => cs.object));
             // Fetch Statements of each component specification
-            cSpecifications = cSpecifications.map(cs =>
-                getStatementsBySubject({ id: cs.id }).then(css => {
+            cSpecifications = cSpecifications.map((cs) =>
+                getStatementsBySubject({ id: cs.id }).then((css) => {
                     // Get order of component specification
-                    let order = css.filter(statement => statement.predicate.label === 'order');
+                    let order = css.filter((statement) => statement.predicate.label === 'order');
                     if (order.length > 0) {
                         order = order[0].object.label;
                     } else {
                         order = css[0].subject.id;
                     }
-                    css = css.map(cs => ({ ...cs.object, order }));
+                    css = css.map((cs) => ({ ...cs.object, order }));
                     return css;
                 }),
             );
             Promise.all(cSpecifications)
-                .then(cso => cso.flat(1))
-                .then(cso => {
+                .then((cso) => cso.flat(1))
+                .then((cso) => {
                     // Get Dimensions and Measures
-                    let sDimensions = cso.filter(s => s.classes && s.classes.includes(classes['qb:DimensionProperty']));
-                    let sMeasures = cso.filter(s => s.classes && s.classes.includes(classes['qb:MeasureProperty']));
-                    let sAttributes = cso.filter(s => s.classes && s.classes.includes(classes['qb:AttributeProperty']));
-                    sDimensions = Object.assign({}, ...sDimensions.map(item => ({ [item.id]: item })));
-                    sMeasures = Object.assign({}, ...sMeasures.map(item => ({ [item.id]: item })));
-                    sAttributes = Object.assign({}, ...sAttributes.map(item => ({ [item.id]: item })));
+                    let sDimensions = cso.filter((s) => s.classes && s.classes.includes(classes['qb:DimensionProperty']));
+                    let sMeasures = cso.filter((s) => s.classes && s.classes.includes(classes['qb:MeasureProperty']));
+                    let sAttributes = cso.filter((s) => s.classes && s.classes.includes(classes['qb:AttributeProperty']));
+                    sDimensions = Object.assign({}, ...sDimensions.map((item) => ({ [item.id]: item })));
+                    sMeasures = Object.assign({}, ...sMeasures.map((item) => ({ [item.id]: item })));
+                    sAttributes = Object.assign({}, ...sAttributes.map((item) => ({ [item.id]: item })));
                     return { sMeasures, sDimensions, sAttributes };
                 })
                 .then(({ sMeasures, sDimensions, sAttributes }) => {
@@ -261,22 +261,22 @@ const RDFDataCube = props => {
                         size: 9999,
                         sortBy: 'created_at',
                         desc: true,
-                    }).then(statements => {
+                    }).then((statements) => {
                         // Filter observations
                         const observations = statements.filter(
-                            statement =>
+                            (statement) =>
                                 statement.predicate.label.toLowerCase() === 'dataset' &&
                                 statement.subject.classes.includes(classes['qb:Observation']),
                         );
                         // Fetch the data of each observation todo : check for const correctness
-                        const observations_data = observations.map(observation =>
-                            getStatementsBySubject({ id: observation.subject.id }).then(observationStatements => {
+                        const observations_data = observations.map((observation) =>
+                            getStatementsBySubject({ id: observation.subject.id }).then((observationStatements) => {
                                 // Measure
-                                const os_m = observationStatements.filter(statement => statement.predicate.label in sMeasures);
+                                const os_m = observationStatements.filter((statement) => statement.predicate.label in sMeasures);
                                 // Dimensions
-                                const os_d = observationStatements.filter(statement => statement.predicate.label in sDimensions);
+                                const os_d = observationStatements.filter((statement) => statement.predicate.label in sDimensions);
                                 // Attributes
-                                const os_a = observationStatements.filter(statement => statement.predicate.label in sAttributes);
+                                const os_a = observationStatements.filter((statement) => statement.predicate.label in sAttributes);
                                 const ob = {
                                     // OLAP table data is in the format data[pointIndex][fieldIndex], sort by order or predicate label is to keep same order in Table fields
                                     data: [
@@ -284,7 +284,7 @@ const RDFDataCube = props => {
                                             .sort((first, second) =>
                                                 sortMethod(allDim[first.predicate.label].order, allDim[second.predicate.label].order),
                                             )
-                                            .map(o_m => ({
+                                            .map((o_m) => ({
                                                 id: observation.subject.id,
                                                 rlabel: observation.subject.label,
                                                 label: o_m.object.label,
@@ -296,23 +296,23 @@ const RDFDataCube = props => {
                                             .sort((first, second) =>
                                                 sortMethod(allDim[first.predicate.label].order, allDim[second.predicate.label].order),
                                             )
-                                            .map(o_d => o_d.object.id),
+                                            .map((o_d) => o_d.object.id),
                                         ...os_a
                                             .sort((first, second) =>
                                                 sortMethod(allDim[first.predicate.label].order, allDim[second.predicate.label].order),
                                             )
-                                            .map(o_a => o_a.object.id),
+                                            .map((o_a) => o_a.object.id),
                                     ],
                                     point_label: [
-                                        ...os_d.map(o_d => ({ id: o_d.object.id, label: o_d.object.label, type: o_d.object._class })),
-                                        ...os_a.map(o_a => ({ id: o_a.object.id, label: o_a.object.label, type: o_a.object._class })),
+                                        ...os_d.map((o_d) => ({ id: o_d.object.id, label: o_d.object.label, type: o_d.object._class })),
+                                        ...os_a.map((o_a) => ({ id: o_a.object.id, label: o_a.object.label, type: o_a.object._class })),
                                     ], // Resource labels
                                 };
                                 return ob;
                             }),
                         );
 
-                        return Promise.all(observations_data).then(observations => {
+                        return Promise.all(observations_data).then((observations) => {
                             try {
                                 const table = new CUBE.model.Table({
                                     dimensions: [
@@ -320,8 +320,8 @@ const RDFDataCube = props => {
                                         ...Object.keys(sAttributes).sort((first, second) => sortMethod(allDim[first].order, allDim[second].order)),
                                     ],
                                     fields: Object.keys(sMeasures).sort((first, second) => sortMethod(allDim[first].order, allDim[second].order)),
-                                    points: observations.map(o => o.point),
-                                    data: observations.map(o => o.data),
+                                    points: observations.map((o) => o.point),
+                                    data: observations.map((o) => o.data),
                                 });
                                 // const onlyFebruary = (point) => point[2] === 'R1415'
                                 // table = table.dice(onlyFebruary)
@@ -329,9 +329,9 @@ const RDFDataCube = props => {
                                 resources = Object.assign(
                                     {},
                                     ...observations
-                                        .map(o => o.point_label)
+                                        .map((o) => o.point_label)
                                         .flat(1)
-                                        .map(item => ({ [item.id]: item })),
+                                        .map((item) => ({ [item.id]: item })),
                                 );
 
                                 setMeasures(sMeasures);
@@ -349,7 +349,7 @@ const RDFDataCube = props => {
                         });
                     });
                 })
-                .catch(e => {
+                .catch((e) => {
                     console.log(e);
                     setIsDataCubeLoading(false);
                     setIsDataCubeFailedLoading(true);
@@ -373,11 +373,11 @@ const RDFDataCube = props => {
                                         <DropdownItem header>Export</DropdownItem>
                                         {rows.length > 0 ? (
                                             <CSVLink
-                                                headers={dataCube.header.map(h => ({
+                                                headers={dataCube.header.map((h) => ({
                                                     label: { ...measures, ...dimensions, ...attributes }[h].label,
                                                     key: `${h}.label`,
                                                 }))}
-                                                data={rows.map(r => r.values)}
+                                                data={rows.map((r) => r.values)}
                                                 filename={`${value.label}.csv`}
                                                 className="dropdown-item"
                                                 target="_blank"
@@ -392,10 +392,10 @@ const RDFDataCube = props => {
                                 </Dropdown>
                                 <Table {...getTableProps()} striped bordered className="text-nowrap d-block overflow-auto">
                                     <thead>
-                                        {headerGroups.map(headerGroup => (
+                                        {headerGroups.map((headerGroup) => (
                                             // eslint-disable-next-line react/jsx-key
                                             <tr {...headerGroup.getHeaderGroupProps()}>
-                                                {headerGroup.headers.map(column => (
+                                                {headerGroup.headers.map((column) => (
                                                     // Add the sorting props to control sorting. For this example
                                                     // we can add them into the header props
                                                     <th key={column.getHeaderProps(column.getSortByToggleProps()).key}>
@@ -427,7 +427,7 @@ const RDFDataCube = props => {
                                             return (
                                                 // eslint-disable-next-line react/jsx-key
                                                 <tr {...row.getRowProps()}>
-                                                    {row.cells.map(cell => (
+                                                    {row.cells.map((cell) => (
                                                         // eslint-disable-next-line react/jsx-key
                                                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                                                     ))}
@@ -465,7 +465,7 @@ const RDFDataCube = props => {
                                         <Input
                                             type="number"
                                             defaultValue={pageIndex + 1}
-                                            onChange={e => {
+                                            onChange={(e) => {
                                                 const page = e.target.value ? Number(e.target.value) - 1 : 0;
                                                 gotoPage(page);
                                             }}
@@ -475,11 +475,11 @@ const RDFDataCube = props => {
                                             type="select"
                                             name="selectMulti"
                                             value={pageSize}
-                                            onChange={e => {
+                                            onChange={(e) => {
                                                 setPageSize(Number(e.target.value));
                                             }}
                                         >
-                                            {[10, 20, 30, 40, 50].map(pageSize => (
+                                            {[10, 20, 30, 40, 50].map((pageSize) => (
                                                 <option key={pageSize} value={pageSize}>
                                                     Show {pageSize}
                                                 </option>

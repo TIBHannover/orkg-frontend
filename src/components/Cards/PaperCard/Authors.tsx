@@ -14,7 +14,7 @@ const Authors: FC<AuthorsProps> = ({ authors, maxAuthors = 5 }) =>
             <Icon size="sm" icon={faUser} />{' '}
             {authors
                 .slice(0, maxAuthors)
-                .map(a => a.name)
+                .map((a) => a.name)
                 .join(', ')}
             {authors.length > maxAuthors && ' et al.'}
         </>

@@ -10,8 +10,9 @@ import { getThing } from 'services/similarity';
 const SectionVisualization = ({ id }) => {
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const statements = useSelector(state => state.review.statements);
-    const description = statements.find(statement => statement.subject.id === id && statement.predicate.id === PREDICATES.DESCRIPTION)?.object.label;
+    const statements = useSelector((state) => state.review.statements);
+    const description = statements.find((statement) => statement.subject.id === id && statement.predicate.id === PREDICATES.DESCRIPTION)?.object
+        .label;
 
     useEffect(() => {
         const getData = async () => {

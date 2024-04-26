@@ -1,7 +1,7 @@
 import { Steps } from 'intro.js-react';
 import PropTypes from 'prop-types';
 
-const Help = props => {
+const Help = (props) => {
     const handleCloseTour = () => {
         props.setIsOpen(false);
     };

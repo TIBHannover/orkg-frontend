@@ -23,7 +23,7 @@ function ContentTypes() {
 
     useEffect(() => {
         if (type) {
-            const _contentType = supportedContentTypes.find(ct => ct.id === type);
+            const _contentType = supportedContentTypes.find((ct) => ct.id === type);
             if (!_contentType) {
                 setNotFound(true);
             }
@@ -35,7 +35,7 @@ function ContentTypes() {
         document.title = `${pluralize(contentType?.label || '', 0, false)} list - ORKG`;
     }, [contentType?.label]);
 
-    const renderListItem = resource => (
+    const renderListItem = (resource) => (
         <ShortRecord key={resource.id} header={resource.label} href={reverse(ROUTES.CONTENT_TYPE, { id: resource.id, type })}>
             {resource.id}
         </ShortRecord>

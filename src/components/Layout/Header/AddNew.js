@@ -15,7 +15,7 @@ import { reverse } from 'named-urls';
 import Image from 'components/NextJsMigration/Image';
 
 const LabelStyled = styled.span`
-    @media (max-width: ${props => props.theme.gridBreakpoints.lg}) {
+    @media (max-width: ${(props) => props.theme.gridBreakpoints.lg}) {
         display: none;
     }
 `;
@@ -38,7 +38,7 @@ const ToolContainer = styled(Link)`
     text-align: center;
     color: inherit;
     border-radius: 0;
-    border-bottom: 2px solid ${props => props.theme.lightDarker};
+    border-bottom: 2px solid ${(props) => props.theme.lightDarker};
     position: relative;
     &:last-of-type {
         border-bottom: 0;
@@ -51,7 +51,7 @@ const ToolContainer = styled(Link)`
     }
 
     &:hover {
-        background-color: ${props => props.theme.lightLighter};
+        background-color: ${(props) => props.theme.lightLighter};
         color: inherit;
         text-decoration: none;
     }
@@ -98,7 +98,7 @@ const AddNew = ({ isHomePageStyle, onAdd = null }) => {
             interactiveBorder={30}
             placement="bottom"
             trigger="click"
-            onCreate={instance => (refTippyInstance.current = instance)}
+            onCreate={(instance) => (refTippyInstance.current = instance)}
             maxWidth="470px"
             offset={[0, 0]}
             content={

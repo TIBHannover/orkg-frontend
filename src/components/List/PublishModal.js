@@ -40,7 +40,7 @@ const PublishModal = ({ id, show, toggle, listId }) => {
                             id="update-message"
                             placeholder="Example: updated section order"
                             value={updateMessage}
-                            onChange={e => setUpdateMessage(e.target.value)}
+                            onChange={(e) => setUpdateMessage(e.target.value)}
                             maxLength={MAX_LENGTH_INPUT}
                         />
                     </FormGroup>

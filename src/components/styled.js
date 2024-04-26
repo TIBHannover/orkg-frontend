@@ -6,7 +6,7 @@ export const SubtitleSeparator = styled.div`
     @media (max-width: 480px) {
         display: none;
     }
-    background: ${props => props.theme.secondary};
+    background: ${(props) => props.theme.secondary};
     width: 2px;
     height: 24px;
     margin: 3px 15px 3px 0;
@@ -22,35 +22,35 @@ export const SubTitle = styled.div`
     overflow: hidden;
     float: left;
     margin-right: 20px;
-    color: ${props => props.theme.secondary};
+    color: ${(props) => props.theme.secondary};
     margin-top: 3px;
     min-width: 0;
     margin-bottom: 0;
 `;
 
 export const StyledGravatar = styled(Gravatar)`
-    border: 2px solid ${props => props.theme.lightDarker};
+    border: 2px solid ${(props) => props.theme.lightDarker};
     cursor: pointer;
     &:hover {
-        border: 2px solid ${props => props.theme.primary};
+        border: 2px solid ${(props) => props.theme.primary};
     }
 `;
 
 export const StyledDotGravatar = styled.div`
-    width: ${props => props.size || 48}px;
-    height: ${props => props.size || 48}px;
+    width: ${(props) => props.size || 48}px;
+    height: ${(props) => props.size || 48}px;
     display: inline-block;
     text-align: center;
-    line-height: ${props => props.size || 48}px;
-    color: ${props => props.theme.secondary};
-    border: 2px solid ${props => props.theme.lightDarker};
+    line-height: ${(props) => props.size || 48}px;
+    color: ${(props) => props.theme.secondary};
+    border: 2px solid ${(props) => props.theme.lightDarker};
     cursor: pointer;
     vertical-align: sub;
     &:hover {
-        border: 2px solid ${props => props.theme.primary};
+        border: 2px solid ${(props) => props.theme.primary};
     }
 
-    background-color: ${props => props.theme.lightDarker};
+    background-color: ${(props) => props.theme.lightDarker};
 `;
 
 export const ContributorsAvatars = styled.div`
@@ -86,7 +86,7 @@ export const InputStyled = styled.input`
     animation: width 0.2s normal forwards ease-in-out;
     outline: 0;
 
-    @media (max-width: ${props => props.theme.gridBreakpoints.sm}) {
+    @media (max-width: ${(props) => props.theme.gridBreakpoints.sm}) {
         width: 100% !important;
     }
 
@@ -115,20 +115,20 @@ export const SearchButtonStyled = styled(Button)`
 export const CardBadge = styled.div`
     background: #fff;
     display: inline-block;
-    color: ${props => props.theme.bodyColor};
+    color: ${(props) => props.theme.bodyColor};
     padding: 1px 5px;
     margin-right: 6px;
     font-size: 70%;
     cursor: default;
     border-radius: 4px;
-    border: 1px ${props => props.theme.bodyColor} solid;
+    border: 1px ${(props) => props.theme.bodyColor} solid;
 `;
 
 export const CardBadgeFilter = styled.div`
     background: #fff;
     display: inline-block;
-    border: 1px ${props => props.theme.lightDarker} solid;
-    color: ${props => props.theme.lightDarker};
+    border: 1px ${(props) => props.theme.lightDarker} solid;
+    color: ${(props) => props.theme.lightDarker};
     padding: 2.5px 10px;
     margin-right: 6px;
     border-radius: 4px;
@@ -142,8 +142,8 @@ export const CardBadgeFilter = styled.div`
     */
     &.active,
     &:hover {
-        color: ${props => props.theme.secondary};
-        border: 1px ${props => props.theme.secondaryDarker} solid;
+        color: ${(props) => props.theme.secondary};
+        border: 1px ${(props) => props.theme.secondaryDarker} solid;
     }
 `;
 
@@ -159,12 +159,12 @@ export const CarouselIndicatorsStyled = styled(CarouselIndicators)`
         margin: 0;
     }
 
-    background: ${props => props.theme.lightLighter};
+    background: ${(props) => props.theme.lightLighter};
     [data-bs-target] {
         width: 10px;
         height: 10px;
         border-radius: 100%;
-        background: ${props => props.theme.primary};
+        background: ${(props) => props.theme.primary};
         background-clip: padding-box;
     }
 `;

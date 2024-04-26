@@ -7,12 +7,12 @@ import { components } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import { Col, FormFeedback, FormGroup, Input, Label, ModalBody } from 'reactstrap';
 
-const createOption = label => ({
+const createOption = (label) => ({
     label,
     value: label,
 });
 
-const OrdinalFilterRule = props => {
+const OrdinalFilterRule = (props) => {
     // change apply and reset
     const { property, rules, updateRulesOfProperty, typeIsDate, toggleFilterDialog } = props.dataController;
     const { label: propertyName, id: propertyId } = property;
@@ -32,8 +32,8 @@ const OrdinalFilterRule = props => {
     const nEqRuleType = typeIsDate ? FILTER_TYPES.NEQ_DATE : FILTER_TYPES.NEQ;
 
     const invalidText = typeIsDate ? 'Should match the format: yyyy-mm-dd' : 'Should be Number';
-    const validateFunc = str => (typeIsDate ? isDate(str) : isNum(str));
-    const isDate = str => {
+    const validateFunc = (str) => (typeIsDate ? isDate(str) : isNum(str));
+    const isDate = (str) => {
         const { error } = Joi.date()
 
             .required()
@@ -41,12 +41,12 @@ const OrdinalFilterRule = props => {
         return !error;
     };
 
-    const isNum = str => !isNaN(str) && !isNaN(parseFloat(str));
-    const isEmptyOrValid = str => !str || validateFunc(str);
+    const isNum = (str) => !isNaN(str) && !isNaN(parseFloat(str));
+    const isEmptyOrValid = (str) => !str || validateFunc(str);
 
-    const minRule = rules.find(item => item.propertyId === propertyId && item.type === minRuleType);
-    const maxRule = rules.find(item => item.propertyId === propertyId && item.type === maxRuleType);
-    const nEqRule = rules.find(item => item.propertyId === propertyId && item.type === nEqRuleType);
+    const minRule = rules.find((item) => item.propertyId === propertyId && item.type === minRuleType);
+    const maxRule = rules.find((item) => item.propertyId === propertyId && item.type === maxRuleType);
+    const nEqRule = rules.find((item) => item.propertyId === propertyId && item.type === nEqRuleType);
     const minValue = typeof minRule === 'undefined' ? '' : minRule.value;
     const maxValue = typeof maxRule === 'undefined' ? '' : maxRule.value;
     const nEqValueArr = typeof nEqRule === 'undefined' ? [] : nEqRule.value.map(createOption);
@@ -69,24 +69,24 @@ const OrdinalFilterRule = props => {
         const notEqualValues =
             val.length > 0 &&
             val
-                .map(item => item.label)
+                .map((item) => item.label)
                 .filter(validateFunc)
-                .map(v => (typeIsDate ? v : parseFloat(v)));
+                .map((v) => (typeIsDate ? v : parseFloat(v)));
         notEqualValues.length > 0 && rules.push({ propertyId, propertyName, type: nEqRuleType, value: notEqualValues });
         return rules;
     };
 
-    const handleMinChange = event => {
+    const handleMinChange = (event) => {
         setMinInput(event.target.value);
         isEmptyOrValid(event.target.value) ? setMinInvalid(false) : setMinInvalid(true);
     };
 
-    const handleMaxChange = event => {
+    const handleMaxChange = (event) => {
         setMaxInput(event.target.value);
         isEmptyOrValid(event.target.value) ? setMaxInvalid(false) : setMaxInvalid(true);
     };
 
-    const handleChangeSel = value => {
+    const handleChangeSel = (value) => {
         const valueWithoutNUll = !value ? [] : value;
         setNEqValue(valueWithoutNUll);
     };
@@ -98,13 +98,13 @@ const OrdinalFilterRule = props => {
         }
     };
 
-    const handleKeyDownSel = event => {
+    const handleKeyDownSel = (event) => {
         if (!isEmptyOrValid(nEqInputValue)) {
             return;
         }
         if (event.key === 'Enter' || event.key === 'Tab' || event.key === ',') {
             setNEqInputValue('');
-            setNEqValue(nEqValue => [...nEqValue, createOption(nEqInputValue)]);
+            setNEqValue((nEqValue) => [...nEqValue, createOption(nEqInputValue)]);
             event.preventDefault();
         }
     };
@@ -124,13 +124,13 @@ const OrdinalFilterRule = props => {
         toggleFilterDialog();
     };
 
-    const handleDatePickerOnBlur = useCallback(event => {
+    const handleDatePickerOnBlur = useCallback((event) => {
         const { value } = event.target;
         if (!value) {
             return;
         }
         setNEqInputValue('');
-        setNEqValue(nEqValue => [...nEqValue, createOption(value)]);
+        setNEqValue((nEqValue) => [...nEqValue, createOption(value)]);
     }, []);
 
     const CustomInput = useCallback(
@@ -142,7 +142,7 @@ const OrdinalFilterRule = props => {
                         value={innerProps.value}
                         className="form-control-sm"
                         onBlur={handleDatePickerOnBlur}
-                        onInput={e => setNEqInputValue(e.target.value)}
+                        onInput={(e) => setNEqInputValue(e.target.value)}
                         type="date"
                     />
                 );
@@ -154,7 +154,7 @@ const OrdinalFilterRule = props => {
     );
 
     const customStyles = {
-        valueContainer: provided => ({
+        valueContainer: (provided) => ({
             ...provided,
             '& input': {
                 backgroundColor: 'transparent !important',

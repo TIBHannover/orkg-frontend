@@ -23,7 +23,7 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
     const [children, setChildren] = useState([]);
     const { countInstances, isLoading: isLoadingCount } = useCountInstances(id);
     const [showMoreChildren, setShowMoreChildren] = useState(false);
-    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
+    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
 
     useEffect(() => {
         const findTemplate = async () => {
@@ -32,10 +32,10 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                 objectId: id,
                 predicateId: PREDICATES.SHACL_TARGET_CLASS,
             })
-                .then(statements =>
-                    Promise.all(statements.filter(statement => statement.subject.classes?.includes(CLASSES.NODE_SHAPE)).map(st => st.subject)),
+                .then((statements) =>
+                    Promise.all(statements.filter((statement) => statement.subject.classes?.includes(CLASSES.NODE_SHAPE)).map((st) => st.subject)),
                 )
-                .then(templates => {
+                .then((templates) => {
                     if (templates.length > 0) {
                         setTemplate(templates[0]);
                     } else {
@@ -44,16 +44,16 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                 });
         };
         const findParent = async () => {
-            getParentByID(id).then(p => {
+            getParentByID(id).then((p) => {
                 setParent(p);
             });
         };
         const findChildren = async () => {
-            getChildrenByID({ id }).then(p => {
+            getChildrenByID({ id }).then((p) => {
                 setChildren(
                     orderBy(
-                        p.content.map(c => c.class),
-                        [c => c.label.toLowerCase()],
+                        p.content.map((c) => c.class),
+                        [(c) => c.label.toLowerCase()],
                         ['asc'],
                     ),
                 );
@@ -90,7 +90,7 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                                 classObject={parent}
                                 editMode={editMode}
                                 displayButtonOnHover={false}
-                                onChange={async _parent => {
+                                onChange={async (_parent) => {
                                     if (parent) {
                                         await deleteParentByID(id);
                                     }
@@ -115,7 +115,7 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                         <td>
                             {_children?.length > 0 && (
                                 <>
-                                    {_children.map(child => (
+                                    {_children.map((child) => (
                                         <div key={child.id}>
                                             <ClassInlineItem
                                                 classObject={child}
@@ -123,7 +123,7 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                                                 onDelete={async () => {
                                                     try {
                                                         await deleteParentByID(child.id);
-                                                        setChildren(prev => prev.filter(c => c.id !== child.id));
+                                                        setChildren((prev) => prev.filter((c) => c.id !== child.id));
                                                     } catch (e) {
                                                         toast.error(`Error removing subclass! ${getErrorMessage(e) ?? e?.message}`);
                                                     }
@@ -135,7 +135,7 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                                     ))}
 
                                     {children.length > 9 && (
-                                        <Button className="p-0 ps-0 mb-1" onClick={() => setShowMoreChildren(v => !v)} color="link" size="sm">
+                                        <Button className="p-0 ps-0 mb-1" onClick={() => setShowMoreChildren((v) => !v)} color="link" size="sm">
                                             {showMoreChildren ? 'Show less subclasses' : 'Show more subclasses'}
                                         </Button>
                                     )}
@@ -149,10 +149,10 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                                         displayButtonOnHover={false}
                                         noValueMessage={null}
                                         showParentFieldForCreate={false}
-                                        onChange={async chil => {
+                                        onChange={async (chil) => {
                                             try {
                                                 await setParentClassByID(chil.id, id);
-                                                setChildren(prev => [...prev, chil]);
+                                                setChildren((prev) => [...prev, chil]);
                                             } catch (e) {
                                                 toast.error(`Error adding subclass! ${getErrorMessage(e) ?? e?.message}`);
                                             }

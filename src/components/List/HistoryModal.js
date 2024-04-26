@@ -5,9 +5,9 @@ import { useSelector } from 'react-redux';
 import { reverse } from 'named-urls';
 
 const HistoryModal = ({ id, show, toggle }) => {
-    const listVersions = useSelector(state => state.list.versions);
+    const listVersions = useSelector((state) => state.list.versions);
 
-    const versions = listVersions.map(version => ({
+    const versions = listVersions.map((version) => ({
         ...version,
         created_by: version.creator,
         created_at: version.date,

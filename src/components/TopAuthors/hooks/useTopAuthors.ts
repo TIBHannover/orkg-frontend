@@ -37,7 +37,7 @@ function useTopAuthors({
                 }
 
                 if (result && result.content.length > 0) {
-                    setAuthors(prevResources => [...prevResources, ...result!.content]);
+                    setAuthors((prevResources) => [...prevResources, ...result!.content]);
                     setIsLast(result.last);
                     setIsLoading(false);
                     setPage(_page + 1);

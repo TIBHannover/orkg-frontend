@@ -26,7 +26,7 @@ import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organi
 import styled from 'styled-components';
 
 const StyledGravatar = styled(Gravatar)`
-    border: 3px solid ${props => props.theme.dark};
+    border: 3px solid ${(props) => props.theme.dark};
 `;
 
 const StyledOrganizationCard = styled.div`
@@ -59,7 +59,7 @@ const StyledOrganizationCard = styled.div`
     }
 `;
 
-const UserProfile = props => {
+const UserProfile = (props) => {
     const [userData, setUserData] = useState('');
     const [observatoryData, setObservatoryData] = useState(null);
     const [organizationData, setOrganizationData] = useState(null);
@@ -67,13 +67,13 @@ const UserProfile = props => {
     const [notFound, setNotFound] = useState(false);
     const params = useParams();
     const { userId } = params;
-    const currentUserId = useSelector(state => state.auth.user?.id);
+    const currentUserId = useSelector((state) => state.auth.user?.id);
     useEffect(() => {
         const getUserInformation = async () => {
             setNotFound(false);
             setIsLoadingUserData(true);
             getContributorInformationById(userId)
-                .then(userData => {
+                .then((userData) => {
                     if (userData.observatory_id || userData.organization_id) {
                         const promises = [];
                         if (userData.organization_id !== MISC.UNKNOWN_ID) {
@@ -90,7 +90,7 @@ const UserProfile = props => {
                         }
 
                         Promise.all(promises)
-                            .then(obsOrgData => {
+                            .then((obsOrgData) => {
                                 if (userData.organization_id) {
                                     setOrganizationData(obsOrgData[0]);
                                 }
@@ -100,7 +100,7 @@ const UserProfile = props => {
                                 setUserData(userData);
                                 setIsLoadingUserData(false);
                             })
-                            .catch(e => {
+                            .catch((e) => {
                                 if (userData.organization_id) {
                                     setOrganizationData(null);
                                 }
@@ -116,7 +116,7 @@ const UserProfile = props => {
                     }
                     document.title = `${userData.display_name} - ORKG`;
                 })
-                .catch(e => {
+                .catch((e) => {
                     document.title = 'User profile - ORKG';
                     setNotFound(true);
                 });

@@ -48,7 +48,7 @@ export default class Cell {
         this.itemIsSelectedForUse = false;
     }
 
-    setPropertyMapperType = name => {
+    setPropertyMapperType = (name) => {
         this.propertyMapperType = name;
     };
 
@@ -56,23 +56,23 @@ export default class Cell {
 
     isSelectedColumn = () => this.isSelectedColumnForUse;
 
-    setSelectedColumn = value => {
+    setSelectedColumn = (value) => {
         this.isSelectedColumnForUse = value;
     };
 
     isSelectedRow = () => this.isSelectedRowForUse;
 
-    setSelectedRow = value => {
+    setSelectedRow = (value) => {
         this.isSelectedRowForUse = value;
     };
 
     isItemSelected = () => this.itemIsSelectedForUse;
 
-    setItemSelected = value => {
+    setItemSelected = (value) => {
         this.itemIsSelectedForUse = value;
     };
 
-    setFlagByName = name => {
+    setFlagByName = (name) => {
         if (name === 'property') {
             this.propertyAnchorFlag = true;
         }
@@ -84,7 +84,7 @@ export default class Cell {
         }
     };
 
-    setLabel = value => {
+    setLabel = (value) => {
         this.label = value;
     };
 

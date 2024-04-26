@@ -11,7 +11,7 @@ import { EXTRACTION_METHODS } from 'constants/misc';
 
 const TableCell = ({ values, contributionId, propertyId }) => {
     const [disableCreate, setDisableCreate] = useState(false);
-    const contribution = useSelector(state => state.contributionEditor.contributions[contributionId] || '');
+    const contribution = useSelector((state) => state.contributionEditor.contributions[contributionId] || '');
     const backgroundColor = contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC ? '#ecf6f8' : '';
     return (
         <Item className="position-relative">

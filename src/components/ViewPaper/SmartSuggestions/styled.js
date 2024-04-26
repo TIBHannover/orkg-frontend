@@ -28,7 +28,7 @@ export const AnimationContainer = styled(CSSTransition)`
 `;
 
 export const PropertyItem = styled(ListGroupItem)`
-    background-color: ${props => props.theme.smart}!important;
+    background-color: ${(props) => props.theme.smart}!important;
     color: #fff !important;
     padding: 1rem 0.6rem;
     font-weight: 500;

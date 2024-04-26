@@ -17,11 +17,11 @@ const ResourceItem = styled.div`
     padding: 3px;
 
     &:hover {
-        border: 1px solid ${props => props.theme.primary};
+        border: 1px solid ${(props) => props.theme.primary};
     }
 `;
 
-const Thumbnail = props => {
+const Thumbnail = (props) => {
     const [thumbnail, setThumbnail] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -30,11 +30,11 @@ const Thumbnail = props => {
             if (props.visualization) {
                 setIsLoading(true);
                 getThing({ thingType: THING_TYPES.VISUALIZATION, thingKey: props.visualization.id })
-                    .then(visualization => {
+                    .then((visualization) => {
                         setThumbnail(visualization);
                         setIsLoading(false);
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         console.log(err);
                     });
             }

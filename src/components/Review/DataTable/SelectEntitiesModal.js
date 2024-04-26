@@ -38,7 +38,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const SelectEntitiesModal = ({ toggle, section, type }) => {
-    const comparisons = useSelector(state => state.review.comparisons);
+    const comparisons = useSelector((state) => state.review.comparisons);
     const [selectedEntities, setSelectedEntities] = useState([]);
     const [suggestionEntities, setSuggestionEntities] = useState([]);
     const [suggestionProperties, setSuggestionProperties] = useState([]);
@@ -51,21 +51,21 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
             if (type === 'entities') {
                 // get all the properties used in the comparison (not the most elegant code..)
                 setSuggestionEntities(
-                    Object.values(comparisons).map(comparison => ({
+                    Object.values(comparisons).map((comparison) => ({
                         title: comparison.metaData?.title ?? 'Nameless comparison',
                         properties: uniqBy(
                             flattenDeep(
                                 Object.keys(comparison.data)
-                                    .filter(property => comparison.properties.find(({ id }) => property === id).active)
-                                    .map(property =>
-                                        comparison.data[property].map(row =>
+                                    .filter((property) => comparison.properties.find(({ id }) => property === id).active)
+                                    .map((property) =>
+                                        comparison.data[property].map((row) =>
                                             row
-                                                .map(value => ({
+                                                .map((value) => ({
                                                     label: value.path_labels?.[value.path_labels?.length - 1],
                                                     id: value.path?.[value.path?.length - 1],
                                                     type: 'property',
                                                 }))
-                                                .filter(_property => _property.id),
+                                                .filter((_property) => _property.id),
                                         ),
                                     ),
                             ),
@@ -114,7 +114,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                     <Autocomplete
                         entityType={addEntityType}
                         placeholder={`Enter a ${addEntityType === ENTITIES.PREDICATE ? 'property' : 'resource'}`}
-                        onItemSelected={item => handleSelectEntity(item.id)}
+                        onItemSelected={(item) => handleSelectEntity(item.id)}
                         onBlur={() => setAddEntityType(null)}
                         openMenuOnFocus={true}
                         cssClasses="form-control-sm"
@@ -136,7 +136,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
     ));
 
     const handleSort = ({ oldIndex, newIndex }) => {
-        setSelectedEntities(_entities => arrayMove(_entities, oldIndex, newIndex));
+        setSelectedEntities((_entities) => arrayMove(_entities, oldIndex, newIndex));
     };
 
     const handleSave = () => {
@@ -158,22 +158,22 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
         toggle();
     };
 
-    const handleSelectEntity = async id => {
+    const handleSelectEntity = async (id) => {
         try {
             const entity = addEntityType === ENTITIES.RESOURCE ? await getResource(id) : await getPredicate(id);
             const entityStatements = await getStatementsBySubject({ id });
-            setSelectedEntities(_entities => [..._entities, { ...entity, statements: entityStatements }]);
+            setSelectedEntities((_entities) => [..._entities, { ...entity, statements: entityStatements }]);
             setAddEntityType(null);
         } catch (e) {
             toast.error('An error occurred, please reload the page and try again');
         }
     };
 
-    const handleRemoveEntity = entityId => {
-        setSelectedEntities(_entities => _entities.filter(_entity => _entity.id !== entityId));
+    const handleRemoveEntity = (entityId) => {
+        setSelectedEntities((_entities) => _entities.filter((_entity) => _entity.id !== entityId));
     };
 
-    const handleAddAllEntities = entities => entities.map(entity => handleSelectEntity(entity.id));
+    const handleAddAllEntities = (entities) => entities.map((entity) => handleSelectEntity(entity.id));
 
     return (
         <Modal isOpen toggle={toggle}>
@@ -185,7 +185,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
 
                 {suggestionEntities.map((comparison, index) => {
                     const entities =
-                        comparison?.properties?.filter(entity => selectedEntities.filter(item => item.id === entity.id).length === 0) ?? [];
+                        comparison?.properties?.filter((entity) => selectedEntities.filter((item) => item.id === entity.id).length === 0) ?? [];
                     return (
                         <ListGroup className="mt-3" key={index}>
                             <ListGroupItemStyled className="bg-light ps-2 py-2 d-flex justify-content-between align-items-center">
@@ -198,7 +198,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                                     </Button>
                                 )}
                             </ListGroupItemStyled>
-                            {entities.map(suggestion => (
+                            {entities.map((suggestion) => (
                                 <ListGroupItem key={suggestion.id} className="py-2">
                                     <Button color="link" className="p-0 me-2" onClick={() => handleSelectEntity(suggestion.id)}>
                                         <Icon icon={faPlusCircle} />
@@ -214,8 +214,8 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                 {suggestionProperties.length > 0 && (
                     <ListGroup className="mt-3">
                         {suggestionProperties
-                            .filter(property => selectedEntities.filter(item => item.id === property.id).length === 0)
-                            .map(suggestion => (
+                            .filter((property) => selectedEntities.filter((item) => item.id === property.id).length === 0)
+                            .map((suggestion) => (
                                 <ListGroupItem key={suggestion.id} className="py-2">
                                     <Button color="link" className="p-0 me-2" onClick={() => handleSelectEntity(suggestion.id)}>
                                         <Icon icon={faPlusCircle} />

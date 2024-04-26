@@ -19,7 +19,7 @@ const TableEditor = dynamic(() => import('components/PdfAnnotation/TableEditor')
     ssr: false,
 });
 
-const ExtractionModal = props => {
+const ExtractionModal = (props) => {
     const [
         loading,
         importedData,
@@ -39,7 +39,7 @@ const ExtractionModal = props => {
     const { removeEmptyRows } = useTableEditor(props.id, editorRef);
 
     const comparisonUrl = importedData
-        ? `${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${importedData.map(entry => entry.contributionId)}`
+        ? `${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${importedData.map((entry) => entry.contributionId)}`
         : null;
 
     return (

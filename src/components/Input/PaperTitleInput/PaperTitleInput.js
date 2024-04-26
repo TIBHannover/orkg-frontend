@@ -67,7 +67,7 @@ function PaperTitleInput({
                     );
                 }
                 for (const promise of await Promise.all(promises)) {
-                    options = [...options, ...promise.content.map(result => ({ ...result, isOrkgResource: true }))];
+                    options = [...options, ...promise.content.map((result) => ({ ...result, isOrkgResource: true }))];
                     hasMore = !hasMore ? !promise.last : hasMore;
                 }
 
@@ -89,7 +89,7 @@ function PaperTitleInput({
                 });
                 options = [
                     ...options,
-                    ...papers.data.map(item => ({
+                    ...papers.data.map((item) => ({
                         ...item,
                         label: item.title,
                         id: item.paperId,
@@ -129,7 +129,7 @@ function PaperTitleInput({
         }
     };
 
-    const noOptionsMessage = input =>
+    const noOptionsMessage = (input) =>
         input.inputValue?.length >= MIN_INPUT_LENGTH ? 'No existing items found' : 'Search by title input must be at least 3 characters';
 
     const customStyles = {
@@ -141,12 +141,12 @@ function PaperTitleInput({
             cursor: 'text!important',
             borderRadius: borderRadius || theme.borderRadius,
         }),
-        container: provided => ({
+        container: (provided) => ({
             ...provided,
             borderRadius: 'inherit',
             background: 'inherit',
         }),
-        menu: provided => ({
+        menu: (provided) => ({
             ...provided,
             fontSize: '0.875rem',
             zIndex: 5,

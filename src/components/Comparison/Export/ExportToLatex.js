@@ -35,13 +35,13 @@ const ExportToLatex = ({ showDialog, toggle }) => {
     const [latexTable, setLatexTable] = useState('');
     const [bibTexReferences, setBibTexReferences] = useState('');
 
-    const matrixData = useSelector(state => getMatrixOfComparison(state.comparison));
-    const contributions = useSelector(state => state.comparison.contributions.filter(c => c.active));
-    const { label, id, description } = useSelector(state => state.comparison.comparisonResource);
+    const matrixData = useSelector((state) => getMatrixOfComparison(state.comparison));
+    const contributions = useSelector((state) => state.comparison.contributions.filter((c) => c.active));
+    const { label, id, description } = useSelector((state) => state.comparison.comparisonResource);
 
-    const transpose = useSelector(state => state.comparison.configuration.transpose);
-    const contributionsList = useSelector(state => activatedContributionsToList(state.comparison.contributions));
-    const comparisonURLConfig = useSelector(state => getComparisonURLConfigOfReduxState(state.comparison));
+    const transpose = useSelector((state) => state.comparison.configuration.transpose);
+    const contributionsList = useSelector((state) => activatedContributionsToList(state.comparison.contributions));
+    const comparisonURLConfig = useSelector((state) => getComparisonURLConfigOfReduxState(state.comparison));
     const generateLatex = async () => {
         setLatexTableLoading(true);
         if (matrixData.length === 0) {
@@ -54,7 +54,7 @@ const ExportToLatex = ({ showDialog, toggle }) => {
         let nbColumns = 0;
 
         if (!transpose) {
-            transposedData = matrixData[0].map((col, i) => matrixData.map(row => row[i]));
+            transposedData = matrixData[0].map((col, i) => matrixData.map((row) => row[i]));
 
             if (replaceTitles) {
                 newTitles = ['\\textbf{Title}'];
@@ -150,17 +150,17 @@ const ExportToLatex = ({ showDialog, toggle }) => {
         }
     };
 
-    const parsePaperStatements = paperStatements => {
+    const parsePaperStatements = (paperStatements) => {
         // publication year
-        let publicationYear = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_PUBLICATION_YEAR);
+        let publicationYear = paperStatements.filter((statement) => statement.predicate.id === PREDICATES.HAS_PUBLICATION_YEAR);
 
         if (publicationYear.length > 0) {
             publicationYear = publicationYear[0].object.label;
         }
 
         // authors
-        const authorsList = paperStatements.find(statement => statement.predicate.id === PREDICATES.HAS_AUTHORS);
-        const authors = paperStatements.filter(statement => statement.subject.id === authorsList?.object.id);
+        const authorsList = paperStatements.find((statement) => statement.predicate.id === PREDICATES.HAS_AUTHORS);
+        const authors = paperStatements.filter((statement) => statement.subject.id === authorsList?.object.id);
 
         const authorNamesArray = [];
 
@@ -178,7 +178,7 @@ const ExportToLatex = ({ showDialog, toggle }) => {
         let ref;
         if (paperStatements) {
             const contributionData = parsePaperStatements(paperStatements);
-            const authors = contributionData.authors.map(a => ({ literal: a }));
+            const authors = contributionData.authors.map((a) => ({ literal: a }));
             ref = new Cite({
                 id: contribution.paper_id,
                 title: contribution.title,
@@ -201,19 +201,19 @@ const ExportToLatex = ({ showDialog, toggle }) => {
             setBibtexReferencesLoading(false);
             return '';
         }
-        const contributionsCalls = contributions.map(contribution =>
+        const contributionsCalls = contributions.map((contribution) =>
             // Fetch the data of each contribution
             getStatementsBySubject({ id: contribution.paper_id })
-                .then(_statements => addAuthorsToStatements(_statements))
-                .then(paperStatements => {
+                .then((_statements) => addAuthorsToStatements(_statements))
+                .then((paperStatements) => {
                     const _contribution = clone(contribution);
-                    let publicationDOI = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_DOI);
+                    let publicationDOI = paperStatements.filter((statement) => statement.predicate.id === PREDICATES.HAS_DOI);
                     if (publicationDOI.length > 0) {
                         publicationDOI = publicationDOI[0].object.label;
                         if (publicationDOI !== '') {
                             return Cite.async(publicationDOI)
                                 .catch(() => createCiteBibtex(_contribution, paperStatements))
-                                .then(data => {
+                                .then((data) => {
                                     _contribution.bibtex = data;
                                     return _contribution;
                                 });
@@ -229,7 +229,7 @@ const ExportToLatex = ({ showDialog, toggle }) => {
                 }),
         );
         const orkgCitation = Cite.async('10.1145/3360901.3364435').then();
-        return Promise.all([...contributionsCalls, orkgCitation]).then(_contributions => {
+        return Promise.all([...contributionsCalls, orkgCitation]).then((_contributions) => {
             const res = [];
             const paperIds = [];
             const bibtexOptions = {
@@ -306,7 +306,7 @@ const ExportToLatex = ({ showDialog, toggle }) => {
                                             className="float-start"
                                             type="checkbox"
                                             id="replaceTitles"
-                                            onChange={() => setReplaceTitles(v => !v)}
+                                            onChange={() => setReplaceTitles((v) => !v)}
                                             checked={replaceTitles}
                                         />{' '}
                                         <Label check for="replaceTitles" className="mb-0">
@@ -319,7 +319,7 @@ const ExportToLatex = ({ showDialog, toggle }) => {
                                         className="float-start"
                                         type="checkbox"
                                         id="includeFootnote"
-                                        onChange={() => setIncludeFootnote(v => !v)}
+                                        onChange={() => setIncludeFootnote((v) => !v)}
                                         checked={includeFootnote}
                                     />{' '}
                                     <Label check for="includeFootnote" className="mb-0">

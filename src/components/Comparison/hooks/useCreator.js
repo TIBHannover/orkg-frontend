@@ -5,9 +5,9 @@ import { setCreatedBy } from 'slices/comparisonSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
 function useCreator() {
-    const id = useSelector(state => state.comparison.comparisonResource.id);
-    const createdById = useSelector(state => state.comparison.comparisonResource.created_by);
-    const createdBy = useSelector(state => state.comparison.createdBy);
+    const id = useSelector((state) => state.comparison.comparisonResource.id);
+    const createdById = useSelector((state) => state.comparison.comparisonResource.created_by);
+    const createdBy = useSelector((state) => state.comparison.createdBy);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -17,7 +17,7 @@ function useCreator() {
         const loadCreatedBy = () => {
             if (createdById && createdById !== MISC.UNKNOWN_ID) {
                 getContributorInformationById(createdById)
-                    .then(creator => {
+                    .then((creator) => {
                         dispatch(setCreatedBy(creator));
                     })
                     .catch(() => {

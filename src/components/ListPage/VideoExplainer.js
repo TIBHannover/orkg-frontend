@@ -23,8 +23,8 @@ const VideoExplainer = ({ previewStyle = {}, video }) => {
                 </span>
             </Button>
 
-            <Modal isOpen={isOpen} toggle={() => setIsOpen(v => !v)} size="lg">
-                <ModalHeader toggle={() => setIsOpen(v => !v)}>Video explainer</ModalHeader>
+            <Modal isOpen={isOpen} toggle={() => setIsOpen((v) => !v)} size="lg">
+                <ModalHeader toggle={() => setIsOpen((v) => !v)}>Video explainer</ModalHeader>
                 <ModalBody>
                     <div className="ratio ratio-16x9">{video}</div>
                 </ModalBody>

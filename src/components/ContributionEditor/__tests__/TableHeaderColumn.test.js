@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from 'testUtils';
 import TableHeaderColumn from 'components/ContributionEditor/TableHeaderColumn';
 
-const setup = paperTitle => {
+const setup = (paperTitle) => {
     const paper = {
         id: 'R1',
         label: paperTitle,

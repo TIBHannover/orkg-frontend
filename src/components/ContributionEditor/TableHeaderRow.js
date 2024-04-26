@@ -17,13 +17,13 @@ const TableHeaderRow = ({ property }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [inputValue, setInputValue] = useState(property.label);
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
-    const statements = useSelector(state => state.contributionEditor.statements);
-    const statementIds = Object.keys(statements).filter(statementId => statements[statementId].propertyId === property.id);
+    const statements = useSelector((state) => state.contributionEditor.statements);
+    const statementIds = Object.keys(statements).filter((statementId) => statements[statementId].propertyId === property.id);
     const pwcStatementIds = Object.keys(statements).filter(
-        statementId => statements[statementId].propertyId === property.id && statements[statementId].created_by === env('NEXT_PUBLIC_PWC_USER_ID'),
+        (statementId) => statements[statementId].propertyId === property.id && statements[statementId].created_by === env('NEXT_PUBLIC_PWC_USER_ID'),
     );
 
-    const canDeleteProperty = useSelector(state => canDeletePropertyAction(state, property.id));
+    const canDeleteProperty = useSelector((state) => canDeletePropertyAction(state, property.id));
 
     const dispatch = useDispatch();
 
@@ -83,7 +83,7 @@ const TableHeaderRow = ({ property }) => {
                 <ConfirmCreatePropertyModal
                     onCreate={handleCreate}
                     label={inputValue}
-                    toggle={() => setIsOpenConfirmModal(v => !v)}
+                    toggle={() => setIsOpenConfirmModal((v) => !v)}
                     shouldPerformCreate
                 />
             )}
@@ -112,7 +112,7 @@ const TableHeaderRow = ({ property }) => {
                     {isOpenStatementBrowser && (
                         <StatementBrowserDialog
                             type="property"
-                            toggleModal={() => setIsOpenStatementBrowser(v => !v)}
+                            toggleModal={() => setIsOpenStatementBrowser((v) => !v)}
                             id={property.id}
                             label={property.label}
                             show

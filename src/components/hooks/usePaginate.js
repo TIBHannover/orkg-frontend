@@ -27,14 +27,14 @@ const usePaginate = ({ fetchItems, fetchItemsExtraParams = {}, pageSize = 25, re
     };
 
     const addResults = ({ results: _results, last, totalElements: _totalElements }) => {
-        setResults(prevResults => [...prevResults, ..._results]);
+        setResults((prevResults) => [...prevResults, ..._results]);
         setIsLoading(false);
         setHasNextPage(!last);
         setIsLastPageReached(last);
         setTotalElements(_totalElements);
     };
 
-    const loadNextPage = () => setPage(prev => prev + 1);
+    const loadNextPage = () => setPage((prev) => prev + 1);
 
     const load = useCallback(async () => {
         startLoading();
@@ -83,7 +83,7 @@ const usePaginate = ({ fetchItems, fetchItemsExtraParams = {}, pageSize = 25, re
         loadMore();
     }, [loadMore]);
 
-    const handleKeyDown = e => {
+    const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
             loadNextPage();
         }

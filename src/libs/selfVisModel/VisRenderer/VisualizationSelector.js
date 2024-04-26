@@ -26,7 +26,7 @@ export default class VisualizationSelector extends Component {
         this.setState({ visualizationMethod: this.selfVisModel.getRenderingMethod() ? this.selfVisModel.getRenderingMethod() : 'Table' });
     };
 
-    componentDidUpdate = prevProps => {
+    componentDidUpdate = (prevProps) => {
         this.selfVisModel.setRenderingMethod(this.state.visualizationMethod);
         if (this.props.propagationFunction) {
             this.props.propagationFunction();

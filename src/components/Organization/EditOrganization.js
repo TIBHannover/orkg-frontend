@@ -20,7 +20,7 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
         setOrganizationPreviewSrc(previewSrc);
     }, [label, url, previewSrc]);
 
-    const handlePreview = async e => {
+    const handlePreview = async (e) => {
         e.preventDefault();
 
         const file = e.target.files[0];
@@ -100,7 +100,7 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
                         <FormGroup>
                             <Label for="organizationLabel">{capitalize(typeName)} name</Label>
                             <Input
-                                onChange={e => {
+                                onChange={(e) => {
                                     setOrganizationLabel(e.target.value);
                                 }}
                                 type="text"
@@ -115,7 +115,7 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
                         <FormGroup>
                             <Label for="OrganizationUrl">{capitalize(typeName)} URL</Label>
                             <Input
-                                onChange={e => setOrganizationUrl(e.target.value)}
+                                onChange={(e) => setOrganizationUrl(e.target.value)}
                                 type="text"
                                 name="url"
                                 id="OrganizationUrl"

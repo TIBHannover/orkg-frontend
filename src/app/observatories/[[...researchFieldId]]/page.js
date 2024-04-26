@@ -48,7 +48,7 @@ const Observatories = () => {
 
     const _researchFields = [{ id: 'all', label: 'All research fields' }, ...researchFields];
 
-    const onTabChange = key => {
+    const onTabChange = (key) => {
         if (key === 'loadMore') {
             loadNextPage();
         } else {
@@ -80,11 +80,11 @@ const Observatories = () => {
                         onChange={onTabChange}
                         activeKey={researchFieldId ?? 'all'}
                         items={[
-                            ..._researchFields.map(researchField => ({
+                            ..._researchFields.map((researchField) => ({
                                 label: (
                                     <ConditionalWrapper
                                         condition={researchField.label?.length > 40}
-                                        wrapper={children => <Tippy content={researchField.label}>{children}</Tippy>}
+                                        wrapper={(children) => <Tippy content={researchField.label}>{children}</Tippy>}
                                     >
                                         <div className="text-truncate" style={{ maxWidth: 250 }}>
                                             {researchField.id === null || '' ? 'Others' : researchField.label}

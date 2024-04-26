@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateContributionOrder, updatePropertyOrder } from 'slices/comparisonSlice';
 
 const HeaderRow = ({ scrollContainerHead, headerGroups }) => {
-    const transpose = useSelector(state => state.comparison.configuration.transpose);
+    const transpose = useSelector((state) => state.comparison.configuration.transpose);
     const dispatch = useDispatch();
 
     const handleDragEnd = ({ source, destination }) =>
@@ -15,11 +15,11 @@ const HeaderRow = ({ scrollContainerHead, headerGroups }) => {
 
     return (
         <div ref={scrollContainerHead} style={{ overflow: 'auto', top: '71px', position: 'sticky', zIndex: '3' }} className="disable-scrollbars">
-            {headerGroups.map(headerGroup => (
+            {headerGroups.map((headerGroup) => (
                 <Fragment key={headerGroup.getHeaderGroupProps().key}>
                     <DragDropContext onDragEnd={handleDragEnd}>
                         <Droppable droppableId="droppable-columns" direction="horizontal">
-                            {providedDroppable => (
+                            {(providedDroppable) => (
                                 <div
                                     ref={providedDroppable.innerRef}
                                     className="header"

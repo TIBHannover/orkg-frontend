@@ -29,14 +29,14 @@ const AddClass = () => {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
+    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
 
     useEffect(() => {
         // Set document title
         document.title = 'Add Class - ORKG';
     }, []);
 
-    const handleAdd = async e => {
+    const handleAdd = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         if (label.trim() !== '') {
@@ -109,7 +109,7 @@ const AddClass = () => {
                         <FormGroup>
                             <Label for="classLabel">Class label</Label>
                             <Input
-                                onChange={e => setLabel(e.target.value)}
+                                onChange={(e) => setLabel(e.target.value)}
                                 type="text"
                                 name="value"
                                 maxLength={MAX_LENGTH_INPUT}
@@ -121,7 +121,7 @@ const AddClass = () => {
                             <Label for="URIInput">
                                 URI <span className="text-muted fst-italic">(optional)</span>
                             </Label>
-                            <Input type="uri" name="uri" id="URIInput" value={uri} onChange={e => setUri(e.target.value)} />
+                            <Input type="uri" name="uri" id="URIInput" value={uri} onChange={(e) => setUri(e.target.value)} />
                             <FormText color="muted">
                                 Please provide the URI of the class if you are using a class defined in an external ontology
                             </FormText>

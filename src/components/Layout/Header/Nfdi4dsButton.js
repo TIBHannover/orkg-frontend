@@ -3,17 +3,17 @@ import { NavItem } from 'reactstrap';
 import styled from 'styled-components';
 
 const NavItemStyled = styled(NavItem)`
-    @media (min-width: ${props => props.theme.gridBreakpoints.lg}) and (max-width: ${props => props.theme.gridBreakpoints.xl}) {
+    @media (min-width: ${(props) => props.theme.gridBreakpoints.lg}) and (max-width: ${(props) => props.theme.gridBreakpoints.xl}) {
         .nfdi4ds-banner button span {
             display: none;
         }
     }
-    @media (min-width: ${props => props.theme.gridBreakpoints.md}) and (max-width: ${props => props.theme.gridBreakpoints.lg}) {
+    @media (min-width: ${(props) => props.theme.gridBreakpoints.md}) and (max-width: ${(props) => props.theme.gridBreakpoints.lg}) {
         .nfdi4ds-banner {
             display: none;
         }
     }
-    @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
+    @media (max-width: ${(props) => props.theme.gridBreakpoints.md}) {
         padding-left: 0 !important;
         .nfdi4ds-banner {
             padding: 10px 0;

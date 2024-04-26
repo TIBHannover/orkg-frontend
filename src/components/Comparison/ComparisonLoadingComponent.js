@@ -26,7 +26,7 @@ const ComparisonLoadingComponent = () => (
                             <rect x="0" y="0" rx="0" ry="0" width="250" height="50" />
                         </ContentLoader>
                     </td>
-                    {times(COLUMN_AMOUNT, i => (
+                    {times(COLUMN_AMOUNT, (i) => (
                         <td className="p-0" key={i}>
                             <BorderTopRadius>
                                 <ContentLoader
@@ -49,7 +49,7 @@ const ComparisonLoadingComponent = () => (
                             <rect x="0" y="0" rx="0" ry="0" width="250" height="250" />
                         </ContentLoader>
                     </td>
-                    {times(COLUMN_AMOUNT, i => (
+                    {times(COLUMN_AMOUNT, (i) => (
                         <td className="p-0" key={i}>
                             <BorderBottomRadius>
                                 <ContentLoader

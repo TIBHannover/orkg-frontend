@@ -4,7 +4,7 @@ import useComparison from 'components/Comparison/hooks/useComparison';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import PropTypes from 'prop-types';
 
-const EmbeddedComparison = props => {
+const EmbeddedComparison = (props) => {
     const { isLoadingResult, data, contributions, comparisonResource, properties } = useComparison({
         id: props.id,
         isEmbeddedMode: true,

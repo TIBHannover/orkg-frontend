@@ -25,13 +25,13 @@ const setup = (
     render(<StatementBrowser {...props} />, { initialState });
 };
 
-const clickOnDeleteValueButton = async sc => {
+const clickOnDeleteValueButton = async (sc) => {
     const deleteButton = sc.getByRole('button', { name: 'Delete value' });
     await waitFor(() => expect(deleteButton).toBeInTheDocument());
     fireEvent.click(deleteButton);
 };
 
-const clickOnDeletePropertyButton = async sc => {
+const clickOnDeletePropertyButton = async (sc) => {
     const deleteButton = sc.getByRole('button', { name: 'Delete property' });
     await waitFor(() => expect(deleteButton).toBeInTheDocument());
     fireEvent.click(deleteButton);

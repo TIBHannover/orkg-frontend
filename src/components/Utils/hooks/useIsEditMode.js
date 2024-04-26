@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { firstLoad, openAuthDialog } from 'slices/authSlice';
 
 const useIsEditMode = () => {
-    const { dialogIsOpen, user } = useSelector(state => state.auth);
+    const { dialogIsOpen, user } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
     // using a rather complex method to set the search params: https://github.com/vercel/next.js/discussions/47583]

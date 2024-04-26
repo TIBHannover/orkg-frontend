@@ -16,7 +16,7 @@ export default {
     },
 };
 
-const Template = args => <TitleBar {...args} />;
+const Template = (args) => <TitleBar {...args} />;
 
 export const Default = Template.bind({});
 
@@ -46,7 +46,7 @@ WithoutTitleAddition.args = {
     titleAddition: '',
 };
 
-const TemplateWithContainer = args => (
+const TemplateWithContainer = (args) => (
     <div style={{ background: 'WhiteSmoke', padding: '10px 10px 50px 10px' }}>
         <TitleBar {...args} />
         <Container className="box rounded p-4 clearfix">Lorum ipsum dolor sit amet</Container>

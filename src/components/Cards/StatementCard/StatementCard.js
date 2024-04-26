@@ -59,7 +59,7 @@ function StatementCard({ statement }) {
                             </div>
                         }
                     >
-                        <ActionButtonView action={e => e.stopPropagation()} title="Show information about this statement" icon={faInfo} />
+                        <ActionButtonView action={(e) => e.stopPropagation()} title="Show information about this statement" icon={faInfo} />
                     </Tippy>
                 </div>
             </div>

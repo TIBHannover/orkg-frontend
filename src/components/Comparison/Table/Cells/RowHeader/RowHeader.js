@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { getCellPadding } from 'slices/comparisonSlice';
 
 const RowHeader = ({ cell, property }) => {
-    const transpose = useSelector(state => state.comparison.configuration.transpose);
+    const transpose = useSelector((state) => state.comparison.configuration.transpose);
     const cellPadding = useSelector(getCellPadding);
 
     return (

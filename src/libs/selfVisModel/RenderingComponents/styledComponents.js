@@ -32,7 +32,7 @@ export const PropertyCell = styled.div`
     text-overflow: ellipsis;
     display: ruby;
     color: white;
-    background: ${props => props.theme.secondary};
+    background: ${(props) => props.theme.secondary};
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     width: 150px;
@@ -47,7 +47,7 @@ export const PropertyCellEditor = styled(TableCell)`
     text-overflow: ellipsis;
     display: ruby;
     color: white;
-    background: ${props => props.theme.secondary};
+    background: ${(props) => props.theme.secondary};
     width: 150px;
     min-width: 150px;
     padding: 0 2px;
@@ -76,7 +76,7 @@ export const ContributionCell = styled(TableCell)`
     display: ruby;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
-    background: ${props => props.theme.primary};
+    background: ${(props) => props.theme.primary};
     color: white;
     width: 150px;
     min-width: 150px;
@@ -125,9 +125,9 @@ export const MetaMapperSelectorSimple = styled.div`
 
 export const PropertyCellInput = styled(Input)`
     background: #fff;
-    color: ${props => props.theme.primary};
+    color: ${(props) => props.theme.primary};
     outline: 0;
-    border: dotted 2px ${props => props.theme.listGroupBorderColor};
+    border: dotted 2px ${(props) => props.theme.listGroupBorderColor};
     border-radius: 0;
     padding: 0 4px;
     display: block;
@@ -137,9 +137,9 @@ export const PropertyCellInput = styled(Input)`
 
     &:focus {
         background: #fff;
-        color: ${props => props.theme.primary};
+        color: ${(props) => props.theme.primary};
         outline: 0;
-        border: dotted 2px ${props => props.theme.listGroupBorderColor};
+        border: dotted 2px ${(props) => props.theme.listGroupBorderColor};
         padding: 0 4px;
         border-radius: 0;
         display: block;
@@ -150,7 +150,7 @@ export const ValueCellValidator = styled(TableCell)`
     overflow: hidden;
     text-overflow: ellipsis;
     display: ruby;
-    background: ${props => (props.isValid ? '#4caf50' : '#fda9a9')};
+    background: ${(props) => (props.isValid ? '#4caf50' : '#fda9a9')};
     color: black;
     width: 150px;
     min-width: 150px;
@@ -164,7 +164,7 @@ export const ValueCellInput = styled(Input)`
     background: #fff;
     color: black;
     outline: 0;
-    border: dotted 2px ${props => props.theme.listGroupBorderColor};
+    border: dotted 2px ${(props) => props.theme.listGroupBorderColor};
     border-radius: 0;
     padding: 0 4px;
     display: block;
@@ -178,7 +178,7 @@ export const ValueCellInput = styled(Input)`
         background: #fff;
         color: black;
         outline: 0;
-        border: dotted 2px ${props => props.theme.listGroupBorderColor};
+        border: dotted 2px ${(props) => props.theme.listGroupBorderColor};
         padding: 0 4px;
         border-radius: 0;
         display: block;
@@ -189,7 +189,7 @@ export const ContributionCellInput = styled(Input)`
     background: #fff;
     color: black;
     outline: 0;
-    border: dotted 2px ${props => props.theme.listGroupBorderColor};
+    border: dotted 2px ${(props) => props.theme.listGroupBorderColor};
     border-radius: 0;
     padding: 0 4px;
     display: block;
@@ -202,7 +202,7 @@ export const ContributionCellInput = styled(Input)`
         background: #fff;
         color: black;
         outline: 0;
-        border: dotted 2px ${props => props.theme.listGroupBorderColor};
+        border: dotted 2px ${(props) => props.theme.listGroupBorderColor};
         padding: 0 4px;
         border-radius: 0;
         display: block;

@@ -43,11 +43,11 @@ export const FIELDS_SERVICES_MAPPING = {
 
 export const determineActiveNERService = async (field: string): Promise<string | null> => {
     if (!field) return null;
-    let result = Object.keys(FIELDS_SERVICES_MAPPING).map(key => FIELDS_SERVICES_MAPPING[key].includes(field));
+    let result = Object.keys(FIELDS_SERVICES_MAPPING).map((key) => FIELDS_SERVICES_MAPPING[key].includes(field));
     if (result.indexOf(true) === -1) {
         const parentFields = await getParentResearchFields(field);
         result = Object.keys(FIELDS_SERVICES_MAPPING).map(
-            key => parentFields.some((_field: { id: string }) => FIELDS_SERVICES_MAPPING[key].includes(_field.id)), // type of field should come from the function itself, so ': { id: string }' can be removed in the future
+            (key) => parentFields.some((_field: { id: string }) => FIELDS_SERVICES_MAPPING[key].includes(_field.id)), // type of field should come from the function itself, so ': { id: string }' can be removed in the future
         );
     }
     let activeNerService = null;
@@ -163,7 +163,7 @@ export const getNerResults = async ({
     for (const type of Object.keys(PROPERTY_MAPPING)) {
         const resources = uniq([...(titleConcepts?.[type] || []), ...(abstractConcepts?.[type] || [])]);
         mappedResourcePromises.push(
-            ...resources.map(resource => ({
+            ...resources.map((resource) => ({
                 type,
                 label: resource,
                 data: getResources({ q: resource, exact: true, returnContent: true }) as Promise<Resource[]>,
@@ -171,7 +171,7 @@ export const getNerResults = async ({
         );
     }
 
-    const resources = await Promise.all(mappedResourcePromises.map(promise => promise.data));
+    const resources = await Promise.all(mappedResourcePromises.map((promise) => promise.data));
 
     for (const [index, resourceResults] of resources.entries()) {
         if (!mappedEntities[PROPERTY_MAPPING[mappedResourcePromises[index].type]]) {
@@ -189,12 +189,12 @@ export const getNerResults = async ({
         mappedEntities[PROPERTY_MAPPING[mappedResourcePromises[index].type]].push(resource);
     }
 
-    const propertyPromises = Object.keys(mappedEntities).map(propertyId => getPredicate(propertyId));
+    const propertyPromises = Object.keys(mappedEntities).map((propertyId) => getPredicate(propertyId));
     const properties = await Promise.all(propertyPromises);
     const propertiesByKey = keyBy(
-        properties.map(property => ({
+        properties.map((property) => ({
             ...property,
-            concept: Object.keys(PROPERTY_MAPPING).find(key => PROPERTY_MAPPING[key] === property.id),
+            concept: Object.keys(PROPERTY_MAPPING).find((key) => PROPERTY_MAPPING[key] === property.id),
         })),
         'id',
     );
@@ -359,5 +359,5 @@ export const getLlmResponse = async ({
     };
 }): Promise<any> =>
     submitPostRequest(`${nlpServiceUrl}tools/text/chatgpt`, { 'Content-Type': 'application/json' }, { task_name: taskName, placeholders }).then(
-        response => response?.payload.arguments,
+        (response) => response?.payload.arguments,
     );

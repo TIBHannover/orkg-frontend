@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { isString } from 'lodash';
 
 const useDiff = () => {
-    const reviewToPlainText = useCallback(article => {
+    const reviewToPlainText = useCallback((article) => {
         let articleText = '';
         articleText += `Title: ${article.paper.title}\n\n`;
 
@@ -30,7 +30,7 @@ const useDiff = () => {
         return articleText;
     }, []);
 
-    const listToPlainText = useCallback(article => {
+    const listToPlainText = useCallback((article) => {
         let articleText = '';
         articleText += `Title: ${article.list.title}\n\n`;
 
@@ -64,7 +64,7 @@ const useDiff = () => {
         return articleText;
     }, []);
 
-    const comparisonToPlainText = useCallback(comparison => {
+    const comparisonToPlainText = useCallback((comparison) => {
         let comparisonText = '';
         comparisonText += `Title: ${comparison.label}\n\n`;
 

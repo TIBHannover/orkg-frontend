@@ -5,7 +5,7 @@ export default {
     component: Boolean,
 };
 
-const Template = args => <Boolean {...args} />;
+const Template = (args) => <Boolean {...args} />;
 
 export const Default = Template.bind({});
 

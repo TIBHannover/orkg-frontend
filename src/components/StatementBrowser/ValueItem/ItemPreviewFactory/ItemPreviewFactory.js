@@ -4,7 +4,7 @@ import { CLASSES } from 'constants/graphSettings';
 import CSVWTable from 'components/CSVWTable/CSVWTable';
 
 const ItemPreviewFactory = ({ id, classes, children = null }) => {
-    const findClass = useCallback(classId => classes?.includes(classId), [classes]);
+    const findClass = useCallback((classId) => classes?.includes(classId), [classes]);
 
     if (findClass(CLASSES.CSVW_TABLE)) {
         return <CSVWTable id={id} />;

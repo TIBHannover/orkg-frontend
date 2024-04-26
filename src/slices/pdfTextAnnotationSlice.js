@@ -18,10 +18,10 @@ export const pdfTextAnnotationSlice = createSlice({
             state.annotations.push({ id: guid(), ...payload });
         },
         deleteAnnotation: (state, { payload }) => {
-            state.annotations = state.annotations.filter(annotation => annotation.id !== payload);
+            state.annotations = state.annotations.filter((annotation) => annotation.id !== payload);
         },
         updateAnnotationText: (state, { payload }) => {
-            state.annotations = state.annotations.map(annotation => {
+            state.annotations = state.annotations.map((annotation) => {
                 if (annotation.id === payload.id) {
                     return {
                         ...annotation,
@@ -48,7 +48,7 @@ export const pdfTextAnnotationSlice = createSlice({
         setSummaryFetched: (state, { payload }) => {
             state.summaryFetched = payload;
         },
-        discardChanges: state => {
+        discardChanges: (state) => {
             window.URL.revokeObjectURL(state.pdf);
             return initialState;
         },
@@ -69,7 +69,7 @@ export const {
 
 export default pdfTextAnnotationSlice.reducer;
 
-export const uploadPdf = files => async dispatch => {
+export const uploadPdf = (files) => async (dispatch) => {
     if (files.length === 0) {
         return;
     }

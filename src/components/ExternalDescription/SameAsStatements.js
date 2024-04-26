@@ -11,23 +11,23 @@ const REG_WIKIPEDIA = new RegExp(/^(https?:)?\/\/[a-zA-Z.0-9]{0,3}\.wikipedia\.o
 
 const SameAsStatements = () => {
     const [externalResources, setExternalResources] = useState([]);
-    const resources = useSelector(state => state.statementBrowser.resources);
-    const properties = useSelector(state => state.statementBrowser.properties);
-    const values = useSelector(state => state.statementBrowser.values);
-    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
-    const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
+    const resources = useSelector((state) => state.statementBrowser.resources);
+    const properties = useSelector((state) => state.statementBrowser.properties);
+    const values = useSelector((state) => state.statementBrowser.values);
+    const selectedResource = useSelector((state) => state.statementBrowser.selectedResource);
+    const resource = useSelector((state) => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
 
     useEffect(() => {
         const getSameAsResources = () => {
             const internalSameAsIds =
                 resource?.propertyIds?.length > 0
-                    ? resource.propertyIds.filter(property => properties.byId[property].existingPredicateId === PREDICATES.SAME_AS)
+                    ? resource.propertyIds.filter((property) => properties.byId[property].existingPredicateId === PREDICATES.SAME_AS)
                     : [];
 
-            let valueIds = internalSameAsIds.length > 0 ? internalSameAsIds.map(propertyId => properties.byId[propertyId].valueIds) : [];
+            let valueIds = internalSameAsIds.length > 0 ? internalSameAsIds.map((propertyId) => properties.byId[propertyId].valueIds) : [];
             valueIds = valueIds.flat();
 
-            const _values = values ? valueIds.map(valueId => values.byId[valueId].label) : [];
+            const _values = values ? valueIds.map((valueId) => values.byId[valueId].label) : [];
 
             setExternalResources(_values);
         };

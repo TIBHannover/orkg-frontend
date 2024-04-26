@@ -15,7 +15,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
 
 const StyledGravatar = styled(Gravatar)`
-    border: 3px solid ${props => props.theme.dark};
+    border: 3px solid ${(props) => props.theme.dark};
     cursor: pointer;
 `;
 
@@ -23,9 +23,9 @@ const StyledAuthTooltip = styled(motion.div)`
     position: absolute;
     right: 0;
     top: 50px;
-    border-radius: ${props => props.theme.borderRadius};
+    border-radius: ${(props) => props.theme.borderRadius};
     font-size: 16px;
-    background-color: ${props => props.theme.secondary};
+    background-color: ${(props) => props.theme.secondary};
     max-width: 430px;
     width: max-content;
     box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.13);
@@ -33,27 +33,27 @@ const StyledAuthTooltip = styled(motion.div)`
     padding: 1rem;
 
     .btn {
-        border-color: ${props => props.theme.secondary};
-        background-color: ${props => props.theme.dark};
+        border-color: ${(props) => props.theme.secondary};
+        background-color: ${(props) => props.theme.dark};
 
         &:hover {
-            background-color: ${props => props.theme.secondaryDarker};
+            background-color: ${(props) => props.theme.secondaryDarker};
         }
     }
 
     & .arrow:before {
-        border-bottom-color: ${props => props.theme.secondary} !important;
+        border-bottom-color: ${(props) => props.theme.secondary} !important;
     }
 
-    @media (max-width: ${props => props.theme.gridBreakpoints.sm}) {
+    @media (max-width: ${(props) => props.theme.gridBreakpoints.sm}) {
         .btn-group {
             width: 100%;
             flex-direction: column;
             .btn:first-child {
-                border-radius: ${props => props.theme.borderRadius} ${props => props.theme.borderRadius} 0 0;
+                border-radius: ${(props) => props.theme.borderRadius} ${(props) => props.theme.borderRadius} 0 0;
             }
             .btn:last-child {
-                border-radius: 0 0 ${props => props.theme.borderRadius} ${props => props.theme.borderRadius};
+                border-radius: 0 0 ${(props) => props.theme.borderRadius} ${(props) => props.theme.borderRadius};
             }
         }
         .col-3 {
@@ -67,7 +67,7 @@ const StyledAuthTooltip = styled(motion.div)`
 `;
 
 const UserTooltip = () => {
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
     const email = user && user.email ? user.email : 'example@example.com';
     const [isVisibleTooltip, setIsVisibleTooltip] = useState(false);
     const userPopup = useRef(null);
@@ -76,7 +76,7 @@ const UserTooltip = () => {
     const greeting = greetingTime(new Date());
 
     useEffect(() => {
-        const handleClickOutside = event => {
+        const handleClickOutside = (event) => {
             if (userPopup.current && !userPopup.current.contains(event.target) && isVisibleTooltip) {
                 setIsVisibleTooltip(false);
             }
@@ -86,7 +86,7 @@ const UserTooltip = () => {
     }, [isVisibleTooltip]);
 
     useEffect(() => {
-        const handleEscapeKey = event => {
+        const handleEscapeKey = (event) => {
             if (event.code === 'Escape' && isVisibleTooltip) {
                 setIsVisibleTooltip(false);
             }
@@ -113,8 +113,8 @@ const UserTooltip = () => {
                 className="rounded-circle"
                 email={email}
                 size={40}
-                onClick={() => setIsVisibleTooltip(v => !v)}
-                onKeyDown={e => (e.code === 'Enter' ? setIsVisibleTooltip(v => !v) : undefined)}
+                onClick={() => setIsVisibleTooltip((v) => !v)}
+                onKeyDown={(e) => (e.code === 'Enter' ? setIsVisibleTooltip((v) => !v) : undefined)}
             />
             <AnimatePresence>
                 {isVisibleTooltip && (

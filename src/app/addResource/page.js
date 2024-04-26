@@ -28,7 +28,7 @@ const AddResource = () => {
     const [label, setLabel] = useState('');
     const [classes, setClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
+    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
     const [isLoadingDefaultClasses, setIsLoadingDefaultClasses] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -39,13 +39,13 @@ const AddResource = () => {
         const getDefaultClass = async () => {
             let _classes = searchParams.get('classes')?.split(',');
             if (!isCurationAllowed && _classes && _classes.length > 0) {
-                _classes = _classes.filter(c => c !== CLASSES.RESEARCH_FIELD); // only admins can add research field resources
+                _classes = _classes.filter((c) => c !== CLASSES.RESEARCH_FIELD); // only admins can add research field resources
             }
             if (_classes && _classes.length > 0) {
                 setIsLoadingDefaultClasses(true);
-                const fetchDefaultClasses = _classes.map(c => getClassById(c));
+                const fetchDefaultClasses = _classes.map((c) => getClassById(c));
                 Promise.all(fetchDefaultClasses)
-                    .then(classesData => {
+                    .then((classesData) => {
                         setIsLoadingDefaultClasses(false);
                         setClasses(classesData);
                     })
@@ -58,13 +58,13 @@ const AddResource = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const handleAdd = async e => {
+    const handleAdd = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         if (label.trim() !== '') {
             if (!isDOI.test(label)) {
                 try {
-                    const newResource = await createResource(label.trim(), classes ? classes.map(c => c.id) : []);
+                    const newResource = await createResource(label.trim(), classes ? classes.map((c) => c.id) : []);
                     toast.success('Resource created successfully');
                     setIsLoading(false);
                     router.push(`${reverse(ROUTES.RESOURCE, { id: newResource.id })}?noRedirect&isEditMode=true`);
@@ -79,7 +79,7 @@ const AddResource = () => {
                     try {
                         const responseJson = await Cite.async(doi);
                         setLabel(responseJson.data[0].title);
-                        const newResource = await createResource(responseJson.data[0].title, classes ? classes.map(c => c.id) : []);
+                        const newResource = await createResource(responseJson.data[0].title, classes ? classes.map((c) => c.id) : []);
                         const responseJsonDoi = await createLiteral(doi);
                         await createLiteralStatement(newResource.id, PREDICATES.HAS_DOI, responseJsonDoi.id);
                         toast.success('Resource created successfully');
@@ -104,12 +104,12 @@ const AddResource = () => {
 
     const handleClassSelect = async (selected, { action }) => {
         if (action === 'create-option') {
-            const foundIndex = selected.findIndex(x => x.__isNew__);
+            const foundIndex = selected.findIndex((x) => x.__isNew__);
             const newClass = await ConfirmClass({
                 label: selected[foundIndex].label,
             });
             if (newClass) {
-                const foundIndex = selected.findIndex(x => x.__isNew__);
+                const foundIndex = selected.findIndex((x) => x.__isNew__);
                 selected[foundIndex] = newClass;
                 setClasses(selected);
             } else {
@@ -129,7 +129,7 @@ const AddResource = () => {
                         <FormGroup>
                             <Label for="ResourceLabel">Resource label or DOI</Label>
                             <Input
-                                onChange={e => setLabel(e.target.value)}
+                                onChange={(e) => setLabel(e.target.value)}
                                 type="text"
                                 maxLength={MAX_LENGTH_INPUT}
                                 name="value"

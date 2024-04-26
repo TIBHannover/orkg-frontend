@@ -50,7 +50,7 @@ function ClassDetails() {
         findClass();
     }, [id]);
 
-    const handleHeaderChange = val => {
+    const handleHeaderChange = (val) => {
         setLabel(val);
     };
 
@@ -122,7 +122,7 @@ function ClassDetails() {
                     <ImportCSVInstances
                         classId={id}
                         showDialog={modalImportIsOpen}
-                        toggle={() => setModalImportIsOpen(v => !v)}
+                        toggle={() => setModalImportIsOpen((v) => !v)}
                         callBack={() => setKeyInstances(Math.random())}
                     />
                 </>

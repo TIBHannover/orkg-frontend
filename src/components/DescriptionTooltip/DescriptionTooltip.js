@@ -56,7 +56,7 @@ const DescriptionTooltip = ({ disabled = false, showURL = false, id, _class, cla
         if (!isLoaded && _class !== ENTITIES.LITERAL && id && !contextDescription) {
             setIsLoading(true);
             getStatementsBySubjectAndPredicate({ subjectId: id, predicateId: PREDICATES.DESCRIPTION })
-                .then(descriptionStatement => {
+                .then((descriptionStatement) => {
                     if (descriptionStatement.length) {
                         setDescription(descriptionStatement[0].object.label);
                     }
@@ -114,7 +114,7 @@ const DescriptionTooltip = ({ disabled = false, showURL = false, id, _class, cla
                                         >
                                             <Button
                                                 title="Click to copy id"
-                                                onClick={e => e.stopPropagation()}
+                                                onClick={(e) => e.stopPropagation()}
                                                 className="py-0 px-0 ms-1"
                                                 size="sm"
                                                 color="link"

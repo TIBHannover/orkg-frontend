@@ -6,8 +6,8 @@ import { Position } from 'reactflow';
 import styled from 'styled-components';
 
 const TargetClassStyled = styled.div`
-    background: ${props => props.theme.secondaryDarker};
-    color: ${props => props.theme.lightLighter};
+    background: ${(props) => props.theme.secondaryDarker};
+    color: ${(props) => props.theme.lightLighter};
     border-bottom: 1px solid #000;
 `;
 

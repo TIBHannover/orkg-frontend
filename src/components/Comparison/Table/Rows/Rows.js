@@ -6,7 +6,7 @@ import { Scrollbar } from 'react-scrollbars-custom';
 import { updateContributionOrder, updatePropertyOrder } from 'slices/comparisonSlice';
 
 const Rows = ({ rows, scrollContainerBody, getTableBodyProps, prepareRow }) => {
-    const transpose = useSelector(state => state.comparison.configuration.transpose);
+    const transpose = useSelector((state) => state.comparison.configuration.transpose);
     const dispatch = useDispatch();
 
     const handleDragEnd = ({ source, destination }) =>
@@ -26,7 +26,7 @@ const Rows = ({ rows, scrollContainerBody, getTableBodyProps, prepareRow }) => {
                 renderer: ({ elementRef, ...restProps }) => (
                     <div
                         {...restProps}
-                        ref={el => {
+                        ref={(el) => {
                             elementRef(el);
                             scrollContainerBody.current = el;
                         }}
@@ -66,7 +66,7 @@ const Rows = ({ rows, scrollContainerBody, getTableBodyProps, prepareRow }) => {
                         </div>
                     )}
                 >
-                    {providedDroppable => (
+                    {(providedDroppable) => (
                         <div ref={providedDroppable.innerRef} {...getTableBodyProps()} {...providedDroppable.droppableProps}>
                             {rows.map((row, index) => {
                                 prepareRow(row);

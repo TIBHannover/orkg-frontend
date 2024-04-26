@@ -15,7 +15,7 @@ const StyledMathJax = styled(MathJaxPreview)`
     }
 `;
 
-const MathJax = props => {
+const MathJax = (props) => {
     const expression = /(\${2}.*\${2})/gm;
     const supportedValues = new RegExp(expression);
     const label = props.children;

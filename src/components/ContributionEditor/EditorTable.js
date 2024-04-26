@@ -10,7 +10,7 @@ import { useSticky } from 'react-table-sticky';
 import FlipMove from 'react-flip-move';
 
 const EditorTable = ({ scrollContainerBody }) => {
-    const { contributions, papers, statements, properties, resources, literals } = useSelector(state => state.contributionEditor);
+    const { contributions, papers, statements, properties, resources, literals } = useSelector((state) => state.contributionEditor);
     const { generateTableMatrix } = useContributionEditor();
     const { data, columns } = useMemo(
         () => generateTableMatrix({ contributions, papers, statements, properties, resources, literals }),
@@ -42,10 +42,10 @@ const EditorTable = ({ scrollContainerBody }) => {
             <div role="table" id="comparisonTable" {...getTableProps()} className="table sticky mb-0 p-0" style={{ height: 'max-content' }}>
                 <ScrollSyncPane group="one">
                     <div style={{ overflow: 'auto', top: '71px', position: 'sticky', zIndex: '3' }} className="disable-scrollbars">
-                        {headerGroups.map(headerGroup => (
+                        {headerGroups.map((headerGroup) => (
                             // eslint-disable-next-line react/jsx-key
                             <div className="header" {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map(column => (
+                                {headerGroup.headers.map((column) => (
                                     // eslint-disable-next-line react/jsx-key
                                     <div {...column.getHeaderProps()} className="th p-0">
                                         {column.render('Header')}
@@ -60,12 +60,12 @@ const EditorTable = ({ scrollContainerBody }) => {
                     <div ref={scrollContainerBody} style={{ overflow: 'auto', paddingBottom: 15 }}>
                         <div {...getTableBodyProps()} className="comparisonRow" style={{ ...getTableProps().style }}>
                             <FlipMove duration={700} enterAnimation="accordionVertical" leaveAnimation="accordionVertical" className="p-0">
-                                {rows.map(row => {
+                                {rows.map((row) => {
                                     prepareRow(row);
                                     return (
                                         // eslint-disable-next-line react/jsx-key
                                         <div {...row.getRowProps()} className="tr d-flex p-0" style={{ zIndex: 100 - row.index }}>
-                                            {row.cells.map(cell => (
+                                            {row.cells.map((cell) => (
                                                 // eslint-disable-next-line react/jsx-key
                                                 <div {...cell.getCellProps()} className="td p-0">
                                                     {cell.render('Cell')}

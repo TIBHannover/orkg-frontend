@@ -18,21 +18,21 @@ const ButtonTab = styled(Button)`
         border: 0;
         border-bottom-width: 2px;
         border-bottom-style: solid;
-        border-bottom-color: ${props => props.theme.light};
+        border-bottom-color: ${(props) => props.theme.light};
         text-decoration: none;
         border-radius: 0;
         padding: 0.7rem 0;
     }
     &.active {
         font-weight: 600;
-        border-color: ${props => props.theme.primary} !important;
+        border-color: ${(props) => props.theme.primary} !important;
     }
 `;
 
 const QualityReportModal = ({ toggle }) => {
     const [selectedTab, setSelectedTab] = useState('recommendations');
     const dispatch = useDispatch();
-    const comparisonId = useSelector(state => state.comparison.comparisonResource.id);
+    const comparisonId = useSelector((state) => state.comparison.comparisonResource.id);
     const { issueRecommendations, passingRecommendations, recommendationsPercentage, feedbacksPercentage, feedbacks, isLoading } = useQualityReport();
     const stars = Math.round(feedbacksPercentage / 20);
 

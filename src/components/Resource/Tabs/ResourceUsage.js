@@ -12,7 +12,7 @@ function ResourceUsage({ id }) {
     const [statements, setStatements] = useState([]);
     const [totalPapers, setTotalPapers] = useState(0);
 
-    const renderListItem = object => {
+    const renderListItem = (object) => {
         const paperCardData = statements.find(({ id: _id }) => _id === object.id);
         return (
             <PaperCard
@@ -40,10 +40,10 @@ function ResourceUsage({ id }) {
         setTotalPapers(totalElements);
         // promise to prevent blocking loading of the additional paper data
         if (items.length > 0) {
-            getStatementsBySubjects({ ids: items.map(p => p.id) })
-                .then(_statements => addAuthorsToStatementBundle(_statements))
-                .then(_statements => {
-                    setStatements(prevStatements => [...prevStatements, ..._statements]);
+            getStatementsBySubjects({ ids: items.map((p) => p.id) })
+                .then((_statements) => addAuthorsToStatementBundle(_statements))
+                .then((_statements) => {
+                    setStatements((prevStatements) => [...prevStatements, ..._statements]);
                 });
         }
 

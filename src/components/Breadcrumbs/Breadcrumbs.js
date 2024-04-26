@@ -30,12 +30,12 @@ function Breadcrumbs({ disableLastField = false, backgroundWhite = false, resear
         if (researchFieldId) {
             setIsLoading(true);
             getParentResearchFields(researchFieldId)
-                .then(result => {
+                .then((result) => {
                     setParentResearchFields(result.reverse());
                     setIsLoading(false);
-                    setIsOpen(result.map(s => false));
-                    setSiblings(result.map(s => []));
-                    setIsLoadingSiblings(result.map(s => false));
+                    setIsOpen(result.map((s) => false));
+                    setSiblings(result.map((s) => []));
+                    setIsLoadingSiblings(result.map((s) => false));
                 })
                 .catch(() => setIsLoading(false));
         } else {
@@ -43,7 +43,7 @@ function Breadcrumbs({ disableLastField = false, backgroundWhite = false, resear
         }
     }, [researchFieldId]);
 
-    const handleClickArrow = index => {
+    const handleClickArrow = (index) => {
         setIsLoadingSiblings(isLoadingSiblings.map((el, i) => (i === index ? true : el)));
         setIsOpen(isOpen.map((el, i) => (i === index ? !el : false)));
         if (siblings[index] && !siblings[index].length) {
@@ -51,8 +51,8 @@ function Breadcrumbs({ disableLastField = false, backgroundWhite = false, resear
             getStatementsBySubjectAndPredicate({
                 subjectId: parentResearchFields[index].id,
                 predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD,
-            }).then(subRF => {
-                setSiblings(siblings.map((el, i) => (i === index ? subRF.map(s => s.object) : el)));
+            }).then((subRF) => {
+                setSiblings(siblings.map((el, i) => (i === index ? subRF.map((s) => s.object) : el)));
                 setIsLoadingSiblings(isLoadingSiblings.map((el, i) => (i === index ? false : el)));
             });
         } else {
@@ -125,7 +125,7 @@ function Breadcrumbs({ disableLastField = false, backgroundWhite = false, resear
                                                     <>
                                                         {siblings[index] &&
                                                             siblings[index].length &&
-                                                            siblings[index].map(rf =>
+                                                            siblings[index].map((rf) =>
                                                                 rf.id !== parentResearchFields[index + 1].id ? (
                                                                     renderDropdownItem(rf, rf.label)
                                                                 ) : (

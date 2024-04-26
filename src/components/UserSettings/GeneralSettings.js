@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 const StyledGravatar = styled(Gravatar)`
-    border: 3px solid ${props => props.theme.dark};
+    border: 3px solid ${(props) => props.theme.dark};
 `;
 
 class GeneralSettings extends Component {
@@ -41,7 +41,7 @@ class GeneralSettings extends Component {
         });
     };
 
-    handleInputChange = e => {
+    handleInputChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value,
         });
@@ -66,7 +66,7 @@ class GeneralSettings extends Component {
             email,
             display_name,
         })
-            .then(response => {
+            .then((response) => {
                 toast.success('Your changes have been saved successfully');
                 this.props.updateAuth({ user: { ...this.props.user, displayName: display_name } });
 
@@ -75,7 +75,7 @@ class GeneralSettings extends Component {
                     errors: null,
                 });
             })
-            .catch(err => {
+            .catch((err) => {
                 this.setState({
                     loading: false,
                     errors: err,
@@ -141,11 +141,11 @@ class GeneralSettings extends Component {
     );
 }
 
-const mapDispatchToProps = dispatch => ({
-    updateAuth: data => dispatch(updateAuth(data)),
+const mapDispatchToProps = (dispatch) => ({
+    updateAuth: (data) => dispatch(updateAuth(data)),
 });
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     user: state.auth.user,
 });
 

@@ -28,9 +28,9 @@ const AddOrganization = () => {
     const [permalink, setPermalink] = useState('');
     const [logo, setLogo] = useState('');
     const [editorState, setEditorState] = useState('edit');
-    const organizationType = ORGANIZATIONS_TYPES.find(t => t.label === params.type);
+    const organizationType = ORGANIZATIONS_TYPES.find((t) => t.label === params.type);
     const publicOrganizationRoute = `${getPublicUrl()}${reverse(ROUTES.ORGANIZATION, { type: organizationType?.label, id: ' ' })}`;
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -38,7 +38,7 @@ const AddOrganization = () => {
         document.title = `Create ${organizationType?.alternateLabel} - ORKG`;
     }, [organizationType]);
 
-    const navigateToOrganization = display_id => {
+    const navigateToOrganization = (display_id) => {
         setEditorState('edit');
         setName('');
         setWebsite('');
@@ -80,7 +80,7 @@ const AddOrganization = () => {
         }
     };
 
-    const handlePreview = async e => {
+    const handlePreview = async (e) => {
         e.preventDefault();
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -99,11 +99,11 @@ const AddOrganization = () => {
             <TitleBar>Create {organizationType?.alternateLabel}</TitleBar>
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 {!!user && user.isCurationAllowed && (
-                    <Form className="ps-3 pe-3 pt-2" onSubmit={e => e.preventDefault()}>
+                    <Form className="ps-3 pe-3 pt-2" onSubmit={(e) => e.preventDefault()}>
                         <FormGroup>
                             <Label for="organizationName">Name</Label>
                             <Input
-                                onChange={e => {
+                                onChange={(e) => {
                                     setName(e.target.value);
                                     setPermalink(
                                         slugify(e.target.value.trim(), {
@@ -131,7 +131,7 @@ const AddOrganization = () => {
                                 <InputGroup>
                                     <span className="input-group-text">{publicOrganizationRoute}</span>
                                     <Input
-                                        onChange={e => setPermalink(e.target.value)}
+                                        onChange={(e) => setPermalink(e.target.value)}
                                         type="text"
                                         name="permalink"
                                         id="organizationPermalink"
@@ -146,7 +146,7 @@ const AddOrganization = () => {
                         <FormGroup>
                             <Label for="organizationWebsite">Website</Label>
                             <Input
-                                onChange={e => setWebsite(e.target.value)}
+                                onChange={(e) => setWebsite(e.target.value)}
                                 type="text"
                                 name="website"
                                 id="organizationWebsite"

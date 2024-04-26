@@ -14,7 +14,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
  */
 const Unauthorized = () => {
     const dispatch = useDispatch();
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
 
     useEffect(() => {
         document.title = 'Unauthorized - ORKG';
@@ -60,7 +60,7 @@ const Unauthorized = () => {
                                         textDecoration: 'underline',
                                     }}
                                     onClick={handleSignUp}
-                                    onKeyDown={e => (e.keyCode === 13 ? handleSignUp : undefined)}
+                                    onKeyDown={(e) => (e.keyCode === 13 ? handleSignUp : undefined)}
                                     role="button"
                                     tabIndex={0}
                                 >

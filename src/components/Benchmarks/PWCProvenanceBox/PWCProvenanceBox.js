@@ -3,7 +3,7 @@ import PWC_LOGO from 'assets/img/poweredby/papers-with-code.png';
 import Image from 'components/NextJsMigration/Image';
 
 const PWCProvenanceBoxStyled = styled.div`
-    border: 2px solid ${props => props.theme.light};
+    border: 2px solid ${(props) => props.theme.light};
     border-radius: 5px;
     display: flex;
     flex-direction: column;
@@ -11,7 +11,7 @@ const PWCProvenanceBoxStyled = styled.div`
     align-items: center;
 
     &:hover {
-        border: 2px solid ${props => props.theme.secondary};
+        border: 2px solid ${(props) => props.theme.secondary};
     }
 `;
 

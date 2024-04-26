@@ -28,7 +28,7 @@ class ForgotPassword extends Component {
     render() {
         return (
             <>
-                <Form className="ps-3 pe-3 pt-2" onSubmit={e => e.preventDefault()}>
+                <Form className="ps-3 pe-3 pt-2" onSubmit={(e) => e.preventDefault()}>
                     <Alert color="info">If you forgot your password, you can reset it via your email address</Alert>
                     <FormGroup>
                         <Label for="Email">Email address</Label>
@@ -62,7 +62,7 @@ ForgotPassword.propTypes = {
     toggleAuthDialog: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
     toggleAuthDialog: () => dispatch(toggleAuthDialog()),
 });
 

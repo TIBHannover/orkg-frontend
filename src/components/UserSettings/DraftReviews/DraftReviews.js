@@ -13,13 +13,13 @@ import { getResources } from 'services/backend/resources';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 
 const DraftReviews = () => {
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
 
     useEffect(() => {
         document.title = 'Draft reviews - ORKG';
     });
 
-    const renderListItem = article => (
+    const renderListItem = (article) => (
         <ShortRecord key={article.id} header={article.label} href={reverse(ROUTES.REVIEW, { id: article.id })}>
             <div className="time">
                 <Icon size="sm" icon={faCalendar} className="me-1" /> {article.created_at ? moment(article.created_at).format('DD MMMM YYYY') : ''}
@@ -43,11 +43,11 @@ const DraftReviews = () => {
 
         if (resources.length) {
             return Promise.all(
-                resources.map(resource =>
+                resources.map((resource) =>
                     getStatementsBySubjectAndPredicate({ subjectId: resource.id, predicateId: PREDICATES.HAS_PUBLISHED_VERSION }),
                 ),
             )
-                .then(resourcesStatements =>
+                .then((resourcesStatements) =>
                     resourcesStatements.map((statements, idx) => {
                         if (!statements.length) {
                             return resources[idx];
@@ -55,8 +55,8 @@ const DraftReviews = () => {
                         return null;
                     }),
                 )
-                .then(unpublishedItems => {
-                    const items = unpublishedItems.filter(v => v);
+                .then((unpublishedItems) => {
+                    const items = unpublishedItems.filter((v) => v);
                     return {
                         items,
                         last,

@@ -10,7 +10,7 @@ import { createSection } from 'slices/listSlice';
 import { CSSTransition } from 'react-transition-group';
 
 const AddSectionStyled = styled(Button)`
-    color: ${props => props.theme.secondary}!important;
+    color: ${(props) => props.theme.secondary}!important;
     font-size: 140% !important;
     margin: 5px 0 !important;
     animation: 0.3s ease-out 0s 1 slideDown;
@@ -55,13 +55,13 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
-const AddSection = props => {
+const AddSection = (props) => {
     const [isToolbarVisible, setIsToolbarVisible] = useState(false);
     const dispatch = useDispatch();
-    const { id } = useSelector(state => state.list.list);
+    const { id } = useSelector((state) => state.list.list);
     const refToolbar = useRef(null);
 
-    const handleAddSection = sectionType => {
+    const handleAddSection = (sectionType) => {
         setIsToolbarVisible(false);
 
         dispatch(
@@ -79,7 +79,7 @@ const AddSection = props => {
 
     return (
         <div className="d-flex align-items-center justify-content-center add position-relative">
-            <AddSectionStyled color="link" className="p-0" onClick={() => setIsToolbarVisible(v => !v)} aria-label="Add section">
+            <AddSectionStyled color="link" className="p-0" onClick={() => setIsToolbarVisible((v) => !v)} aria-label="Add section">
                 <Icon icon={faPlusCircle} />
             </AddSectionStyled>
             <AnimationContainer in={isToolbarVisible} unmountOnExit classNames="opacity" timeout={{ enter: 800, exit: 800 }}>

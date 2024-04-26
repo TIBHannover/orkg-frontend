@@ -40,7 +40,7 @@ const AnimationContainer = styled(CSSTransition)`
 
 const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsTemplatesModalOpen = undefined }) => {
     const [source, target] = useSingleton();
-    const isTemplatesModalOpen = useSelector(state => isTemplatesModalOpenProp ?? state.statementBrowser.isTemplatesModalOpen);
+    const isTemplatesModalOpen = useSelector((state) => isTemplatesModalOpenProp ?? state.statementBrowser.isTemplatesModalOpen);
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
     const onlyFeatured = true;
     const {
@@ -89,7 +89,7 @@ const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsT
                         <AnimationContainer in={usedTemplates?.length > 0} timeout={600} classNames="zoom" unmountOnExit>
                             <div>
                                 <p>Used templates:</p>
-                                {usedTemplates.map(template => (
+                                {usedTemplates.map((template) => (
                                     <TemplateButton
                                         addMode={false}
                                         tippyTarget={target}
@@ -121,7 +121,7 @@ const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsT
                                 {selectedFilter.id !== CLASSES.NODE_SHAPE && (
                                     <ConditionalWrapper
                                         condition={selectedFilter.id === CLASSES.RESEARCH_FIELD}
-                                        wrapper={children => (
+                                        wrapper={(children) => (
                                             <>
                                                 {children}
 
@@ -132,7 +132,7 @@ const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsT
                                                 {isOpenResearchFieldModal && (
                                                     <ResearchFieldSelectorModal
                                                         isOpen
-                                                        toggle={v => setIsOpenResearchFieldModal(v => !v)}
+                                                        toggle={(v) => setIsOpenResearchFieldModal((v) => !v)}
                                                         onSelectField={handleSelectField}
                                                     />
                                                 )}
@@ -194,7 +194,7 @@ const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsT
                             <FormGroup>
                                 <p>Featured templates:</p>
                                 <div>
-                                    {featuredTemplates.map(template => (
+                                    {featuredTemplates.map((template) => (
                                         <TemplateButton tippyTarget={target} key={`t${template.id}`} id={template.id} label={template.label} />
                                     ))}
                                 </div>
@@ -227,7 +227,7 @@ const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsT
                                     </p>
                                 )}
                                 <div>
-                                    {templates.map(template => (
+                                    {templates.map((template) => (
                                         <TemplateButton tippyTarget={target} key={`t${template.id}`} id={template.id} label={template.label} />
                                     ))}
                                 </div>

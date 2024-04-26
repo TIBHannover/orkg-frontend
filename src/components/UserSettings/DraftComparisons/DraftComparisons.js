@@ -23,7 +23,7 @@ const DraftComparisons = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [editDraftComparison, setEditDraftComparison] = useState(null);
     const [isOpenEditModal, setIsOpenEditModal] = useState(null);
-    const userId = useSelector(state => state.auth.user.id);
+    const userId = useSelector((state) => state.auth.user.id);
 
     useEffect(() => {
         document.title = 'Draft comparisons - ORKG';
@@ -40,16 +40,16 @@ const DraftComparisons = () => {
         });
 
         let draftComparisonUrls = await Promise.all(
-            _draftComparisons.map(draftComparison =>
+            _draftComparisons.map((draftComparison) =>
                 getThing({ thingType: THING_TYPES.DRAFT_COMPARISON, thingKey: draftComparison.id }).catch(() => null),
             ),
         );
-        draftComparisonUrls = draftComparisonUrls.filter(result => result);
+        draftComparisonUrls = draftComparisonUrls.filter((result) => result);
         setIsLast(last);
         setDraftComparisons(
-            draftComparisonUrls.map(draftComparison => ({
+            draftComparisonUrls.map((draftComparison) => ({
                 ...draftComparison,
-                ..._draftComparisons.find(dc => dc.id === draftComparison.thing_key),
+                ..._draftComparisons.find((dc) => dc.id === draftComparison.thing_key),
             })),
         );
 
@@ -60,7 +60,7 @@ const DraftComparisons = () => {
         getDraftComparisons();
     }, [getDraftComparisons, page]);
 
-    const handleDelete = async id => {
+    const handleDelete = async (id) => {
         const isConfirmed = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure to delete this draft comparison? If the comparison is published already, the comparison remains available',
@@ -81,11 +81,11 @@ const DraftComparisons = () => {
     };
 
     const handleChange = ({ title, editItem }) =>
-        setDraftComparisons(comparisons =>
-            comparisons.map(draftComparison => (draftComparison.id === editItem.id ? { ...draftComparison, label: title } : draftComparison)),
+        setDraftComparisons((comparisons) =>
+            comparisons.map((draftComparison) => (draftComparison.id === editItem.id ? { ...draftComparison, label: title } : draftComparison)),
         );
 
-    const handleEdit = draftComparison => {
+    const handleEdit = (draftComparison) => {
         setEditDraftComparison(draftComparison);
         setIsOpenEditModal(true);
     };
@@ -101,7 +101,7 @@ const DraftComparisons = () => {
             </div>
             {(draftComparisons.length > 0 || isLoading) && (
                 <ListGroup className="mb-3 box">
-                    {draftComparisons.map(draftComparison => (
+                    {draftComparisons.map((draftComparison) => (
                         <ListGroupItem key={draftComparison.id} className="d-flex justify-content-between align-items-center px-4 py-3">
                             <div>
                                 <Link href={reverse(ROUTES.COMPARISON_NOT_PUBLISHED) + getComparisonURLFromConfig(draftComparison.config)}>
@@ -139,10 +139,10 @@ const DraftComparisons = () => {
                     ))}
                     {!isLoading && (page > 0 || !isLast) && (
                         <ListGroupItem className="d-flex justify-content-between">
-                            <Button color="light" size="sm" disabled={page === 0} onClick={() => setPage(p => p - 1)}>
+                            <Button color="light" size="sm" disabled={page === 0} onClick={() => setPage((p) => p - 1)}>
                                 <Icon icon={faAngleDoubleLeft} />
                             </Button>
-                            <Button color="light" size="sm" disabled={isLast} onClick={() => setPage(p => p + 1)}>
+                            <Button color="light" size="sm" disabled={isLast} onClick={() => setPage((p) => p + 1)}>
                                 <Icon icon={faAngleDoubleRight} />
                             </Button>
                         </ListGroupItem>
@@ -158,7 +158,7 @@ const DraftComparisons = () => {
             {isOpenEditModal && (
                 <EditTitleModal
                     isOpen={isOpenEditModal}
-                    toggle={() => setIsOpenEditModal(v => !v)}
+                    toggle={() => setIsOpenEditModal((v) => !v)}
                     onChange={handleChange}
                     editItem={editDraftComparison}
                 />

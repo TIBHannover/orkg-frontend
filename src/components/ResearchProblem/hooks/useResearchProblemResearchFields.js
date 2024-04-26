@@ -5,11 +5,11 @@ function useResearchProblemResearchFields({ researchProblemId }) {
     const [researchFields, setResearchFields] = useState([]);
     const [isLoadingResearchFields, setIsLoadingResearchFields] = useState(true);
 
-    const loadResearchProblemResearchFields = useCallback(rpId => {
+    const loadResearchProblemResearchFields = useCallback((rpId) => {
         if (rpId) {
             setIsLoadingResearchFields(true);
             // Get the research fields of research problem
-            getResearchFieldsByResearchProblemId(rpId).then(result => {
+            getResearchFieldsByResearchProblemId(rpId).then((result) => {
                 setResearchFields(result);
                 setIsLoadingResearchFields(false);
             });

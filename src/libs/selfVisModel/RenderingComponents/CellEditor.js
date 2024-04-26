@@ -7,19 +7,19 @@ import PropTypes from 'prop-types';
 import CellVE from 'libs/selfVisModel/RenderingComponents/CellVE';
 import DropDownMapperSelector from 'libs/selfVisModel/RenderingComponents/DropdownMapperSelector';
 
-const CellEditor = props => {
+const CellEditor = (props) => {
     const [selfVisModel] = useState(new SelfVisDataModel());
     const [, setUpdateFlipFlop] = useState(false);
     const [source, target] = useSingleton();
 
     const validationCallback = () => {
         // this is used to trigger the re-rendering of the cells which will then validate them on update;
-        setUpdateFlipFlop(prevUpdateFlipFlop => !prevUpdateFlipFlop);
+        setUpdateFlipFlop((prevUpdateFlipFlop) => !prevUpdateFlipFlop);
     };
 
     /** Rendering functions for the frame (headers for rows and cols ) * */
     const createTable = () => {
-        const filteredProperties = selfVisModel.mrrModel.propertyAnchors.filter(item => item.isSelectedColumnForUse === true);
+        const filteredProperties = selfVisModel.mrrModel.propertyAnchors.filter((item) => item.isSelectedColumnForUse === true);
         const renderingDimX = filteredProperties.length + 1;
         // we use the whole column for now;
         const filteredContribs = selfVisModel.mrrModel.contributionAnchors;

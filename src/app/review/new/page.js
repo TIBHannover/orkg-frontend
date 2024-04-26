@@ -22,7 +22,7 @@ const ReviewNew = () => {
         document.title = 'Create new review - ORKG';
     });
 
-    const handleCreate = async e => {
+    const handleCreate = async (e) => {
         e.preventDefault();
         if (!title) {
             toast.error('Enter a paper title');
@@ -60,7 +60,7 @@ const ReviewNew = () => {
                             </span>
                         </Tippy>
 
-                        <Input type="text" id="articleTitle" maxLength={MAX_LENGTH_INPUT} value={title} onChange={e => setTitle(e.target.value)} />
+                        <Input type="text" id="articleTitle" maxLength={MAX_LENGTH_INPUT} value={title} onChange={(e) => setTitle(e.target.value)} />
                     </FormGroup>
                     <div className="text-end">
                         <ButtonWithLoading type="submit" color="primary" onClick={handleCreate} isLoading={isLoading}>

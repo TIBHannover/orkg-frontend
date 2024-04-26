@@ -32,7 +32,7 @@ export default function InputField(props) {
                 value={props.inputValue}
                 onChange={(e, value) => props.setInputValue(e ? e.target.value : value)}
                 onKeyDown={props.onKeyDown}
-                ref={tag => {
+                ref={(tag) => {
                     if (props.literalInputRef) {
                         props.literalInputRef.current = tag;
                     }

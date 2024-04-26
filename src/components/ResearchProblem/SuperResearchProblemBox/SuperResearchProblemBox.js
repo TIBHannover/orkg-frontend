@@ -15,7 +15,7 @@ const SuperResearchProblemBox = ({ isLoading, superProblems }) => (
             <div className="mb-4 mt-4 ps-3 pe-3">
                 {superProblems.length > 0 ? (
                     <ul className="ps-1">
-                        {superProblems.map(superProblem => (
+                        {superProblems.map((superProblem) => (
                             <li key={`suprp${superProblem.id}`}>
                                 <Link
                                     href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {

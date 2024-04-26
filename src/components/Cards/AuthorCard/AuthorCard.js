@@ -53,7 +53,7 @@ function AuthorCard({ author, paperAmount = null, papers = null, isVisibleGoogle
                     <small>
                         <FormGroup switch className="d-inline-block ms-3">
                             <Label check>
-                                <Input type="switch" role="switch" checked={isCitationsEnabled} onChange={() => setIsCitationsEnabled(v => !v)} />
+                                <Input type="switch" role="switch" checked={isCitationsEnabled} onChange={() => setIsCitationsEnabled((v) => !v)} />
                                 <Tippy
                                     interactive
                                     content={
@@ -95,7 +95,7 @@ function AuthorCard({ author, paperAmount = null, papers = null, isVisibleGoogle
                 {isCitationsEnabled && (
                     <ListGroup className="my-2">
                         {semanticScholarAuthors.length > 0 &&
-                            semanticScholarAuthors.map(result => (
+                            semanticScholarAuthors.map((result) => (
                                 <ListGroupItem key={result.authorId}>
                                     <a href={result.url} target="_blank" rel="noreferrer">
                                         {result.name}

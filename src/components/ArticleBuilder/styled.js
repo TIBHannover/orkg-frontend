@@ -7,7 +7,7 @@ export const EditableTitle = styled(Input)`
     background: inherit !important;
     font-size: inherit;
     padding: 0 5px;
-    border-radius: ${props => props.theme.borderRadius};
+    border-radius: ${(props) => props.theme.borderRadius};
     color: inherit;
     resize: none;
 `;
@@ -40,7 +40,7 @@ export const MoveHandle = styled.div`
     top: 0;
     z-index: 0;
     &.hover {
-        background: ${props => props.theme.secondary};
+        background: ${(props) => props.theme.secondary};
         color: #fff;
     }
 `;
@@ -73,7 +73,7 @@ export const SectionTypeStyled = styled.button`
     position: absolute;
     right: -6px;
     top: -6px;
-    color: ${props => props.theme.secondary};
+    color: ${(props) => props.theme.secondary};
     text-transform: uppercase;
     font-weight: bold;
     font-size: 90%;

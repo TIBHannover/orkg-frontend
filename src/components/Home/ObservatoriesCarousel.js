@@ -21,7 +21,7 @@ const CarouselContainer = styled.div`
         width: 10px !important;
         height: 10px !important;
         border-radius: 100% !important;
-        background-color: ${props => props.theme.primary} !important;
+        background-color: ${(props) => props.theme.primary} !important;
     }
 `;
 
@@ -43,16 +43,16 @@ const ObservatoryCardStyled = styled.div`
 `;
 
 const StyledGravatar = styled(Gravatar)`
-    border: 2px solid ${props => props.theme.secondary};
+    border: 2px solid ${(props) => props.theme.secondary};
     cursor: pointer;
     &:hover {
-        border: 2px solid ${props => props.theme.primaryColor};
+        border: 2px solid ${(props) => props.theme.primaryColor};
     }
 `;
 
 const CardFooterStyled = styled(CardFooter)`
     && {
-        background: ${props => props.theme.lightLighter};
+        background: ${(props) => props.theme.lightLighter};
     }
 `;
 
@@ -76,12 +76,12 @@ function ObservatoriesCarousel(props) {
         setActiveIndex(nextIndex);
     };
 
-    const goToIndex = newIndex => {
+    const goToIndex = (newIndex) => {
         setActiveIndex(newIndex);
     };
 
     const slides = () =>
-        props.observatories.map(observatory => (
+        props.observatories.map((observatory) => (
             <CarouselItem onExiting={() => setAnimating(true)} onExited={() => setAnimating(false)} className="pb-1 mb-4" key={`fp${observatory.id}`}>
                 <ObservatoryCardStyled className="">
                     <Card style={{ border: 0 }}>
@@ -117,7 +117,7 @@ function ObservatoriesCarousel(props) {
                                 {observatory.resources} papers
                             </small>
                             <div className="float-end" style={{ height: '25px' }}>
-                                {observatory.members.slice(0, 5).map(contributor => (
+                                {observatory.members.slice(0, 5).map((contributor) => (
                                     <Tippy key={`contributor${contributor.id}`} content={contributor.display_name}>
                                         <Link className="ms-1" href={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
                                             <StyledGravatar className="rounded-circle" md5={contributor.gravatar_id} size={24} />

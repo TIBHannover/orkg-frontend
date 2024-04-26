@@ -29,12 +29,12 @@ const ReviewDiff = () => {
     };
 
     const getTitleData = ({ versions, articleId: id }) => {
-        const version = versions.find(version => version.id === id);
+        const version = versions.find((version) => version.id === id);
         if (!version) {
             return null;
         }
 
-        const versionNumber = versions.length ? versions.length - versions.findIndex(version => version.id === id) : null;
+        const versionNumber = versions.length ? versions.length - versions.findIndex((version) => version.id === id) : null;
         const publicationDate = version ? moment(version.date).format('DD MMMM YYYY - H:m:s') : null;
 
         return {

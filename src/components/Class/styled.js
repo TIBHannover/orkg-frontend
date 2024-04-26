@@ -6,8 +6,8 @@ export const motion = {
     motionName: 'node-motion',
     motionAppear: false,
     onAppearStart: () => ({ height: 0 }),
-    onAppearActive: node => ({ height: node.scrollHeight }),
-    onLeaveStart: node => ({ height: node.offsetHeight }),
+    onAppearActive: (node) => ({ height: node.scrollHeight }),
+    onLeaveStart: (node) => ({ height: node.offsetHeight }),
     onLeaveActive: () => ({ height: 0 }),
 };
 
@@ -29,16 +29,16 @@ const AnimatedTree = styled(Tree)`
         content: '';
     }
     .rc-tree-node-content-wrapper:hover {
-        background-color: ${props => props.theme.primary};
+        background-color: ${(props) => props.theme.primary};
         color: #fff;
         opacity: 0.8;
         pointer-events: auto;
     }
     .rc-tree-node-selected {
-        background-color: ${props => props.theme.primary};
+        background-color: ${(props) => props.theme.primary};
         color: #fff;
         padding: 0 4px !important;
-        box-shadow: 0 0 0 1px ${props => props.theme.primary};
+        box-shadow: 0 0 0 1px ${(props) => props.theme.primary};
         display: inline-block;
         opacity: 1;
     }

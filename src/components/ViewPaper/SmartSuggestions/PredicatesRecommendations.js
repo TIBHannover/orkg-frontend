@@ -17,12 +17,12 @@ const MAX_PROPERTIES_ITEMS = 8;
 function PredicatesRecommendations({ title = '', abstract = '' }) {
     const [showMorePredicates, setShowMorePredicates] = useState(false);
     const dispatch = useDispatch();
-    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
+    const selectedResource = useSelector((state) => state.statementBrowser.selectedResource);
 
     const { recommendedPredicates } = usePredicatesRecommendation({ title, abstract });
     const _recommendedPredicates = showMorePredicates ? recommendedPredicates : recommendedPredicates.slice(0, MAX_PROPERTIES_ITEMS);
 
-    const handlePropertyClick = property => {
+    const handlePropertyClick = (property) => {
         dispatch(
             createProperty({
                 resourceId: selectedResource,
@@ -70,7 +70,7 @@ function PredicatesRecommendations({ title = '', abstract = '' }) {
             {recommendedPredicates.length > MAX_PROPERTIES_ITEMS && (
                 <div className="text-center">
                     <ShowMoreButton
-                        onClick={() => setShowMorePredicates(v => !v)}
+                        onClick={() => setShowMorePredicates((v) => !v)}
                         color="link"
                         size="sm"
                         className="p-0 ms-2 mt-2 mb-3"

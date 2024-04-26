@@ -19,12 +19,12 @@ const TippyDropdownToggle = styled(DropdownToggle)`
     }
 `;
 
-export const addYAxisSelector = ref => {
+export const addYAxisSelector = (ref) => {
     // FETCH POSSIBLE CANDIDATES;
     const currentCustomState = ref.selfVisModel.__sharedStateObject.customizer;
     const selectedCols = ref.selfVisModel.__sharedStateObject.selectedColumns;
-    const Y_possibleValueCandidates = selectedCols.filter(item => item.propertyMapperType === 'Number');
-    const Y_possibleAxisSelectors = Y_possibleValueCandidates.map(item => ({ axis: item }));
+    const Y_possibleValueCandidates = selectedCols.filter((item) => item.propertyMapperType === 'Number');
+    const Y_possibleAxisSelectors = Y_possibleValueCandidates.map((item) => ({ axis: item }));
     const newItem = Y_possibleAxisSelectors[0];
     currentCustomState.yAxisSelector.push(newItem);
     // TODO some validation here;
@@ -35,12 +35,12 @@ export const addYAxisSelector = ref => {
 };
 
 /** INITIALIZER * */
-export const initializeFromCustomizer = ref => {
+export const initializeFromCustomizer = (ref) => {
     const currentCustomState = ref.selfVisModel.__sharedStateObject.customizer;
     const selectedCols = ref.selfVisModel.__sharedStateObject.selectedColumns;
 
     /** X-AXIS INITIALIZER * */
-    const X_possibleLabelCandidates = selectedCols.filter(item => item.propertyMapperType === 'String' || item.propertyMapperType === 'Date');
+    const X_possibleLabelCandidates = selectedCols.filter((item) => item.propertyMapperType === 'String' || item.propertyMapperType === 'Date');
     X_possibleLabelCandidates.unshift({ label: 'Contribution' });
 
     if (X_possibleLabelCandidates.length === 0) {
@@ -55,7 +55,7 @@ export const initializeFromCustomizer = ref => {
             // verify that this axis still exists;
             const selectedCols = ref.selfVisModel.__sharedStateObject.selectedColumns;
             const colId = currentCustomState.xAxisSelector.positionPropertyAnchor;
-            const res = selectedCols.find(item => item.positionPropertyAnchor === colId);
+            const res = selectedCols.find((item) => item.positionPropertyAnchor === colId);
 
             if (currentCustomState.xAxisSelector.positionPropertyAnchor && (!res || res.propertyMapperType === 'Select Mapper')) {
                 // which means we need to change selector and label
@@ -69,7 +69,7 @@ export const initializeFromCustomizer = ref => {
     }
 
     /** Y-AXIS INITIALIZER * */
-    const Y_possibleValueCandidates = selectedCols.filter(item => item.propertyMapperType === 'Number');
+    const Y_possibleValueCandidates = selectedCols.filter((item) => item.propertyMapperType === 'Number');
     if (Y_possibleValueCandidates.length === 0) {
         currentCustomState.errorDataNotSupported = true;
         currentCustomState.errorValue = 1;
@@ -94,7 +94,7 @@ export const initializeFromCustomizer = ref => {
             currentCustomState.yAxisSelector.forEach((selector, index) => {
                 // validate
                 const selectorId = selector.axis.positionPropertyAnchor;
-                const res = selectedCols.find(item => item.positionPropertyAnchor === selectorId);
+                const res = selectedCols.find((item) => item.positionPropertyAnchor === selectorId);
                 if (res) {
                     // is it a number?
                     if (res.propertyMapperType === 'Number') {
@@ -104,10 +104,10 @@ export const initializeFromCustomizer = ref => {
 
                         if (selector.intervals && selector.intervals.length > 0) {
                             const validIntervals = [];
-                            selector.intervals.forEach(interval => {
+                            selector.intervals.forEach((interval) => {
                                 // 1] check if item is in selected cols;
                                 const exists = selectedCols.find(
-                                    selectedCol => selectedCol.positionPropertyAnchor === interval.item.positionPropertyAnchor,
+                                    (selectedCol) => selectedCol.positionPropertyAnchor === interval.item.positionPropertyAnchor,
                                 );
                                 if (exists) {
                                     // 2] check if it has mapper of type number
@@ -149,13 +149,13 @@ export const initializeFromCustomizer = ref => {
 };
 
 /** LABEL AXIS SELECTOR * */
-export const createLabelSelectors = ref => {
+export const createLabelSelectors = (ref) => {
     const currentCustomState = ref.selfVisModel.__sharedStateObject.customizer;
     if (!ref.state.isInitialized) {
         // ignored state, initialization will be triggered when customization state is initialized
     } else {
         const possibleLabelCandidates = ref.selfVisModel.__sharedStateObject.selectedColumns.filter(
-            item => item.propertyMapperType === 'String' || item.propertyMapperType === 'Date',
+            (item) => item.propertyMapperType === 'String' || item.propertyMapperType === 'Date',
         );
         possibleLabelCandidates.unshift({ label: 'Contribution' });
 
@@ -223,13 +223,13 @@ export const createLabelSelectors = ref => {
 };
 
 /** VALUE AXIS SELECTOR * */
-export const createValueSelectors = ref => {
+export const createValueSelectors = (ref) => {
     const currentCustomState = ref.selfVisModel.__sharedStateObject.customizer;
     const selectedCols = ref.selfVisModel.__sharedStateObject.selectedColumns;
     if (!ref.state.isInitialized) {
         // ignored state, initialization will be triggered when customization state is initialized
     } else {
-        const possibleValueCandidates = selectedCols.filter(item => item.propertyMapperType === 'Number');
+        const possibleValueCandidates = selectedCols.filter((item) => item.propertyMapperType === 'Number');
         if (possibleValueCandidates.length === 0) {
             currentCustomState.errorDataNotSupported = true;
             currentCustomState.errorValue = 1;
@@ -238,7 +238,7 @@ export const createValueSelectors = ref => {
             ref.setErrorCode(1);
         } else {
             ref.yAxisSelectorMaxCount = possibleValueCandidates.length;
-            const possibleAxisCandidates = possibleValueCandidates.map(item => ({ axis: item }));
+            const possibleAxisCandidates = possibleValueCandidates.map((item) => ({ axis: item }));
             const itemsArray = [];
             for (let i = 0; i < ref.state.yAxisSelectorCount; i++) {
                 const items = possibleAxisCandidates.map((item, id) => (
@@ -482,7 +482,7 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
     );
 };
 
-export const createLabelEditor = ref => {
+export const createLabelEditor = (ref) => {
     const currentCustomState = ref.selfVisModel.__sharedStateObject.customizer;
     if (!ref.state.isInitialized) {
         // ignored state, initialization will be triggered when customization state is initialized
@@ -492,7 +492,7 @@ export const createLabelEditor = ref => {
         return (
             <Input
                 value={ref.state.xAxisLabel ? ref.state.xAxisLabel : initValue}
-                onChange={event => {
+                onChange={(event) => {
                     currentCustomState.xAxisLabel = event.target.value;
                     ref.setState({
                         xAxisLabel: event.target.value,
@@ -502,7 +502,7 @@ export const createLabelEditor = ref => {
         );
     }
 };
-export const createValueEditor = ref => {
+export const createValueEditor = (ref) => {
     const currentCustomState = ref.selfVisModel.__sharedStateObject.customizer;
     if (!ref.state.isInitialized) {
         // ignored state, initialization will be triggered when customization state is initialized
@@ -512,7 +512,7 @@ export const createValueEditor = ref => {
         return (
             <Input
                 value={ref.state.yAxisLabel ? ref.state.yAxisLabel : initValue}
-                onChange={event => {
+                onChange={(event) => {
                     currentCustomState.yAxisLabel = event.target.value;
                     ref.setState({
                         yAxisLabel: event.target.value,

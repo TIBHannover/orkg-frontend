@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { MISC } from 'constants/graphSettings';
 
-const ObservatoryModal = props => {
+const ObservatoryModal = (props) => {
     const [observatory, setObservatory] = useState(props.observatory);
     const [organization, setOrganization] = useState(props.organization);
 
@@ -18,11 +18,11 @@ const ObservatoryModal = props => {
         setOrganization(props.organization);
     }, [props.organization]);
 
-    const handleChangeObservatory = select => {
+    const handleChangeObservatory = (select) => {
         setObservatory(select);
     };
 
-    const handleChangeOrganization = select => {
+    const handleChangeOrganization = (select) => {
         setOrganization(select);
     };
 

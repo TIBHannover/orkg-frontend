@@ -20,7 +20,7 @@ const ResourceItem = styled.div`
     padding: 3px;
 
     &:hover {
-        border: 1px solid ${props => props.theme.primary};
+        border: 1px solid ${(props) => props.theme.primary};
     }
 `;
 
@@ -30,7 +30,7 @@ const ThumbnailImg = styled.img`
     object-fit: cover;
 `;
 
-const Thumbnail = props => {
+const Thumbnail = (props) => {
     const [thumbnail, setThumbnail] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -39,11 +39,11 @@ const Thumbnail = props => {
             if (props.visualizations?.length > 0) {
                 setIsLoading(true);
                 getThing({ thingType: THING_TYPES.VISUALIZATION, thingKey: props.visualizations[0].id })
-                    .then(visualization => {
+                    .then((visualization) => {
                         setThumbnail(visualization);
                         setIsLoading(false);
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         console.log(err);
                     });
             } else if (props.figures?.length > 0) {
@@ -51,14 +51,14 @@ const Thumbnail = props => {
                 getStatementsBySubject({
                     id: props.figures[0].id,
                 })
-                    .then(figuresStatements => {
+                    .then((figuresStatements) => {
                         const img = filterObjectOfStatementsByPredicateAndClass(figuresStatements, PREDICATES.IMAGE, true);
                         setThumbnail({
                             src: img ? img.label : '',
                         });
                         setIsLoading(false);
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         console.log(err);
                     });
             }

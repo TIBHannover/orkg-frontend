@@ -33,13 +33,13 @@ function EditEdge({ isEditEdgeModalOpen, setIsEditEdgeModalOpen, saveEdge, addEd
                                 name="select"
                                 type="select"
                                 value={selectedEntity}
-                                onChange={e => {
+                                onChange={(e) => {
                                     setSelectedEntity(e.target.value);
                                     setValue(null);
                                 }}
                             >
                                 {Object.keys(ENTITIES)
-                                    .filter(e => ![ENTITIES.CLASS, ENTITIES.LITERAL].includes(ENTITIES[e]))
+                                    .filter((e) => ![ENTITIES.CLASS, ENTITIES.LITERAL].includes(ENTITIES[e]))
                                     .map((e, index) => (
                                         <option key={index} value={ENTITIES[e]}>
                                             {capitalize(ENTITIES[e])}
@@ -52,10 +52,10 @@ function EditEdge({ isEditEdgeModalOpen, setIsEditEdgeModalOpen, saveEdge, addEd
                             placeholder={`Select or type to enter a ${selectedEntity}`}
                             allowCreate={true}
                             inputGroup={false}
-                            onItemSelected={item => {
+                            onItemSelected={(item) => {
                                 setValue({ ...item, label: item.value, _class: selectedEntity, linked: true });
                             }}
-                            onNewItemSelected={item => {
+                            onNewItemSelected={(item) => {
                                 setValue({ id: item, label: item, value: item, _class: selectedEntity, linked: false });
                             }}
                             value={value}

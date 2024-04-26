@@ -70,16 +70,16 @@ function AbstractAnnotatorModal({ toggle }) {
     const [validation, setValidation] = useState(true);
     const [classColors, setClassColors] = useState(CLASS_COLORS);
 
-    const abstractGlobal = useSelector(state => state.viewPaper.abstract);
+    const abstractGlobal = useSelector((state) => state.viewPaper.abstract);
 
     const [abstract, setAbstract] = useState(abstractGlobal);
     const dispatch = useDispatch();
 
-    const abstractDialogView = useSelector(state => state.viewPaper.abstractDialogView);
-    const ranges = useSelector(state => state.viewPaper.ranges);
-    const selectedContributionId = useSelector(state => state.viewPaper.selectedContributionId);
-    const properties = useSelector(state => state.statementBrowser.properties);
-    const values = useSelector(state => state.statementBrowser.values);
+    const abstractDialogView = useSelector((state) => state.viewPaper.abstractDialogView);
+    const ranges = useSelector((state) => state.viewPaper.ranges);
+    const selectedContributionId = useSelector((state) => state.viewPaper.selectedContributionId);
+    const properties = useSelector((state) => state.statementBrowser.properties);
+    const values = useSelector((state) => state.statementBrowser.values);
 
     const getAnnotation = useCallback(() => {
         if (!abstract) {
@@ -88,17 +88,17 @@ function AbstractAnnotatorModal({ toggle }) {
         setIsAnnotationLoading(true);
 
         return getAnnotations(abstract)
-            .then(data => {
+            .then((data) => {
                 const annotated = [];
                 const nRanges = {};
                 if (data && data.entities) {
                     data.entities
-                        .map(entity => {
+                        .map((entity) => {
                             const text = data.text.substring(entity[2][0][0], entity[2][0][1]);
                             if (annotated.indexOf(text.toLowerCase()) < 0) {
                                 annotated.push(text.toLowerCase());
                                 // Predicate label entity[1]
-                                let rangeClass = CLASS_OPTIONS.filter(c => c.label.toLowerCase() === entity[1].toLowerCase());
+                                let rangeClass = CLASS_OPTIONS.filter((c) => c.label.toLowerCase() === entity[1].toLowerCase());
                                 if (rangeClass.length > 0) {
                                     [rangeClass] = rangeClass;
                                 } else {
@@ -116,17 +116,17 @@ function AbstractAnnotatorModal({ toggle }) {
                             }
                             return null;
                         })
-                        .filter(r => r);
+                        .filter((r) => r);
                 }
                 // Clear annotations
                 dispatch(clearAnnotations());
-                toArray(nRanges).map(range => dispatch(createAnnotation(range)));
+                toArray(nRanges).map((range) => dispatch(createAnnotation(range)));
                 setIsAnnotationLoading(false);
                 setIsAnnotationFailedLoading(false);
                 setIsAbstractLoading(false);
                 setIsAbstractFailedLoading(false);
             })
-            .catch(e => {
+            .catch((e) => {
                 if (e.statusCode === 422) {
                     setAnnotationError('Failed to annotate the abstract, please change the abstract and try again');
                     setIsAnnotationLoading(false);
@@ -159,7 +159,7 @@ function AbstractAnnotatorModal({ toggle }) {
         }
     }, [abstract, getAnnotation]);
 
-    const getClassColor = rangeClass => {
+    const getClassColor = (rangeClass) => {
         if (!rangeClass) {
             return '#ffb7b7';
         }
@@ -171,9 +171,9 @@ function AbstractAnnotatorModal({ toggle }) {
         return newColor;
     };
 
-    const getExistingPredicateId = property => {
+    const getExistingPredicateId = (property) => {
         if (properties.allIds.length > 0) {
-            const p = properties.allIds.filter(pId => properties.byId[pId].label === property.label);
+            const p = properties.allIds.filter((pId) => properties.byId[pId].label === property.label);
             if (p.length > 0) {
                 // Property Already exists
                 return p[0];
@@ -182,13 +182,13 @@ function AbstractAnnotatorModal({ toggle }) {
         return false;
     };
 
-    const getExistingRange = range => {
+    const getExistingRange = (range) => {
         if (properties.allIds.length > 0) {
-            const p = properties.allIds.filter(pId => properties.byId[pId].label === range.class.label);
+            const p = properties.allIds.filter((pId) => properties.byId[pId].label === range.class.label);
             if (p.length > 0) {
                 // Property Already exists
                 // Check value
-                const v = properties.byId[p[0]].valueIds.filter(id => {
+                const v = properties.byId[p[0]].valueIds.filter((id) => {
                     if (values.byId[id].label === range.text) {
                         return id;
                     }
@@ -206,9 +206,9 @@ function AbstractAnnotatorModal({ toggle }) {
         const classesID = {};
         const createdProperties = {};
         const statements = { properties: [], values: [] };
-        const rangesArray = toArray(ranges).filter(r => r.certainty >= certaintyThreshold);
+        const rangesArray = toArray(ranges).filter((r) => r.certainty >= certaintyThreshold);
         if (rangesArray.length > 0) {
-            rangesArray.map(async range => {
+            rangesArray.map(async (range) => {
                 let propertyId;
                 if (!getExistingRange(range) && range.class.id) {
                     if (classesID[range.class.id]) {
@@ -221,7 +221,7 @@ function AbstractAnnotatorModal({ toggle }) {
                     if (!createdProperties[propertyId]) {
                         const existingPredicateId = getExistingPredicateId(range.class);
                         if (!existingPredicateId) {
-                            let _existingPredicateId = CLASS_OPTIONS.find(_class => _class.id === range.class.id)?.id;
+                            let _existingPredicateId = CLASS_OPTIONS.find((_class) => _class.id === range.class.id)?.id;
                             if (!_existingPredicateId && range.class.id.toLowerCase() !== range.class.label.toLowerCase()) {
                                 _existingPredicateId = range.class.id;
                             }
@@ -249,7 +249,7 @@ function AbstractAnnotatorModal({ toggle }) {
         toggle();
     };
 
-    const handleChangeView = view => {
+    const handleChangeView = (view) => {
         dispatch(setAbstractDialogView(view));
     };
 
@@ -260,7 +260,7 @@ function AbstractAnnotatorModal({ toggle }) {
                 isAbstractLoading={isAbstractLoading}
                 isAnnotationLoading={isAnnotationLoading}
                 isAnnotationFailedLoading={isAnnotationFailedLoading}
-                handleChangeCertaintyThreshold={v => setCertaintyThreshold(v)}
+                handleChangeCertaintyThreshold={(v) => setCertaintyThreshold(v)}
                 classOptions={CLASS_OPTIONS}
                 annotationError={annotationError}
                 getClassColor={getClassColor}

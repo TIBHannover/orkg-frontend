@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-const ResearchProblemCard = props => {
+const ResearchProblemCard = (props) => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: props.problem.id,
         unlisted: props.problem.unlisted,
@@ -30,7 +30,7 @@ const ResearchProblemCard = props => {
                     {props.problem.label}
                 </Link>{' '}
                 <small>
-                    {props.options?.map?.(option => (
+                    {props.options?.map?.((option) => (
                         <StatementActionButton
                             title={option.label}
                             icon={option.icon}

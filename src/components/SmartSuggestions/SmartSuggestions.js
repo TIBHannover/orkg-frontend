@@ -11,9 +11,9 @@ import styled from 'styled-components';
 const TippyStyle = styled(Tippy)`
     &.tippy-box {
         min-width: 400px;
-        background: ${props => props.theme.smart} !important;
+        background: ${(props) => props.theme.smart} !important;
         > .tippy-arrow {
-            color: ${props => props.theme.smart} !important;
+            color: ${(props) => props.theme.smart} !important;
         }
         > .tippy-content {
             padding: 0;

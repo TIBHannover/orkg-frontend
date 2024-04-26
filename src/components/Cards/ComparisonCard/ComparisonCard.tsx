@@ -20,7 +20,7 @@ import styled from 'styled-components';
 
 const ComparisonCardStyled = styled.li<{ rounded: string }>`
     &:last-child {
-        border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
+        border-bottom-right-radius: ${(props) => (props.rounded === 'true' ? '0 !important' : '')};
     }
 `;
 

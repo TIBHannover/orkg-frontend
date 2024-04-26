@@ -17,7 +17,7 @@ const RelatedFigure = ({ src = '', title = '', description = '' }) => {
     return (
         <div className="w-100 mx-1">
             <GlobalStyle />
-            <Card className="overflow-hidden" style={{ cursor: 'pointer' }} onClick={() => setIsOpen(v => !v)}>
+            <Card className="overflow-hidden" style={{ cursor: 'pointer' }} onClick={() => setIsOpen((v) => !v)}>
                 <CardImg top width="100%" height="120px" src={src} alt={`Thumbnail: ${title}`} />
             </Card>
 

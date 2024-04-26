@@ -45,12 +45,12 @@ const MarkdownSection = styled.div`
         font-size: 90%;
     }
     .rta__entity--selected {
-        background: ${props => props.theme.primary};
+        background: ${(props) => props.theme.primary};
     }
 `;
 
 const ItemReference = ({ entity: { reference } }) => (
-    <div role="button" onMouseDown={e => e.preventDefault()} className="px-2 py-1">
+    <div role="button" onMouseDown={(e) => e.preventDefault()} className="px-2 py-1">
         {reference.id}{' '}
         <span className="font-italic ms-2" style={{ opacity: 0.7 }}>
             {reference?.author?.[0]?.family ?? ''} {reference?.author?.length > 0 ? 'et al.' : ''} {reference?.issued?.['date-parts']?.[0] ?? ''}
@@ -63,7 +63,7 @@ ItemReference.propTypes = {
 };
 
 const ItemResource = ({ entity: { resource } }) => (
-    <div role="button" onMouseDown={e => e.preventDefault()} className="px-2 py-1">
+    <div role="button" onMouseDown={(e) => e.preventDefault()} className="px-2 py-1">
         {resource.label}
         <span className="font-italic ms-2" style={{ opacity: 0.7 }}>
             {resource.id}
@@ -109,7 +109,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
         setSelectionRange(null);
     }, [markdownEditorRef, selectionRange]);
 
-    const handleBlurMarkdown = e => {
+    const handleBlurMarkdown = (e) => {
         if (e.target.className.includes('list-item')) {
             return;
         }
@@ -134,7 +134,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
         setSelectionRange({ start, end, length: openTag.length });
     };
 
-    const findResources = async token => {
+    const findResources = async (token) => {
         if (token.startsWith('!#')) {
             const resourceId = token.substring(2);
             if (!resourceId) {
@@ -152,7 +152,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
             }
         } else {
             return token && token !== '!'
-                ? (await getResources({ q: token.substring(1), returnContent: true, size: 10 })).map(resource => ({
+                ? (await getResources({ q: token.substring(1), returnContent: true, size: 10 })).map((resource) => ({
                       resource,
                   }))
                 : [];
@@ -164,22 +164,22 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
             dataProvider: findResources,
             component: ItemResource,
             allowWhitespace: true,
-            output: item =>
+            output: (item) =>
                 `[${item.resource.label}](${env('NEXT_PUBLIC_URL')}${reverse(ROUTES.RESOURCE, {
                     id: item.resource.id,
                 })})`,
         },
         '[@': {
-            dataProvider: token =>
+            dataProvider: (token) =>
                 references
-                    .filter(reference => reference.parsedReference.id.toLowerCase().startsWith(token.toLowerCase().substring(1)))
-                    .map(reference => ({ reference: reference.parsedReference, char: reference.parsedReference.id })),
+                    .filter((reference) => reference.parsedReference.id.toLowerCase().startsWith(token.toLowerCase().substring(1)))
+                    .map((reference) => ({ reference: reference.parsedReference, char: reference.parsedReference.id })),
             component: ItemReference,
-            output: item => `[@${item.char}]`,
+            output: (item) => `[@${item.char}]`,
         },
     };
 
-    const handleKeyPress = e => {
+    const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             setEditMode(true);
         }
@@ -210,36 +210,36 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                     <Toolbar>
                         <ButtonGroup className="me-1" size="sm">
                             <Tippy content="Add bold text">
-                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '**', '**')}>
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '**', '**')}>
                                     <Icon icon={faBold} />
                                 </div>
                             </Tippy>
                             <Tippy content="Add italic text">
-                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '*', '*')}>
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '*', '*')}>
                                     <Icon icon={faItalic} />
                                 </div>
                             </Tippy>
                             <Tippy content="Add underlined text">
-                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '__', '__')}>
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '__', '__')}>
                                     <Icon icon={faUnderline} />
                                 </div>
                             </Tippy>
                         </ButtonGroup>
                         <ButtonGroup className="me-1" size="sm">
                             <Tippy content="Add bullet list">
-                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '* ')}>
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '* ')}>
                                     <Icon icon={faList} />
                                 </div>
                             </Tippy>
                             <Tippy content="Add numbered list">
-                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '1. ')}>
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '1. ')}>
                                     <Icon icon={faListOl} />
                                 </div>
                             </Tippy>
                         </ButtonGroup>
                         <ButtonGroup className="me-1" size="sm">
                             <Tippy content="Add link">
-                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '[', '](url)')}>
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '[', '](url)')}>
                                     <Icon icon={faLink} />
                                 </div>
                             </Tippy>
@@ -248,7 +248,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                                     role="button"
                                     tabIndex="0"
                                     className="btn btn-dark"
-                                    onMouseDown={e => wrapText(e, '![', '](https://example.com/img.png)')}
+                                    onMouseDown={(e) => wrapText(e, '![', '](https://example.com/img.png)')}
                                 >
                                     <Icon icon={faImage} />
                                 </div>
@@ -258,7 +258,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                                     role="button"
                                     tabIndex="0"
                                     className="btn btn-dark"
-                                    onMouseDown={e => wrapText(e, '![', '](https://av.tib.eu/media/16120 =500x300)')}
+                                    onMouseDown={(e) => wrapText(e, '![', '](https://av.tib.eu/media/16120 =500x300)')}
                                 >
                                     <Icon icon={faVideo} />
                                 </div>
@@ -268,13 +268,13 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                             {references && (
                                 <>
                                     <Tippy content="Add citation">
-                                        <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '[@', ']')}>
+                                        <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '[@', ']')}>
                                             <Icon icon={faQuoteLeft} />
                                         </div>
                                     </Tippy>
 
                                     <Tippy content="Add ORKG resource">
-                                        <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '[!', ']')}>
+                                        <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '[!', ']')}>
                                             <Icon icon={faExternalLinkAlt} />
                                         </div>
                                     </Tippy>
@@ -285,7 +285,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                                     role="button"
                                     tabIndex="0"
                                     className="btn btn-dark"
-                                    onMouseDown={e =>
+                                    onMouseDown={(e) =>
                                         wrapText(e, '| Header 1 | Header 2 |\n| ------ | ------ |\n| Item   | Item   |\n| Item   | Item   |')
                                     }
                                 >
@@ -293,7 +293,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                                 </div>
                             </Tippy>
                             <Tippy content="Add code">
-                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '`', '`')}>
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '`', '`')}>
                                     <Icon icon={faCode} />
                                 </div>
                             </Tippy>
@@ -304,13 +304,13 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                         textAreaComponent={Textarea}
                         className="form-control"
                         loadingComponent={Loading}
-                        innerRef={ref => {
+                        innerRef={(ref) => {
                             setMarkdownEditorRef(ref);
                         }}
                         dropdownStyle={{ zIndex: 100 }}
                         minChar={0}
                         trigger={references ? autocompleteTriggers : {}}
-                        onChange={e => {
+                        onChange={(e) => {
                             setMarkdownValue(e.target.value);
                             if (e.target.value.length > 3899) {
                                 toast.warning('The section text cannot exceed 3900 characters');

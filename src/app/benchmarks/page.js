@@ -66,7 +66,7 @@ const Benchmarks = () => {
                 <hr />
                 <Row className="mt-3 flex-grow-1 justify-content-center">
                     {benchmarks?.length > 0 &&
-                        benchmarks.map(benchmark => <BenchmarkCard key={`${benchmark.research_problem.id}`} benchmark={benchmark} />)}
+                        benchmarks.map((benchmark) => <BenchmarkCard key={`${benchmark.research_problem.id}`} benchmark={benchmark} />)}
                     {!isLoading && hasNextPage && (
                         <div className="text-center">
                             <Button onClick={loadNextPage} size="sm" color="light">

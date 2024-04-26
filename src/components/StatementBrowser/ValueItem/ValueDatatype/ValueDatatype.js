@@ -9,14 +9,14 @@ import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip
 import { reverse } from 'named-urls';
 
 function ValueDatatype(props) {
-    const preferences = useSelector(state => state.statementBrowser.preferences);
+    const preferences = useSelector((state) => state.statementBrowser.preferences);
 
     return (
         <>
             {props.value._class === ENTITIES.LITERAL && (
                 <small>
                     <Badge color="light" className="ms-2 me-2" title={props.value.datatype}>
-                        {DATA_TYPES.find(dt => dt.type === props.value.datatype)?.name ?? props.value.datatype}
+                        {DATA_TYPES.find((dt) => dt.type === props.value.datatype)?.name ?? props.value.datatype}
                     </Badge>
                 </small>
             )}
@@ -25,7 +25,7 @@ function ValueDatatype(props) {
                     <Badge color="light" className="ms-2 me-2">
                         {props.value.classes?.length > 0 &&
                             props.value.classes
-                                .map(c => (
+                                .map((c) => (
                                     <DescriptionTooltip key={c} id={c} _class={ENTITIES.CLASS} disabled={!preferences.showDescriptionTooltips}>
                                         <Link target="_blank" style={{ color: '#60687a' }} href={reverse(ROUTES.CLASS, { id: c })}>
                                             {c}

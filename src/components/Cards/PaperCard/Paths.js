@@ -17,15 +17,15 @@ const StyledPaths = styled.div`
         text-align: center;
         color: white;
         display: inline-block;
-        border: 1px ${props => props.theme.secondaryDarker} solid;
+        border: 1px ${(props) => props.theme.secondaryDarker} solid;
         border-radius: 100%;
         font-size: 9px;
         font-weight: bold;
-        background: ${props => props.theme.secondary};
+        background: ${(props) => props.theme.secondary};
     }
 
     & a:hover .typeCircle {
-        background: ${props => props.theme.primary};
+        background: ${(props) => props.theme.primary};
     }
 `;
 

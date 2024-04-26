@@ -17,11 +17,11 @@ import { createResource } from 'services/backend/resources';
 import { getStatementsByObjectAndPredicate, getStatementsBySubjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
 import { addAuthorsToStatements, getPaperData } from 'utils';
 
-const SectionContentLink = props => {
+const SectionContentLink = (props) => {
     const dispatch = useDispatch();
     const [shouldShowOntologyAlert, setShouldShowOntologyAlert] = useState(false);
-    const references = useSelector(state => state.review.references);
-    const contributionId = useSelector(state => state.review.contributionId);
+    const references = useSelector((state) => state.review.references);
+    const contributionId = useSelector((state) => state.review.contributionId);
 
     const [selectedResource, setSelectedResource] = useState(null);
 
@@ -58,7 +58,7 @@ const SectionContentLink = props => {
         }
 
         setSelectedResource({ value: id, label });
-        setStatementBrowserKey(current => ++current);
+        setStatementBrowserKey((current) => ++current);
         setShouldShowOntologyAlert(true);
         dispatch(
             updateSectionLink({
@@ -75,17 +75,17 @@ const SectionContentLink = props => {
     };
 
     // it requires quite a lot of requests to get the metadata of the papers used in a comparison
-    const getPaperMetadataFromComparison = async comparisonId => {
+    const getPaperMetadataFromComparison = async (comparisonId) => {
         const contributionStatements = await getStatementsBySubjectAndPredicate({
             subjectId: comparisonId,
             predicateId: PREDICATES.COMPARE_CONTRIBUTION,
         });
-        const contributionIds = contributionStatements.map(statement => statement.object.id);
-        const paperStatementsPromises = contributionIds.map(contributionId =>
+        const contributionIds = contributionStatements.map((statement) => statement.object.id);
+        const paperStatementsPromises = contributionIds.map((contributionId) =>
             getStatementsByObjectAndPredicate({ predicateId: PREDICATES.HAS_CONTRIBUTION, objectId: contributionId }),
         );
-        const paperStatements = (await Promise.all(paperStatementsPromises)).flatMap(statement => statement);
-        const paperIds = uniq(paperStatements.map(statement => statement.subject.id));
+        const paperStatements = (await Promise.all(paperStatementsPromises)).flatMap((statement) => statement);
+        const paperIds = uniq(paperStatements.map((statement) => statement.subject.id));
         const statementsByPaper = groupBy(
             (await getStatementsBySubjects({ ids: paperIds })).flatMap(({ statements }) => statements),
             'subject.id',
@@ -98,7 +98,7 @@ const SectionContentLink = props => {
                 const bibJson = {
                     id: paperData.id,
                     title: paperData.label,
-                    author: paperData.authors?.map(author => ({ name: author.label })),
+                    author: paperData.authors?.map((author) => ({ name: author.label })),
                     year: paperData.publicationYear?.label,
                 };
                 const parsedReference = await Cite.async(bibJson);
@@ -109,7 +109,7 @@ const SectionContentLink = props => {
                 parsedReferenceData['citation-label'] = paper.id;
                 const bibtex = parsedReference.format('bibtex'); // use the paper ID as key, so we can identify it to add in the _usedReferences later
                 parsedReferenceData.id = paper.id; // set citation-label, later used to get the citation key
-                const isExistingReference = references.find(reference => reference?.parsedReference?.id === paper.id);
+                const isExistingReference = references.find((reference) => reference?.parsedReference?.id === paper.id);
                 if (!isExistingReference) {
                     dispatch(createReference({ contributionId, bibtex, parsedReference: parsedReferenceData }));
                 }

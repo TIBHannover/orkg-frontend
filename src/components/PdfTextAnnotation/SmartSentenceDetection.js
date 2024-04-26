@@ -17,21 +17,21 @@ const PROCESSING_SECONDS_PER_PAGE = 10;
 const Container = styled.div`
     // for showing a loading progress estimator background
     &:before {
-        background: ${props => props.theme.smartDarker};
+        background: ${(props) => props.theme.smartDarker};
         top: 0;
         left: 0;
         content: '';
         position: absolute;
         height: 100%;
-        width: ${props => (props.isLoading ? 100 : 0)}%;
+        width: ${(props) => (props.isLoading ? 100 : 0)}%;
         border-radius: 4px 0 0 4px;
         z-index: -1;
-        transition: width ${props => props.estimatedLoadingTime}s;
-        visibility: ${props => (props.isLoading ? 'visible' : 'hidden')};
+        transition: width ${(props) => props.estimatedLoadingTime}s;
+        visibility: ${(props) => (props.isLoading ? 'visible' : 'hidden')};
     }
     color: #fff;
     border-radius: 4px;
-    background: ${props => props.theme.smart};
+    background: ${(props) => props.theme.smart};
     padding: 10px 10px;
     display: flex;
     justify-content: space-between;
@@ -47,19 +47,19 @@ const Container = styled.div`
  */
 const GlobalStyle = createGlobalStyle`
     .highlight { 
-        cursor: ${props => (props.showHighlights ? 'pointer' : 'text')}!important;
-        background: ${props => (props.showHighlights ? '#d2d5df' : 'transparent')}!important;
+        cursor: ${(props) => (props.showHighlights ? 'pointer' : 'text')}!important;
+        background: ${(props) => (props.showHighlights ? '#d2d5df' : 'transparent')}!important;
     }
 `;
 
 const SmartSentenceDetection = ({ pdfViewer }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [fetchFailed, setFetchFailed] = useState(false);
-    const showHighlights = useSelector(state => state.pdfTextAnnotation.showHighlights);
-    const summaryFetched = useSelector(state => state.pdfTextAnnotation.summaryFetched);
-    const pdf = useSelector(state => state.pdfTextAnnotation.pdf);
+    const showHighlights = useSelector((state) => state.pdfTextAnnotation.showHighlights);
+    const summaryFetched = useSelector((state) => state.pdfTextAnnotation.summaryFetched);
+    const pdf = useSelector((state) => state.pdfTextAnnotation.pdf);
     const dispatch = useDispatch();
-    const setShowHighlights = useCallback(show => dispatch(setShowHighlightsAction(show)), [dispatch]);
+    const setShowHighlights = useCallback((show) => dispatch(setShowHighlightsAction(show)), [dispatch]);
 
     /**
      * Selects text between beginNode and endNode
@@ -115,7 +115,7 @@ const SmartSentenceDetection = ({ pdfViewer }) => {
      * useCallback is required to ensure the event can be removed later via removeEventListener
      * */
     const handleContainerClick = useCallback(
-        e => {
+        (e) => {
             // only proceed if the target is a highlight
             if (!e.target.classList.contains('highlight')) {
                 return;
@@ -171,7 +171,7 @@ const SmartSentenceDetection = ({ pdfViewer }) => {
          * from natural package, it is not possible to correctly load the dependency (not a problem anyway since it's quite large)
          * so copied from: https://github.com/NaturalNode/natural/blob/master/lib/natural/tokenizers/sentence_tokenizer.js
          */
-        const tokenizeSentence = text => {
+        const tokenizeSentence = (text) => {
             try {
                 let sentenceSplitterRegex = '';
                 // prevent error in older browsers, that don't support lookbehinds (https://stackoverflow.com/a/50011952)
@@ -190,13 +190,13 @@ const SmartSentenceDetection = ({ pdfViewer }) => {
                     return [text];
                 }
 
-                return tokens.map(s => s.trim());
+                return tokens.map((s) => s.trim());
             } catch (e) {
                 return [text];
             }
         };
 
-        const setSummaryFetched = fetched => dispatch(setSummaryFetchedAction(fetched));
+        const setSummaryFetched = (fetched) => dispatch(setSummaryFetchedAction(fetched));
 
         const getAllText = () => {
             const maxPages = pdfViewer.pagesCount;
@@ -205,19 +205,19 @@ const SmartSentenceDetection = ({ pdfViewer }) => {
                 const page = pdfViewer.pdfDocument.getPage(j);
 
                 countPromises.push(
-                    page.then(page => {
+                    page.then((page) => {
                         // add page promise
                         const textContent = page.getTextContent();
                         return textContent.then(
-                            text =>
+                            (text) =>
                                 // return content promise
-                                text.items.map(s => s.str).join(''), // value page text
+                                text.items.map((s) => s.str).join(''), // value page text
                         );
                     }),
                 );
             }
             // Wait for all pages and join text
-            return Promise.all(countPromises).then(texts => texts.join(''));
+            return Promise.all(countPromises).then((texts) => texts.join(''));
         };
 
         const highlightText = () => {
@@ -226,7 +226,7 @@ const SmartSentenceDetection = ({ pdfViewer }) => {
             setFetchFailed(false);
 
             getAllText()
-                .then(async text => {
+                .then(async (text) => {
                     const summary = await summarizeText({
                         text,
                         ratio: ANNOTATION_RATIO,
@@ -253,7 +253,7 @@ const SmartSentenceDetection = ({ pdfViewer }) => {
                     }
 
                     // ensure to empty strings are not part of the search query (PDF.js bug will crash the browser)
-                    summarySentences = summarySentences.filter(item => item.length);
+                    summarySentences = summarySentences.filter((item) => item.length);
 
                     pdfViewer.findController.executeCommand('find', {
                         query: summarySentences,
@@ -267,7 +267,7 @@ const SmartSentenceDetection = ({ pdfViewer }) => {
                     setIsLoading(false);
                     setFetchFailed(false);
                 })
-                .catch(e => {
+                .catch((e) => {
                     toast.error('Smart sentence detection could not be performed and is therefore disabled');
                     setFetchFailed(true);
                     setSummaryFetched(true);
@@ -291,7 +291,7 @@ const SmartSentenceDetection = ({ pdfViewer }) => {
                 <Input
                     type="switch"
                     id="enableSentenceDetection"
-                    onChange={e => setShowHighlights(e.target.checked)}
+                    onChange={(e) => setShowHighlights(e.target.checked)}
                     checked={showHighlights && !fetchFailed}
                     disabled={!pdf || fetchFailed}
                 />

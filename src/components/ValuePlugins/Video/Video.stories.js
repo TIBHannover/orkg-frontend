@@ -13,7 +13,7 @@ export default {
     },
 };
 
-const Template = args => <Video {...args} />;
+const Template = (args) => <Video {...args} />;
 
 export const Youtube = Template.bind({});
 

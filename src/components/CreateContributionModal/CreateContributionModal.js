@@ -45,7 +45,7 @@ const CreateContributionModal = ({ isOpen, toggle, paperId, onCreateContribution
                             <Tooltip message="Enter the title of the contribution">Contribution title</Tooltip>
                         </Label>
                         <InputGroup>
-                            <Input value={title} maxLength={MAX_LENGTH_INPUT} type="text" id="title" onChange={e => setTitle(e.target.value)} />
+                            <Input value={title} maxLength={MAX_LENGTH_INPUT} type="text" id="title" onChange={(e) => setTitle(e.target.value)} />
                         </InputGroup>
                     </FormGroup>
                 ) : (

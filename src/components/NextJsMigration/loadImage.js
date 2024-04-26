@@ -4,6 +4,6 @@
 // export default loadImage;
 
 // NEXT-CODE
-const loadImage = image => image.src;
+const loadImage = (image) => image.src;
 
 export default loadImage;

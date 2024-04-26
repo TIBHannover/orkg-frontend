@@ -51,25 +51,25 @@ import {
 } from 'slices/comparisonSlice';
 import ColumnWidth from 'components/Comparison/ComparisonHeader/ColumnWidth';
 
-const ComparisonHeaderMenu = props => {
+const ComparisonHeaderMenu = (props) => {
     const dispatch = useDispatch();
-    const data = useSelector(state => state.comparison.data);
-    const matrixData = useSelector(state => getMatrixOfComparison(state.comparison));
-    const contributions = useSelector(state => state.comparison.contributions.filter(c => c.active));
-    const properties = useSelector(state => state.comparison.properties.filter(c => c.active));
-    const comparisonResource = useSelector(state => state.comparison.comparisonResource);
-    const isFailedLoadingMetadata = useSelector(state => state.comparison.isFailedLoadingMetadata);
-    const isLoadingResult = useSelector(state => state.comparison.isLoadingResult);
-    const isFailedLoadingResult = useSelector(state => state.comparison.isFailedLoadingResult);
-    const isOpenVisualizationModal = useSelector(state => state.comparison.isOpenVisualizationModal);
-    const isOpenFeedbackModal = useSelector(state => state.comparison.isOpenFeedbackModal);
-    const fullWidth = useSelector(state => state.comparison.configuration.fullWidth);
-    const viewDensity = useSelector(state => state.comparison.configuration.viewDensity);
-    const comparisonType = useSelector(state => state.comparison.configuration.comparisonType);
-    const responseHash = useSelector(state => state.comparison.configuration.responseHash);
-    const transpose = useSelector(state => state.comparison.configuration.transpose);
-    const isEditing = useSelector(state => state.comparison.isEditing);
-    const contributionsList = useSelector(state => activatedContributionsToList(state.comparison.contributions));
+    const data = useSelector((state) => state.comparison.data);
+    const matrixData = useSelector((state) => getMatrixOfComparison(state.comparison));
+    const contributions = useSelector((state) => state.comparison.contributions.filter((c) => c.active));
+    const properties = useSelector((state) => state.comparison.properties.filter((c) => c.active));
+    const comparisonResource = useSelector((state) => state.comparison.comparisonResource);
+    const isFailedLoadingMetadata = useSelector((state) => state.comparison.isFailedLoadingMetadata);
+    const isLoadingResult = useSelector((state) => state.comparison.isLoadingResult);
+    const isFailedLoadingResult = useSelector((state) => state.comparison.isFailedLoadingResult);
+    const isOpenVisualizationModal = useSelector((state) => state.comparison.isOpenVisualizationModal);
+    const isOpenFeedbackModal = useSelector((state) => state.comparison.isOpenFeedbackModal);
+    const fullWidth = useSelector((state) => state.comparison.configuration.fullWidth);
+    const viewDensity = useSelector((state) => state.comparison.configuration.viewDensity);
+    const comparisonType = useSelector((state) => state.comparison.configuration.comparisonType);
+    const responseHash = useSelector((state) => state.comparison.configuration.responseHash);
+    const transpose = useSelector((state) => state.comparison.configuration.transpose);
+    const isEditing = useSelector((state) => state.comparison.isEditing);
+    const contributionsList = useSelector((state) => activatedContributionsToList(state.comparison.contributions));
 
     const [, setCookie] = useCookies();
     const router = useRouter();
@@ -91,7 +91,7 @@ const ComparisonHeaderMenu = props => {
     const [isOpenQualityReportModal, setIsOpenQualityReportModal] = useState(false);
     const [isOpenGraphViewModal, setIsOpenGraphViewModal] = useState(false);
 
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector((state) => state.auth.user);
 
     const handleFullWidth = () => {
         setCookie('useFullWidthForComparisonTable', !fullWidth, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
@@ -106,7 +106,7 @@ const ComparisonHeaderMenu = props => {
         dispatch(setConfigurationAttribute({ attribute: 'transpose', value: !transpose }));
     };
 
-    const handleViewDensity = density => {
+    const handleViewDensity = (density) => {
         setCookie('viewDensityComparisonTable', density, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
         dispatch(setConfigurationAttribute({ attribute: 'viewDensity', value: density }));
     };
@@ -138,7 +138,7 @@ const ComparisonHeaderMenu = props => {
         }
     };
 
-    const handleChangeType = type => {
+    const handleChangeType = (type) => {
         setDropdownMethodOpen(false);
         props.navigateToNewURL({ _comparisonType: type });
     };
@@ -150,7 +150,7 @@ const ComparisonHeaderMenu = props => {
      *
      * @param {Array[String]} newContributionIds Contribution ids to add
      */
-    const addContributions = newContributionIds => {
+    const addContributions = (newContributionIds) => {
         const contributionsIDs = without(uniq(contributionsList.concat(newContributionIds)), undefined, null, '') ?? [];
         props.navigateToNewURL({ _contributionsList: contributionsIDs });
     };
@@ -171,10 +171,10 @@ const ComparisonHeaderMenu = props => {
             }
             return;
         }
-        setShowAddContribution(v => !v);
+        setShowAddContribution((v) => !v);
     };
 
-    const handleEdit = async shouldEdit => {
+    const handleEdit = async (shouldEdit) => {
         if (shouldEdit && isPublished) {
             if (await showConfirmDialog()) {
                 props.navigateToNewURL({});
@@ -230,12 +230,12 @@ const ComparisonHeaderMenu = props => {
                                     </span>
                                 </Tippy>
                             )}
-                            <Dropdown group isOpen={dropdownOpen} toggle={() => setDropdownOpen(v => !v)}>
+                            <Dropdown group isOpen={dropdownOpen} toggle={() => setDropdownOpen((v) => !v)}>
                                 <DropdownToggle color="secondary" size="sm" className="rounded-end">
                                     <span className="me-2">Actions</span> <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu end style={{ zIndex: '1031' }}>
-                                    <Dropdown isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} direction="left">
+                                    <Dropdown isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen((v) => !v)} direction="left">
                                         <DropdownToggle className="dropdown-item pe-auto" tag="div" style={{ cursor: 'pointer' }}>
                                             View <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
                                         </DropdownToggle>
@@ -270,14 +270,14 @@ const ComparisonHeaderMenu = props => {
                                     </Tippy>
                                     <Tippy disabled={!isPublished} content={publishedMessage}>
                                         <span>
-                                            <DropdownItem onClick={() => setShowPropertiesDialog(v => !v)} disabled={isPublished}>
+                                            <DropdownItem onClick={() => setShowPropertiesDialog((v) => !v)} disabled={isPublished}>
                                                 Select properties
                                             </DropdownItem>
                                         </span>
                                     </Tippy>
                                     <Tippy disabled={!isPublished} content={publishedMessage}>
                                         <span>
-                                            <Dropdown isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen(v => !v)} direction="left">
+                                            <Dropdown isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen((v) => !v)} direction="left">
                                                 <DropdownToggle
                                                     tag="div"
                                                     className={`dropdown-item d-flex ${isPublished ? 'disabled' : ''}`}
@@ -321,14 +321,14 @@ const ComparisonHeaderMenu = props => {
 
                                     <DropdownItem divider />
                                     <DropdownItem header>Export</DropdownItem>
-                                    <DropdownItem onClick={() => setShowLatexDialog(v => !v)}>Export as LaTeX</DropdownItem>
+                                    <DropdownItem onClick={() => setShowLatexDialog((v) => !v)}>Export as LaTeX</DropdownItem>
                                     {matrixData && (
                                         <CSVLink
                                             data={matrixData}
                                             filename="ORKG Contribution Comparison.csv"
                                             className="dropdown-item"
                                             target="_blank"
-                                            onClick={() => setDropdownOpen(v => !v)}
+                                            onClick={() => setDropdownOpen((v) => !v)}
                                         >
                                             Export as CSV
                                         </CSVLink>
@@ -354,7 +354,7 @@ const ComparisonHeaderMenu = props => {
                                         Export as RDF
                                     </DropdownItem>
                                     {comparisonResource?.id && comparisonResource?.doi && (
-                                        <DropdownItem onClick={() => setShowExportCitationsDialog(v => !v)}>Export Citation</DropdownItem>
+                                        <DropdownItem onClick={() => setShowExportCitationsDialog((v) => !v)}>Export Citation</DropdownItem>
                                     )}
                                     {comparisonResource?.id && (
                                         <DropdownItem
@@ -370,7 +370,7 @@ const ComparisonHeaderMenu = props => {
                                     <DropdownItem header>Tools</DropdownItem>
                                     <Tippy disabled={versions?.length > 1} content="There is no history available for this comparison">
                                         <span>
-                                            <DropdownItem onClick={() => setShowComparisonVersions(v => !v)} disabled={versions?.length < 2}>
+                                            <DropdownItem onClick={() => setShowComparisonVersions((v) => !v)} disabled={versions?.length < 2}>
                                                 <span className="me-2">History</span>
                                             </DropdownItem>
                                         </span>
@@ -405,7 +405,7 @@ const ComparisonHeaderMenu = props => {
                                             if (!user) {
                                                 dispatch(openAuthDialog({ action: 'signin', signInRequired: true }));
                                             } else {
-                                                setShowPublishDialog(v => !v);
+                                                setShowPublishDialog((v) => !v);
                                             }
                                         }}
                                     >
@@ -454,36 +454,36 @@ const ComparisonHeaderMenu = props => {
             {!isLoadingVersions && versions?.length > 1 && showComparisonVersions && (
                 <HistoryModal
                     comparisonId={comparisonResource?.id || comparisonResource?.hasPreviousVersion?.id}
-                    toggle={() => setShowComparisonVersions(v => !v)}
+                    toggle={() => setShowComparisonVersions((v) => !v)}
                     showDialog={showComparisonVersions}
                 />
             )}
             {showPublishDialog && (
-                <Publish toggle={() => setShowPublishDialog(v => !v)} nextVersions={!isLoadingVersions && hasNextVersion ? versions : []} />
+                <Publish toggle={() => setShowPublishDialog((v) => !v)} nextVersions={!isLoadingVersions && hasNextVersion ? versions : []} />
             )}
             <AddContribution
                 onAddContributions={addContributions}
                 showDialog={showAddContribution}
-                toggle={() => setShowAddContribution(v => !v)}
+                toggle={() => setShowAddContribution((v) => !v)}
             />
-            <ExportToLatex showDialog={showLatexDialog} toggle={() => setShowLatexDialog(v => !v)} s />
+            <ExportToLatex showDialog={showLatexDialog} toggle={() => setShowLatexDialog((v) => !v)} s />
             <ExportCitation
                 showDialog={showExportCitationsDialog}
-                toggle={() => setShowExportCitationsDialog(v => !v)}
+                toggle={() => setShowExportCitationsDialog((v) => !v)}
                 DOI={comparisonResource?.doi}
                 comparisonId={comparisonResource?.id}
             />
-            {showSaveDraftDialog && <SaveDraft isOpen={showSaveDraftDialog} toggle={() => setShowSaveDraftDialog(v => !v)} comparisonUrl="" />}
+            {showSaveDraftDialog && <SaveDraft isOpen={showSaveDraftDialog} toggle={() => setShowSaveDraftDialog((v) => !v)} comparisonUrl="" />}
             <AddVisualizationModal />
-            <SelectProperties showPropertiesDialog={showPropertiesDialog} togglePropertiesDialog={() => setShowPropertiesDialog(v => !v)} />
+            <SelectProperties showPropertiesDialog={showPropertiesDialog} togglePropertiesDialog={() => setShowPropertiesDialog((v) => !v)} />
             {isOpenTopAuthorsModal && (
-                <ComparisonAuthorsModel comparisonId={comparisonResource?.id} toggle={() => setIsOpenTopAuthorsModal(v => !v)} />
+                <ComparisonAuthorsModel comparisonId={comparisonResource?.id} toggle={() => setIsOpenTopAuthorsModal((v) => !v)} />
             )}
-            {isOpenQualityReportModal && <QualityReportModal toggle={() => setIsOpenQualityReportModal(v => !v)} />}
+            {isOpenQualityReportModal && <QualityReportModal toggle={() => setIsOpenQualityReportModal((v) => !v)} />}
             {isOpenFeedbackModal && (
                 <WriteFeedback comparisonId={comparisonResource?.id} toggle={() => dispatch(setIsOpenFeedbackModal(!isOpenFeedbackModal))} />
             )}
-            {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal(v => !v)} resourceId={comparisonResource?.id} />}
+            {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal((v) => !v)} resourceId={comparisonResource?.id} />}
         </>
     );
 };

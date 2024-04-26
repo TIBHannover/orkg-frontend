@@ -10,12 +10,12 @@ const useSimilarContributions = ({ contributionId }) => {
     useEffect(() => {
         setIsSimilarContributionsLoading(true);
         getSimilarContribution({ contributionId })
-            .then(sContributions => {
-                const sContributionsData = sContributions.map(paper =>
+            .then((sContributions) => {
+                const sContributionsData = sContributions.map((paper) =>
                     // Fetch the data of each paper
-                    getResource(paper.paper_id).then(paperResource => ({ ...paper, title: paperResource.label })),
+                    getResource(paper.paper_id).then((paperResource) => ({ ...paper, title: paperResource.label })),
                 );
-                Promise.all(sContributionsData).then(results => {
+                Promise.all(sContributionsData).then((results) => {
                     setSimilarContributions(results);
                     setIsSimilarContributionsLoading(false);
                     setIsSimilarContributionsFailedLoading(false);

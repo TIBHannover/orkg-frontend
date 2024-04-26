@@ -7,10 +7,10 @@ import { setDoneAnimation } from 'slices/statementBrowserSlice';
 import { AddPropertyWrapper, AnimationContainer } from 'components/StatementBrowser/Template/styled';
 import PropertySuggestions from 'components/StatementBrowser/Template/PropertySuggestions';
 
-const Template = props => {
+const Template = (props) => {
     const dispatch = useDispatch();
-    const resources = useSelector(state => state.statementBrowser.resources);
-    const property = useSelector(state => state.statementBrowser.properties.byId[props.propertyId]);
+    const resources = useSelector((state) => state.statementBrowser.resources);
+    const property = useSelector((state) => state.statementBrowser.properties.byId[props.propertyId]);
     let propertyIds = [];
     let shared = 1;
     if (Object.keys(resources.byId).length !== 0 && props.value.resourceId) {

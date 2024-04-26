@@ -20,17 +20,17 @@ import HelpVideoModal from 'libs/selfVisModel/ComparisonComponents/HelpVideoModa
 import PublishVisualization from 'libs/selfVisModel/ComparisonComponents/PublishVisualization';
 
 const TabButtons = styled.div`
-    border-bottom: 2px solid ${props => props.theme.lightDarker};
+    border-bottom: 2px solid ${(props) => props.theme.lightDarker};
     display: flex;
 `;
 
 const TabButton = styled.div`
     cursor: pointer;
     padding: 4px 20px;
-    background-color: ${props => (props.active ? props.theme.primary : props.theme.light)};
-    border: ${props => (props.active ? 'none' : `1px solid ${props.theme.lightDarker}`)};
+    background-color: ${(props) => (props.active ? props.theme.primary : props.theme.light)};
+    border: ${(props) => (props.active ? 'none' : `1px solid ${props.theme.lightDarker}`)};
     border-bottom: 0;
-    color: ${props => (props.active ? '#ffffff' : '')};
+    color: ${(props) => (props.active ? '#ffffff' : '')};
     font-size: 18px;
 
     &:first-child {
@@ -54,19 +54,19 @@ function AddVisualizationModal() {
     const prevProcessStep = usePrevious(processStep);
 
     const dispatch = useDispatch();
-    const { data } = useSelector(state => state.comparison);
-    const contributions = useSelector(state => state.comparison.contributions.filter(c => c.active));
-    const properties = useSelector(state => state.comparison.properties.filter(c => c.active));
-    const comparisonResource = useSelector(state => state.comparison.comparisonResource);
-    const useReconstructedDataInVisualization = useSelector(state => state.comparison.useReconstructedDataInVisualization);
-    const isOpenVisualizationModal = useSelector(state => state.comparison.isOpenVisualizationModal);
+    const { data } = useSelector((state) => state.comparison);
+    const contributions = useSelector((state) => state.comparison.contributions.filter((c) => c.active));
+    const properties = useSelector((state) => state.comparison.properties.filter((c) => c.active));
+    const comparisonResource = useSelector((state) => state.comparison.comparisonResource);
+    const useReconstructedDataInVisualization = useSelector((state) => state.comparison.useReconstructedDataInVisualization);
+    const isOpenVisualizationModal = useSelector((state) => state.comparison.isOpenVisualizationModal);
     const prevShowDialog = usePrevious(isOpenVisualizationModal);
 
-    const predicatesList = useSelector(state => state.comparison.configuration.predicatesList);
-    const contributionsList = useSelector(state => activatedContributionsToList(state.comparison.contributions));
+    const predicatesList = useSelector((state) => state.comparison.configuration.predicatesList);
+    const contributionsList = useSelector((state) => activatedContributionsToList(state.comparison.contributions));
 
     const loadVisualizations = () => {
-        getStatementsBySubjectAndPredicate({ subjectId: comparisonResource.id, predicateId: PREDICATES.HAS_VISUALIZATION }).then(statements => {
+        getStatementsBySubjectAndPredicate({ subjectId: comparisonResource.id, predicateId: PREDICATES.HAS_VISUALIZATION }).then((statements) => {
             const visualizations = filterObjectOfStatementsByPredicateAndClass(
                 statements,
                 PREDICATES.HAS_VISUALIZATION,
@@ -120,7 +120,7 @@ function AddVisualizationModal() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpenVisualizationModal, processStep]);
 
-    const compareWidth = assumedWidth => {
+    const compareWidth = (assumedWidth) => {
         const modalBody = document.getElementById('selfVisServiceModalBody');
         if (modalBody) {
             return modalBody.getBoundingClientRect().width;

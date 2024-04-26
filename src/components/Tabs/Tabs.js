@@ -4,7 +4,7 @@ import { ORKGTabsStyle } from 'components/Tabs/styled';
 
 const ORKGTabs = ({ style, className, ...props }) => (
     <ORKGTabsStyle className={className} style={style}>
-        <Tabs {...props} getPopupContainer={trigger => trigger.parentNode} />
+        <Tabs {...props} getPopupContainer={(trigger) => trigger.parentNode} />
     </ORKGTabsStyle>
 );
 

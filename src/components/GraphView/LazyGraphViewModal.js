@@ -37,7 +37,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
         blackListClasses,
     } = useGraphView({ resourceId });
 
-    const handleLayoutChange = newLayoutType => {
+    const handleLayoutChange = (newLayoutType) => {
         setLayoutType(newLayoutType);
     };
 
@@ -50,9 +50,9 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
         focusOnSelect: false,
     });
 
-    const selectedNode = selections[0] ? nodes.find(node => node.id === selections[0]) : null;
+    const selectedNode = selections[0] ? nodes.find((node) => node.id === selections[0]) : null;
 
-    const getExpandButtonLabel = data =>
+    const getExpandButtonLabel = (data) =>
         collapsed.includes(data.id) || !data.hasObjectStatements || (data.hasObjectStatements && !data.hasFetchedObjectStatements)
             ? 'Expand'
             : 'Collapse';
@@ -64,12 +64,12 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
     };
 
     const layoutIcon = layoutIcons[layoutType] || faSitemap;
-    const onEdgeButtonClick = edge => {
+    const onEdgeButtonClick = (edge) => {
         setSelectedEdge(edge);
         setSelections([]);
     };
 
-    const handleCanvasClick = e => {
+    const handleCanvasClick = (e) => {
         setSelectedEdge(null);
         onCanvasClick(e);
     };
@@ -130,7 +130,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                                                 entityType={ENTITIES.CLASS}
                                                 isMulti={true}
                                                 placeholder="Select a class"
-                                                onChange={selected => {
+                                                onChange={(selected) => {
                                                     setBlackListClasses(!selected ? [] : selected);
                                                 }}
                                                 value={blackListClasses}
@@ -167,7 +167,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                                 className="ms-2"
                                 style={{ width: '60px' }}
                                 value={depth}
-                                onChange={e => setDepth(e.target.value)}
+                                onChange={(e) => setDepth(e.target.value)}
                             />
                         </div>
                         <div className="ms-auto me-3 w-100" style={{ maxWidth: 300 }}>
@@ -218,7 +218,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                         edgeLabelPosition="natural"
                         actives={actives}
                         onEdgeClick={onEdgeButtonClick}
-                        onNodeClick={node => {
+                        onNodeClick={(node) => {
                             if (onNodeClick) {
                                 onNodeClick(node);
                             }
@@ -235,7 +235,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                                 : {}
                         }
                         // labelFontUrl={RobotoFont}
-                        renderNode={renderedNode => <Node renderedNode={renderedNode} toggleExpandNode={toggleExpandNode} collapsed={collapsed} />}
+                        renderNode={(renderedNode) => <Node renderedNode={renderedNode} toggleExpandNode={toggleExpandNode} collapsed={collapsed} />}
                         contextMenu={({ data, onClose }) => (
                             <ContextMenu
                                 getExpandButtonLabel={getExpandButtonLabel}

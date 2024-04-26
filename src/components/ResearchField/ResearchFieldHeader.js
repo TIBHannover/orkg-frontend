@@ -23,7 +23,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 const ResearchFieldHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
+    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
     const [showMoreFields, setShowMoreFields] = useState(false);
     const [researchFieldData, subResearchFields, isLoading, isFailedLoading, loadResearchFieldData] = useResearchField();
 
@@ -73,7 +73,7 @@ const ResearchFieldHeader = ({ id }) => {
                     {editMode && (
                         <StatementBrowserDialog
                             show={editMode}
-                            toggleModal={() => setEditMode(v => !v)}
+                            toggleModal={() => setEditMode((v) => !v)}
                             id={id}
                             label={researchFieldData.label}
                             enableEdit={true}
@@ -91,13 +91,13 @@ const ResearchFieldHeader = ({ id }) => {
                                         size="sm"
                                         color="secondary"
                                         className="float-end"
-                                        onClick={() => setEditMode(v => !v)}
+                                        onClick={() => setEditMode((v) => !v)}
                                         style={{ marginRight: 2 }}
                                     >
                                         <Icon icon={faPen} /> Edit
                                     </RequireAuthentication>
                                 )}
-                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
@@ -135,7 +135,7 @@ const ResearchFieldHeader = ({ id }) => {
                             <>
                                 <h2 className="h5">Subfields</h2>
                                 <div>
-                                    {_subResearchFields.map(subfield => (
+                                    {_subResearchFields.map((subfield) => (
                                         <Link
                                             key={`index${subfield.id}`}
                                             href={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
@@ -149,7 +149,7 @@ const ResearchFieldHeader = ({ id }) => {
                                         </Link>
                                     ))}
                                     {subResearchFields.length > 9 && (
-                                        <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm" className="p-0 ms-2">
+                                        <Button onClick={() => setShowMoreFields((v) => !v)} color="link" size="sm" className="p-0 ms-2">
                                             {showMoreFields ? 'Show less subfields' : 'Show more subfields'}
                                         </Button>
                                     )}

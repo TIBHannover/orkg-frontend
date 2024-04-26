@@ -8,8 +8,8 @@ import moment from 'moment';
 import ActionButtonView from 'components/StatementBrowser/StatementActionButton/ActionButtonView';
 import { MISC } from 'constants/graphSettings';
 
-const InfoTippy = props => {
-    const value = useSelector(state => state.statementBrowser.values.byId[props.id]);
+const InfoTippy = (props) => {
+    const value = useSelector((state) => state.statementBrowser.values.byId[props.id]);
     return (
         <Tippy
             interactive={true}
@@ -37,7 +37,7 @@ const InfoTippy = props => {
             }
             trigger="click"
         >
-            <ActionButtonView action={e => e.stopPropagation()} title="Show information about this statement" icon={faInfo} />
+            <ActionButtonView action={(e) => e.stopPropagation()} title="Show information about this statement" icon={faInfo} />
         </Tippy>
     );
 };

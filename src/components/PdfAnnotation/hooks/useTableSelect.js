@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 function useTableSelect(props) {
     const [isDragging, setIsDragging] = useState(false);
-    const selectedTool = useSelector(state => state.pdfAnnotation.selectedTool);
+    const selectedTool = useSelector((state) => state.pdfAnnotation.selectedTool);
     const [coordinates, setCoordinates] = useState({
         startX: -1,
         startY: -1,
@@ -22,7 +22,7 @@ function useTableSelect(props) {
     });
     const dispatch = useDispatch();
 
-    const onMouseDown = useCallback(e => {
+    const onMouseDown = useCallback((e) => {
         setCoordinates({
             startX: e.nativeEvent.offsetX,
             startY: e.nativeEvent.offsetY,
@@ -31,7 +31,7 @@ function useTableSelect(props) {
     }, []);
 
     const onMouseMove = useCallback(
-        e => {
+        (e) => {
             if (!isDragging || selectedTool !== 'tableSelect') {
                 return;
             }
@@ -49,7 +49,7 @@ function useTableSelect(props) {
     );
 
     const onMouseUp = useCallback(
-        e => {
+        (e) => {
             setIsDragging(false);
 
             // don't create a region if it is too small

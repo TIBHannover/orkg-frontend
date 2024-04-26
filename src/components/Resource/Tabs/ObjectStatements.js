@@ -8,7 +8,7 @@ import { getStatementsByObject } from 'services/backend/statements';
 const ObjectStatements = ({ id }) => {
     const [totalStatements, setTotalStatements] = useState(0);
 
-    const renderListItem = statement => <StatementCard key={statement.id} statement={statement} />;
+    const renderListItem = (statement) => <StatementCard key={statement.id} statement={statement} />;
 
     const fetchItems = async ({ page, pageSize }) => {
         const {

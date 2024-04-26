@@ -10,7 +10,7 @@ function CustomNode({ data }) {
     const [paper, setPaper] = useState(null);
     useEffect(() => {
         const loadPaper = () => {
-            getStatementsByObjectAndPredicate({ objectId: data.id, predicateId: PREDICATES.HAS_CONTRIBUTION }).then(statements => {
+            getStatementsByObjectAndPredicate({ objectId: data.id, predicateId: PREDICATES.HAS_CONTRIBUTION }).then((statements) => {
                 setPaper(filterSubjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_CONTRIBUTION, true, CLASSES.PAPER));
             });
         };

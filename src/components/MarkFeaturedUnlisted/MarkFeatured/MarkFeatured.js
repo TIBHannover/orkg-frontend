@@ -13,7 +13,7 @@ const StyledIcon = styled(Icon)`
 
 const FeaturedMark = ({ featured = false, size = '1x', handleChangeStatus }) => {
     const [over, setOver] = useState(false);
-    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
+    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
 
     if (!isCurationAllowed && !featured) {
         return null;

@@ -12,8 +12,8 @@ const StyledBox = styled.div`
     position: absolute;
     right: 10px;
     top: 10px;
-    border-radius: ${props => props.theme.borderRadius};
-    background: ${props => props.theme.light};
+    border-radius: ${(props) => props.theme.borderRadius};
+    background: ${(props) => props.theme.light};
     width: 300px;
     z-index: 1;
     padding: 10px;

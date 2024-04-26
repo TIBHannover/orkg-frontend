@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Suspense, lazy } from 'react';
 
-const GraphViewModal = props => {
+const GraphViewModal = (props) => {
     const LazyGraphViewModal = lazy(() => import('components/GraphView/LazyGraphViewModal'));
 
     return (

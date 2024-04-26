@@ -19,7 +19,7 @@ function useAuthorWorks({ authorId, authorString }) {
     const pageSize = 10;
 
     const loadMoreWorks = useCallback(
-        async p => {
+        async (p) => {
             setIsNextPageLoading(true);
             // Get the statements that contains the author as an object
             let result = null;
@@ -44,29 +44,29 @@ function useAuthorWorks({ authorId, authorString }) {
                     returnContent: false,
                 });
             }
-            const subjectPromises = result.content.map(list => getStatementsByObject({ id: list.subject.id }));
+            const subjectPromises = result.content.map((list) => getStatementsByObject({ id: list.subject.id }));
             const subjects = await Promise.all(subjectPromises);
             result.content = flatten(subjects);
             const filteredResult = result.content.filter(
-                item =>
+                (item) =>
                     intersection(item.subject.classes, [CLASSES.PAPER, CLASSES.COMPARISON, CLASSES.VISUALIZATION, CLASSES.SMART_REVIEW]).length > 0,
             );
 
             // Fetch the data of each work
             if (filteredResult?.length) {
                 return getStatementsBySubjects({
-                    ids: filteredResult.map(s => s.subject.id),
+                    ids: filteredResult.map((s) => s.subject.id),
                 })
-                    .then(statements => addAuthorsToStatementBundle(statements))
-                    .then(statements => {
-                        const items = statements.map(itemStatements => {
+                    .then((statements) => addAuthorsToStatementBundle(statements))
+                    .then((statements) => {
+                        const items = statements.map((itemStatements) => {
                             const itemSubject = find(
-                                result.content.map(_p => _p.subject),
+                                result.content.map((_p) => _p.subject),
                                 { id: itemStatements.id },
                             );
                             return getDataBasedOnType(itemSubject, itemStatements.statements);
                         });
-                        setWorks(prevResources => [...prevResources, ...items]);
+                        setWorks((prevResources) => [...prevResources, ...items]);
                         setIsNextPageLoading(false);
                         setHasNextPage(!result.last);
                         setIsLastPageReached(result.last);

@@ -18,25 +18,28 @@ const Comparisons = ({ organizationsId }) => {
     const [currentPage, setCurrentPage] = useState(0);
 
     const loadComparisons = useCallback(
-        page => {
+        (page) => {
             setIsLoadingComparisons(true);
             getResources({ organizationId: organizationsId, size: 10, page })
-                .then(comparisons =>
+                .then((comparisons) =>
                     // Fetch the data of each comparison
                     getStatementsBySubjects({
-                        ids: comparisons.content.map(c => c.id),
-                    }).then(resourcesStatements => {
-                        const comparisonsData = resourcesStatements.map(resourceStatements => {
+                        ids: comparisons.content.map((c) => c.id),
+                    }).then((resourcesStatements) => {
+                        const comparisonsData = resourcesStatements.map((resourceStatements) => {
                             const comparisonSubject = find(comparisons.content, { id: resourceStatements.id });
                             const data = getComparisonData(comparisonSubject, resourceStatements.statements);
                             return data;
                         });
-                        setComparisonsList(prevComparisons => {
+                        setComparisonsList((prevComparisons) => {
                             const updatedComparisons = groupVersionsOfComparisons([
-                                ...flatten([...prevComparisons.map(c => c.versions ?? []), ...prevComparisons]),
+                                ...flatten([...prevComparisons.map((c) => c.versions ?? []), ...prevComparisons]),
                                 ...comparisonsData,
                             ]);
-                            return flatten([...prevComparisons, updatedComparisons.filter(t => t && !prevComparisons.map(p => p.id).includes(t.id))]);
+                            return flatten([
+                                ...prevComparisons,
+                                updatedComparisons.filter((t) => t && !prevComparisons.map((p) => p.id).includes(t.id)),
+                            ]);
                         });
                         setIsLoadingComparisons(false);
                         setHasNextPage(!comparisons.last);
@@ -44,7 +47,7 @@ const Comparisons = ({ organizationsId }) => {
                         setCurrentPage(page + 1);
                     }),
                 )
-                .catch(error => {
+                .catch((error) => {
                     setIsLoadingComparisons(false);
                     setHasNextPage(false);
                 });
@@ -73,7 +76,7 @@ const Comparisons = ({ organizationsId }) => {
                 {comparisonsList.length > 0 && (
                     <ListGroup>
                         <>
-                            {comparisonsList.map(comparison => (
+                            {comparisonsList.map((comparison) => (
                                 <ComparisonCard comparison={convertComparisonToNewFormat(comparison)} key={`pc${comparison.id}`} />
                             ))}
                         </>
@@ -82,7 +85,7 @@ const Comparisons = ({ organizationsId }) => {
                                 style={{ cursor: 'pointer' }}
                                 className="list-group-item list-group-item-action text-center"
                                 onClick={!isLoadingComparisons ? handleLoadMore : undefined}
-                                onKeyDown={e => (e.keyCode === 13 ? (!isLoadingComparisons ? handleLoadMore : undefined) : undefined)}
+                                onKeyDown={(e) => (e.keyCode === 13 ? (!isLoadingComparisons ? handleLoadMore : undefined) : undefined)}
                                 role="button"
                                 tabIndex={0}
                             >

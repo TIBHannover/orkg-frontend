@@ -21,7 +21,7 @@ const DiscussionModal = ({ entityId, toggle, refreshCount }) => {
     const [page, setPage] = useState(0);
     const [isLast, setIsLast] = useState(true);
     const listRef = useRef(null);
-    const userId = useSelector(state => state.auth.user?.id);
+    const userId = useSelector((state) => state.auth.user?.id);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -29,7 +29,7 @@ const DiscussionModal = ({ entityId, toggle, refreshCount }) => {
             try {
                 setIsLoading(true);
                 const { content, last } = await getDiscussionsByEntityId({ entityId, page });
-                setComments(prevComments => [...prevComments, ...content]);
+                setComments((prevComments) => [...prevComments, ...content]);
                 setIsLast(last);
             } catch (e) {
                 toast.error('Error while loading comments');
@@ -48,7 +48,7 @@ const DiscussionModal = ({ entityId, toggle, refreshCount }) => {
         try {
             setIsLoadingCreate(true);
             const comment = await createComment({ entityId, message: commentValue });
-            setComments(prevComments => [comment, ...prevComments]);
+            setComments((prevComments) => [comment, ...prevComments]);
             setCommentValue('');
             toast.success('Comment created successfully');
             refreshCount();
@@ -66,7 +66,7 @@ const DiscussionModal = ({ entityId, toggle, refreshCount }) => {
     };
 
     const handleLoadMore = () => {
-        setPage(prevPage => prevPage + 1);
+        setPage((prevPage) => prevPage + 1);
     };
 
     const handleSignIn = () => {
@@ -78,7 +78,7 @@ const DiscussionModal = ({ entityId, toggle, refreshCount }) => {
             <ModalHeader toggle={toggle}>Discussion</ModalHeader>
             <ModalBody>
                 <ul className="p-0 m-0" ref={listRef}>
-                    {comments.map(comment => (
+                    {comments.map((comment) => (
                         <Comment key={comment.id} comment={comment} entityId={entityId} setComments={setComments} refreshCount={refreshCount} />
                     ))}
                 </ul>
@@ -135,7 +135,7 @@ const DiscussionModal = ({ entityId, toggle, refreshCount }) => {
                                     placeholder="Write your comment"
                                     value={commentValue}
                                     disabled={isLoadingCreate}
-                                    onChange={e => setCommentValue(e.target.value)}
+                                    onChange={(e) => setCommentValue(e.target.value)}
                                     rows="3"
                                     maxLength={MAX_LENGTH_INPUT}
                                 />

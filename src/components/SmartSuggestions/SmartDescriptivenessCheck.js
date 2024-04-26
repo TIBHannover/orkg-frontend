@@ -83,7 +83,7 @@ export const SmartDescriptivenessCheck = ({ value = '' }) => {
                 <button
                     className="btn btn-smart btn-sm px-3 position-absolute"
                     style={{ right: 5, top: 5 }}
-                    onClick={() => setIsOpenSmartTooltip(v => !v)}
+                    onClick={() => setIsOpenSmartTooltip((v) => !v)}
                 >
                     <Icon icon={faLightbulb} style={{ fontSize: '120%' }} />
                 </button>

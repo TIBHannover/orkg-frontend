@@ -17,7 +17,7 @@ function TabsContainer({ id, classes, editMode }) {
 
     const router = useRouter();
 
-    const onTabChange = key => {
+    const onTabChange = (key) => {
         router.push(
             `${reverse(ROUTES.RESOURCE_TABS, {
                 id,
@@ -30,7 +30,7 @@ function TabsContainer({ id, classes, editMode }) {
         <Container className="mt-3 p-0">
             <Tabs
                 className="box rounded"
-                getPopupContainer={trigger => trigger.parentNode}
+                getPopupContainer={(trigger) => trigger.parentNode}
                 destroyInactiveTabPane={true}
                 onChange={onTabChange}
                 activeKey={activeTab ?? 'information'}

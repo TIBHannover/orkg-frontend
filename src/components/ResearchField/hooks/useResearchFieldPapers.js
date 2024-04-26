@@ -72,21 +72,21 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
             }
 
             papersService
-                .then(result => {
+                .then((result) => {
                     // Fetch the data of each paper
                     getStatementsBySubjects({
-                        ids: result.content.map(p => p.id),
+                        ids: result.content.map((p) => p.id),
                     })
-                        .then(statements => addAuthorsToStatementBundle(statements))
-                        .then(papersStatements => {
-                            const _papers = papersStatements.map(paperStatements => {
+                        .then((statements) => addAuthorsToStatementBundle(statements))
+                        .then((papersStatements) => {
+                            const _papers = papersStatements.map((paperStatements) => {
                                 const paperSubject = find(result.content, {
                                     id: paperStatements.id,
                                 });
                                 return getPaperData(paperSubject, paperStatements.statements);
                             });
 
-                            setPapers(prevResources => [...prevResources, ..._papers]);
+                            setPapers((prevResources) => [...prevResources, ..._papers]);
                             setIsLoading(false);
                             setHasNextPage(!result.last);
                             setIsLastPageReached(result.last);

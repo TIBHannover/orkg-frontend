@@ -42,7 +42,7 @@ export const SmartValueSuggestions = ({ paperTitle, abstract = '', resourceId, p
                 placeholders: { paperTitle, abstract },
             });
             const values = llmResponse?.values.slice(0, 5) ?? [];
-            const resourcePromises = values.map(label =>
+            const resourcePromises = values.map((label) =>
                 classId
                     ? getResources({
                           include: [classId],
@@ -80,7 +80,7 @@ export const SmartValueSuggestions = ({ paperTitle, abstract = '', resourceId, p
         getChatResponse();
     }, [getChatResponse, isOpenSmartTooltip]);
 
-    const handleAddClick = value => {
+    const handleAddClick = (value) => {
         handleAddValue(ENTITIES.RESOURCE, { id: value.id, label: value.label, class: value.class, selected: !!value.id });
         setIsOpenSmartTooltip(false);
         trackEvent({ category: 'smart-suggestions', action: 'click-suggestion', name: taskName });
@@ -111,7 +111,7 @@ export const SmartValueSuggestions = ({ paperTitle, abstract = '', resourceId, p
                     )}
                     {!isLoading && !isFailed && recommendedValues.length > 0 && (
                         <div>
-                            {recommendedValues.map(value => (
+                            {recommendedValues.map((value) => (
                                 <DescriptionTooltip key={value.label} _class={ENTITIES.RESOURCE} id={value.id}>
                                     <Button
                                         color="smart-darker"
@@ -143,7 +143,7 @@ export const SmartValueSuggestions = ({ paperTitle, abstract = '', resourceId, p
             handleReload={getChatResponse}
         >
             <Tippy content="Get value suggestions">
-                <button className="btn btn-smart px-3 btn-sm" onClick={() => setIsOpenSmartTooltip(v => !v)}>
+                <button className="btn btn-smart px-3 btn-sm" onClick={() => setIsOpenSmartTooltip((v) => !v)}>
                     <Icon icon={faLightbulb} style={{ fontSize: '120%' }} />
                 </button>
             </Tippy>

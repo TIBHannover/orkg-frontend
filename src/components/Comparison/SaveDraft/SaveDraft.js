@@ -18,7 +18,7 @@ const SaveDraft = ({ isOpen, toggle }) => {
     const [title, setTitle] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [savedDraftId, setSavedDraftId] = useState(null);
-    const comparisonConfigObject = useSelector(state => getComparisonConfigObject(state.comparison));
+    const comparisonConfigObject = useSelector((state) => getComparisonConfigObject(state.comparison));
 
     const saveDraft = async () => {
         if (!title || !title.trim()) {
@@ -39,7 +39,7 @@ const SaveDraft = ({ isOpen, toggle }) => {
 
     return (
         <Modal isOpen={isOpen} toggle={toggle}>
-            <Form onSubmit={e => e.preventDefault()}>
+            <Form onSubmit={(e) => e.preventDefault()}>
                 <ModalHeader toggle={toggle}>Save as draft</ModalHeader>
                 <ModalBody>
                     {!savedDraftId ? (
@@ -55,7 +55,7 @@ const SaveDraft = ({ isOpen, toggle }) => {
                                     maxLength={MAX_LENGTH_INPUT}
                                     id="draft-title"
                                     value={title}
-                                    onChange={e => setTitle(e.target.value)}
+                                    onChange={(e) => setTitle(e.target.value)}
                                 />
                             </FormGroup>
                         </>

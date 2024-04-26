@@ -7,8 +7,8 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
 const PREVENT_EDIT_CASES = [
     {
-        condition: resource => env('NEXT_PUBLIC_PWC_USER_ID') === resource.created_by,
-        preventModalProps: resource => ({
+        condition: (resource) => env('NEXT_PUBLIC_PWC_USER_ID') === resource.created_by,
+        preventModalProps: (resource) => ({
             header: 'We are working on it!',
             content: (
                 <>
@@ -30,7 +30,7 @@ const PREVENT_EDIT_CASES = [
         }),
     },
     {
-        condition: resource => resource.classes.includes(CLASSES.RESEARCH_FIELD),
+        condition: (resource) => resource.classes.includes(CLASSES.RESEARCH_FIELD),
         preventModalProps: () => ({
             header: 'Research fields taxonomy!',
             content: (
@@ -45,7 +45,7 @@ const PREVENT_EDIT_CASES = [
         }),
     },
     {
-        condition: async resource => {
+        condition: async (resource) => {
             if (resource.classes.includes(CLASSES.COMPARISON)) {
                 const st = await getStatementsBySubjectAndPredicate({ subjectId: resource.id, predicateId: PREDICATES.HAS_DOI });
                 if (st.length > 0) {
@@ -67,7 +67,7 @@ const PREVENT_EDIT_CASES = [
     },
 ];
 
-const getPreventEditCase = async resource => {
+const getPreventEditCase = async (resource) => {
     for (const preventCase of PREVENT_EDIT_CASES) {
         // eslint-disable-next-line no-await-in-loop
         const resultCondition = await preventCase.condition(resource);

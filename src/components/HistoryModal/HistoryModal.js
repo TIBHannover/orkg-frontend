@@ -29,10 +29,10 @@ Option.propTypes = {
 
 const Activity = styled.div`
     border-left: 3px solid #e9ebf2;
-    color: ${props => props.theme.bodyColor};
+    color: ${(props) => props.theme.bodyColor};
 
     a {
-        color: ${props => props.theme.primary};
+        color: ${(props) => props.theme.primary};
     }
 
     &:last-child {
@@ -92,7 +92,7 @@ const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => 
                                     <div className="d-flex w-100">
                                         <Select
                                             value={selectedVersion1}
-                                            onChange={v => setSelectedVersion1(v)}
+                                            onChange={(v) => setSelectedVersion1(v)}
                                             options={options}
                                             components={{ Option }}
                                             blurInputOnSelect
@@ -103,7 +103,7 @@ const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => 
                                         />
                                         <Select
                                             value={selectedVersion2}
-                                            onChange={v => setSelectedVersion2(v)}
+                                            onChange={(v) => setSelectedVersion2(v)}
                                             options={options}
                                             components={{ Option }}
                                             blurInputOnSelect

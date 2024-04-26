@@ -7,25 +7,25 @@ const useEditAnnotation = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [annotationId, setAnnotationId] = useState(null);
     const [value, setValue] = useState(null);
-    const annotations = useSelector(state => state.pdfTextAnnotation.annotations);
+    const annotations = useSelector((state) => state.pdfTextAnnotation.annotations);
     const dispatch = useDispatch();
 
     const toggleIsOpen = () => {
-        setIsOpen(prevState => !prevState);
+        setIsOpen((prevState) => !prevState);
     };
 
-    const editAnnotation = id => {
+    const editAnnotation = (id) => {
         toggleIsOpen();
         setAnnotationId(id);
 
-        const annotation = annotations.find(annotation => annotation.id === id);
+        const annotation = annotations.find((annotation) => annotation.id === id);
 
         if (annotation?.content?.text) {
             setValue(annotation.content.text);
         }
     };
 
-    const handleDone = id => {
+    const handleDone = (id) => {
         dispatch(
             updateAnnotationText({
                 id: annotationId,

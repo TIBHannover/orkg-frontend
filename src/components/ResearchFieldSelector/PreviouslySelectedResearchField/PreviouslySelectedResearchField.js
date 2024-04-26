@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import usePreviouslySelectedResearchField from 'components/ResearchFieldSelector/PreviouslySelectedResearchField/hooks/usePreviouslySelectedResearchField';
 
-const PreviouslySelectedResearchField = props => {
+const PreviouslySelectedResearchField = (props) => {
     const { researchFields } = usePreviouslySelectedResearchField();
 
     return (
@@ -21,7 +21,7 @@ const PreviouslySelectedResearchField = props => {
                     </h3>
 
                     <div className="d-flex flex-wrap">
-                        {researchFields.map(rf => (
+                        {researchFields.map((rf) => (
                             <Button
                                 key={rf.id}
                                 color="light"

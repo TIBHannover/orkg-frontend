@@ -34,7 +34,7 @@ const HeaderSearchButton = ({ placeholder = '', type, userId }) => {
         }
     });
 
-    const handleKeyDown = e => {
+    const handleKeyDown = (e) => {
         if (e.key === 'Escape') {
             closeSearch();
         } else if (e.key === 'Enter') {
@@ -54,7 +54,7 @@ const HeaderSearchButton = ({ placeholder = '', type, userId }) => {
                 ref={refInput}
                 onKeyDown={handleKeyDown}
                 value={value}
-                onChange={e => setValue(e.target.value)}
+                onChange={(e) => setValue(e.target.value)}
                 maxLength={MAX_LENGTH_INPUT}
             />
             <SearchButtonStyled size="sm" className="px-3" color="link" onClick={() => (isSearchOpen ? goToResults() : setIsSearchOpen(true))}>

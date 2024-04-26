@@ -17,11 +17,11 @@ const WriteFeedback = ({ toggle }) => {
     const [answers, setAnswers] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const userId = useSelector(state => state.auth.user?.id);
-    const comparisonId = useSelector(state => state.comparison.comparisonResource.id);
-    const comparisonCreator = useSelector(state => state.comparison.comparisonResource.created_by);
+    const userId = useSelector((state) => state.auth.user?.id);
+    const comparisonId = useSelector((state) => state.comparison.comparisonResource.id);
+    const comparisonCreator = useSelector((state) => state.comparison.comparisonResource.created_by);
 
-    const handleChange = e => {
+    const handleChange = (e) => {
         setAnswers({
             ...answers,
             [e.target.name]: e.target.value,

@@ -24,7 +24,7 @@ export const stringComparePosition = (left, right) => {
  * @param {String } label
  * @param {Array} comparisonStatements
  */
-export const getComparisonConfiguration = url => {
+export const getComparisonConfiguration = (url) => {
     const type = getParamFromQueryString(url.substring(url.indexOf('?')), 'type') ?? DEFAULT_COMPARISON_METHOD;
     const transpose = getParamFromQueryString(url.substring(url.indexOf('?')), 'transpose', true);
     const predicatesList = getArrayParamFromQueryString(url.substring(url.indexOf('?')), 'properties');
@@ -53,10 +53,10 @@ export const isPredicatesListCorrect = (propertyIds, _comparisonType) => {
         return true;
     }
     if (_comparisonType === 'MERGE') {
-        return propertyIds.every(element => !element.includes('/'));
+        return propertyIds.every((element) => !element.includes('/'));
     }
     if (_comparisonType === 'PATH') {
-        return propertyIds.some(element => element.includes('/') || !element.match(/^P([0-9])+$/));
+        return propertyIds.some((element) => element.includes('/') || !element.match(/^P([0-9])+$/));
     }
     return true;
 };
@@ -77,7 +77,7 @@ export const extendPropertyIds = (propertyIds, data) => {
             // flat the all contribution values for the current predicate and
             // check if there similar predicate.
             // (the target similar predicate is supposed to be the last in the path of value)
-            const allV = flattenDepth(values, 2).filter(value => {
+            const allV = flattenDepth(values, 2).filter((value) => {
                 if (value.path && value.path.length > 0 && value.path[value.path.length - 1] === pID && pr !== pID) {
                     return true;
                 }
@@ -122,7 +122,7 @@ export const similarPropertiesByLabel = (propertyLabel, propertyData) => {
  */
 export const generateFilterControlData = (contributions, properties, data) => {
     const controlData = [
-        ...properties.map(property => ({
+        ...properties.map((property) => ({
             property,
             rules: [],
             values: groupBy(
@@ -131,8 +131,8 @@ export const generateFilterControlData = (contributions, properties, data) => {
             ),
         })),
     ];
-    controlData.forEach(item => {
-        Object.keys(item.values).forEach(key => {
+    controlData.forEach((item) => {
+        Object.keys(item.values).forEach((key) => {
             item.values[key] = item.values[key].map(({ path }) => path[0]);
         });
     });
@@ -142,7 +142,7 @@ export const generateFilterControlData = (contributions, properties, data) => {
 /**
  * Get ordered list of selected properties
  */
-export const activatedPropertiesToList = propertiesData => {
+export const activatedPropertiesToList = (propertiesData) => {
     const activeProperties = [];
     propertiesData.forEach((property, index) => {
         if (property.active) {
@@ -155,7 +155,7 @@ export const activatedPropertiesToList = propertiesData => {
 /**
  * Get ordered list of selected contributions
  */
-export const activatedContributionsToList = contributionsData => {
+export const activatedContributionsToList = (contributionsData) => {
     const activeContributions = [];
     contributionsData.forEach((contribution, index) => {
         if (contribution.active) {
@@ -175,7 +175,7 @@ export function getComparisonURLFromConfig({
     const params = qs.stringify(
         {
             contributions,
-            properties: predicates.map(predicate => encodeURIComponent(predicate)),
+            properties: predicates.map((predicate) => encodeURIComponent(predicate)),
             type,
             transpose,
             hasPreviousVersion,
@@ -201,7 +201,7 @@ export function getComparisonURLConfigOfReduxState(comparisonState) {
 export function getComparisonConfigObject(comparisonState) {
     return {
         contributions: activatedContributionsToList(comparisonState.contributions),
-        predicates: comparisonState.configuration.predicatesList.map(predicate => decodeURIComponent(predicate)),
+        predicates: comparisonState.configuration.predicatesList.map((predicate) => decodeURIComponent(predicate)),
         type: comparisonState.configuration.comparisonType,
         transpose: comparisonState.configuration.transpose,
     };
@@ -209,9 +209,9 @@ export function getComparisonConfigObject(comparisonState) {
 
 // returns the part of the string preceding (but not including) the
 // final directory delimiter, or empty if none are found
-export const truncateToLastDir = str => str.substr(0, str.lastIndexOf('/')).toString();
+export const truncateToLastDir = (str) => str.substr(0, str.lastIndexOf('/')).toString();
 
-export const groupArrayByDirectoryPrefix = strings => {
+export const groupArrayByDirectoryPrefix = (strings) => {
     const groups = {};
     const numStrings = strings?.length;
     let i;
@@ -256,7 +256,7 @@ export const groupArrayByDirectoryPrefix = strings => {
  * @return {Object} The property object
  */
 export const getPropertyObjectFromData = (data, value) => {
-    const notEmptyCell = find(flatten(data[value.id]), v => v?.path?.length > 0);
+    const notEmptyCell = find(flatten(data[value.id]), (v) => v?.path?.length > 0);
     return notEmptyCell && notEmptyCell.path?.length && notEmptyCell.path_labels?.length
         ? { id: last(notEmptyCell.path), label: last(notEmptyCell.path_labels) }
         : value;
@@ -298,7 +298,7 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
     const cs = {};
     const dt = {};
     // components
-    const columns = [{ id: 'Properties', title: 'Properties' }, ...contributions.filter(c => c.active).map((contribution, index) => contribution)];
+    const columns = [{ id: 'Properties', title: 'Properties' }, ...contributions.filter((c) => c.active).map((contribution, index) => contribution)];
     columns.forEach((column, index) => {
         if (column.id === 'Properties') {
             cs[column.id] = new rdf.BlankNode();
@@ -324,7 +324,7 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
     });
     // data
     properties
-        .filter(property => property.active && data[property.id])
+        .filter((property) => property.active && data[property.id])
         .map((property, index) => {
             const bno = new rdf.BlankNode();
             gds.add(new rdf.Triple(bno, rdf.rdfns('type'), cubens('Observation')));
@@ -335,7 +335,7 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
                 if (contribution.active) {
                     const cell = data[property.id][index2];
                     if (cell.length > 0) {
-                        cell.map(v => {
+                        cell.map((v) => {
                             if (v.type && v.type === 'resource') {
                                 gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), orkgResource(`${v.resourceId}`)));
                             } else {
@@ -356,7 +356,7 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
         [
             gds
                 .toArray()
-                .map(t => t.toString())
+                .map((t) => t.toString())
                 .join('\n'),
         ],
         { type: 'text/n3' },

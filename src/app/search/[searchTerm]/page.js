@@ -32,7 +32,7 @@ export default function Search() {
                     </Col>
                     <Col md="8" className="mt-sm-2 mt-md-0">
                         <div className="box rounded p-4">
-                            {isLoading() && Object.keys(results).every(v => results[v] && results[v].length === 0) && (
+                            {isLoading() && Object.keys(results).every((v) => results[v] && results[v].length === 0) && (
                                 <ContentLoader
                                     height="100%"
                                     width="100%"
@@ -50,16 +50,16 @@ export default function Search() {
                                 </ContentLoader>
                             )}
 
-                            {!searchTerm || (!isLoading() && Object.keys(results).every(v => results[v] && results[v].length === 0)) ? (
+                            {!searchTerm || (!isLoading() && Object.keys(results).every((v) => results[v] && results[v].length === 0)) ? (
                                 <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
                             ) : (
                                 <div>
                                     {allFilters
-                                        .filter(filter => (results[filter.id] || [])?.length > 0)
-                                        .map(filter => {
+                                        .filter((filter) => (results[filter.id] || [])?.length > 0)
+                                        .map((filter) => {
                                             if (
                                                 selectedFilters.length === 0 ||
-                                                (selectedFilters.length > 0 && selectedFilters.map(c => c && c.id).includes(filter.id))
+                                                (selectedFilters.length > 0 && selectedFilters.map((c) => c && c.id).includes(filter.id))
                                             ) {
                                                 return (
                                                     <div key={`filter-result${filter.id}`}>
@@ -72,7 +72,7 @@ export default function Search() {
                                                             label={filter.label || filter.id}
                                                             class={filter.id}
                                                             currentPage={currentPage[filter.id] || 0}
-                                                            showNoResultsMessage={selectedFilters.map(c => c.id).includes(filter.id)}
+                                                            showNoResultsMessage={selectedFilters.map((c) => c.id).includes(filter.id)}
                                                         />
                                                     </div>
                                                 );
@@ -80,7 +80,8 @@ export default function Search() {
                                             return null;
                                         })}
                                     {allFilters.filter(
-                                        filter => (results[filter.id] || [])?.length === 0 && selectedFilters.map(c => c && c.id).includes(filter.id),
+                                        (filter) =>
+                                            (results[filter.id] || [])?.length === 0 && selectedFilters.map((c) => c && c.id).includes(filter.id),
                                     ).length > 0 &&
                                         !isLoading() && (
                                             <>
@@ -90,11 +91,11 @@ export default function Search() {
                                                     <i>
                                                         {allFilters
                                                             .filter(
-                                                                filter =>
+                                                                (filter) =>
                                                                     (results[filter.id] || [])?.length === 0 &&
-                                                                    selectedFilters.map(c => c && c.id).includes(filter.id),
+                                                                    selectedFilters.map((c) => c && c.id).includes(filter.id),
                                                             )
-                                                            .map(f => f.label)
+                                                            .map((f) => f.label)
                                                             .join(', ')}
                                                     </i>
                                                     )

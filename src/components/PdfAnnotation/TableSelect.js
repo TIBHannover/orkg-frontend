@@ -41,9 +41,9 @@ const RemoveTableButton = styled(Button)`
     height: 25px;
 `;
 
-const TableSelect = props => {
-    const tableRegions = useSelector(state => state.pdfAnnotation.tableRegions);
-    const selectedTool = useSelector(state => state.pdfAnnotation.selectedTool);
+const TableSelect = (props) => {
+    const tableRegions = useSelector((state) => state.pdfAnnotation.tableRegions);
+    const selectedTool = useSelector((state) => state.pdfAnnotation.selectedTool);
     const [onMouseDown, onMouseUp, onMouseMove, pointerStyles, rect, handleExtract, deleteRegion, extractionModal, toggleModel] =
         useTableSelect(props);
 
@@ -61,19 +61,19 @@ const TableSelect = props => {
                     {rect && <SelectHelper style={{ top: rect.y, left: rect.x, width: rect.w, height: rect.h }} />}
 
                     {Object.keys(tableRegions)
-                        .filter(key => tableRegions[key].page === props.pageNumber)
-                        .map(key => {
+                        .filter((key) => tableRegions[key].page === props.pageNumber)
+                        .map((key) => {
                             const { region } = tableRegions[key];
                             return (
                                 <SelectHelper style={{ top: region.y, left: region.x, width: region.w, height: region.h }} key={key}>
-                                    <RemoveTableButton color="secondary-darker" size="sm" className="p-0" onMouseDown={e => deleteRegion(e, key)}>
+                                    <RemoveTableButton color="secondary-darker" size="sm" className="p-0" onMouseDown={(e) => deleteRegion(e, key)}>
                                         <Icon icon={faTimes} />
                                     </RemoveTableButton>
                                     <Button
                                         style={{ pointerEvents: 'all' }}
                                         color="primary"
                                         size="sm"
-                                        onMouseDown={e => handleExtract(e, key, region)}
+                                        onMouseDown={(e) => handleExtract(e, key, region)}
                                     >
                                         Extract table
                                     </Button>

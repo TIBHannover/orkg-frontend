@@ -21,13 +21,13 @@ export const Item = styled.div`
 `;
 
 export const ItemInner = styled.div`
-    padding: ${props => props.cellPadding}px 0;
+    padding: ${(props) => props.cellPadding}px 0;
     border-right: thin solid #d5dae4;
     border-bottom: thin solid #e7eaf1;
     text-align: center;
     height: 100%;
     overflow-wrap: anywhere;
-    background-color: ${props => props.$backgroundColor};
+    background-color: ${(props) => props.$backgroundColor};
 
     &:hover .create-button {
         display: block;
@@ -35,7 +35,7 @@ export const ItemInner = styled.div`
 `;
 
 export const ItemInnerSeparator = styled.hr`
-    margin: ${props => props.cellPadding}px auto;
+    margin: ${(props) => props.cellPadding}px auto;
     width: 100%;
     border-color: #d5dae4;
     opacity: 1;
@@ -107,7 +107,7 @@ const TableCell = ({ entities }) => {
                                                             className="btn-link"
                                                             onClick={() => onClickHandle(entity, index)}
                                                             style={{ cursor: 'pointer' }}
-                                                            onKeyDown={e => (e.keyCode === 13 ? onClickHandle(entity, index) : undefined)}
+                                                            onKeyDown={(e) => (e.keyCode === 13 ? onClickHandle(entity, index) : undefined)}
                                                             role="button"
                                                             tabIndex={0}
                                                         >
@@ -123,7 +123,7 @@ const TableCell = ({ entities }) => {
                                 ),
                         )}
                     {entities?.length > MAX_ITEMS && (
-                        <Button color="secondary" outline size="sm" className="mt-1 border-0" onClick={() => setIsExpanded(v => !v)}>
+                        <Button color="secondary" outline size="sm" className="mt-1 border-0" onClick={() => setIsExpanded((v) => !v)}>
                             {isExpanded ? 'Hide more' : `Show ${entities.length - MAX_ITEMS} more`}{' '}
                             <Icon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
                         </Button>
@@ -134,7 +134,7 @@ const TableCell = ({ entities }) => {
             {modal && (
                 <StatementBrowserDialog
                     show={modal}
-                    toggleModal={() => setModal(v => !v)}
+                    toggleModal={() => setModal((v) => !v)}
                     id={dialogResourceId}
                     label={dialogResourceLabel}
                     type={dialogResourceType}

@@ -34,7 +34,7 @@ const ConfirmationTooltip = forwardRef((props, ref) => {
     }));
 
     useEffect(() => {
-        const onKeyPressed = e => {
+        const onKeyPressed = (e) => {
             if (e.keyCode === 27) {
                 // escape
                 props.closeTippy();

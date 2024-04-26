@@ -130,13 +130,13 @@ const StyledSlider = styled(Slider)`
 
         cursor: pointer;
 
-        color: ${props => props.theme.secondary};
+        color: ${(props) => props.theme.secondary};
     }
     & .slick-prev:hover,
     & .slick-prev:focus,
     & .slick-next:hover,
     & .slick-next:focus {
-        color: ${props => props.theme.primary};
+        color: ${(props) => props.theme.primary};
         outline: none;
         background: transparent;
     }

@@ -10,7 +10,7 @@ import { fillContributionsWithTemplate, removeClassFromContributionResource, rem
 import styled from 'styled-components';
 
 const IconWrapper = styled.span`
-    background-color: ${props => (props.addMode ? '#d1d5e4' : '#dc3545')};
+    background-color: ${(props) => (props.addMode ? '#d1d5e4' : '#dc3545')};
     position: absolute;
     left: 0;
     height: 100%;
@@ -22,7 +22,7 @@ const IconWrapper = styled.span`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: ${props => (props.addMode ? props.theme.secondary : 'white')};
+    color: ${(props) => (props.addMode ? props.theme.secondary : 'white')};
     padding-left: 3px;
 `;
 

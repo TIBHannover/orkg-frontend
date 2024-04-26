@@ -24,7 +24,7 @@ const ReferenceModal = ({ show, toggle, onSave, reference = null }) => {
                 <Textarea
                     value={bibtex}
                     className="form-control"
-                    onChange={e => setBibtex(e.target.value)}
+                    onChange={(e) => setBibtex(e.target.value)}
                     placeholder="Paste your BibTeX here..."
                     aria-label="Enter a valid bibtex entry in this field"
                     style={{ fontFamily: 'monospace', fontSize: '90%' }}

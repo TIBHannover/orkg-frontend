@@ -22,7 +22,7 @@ export const searchEntity = async ({ value, page, pageSize, type }) => {
                 index === 0 &&
                 page === 0 &&
                 (result.label?.toLowerCase() === value?.toLowerCase() ||
-                    !!result.aliases?.find(alias => alias?.toLowerCase() === value?.toLowerCase()));
+                    !!result.aliases?.find((alias) => alias?.toLowerCase() === value?.toLowerCase()));
 
             const item = {
                 id: result.id,
@@ -43,7 +43,7 @@ export const searchEntity = async ({ value, page, pageSize, type }) => {
     return { options: newOptions, hasMore: results ? !!results['search-continue'] : false };
 };
 
-export const searchAuthorOnWikidataByORCID = orcid => {
+export const searchAuthorOnWikidataByORCID = (orcid) => {
     const query = `SELECT ?item ?itemLabel ?dblpId WHERE {
                     ?item wdt:P496 "${orcid}" ;
                         wdt:P2456 ?dblpId .

@@ -11,7 +11,7 @@ const DiagramCardStyled = styled.div`
     }
 
     &.selected {
-        background: ${props => props.theme.bodyBg};
+        background: ${(props) => props.theme.bodyBg};
     }
 
     &:hover .options,

@@ -20,7 +20,7 @@ import {
     TippyContainer,
 } from 'libs/selfVisModel/RenderingComponents/styledComponents';
 
-const CellVE = props => {
+const CellVE = (props) => {
     const [selfVisModel] = useState(new SelfVisDataModel());
     const [renderingItem, setRenderingItem] = useState('text');
     const [cellLabelValue, setCellLabelValue] = useState(props.data && props.data.label ? props.data.label : '');
@@ -41,7 +41,7 @@ const CellVE = props => {
         }
         setRenderingItem('input');
     };
-    const cellValueChanged = event => {
+    const cellValueChanged = (event) => {
         setCellLabelValue(event.target.value);
     };
 
@@ -140,14 +140,14 @@ const CellVE = props => {
                                 value={cellLabelValue}
                                 onChange={cellValueChanged}
                                 innerRef={inputRefs}
-                                onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
-                                onBlur={e => {
+                                onKeyDown={(e) => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
+                                onBlur={(e) => {
                                     props.data.setLabel(cellLabelValue);
                                     props.tippySource.data.instance.enable();
                                     setRenderingItem('text');
                                 }}
                                 onFocus={
-                                    e => {
+                                    (e) => {
                                         e.target.select();
                                     } // Highlights the entire label when edit
                                 }
@@ -170,14 +170,14 @@ const CellVE = props => {
                                 value={cellLabelValue}
                                 onChange={cellValueChanged}
                                 innerRef={inputRefs}
-                                onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
-                                onBlur={e => {
+                                onKeyDown={(e) => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
+                                onBlur={(e) => {
                                     props.data.setLabel(cellLabelValue);
                                     props.tippySource.data.instance.enable();
                                     setRenderingItem('text');
                                 }}
                                 onFocus={
-                                    e => {
+                                    (e) => {
                                         e.target.select();
                                     } // Highlights the entire label when edit
                                 }
@@ -201,14 +201,14 @@ const CellVE = props => {
                                 value={cellLabelValue}
                                 onChange={cellValueChanged}
                                 innerRef={inputRefs}
-                                onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
-                                onBlur={e => {
+                                onKeyDown={(e) => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
+                                onBlur={(e) => {
                                     props.data.setLabel(cellLabelValue);
                                     props.tippySource.data.instance.enable();
                                     setRenderingItem('text');
                                 }}
                                 onFocus={
-                                    e => {
+                                    (e) => {
                                         e.target.select();
                                     } // Highlights the entire label when edit
                                 }

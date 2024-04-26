@@ -14,12 +14,12 @@ const SectionOntology = ({ section, isEditable = false }) => {
     const entityStatements = useMemo(() => {
         if (section?.dataTable) {
             const properties = section.dataTable.properties ?? [];
-            const propertyIds = properties.map(property => property.id);
+            const propertyIds = properties.map((property) => property.id);
 
-            const entities = section.dataTable.entities.map(entity => {
+            const entities = section.dataTable.entities.map((entity) => {
                 const statements = orderBy(
-                    entity.statements.filter(statement => propertyIds.includes(statement.predicate.id)),
-                    statement => propertyIds.findIndex(element => element === statement.predicate.id),
+                    entity.statements.filter((statement) => propertyIds.includes(statement.predicate.id)),
+                    (statement) => propertyIds.findIndex((element) => element === statement.predicate.id),
                 );
 
                 if (!statements || statements.length === 0) {
@@ -39,12 +39,12 @@ const SectionOntology = ({ section, isEditable = false }) => {
                     statements,
                 };
             });
-            return entities.flatMap(entity => entity.statements);
+            return entities.flatMap((entity) => entity.statements);
         }
         return [];
     }, [section.dataTable]);
 
-    const handleOpenEditModal = type => {
+    const handleOpenEditModal = (type) => {
         setEditType(type);
         setIsOpenEntityModal(true);
     };
@@ -129,7 +129,7 @@ const SectionOntology = ({ section, isEditable = false }) => {
                     </tr>
                 )}
             </tbody>
-            {isOpenEntityModal && <SelectEntitiesModal type={editType} toggle={() => setIsOpenEntityModal(v => !v)} section={section} />}
+            {isOpenEntityModal && <SelectEntitiesModal type={editType} toggle={() => setIsOpenEntityModal((v) => !v)} section={section} />}
         </Table>
     );
 };

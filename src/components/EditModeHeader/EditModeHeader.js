@@ -23,7 +23,7 @@ const AnimationContainer = styled(CSSTransition)`
 `;
 
 export const EditModeContainer = styled(Container)`
-    background-color: ${props => props.theme.secondary}!important;
+    background-color: ${(props) => props.theme.secondary}!important;
     color: #fff;
     padding: 8px 25px !important;
     display: flex;
@@ -38,7 +38,7 @@ export const Title = styled.div`
     flex-grow: 1;
     & span {
         font-size: small;
-        color: ${props => props.theme.lightDarker};
+        color: ${(props) => props.theme.lightDarker};
     }
 `;
 

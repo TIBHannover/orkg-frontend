@@ -5,7 +5,7 @@ export default {
     component: PublishedInInput,
 };
 
-const Template = args => <PublishedInInput {...args} />;
+const Template = (args) => <PublishedInInput {...args} />;
 
 export const Default = Template.bind({});
 

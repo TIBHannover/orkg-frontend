@@ -17,7 +17,7 @@ const Properties = () => {
         document.title = 'Properties list - ORKG';
     });
 
-    const renderListItem = property => (
+    const renderListItem = (property) => (
         <ShortRecord key={property.id} header={property.label} href={reverse(ROUTES.PROPERTY, { id: property.id })}>
             {property.id}
         </ShortRecord>

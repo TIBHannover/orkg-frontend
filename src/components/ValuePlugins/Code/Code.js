@@ -28,7 +28,7 @@ const Code = ({ children, type }) => {
     const isTibUrl = labelToText && type === ENTITIES.LITERAL ? labelToText.match(new RegExp(REGEX.TIB_CODE_URL)) : false;
     const isSupportedLanguage =
         labelToText && type === ENTITIES.LITERAL
-            ? SUPPORTED_LANGUAGES.find(language => labelToText.toLowerCase().endsWith(`.${language.extension}`))
+            ? SUPPORTED_LANGUAGES.find((language) => labelToText.toLowerCase().endsWith(`.${language.extension}`))
             : false;
     const isCodeBlock = (isGithubUrl || isTibUrl) && isSupportedLanguage;
 
@@ -59,7 +59,7 @@ const Code = ({ children, type }) => {
                 <CopyToClipboardButton code={code}>
                     <SyntaxHighlighter
                         className="m-0"
-                        language={SUPPORTED_LANGUAGES.find(language => labelToText.endsWith(`.${language.extension}`)?.language)}
+                        language={SUPPORTED_LANGUAGES.find((language) => labelToText.endsWith(`.${language.extension}`)?.language)}
                         style={github}
                     >
                         {codeToShow}
@@ -67,7 +67,7 @@ const Code = ({ children, type }) => {
                 </CopyToClipboardButton>
                 {isCodeOverflowing && (
                     <div>
-                        <Button size="sm" color="link" className="p-0" onClick={() => setIsShowAll(v => !v)}>
+                        <Button size="sm" color="link" className="p-0" onClick={() => setIsShowAll((v) => !v)}>
                             {isShowAll ? 'Show less' : 'Show all'}
                         </Button>
                     </div>

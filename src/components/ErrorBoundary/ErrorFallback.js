@@ -8,7 +8,7 @@ import Logo from 'assets/img/logo.svg';
 import { detect } from 'detect-browser';
 import PropTypes from 'prop-types';
 
-const ErrorFallback = props => {
+const ErrorFallback = (props) => {
     const [collapse, setCollapse] = useState(false);
     const browser = detect();
 
@@ -50,7 +50,7 @@ const ErrorFallback = props => {
                             </Button>
                         </div>
                         <div>
-                            <Button onClick={() => setCollapse(v => !v)} size="sm" color="link" className="d-inline-block px-0 text-muted">
+                            <Button onClick={() => setCollapse((v) => !v)} size="sm" color="link" className="d-inline-block px-0 text-muted">
                                 Show error details
                             </Button>
                         </div>

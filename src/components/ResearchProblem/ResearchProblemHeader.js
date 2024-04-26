@@ -103,12 +103,12 @@ const ResearchProblemHeader = ({ id }) => {
                                     size="sm"
                                     color="secondary"
                                     className="float-end"
-                                    onClick={() => setEditMode(v => !v)}
+                                    onClick={() => setEditMode((v) => !v)}
                                     style={{ marginRight: 2 }}
                                 >
                                     <Icon icon={faPen} /> Edit
                                 </RequireAuthentication>
-                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
@@ -127,7 +127,7 @@ const ResearchProblemHeader = ({ id }) => {
                     {editMode && (
                         <StatementBrowserDialog
                             show={editMode}
-                            toggleModal={() => setEditMode(v => !v)}
+                            toggleModal={() => setEditMode((v) => !v)}
                             id={id}
                             label={researchProblemData.label}
                             enableEdit={true}
@@ -149,7 +149,7 @@ const ResearchProblemHeader = ({ id }) => {
 
                                 <h2 className="h5">Subproblems</h2>
                                 <div>
-                                    {subProblems.map(subfield => (
+                                    {subProblems.map((subfield) => (
                                         <Link
                                             key={`index${subfield.id}`}
                                             href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
@@ -163,7 +163,7 @@ const ResearchProblemHeader = ({ id }) => {
                                         </Link>
                                     ))}
                                     {researchProblemData.subProblems.length > 9 && (
-                                        <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm" className="p-0 ms-2">
+                                        <Button onClick={() => setShowMoreFields((v) => !v)} color="link" size="sm" className="p-0 ms-2">
                                             {showMoreFields ? 'Show less subproblems' : 'Show more subproblems'}
                                         </Button>
                                     )}

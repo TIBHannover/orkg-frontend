@@ -38,11 +38,11 @@ const FilePlaceholder = styled(Icon)`
 `;
 
 const DragUpload = () => {
-    const pdf = useSelector(state => state.pdfTextAnnotation.pdf);
+    const pdf = useSelector((state) => state.pdfTextAnnotation.pdf);
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
 
-    const onDrop = files => {
+    const onDrop = (files) => {
         dispatch(uploadPdf(files));
         setIsLoading(true);
     };

@@ -43,7 +43,7 @@ const PropertyStatements = ({ propertyId }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {statements.map(statement => (
+                                {statements.map((statement) => (
                                     <tr key={statement.id}>
                                         <td>
                                             <DescriptionTooltip

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Tooltip from 'components/Utils/Tooltip';
 
 function AbstractInputView(props) {
-    const stripLineBreaks = event => {
+    const stripLineBreaks = (event) => {
         event.preventDefault();
         let text = '';
         if (event.clipboardData || event.originalEvent.clipboardData) {
@@ -33,7 +33,7 @@ function AbstractInputView(props) {
                 className={`form-control ps-2 pe-2 ${!props.validation ? 'is-invalid' : ''}`}
                 minRows={8}
                 value={props.abstract}
-                onChange={event => props.setAbstract(event.target.value)}
+                onChange={(event) => props.setAbstract(event.target.value)}
                 onPaste={stripLineBreaks}
             />
             {!props.validation && <FormFeedback className="order-1">Please enter the abstract.</FormFeedback>}

@@ -20,19 +20,19 @@ export default class MachineReadableRepresentation {
 
     getResult = () => this.mrrModel;
 
-    getRow = index =>
+    getRow = (index) =>
         // we use the notation, that the row describes the cell values related to the contribution anchors
         // so it will return all values for a "property" relating to all contributions
-        this.mrrModel.dataItems.filter(item => item.positionContribAnchor === index);
+        this.mrrModel.dataItems.filter((item) => item.positionContribAnchor === index);
 
-    getCol = index =>
+    getCol = (index) =>
         // we use the notation, that the row describes the cell values related to the property anchors
         // so it will return all values for a "contribution" relating to all properties
-        this.mrrModel.dataItems.filter(item => item.positionPropertyAnchor === index);
+        this.mrrModel.dataItems.filter((item) => item.positionPropertyAnchor === index);
 
     getItem = (rowIndex, colIndex) => {
         const itemsArray = this.mrrModel.dataItems.filter(
-            item => item.positionPropertyAnchor === colIndex && item.positionContribAnchor === rowIndex,
+            (item) => item.positionPropertyAnchor === colIndex && item.positionContribAnchor === rowIndex,
         );
         if (itemsArray.length === 1) {
             return itemsArray[0];

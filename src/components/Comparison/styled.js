@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Container, Button } from 'reactstrap';
 
 export const SubtitleSeparator = styled.div`
-    background: ${props => props.theme.secondary};
+    background: ${(props) => props.theme.secondary};
     width: 2px;
     height: 30px;
     margin: 0 15px;
@@ -40,7 +40,7 @@ export const ComparisonTypeButton = styled(Button)`
 export const ScrollButton = styled(Button)`
     &&& {
         border-radius: 30px;
-        color: ${props => props.theme.secondary};
+        color: ${(props) => props.theme.secondary};
         width: 30px;
         height: 30px;
         cursor: pointer;
@@ -87,17 +87,17 @@ export const ReactTableWrapper = styled.div`
             }
             .tr .td > div > .itemGroup,
             .tr:hover .td > div > .itemGroup {
-                background: ${props => props.theme.lightDarker};
+                background: ${(props) => props.theme.lightDarker};
             }
             .tr:hover .td .columnProperty > div {
                 background: #8b91a5;
             }
             .tr .td .columnPropertyGroup > div,
             .tr:hover .td .columnPropertyGroup > div {
-                background: ${props => props.theme.secondaryDarker};
+                background: ${(props) => props.theme.secondaryDarker};
             }
             .tr:hover .td .columnContribution > div:first-child {
-                color: ${props => props.theme.primary};
+                color: ${(props) => props.theme.primary};
                 background: #d77171;
             }
             // animate the background change on hover
@@ -146,7 +146,7 @@ export const ReactTableWrapper = styled.div`
         }
 
         .comparisonRow .tr:last-child .td > div > div:first-child {
-            // border-radius: 0 0 0 ${props => props.theme.borderRadius} !important;
+            // border-radius: 0 0 0 ${(props) => props.theme.borderRadius} !important;
         }
 
         &.sticky {
@@ -154,7 +154,7 @@ export const ReactTableWrapper = styled.div`
                 top: 0;
 
                 .th:last-child > div > div {
-                    border-radius: 0 ${props => props.theme.borderRadius} 0 0;
+                    border-radius: 0 ${(props) => props.theme.borderRadius} 0 0;
                 }
             }
 
@@ -170,7 +170,7 @@ export const Properties = styled.div`
     margin: 0;
     height: 100%;
     position: relative;
-    background: ${props => props.theme.light};
+    background: ${(props) => props.theme.light};
 
     // for contribution editor, show edit/delete buttons on hover
     &:hover .cell-buttons {
@@ -179,11 +179,11 @@ export const Properties = styled.div`
 `;
 
 export const PropertiesInner = styled.div`
-    background: ${props => (props.transpose ? props => props.theme.primary : props => props.theme.secondary)};
+    background: ${(props) => (props.transpose ? (props) => props.theme.primary : (props) => props.theme.secondary)};
     height: 100%;
     color: #fff;
-    padding: ${props => props.cellPadding ?? 10}px 10px;
-    border-bottom: ${props => (props.transpose ? 'thin solid #fff!important' : 'thin solid #8B91A5!important')};
+    padding: ${(props) => props.cellPadding ?? 10}px 10px;
+    border-bottom: ${(props) => (props.transpose ? 'thin solid #fff!important' : 'thin solid #8B91A5!important')};
     overflow-wrap: anywhere;
     white-space: normal;
     a {
@@ -191,18 +191,18 @@ export const PropertiesInner = styled.div`
     }
 
     &.first {
-        border-radius: ${props => props.theme.borderRadius} 0 0 0;
-        background: ${props => props.theme.secondary};
+        border-radius: ${(props) => props.theme.borderRadius} 0 0 0;
+        background: ${(props) => props.theme.secondary};
     }
 
     &.last {
-        border-radius: 0 0 0 ${props => props.theme.borderRadius};
+        border-radius: 0 0 0 ${(props) => props.theme.borderRadius};
     }
 `;
 
 export const ItemHeader = styled.div`
     min-height: 50px;
-    background-color: ${props => props.theme.light};
+    background-color: ${(props) => props.theme.light};
     margin: 0;
     height: 100%;
     position: relative;
@@ -210,7 +210,7 @@ export const ItemHeader = styled.div`
 
 export const ItemHeaderInner = styled.div`
     padding: 5px 10px;
-    background: ${props => (!props.transpose ? props => props.theme.primary : props => props.theme.secondary)};
+    background: ${(props) => (!props.transpose ? (props) => props.theme.primary : (props) => props.theme.secondary)};
     border-radius: 0 0 0 0;
     color: #fff;
     height: 100%;
@@ -220,7 +220,7 @@ export const ItemHeaderInner = styled.div`
         color: #fff !important;
     }
     &.contribution-editor {
-        background: ${props => props.theme.light};
+        background: ${(props) => props.theme.light};
     }
 `;
 
@@ -232,7 +232,7 @@ export const Contribution = styled.div`
     margin-top: 2px;
     padding-top: 2px;
     &.contribution-editor {
-        color: ${props => props.theme.secondaryDarker};
+        color: ${(props) => props.theme.secondaryDarker};
         border-top-color: #d0d5e8;
     }
 `;
@@ -253,7 +253,7 @@ export const Delete = styled.button`
     border-radius: 20px;
     width: 24px;
     height: 24px;
-    color: ${props => props.theme.primary};
+    color: ${(props) => props.theme.primary};
     cursor: pointer;
     justify-content: center;
     display: flex;
@@ -263,11 +263,11 @@ export const Delete = styled.button`
         background: #fff;
     }
     &.contribution-editor {
-        color: ${props => props.theme.light};
+        color: ${(props) => props.theme.light};
         right: -5px;
-        background: ${props => props.theme.secondary};
+        background: ${(props) => props.theme.secondary};
         &:hover {
-            background: ${props => props.theme.secondaryDarker};
+            background: ${(props) => props.theme.secondaryDarker};
         }
     }
 `;
@@ -295,7 +295,7 @@ export const ClickableScrollButton = styled.button`
 
     &.left {
         cursor: w-resize;
-        left: ${props => props.leftOffset};
+        left: ${(props) => props.leftOffset};
         top: 10px;
         height: calc(100% - 12px);
 

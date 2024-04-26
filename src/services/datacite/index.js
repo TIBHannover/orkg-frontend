@@ -11,7 +11,7 @@ export const getCitationByDOI = (DOI, style = '', header = 'text/x-bibliography'
             method: 'GET',
             headers: myHeaders,
         })
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     return reject({
                         error: new Error(`Error response. (${response.status}) ${response.statusText}`),

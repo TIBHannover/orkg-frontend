@@ -16,7 +16,7 @@ function TabsContainer({ id, label, classObject, editMode }) {
     const [reloadTree, setReloadTree] = useState(false);
     const router = useRouter();
 
-    const onTabChange = key => {
+    const onTabChange = (key) => {
         router.push(
             `${reverse(ROUTES.CLASS_TABS, {
                 id,
@@ -49,7 +49,7 @@ function TabsContainer({ id, label, classObject, editMode }) {
                                         id={id}
                                         label={label}
                                         editMode={editMode}
-                                        callBackToReloadTree={() => setReloadTree(v => !v)}
+                                        callBackToReloadTree={() => setReloadTree((v) => !v)}
                                     />
                                 ),
                             },

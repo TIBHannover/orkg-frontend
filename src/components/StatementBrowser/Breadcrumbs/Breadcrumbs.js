@@ -10,10 +10,10 @@ import { Container, BackButton, BreadcrumbList, BreadcrumbItem } from 'component
 
 const Breadcrumbs = () => {
     const dispatch = useDispatch();
-    const resourceHistory = useSelector(state => state.statementBrowser.resourceHistory);
-    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
-    const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
-    const resources = useSelector(state => state.statementBrowser.resources);
+    const resourceHistory = useSelector((state) => state.statementBrowser.resourceHistory);
+    const selectedResource = useSelector((state) => state.statementBrowser.selectedResource);
+    const openExistingResourcesInDialog = useSelector((state) => state.statementBrowser.openExistingResourcesInDialog);
+    const resources = useSelector((state) => state.statementBrowser.resources);
 
     const handleOnClick = (id, historyIndex) => {
         dispatch(

@@ -14,7 +14,7 @@ const Cross = styled.span`
     font-size: 20px;
 `;
 
-const Boolean = props => {
+const Boolean = (props) => {
     const trueValues = ['t', 'y', 'true'];
     const falseValues = ['f', 'n', 'false'];
     const supportedValues = [...trueValues, ...falseValues];

@@ -44,7 +44,7 @@ function AnnotationTooltip(props) {
                     }
                 }}
                 interactive={true}
-                onCreate={instance => (tippyInstance.current = instance)}
+                onCreate={(instance) => (tippyInstance.current = instance)}
                 content={
                     <div style={{ width: '300px' }}>
                         <AutoComplete
@@ -61,13 +61,13 @@ function AnnotationTooltip(props) {
                                 certainty: props.range.certainty,
                                 range_id: props.range.id,
                             }}
-                            key={value => value}
+                            key={(value) => value}
                             isClearable
                             openMenuOnFocus={true}
                             autoLoadOption={true}
                             allowCreate={true}
                             autoFocus={false}
-                            innerRef={instance => (reactSelectInstance.current = instance)}
+                            innerRef={(instance) => (reactSelectInstance.current = instance)}
                         />
                     </div>
                 }

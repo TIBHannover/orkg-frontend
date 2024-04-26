@@ -3,7 +3,7 @@ import { CSSTransition } from 'react-transition-group';
 
 export const StyledActivity = styled.div`
     border-left: 3px solid #e9ebf2;
-    color: ${props => props.theme.bodyColor};
+    color: ${(props) => props.theme.bodyColor};
     font-size: small;
     .time {
         color: rgba(100, 100, 100, 0.57);
@@ -22,7 +22,7 @@ export const StyledActivity = styled.div`
         display: inline-block;
     }
     a {
-        color: ${props => props.theme.bodyColor};
+        color: ${(props) => props.theme.bodyColor};
     }
     a:active,
     a:focus {
@@ -93,7 +93,7 @@ export const StyledItemProvenanceBox = styled.li`
     border-bottom: 1px solid #eeeff3;
     font-size: 12px;
     a {
-        color: ${props => props.theme.bodyColor};
+        color: ${(props) => props.theme.bodyColor};
     }
     a:active,
     a:focus {

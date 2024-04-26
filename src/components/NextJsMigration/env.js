@@ -8,7 +8,7 @@ import { env as envOriginal } from 'next-runtime-env';
 // export default env;
 
 // NEXT-CODE
-const env = name =>
+const env = (name) =>
     // const envs = {
     //     BROWSER: 'none',
     //     FAST_REFRESH: 'false',

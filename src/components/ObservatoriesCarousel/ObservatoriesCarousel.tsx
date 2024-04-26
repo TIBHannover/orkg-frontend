@@ -18,7 +18,7 @@ const CarouselContainer = styled.div`
         width: 10px !important;
         height: 10px !important;
         border-radius: 100% !important;
-        background-color: ${props => props.theme.primary} !important;
+        background-color: ${(props) => props.theme.primary} !important;
     }
 `;
 type ObservatoriesCarouselProps = {

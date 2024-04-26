@@ -22,7 +22,7 @@ const ItemContainer = styled.div`
 `;
 
 const ButtonsContainer = styled.div`
-    display: ${props => (props.displayButtonOnHover ? 'none' : 'inline-block')};
+    display: ${(props) => (props.displayButtonOnHover ? 'none' : 'inline-block')};
 `;
 
 const ClassInlineItem = ({
@@ -35,7 +35,7 @@ const ClassInlineItem = ({
     onChange,
 }) => {
     const classAutocompleteRef = useRef(null);
-    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
+    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
     const [isChangingValue, setIsChangingValue] = useState(null);
     const [isSavingChange, setIsSavingChange] = useState(false);
     const [isSavingDelete, setIsSavingDelete] = useState(false);

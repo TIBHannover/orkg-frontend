@@ -7,6 +7,6 @@ import { redirect as redirectNext } from 'next/navigation';
 // export default redirect;
 
 // NEXT-CODE
-const redirect = params => redirectNext(params);
+const redirect = (params) => redirectNext(params);
 
 export default redirect;

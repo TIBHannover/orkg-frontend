@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
 
 const ToolbarStyled = styled.div`
-    background: ${props => props.theme.secondary};
+    background: ${(props) => props.theme.secondary};
     position: fixed;
     width: 100%;
     top: 72px;
@@ -20,8 +20,8 @@ const ToolbarStyled = styled.div`
     align-items: center;
 `;
 
-const Toolbar = props => {
-    const pdf = useSelector(state => state.pdfAnnotation.pdf);
+const Toolbar = (props) => {
+    const pdf = useSelector((state) => state.pdfAnnotation.pdf);
     const dispatch = useDispatch();
 
     // Reset the pdf Annotation state

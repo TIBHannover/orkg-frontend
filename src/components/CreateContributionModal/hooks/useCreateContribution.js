@@ -26,7 +26,7 @@ const useCreateContribution = ({ paperId, isOpen }) => {
         fetchPaperData();
     }, [isOpen, paperId]);
 
-    const createContribution = async title => {
+    const createContribution = async (title) => {
         setIsLoading(true);
         const { id } = await createResource(title, [CLASSES.CONTRIBUTION]);
         await createResourceStatement(paperId, PREDICATES.HAS_CONTRIBUTION, id);

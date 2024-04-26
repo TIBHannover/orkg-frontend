@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 const DeleteButton = styled(Button)`
     &&& {
-        color: ${props => props.theme.secondary};
+        color: ${(props) => props.theme.secondary};
         padding: 0;
         line-height: 1;
         border: 0;
@@ -18,7 +18,7 @@ const DeleteButton = styled(Button)`
     }
 `;
 
-const AppliedRule = props => {
+const AppliedRule = (props) => {
     const { data } = props;
     const { propertyName, type, value, removeRule } = data;
 

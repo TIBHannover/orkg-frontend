@@ -14,35 +14,35 @@ function useResearchField(initialVal = {}) {
     const [isLoadingData, setIsLoadingData] = useState(true);
     const [isFailedLoadingData, setIsFailedLoadingData] = useState(true);
 
-    const loadResearchFieldData = useCallback(rfId => {
+    const loadResearchFieldData = useCallback((rfId) => {
         if (rfId) {
             setIsLoadingData(true);
             // Get the research field
             getResource(rfId)
-                .then(result => {
+                .then((result) => {
                     setData({ ...result });
                     setIsLoadingData(false);
                     setIsFailedLoadingData(false);
                     document.title = `${result.label} - ORKG`;
                 })
-                .catch(error => {
+                .catch((error) => {
                     setIsLoadingData(false);
                     setIsFailedLoadingData(true);
                 });
 
             // Get description and same as
-            getStatementsBySubject({ id: rfId }).then(statements => {
+            getStatementsBySubject({ id: rfId }).then((statements) => {
                 const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
                 const sameAs = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.SAME_AS, true);
-                setData(data => ({ ...data, description: description?.label, sameAs }));
+                setData((data) => ({ ...data, description: description?.label, sameAs }));
             });
 
-            getStatementsBySubjectAndPredicate({ subjectId: rfId, predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD }).then(result => {
+            getStatementsBySubjectAndPredicate({ subjectId: rfId, predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD }).then((result) => {
                 if (result.length > 0) {
-                    getResearchFieldsStats().then(stats => {
+                    getResearchFieldsStats().then((stats) => {
                         const orderedSubRF = orderBy(
-                            result.map(s => ({ ...s.object, numPapers: stats[s.object.id] })),
-                            item => item.numPapers,
+                            result.map((s) => ({ ...s.object, numPapers: stats[s.object.id] })),
+                            (item) => item.numPapers,
                             ['desc'],
                         );
                         setSubResearchFields(orderedSubRF);

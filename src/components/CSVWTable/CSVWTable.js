@@ -30,10 +30,10 @@ import {
 import { sortMethod } from 'utils';
 
 function CSVWTable(props) {
-    const resource = useSelector(state => state.statementBrowser.resources.byId[props.id]);
-    const value = useSelector(state => state.statementBrowser.values.byId[resource.valueId]);
-    const fetchedDepth = useSelector(state => getDepthByValueId(state, resource.valueId));
-    const { lines, cols, isTitlesColumnsExist } = useSelector(state => getTableByValueId(state, resource.valueId), shallowEqual);
+    const resource = useSelector((state) => state.statementBrowser.resources.byId[props.id]);
+    const value = useSelector((state) => state.statementBrowser.values.byId[resource.valueId]);
+    const fetchedDepth = useSelector((state) => getDepthByValueId(state, resource.valueId));
+    const { lines, cols, isTitlesColumnsExist } = useSelector((state) => getTableByValueId(state, resource.valueId), shallowEqual);
 
     const dispatch = useDispatch();
     const columnsSortMethod = useCallback((rowA, rowB, id, desc) => sortMethod(rowA.original[id].value?.label, rowB.original[id].value?.label), []);
@@ -41,11 +41,11 @@ function CSVWTable(props) {
     const [isCSVWModelOpen, setIsCSVWModelOpen] = useState(false);
 
     const toggleModal = () => {
-        setIsCSVWModelOpen(v => !v);
+        setIsCSVWModelOpen((v) => !v);
     };
 
     useEffect(() => {
-        const handleViewTableClick = async e => {
+        const handleViewTableClick = async (e) => {
             const { existingResourceId } = resource;
             if (existingResourceId) {
                 if (!resource.isFetching && fetchedDepth < 3) {
@@ -86,12 +86,12 @@ function CSVWTable(props) {
                 accessor: c.existingResourceId,
                 sortType: columnsSortMethod,
                 disableFilters: isTitlesColumnsExist && index === 0,
-                Cell: innerProps => (
+                Cell: (innerProps) => (
                     <span
-                        onKeyDown={e => (e.key === 'Enter' ? handleCellClick(e, innerProps?.value, PREDICATES.CSVW_CELLS) : undefined)}
+                        onKeyDown={(e) => (e.key === 'Enter' ? handleCellClick(e, innerProps?.value, PREDICATES.CSVW_CELLS) : undefined)}
                         role="button"
                         tabIndex={0}
-                        onClick={e => handleCellClick(e, innerProps?.value, PREDICATES.CSVW_CELLS)}
+                        onClick={(e) => handleCellClick(e, innerProps?.value, PREDICATES.CSVW_CELLS)}
                     >
                         {innerProps?.value?.value?.label ?? <b>{innerProps?.value?.label}</b> ?? (
                             <small>
@@ -106,8 +106,8 @@ function CSVWTable(props) {
 
     const data = useMemo(
         () =>
-            lines?.map(r => {
-                let values = r.cells.map(c => c) ?? [];
+            lines?.map((r) => {
+                let values = r.cells.map((c) => c) ?? [];
                 values = values.map((c, index) => ({
                     [cols[!isTitlesColumnsExist ? index : index + 1].existingResourceId]: c,
                 }));
@@ -162,7 +162,7 @@ function CSVWTable(props) {
     return (
         <ConditionalWrapper
             condition={isCSVWModelOpen}
-            wrapper={children => (
+            wrapper={(children) => (
                 <Modal fade={false} fullscreen isOpen={isCSVWModelOpen} toggle={toggleModal} size="lg">
                     <ModalHeader toggle={toggleModal}>View Tabular Data: {value.label}</ModalHeader>
                     <ModalBody>{children} </ModalBody>
@@ -179,12 +179,12 @@ function CSVWTable(props) {
                                 </Button>
                                 {rows?.length > 0 && (
                                     <CSVLink
-                                        headers={cols.map(h => ({
+                                        headers={cols.map((h) => ({
                                             label: h.titles?.label ?? 'No Label',
                                             key: h.existingResourceId,
                                         }))}
                                         data={data?.map(
-                                            c => Object.assign({}, ...Object.keys(c).map(v => ({ [v]: c[v]?.value?.label ?? '' }))) ?? [],
+                                            (c) => Object.assign({}, ...Object.keys(c).map((v) => ({ [v]: c[v]?.value?.label ?? '' }))) ?? [],
                                         )}
                                         filename={`${value.label}.csv`}
                                         className="btn btn-secondary"
@@ -198,10 +198,10 @@ function CSVWTable(props) {
                         <div className="text-nowrap d-block overflow-auto ">
                             <Table {...getTableProps()} striped bordered hover>
                                 <thead>
-                                    {headerGroups.map(headerGroup => (
+                                    {headerGroups.map((headerGroup) => (
                                         // eslint-disable-next-line react/jsx-key
                                         <tr {...headerGroup.getHeaderGroupProps()}>
-                                            {headerGroup.headers.map(column => (
+                                            {headerGroup.headers.map((column) => (
                                                 // Add the sorting props to control sorting. For this example
                                                 // we can add them into the header props
                                                 <th key={column.getHeaderProps(column.getSortByToggleProps()).key}>
@@ -235,16 +235,16 @@ function CSVWTable(props) {
                                         return (
                                             // eslint-disable-next-line react/jsx-key
                                             <tr {...row.getRowProps()}>
-                                                {row.cells.map(cell => (
+                                                {row.cells.map((cell) => (
                                                     // eslint-disable-next-line react/jsx-key
                                                     <td
                                                         {...cell.getCellProps()}
-                                                        onKeyDown={e =>
+                                                        onKeyDown={(e) =>
                                                             e.key === 'Enter' ? handleCellClick(e, cell.value.row, PREDICATES.CSVW_ROWS) : undefined
                                                         }
                                                         role="button"
                                                         tabIndex={0}
-                                                        onClick={e => handleCellClick(e, cell.value.row, PREDICATES.CSVW_ROWS)}
+                                                        onClick={(e) => handleCellClick(e, cell.value.row, PREDICATES.CSVW_ROWS)}
                                                     >
                                                         {cell.render('Cell')}
                                                     </td>
@@ -281,7 +281,7 @@ function CSVWTable(props) {
                                 <Input
                                     type="number"
                                     defaultValue={pageIndex + 1}
-                                    onChange={e => {
+                                    onChange={(e) => {
                                         const _page = e.target.value ? Number(e.target.value) - 1 : 0;
                                         gotoPage(_page);
                                     }}
@@ -291,11 +291,11 @@ function CSVWTable(props) {
                                     type="select"
                                     name="selectMulti"
                                     value={pageSize}
-                                    onChange={e => {
+                                    onChange={(e) => {
                                         setPageSize(Number(e.target.value));
                                     }}
                                 >
-                                    {[10, 20, 30, 40, 50].map(_pageSize => (
+                                    {[10, 20, 30, 40, 50].map((_pageSize) => (
                                         <option key={_pageSize} value={_pageSize}>
                                             Show {_pageSize}
                                         </option>

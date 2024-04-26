@@ -3,8 +3,8 @@ import ContributorCard from 'components/Cards/ContributorCard/ContributorCard';
 import PropTypes from 'prop-types';
 
 const MembersModal = ({ members, openModal, setOpenModal }) => (
-    <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
-        <ModalHeader toggle={() => setOpenModal(v => !v)}>Organization members</ModalHeader>
+    <Modal isOpen={openModal} toggle={() => setOpenModal((v) => !v)} size="lg">
+        <ModalHeader toggle={() => setOpenModal((v) => !v)}>Organization members</ModalHeader>
         <ModalBody>
             <div className="ps-3 pe-3">
                 {members.map((contributor, index) => (

@@ -37,9 +37,9 @@ const Main = styled.div`
 
 const PdfTextAnnotation = () => {
     const [pdfViewer, setPdfViewer] = useState(null); // TODO: the state contains data that might be changed by the browser, change this mechanism
-    const annotations = useSelector(state => state.pdfTextAnnotation.annotations);
-    const pdf = useSelector(state => state.pdfTextAnnotation.pdf);
-    const zoom = useSelector(state => state.pdfTextAnnotation.zoom);
+    const annotations = useSelector((state) => state.pdfTextAnnotation.annotations);
+    const pdf = useSelector((state) => state.pdfTextAnnotation.pdf);
+    const zoom = useSelector((state) => state.pdfTextAnnotation.zoom);
     const { deleteAnnotation } = useDeleteAnnotation();
     const dispatch = useDispatch();
     const PdfHighlighterRef = useRef();
@@ -75,7 +75,7 @@ const PdfTextAnnotation = () => {
         ) : (
             <AreaHighlight
                 highlight={highlight}
-                onChange={boundingRect => {
+                onChange={(boundingRect) => {
                     this.updateHighlight(highlight.id, { boundingRect: viewportToScaled(boundingRect) }, { image: screenshot(boundingRect) });
                 }}
             />
@@ -86,7 +86,7 @@ const PdfTextAnnotation = () => {
             // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
             <Popup
                 popupContent={<AnnotationTooltipExisting {...highlight} deleteAnnotation={deleteAnnotation} />}
-                onMouseOver={popupContent => setTip(highlight, highlight => popupContent)}
+                onMouseOver={(popupContent) => setTip(highlight, (highlight) => popupContent)}
                 onMouseOut={hideTip}
                 key={index}
             >
@@ -98,7 +98,7 @@ const PdfTextAnnotation = () => {
     useEffect(() => {
         const scrollToHighlightFromHash = () => {
             const id = parseIdFromHash();
-            const highlight = annotations.find(annotation => annotation.id === id);
+            const highlight = annotations.find((annotation) => annotation.id === id);
 
             if (highlight) {
                 PdfHighlighterRef.current.scrollTo(highlight);
@@ -120,14 +120,14 @@ const PdfTextAnnotation = () => {
             <Main>
                 {pdf ? (
                     <PdfLoader url={pdf} beforeLoad={<Icon icon={faSpinner} />} workerSrc={pdfjsWorker}>
-                        {pdfDocument => (
+                        {(pdfDocument) => (
                             <PdfHighlighter
                                 pdfDocument={pdfDocument}
-                                enableAreaSelection={event => event.altKey}
+                                enableAreaSelection={(event) => event.altKey}
                                 onScrollChange={resetHash}
                                 scrollRef={() => {}} // if this is not present, the component will break
                                 ref={PdfHighlighterRef}
-                                onDocumentReady={_pdfViewer => {
+                                onDocumentReady={(_pdfViewer) => {
                                     setPdfViewer(_pdfViewer);
                                     dispatch(setIsLoadedPdfViewer(true));
                                 }}

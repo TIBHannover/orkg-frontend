@@ -24,11 +24,11 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
         setValue(decodedValue || '');
     }, [urlSearchQuery]);
 
-    const handleChange = event => {
+    const handleChange = (event) => {
         setValue(event.target.value);
     };
 
-    const handleSubmit = e => {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         let route = '';

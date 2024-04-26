@@ -62,7 +62,7 @@ export const signInWithEmailAndPassword = async (
     };
 
     const formBody = Object.keys(data)
-        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key as keyof typeof data])}`)
+        .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key as keyof typeof data])}`)
         .join('&');
 
     return submitPostRequest(`${authenticationUrl}oauth/token`, headers, formBody, false, false);

@@ -29,17 +29,17 @@ const cookies = new Cookies();
 
 const ComparisonPopupStyled = styled.div`
     &&& {
-        bottom: ${props => (props.$cookieInfoDismissed ? '0px' : '50px')};
+        bottom: ${(props) => (props.$cookieInfoDismissed ? '0px' : '50px')};
     }
 
     @media (min-width: 481px) and (max-width: 1100px) {
         &&& {
-            bottom: ${props => (props.$cookieInfoDismissed ? '0px' : '70px')};
+            bottom: ${(props) => (props.$cookieInfoDismissed ? '0px' : '70px')};
         }
     }
     @media (max-width: 480px) {
         &&& {
-            bottom: ${props => (props.$cookieInfoDismissed ? '0px' : '120px')};
+            bottom: ${(props) => (props.$cookieInfoDismissed ? '0px' : '120px')};
         }
     }
 `;
@@ -78,22 +78,22 @@ class ComparisonPopup extends Component {
     };
 
     toggleComparisonBox = () => {
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             showComparisonBox: !prevState.showComparisonBox,
         }));
     };
 
-    handleClickOutside = event => {
+    handleClickOutside = (event) => {
         if (this.comparisonPopup.current && !this.comparisonPopup.current.contains(event.target) && this.state.showComparisonBox) {
             this.toggleComparisonBox();
         }
     };
 
-    removeAllContributionFromComparison = async allIds => {
-        allIds.map(contributionId => this.removeFromComparison(contributionId));
+    removeAllContributionFromComparison = async (allIds) => {
+        allIds.map((contributionId) => this.removeFromComparison(contributionId));
     };
 
-    removeFromComparison = id => {
+    removeFromComparison = (id) => {
         this.props.removeFromComparison(id);
     };
 
@@ -109,7 +109,7 @@ class ComparisonPopup extends Component {
         document.removeEventListener('keydown', this.onKeyPressed);
     };
 
-    onKeyPressed = e => {
+    onKeyPressed = (e) => {
         if (e.keyCode === 27) {
             // escape
             this.tippy.hide();
@@ -130,7 +130,7 @@ class ComparisonPopup extends Component {
         this.tippy.hide();
     };
 
-    onCreate = tippy => {
+    onCreate = (tippy) => {
         this.tippy = tippy;
     };
 
@@ -149,7 +149,7 @@ class ComparisonPopup extends Component {
         return (
             <ComparisonPopupStyled
                 $cookieInfoDismissed={cookieInfoDismissed}
-                ref={node => (this.comparisonPopup.current = node)}
+                ref={(node) => (this.comparisonPopup.current = node)}
                 className="fixed-bottom p-0 offset-sm-2 offset-md-8"
                 style={{ width: '340px', zIndex: '1000' }}
             >
@@ -214,7 +214,7 @@ class ComparisonPopup extends Component {
                                                 }
                                             >
                                                 <span>
-                                                    <Icon className="ms-2 me-2" size="sm" onClick={e => e.stopPropagation()} icon={faTrash} />
+                                                    <Icon className="ms-2 me-2" size="sm" onClick={(e) => e.stopPropagation()} icon={faTrash} />
                                                 </span>
                                             </Tippy>
                                         </Tippy>
@@ -222,7 +222,7 @@ class ComparisonPopup extends Component {
                                     </div>
                                 </Header>
                                 <List>
-                                    {allIds.map(contributionId => (
+                                    {allIds.map((contributionId) => (
                                         <ContributionItem key={contributionId}>
                                             <div className="d-flex">
                                                 <div className="pe-3">
@@ -253,7 +253,7 @@ class ComparisonPopup extends Component {
                                 <div className="w-100 text-center">
                                     <ConditionalWrapper
                                         condition={contributionAmount > 1}
-                                        wrapper={children => <Link href={comparisonUrl}>{children}</Link>}
+                                        wrapper={(children) => <Link href={comparisonUrl}>{children}</Link>}
                                     >
                                         <Tippy disabled={contributionAmount > 1} content="Please select at least two contributions">
                                             <span>
@@ -279,13 +279,13 @@ ComparisonPopup.propTypes = {
     loadComparisonFromLocalStorage: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     comparison: state.viewPaper.comparison,
 });
 
-const mapDispatchToProps = dispatch => ({
-    removeFromComparison: data => dispatch(removeFromComparison(data)),
-    loadComparisonFromLocalStorage: data => dispatch(loadComparisonFromLocalStorage(data)),
+const mapDispatchToProps = (dispatch) => ({
+    removeFromComparison: (data) => dispatch(removeFromComparison(data)),
+    loadComparisonFromLocalStorage: (data) => dispatch(loadComparisonFromLocalStorage(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ComparisonPopup);

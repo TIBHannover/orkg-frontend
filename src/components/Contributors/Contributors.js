@@ -30,7 +30,7 @@ const Contributors = ({ contributors = [], isEmbedded = false }) => {
 
             {contributors && contributors.find(({ percentage }) => percentage <= PERCENTAGE_THRESHOLD) && (
                 <Tippy content={`${shouldShowAll ? 'Hide' : 'Show'} contributors that contributed less than ${PERCENTAGE_THRESHOLD}%`}>
-                    <StyledDotGravatar size={40} onClick={() => setShouldShowAll(v => !v)} className="rounded-circle">
+                    <StyledDotGravatar size={40} onClick={() => setShouldShowAll((v) => !v)} className="rounded-circle">
                         <Icon icon={shouldShowAll ? faClose : faEllipsisH} />
                     </StyledDotGravatar>
                 </Tippy>

@@ -40,14 +40,14 @@ function useDiagramEditor({ id }) {
     const [nodes, setNodes] = useState([]);
     const [edges, setEdges] = useState([]);
 
-    const onNodesChange = useCallback(changes => setNodes(nds => applyNodeChanges(changes, nds)), [setNodes]);
-    const onEdgesChange = useCallback(changes => setEdges(eds => applyEdgeChanges(changes, eds)), [setEdges]);
-    const onConnect = useCallback(connection => {
+    const onNodesChange = useCallback((changes) => setNodes((nds) => applyNodeChanges(changes, nds)), [setNodes]);
+    const onEdgesChange = useCallback((changes) => setEdges((eds) => applyEdgeChanges(changes, eds)), [setEdges]);
+    const onConnect = useCallback((connection) => {
         setCurrentEdge(connection);
         setIsEditEdgeModalOpen(true);
     }, []);
 
-    const handlePaneContextMenu = event => {
+    const handlePaneContextMenu = (event) => {
         event.preventDefault();
         setCurrentMenu('pane');
         show({
@@ -104,13 +104,13 @@ function useDiagramEditor({ id }) {
         [show],
     );
 
-    const handleAddGroup = useCallback(event => {
+    const handleAddGroup = useCallback((event) => {
         setCurrentGroup({ event: event.props.event, nodes: event.props.nodes });
-        setIsEditGroupModalOpen(v => !v);
+        setIsEditGroupModalOpen((v) => !v);
     }, []);
 
     const addGroup = useCallback(
-        value => {
+        (value) => {
             const group = {
                 id: guid(),
                 type: 'group',
@@ -122,11 +122,11 @@ function useDiagramEditor({ id }) {
                 },
             };
 
-            setNodes(prevNodes => [
+            setNodes((prevNodes) => [
                 group,
-                ...prevNodes.map(node => {
+                ...prevNodes.map((node) => {
                     const child = node;
-                    if (currentGroup.nodes.map(sn => sn.id).includes(node.id)) {
+                    if (currentGroup.nodes.map((sn) => sn.id).includes(node.id)) {
                         // it's important that you create a new object here
                         // in order to notify react flow about the change
                         child.parentNode = group.id;
@@ -146,34 +146,34 @@ function useDiagramEditor({ id }) {
     );
 
     const handleAddNode = useCallback(
-        event => {
+        (event) => {
             const bounds = diagramRef.current.getBoundingClientRect();
             // Compute mouse coords relative to canvas
             const clientX = event.props.event.clientX - bounds.left;
             const clientY = event.props.event.clientY - bounds.top;
             setPosition(reactFlowInstance.project({ x: clientX, y: clientY }));
             setCurrentNode(null);
-            setIsEditNodeModalOpen(v => !v);
+            setIsEditNodeModalOpen((v) => !v);
         },
         [reactFlowInstance],
     );
 
-    const handleEditNode = useCallback(event => {
+    const handleEditNode = useCallback((event) => {
         setCurrentNode(event.props.node);
-        setIsEditNodeModalOpen(v => !v);
+        setIsEditNodeModalOpen((v) => !v);
     }, []);
 
-    const handleEditGroup = useCallback(event => {
+    const handleEditGroup = useCallback((event) => {
         setCurrentGroup(event.props.node);
-        setIsEditGroupModalOpen(v => !v);
+        setIsEditGroupModalOpen((v) => !v);
     }, []);
 
-    const handleEditEdge = useCallback(event => {
+    const handleEditEdge = useCallback((event) => {
         setCurrentEdge(event.props.edge);
-        setIsEditEdgeModalOpen(v => !v);
+        setIsEditEdgeModalOpen((v) => !v);
     }, []);
 
-    const handleDeleteNode = useCallback(async event => {
+    const handleDeleteNode = useCallback(async (event) => {
         const confirm = await Confirm({
             title: 'Are you sure?',
             message: (
@@ -189,10 +189,10 @@ function useDiagramEditor({ id }) {
 
         if (confirm) {
             // remove and un-plug childs
-            setNodes(nds =>
+            setNodes((nds) =>
                 nds
-                    .filter(n => n.id !== event.props.node.id)
-                    .map(n => {
+                    .filter((n) => n.id !== event.props.node.id)
+                    .map((n) => {
                         if (n.parentNode === event.props.node.id) {
                             n.parentNode = undefined;
                             n.extent = undefined;
@@ -205,7 +205,7 @@ function useDiagramEditor({ id }) {
     }, []);
 
     const handleDeleteEdge = useCallback(
-        async event => {
+        async (event) => {
             const confirm = await Confirm({
                 title: 'Are you sure?',
                 message: (
@@ -215,20 +215,20 @@ function useDiagramEditor({ id }) {
                         between:
                         <br />
                         <small>
-                            <i>- {nodes.find(n => n.id === event.props.edge.source)?.data.label}</i>
+                            <i>- {nodes.find((n) => n.id === event.props.edge.source)?.data.label}</i>
                         </small>
                         <br />
                         and:
                         <br />
                         <small>
-                            <i>- {nodes.find(n => n.id === event.props.edge.target)?.data.label}</i>
+                            <i>- {nodes.find((n) => n.id === event.props.edge.target)?.data.label}</i>
                         </small>
                     </>
                 ),
             });
 
             if (confirm) {
-                setEdges(nds => nds.filter(n => n.id !== event.props.edge.id));
+                setEdges((nds) => nds.filter((n) => n.id !== event.props.edge.id));
             }
         },
         [nodes],
@@ -249,35 +249,35 @@ function useDiagramEditor({ id }) {
     }, []);
 
     const addNode = useCallback(
-        value => {
+        (value) => {
             const node = {
                 id: guid(),
                 data: { label: value.value, ...value },
                 position,
             };
-            setNodes(prevNodes => [...prevNodes, node]);
+            setNodes((prevNodes) => [...prevNodes, node]);
             setIsEditNodeModalOpen(false);
         },
         [position],
     );
 
     const handleAddEdge = useCallback(
-        value => {
+        (value) => {
             const edge = {
                 ...currentEdge,
                 ...(value ? { label: value.value, data: { label: value.value, ...value } } : {}),
                 labelStyle: { fontSize: '14px' },
             };
-            setEdges(eds => addEdge(edge, eds));
+            setEdges((eds) => addEdge(edge, eds));
             setIsEditEdgeModalOpen(false);
         },
         [currentEdge],
     );
 
     const saveNode = useCallback(
-        value => {
-            setNodes(prevNodes =>
-                prevNodes.map(node => {
+        (value) => {
+            setNodes((prevNodes) =>
+                prevNodes.map((node) => {
                     if (node.id === currentNode.id) {
                         // it's important that you create a new object here
                         // in order to notify react flow about the change
@@ -295,9 +295,9 @@ function useDiagramEditor({ id }) {
     );
 
     const saveGroup = useCallback(
-        value => {
-            setNodes(prevNodes =>
-                prevNodes.map(node => {
+        (value) => {
+            setNodes((prevNodes) =>
+                prevNodes.map((node) => {
                     if (node.id === currentGroup.id) {
                         // it's important that you create a new object here
                         // in order to notify react flow about the change
@@ -315,9 +315,9 @@ function useDiagramEditor({ id }) {
     );
 
     const saveEdge = useCallback(
-        value => {
-            setEdges(prevEdges =>
-                prevEdges.map(edge => {
+        (value) => {
+            setEdges((prevEdges) =>
+                prevEdges.map((edge) => {
                     if (edge.id === currentEdge.id) {
                         // it's important that you create a new object here
                         // in order to notify react flow about the change
@@ -334,12 +334,12 @@ function useDiagramEditor({ id }) {
     );
 
     const handleSave = useCallback(() => {
-        setIsSaveDiagramModalOpen(v => !v);
+        setIsSaveDiagramModalOpen((v) => !v);
     }, []);
 
     const handleStopEdit = useCallback(async () => {
         if (!editMode) {
-            setEditMode(v => !v);
+            setEditMode((v) => !v);
         } else {
             const confirm = await Confirm({
                 title: 'Are you sure?',
@@ -349,7 +349,7 @@ function useDiagramEditor({ id }) {
             if (confirm) {
                 setNodes(diagram.nodes);
                 setEdges(diagram.edges);
-                setEditMode(v => !v);
+                setEditMode((v) => !v);
             }
         }
     }, [diagram?.edges, diagram?.nodes, editMode]);
@@ -357,12 +357,12 @@ function useDiagramEditor({ id }) {
     useEffect(() => {
         if (id) {
             setIsDataLoadedFromLocalStorage(false);
-            getThing({ thingType: THING_TYPES.DIAGRAM, thingKey: id }).then(res => {
+            getThing({ thingType: THING_TYPES.DIAGRAM, thingKey: id }).then((res) => {
                 setDiagram(res.data);
                 setNodes(res.data.nodes);
                 setEdges(res.data.edges);
             });
-            getResource(id).then(res => {
+            getResource(id).then((res) => {
                 setDiagramResource(res);
             });
         }

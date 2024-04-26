@@ -31,7 +31,7 @@ const AddPaperAdditionalButtons = ({
     const [isOpenBibTexModal, setIsOpenBibTexModal] = useState(false);
     const { shouldUpdateValues, OverwriteValuesModal } = useOverwriteValuesModal();
 
-    const handleUpdateDataFromPdf = async newData => {
+    const handleUpdateDataFromPdf = async (newData) => {
         if (
             await shouldUpdateValues({
                 currentData: {
@@ -62,13 +62,13 @@ const AddPaperAdditionalButtons = ({
         }
     };
 
-    const handleUpdateDataFromBibTex = async newData => {
+    const handleUpdateDataFromBibTex = async (newData) => {
         if (
             await shouldUpdateValues({
                 currentData: {
                     doi,
                     title,
-                    authors: authors.map(author => ({ label: author.label, orcid: author.orcid })),
+                    authors: authors.map((author) => ({ label: author.label, orcid: author.orcid })),
                     publicationMonth: parseInt(publicationMonth, 10),
                     publicationYear: parseInt(publicationYear, 10),
                     publishedIn: publishedIn?.label,
@@ -100,8 +100,8 @@ const AddPaperAdditionalButtons = ({
                 <Icon icon={faCode} /> Enter BibTeX
             </Button>
 
-            {isOpenPdfModal && <UploadPdfModal toggle={() => setIsOpenPdfModal(v => !v)} onUpdateData={handleUpdateDataFromPdf} />}
-            {isOpenBibTexModal && <BibTexModal toggle={() => setIsOpenBibTexModal(v => !v)} onUpdateData={handleUpdateDataFromBibTex} />}
+            {isOpenPdfModal && <UploadPdfModal toggle={() => setIsOpenPdfModal((v) => !v)} onUpdateData={handleUpdateDataFromPdf} />}
+            {isOpenBibTexModal && <BibTexModal toggle={() => setIsOpenBibTexModal((v) => !v)} onUpdateData={handleUpdateDataFromBibTex} />}
             <OverwriteValuesModal />
         </ButtonGroup>
     );

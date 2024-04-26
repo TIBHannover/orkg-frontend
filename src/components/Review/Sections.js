@@ -23,8 +23,8 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Sections = () => {
-    const sections = useSelector(state => state.review.sections);
-    const contributionId = useSelector(state => state.review.contributionId);
+    const sections = useSelector((state) => state.review.sections);
+    const contributionId = useSelector((state) => state.review.contributionId);
     const [isSorting, setIsSorting] = useState(false);
     const dispatch = useDispatch();
 
@@ -36,7 +36,7 @@ const Sections = () => {
     };
 
     const handleManualSort = ({ id, direction }) => {
-        const oldIndex = sections.findIndex(section => section.id === id);
+        const oldIndex = sections.findIndex((section) => section.id === id);
         const newIndex = direction === 'up' ? oldIndex - 1 : oldIndex + 1;
         if (newIndex < 0) {
             return;

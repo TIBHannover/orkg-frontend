@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Badge, Button, Input, ModalBody, Label, FormGroup } from 'reactstrap';
 
-const CategoricalFilterRule = props => {
+const CategoricalFilterRule = (props) => {
     const { property, values, rules, updateRulesOfProperty, toggleFilterDialog } = props.dataController;
     const { label: propertyName, id: propertyId } = property;
 
@@ -18,24 +18,25 @@ const CategoricalFilterRule = props => {
     const [btnLabel, setBtnLabel] = useState(SHOW_MORE);
 
     const vals = Object.keys(values)
-        .map(key => ({
+        .map((key) => ({
             label: key,
-            checked: rules.filter(item => item.propertyId === propertyId && item.type === FILTER_TYPES.ONE_OF && item.value.includes(key)).length > 0,
+            checked:
+                rules.filter((item) => item.propertyId === propertyId && item.type === FILTER_TYPES.ONE_OF && item.value.includes(key)).length > 0,
         }))
         .sort((a, b) => a.label.localeCompare(b.label));
 
     const [categoricalValues, setCategoricalValues] = useState(vals);
 
-    const calRules = list => {
-        const checkedList = list.filter(item => item.checked);
+    const calRules = (list) => {
+        const checkedList = list.filter((item) => item.checked);
         return checkedList.length > 0 ? [{ propertyId, propertyName, type: FILTER_TYPES.ONE_OF, value: checkedList.map(({ label }) => label) }] : [];
     };
 
-    const handleCheckboxChange = event => {
+    const handleCheckboxChange = (event) => {
         event.persist();
-        setCategoricalValues(pervState => {
+        setCategoricalValues((pervState) => {
             const newState = [...pervState];
-            const toChangeIndex = newState.findIndex(item => item.label === event.target.id);
+            const toChangeIndex = newState.findIndex((item) => item.label === event.target.id);
             const toChange = { ...newState[toChangeIndex] };
             toChange.checked = event.target.checked;
             newState[toChangeIndex] = toChange;
@@ -44,12 +45,12 @@ const CategoricalFilterRule = props => {
     };
 
     const handleButtonChange = () => {
-        setMaxCategoryNumber(pervState => (pervState === DEFAULT_MAX_CATEGORIES ? categoricalValues.length : DEFAULT_MAX_CATEGORIES));
-        setBtnLabel(pervState => (pervState === SHOW_MORE ? SHOW_LESS : SHOW_MORE));
+        setMaxCategoryNumber((pervState) => (pervState === DEFAULT_MAX_CATEGORIES ? categoricalValues.length : DEFAULT_MAX_CATEGORIES));
+        setBtnLabel((pervState) => (pervState === SHOW_MORE ? SHOW_LESS : SHOW_MORE));
     };
 
     const handleReset = () => {
-        setCategoricalValues(vals.map(value => ({ ...value, checked: false })));
+        setCategoricalValues(vals.map((value) => ({ ...value, checked: false })));
     };
     const handleApply = () => {
         updateRulesOfProperty(calRules(categoricalValues));
@@ -57,7 +58,7 @@ const CategoricalFilterRule = props => {
     };
 
     const checkboxList = () =>
-        categoricalValues.slice(0, maxCategoryNumber).map(item => (
+        categoricalValues.slice(0, maxCategoryNumber).map((item) => (
             <FormGroup key={item.label} check>
                 <Input className="col-form-label-sm" type="checkbox" id={item.label} onChange={handleCheckboxChange} checked={item.checked} />{' '}
                 <Label check for={item.label} className="mb-0">

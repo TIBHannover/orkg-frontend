@@ -30,7 +30,7 @@ const ResearchFieldObservatories = ({ rfId }) => {
 
     return (
         <Row>
-            {observatories?.length > 0 && observatories.map(observatory => <ObservatoryCard key={`${observatory.id}`} observatory={observatory} />)}
+            {observatories?.length > 0 && observatories.map((observatory) => <ObservatoryCard key={`${observatory.id}`} observatory={observatory} />)}
             {isLoading && (
                 <div className="text-center mt-4 mb-4">
                     <div className="mt-3">

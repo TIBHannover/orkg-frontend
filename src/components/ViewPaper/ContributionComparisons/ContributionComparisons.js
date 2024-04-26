@@ -55,7 +55,7 @@ function ContributionComparisons(props) {
                 {comparisons.length > 0 && (
                     <ListGroup>
                         {comparisons.map(
-                            comparison =>
+                            (comparison) =>
                                 comparison && (
                                     <ComparisonCard
                                         rounded={!hasNextPage ? 'false' : 'true'}

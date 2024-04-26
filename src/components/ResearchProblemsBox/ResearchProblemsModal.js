@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenModal }) => {
-    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
+    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
     const {
         problems,
         page,
@@ -31,12 +31,12 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
     });
 
     return (
-        <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
-            <ModalHeader toggle={() => setOpenModal(v => !v)}>
+        <Modal isOpen={openModal} toggle={() => setOpenModal((v) => !v)} size="lg">
+            <ModalHeader toggle={() => setOpenModal((v) => !v)}>
                 <div className="d-flex justify-content-end mb-2 me-2">
                     <div>Research problems</div>
                     <div className="mb-0 ms-2 me-2">
-                        <Input value={sort} onChange={e => setSort(e.target.value)} bsSize="sm" type="select" name="sort" disabled={isLoading}>
+                        <Input value={sort} onChange={(e) => setSort(e.target.value)} bsSize="sm" type="select" name="sort" disabled={isLoading}>
                             <option value="combined">Top recent</option>
                             <option value={VISIBILITY_FILTERS.ALL_LISTED}>Recently added</option>
                             <option value={VISIBILITY_FILTERS.FEATURED}>Featured</option>
@@ -48,7 +48,7 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
                             <FormGroup check className="mb-0">
                                 <Label check className="mb-0">
                                     <Input
-                                        onChange={e => setIncludeSubFields(e.target.checked)}
+                                        onChange={(e) => setIncludeSubFields(e.target.checked)}
                                         checked={includeSubFields}
                                         type="checkbox"
                                         disabled={isLoading}
@@ -87,7 +87,7 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
                             style={{ cursor: 'pointer' }}
                             className="list-group-item list-group-item-action text-center"
                             onClick={!isLoading ? handleLoadMore : undefined}
-                            onKeyDown={e => {
+                            onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     if (!isLoading) {
                                         handleLoadMore();

@@ -12,7 +12,7 @@ function useProvenance({ orgId, obsId }) {
          */
         const loadProvenanceInfos = () => {
             if (observatoryId && observatoryId) {
-                getObservatoryAndOrganizationInformation(observatoryId, organizationId).then(p => {
+                getObservatoryAndOrganizationInformation(observatoryId, organizationId).then((p) => {
                     setProvenance(p);
                 });
             } else {

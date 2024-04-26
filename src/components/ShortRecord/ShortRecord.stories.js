@@ -6,7 +6,7 @@ export default {
     component: ShortRecord,
 };
 
-const Template = args => <ShortRecord {...args} />;
+const Template = (args) => <ShortRecord {...args} />;
 
 export const Default = Template.bind({});
 
@@ -24,7 +24,7 @@ WithoutLabel.args = {
     header: '',
 };
 
-const TemplateWithinList = args => (
+const TemplateWithinList = (args) => (
     <ListGroup>
         <ShortRecord {...args} />
         <ShortRecord {...args} />

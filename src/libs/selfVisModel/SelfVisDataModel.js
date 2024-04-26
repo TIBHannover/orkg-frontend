@@ -41,7 +41,9 @@ export default class SelfVisDataMode {
     applySelectionToCustomizationState = (propertyAnchor, value) => {
         if (value === true) {
             // find based on index
-            const res = this.__sharedStateObject.selectedColumns.find(item => item.positionPropertyAnchor === propertyAnchor.positionPropertyAnchor);
+            const res = this.__sharedStateObject.selectedColumns.find(
+                (item) => item.positionPropertyAnchor === propertyAnchor.positionPropertyAnchor,
+            );
             if (!res) {
                 this.__sharedStateObject.selectedColumns.push(propertyAnchor);
             }
@@ -49,7 +51,9 @@ export default class SelfVisDataMode {
 
         if (value === false) {
             // remove it from the array;
-            const res = this.__sharedStateObject.selectedColumns.find(item => item.positionPropertyAnchor === propertyAnchor.positionPropertyAnchor);
+            const res = this.__sharedStateObject.selectedColumns.find(
+                (item) => item.positionPropertyAnchor === propertyAnchor.positionPropertyAnchor,
+            );
             const indexInArray = this.__sharedStateObject.selectedColumns.indexOf(res);
             if (indexInArray !== -1) {
                 this.__sharedStateObject.selectedColumns.splice(indexInArray, 1);
@@ -97,7 +101,7 @@ export default class SelfVisDataMode {
 
     /** exposed functions ----------------------------------------------------------------------* */
     /** ----------------------------------------------------------------------------------------* */
-    integrateInputData = input => {
+    integrateInputData = (input) => {
         // this will check if we actually have to update the input data (re-run the parser)
         // comes in handy when we will change between comparisons
         this.__compareIfNewInput(input); // << assigns the object if needed and sets flag for parser
@@ -105,23 +109,23 @@ export default class SelfVisDataMode {
     };
 
     /** CURRENTLY HACKISH * */
-    setRenderingMethod = method => {
+    setRenderingMethod = (method) => {
         this._renderingMethod = method;
         this.__sharedStateObject.renderingMethod = method;
     };
 
     getRenderingMethod = () => this._renderingMethod;
 
-    setRenderingEngine = engine => {
+    setRenderingEngine = (engine) => {
         this._renderingEngine = engine;
         this.__sharedStateObject.renderingEngine = engine;
     };
 
-    setGCData = data => {
+    setGCData = (data) => {
         this._googleChartsData = data;
     };
 
-    saveCustomizationState = state => {
+    saveCustomizationState = (state) => {
         this.__customizationStateObject = { ...state };
     };
 
@@ -146,7 +150,7 @@ export default class SelfVisDataMode {
         reconstructionModel.propertyAnchors = [];
         reconstructionModel.contributionAnchors = [];
         reconstructionModel.dataCells = [];
-        selectedPropertyAnchors.forEach(anchor => {
+        selectedPropertyAnchors.forEach((anchor) => {
             // extract some information to be able to reconstruct it later;
             if (anchor.label !== anchor.originalLabel) {
                 reconstructionModel.propertyAnchors.push({
@@ -165,7 +169,7 @@ export default class SelfVisDataMode {
 
         // reconstruct the contribution anchors;
         const selectedContribAnchors = this.mrrModel.contributionAnchors;
-        selectedContribAnchors.forEach(anchor => {
+        selectedContribAnchors.forEach((anchor) => {
             // extract some information to be able to reconstruct it later;
             if (anchor.label !== anchor.originalLabel) {
                 reconstructionModel.contributionAnchors.push({
@@ -182,7 +186,7 @@ export default class SelfVisDataMode {
 
         // reconstruct the cell Values;
         const selectedCells = this.mrrModel.dataItems;
-        selectedCells.forEach(cell => {
+        selectedCells.forEach((cell) => {
             // extract some information to be able to reconstruct it later;
             const colPos = cell.positionPropertyAnchor;
             if (this.mrrModel.propertyAnchors[colPos].isSelectedColumnForUse) {
@@ -237,7 +241,7 @@ export default class SelfVisDataMode {
                         // get the intervals;
                         customizationState.yAxisInterValSelectors[id] = [];
                         customizationState.yAxisIntervals[id] = [];
-                        yAxis.intervals.forEach(interval => {
+                        yAxis.intervals.forEach((interval) => {
                             customizationState.yAxisInterValSelectors[id].push({
                                 isOpen: false,
                                 label: interval.item.label,
@@ -262,7 +266,7 @@ export default class SelfVisDataMode {
 
         if (this.mrrModel) {
             // applySelection in the contribution anchors;
-            this.mrrModel.contributionAnchors.forEach(anchor => {
+            this.mrrModel.contributionAnchors.forEach((anchor) => {
                 const position = anchor.positionContribAnchor;
                 if (this.mrrModel.contributionAnchors[position]) {
                     // set this to be selected in the model;
@@ -271,7 +275,7 @@ export default class SelfVisDataMode {
                 }
             });
 
-            this.mrrModel.propertyAnchors.forEach(anchor => {
+            this.mrrModel.propertyAnchors.forEach((anchor) => {
                 const position = anchor.positionPropertyAnchor;
                 if (this.mrrModel.propertyAnchors[position]) {
                     // set this to be selected in the model;
@@ -280,7 +284,7 @@ export default class SelfVisDataMode {
                     this.mrrModel.propertyAnchors[position].label = anchor.originalLabel;
                 }
             });
-            this.mrrModel.dataItems.forEach(cell => {
+            this.mrrModel.dataItems.forEach((cell) => {
                 const rowIndex = cell.positionContribAnchor;
                 const colIndex = cell.positionPropertyAnchor;
 
@@ -300,7 +304,7 @@ export default class SelfVisDataMode {
         }
     };
 
-    applyReconstructionModel = model => {
+    applyReconstructionModel = (model) => {
         const data = clone(model.data);
 
         if (!this.mrrModel) {
@@ -318,7 +322,7 @@ export default class SelfVisDataMode {
         const reconstructionObject = data.reconstructionData;
 
         // applySelection in the contribution anchors;
-        reconstructionObject.contributionAnchors.forEach(anchor => {
+        reconstructionObject.contributionAnchors.forEach((anchor) => {
             const position = anchor.positionContribAnchor;
             if (this.mrrModel.contributionAnchors[position]) {
                 this.mrrModel.contributionAnchors[position].isSelectedRowForUse = true;
@@ -331,7 +335,7 @@ export default class SelfVisDataMode {
         });
 
         // apply Selection for property anchors;
-        reconstructionObject.propertyAnchors.forEach(anchor => {
+        reconstructionObject.propertyAnchors.forEach((anchor) => {
             const position = anchor.positionPropertyAnchor;
             if (this.mrrModel.propertyAnchors[position]) {
                 // set this to be selected in the model;
@@ -349,7 +353,7 @@ export default class SelfVisDataMode {
         });
 
         // apply selection for cell values;
-        reconstructionObject.dataCells.forEach(cell => {
+        reconstructionObject.dataCells.forEach((cell) => {
             const rowIndex = cell.positionContribAnchor;
             const colIndex = cell.positionPropertyAnchor;
             const item = this.modelAccess.getItem(rowIndex, colIndex);
@@ -373,7 +377,7 @@ export default class SelfVisDataMode {
         return this._googleChartsData.createDataFromSharedCustomizer(this.__sharedStateObject.customizer);
     };
 
-    synchronizeSharedCustomizationStateObject = reconstruct => {
+    synchronizeSharedCustomizationStateObject = (reconstruct) => {
         const { customizer } = this.__sharedStateObject;
 
         // axis selector;
@@ -389,7 +393,7 @@ export default class SelfVisDataMode {
 
         // adjust yAxis selectors;
         const yAxisSelectors = [];
-        reconstruct.yAxisSelector.forEach(item => {
+        reconstruct.yAxisSelector.forEach((item) => {
             // item is a string
             const yAxisGuess = this.requestAnIndex(item);
             yAxisSelectors.push({ axis: this.mrrModel.propertyAnchors[yAxisGuess.index] });
@@ -403,7 +407,7 @@ export default class SelfVisDataMode {
                 const selectedIntervals = reconstruct.yAxisIntervals[intervalAxisID];
                 // createSelector for that
                 const yAxisIntervalGuesses = [];
-                selectedIntervals.forEach(item => {
+                selectedIntervals.forEach((item) => {
                     const yAxisGuess = this.requestAnIndex(item.label);
                     if (yAxisGuess.index) {
                         yAxisIntervalGuesses.push({ isOpen: false, item: this.mrrModel.propertyAnchors[yAxisGuess.index] });
@@ -418,8 +422,8 @@ export default class SelfVisDataMode {
 
     /** HACKISH ENDS* */
 
-    requestAnIndex = label => {
-        const guess = this.mrrModel.propertyAnchors.find(element => element.label === label);
+    requestAnIndex = (label) => {
+        const guess = this.mrrModel.propertyAnchors.find((element) => element.label === label);
 
         if (guess) {
             return { index: guess.positionPropertyAnchor, label: guess.label };
@@ -430,7 +434,7 @@ export default class SelfVisDataMode {
     createGDCDataModel = () => {
         // filter the propertyAnchors by selectionFlag;
         const filteredProperties = this.mrrModel.propertyAnchors.filter(
-            item => item.isSelectedColumnForUse === true && item.propertyMapperType !== 'Select Mapper',
+            (item) => item.isSelectedColumnForUse === true && item.propertyMapperType !== 'Select Mapper',
         );
         // now figure out how many rows we do have;
         // const filteredContribs = this.mrrModel.contributionAnchors.filter(item => item.isSelectedRowForUse === true);
@@ -439,7 +443,7 @@ export default class SelfVisDataMode {
         const gdc = new DataForChart();
         gdc.addColumn('string', 'Contribution');
 
-        filteredProperties.forEach(property => {
+        filteredProperties.forEach((property) => {
             if (property.propertyMapperType) {
                 // headersArray.push(property.label);
                 if (property.propertyMapperType === 'String') {
@@ -498,14 +502,14 @@ export default class SelfVisDataMode {
         // get selected cells;
 
         // perform validation on selected columns;
-        const selectedCols = this.mrrModel.propertyAnchors.filter(item => item.isSelectedColumnForUse);
+        const selectedCols = this.mrrModel.propertyAnchors.filter((item) => item.isSelectedColumnForUse);
 
-        selectedCols.forEach(col => {
+        selectedCols.forEach((col) => {
             // get data item from matrix;
             const colIndex = col.positionPropertyAnchor;
             const colCells = this.modelAccess.getCol(colIndex);
 
-            colCells.forEach(cell => {
+            colCells.forEach((cell) => {
                 const mapper = this.mrrModel.propertyAnchors[colIndex].getPropertyMapperType();
                 if (mapper) {
                     // call the validator for this cell value;
@@ -521,11 +525,11 @@ export default class SelfVisDataMode {
     };
 
     /** GROUPED FUNCTIONS : handling input model and parse it * */
-    __setInputData = data => {
+    __setInputData = (data) => {
         this._inputData = data;
     };
 
-    __compareIfNewInput = data => {
+    __compareIfNewInput = (data) => {
         // no data yet in the input
         if (!this._inputData.contributionsList) {
             this.__setInputData(data);

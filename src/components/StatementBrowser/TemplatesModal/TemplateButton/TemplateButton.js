@@ -14,7 +14,7 @@ import {
 import styled from 'styled-components';
 
 const IconWrapper = styled.span`
-    background-color: ${props => (props.addMode ? (props.isSmart ? props.theme.smart : '#d1d5e4') : '#dc3545')};
+    background-color: ${(props) => (props.addMode ? (props.isSmart ? props.theme.smart : '#d1d5e4') : '#dc3545')};
     position: absolute;
     left: 0;
     height: 100%;
@@ -26,7 +26,7 @@ const IconWrapper = styled.span`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: ${props => (props.addMode && !props.isSmart ? props.theme.secondary : 'white')};
+    color: ${(props) => (props.addMode && !props.isSmart ? props.theme.secondary : 'white')};
     padding-left: 3px;
 `;
 
@@ -38,7 +38,7 @@ const TemplateButton = ({ id, resourceId, label = '', syncBackend = false, addMo
     const [isSaving, setIsSaving] = useState(false);
     const ref = useRef(null);
     const dispatch = useDispatch();
-    const resource = useSelector(state => resourceId && state.statementBrowser.resources.byId[resourceId]);
+    const resource = useSelector((state) => resourceId && state.statementBrowser.resources.byId[resourceId]);
 
     const addTemplate = useCallback(() => {
         setIsSaving(true);
@@ -62,7 +62,7 @@ const TemplateButton = ({ id, resourceId, label = '', syncBackend = false, addMo
         dispatch(
             updateResourceClasses({
                 resourceId,
-                classes: resource.classes?.filter(c => c !== classId) ?? [],
+                classes: resource.classes?.filter((c) => c !== classId) ?? [],
                 syncBackend,
             }),
         )

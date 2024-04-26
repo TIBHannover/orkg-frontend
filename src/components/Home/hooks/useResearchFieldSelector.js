@@ -14,12 +14,12 @@ function useResearchFieldSelector() {
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingStats, setIsLoadingStats] = useState(true);
 
-    const getFieldStats = async fields => {
+    const getFieldStats = async (fields) => {
         if (!fields) {
             return;
         }
         setIsLoadingStats(true);
-        const stats = await Promise.all(fields.map(field => getResearchFieldsStatsWithSubfields(field.id)));
+        const stats = await Promise.all(fields.map((field) => getResearchFieldsStatsWithSubfields(field.id)));
         setResearchFieldStats(stats);
         setIsLoadingStats(false);
     };
@@ -37,14 +37,14 @@ function useResearchFieldSelector() {
 
             // get sub fields
             getFieldChildren({ fieldId: selectedFieldId })
-                .then(async fields => {
+                .then(async (fields) => {
                     // sort research fields alphabetically
-                    const _fields = fields?.map(field => field.resource).sort((a, b) => a.label.localeCompare(b.label));
+                    const _fields = fields?.map((field) => field.resource).sort((a, b) => a.label.localeCompare(b.label));
                     setResearchFields(_fields);
                     getFieldStats(_fields);
                     setIsLoading(false);
                 })
-                .catch(e => {
+                .catch((e) => {
                     setIsLoading(false);
                     console.error(e);
                 });

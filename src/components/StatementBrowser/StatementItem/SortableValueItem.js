@@ -15,10 +15,10 @@ import { handleSortableHoverReactDnd } from 'utils';
 const SortableValueItem = ({ id, propertyId, index, enableEdit, children }) => {
     const ref = useRef(null);
     const dispatch = useDispatch();
-    const valueIds = useSelector(state => state.statementBrowser.properties.byId[propertyId].valueIds);
+    const valueIds = useSelector((state) => state.statementBrowser.properties.byId[propertyId].valueIds);
     const originalIndex = valueIds.indexOf(id);
-    const values = useSelector(state => state.statementBrowser.values);
-    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
+    const values = useSelector((state) => state.statementBrowser.values);
+    const selectedResource = useSelector((state) => state.statementBrowser.selectedResource);
 
     const handleUpdate = ({ dragIndex, hoverIndex }) => {
         const _valueIds = arrayMove(valueIds, dragIndex, hoverIndex);
@@ -33,13 +33,13 @@ const SortableValueItem = ({ id, propertyId, index, enableEdit, children }) => {
     const [{ isDragging }, drag, preview] = useDrag({
         type: DND_TYPES.LIST_ITEM,
         item: { index, originalIndex },
-        collect: monitor => ({
+        collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
         canDrag: () => enableEdit,
-        end: item => {
+        end: (item) => {
             if (item.index !== item.originalIndex) {
-                updateList({ id: selectedResource, elements: valueIds.map(_id => values.byId[_id].resourceId) });
+                updateList({ id: selectedResource, elements: valueIds.map((_id) => values.byId[_id].resourceId) });
                 toast.dismiss();
                 toast.success('Order updated successfully');
             }
@@ -50,7 +50,7 @@ const SortableValueItem = ({ id, propertyId, index, enableEdit, children }) => {
 
     preview(drop(ref));
 
-    const isList = useSelector(state => checkIfIsList({ state, propertyId }));
+    const isList = useSelector((state) => checkIfIsList({ state, propertyId }));
 
     return (
         <ValueItemStyle ref={ref} className="d-flex align-items-center" style={{ opacity }}>

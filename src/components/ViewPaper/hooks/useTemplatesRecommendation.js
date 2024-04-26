@@ -5,7 +5,7 @@ import { differenceBy } from 'lodash';
 import useUsedTemplates from 'components/StatementBrowser/TemplatesModal/hooks/useUsedTemplates';
 
 const useTemplatesRecommendation = ({ title, abstract }) => {
-    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
+    const selectedResource = useSelector((state) => state.statementBrowser.selectedResource);
     const [recommendedTemplates, setRecommendedTemplates] = useState([]);
     const [isLoadingRT, setIsLoadingRT] = useState(false);
     const { usedTemplates } = useUsedTemplates({ resourceId: selectedResource });
@@ -14,7 +14,7 @@ const useTemplatesRecommendation = ({ title, abstract }) => {
         const fetchRecommendation = () => {
             setIsLoadingRT(true);
             getTemplateRecommendations({ title, abstract })
-                .then(result => {
+                .then((result) => {
                     setRecommendedTemplates(result.templates);
                     setIsLoadingRT(false);
                 })

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from 'testUtils';
 import TableCellValue from 'components/ContributionEditor/TableCellValue';
 
-const setup = className => {
+const setup = (className) => {
     const label = 'example label';
     const setDisableCreate = jest.fn();
     const value = {

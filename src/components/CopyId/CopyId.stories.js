@@ -5,7 +5,7 @@ export default {
     component: CopyId,
 };
 
-const Template = args => <CopyId {...args} />;
+const Template = (args) => <CopyId {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

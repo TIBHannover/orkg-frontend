@@ -21,8 +21,8 @@ const ResearchProblemAuthorsModal = ({ researchProblemId, openModal, setOpenModa
     });
 
     return (
-        <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
-            <ModalHeader toggle={() => setOpenModal(v => !v)}>
+        <Modal isOpen={openModal} toggle={() => setOpenModal((v) => !v)} size="lg">
+            <ModalHeader toggle={() => setOpenModal((v) => !v)}>
                 <Icon icon={faAward} className="text-primary ms-2" /> Top authors
             </ModalHeader>
             <ModalBody className="p-0">

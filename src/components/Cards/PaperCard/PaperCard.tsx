@@ -22,7 +22,7 @@ import styled from 'styled-components';
 
 const PaperCardStyled = styled.div`
     &.selected {
-        background: ${props => props.theme.bodyBg};
+        background: ${(props) => props.theme.bodyBg};
     }
 `;
 

@@ -7,23 +7,23 @@ import PropTypes from 'prop-types';
 import { CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
-const AddResearchProblem = props => {
+const AddResearchProblem = (props) => {
     const [problem, setProblem] = useState(null);
     const [isSaving, setIsSaving] = useState(false);
 
-    const handleSubmit = async e => {
+    const handleSubmit = async (e) => {
         if (problem && problem.id) {
             setIsSaving(true);
             addResourceToObservatory({ observatory_id: props.id, organization_id: MISC.UNKNOWN_ID, id: problem.id })
-                .then(a => {
+                .then((a) => {
                     toast.success('Research problem added successfully');
                     setIsSaving(false);
-                    props.setProblems(v => [problem, ...v]);
-                    props.setTotalElements(t => t + 1);
+                    props.setProblems((v) => [problem, ...v]);
+                    props.setTotalElements((t) => t + 1);
                     props.toggle();
                     setProblem(null);
                 })
-                .catch(error => {
+                .catch((error) => {
                     setIsSaving(false);
                     console.error(error);
                     toast.error(`Error updating an observatory ${error.message}`);
@@ -44,7 +44,7 @@ const AddResearchProblem = props => {
                             entityType={ENTITIES.RESOURCE}
                             optionsClass={CLASSES.PROBLEM}
                             placeholder="Select a research problem"
-                            onItemSelected={async rp => {
+                            onItemSelected={async (rp) => {
                                 setProblem({ ...rp, label: rp.value });
                             }}
                             value={problem || ''}

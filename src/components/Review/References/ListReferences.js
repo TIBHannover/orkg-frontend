@@ -12,20 +12,20 @@ const ListReferencesStyled = styled.ul`
     }
     @keyframes blinkingBackground {
         from {
-            background-color: ${props => props.theme.lightDarker};
+            background-color: ${(props) => props.theme.lightDarker};
         }
         50% {
             background-color: #fff;
         }
         to {
-            background-color: ${props => props.theme.lightDarker};
+            background-color: ${(props) => props.theme.lightDarker};
         }
     }
 `;
 
 const ListReferences = () => {
-    const usedReferences = useSelector(state => state.review.usedReferences);
-    const isEditing = useSelector(state => state.review.isEditing);
+    const usedReferences = useSelector((state) => state.review.usedReferences);
+    const isEditing = useSelector((state) => state.review.isEditing);
     const [bibliography, setBibliography] = useState(null);
     const params = useParams();
     const [error, setError] = useState(false);
@@ -33,11 +33,11 @@ const ListReferences = () => {
     useEffect(() => {
         const parseBibtex = async () => {
             const bibtex = Object.values(usedReferences)
-                .map(section =>
+                .map((section) =>
                     Object.values(section).length > 0
                         ? Object.values(section)
-                              .filter(reference => reference)
-                              .map(reference => reference?.literal?.label)
+                              .filter((reference) => reference)
+                              .map((reference) => reference?.literal?.label)
                         : [],
                 )
                 .join('');
@@ -57,7 +57,7 @@ const ListReferences = () => {
                     format: 'html',
                     template: 'apa',
                     lang: 'en-US',
-                    prepend: data =>
+                    prepend: (data) =>
                         `<li  class="${window?.location?.hash === `#reference${data.id}` ? 'blink-figure' : ''}" id="reference${data.id}">`,
                     append: () => '</li>',
                 });

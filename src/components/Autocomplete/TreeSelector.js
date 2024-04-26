@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Alert, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
-const TreeSelector = props => {
+const TreeSelector = (props) => {
     const [showTree, setShowTree] = useState(false);
     const [valueFromTree, setValueFromTree] = useState(props.value);
-    const toggleTree = () => setShowTree(prev => !prev);
+    const toggleTree = () => setShowTree((prev) => !prev);
 
     useEffect(() => {
         setValueFromTree(props.value);

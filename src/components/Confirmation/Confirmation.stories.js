@@ -1,6 +1,6 @@
 import Confirm from 'components/Confirmation/Confirmation';
 
-const Demo = props => {
+const Demo = (props) => {
     const handleConfirm = async () => {
         await Confirm({
             ...props,
@@ -14,7 +14,7 @@ export default {
     component: Demo,
 };
 
-const Template = args => <Demo {...args} />;
+const Template = (args) => <Demo {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

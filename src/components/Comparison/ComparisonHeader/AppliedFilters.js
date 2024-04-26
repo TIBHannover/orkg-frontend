@@ -5,7 +5,7 @@ import { removeRule } from 'slices/comparisonSlice';
 
 export default function AppliedFilters() {
     const dispatch = useDispatch();
-    const filterControlData = useSelector(state => state.comparison.filterControlData);
+    const filterControlData = useSelector((state) => state.comparison.filterControlData);
 
     const removeRuleFactory =
         ({ propertyId, type, value }) =>
@@ -14,7 +14,7 @@ export default function AppliedFilters() {
 
     const displayRules = () =>
         []
-            .concat(...filterControlData.map(item => item.rules))
+            .concat(...filterControlData.map((item) => item.rules))
             .map(({ propertyId, propertyName, type, value }) => (
                 <AppliedRule
                     key={`${propertyId}#${type}`}

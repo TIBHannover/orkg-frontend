@@ -31,14 +31,14 @@ const ContributorsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort
                     interactive={true}
                     trigger="click"
                     placement="bottom-end"
-                    onCreate={instance => setTippy(instance)}
+                    onCreate={(instance) => setTippy(instance)}
                     content={
                         <div className="p-2">
                             <FormGroup>
                                 <Label for="sortPapers">Sort</Label>
                                 <Input
                                     value={sort}
-                                    onChange={e => {
+                                    onChange={(e) => {
                                         tippy.hide();
                                         setSort(e.target.value);
                                     }}
@@ -55,7 +55,7 @@ const ContributorsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort
                             <FormGroup check>
                                 <Label check>
                                     <Input
-                                        onChange={e => {
+                                        onChange={(e) => {
                                             tippy.hide();
                                             setIncludeSubFields(e.target.checked);
                                         }}

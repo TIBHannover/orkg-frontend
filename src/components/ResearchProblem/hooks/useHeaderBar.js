@@ -3,7 +3,7 @@ import { useState } from 'react';
 function useHeaderBar(initialVal = false) {
     const [state, setState] = useState(initialVal);
 
-    const handleChange = isVisible => {
+    const handleChange = (isVisible) => {
         setState(!isVisible);
     };
 

@@ -22,15 +22,15 @@ function ComparisonCarousel() {
     const [isLoadingVisualizationData, setIsLoadingVisualizationData] = useState(false);
     const [visData, setVisData] = useState([]);
 
-    const comparisonResource = useSelector(state => state.comparison.comparisonResource);
-    const visualizations = useSelector(state => state.comparison.comparisonResource.visualizations);
-    const data = useSelector(state => state.comparison.data);
-    const isLoadingMetadata = useSelector(state => state.comparison.isLoadingMetadata);
-    const isFailedLoadingMetadata = useSelector(state => state.comparison.isFailedLoadingMetadata);
-    const contributions = useSelector(state => state.comparison.contributions);
-    const properties = useSelector(state => state.comparison.properties);
-    const contributionsList = useSelector(state => state.comparison.configuration.contributionsList);
-    const predicatesList = useSelector(state => state.comparison.configuration.predicatesList);
+    const comparisonResource = useSelector((state) => state.comparison.comparisonResource);
+    const visualizations = useSelector((state) => state.comparison.comparisonResource.visualizations);
+    const data = useSelector((state) => state.comparison.data);
+    const isLoadingMetadata = useSelector((state) => state.comparison.isLoadingMetadata);
+    const isFailedLoadingMetadata = useSelector((state) => state.comparison.isFailedLoadingMetadata);
+    const contributions = useSelector((state) => state.comparison.contributions);
+    const properties = useSelector((state) => state.comparison.properties);
+    const contributionsList = useSelector((state) => state.comparison.configuration.contributionsList);
+    const predicatesList = useSelector((state) => state.comparison.configuration.predicatesList);
 
     const { relatedResources, relatedFigures, isLoadingResources, isLoadingFigures } = useRelatedResources();
 
@@ -89,7 +89,7 @@ function ComparisonCarousel() {
      *
      * @param {Boolean} val weather to use reconstructed data
      */
-    const expandVisualization = val => {
+    const expandVisualization = (val) => {
         dispatch(setUseReconstructedDataInVisualization(val));
         if (!val) {
             model.resetCustomizationModel();
@@ -103,14 +103,14 @@ function ComparisonCarousel() {
                 setIsLoadingVisualizationData(true);
                 // Get the reconstruction model from the comparison service
                 const reconstructionModelsCalls = Promise.all(
-                    visualizations.map(v => getThing({ thingType: THING_TYPES.VISUALIZATION, thingKey: v.id }).catch(() => false)),
+                    visualizations.map((v) => getThing({ thingType: THING_TYPES.VISUALIZATION, thingKey: v.id }).catch(() => false)),
                 );
 
                 // Get the meta data for each visualization
-                const visObjectCalls = getStatementsBySubjects({ ids: visualizations.map(v => v.id) })
-                    .then(statements => addAuthorsToStatementBundle(statements))
-                    .then(visualizationsStatements => {
-                        const vis = visualizationsStatements.map(visualizationStatements => {
+                const visObjectCalls = getStatementsBySubjects({ ids: visualizations.map((v) => v.id) })
+                    .then((statements) => addAuthorsToStatementBundle(statements))
+                    .then((visualizationsStatements) => {
+                        const vis = visualizationsStatements.map((visualizationStatements) => {
                             const resourceSubject = find(visualizations, { id: visualizationStatements.id });
                             return getVisualizationData(resourceSubject, visualizationStatements.statements);
                         });
@@ -118,12 +118,12 @@ function ComparisonCarousel() {
                     });
                 Promise.all([visObjectCalls, reconstructionModelsCalls]).then(([visObjects, reconstructionModels]) => {
                     // zip the result
-                    const _visObjects = visObjects.map(v => ({
+                    const _visObjects = visObjects.map((v) => ({
                         ...v,
-                        reconstructionModel: reconstructionModels.find(r => r.data.orkgOrigin === v.id),
+                        reconstructionModel: reconstructionModels.find((r) => r.data.orkgOrigin === v.id),
                     }));
                     // filter out the visualization that doesn't exist;
-                    const visDataObjects = _visObjects.filter(v => v.reconstructionModel);
+                    const visDataObjects = _visObjects.filter((v) => v.reconstructionModel);
                     setIsLoadingVisualizationData(false);
                     setVisData(visDataObjects);
                 });
@@ -153,7 +153,7 @@ function ComparisonCarousel() {
                                             key={d.id}
                                             input={d}
                                             itemIndex={index}
-                                            expandVisualization={val => expandVisualization(val)}
+                                            expandVisualization={(val) => expandVisualization(val)}
                                         />
                                     ))}
                                     {relatedFigures.map(({ figureId, src, title, description }) => (

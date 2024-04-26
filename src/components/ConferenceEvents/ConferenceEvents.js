@@ -13,7 +13,7 @@ const ConferenceEvents = ({ conferenceId, conferenceName }) => {
         const loadConferences = async () => {
             setIsLoadingConferences(true);
             getSeriesListByConferenceId(conferenceId)
-                .then(responseJson => {
+                .then((responseJson) => {
                     setConferencesList(responseJson.content);
                     document.title = `${conferenceName} - Conference - ORKG`;
                 })
@@ -38,7 +38,7 @@ const ConferenceEvents = ({ conferenceId, conferenceName }) => {
                     <ListGroup>
                         {conferencesList.length > 0 ? (
                             <>
-                                {conferencesList.map(conference => (
+                                {conferencesList.map((conference) => (
                                     <EventsCard conference={conference} key={`pc${conference.display_id}`} />
                                 ))}
                             </>

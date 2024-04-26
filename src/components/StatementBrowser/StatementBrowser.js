@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import Statements from 'components/StatementBrowser/Statements/Statements';
 import PropTypes from 'prop-types';
 
-const StatementBrowser = props => {
+const StatementBrowser = (props) => {
     const [store, setStore] = useState(null);
-    const auth = useSelector(state => state.auth);
+    const auth = useSelector((state) => state.auth);
     const { newStore = false } = props;
 
     useEffect(() => {

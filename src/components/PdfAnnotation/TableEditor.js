@@ -12,10 +12,10 @@ import useTableEditor from 'components/PdfAnnotation/hooks/useTableEditor';
 // register Handsontable's modules
 registerAllModules();
 
-const TableEditor = props => {
+const TableEditor = (props) => {
     const dispatch = useDispatch();
-    const tableData = useSelector(state => state.pdfAnnotation.tableData[props.id]);
-    const cachedLabels = useSelector(state => state.pdfAnnotation.cachedLabels);
+    const tableData = useSelector((state) => state.pdfAnnotation.tableData[props.id]);
+    const cachedLabels = useSelector((state) => state.pdfAnnotation.cachedLabels);
     const { removeEmptyRows, mergeCellValues, renderTable } = useTableEditor(props.id, props.setRef);
 
     const renderer = function (instance, td, row, col, prop, value, cellProperties) {
@@ -84,7 +84,7 @@ const TableEditor = props => {
             }}
             stretchH="all"
             ref={props.setRef}
-            beforeChange={changes => dispatch(updateTableData({ id: props.id, dataChanges: changes }))}
+            beforeChange={(changes) => dispatch(updateTableData({ id: props.id, dataChanges: changes }))}
             afterRemoveCol={() => renderTable()}
         >
             <EditorComponent hot-editor id={props.id} />

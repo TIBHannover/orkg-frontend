@@ -13,12 +13,12 @@ function useVisualizationResearchField({ visualizationId }) {
             objectId: visualizationId,
             predicateId: PREDICATES.HAS_VISUALIZATION,
         })
-            .then(comparison =>
+            .then((comparison) =>
                 comparison?.length > 0
                     ? getStatementsBySubjectAndPredicate({ subjectId: comparison[0].subject.id, predicateId: PREDICATES.HAS_SUBJECT })
                     : [],
             )
-            .then(comparisonStatement => {
+            .then((comparisonStatement) => {
                 setIsLoading(false);
                 setResearchField(
                     filterObjectOfStatementsByPredicateAndClass(comparisonStatement, PREDICATES.HAS_SUBJECT, true, CLASSES.RESEARCH_FIELD),

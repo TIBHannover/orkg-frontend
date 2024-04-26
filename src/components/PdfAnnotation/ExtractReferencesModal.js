@@ -6,14 +6,14 @@ import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import { cloneDeep, isString } from 'lodash';
 
-const ExtractReferencesModal = props => {
+const ExtractReferencesModal = (props) => {
     const [columns, setColumns] = useState([]);
     const [selectedColumn, setSelectedColumn] = useState('');
     const [formattingType, setFormattingType] = useState('numerical');
     const [parsedPdfData, setParsePdfData] = useState({});
-    const tableData = useSelector(state => state.pdfAnnotation.tableData[props.id]);
-    const pdfData = useSelector(state => state.pdfAnnotation.parsedPdfData);
-    const cachedLabels = useSelector(state => state.pdfAnnotation.cachedLabels);
+    const tableData = useSelector((state) => state.pdfAnnotation.tableData[props.id]);
+    const pdfData = useSelector((state) => state.pdfAnnotation.parsedPdfData);
+    const cachedLabels = useSelector((state) => state.pdfAnnotation.cachedLabels);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -131,7 +131,7 @@ const ExtractReferencesModal = props => {
         }
     };
 
-    const formatReferenceValue = value => {
+    const formatReferenceValue = (value) => {
         if (formattingType === 'numerical' && isString(value)) {
             value = value.match(/\[\d+\]/i);
 
@@ -212,7 +212,7 @@ const ExtractReferencesModal = props => {
         return referencesParsed;
     };
 
-    const generateCitationKeyFromAuthors = reference => {
+    const generateCitationKeyFromAuthors = (reference) => {
         const authors = reference.querySelectorAll('analytic author');
 
         let key = '';
@@ -246,7 +246,7 @@ const ExtractReferencesModal = props => {
         return key;
     };
 
-    const parseAuthors = reference => {
+    const parseAuthors = (reference) => {
         const authors = reference.querySelectorAll('analytic author');
 
         const authorsParsed = [];
@@ -277,7 +277,7 @@ const ExtractReferencesModal = props => {
         return authorsParsed;
     };
 
-    const getColumnLabel = column => {
+    const getColumnLabel = (column) => {
         if (column && isString(column) && column.startsWith('orkg:')) {
             column = column.replace(/^(orkg:)/, '');
         }
@@ -293,7 +293,7 @@ const ExtractReferencesModal = props => {
                 <Form>
                     <FormGroup>
                         <Label for="columnSelect">Select the column that contains the citation key</Label>
-                        <Input type="select" value={selectedColumn} onChange={e => setSelectedColumn(e.target.value)} id="columnSelect">
+                        <Input type="select" value={selectedColumn} onChange={(e) => setSelectedColumn(e.target.value)} id="columnSelect">
                             {columns.map((column, i) => (
                                 <option key={column + i}>{getColumnLabel(column)}</option>
                             ))}
@@ -302,7 +302,7 @@ const ExtractReferencesModal = props => {
 
                     <FormGroup>
                         <Label for="columnFormatting">Select the reference formatting</Label>
-                        <Input type="select" value={formattingType} onChange={e => setFormattingType(e.target.value)} id="columnFormatting">
+                        <Input type="select" value={formattingType} onChange={(e) => setFormattingType(e.target.value)} id="columnFormatting">
                             <option value="numerical">Numerical ([1]; [2])</option>
                             <option value="author-names">Author last name (Doe, 2020; Doe et al., 2020)</option>
                             {/*

@@ -29,7 +29,7 @@ const SectionType = ({ sectionId, type, isDisabled = false, disabledTooltip = 'T
 
     useEffect(() => {
         if (options.length === 0) {
-            const ontologyClasses = classes.map(_class => ({
+            const ontologyClasses = classes.map((_class) => ({
                 label: upperFirst(_class.label),
                 value: _class.iri,
                 // comment: _class.comment
@@ -72,7 +72,7 @@ const SectionType = ({ sectionId, type, isDisabled = false, disabledTooltip = 'T
 
     useEffect(() => {
         if (type && options.length) {
-            const selected = options.find(option => option.value === type);
+            const selected = options.find((option) => option.value === type);
             if (!selected) {
                 return;
             }
@@ -84,7 +84,7 @@ const SectionType = ({ sectionId, type, isDisabled = false, disabledTooltip = 'T
         setEditMode(false);
     };
 
-    const handleChange = selected => {
+    const handleChange = (selected) => {
         setTypeValue(selected);
 
         dispatch(
@@ -119,7 +119,7 @@ const SectionType = ({ sectionId, type, isDisabled = false, disabledTooltip = 'T
                         options={options}
                         components={{ Option }}
                         onBlur={handleBlur}
-                        isOptionDisabled={option => option.disabled}
+                        isOptionDisabled={(option) => option.disabled}
                         classNamePrefix="react-select"
                         blurInputOnSelect
                         autoFocus

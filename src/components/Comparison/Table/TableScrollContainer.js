@@ -19,7 +19,7 @@ const TableScrollContainer = ({ children, className = '' }) => {
     const { width: scrollContainerBodyWidth } = useResizeObserver({ ref: scrollContainerBody });
     const isSmallScreen = useMedia('(max-width: 576px)');
 
-    const handleScrollCallback = debounce(rtBody => {
+    const handleScrollCallback = debounce((rtBody) => {
         if (!rtBody) {
             return;
         }

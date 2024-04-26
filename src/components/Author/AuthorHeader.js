@@ -38,11 +38,11 @@ const AuthorHeader = ({ authorId }) => {
                                     size="sm"
                                     color="secondary"
                                     className="float-end"
-                                    onClick={() => setEditMode(v => !v)}
+                                    onClick={() => setEditMode((v) => !v)}
                                 >
                                     <Icon icon={faPen} /> Edit
                                 </RequireAuthentication>
-                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
@@ -62,7 +62,7 @@ const AuthorHeader = ({ authorId }) => {
                     {editMode && (
                         <StatementBrowserDialog
                             show={editMode}
-                            toggleModal={() => setEditMode(v => !v)}
+                            toggleModal={() => setEditMode((v) => !v)}
                             id={author.id}
                             label={author.label}
                             enableEdit={true}

@@ -10,7 +10,7 @@ function usePropertyStatements({ propertyId, pageSize = 10 }) {
     const [totalElements, setTotalElements] = useState(0);
 
     const loadData = useCallback(
-        page => {
+        (page) => {
             setIsLoading(true);
             const statementsService = getStatementsByPredicate({
                 id: propertyId,
@@ -22,15 +22,15 @@ function usePropertyStatements({ propertyId, pageSize = 10 }) {
             });
 
             statementsService
-                .then(result => {
-                    setStatements(prevResources => [...prevResources, ...result.content]);
+                .then((result) => {
+                    setStatements((prevResources) => [...prevResources, ...result.content]);
                     setIsLoading(false);
                     setHasNextPage(!result.last);
                     setIsLastPageReached(result.last);
                     setTotalElements(result.totalElements);
                     setPage(page + 1);
                 })
-                .catch(error => {
+                .catch((error) => {
                     setIsLoading(false);
                     setHasNextPage(false);
                     setIsLastPageReached(page > 1);

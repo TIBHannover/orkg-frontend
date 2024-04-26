@@ -7,7 +7,7 @@ import { Button, ButtonGroup, Container } from 'reactstrap';
 import styled from 'styled-components';
 
 const ContainerStyled = styled(Container)`
-    @media (max-width: ${props => props.theme.gridBreakpoints.sm}) {
+    @media (max-width: ${(props) => props.theme.gridBreakpoints.sm}) {
         margin-top: 1rem !important;
         flex-wrap: wrap;
     }
@@ -16,7 +16,7 @@ const ContainerStyled = styled(Container)`
 const ButtonGroupStyled = styled(ButtonGroup)`
     margin-left: auto;
 
-    @media (max-width: ${props => props.theme.gridBreakpoints.sm}) {
+    @media (max-width: ${(props) => props.theme.gridBreakpoints.sm}) {
         display: none;
         flex-direction: column;
         width: 100%;
@@ -28,17 +28,17 @@ const ButtonGroupStyled = styled(ButtonGroup)`
         > button:first-child,
         > .btn:first-child,
         > .btn-group:first-child > button:first-child {
-            border-radius: ${props => props.theme.borderRadius} ${props => props.theme.borderRadius} 0 0 !important;
+            border-radius: ${(props) => props.theme.borderRadius} ${(props) => props.theme.borderRadius} 0 0 !important;
         }
         > button:last-child,
         > .btn:last-child,
         > .btn-group:last-child > button {
-            border-radius: 0 0 ${props => props.theme.borderRadius} ${props => props.theme.borderRadius} !important;
+            border-radius: 0 0 ${(props) => props.theme.borderRadius} ${(props) => props.theme.borderRadius} !important;
         }
         > button:first-child:last-child,
         .btn:first-child:last-child,
         .btn-group:first-child:last-child > button {
-            border-radius: ${props => props.theme.borderRadius} !important;
+            border-radius: ${(props) => props.theme.borderRadius} !important;
         }
         > * {
             margin-top: 1px !important;
@@ -57,7 +57,7 @@ const MenuButton = styled(Button)`
     flex-grow: 0;
     margin-left: auto;
 
-    @media (max-width: ${props => props.theme.gridBreakpoints.sm}) {
+    @media (max-width: ${(props) => props.theme.gridBreakpoints.sm}) {
         display: block;
     }
 `;
@@ -82,7 +82,7 @@ const TitleBar = ({ buttonGroup = null, titleAddition = null, children = '', wra
                     aria-label="Open action menu"
                     size="sm"
                     color={!isMenuOpen ? 'secondary' : 'secondary-darker'}
-                    onClick={() => setIsMenuOpen(v => !v)}
+                    onClick={() => setIsMenuOpen((v) => !v)}
                 >
                     <Icon icon={faEllipsisV} />
                 </MenuButton>

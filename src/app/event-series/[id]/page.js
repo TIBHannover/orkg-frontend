@@ -25,7 +25,7 @@ const ConferenceDetails = () => {
         const loadConference = () => {
             setIsLoading(true);
             getConferenceById(id)
-                .then(conference => {
+                .then((conference) => {
                     document.title = `${conference.name} - Details`;
                     setConferenceId(conference.id);
                     setLabel(conference.name);
@@ -33,7 +33,7 @@ const ConferenceDetails = () => {
                     setMetadata(conference.metadata);
                     setIsLoading(false);
                 })
-                .catch(error => {
+                .catch((error) => {
                     setIsLoading(false);
                     setError(error);
                 });

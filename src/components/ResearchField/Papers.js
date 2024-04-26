@@ -65,14 +65,14 @@ const Papers = ({ id, boxShadow = false, showBreadcrumbs = true }) => {
                             interactive={true}
                             trigger="click"
                             placement="bottom-end"
-                            onCreate={instance => setTippy(instance)}
+                            onCreate={(instance) => setTippy(instance)}
                             content={
                                 <div className="p-2" style={{ width: '150px' }}>
                                     <FormGroup>
                                         <Label for="sortPapers">Sort</Label>
                                         <Input
                                             value={sort}
-                                            onChange={e => {
+                                            onChange={(e) => {
                                                 tippy.hide();
                                                 setSort(e.target.value);
                                             }}
@@ -91,7 +91,7 @@ const Papers = ({ id, boxShadow = false, showBreadcrumbs = true }) => {
                                     <FormGroup check>
                                         <Label check>
                                             <Input
-                                                onChange={e => {
+                                                onChange={(e) => {
                                                     tippy.hide();
                                                     setIncludeSubFields(e.target.checked);
                                                 }}
@@ -117,7 +117,7 @@ const Papers = ({ id, boxShadow = false, showBreadcrumbs = true }) => {
                 {papers.length > 0 && (
                     <ListGroup className={boxShadow ? 'box' : ''}>
                         {papers.map(
-                            paper =>
+                            (paper) =>
                                 paper && <PaperCard paper={convertPaperToNewFormat(paper)} showBreadcrumbs={showBreadcrumbs} key={`pc${paper.id}`} />,
                         )}
                         {!isLoading && hasNextPage && (
@@ -125,7 +125,7 @@ const Papers = ({ id, boxShadow = false, showBreadcrumbs = true }) => {
                                 style={{ cursor: 'pointer' }}
                                 className="list-group-item list-group-item-action text-center"
                                 onClick={!isLoading ? handleLoadMore : undefined}
-                                onKeyDown={e => {
+                                onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
                                         if (!isLoading) {
                                             handleLoadMore();

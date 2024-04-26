@@ -35,7 +35,7 @@ const FeaturedComparisons = () => {
     }, []);
 
     const scrollTo = useCallback(
-        header => {
+        (header) => {
             const { hash } = window.location;
             const id = isString(hash) ? hash.replace('#', '') : null;
             if (!header || header.id !== id) {
@@ -59,7 +59,7 @@ const FeaturedComparisons = () => {
             returnContent: true,
         });
 
-        const _categories = responseJson.map(item => ({
+        const _categories = responseJson.map((item) => ({
             label: item.label,
             id: item.id,
         }));
@@ -75,12 +75,12 @@ const FeaturedComparisons = () => {
             returnContent: true,
         });
 
-        const ids = responseJson.map(comparison => comparison.id);
+        const ids = responseJson.map((comparison) => comparison.id);
         const comparisonStatements = await getStatementsBySubjects({
             ids,
         });
 
-        const comparisons = responseJson.map(comparison => {
+        const comparisons = responseJson.map((comparison) => {
             let description = '';
             let icon = '';
             let contributions = [];
@@ -89,19 +89,19 @@ const FeaturedComparisons = () => {
             for (const comparisonStatement of comparisonStatements) {
                 if (comparisonStatement.id === comparison.id) {
                     const descriptionStatement = comparisonStatement.statements.filter(
-                        statement => statement.predicate.id === PREDICATES.DESCRIPTION,
+                        (statement) => statement.predicate.id === PREDICATES.DESCRIPTION,
                     );
                     description = descriptionStatement.length ? descriptionStatement[0].object.label : '';
 
-                    const iconStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.ICON);
+                    const iconStatement = comparisonStatement.statements.filter((statement) => statement.predicate.id === PREDICATES.ICON);
                     icon = iconStatement.length ? iconStatement[0].object.label : '';
 
                     // contributions
                     contributions = comparisonStatement.statements
-                        .filter(statement => statement.predicate.id === PREDICATES.COMPARE_CONTRIBUTION)
-                        .map(statement => statement.object);
+                        .filter((statement) => statement.predicate.id === PREDICATES.COMPARE_CONTRIBUTION)
+                        .map((statement) => statement.object);
 
-                    const typeStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.TYPE);
+                    const typeStatement = comparisonStatement.statements.filter((statement) => statement.predicate.id === PREDICATES.TYPE);
                     type = typeStatement.length ? typeStatement[0].object.id : '';
                 }
             }
@@ -142,7 +142,7 @@ const FeaturedComparisons = () => {
                         <Icon icon={faSpinner} spin /> Loading
                     </div>
                 ) : (
-                    categories.map(category => {
+                    categories.map((category) => {
                         const id = encodeURIComponent(kebabCase(category.label));
                         return (
                             <Fragment key={category.id}>
@@ -155,8 +155,8 @@ const FeaturedComparisons = () => {
 
                                 <Row>
                                     {comparisons
-                                        .filter(comparison => comparison.type === category.id)
-                                        .map(comparison => (
+                                        .filter((comparison) => comparison.type === category.id)
+                                        .map((comparison) => (
                                             <FeaturedComparisonsItem
                                                 key={comparison.id}
                                                 title={comparison.label}

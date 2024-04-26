@@ -11,12 +11,12 @@ import { reverse } from 'named-urls';
 import env from 'components/NextJsMigration/env';
 
 const SectionComparison = ({ id, sectionId }) => {
-    const references = useSelector(state => state.review.references);
-    const usedReferences = useSelector(state => state.review.usedReferences);
+    const references = useSelector((state) => state.review.references);
+    const usedReferences = useSelector((state) => state.review.usedReferences);
     const dispatch = useDispatch();
     const [store, setStore] = useState(null);
 
-    const setComparisonDataCallBack = data => {
+    const setComparisonDataCallBack = (data) => {
         if (Object.keys(data).length === 0) {
             return;
         }
@@ -28,12 +28,12 @@ const SectionComparison = ({ id, sectionId }) => {
         );
     };
 
-    const updateReferences = contributions => {
-        const paperIds = contributions.map(contribution => contribution.paper_id);
+    const updateReferences = (contributions) => {
+        const paperIds = contributions.map((contribution) => contribution.paper_id);
         if (paperIds.length === 0) {
             return;
         }
-        const _usedReferences = paperIds.map(paperId => references.find(reference => reference?.parsedReference?.id === paperId));
+        const _usedReferences = paperIds.map((paperId) => references.find((reference) => reference?.parsedReference?.id === paperId));
         if (!isEqual(_usedReferences, usedReferences[sectionId])) {
             dispatch(setUsedReferences({ references: _usedReferences, sectionId }));
         }

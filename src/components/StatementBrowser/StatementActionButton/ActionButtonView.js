@@ -5,7 +5,7 @@ import { isString } from 'lodash';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-const handleIconWrapperSize = wrappersize => {
+const handleIconWrapperSize = (wrappersize) => {
     switch (wrappersize) {
         case 'xs':
             return '1.5rem';
@@ -22,8 +22,8 @@ export const OptionButtonStyled = styled.span`
     .btn {
         display: inline-block;
         border-radius: 100%;
-        background-color: ${props => props.theme.lightDarker};
-        color: ${props => props.theme.dark};
+        background-color: ${(props) => props.theme.lightDarker};
+        color: ${(props) => props.theme.dark};
         border-width: 0;
 
         & .icon-wrapper {
@@ -35,7 +35,7 @@ export const OptionButtonStyled = styled.span`
         }
 
         &:hover {
-            background-color: ${props => props.theme.secondary};
+            background-color: ${(props) => props.theme.secondary};
             color: #fff;
         }
 

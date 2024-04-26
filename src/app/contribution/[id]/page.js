@@ -21,7 +21,7 @@ export default function Contribution(props) {
     const [isReview, setIsReview] = useState(false);
 
     useEffect(() => {
-        getStatementsByObjectAndPredicate({ objectId: contributionId, predicateId: PREDICATES.HAS_CONTRIBUTION }).then(statements => {
+        getStatementsByObjectAndPredicate({ objectId: contributionId, predicateId: PREDICATES.HAS_CONTRIBUTION }).then((statements) => {
             // check if statements are found and if "contributionId" has the contribution class
             if (!statements.length || !statements[0].object.classes.includes(CLASSES.CONTRIBUTION)) {
                 setError(true);
@@ -29,10 +29,10 @@ export default function Contribution(props) {
             }
 
             const paperStatement = statements.find(
-                _statement => _statement.subject.classes.includes(CLASSES.PAPER) || _statement.subject.classes.includes(CLASSES.SMART_REVIEW),
+                (_statement) => _statement.subject.classes.includes(CLASSES.PAPER) || _statement.subject.classes.includes(CLASSES.SMART_REVIEW),
             );
 
-            setIsReview(!!statements.find(_statement => _statement.subject.classes.includes(CLASSES.SMART_REVIEW)));
+            setIsReview(!!statements.find((_statement) => _statement.subject.classes.includes(CLASSES.SMART_REVIEW)));
 
             if (!paperStatement) {
                 setError(true);

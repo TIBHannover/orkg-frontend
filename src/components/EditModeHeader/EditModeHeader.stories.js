@@ -5,7 +5,7 @@ export default {
     component: EditModeHeader,
 };
 
-const Template = args => <EditModeHeader {...args} />;
+const Template = (args) => <EditModeHeader {...args} />;
 
 export const Default = Template.bind({});
 

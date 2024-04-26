@@ -22,7 +22,7 @@ const AddProperty = () => {
         document.title = 'Add property - ORKG';
     }, []);
 
-    const handleAdd = async e => {
+    const handleAdd = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         if (label.trim() !== '') {
@@ -51,8 +51,8 @@ const AddProperty = () => {
                         <FormGroup>
                             <Label for="propertyLabel">Property label</Label>
                             <Input
-                                onChange={e => setLabel(e.target.value)}
-                                onKeyDown={e => (e.keyCode === 13 ? handleAdd : undefined)}
+                                onChange={(e) => setLabel(e.target.value)}
+                                onKeyDown={(e) => (e.keyCode === 13 ? handleAdd : undefined)}
                                 type="text"
                                 maxLength={MAX_LENGTH_INPUT}
                                 name="value"

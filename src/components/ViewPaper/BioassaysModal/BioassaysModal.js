@@ -13,7 +13,7 @@ import useBioassays from 'components/ViewPaper/hooks/useBioassays';
 import BioassaySelectItem from 'components/ViewPaper/BioassaysModal/BioassaySelectItem';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 
-const BioassaysModal = props => {
+const BioassaysModal = (props) => {
     const dispatch = useDispatch();
     const { CSVReader } = useCSVReader();
     const [bioassaysTest, setBioassaysTest] = useState('');
@@ -34,7 +34,7 @@ const BioassaysModal = props => {
             setSubmitAlert(null);
             setIsSubmitted(true);
             semantifyBioassays(bioassaysTest)
-                .then(result => {
+                .then((result) => {
                     const data = result.payload;
                     dispatch(setBioassayRawResponse(data.labels));
                     dispatch(setBioassayText(bioassaysTest));
@@ -61,9 +61,9 @@ const BioassaysModal = props => {
 
     const handleSelect = (labelKey, value) => {
         if (selectedItems[labelKey.property.id]?.includes(value.id)) {
-            setSelectedItems(prev => ({ ...prev, [labelKey.property.id]: prev[labelKey.property.id].filter(id => id !== value.id) }));
+            setSelectedItems((prev) => ({ ...prev, [labelKey.property.id]: prev[labelKey.property.id].filter((id) => id !== value.id) }));
         } else {
-            setSelectedItems(prev => ({ ...prev, [labelKey.property.id]: [...(prev[labelKey.property.id] || []), value.id] }));
+            setSelectedItems((prev) => ({ ...prev, [labelKey.property.id]: [...(prev[labelKey.property.id] || []), value.id] }));
         }
     };
 
@@ -72,7 +72,7 @@ const BioassaysModal = props => {
         const statements = { properties: [], values: [] };
         for (const key of Object.keys(selectedItems)) {
             if (selectedItems[key].length > 0) {
-                const label = assayData.labels.find(l => l.property.id === key);
+                const label = assayData.labels.find((l) => l.property.id === key);
                 statements.properties.push({
                     existingPredicateId: label.property.id,
                     propertyId: label.property.id,
@@ -80,7 +80,7 @@ const BioassaysModal = props => {
                 });
 
                 for (const value of selectedItems[key]) {
-                    const val = label.resources.find(v => v.id === value);
+                    const val = label.resources.find((v) => v.id === value);
                     statements.values.push({
                         label: val.label,
                         type: 'object',
@@ -135,7 +135,7 @@ const BioassaysModal = props => {
                                 <CSVReader
                                     accept=".txt"
                                     config={PARSER_OPTIONS}
-                                    onUploadAccepted={result => setBioassaysTest(result.data.join('\n'))}
+                                    onUploadAccepted={(result) => setBioassaysTest(result.data.join('\n'))}
                                 >
                                     {({ getRootProps, acceptedFile, ProgressBar }) => (
                                         <>
@@ -167,7 +167,7 @@ const BioassaysModal = props => {
                                 rows={8}
                                 value={bioassaysTest}
                                 placeholder="Copy a text into this form or use the upload button"
-                                onChange={e => setBioassaysTest(e.target.value)}
+                                onChange={(e) => setBioassaysTest(e.target.value)}
                                 invalid={!!submitAlert}
                                 maxLength={MAX_LENGTH_INPUT}
                             />

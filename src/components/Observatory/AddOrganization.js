@@ -17,28 +17,28 @@ function AddOrganization(props) {
     useEffect(() => {
         const loadOrganizations = async () => {
             await getAllOrganizations()
-                .then(organizations => {
+                .then((organizations) => {
                     setOrganizations(differenceBy(organizations, props.organizations, 'id'));
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
                 });
         };
         loadOrganizations();
     }, [props.organizations]);
 
-    const handleSubmit = async e => {
+    const handleSubmit = async (e) => {
         setIsLoading(true);
         if (selectedOrganization) {
             await addOrganizationToObservatory(props.id, selectedOrganization.id)
-                .then(_ => {
+                .then((_) => {
                     toast.success('Organization added successfully');
                     setIsLoading(false);
                     props.toggleOrganizationItem(selectedOrganization);
                     setSelectedOrganization(null);
                     props.toggle();
                 })
-                .catch(error => {
+                .catch((error) => {
                     toast.error('Organization cannot be added');
                     setIsLoading(false);
                 });
@@ -56,7 +56,7 @@ function AddOrganization(props) {
                     <>
                         <Select
                             options={organizations}
-                            onChange={selected => setSelectedOrganization(selected)}
+                            onChange={(selected) => setSelectedOrganization(selected)}
                             getOptionValue={({ id }) => id}
                             getOptionLabel={({ name }) => name}
                             classNamePrefix="react-select"

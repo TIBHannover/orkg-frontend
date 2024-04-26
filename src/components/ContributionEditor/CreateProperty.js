@@ -21,8 +21,8 @@ export const CreateProperty = () => {
     const [propertyLabel, setPropertyLabel] = useState('');
 
     const dispatch = useDispatch();
-    const properties = useSelector(state => state.contributionEditor.properties);
-    const propertyLabels = Object.values(properties).map(property => property.label);
+    const properties = useSelector((state) => state.contributionEditor.properties);
+    const propertyLabels = Object.values(properties).map((property) => property.label);
 
     const handleCreate = ({ id, label }) => {
         dispatch(
@@ -37,7 +37,7 @@ export const CreateProperty = () => {
         setIsOpenConfirmModal(false);
     };
 
-    const handleChangeAutocomplete = async selected => {
+    const handleChangeAutocomplete = async (selected) => {
         if (isString(selected)) {
             setPropertyLabel(selected);
             setIsOpenConfirmModal(true);
@@ -52,7 +52,7 @@ export const CreateProperty = () => {
                 <ConfirmCreatePropertyModal
                     onCreate={handleCreate}
                     label={propertyLabel}
-                    toggle={() => setIsOpenConfirmModal(v => !v)}
+                    toggle={() => setIsOpenConfirmModal((v) => !v)}
                     shouldPerformCreate
                 />
             )}

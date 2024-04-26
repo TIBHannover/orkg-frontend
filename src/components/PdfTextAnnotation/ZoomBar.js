@@ -14,7 +14,7 @@ const Container = styled.div`
 
 const ZoomBar = () => {
     const dispatch = useDispatch();
-    const zoom = useSelector(state => state.pdfTextAnnotation.zoom);
+    const zoom = useSelector((state) => state.pdfTextAnnotation.zoom);
 
     const handleZoomIn = () => {
         dispatch(changeZoom(zoom * 1.2));

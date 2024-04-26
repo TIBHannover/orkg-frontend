@@ -9,7 +9,7 @@ import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 
 const StyledGravatar = styled(Gravatar)`
-    border: 3px solid ${props => props.theme.dark};
+    border: 3px solid ${(props) => props.theme.dark};
     cursor: pointer;
 `;
 
@@ -48,7 +48,7 @@ const ContributorCard = ({ contributor, showStatsDetails = false, options }) => 
                     </div>
                 )}
                 <small>
-                    {options?.map?.(option => (
+                    {options?.map?.((option) => (
                         <StatementActionButton
                             title={option.label}
                             icon={option.icon}
@@ -73,7 +73,7 @@ const ContributorCard = ({ contributor, showStatsDetails = false, options }) => 
                 </small>
                 {showStatsDetails && (
                     <ul className="list-group list-group-horizontal-md mt-2 d-flex text-center">
-                        {STATS.map(stat => (
+                        {STATS.map((stat) => (
                             <li key={stat.key} className="list-group-item p-0 px-3 d-flex flex-column align-items-center">
                                 <span className="h5 m-0"> {contributor[stat.key]}</span> <span>{pluralize(stat.label, contributor[stat.key])}</span>
                             </li>

@@ -33,10 +33,10 @@ Confirmation.propTypes = {
 };
 
 const Confirm = ({ message, title = 'Are you sure?', proceedLabel = 'Ok', cancelLabel = 'Cancel', options = {} }) =>
-    new Promise(resolve => {
+    new Promise((resolve) => {
         let container = document.createElement('div');
         const root = createRoot(container);
-        const handleResolve = result => {
+        const handleResolve = (result) => {
             root.unmount();
             container = null;
             resolve(result);

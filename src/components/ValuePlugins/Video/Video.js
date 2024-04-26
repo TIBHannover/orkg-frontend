@@ -71,14 +71,14 @@ const Video = ({ children, type, options = { inModal: false } }) => {
                     className="btn-link"
                     onClick={() => setShowVideoDialog(true)}
                     style={{ cursor: 'pointer' }}
-                    onKeyDown={e => (e.keyCode === 13 ? setShowVideoDialog(true) : undefined)}
+                    onKeyDown={(e) => (e.keyCode === 13 ? setShowVideoDialog(true) : undefined)}
                     role="button"
                     tabIndex={0}
                 >
                     {labelToText} <Icon icon={faVideo} />
                 </span>
-                <Modal isOpen={showVideoDialog} toggle={() => setShowVideoDialog(v => !v)} size="lg">
-                    <ModalHeader toggle={() => setShowVideoDialog(v => !v)}>Video Preview</ModalHeader>
+                <Modal isOpen={showVideoDialog} toggle={() => setShowVideoDialog((v) => !v)} size="lg">
+                    <ModalHeader toggle={() => setShowVideoDialog((v) => !v)}>Video Preview</ModalHeader>
                     <ModalBody>
                         <VideoContainer>
                             <IframeFullWidth title="Video" scrolling="no" src={`${providerUrl}${videoId}`} allowFullScreen />

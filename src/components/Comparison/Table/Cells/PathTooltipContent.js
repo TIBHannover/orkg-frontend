@@ -34,7 +34,7 @@ const PathTooltipContent = ({ data, cellDataValue, openStatementBrowser }) => {
                                         : null
                                 }
                                 style={{ cursor: resourceType !== ENTITIES.PREDICATE ? 'pointer' : 'default' }}
-                                onKeyDown={e =>
+                                onKeyDown={(e) =>
                                     e.keyCode === 13
                                         ? () =>
                                               resourceType !== ENTITIES.PREDICATE

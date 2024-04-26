@@ -24,7 +24,7 @@ const ResearchFields = () => {
     const [researchFieldStats, setResearchFieldStats] = useState({});
 
     useEffect(() => {
-        getResearchFieldsStats().then(results => {
+        getResearchFieldsStats().then((results) => {
             setResearchFieldStats(results);
         });
 
@@ -35,11 +35,11 @@ const ResearchFields = () => {
         if (!selectedResearchField) {
             return;
         }
-        const field = researchFields.find(rf => rf.id === selectedResearchField);
+        const field = researchFields.find((rf) => rf.id === selectedResearchField);
         setResearchFieldLabel(field ? field.label : selectedResearchField);
     }, [selectedResearchField, researchFields]);
 
-    const handleUpdate = useCallback(data => {
+    const handleUpdate = useCallback((data) => {
         if (data.selectedResearchField) {
             setSelectedResearchField(data.selectedResearchField);
         }
@@ -52,7 +52,7 @@ const ResearchFields = () => {
         <>
             <TitleBar
                 buttonGroup={
-                    <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                    <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                         <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                             <Icon icon={faEllipsisV} />
                         </DropdownToggle>

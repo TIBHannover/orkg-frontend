@@ -12,7 +12,7 @@ export const generateGraphMLFile = (diagram, diagramResource) => {
     const graph = doc.createElement('graph');
     graph.setAttribute('id', 'G');
     graph.setAttribute('edgedefault', 'undirected');
-    diagram.nodes.map(n => {
+    diagram.nodes.map((n) => {
         const node = doc.createElement('node');
         node.setAttribute('id', n.id);
         // NodeLabels
@@ -39,7 +39,7 @@ export const generateGraphMLFile = (diagram, diagramResource) => {
         graph.appendChild(node);
         return null;
     });
-    diagram.edges.map(e => {
+    diagram.edges.map((e) => {
         const edge = doc.createElement('edge');
         edge.setAttribute('source', e.source);
         edge.setAttribute('target', e.target);
