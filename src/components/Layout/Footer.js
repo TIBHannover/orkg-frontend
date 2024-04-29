@@ -160,8 +160,8 @@ const Footer = () => (
                                 </a>
                             </Col>
                             <Col md={4} style={{ textAlign: 'center' }}>
-                                <a href="https://www.l3s.de/en/" target="_blank" rel="noopener noreferrer">
-                                    <Image src={L3S_LOGO} alt="Logo L3S Research Center" style={{ borderWidth: 0 }} height="50" />
+                                <a href="https://www.l3s.de/" target="_blank" rel="noopener noreferrer">
+                                    <Image src={L3S_LOGO} alt="Logo L3S Research Center" style={{ borderWidth: 0 }} height="40" />
                                 </a>
                             </Col>
                             <Col md={4} style={{ textAlign: 'center' }}>
