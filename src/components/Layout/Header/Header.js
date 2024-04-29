@@ -376,7 +376,6 @@ const Header = () => {
                                 </DropdownItem>
                                 <DropdownItem
                                     tag={Link}
-                                    end
                                     href={ROUTES.SUSTAINABLE_DEVELOPMENT_GOALS}
                                     onClick={closeMenu}
                                     active={pathname === ROUTES.SUSTAINABLE_DEVELOPMENT_GOALS}
@@ -384,7 +383,7 @@ const Header = () => {
                                     Sustainable <br />
                                     development goals
                                 </DropdownItem>
-                                {/** <DropdownItem tag={Link} end to={ROUTES.DIAGRAMS} onClick={closeMenu}>
+                                {/** <DropdownItem tag={Link} to={ROUTES.DIAGRAMS} onClick={closeMenu}>
                                     Diagrams
                                 </DropdownItem> */}
                                 <ContentTypesMenu closeMenu={closeMenu} />
@@ -476,7 +475,7 @@ const Header = () => {
                                 </DropdownItem>
                                 <DropdownItem divider />
                                 <DropdownItem header>Data export</DropdownItem>
-                                <DropdownItem tag={Link} end href={ROUTES.DATA} onClick={closeMenu} active={pathname === ROUTES.DATA}>
+                                <DropdownItem tag={Link} href={ROUTES.DATA} onClick={closeMenu} active={pathname === ROUTES.DATA}>
                                     Data access
                                 </DropdownItem>
                             </DropdownMenu>
