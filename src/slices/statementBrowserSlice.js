@@ -362,7 +362,9 @@ export const statementBrowserSlice = createSlice({
         },
         updateContributionLabel: (state, { payload: { id, label } }) => {
             state.resources.byId[id].label = label;
-            state.resourceHistory.byId[id].label = label;
+            if (state.resourceHistory.byId[id]) {
+                state.resourceHistory.byId[id].label = label;
+            }
         },
         doneFetchingStatements: (state, { payload: { resourceId } }) => {
             state.isFetchingStatements = false;
