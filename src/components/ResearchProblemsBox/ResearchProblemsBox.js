@@ -2,7 +2,7 @@ import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { Button } from 'reactstrap';
 import ROUTES from 'constants/routes.js';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
 import AddResearchProblem from 'components/Observatory/AddResearchProblem';
 import { faPlus, faCheck, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';

@@ -4,7 +4,7 @@ import { CmsPage } from 'components/styled';
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import ROUTES from 'constants/routes';
 import { useEffect, useState } from 'react';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { useDispatch, useSelector } from 'react-redux';
 import { Alert, Col, Modal, ModalBody, ModalHeader, Row } from 'reactstrap';
 import { getHelpArticle, getHelpArticles } from 'services/cms';
@@ -68,15 +68,7 @@ const SBEditorHelpModal = () => {
                 {(isLoading || isLoadingPage) && (
                     <Row className="mt-3">
                         <Col md="12">
-                            <ContentLoader
-                                speed={2}
-                                width={300}
-                                height={100}
-                                viewBox="0 0 300 100"
-                                style={{ width: '100% !important' }}
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-                            >
+                            <ContentLoader speed={2} width={300} height={100} viewBox="0 0 300 100" style={{ width: '100% !important' }}>
                                 <rect x="0" y="0" rx="3" ry="3" width="300" height="15" />
                                 <rect x="0" y="20" rx="3" ry="3" width="250" height="15" />
                                 <rect x="0" y="40" rx="3" ry="3" width="300" height="15" />

@@ -15,7 +15,7 @@ import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Alert, Button, Col, FormGroup, ListGroup, Row } from 'reactstrap';
 
 const Contributions = (props) => {
@@ -52,15 +52,7 @@ const Contributions = (props) => {
                 <Col md="9">
                     {isLoading && (
                         <div>
-                            <ContentLoader
-                                height="100%"
-                                width="100%"
-                                viewBox="0 0 100 6"
-                                style={{ width: '100% !important' }}
-                                speed={2}
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-                            >
+                            <ContentLoader height="100%" width="100%" viewBox="0 0 100 6" style={{ width: '100% !important' }} speed={2}>
                                 <rect x="0" y="0" rx="1" ry="1" width={20} height="5" />
                                 <rect x="21" y="0" rx="1" ry="1" width={20} height="5" />
                                 <rect x="42" y="0" rx="1" ry="1" width={20} height="5" />
@@ -99,8 +91,6 @@ const Contributions = (props) => {
                                                             viewBox="0 0 100 6"
                                                             style={{ width: '100% !important' }}
                                                             speed={2}
-                                                            backgroundColor="#f3f3f3"
-                                                            foregroundColor="#ecebeb"
                                                         >
                                                             <rect x="0" y="0" rx="1" ry="1" width="90" height="6" />
                                                         </ContentLoader>

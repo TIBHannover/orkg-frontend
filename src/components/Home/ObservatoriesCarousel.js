@@ -10,7 +10,7 @@ import Tippy from '@tippyjs/react';
 import styled from 'styled-components';
 import Gravatar from 'react-gravatar';
 import { reverse } from 'named-urls';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import PropTypes from 'prop-types';
 import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
@@ -153,15 +153,7 @@ function ObservatoriesCarousel(props) {
                 ))}
             {props.isLoading && (
                 <div style={{ height: '130px' }} className="pt-4 pb-1 ps-4 pe-4">
-                    <ContentLoader
-                        width={300}
-                        height={50}
-                        viewBox="0 0 300 50"
-                        speed={2}
-                        backgroundColor="#f3f3f3"
-                        foregroundColor="#ecebeb"
-                        title={false}
-                    >
+                    <ContentLoader width={300} height={50} viewBox="0 0 300 50" speed={2} title={false}>
                         <rect x="1" y="0" rx="4" ry="4" width="300" height="20" />
                         <rect x="1" y="25" rx="3" ry="3" width="250" height="20" />
                     </ContentLoader>

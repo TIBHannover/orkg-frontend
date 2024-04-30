@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { CardTitle } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import ROUTES from 'constants/routes.js';
 import { StyledGravatar, StyledDotGravatar, ContributorsAvatars } from 'components/styled';
 import Tippy from '@tippyjs/react';
@@ -71,14 +71,7 @@ const Contributors = ({ researchProblemId }) => {
             )}
             {isLoading && (
                 <div className="mt-4 mb-4" style={{ width: '100% !important' }}>
-                    <ContentLoader
-                        height="100%"
-                        width="100%"
-                        viewBox="0 0 100 4"
-                        style={{ width: '100% !important' }}
-                        backgroundColor="#f3f3f3"
-                        foregroundColor="#ecebeb"
-                    >
+                    <ContentLoader height="100%" width="100%" viewBox="0 0 100 4" style={{ width: '100% !important' }}>
                         <circle cx="2" cy="2" r="2" />
                         <circle cx="7" cy="2" r="2" />
                         <circle cx="12" cy="2" r="2" />

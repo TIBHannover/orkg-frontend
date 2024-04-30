@@ -9,7 +9,7 @@ import { faPen, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
 import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
 import Contributors from 'components/TopContributors/Contributors';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { useSelector } from 'react-redux';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
@@ -38,29 +38,13 @@ const ResearchFieldHeader = ({ id }) => {
             {isLoading && (
                 <>
                     <div className="mt-4 mb-4 container">
-                        <ContentLoader
-                            speed={2}
-                            width={400}
-                            height={20}
-                            viewBox="0 0 400 20"
-                            style={{ width: '100% !important' }}
-                            backgroundColor="#f3f3f3"
-                            foregroundColor="#ecebeb"
-                        >
+                        <ContentLoader speed={2} width={400} height={20} viewBox="0 0 400 20" style={{ width: '100% !important' }}>
                             <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
                         </ContentLoader>
                     </div>
                     <div className="text-center mt-4 mb-4 p-5 container box rounded">
                         <div className="text-start">
-                            <ContentLoader
-                                speed={2}
-                                width={400}
-                                height={50}
-                                viewBox="0 0 400 50"
-                                style={{ width: '100% !important' }}
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-                            >
+                            <ContentLoader speed={2} width={400} height={50} viewBox="0 0 400 50" style={{ width: '100% !important' }}>
                                 <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
                                 <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
                             </ContentLoader>

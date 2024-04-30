@@ -4,7 +4,7 @@ import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearc
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { RESOURCES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { useSelector } from 'react-redux';
 import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
@@ -103,15 +103,7 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
                     {!hasNextPage && isLastPageReached && page !== 1 && <div className="text-center mt-3">You have reached the last page</div>}
                     {isLoading && (
                         <div className="mt-4 mb-4">
-                            <ContentLoader
-                                speed={2}
-                                width={400}
-                                height={120}
-                                viewBox="0 0 400 120"
-                                style={{ width: '100% !important' }}
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-                            >
+                            <ContentLoader speed={2} width={400} height={120} viewBox="0 0 400 120" style={{ width: '100% !important' }}>
                                 <rect x="0" y="5" rx="3" ry="3" width="350" height="6" />
                                 <rect x="0" y="15" rx="3" ry="3" width="150" height="5" />
                                 <rect x="0" y="35" rx="3" ry="3" width="350" height="6" />

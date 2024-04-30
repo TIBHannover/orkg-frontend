@@ -8,7 +8,7 @@ import { CLASSES, ENTITIES, RESOURCES } from 'constants/graphSettings';
 import { cloneDeep, find, set, sortBy } from 'lodash';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Badge, Button } from 'reactstrap';
 import { getParentResearchFields, getStatementsBySubjects } from 'services/backend/statements';
 import styled from 'styled-components';
@@ -278,14 +278,7 @@ const ResearchFieldSelector = ({
                     </div>
                     {isLoading && (
                         <div>
-                            <ContentLoader
-                                width="100%"
-                                speed={2}
-                                viewBox="0 0 100 30"
-                                style={{ width: '100% !important' }}
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-                            >
+                            <ContentLoader width="100%" speed={2} viewBox="0 0 100 30" style={{ width: '100% !important' }}>
                                 <rect x="0" y="0" rx="1" ry="1" width="100" height="5" />
                                 <rect x="0" y="6" rx="1" ry="1" width="100" height="5" />
                                 <rect x="0" y="12" rx="1" ry="1" width="100" height="5" />

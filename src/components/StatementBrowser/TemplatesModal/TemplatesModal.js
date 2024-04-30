@@ -6,7 +6,7 @@ import { setIsTemplateModalOpen } from 'slices/statementBrowserSlice';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import Tippy, { useSingleton } from '@tippyjs/react';
 import TemplateButton from 'components/StatementBrowser/TemplatesModal/TemplateButton/TemplateButton';
 import SearchFieldSelector from 'components/StatementBrowser/TemplatesModal/SearchFieldSelector/SearchFieldSelector';
@@ -214,15 +214,7 @@ const TemplatesModal = (props) => {
 
                         {isLoadingRT && !labelFilter && !targetFilter && (
                             <div style={{ height: 95 }}>
-                                <ContentLoader
-                                    height="100%"
-                                    width="100%"
-                                    viewBox="0 0 100 5"
-                                    style={{ width: '100% !important' }}
-                                    speed={2}
-                                    backgroundColor="#f3f3f3"
-                                    foregroundColor="#ecebeb"
-                                >
+                                <ContentLoader height="100%" width="100%" viewBox="0 0 100 5" style={{ width: '100% !important' }} speed={2}>
                                     <rect x="0" y="0" rx="1" ry="1" width="10" height="3" />
                                     <rect x="12" y="0" rx="1" ry="1" width="10" height="3" />
                                     <rect x="24" y="0" rx="1" ry="1" width="10" height="3" />
@@ -250,15 +242,7 @@ const TemplatesModal = (props) => {
                         )}
 
                         {(isLoadingFeatured || isNextPageLoading) && templates.length === 0 && (
-                            <ContentLoader
-                                height="100%"
-                                width="100%"
-                                viewBox="0 0 100 5"
-                                style={{ width: '100% !important' }}
-                                speed={2}
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-                            >
+                            <ContentLoader height="100%" width="100%" viewBox="0 0 100 5" style={{ width: '100% !important' }} speed={2}>
                                 <rect x="0" y="0" rx="1" ry="1" width="10" height="3" />
                                 <rect x="12" y="0" rx="1" ry="1" width="10" height="3" />
                                 <rect x="24" y="0" rx="1" ry="1" width="10" height="3" />

@@ -7,7 +7,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import ReactDiffViewer from 'react-diff-viewer';
 import useRouter from 'components/NextJsMigration/useRouter';
 import useParams from 'components/NextJsMigration/useParams';
@@ -98,7 +98,7 @@ const DiffView = ({ type, diffRoute, getData }) => {
                 )}
                 {isLoading && !hasFailed && (
                     <div className="p-4">
-                        <ContentLoader height={350} width="100%" speed={2} backgroundColor="#f3f3f3" foregroundColor="#ecebeb">
+                        <ContentLoader height={350} width="100%" speed={2}>
                             <rect x="0" y="0" rx="2" ry="2" width="50" height="50" style={{ width: '49%' }} />
                             <rect x="0" y="60" rx="2" ry="2" width="50" height="300" style={{ width: '49%' }} />
                             <rect x="50%" y="0" rx="2" ry="2" width="50" height="50" style={{ width: '50%' }} />

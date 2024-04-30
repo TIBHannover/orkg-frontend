@@ -1,7 +1,7 @@
 import usePaginate from 'components/hooks/usePaginate';
 import BenchmarksCarousel from 'components/ResearchProblem/Benchmarks/BenchmarksCarousel';
 import PropTypes from 'prop-types';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Container } from 'reactstrap';
 import { getDatasetsBenchmarksByResearchProblemId } from 'services/backend/datasets';
 
@@ -55,14 +55,7 @@ const Benchmarks = (props) => {
 
                     {isLoading && page === 0 && (
                         <>
-                            <ContentLoader
-                                height="100%"
-                                width="100%"
-                                viewBox="0 0 100 10"
-                                style={{ width: '100% !important' }}
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-                            >
+                            <ContentLoader height="100%" width="100%" viewBox="0 0 100 10" style={{ width: '100% !important' }}>
                                 <rect x="0" y="0" rx="1" ry="1" width="20" height="10" />
                                 <rect x="25" y="0" rx="1" ry="1" width="20" height="10" />
                                 <rect x="50" y="0" rx="1" ry="1" width="20" height="10" />

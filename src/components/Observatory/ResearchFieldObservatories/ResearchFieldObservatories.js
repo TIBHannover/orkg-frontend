@@ -1,7 +1,7 @@
 import ObservatoryCard from 'components/Cards/ObservatoryCard/ObservatoryCard';
 import usePaginate from 'components/hooks/usePaginate';
 import PropTypes from 'prop-types';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Button, Row } from 'reactstrap';
 import { getObservatories } from 'services/backend/observatories';
 
@@ -35,14 +35,7 @@ const ResearchFieldObservatories = ({ rfId }) => {
                 <div className="text-center mt-4 mb-4">
                     <div className="mt-3">
                         <div>
-                            <ContentLoader
-                                height="10%"
-                                width="100%"
-                                viewBox="0 0 100 10"
-                                style={{ width: '100% !important' }}
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-                            >
+                            <ContentLoader height="10%" width="100%" viewBox="0 0 100 10" style={{ width: '100% !important' }}>
                                 <rect x="0" y="0" rx="2" ry="2" width="48" height="10" />
                                 <rect x="50" y="0" rx="2" ry="2" width="48" height="10" />
                             </ContentLoader>

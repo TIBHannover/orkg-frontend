@@ -10,7 +10,7 @@ import Tippy from '@tippyjs/react';
 import { Button } from 'reactstrap';
 import Select, { components } from 'react-select';
 import { toast } from 'react-toastify';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 
 const Container = styled.div`
     background: #333333;

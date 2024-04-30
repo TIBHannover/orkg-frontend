@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import ObservatoryItem from 'components/ObservatoriesCarousel/ObservatoryItem';
 import { CarouselIndicatorsStyled } from 'components/styled';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Carousel } from 'reactstrap';
 import styled from 'styled-components';
 import { Observatory } from 'services/backend/types';
@@ -79,7 +79,7 @@ const ObservatoriesCarousel: FC<ObservatoriesCarouselProps> = ({ isLoading, obse
                 ))}
             {isLoading && (
                 <div style={{ height: '130px' }} className="pt-4 pb-1 ps-4 pe-4">
-                    <ContentLoader width={300} height={50} viewBox="0 0 300 50" speed={2} backgroundColor="#f3f3f3" foregroundColor="#ecebeb">
+                    <ContentLoader width={300} height={50} viewBox="0 0 300 50" speed={2}>
                         <rect x="1" y="0" rx="4" ry="4" width="300" height="20" />
                         <rect x="1" y="25" rx="3" ry="3" width="250" height="20" />
                     </ContentLoader>

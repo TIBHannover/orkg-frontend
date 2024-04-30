@@ -5,7 +5,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import usePaginate from 'components/hooks/usePaginate';
 import { capitalize } from 'lodash';
 import PropTypes from 'prop-types';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Container, ListGroup } from 'reactstrap';
 
 const ListPage = ({
@@ -87,15 +87,7 @@ const ListPage = ({
                 {isLoading && page === 0 && (
                     <div className={`text-center ${page === 0 ? 'p-5 container rounded' : ''} ${boxShadow ? 'box' : ''}`}>
                         <div className="text-start">
-                            <ContentLoader
-                                speed={2}
-                                width={400}
-                                height={50}
-                                viewBox="0 0 400 50"
-                                style={{ width: '100% !important' }}
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-                            >
+                            <ContentLoader speed={2} width={400} height={50} viewBox="0 0 400 50" style={{ width: '100% !important' }}>
                                 <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
                                 <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
                             </ContentLoader>

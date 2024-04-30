@@ -6,7 +6,7 @@ import BenchmarkCard from 'components/Benchmarks/BenchmarkCard/BenchmarkCard';
 import usePaginate from 'components/hooks/usePaginate';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
 import TitleBar from 'components/TitleBar/TitleBar';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Button, Container, Row } from 'reactstrap';
 import { getAllBenchmarks } from 'services/backend/benchmarks';
 
@@ -82,14 +82,7 @@ const Benchmarks = () => {
                     <div className="text-center mt-4 mb-4">
                         <div className="mt-3">
                             <div>
-                                <ContentLoader
-                                    height="10%"
-                                    width="100%"
-                                    viewBox="0 0 100 10"
-                                    style={{ width: '100% !important' }}
-                                    backgroundColor="#f3f3f3"
-                                    foregroundColor="#ecebeb"
-                                >
+                                <ContentLoader height="10%" width="100%" viewBox="0 0 100 10" style={{ width: '100% !important' }}>
                                     <rect x="2" y="0" rx="2" ry="2" width="20" height="10" />
                                     <rect x="27" y="0" rx="2" ry="2" width="20" height="10" />
                                     <rect x="52" y="0" rx="2" ry="2" width="20" height="10" />

@@ -3,7 +3,7 @@ import { FormGroup, Label, Input, ListGroup, Button } from 'reactstrap';
 import ROUTES from 'constants/routes.js';
 import styled from 'styled-components';
 import { CLASSES, RESOURCES } from 'constants/graphSettings';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import useResearchFieldContent from 'components/ResearchField/hooks/useResearchFieldContent';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
@@ -119,15 +119,7 @@ const FeaturedItems: FC<FeaturedItemsProps> = ({ researchFieldId, researchFieldL
                 ))}
             {isLoading && (
                 <div className="p-3 text-start">
-                    <ContentLoader
-                        speed={2}
-                        width={100}
-                        height={50}
-                        viewBox="0 0 100 50"
-                        style={{ width: '100% !important' }}
-                        backgroundColor="#f3f3f3"
-                        foregroundColor="#ecebeb"
-                    >
+                    <ContentLoader speed={2} width={100} height={50} viewBox="0 0 100 50" style={{ width: '100% !important' }}>
                         <rect x="0" y="0" rx="3" ry="3" width="100" height="20" />
                         <rect x="0" y="25" rx="3" ry="3" width="80" height="20" />
                     </ContentLoader>

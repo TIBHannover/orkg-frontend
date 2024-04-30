@@ -5,7 +5,7 @@ import ResearchProblemAuthorsModal from 'components/TopAuthors/ResearchProblemAu
 import useResearchProblemAuthors from 'components/TopAuthors/hooks/useTopAuthors';
 import pluralize from 'pluralize';
 import { useState } from 'react';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Button } from 'reactstrap';
 import { ResearchProblemTopAuthor } from 'services/backend/problems';
 
