@@ -1,6 +1,6 @@
 import Link from 'components/NextJsMigration/Link';
 import { useState, FC } from 'react';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import useTopChangelog from 'components/LastUpdatesBox/hooks/useTopChangelog';
 import moment from 'moment';
 import { getResourceLink, getResourceTypeLabel } from 'utils';

@@ -14,7 +14,7 @@ import useViewPaperVersion from 'components/ViewPaperVersion/hooks/useViewPaperV
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import { useState } from 'react';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -81,15 +81,7 @@ const ViewPaperVersion = () => {
                         {!isLoading && <ShareLinkMarker typeOfLink="paper" title={paper.title} />}
 
                         {isLoading && (
-                            <ContentLoader
-                                height="100%"
-                                width="100%"
-                                viewBox="0 0 100 10"
-                                style={{ width: '100% !important' }}
-                                speed={2}
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-                            >
+                            <ContentLoader height="100%" width="100%" viewBox="0 0 100 10" style={{ width: '100% !important' }} speed={2}>
                                 <rect x="0" y="0" width="80" height="4" />
                                 <rect x="0" y="6" rx="1" ry="1" width="10" height="2" />
                                 <rect x="12" y="6" rx="1" ry="1" width="10" height="2" />

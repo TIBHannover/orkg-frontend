@@ -1,6 +1,6 @@
 import { times } from 'lodash';
 import PropTypes from 'prop-types';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import styled from 'styled-components';
 
 const LoadingContainer = styled.div`
@@ -32,7 +32,7 @@ const TableLoadingIndicator = ({ contributionAmount }) => (
                 <tr className="table-borderless">
                     <td className="p-0">
                         <BorderTopRadius>
-                            <ContentLoader height={50} width={230} viewBox="0 0 230 50" speed={2} backgroundColor="#80869B" foregroundColor="#ecebeb">
+                            <ContentLoader height={50} width={230} viewBox="0 0 230 50" speed={2} backgroundColor="#80869B">
                                 <rect x="0" y="0" rx="0" ry="0" width="230" height="50" />
                             </ContentLoader>
                         </BorderTopRadius>
@@ -40,14 +40,7 @@ const TableLoadingIndicator = ({ contributionAmount }) => (
                     {times(contributionAmount, (i) => (
                         <td className="p-0" key={i} data-testid="contentLoader">
                             <BorderTopRadius>
-                                <ContentLoader
-                                    height={50}
-                                    width={230}
-                                    viewBox="0 0 230 50"
-                                    speed={2}
-                                    backgroundColor="#d5d8e3"
-                                    foregroundColor="#ecebeb"
-                                >
+                                <ContentLoader height={50} width={230} viewBox="0 0 230 50" speed={2} backgroundColor="#d5d8e3">
                                     <rect x="0" y="0" rx="0" ry="0" width="230" height="50" />
                                 </ContentLoader>
                             </BorderTopRadius>
@@ -57,14 +50,7 @@ const TableLoadingIndicator = ({ contributionAmount }) => (
                 <tr className="table-borderless">
                     <td className="p-0">
                         <BorderBottomRadius>
-                            <ContentLoader
-                                height={150}
-                                width={230}
-                                viewBox="0 0 230 150"
-                                speed={2}
-                                backgroundColor="#80869B"
-                                foregroundColor="#ecebeb"
-                            >
+                            <ContentLoader height={150} width={230} viewBox="0 0 230 150" speed={2} backgroundColor="#80869B">
                                 <rect x="0" y="0" rx="0" ry="0" width="230" height="150" />
                             </ContentLoader>
                         </BorderBottomRadius>
@@ -72,14 +58,7 @@ const TableLoadingIndicator = ({ contributionAmount }) => (
                     {times(contributionAmount, (i) => (
                         <td className="p-0" key={i}>
                             <BorderBottomRadius>
-                                <ContentLoader
-                                    height={150}
-                                    width={230}
-                                    viewBox="0 0 230 150"
-                                    speed={2}
-                                    backgroundColor="#f3f3f3"
-                                    foregroundColor="#ecebeb"
-                                >
+                                <ContentLoader height={150} width={230} viewBox="0 0 230 150" speed={2}>
                                     <rect x="0" y="0" rx="0" ry="0" width="230" height="150" />
                                 </ContentLoader>
                             </BorderBottomRadius>

@@ -14,7 +14,7 @@ import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import useViewPaper from 'components/ViewPaper/hooks/useViewPaper';
 import { LICENSE_URL } from 'constants/misc';
 import moment from 'moment';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
 import VisibilitySensor from 'react-visibility-sensor';
@@ -93,15 +93,7 @@ const ViewPaper = () => {
                         {!isLoading && <ShareLinkMarker typeOfLink="paper" title={viewPaper.title} />}
 
                         {isLoading && (
-                            <ContentLoader
-                                height="100%"
-                                width="100%"
-                                viewBox="0 0 100 10"
-                                style={{ width: '100% !important' }}
-                                speed={2}
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-                            >
+                            <ContentLoader height="100%" width="100%" viewBox="0 0 100 10" style={{ width: '100% !important' }} speed={2}>
                                 <rect x="0" y="0" width="80" height="4" />
                                 <rect x="0" y="6" rx="1" ry="1" width="10" height="2" />
                                 <rect x="12" y="6" rx="1" ry="1" width="10" height="2" />

@@ -10,7 +10,7 @@ import THING_TYPES from 'constants/thingTypes';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import { find } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { useDispatch, useSelector } from 'react-redux';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getThing } from 'services/similarity';

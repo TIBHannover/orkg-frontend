@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getResources } from 'services/backend/resources';
 import { CLASSES } from 'constants/graphSettings';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { SuggestionsBox } from 'components/ViewPaper/SmartSuggestions/styled';
 
 const SmartSuggestionsFields = ({ handleFieldSelect, title = null, abstract = null }) => {

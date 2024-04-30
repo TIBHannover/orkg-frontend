@@ -7,7 +7,7 @@ import useFilterConfig from 'components/Filters/hooks/useFilterConfig';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { motion } from 'framer-motion';
 import { FC, Fragment, useState } from 'react';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Button, Card, CardFooter, Col, Container, Label, Row } from 'reactstrap';
 import styled from 'styled-components';
 

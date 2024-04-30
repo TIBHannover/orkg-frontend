@@ -8,7 +8,7 @@ import { CLASSES, RESOURCES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import pluralize from 'pluralize';
 import { useId, useRef, useState } from 'react';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Button } from 'reactstrap';
 import { resourcesUrl } from 'services/backend/resources';
@@ -235,14 +235,7 @@ const ResearchFieldCards = ({
             {isLoading && (
                 <div className="mt-3">
                     <div>
-                        <ContentLoader
-                            height="10%"
-                            width="100%"
-                            viewBox="0 0 100 10"
-                            style={{ width: '100% !important' }}
-                            backgroundColor="#f3f3f3"
-                            foregroundColor="#ecebeb"
-                        >
+                        <ContentLoader height="10%" width="100%" viewBox="0 0 100 10" style={{ width: '100% !important' }}>
                             <rect x="2" y="0" rx="2" ry="2" width="15" height="7" />
                             <rect x="22" y="0" rx="2" ry="2" width="15" height="7" />
                             <rect x="42" y="0" rx="2" ry="2" width="15" height="7" />

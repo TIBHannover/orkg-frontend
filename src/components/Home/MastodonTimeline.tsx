@@ -1,12 +1,12 @@
-import env from 'components/NextJsMigration/env';
 import { faMastodon } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
-import { Button, ListGroup, ListGroupItem } from 'reactstrap';
-import { loadMastodonTimeline, Message } from 'services/mastodon';
+import env from 'components/NextJsMigration/env';
 import { sanitize } from 'isomorphic-dompurify';
 import moment from 'moment';
+import { useCookies } from 'next-client-cookies';
+import { useEffect, useState } from 'react';
+import { Button, ListGroup, ListGroupItem } from 'reactstrap';
+import { Message, loadMastodonTimeline } from 'services/mastodon';
 import styled from 'styled-components';
 
 const COOKIE_NAME = 'loadMastodonTimeline';
@@ -19,13 +19,17 @@ const MastodonContent = styled.p`
 `;
 
 const MastodonTimeline = () => {
-    const [cookies, setCookie] = useCookies([COOKIE_NAME]);
+    const cookies = useCookies();
     const [isLoading, setIsLoading] = useState(true);
     const [messages, setMessages] = useState<Message[]>([]);
 
-    const handleLoadTimeline = () => setCookie(COOKIE_NAME, true, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 604800 });
+    const handleLoadTimeline = () =>
+        cookies.set(COOKIE_NAME, 'true', {
+            path: env('NEXT_PUBLIC_PUBLIC_URL'),
+            expires: 7,
+        });
 
-    const isVisible = cookies[COOKIE_NAME];
+    const isVisible = cookies.get(COOKIE_NAME);
 
     useEffect(() => {
         const loadTimeline = async () => {

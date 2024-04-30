@@ -6,7 +6,7 @@ import ROUTES from 'constants/routes.js';
 import { get, groupBy } from 'lodash';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import { getAboutPageCategories, getAboutPages } from 'services/cms';
 import { AboutPageCategory, HelpArticle } from 'services/cms/types';
@@ -46,7 +46,7 @@ const AboutMenu = (closeMenu: () => void) => {
         <>
             {isLoading && (
                 <DropdownItem disabled>
-                    <ContentLoader height="80" width="100%" viewBox="0 0 120 50" speed={2} backgroundColor="#f3f3f3" foregroundColor="#ecebeb">
+                    <ContentLoader height="80" width="100%" viewBox="0 0 120 50" speed={2}>
                         <rect x="0" y="0" rx="0" ry="0" width="100%" height="20" />
                         <rect x="0" y="30" rx="0" ry="0" width="100%" height="20" />
                     </ContentLoader>

@@ -11,7 +11,7 @@ import { reverse } from 'named-urls';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { toast } from 'react-toastify';
 import { Alert, Button, FormGroup, Input, InputGroup, Label, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { getPaperByDoi } from 'services/backend/papers';
@@ -203,15 +203,7 @@ export default function AddContribution({
                 </FormGroup>
                 <div>
                     {isNextPageLoading && searchPaper && paperResult.length === 0 && (
-                        <ContentLoader
-                            style={{ width: '100% !important' }}
-                            width="100%"
-                            height="100%"
-                            viewBox="0 0 100 20"
-                            speed={2}
-                            backgroundColor="#f3f3f3"
-                            foregroundColor="#ecebeb"
-                        >
+                        <ContentLoader style={{ width: '100% !important' }} width="100%" height="100%" viewBox="0 0 100 20" speed={2}>
                             <rect x="0" y="0" width="100%" height="2" />
                             <rect x="0" y="5" width="100%" height="2" />
                             <rect x="0" y="10" width="100%" height="2" />

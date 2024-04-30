@@ -4,7 +4,7 @@ import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
 import { find, flatten } from 'lodash';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Container, ListGroup } from 'reactstrap';
 import { getResources } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
@@ -106,15 +106,7 @@ const Comparisons = ({ organizationsId }) => {
                         )}
                         {currentPage === 0 && (
                             <div className="text-left">
-                                <ContentLoader
-                                    speed={2}
-                                    width={400}
-                                    height={50}
-                                    viewBox="0 0 400 50"
-                                    style={{ width: '100% !important' }}
-                                    backgroundColor="#f3f3f3"
-                                    foregroundColor="#ecebeb"
-                                >
+                                <ContentLoader speed={2} width={400} height={50} viewBox="0 0 400 50" style={{ width: '100% !important' }}>
                                     <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
                                     <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
                                 </ContentLoader>

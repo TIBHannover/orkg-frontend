@@ -7,7 +7,7 @@ import ROUTES from 'constants/routes';
 import { times } from 'lodash';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Alert, Col, Container, Row } from 'reactstrap';
 import { getHelpCategories } from 'services/cms';
 import { HelpArticle } from 'services/cms/types';
@@ -47,15 +47,7 @@ const HelpCenter = () => {
                     <Row className="mt-5">
                         {times(5, (i) => (
                             <Col key={i} md="6">
-                                <ContentLoader
-                                    speed={2}
-                                    width="100%"
-                                    height={130}
-                                    viewBox="0 0 100% 50"
-                                    style={{ width: '100% !important' }}
-                                    backgroundColor="#f3f3f3"
-                                    foregroundColor="#ecebeb"
-                                >
+                                <ContentLoader speed={2} width="100%" height={130} viewBox="0 0 100% 50" style={{ width: '100% !important' }}>
                                     <rect x="0" y="0" rx="3" ry="3" width="400" height="35" />
                                     <rect x="0" y="40" rx="3" ry="3" width="300" height="15" />
                                     <rect x="0" y="60" rx="3" ry="3" width="200" height="15" />

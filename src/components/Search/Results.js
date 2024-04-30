@@ -1,6 +1,6 @@
 import Link from 'components/NextJsMigration/Link';
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { CLASSES } from 'constants/graphSettings';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -37,15 +37,7 @@ const StyledListGroupItem = styled(ListGroupItem)`
 const Results = (props) => (
     <div>
         {props.loading && props.currentPage === 0 && (
-            <ContentLoader
-                height="100%"
-                width="100%"
-                viewBox="0 0 100 25"
-                style={{ width: '100% !important' }}
-                speed={2}
-                backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
-            >
+            <ContentLoader height="100%" width="100%" viewBox="0 0 100 25" style={{ width: '100% !important' }} speed={2}>
                 <rect x="0" y="0" width="50" height="3" />
                 <rect x="0" y="5" width="100%" height="3" />
                 <rect x="0" y="10" width="100%" height="3" />

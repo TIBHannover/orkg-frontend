@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { Container, Row, Col } from 'reactstrap';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import Results from 'components/Search/Results';
 import Filters from 'components/Search/Filters';
 import { unionBy } from 'lodash';
@@ -33,15 +33,7 @@ export default function Search() {
                     <Col md="8" className="mt-sm-2 mt-md-0">
                         <div className="box rounded p-4">
                             {isLoading() && Object.keys(results).every((v) => results[v] && results[v].length === 0) && (
-                                <ContentLoader
-                                    height="100%"
-                                    width="100%"
-                                    viewBox="0 0 100 25"
-                                    style={{ width: '100% !important' }}
-                                    speed={2}
-                                    backgroundColor="#f3f3f3"
-                                    foregroundColor="#ecebeb"
-                                >
+                                <ContentLoader height="100%" width="100%" viewBox="0 0 100 25" style={{ width: '100% !important' }} speed={2}>
                                     <rect x="0" y="0" width="50" height="3" />
                                     <rect x="0" y="5" width="100%" height="3" />
                                     <rect x="0" y="10" width="100%" height="3" />

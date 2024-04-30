@@ -1,5 +1,5 @@
 import Link from 'components/NextJsMigration/Link';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import useTopChangelog from 'components/LastUpdatesBox/hooks/useTopChangelog';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import moment from 'moment';
@@ -43,15 +43,7 @@ const LastUpdatesBox = ({ researchFieldId, openModal, setOpenModal }) => {
                         ))}
                     {isLoading && (
                         <div className="mt-4 mb-4">
-                            <ContentLoader
-                                speed={2}
-                                width={400}
-                                height={120}
-                                viewBox="0 0 400 120"
-                                style={{ width: '100% !important' }}
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-                            >
+                            <ContentLoader speed={2} width={400} height={120} viewBox="0 0 400 120" style={{ width: '100% !important' }}>
                                 <rect x="30" y="5" rx="3" ry="3" width="350" height="6" />
                                 <rect x="30" y="15" rx="3" ry="3" width="100" height="5" />
                                 <rect x="30" y="35" rx="3" ry="3" width="350" height="6" />

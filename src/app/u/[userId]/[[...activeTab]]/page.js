@@ -15,7 +15,7 @@ import moment from 'moment';
 import { reverse } from 'named-urls';
 import NotFound from 'app/not-found';
 import { useEffect, useState } from 'react';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import Gravatar from 'react-gravatar';
 import { useSelector } from 'react-redux';
 import useParams from 'components/NextJsMigration/useParams';
@@ -193,15 +193,7 @@ const UserProfile = (props) => {
                 )}
                 {isLoadingUserData && (
                     <div className="mt-4 ms-3">
-                        <ContentLoader
-                            speed={2}
-                            width={500}
-                            height={100}
-                            viewBox="0 0 500 100"
-                            style={{ width: '100% !important' }}
-                            backgroundColor="#f3f3f3"
-                            foregroundColor="#ecebeb"
-                        >
+                        <ContentLoader speed={2} width={500} height={100} viewBox="0 0 500 100" style={{ width: '100% !important' }}>
                             <rect x="160" y="8" rx="3" ry="3" width="400" height="20" />
                             <rect x="160" y="50" rx="3" ry="3" width="300" height="20" />
                             <circle cx="50" cy="50" r="50" />

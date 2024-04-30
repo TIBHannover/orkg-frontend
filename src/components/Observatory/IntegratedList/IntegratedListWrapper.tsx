@@ -4,7 +4,7 @@ import IntegratedList from 'components/Observatory/IntegratedList/IntegratedList
 import IntegratedListHeader from 'components/Observatory/IntegratedList/IntegratedListHeader';
 import useObservatoryContent from 'components/Observatory/hooks/useObservatoryContent';
 import { FC } from 'react';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Container, ListGroup } from 'reactstrap';
 
 type IntegratedListWrapperProps = {
@@ -62,15 +62,7 @@ const IntegratedListWrapper: FC<IntegratedListWrapperProps> = ({ id, boxShadow =
                         )}
                         {page === 1 && (
                             <div className="text-left">
-                                <ContentLoader
-                                    speed={2}
-                                    width={400}
-                                    height={50}
-                                    viewBox="0 0 400 50"
-                                    style={{ width: '100% !important' }}
-                                    backgroundColor="#f3f3f3"
-                                    foregroundColor="#ecebeb"
-                                >
+                                <ContentLoader speed={2} width={400} height={50} viewBox="0 0 400 50" style={{ width: '100% !important' }}>
                                     <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
                                     <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
                                 </ContentLoader>

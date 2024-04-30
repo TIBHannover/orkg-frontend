@@ -6,7 +6,7 @@ import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
-import ContentLoader from 'react-content-loader';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Alert, Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
@@ -84,15 +84,7 @@ const DiscussionModal = ({ entityId, toggle, refreshCount }) => {
                 </ul>
 
                 {isLoading && comments.length === 0 && (
-                    <ContentLoader
-                        height="100%"
-                        width="100%"
-                        viewBox="0 0 100 35"
-                        style={{ width: '100% !important' }}
-                        speed={2}
-                        backgroundColor="#f3f3f3"
-                        foregroundColor="#ecebeb"
-                    >
+                    <ContentLoader height="100%" width="100%" viewBox="0 0 100 35" style={{ width: '100% !important' }} speed={2}>
                         <circle cx="3" cy="3" r="2" />
                         <rect x="6" y="0" rx="1" ry="1" width="94" height="10" />
                         <circle cx="3" cy="15" r="2" />
