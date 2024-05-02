@@ -58,14 +58,7 @@ function ResourceUsage({ id }) {
         <div>
             <div className="p-3 pb-0">{pluralize('paper', totalPapers, true)} referring to this resource.</div>
             <hr />
-            <ListPage
-                label="papers"
-                boxShadow={false}
-                hideTitleBar={true}
-                renderListItem={renderListItem}
-                fetchItems={fetchItems}
-                disableSearch={true}
-            />
+            <ListPage label="papers" boxShadow={false} hideTitleBar renderListItem={renderListItem} fetchItems={fetchItems} disableSearch />
             <ComparisonPopup />
         </div>
     );

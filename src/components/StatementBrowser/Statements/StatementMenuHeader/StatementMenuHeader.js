@@ -60,7 +60,7 @@ export default function StatementMenuHeader(props) {
                             appendTo={document.body}
                         >
                             <div className={`${props.enableEdit ? 'px-3' : 'text-muted'} py-1`}>
-                                <Icon fixedWidth={true} className="me-1" icon={!isPreferencesOpen ? faSlidersH : faTimes} /> Preferences
+                                <Icon fixedWidth className="me-1" icon={!isPreferencesOpen ? faSlidersH : faTimes} /> Preferences
                             </div>
                         </Tippy>
                     </Button>

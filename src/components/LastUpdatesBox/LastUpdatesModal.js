@@ -24,11 +24,9 @@ const LastUpdatesBox = ({ researchFieldId, openModal, setOpenModal }) => {
                                 <div className="time">{moment(activity.created_at).fromNow()}</div>
                                 <div className="action">
                                     {activity.profile?.id ? (
-                                        <>
-                                            <Link href={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>
-                                                {activity.profile.display_name}
-                                            </Link>
-                                        </>
+                                        <Link href={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>
+                                            {activity.profile.display_name}
+                                        </Link>
                                     ) : (
                                         <i>Anonymous user</i>
                                     )}{' '}

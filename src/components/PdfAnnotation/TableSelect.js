@@ -84,13 +84,7 @@ const TableSelect = (props) => {
             </TableSelectContainer>
 
             {extractionModal.show && (
-                <ExtractionModal
-                    isOpen={true}
-                    toggle={toggleModel}
-                    region={extractionModal.region}
-                    id={extractionModal.id}
-                    pageNumber={props.pageNumber}
-                />
+                <ExtractionModal isOpen toggle={toggleModel} region={extractionModal.region} id={extractionModal.id} pageNumber={props.pageNumber} />
             )}
         </>
     );

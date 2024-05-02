@@ -30,7 +30,7 @@ const FeaturedMark = ({ featured = false, size = '1x', handleChangeStatus }) => 
                 <StyledIcon
                     onMouseOver={() => setOver(true)}
                     onMouseLeave={() => setOver(false)}
-                    inverse={true}
+                    inverse
                     icon={featured || over ? faStar : faEmptyStar}
                     className={featured || over ? 'text-primary' : 'text-secondary'}
                     size={size}

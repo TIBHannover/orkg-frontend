@@ -180,7 +180,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                     />
                 }
                 appendTo={document.body}
-                interactive={true}
+                interactive
                 trigger="manual"
                 placement="top"
             >
@@ -225,7 +225,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                 menuPortalTarget={document.body}
                                 value={inputValue}
                                 autoLoadOption={!!valueClass}
-                                openMenuOnFocus={true}
+                                openMenuOnFocus
                                 allowCreate
                                 allowCreateDuplicate={!isUniqLabel}
                                 onKeyDown={(e) => {
@@ -268,12 +268,12 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                             valueClass={valueClass}
                             isDisabled={!((!editMode && !valueClass) || (editMode && !valueClass && value._class === ENTITIES.LITERAL))}
                             entity={editMode ? value._class : null}
-                            disableBorderRadiusLeft={true}
+                            disableBorderRadiusLeft
                             disableBorderRadiusRight={false}
                             valueType={inputDataType}
                             setValueType={handleSetValueType}
                             menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
-                            syncBackend={true}
+                            syncBackend
                         />
                     </InputGroup>
                 </span>

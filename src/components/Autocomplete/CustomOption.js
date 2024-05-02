@@ -134,7 +134,7 @@ export default function CustomOption(props) {
                     {props.data.tooltipData && props.data.tooltipData.length > 0 && (
                         <div className="info me-1">
                             <Tippy
-                                interactive={true}
+                                interactive
                                 key="c"
                                 content={
                                     <div className="text-start">
@@ -174,7 +174,7 @@ export default function CustomOption(props) {
                             <Tippy
                                 appendTo={document.body}
                                 onTrigger={onTrigger}
-                                interactive={true}
+                                interactive
                                 key="c"
                                 content={
                                     <div className="text-start">

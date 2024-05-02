@@ -30,13 +30,13 @@ export default class DropDownMapperSelector extends Component {
         this.mapperTypes = ['Select Mapper', 'Number', 'String', 'Date'];
     }
 
-    componentDidUpdate = (prevProps, prevState) => {
+    componentDidUpdate(prevProps, prevState) {
         if (this.state.selectedMapper !== prevState.selectedMapper) {
             if (this.props.callBack) {
                 this.props.callBack();
             }
         }
-    };
+    }
 
     /** Rendering functions * */
     /** render based on propFlag * */

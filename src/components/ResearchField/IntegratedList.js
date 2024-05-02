@@ -73,14 +73,12 @@ const IntegratedList = ({ id, slug, boxShadow = false }) => {
             <Container className="d-md-flex align-items-center mt-4 mb-4">
                 <div className="d-flex flex-md-grow-1 align-items-center">
                     <h1 className="h5 mb-0 me-2">Content</h1>
-                    <>
-                        <SubtitleSeparator />
-                        <SubTitle>
-                            <small className="text-muted text-small mt-1">
-                                {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : <>{`${totalElements} items`}</>}
-                            </small>
-                        </SubTitle>
-                    </>
+                    <SubtitleSeparator />
+                    <SubTitle>
+                        <small className="text-muted text-small mt-1">
+                            {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : <>{`${totalElements} items`}</>}
+                        </small>
+                    </SubTitle>
                 </div>
                 <div
                     className="d-md-flex mt-sm-2  me-md-2 rounded"
@@ -140,7 +138,7 @@ const IntegratedList = ({ id, slug, boxShadow = false }) => {
                 {items.length > 0 && (
                     <ListGroup className={boxShadow ? 'box' : ''}>
                         {items.map((item) => (
-                            <CardFactory showBadge={true} showCurationFlags={true} showAddToComparison={true} key={`item${item.id}`} item={item} />
+                            <CardFactory showBadge showCurationFlags showAddToComparison key={`item${item.id}`} item={item} />
                         ))}
                         {!isLoading && hasNextPage && (
                             <div

@@ -63,7 +63,7 @@ const Contributions = (props) => {
                     <Tabs
                         moreIcon={<Icon size="lg" icon={faAngleDown} />}
                         activeKey={selectedContribution}
-                        destroyInactiveTabPane={true}
+                        destroyInactiveTabPane
                         onChange={onTabChange}
                         items={props.contributions.map((contribution) => ({
                             label: (
@@ -154,12 +154,10 @@ const Contributions = (props) => {
                                         </div>
                                     )}
                                     {isLoadingContributionFailed && (
-                                        <>
-                                            <Alert className="mt-4 mb-5" color="danger">
-                                                {props.contributions.length === 0 && 'This paper has no contributions yet!'}
-                                                {props.contributions.length !== 0 && "Contribution doesn't exist."}
-                                            </Alert>
-                                        </>
+                                        <Alert className="mt-4 mb-5" color="danger">
+                                            {props.contributions.length === 0 && 'This paper has no contributions yet!'}
+                                            {props.contributions.length !== 0 && "Contribution doesn't exist."}
+                                        </Alert>
                                     )}
                                 </div>
                             ),

@@ -47,15 +47,13 @@ function PropertyShape({ data }) {
                     <DescriptionTooltip
                         id={data.path.id}
                         _class={ENTITIES.PREDICATE}
-                        showURL={true}
+                        showURL
                         extraContent={
                             data.path.label?.length > 40 ? (
-                                <>
-                                    <tr>
-                                        <td>Label</td>
-                                        <td>{data.path.label}</td>
-                                    </tr>
-                                </>
+                                <tr>
+                                    <td>Label</td>
+                                    <td>{data.path.label}</td>
+                                </tr>
                             ) : (
                                 ''
                             )
@@ -68,7 +66,7 @@ function PropertyShape({ data }) {
                     [{data.minCount}..{data.maxCount ?? '*'}]
                 </div>
                 {initialType && (
-                    <DescriptionTooltip id={range.id} _class={ENTITIES.CLASS} showPageURL={true} showURL={true}>
+                    <DescriptionTooltip id={range.id} _class={ENTITIES.CLASS} showPageURL showURL>
                         <Circle>{initialType}</Circle>
                     </DescriptionTooltip>
                 )}

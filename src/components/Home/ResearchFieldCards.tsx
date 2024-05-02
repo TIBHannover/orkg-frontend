@@ -161,7 +161,7 @@ const ResearchFieldCards = ({
                             }
                             allowCreate={false}
                             ols={false}
-                            autoLoadOption={true}
+                            autoLoadOption
                             cssClasses="form-control-sm"
                             isDisabled={isLoading}
                             innerRef={rfAutocompleteRef}

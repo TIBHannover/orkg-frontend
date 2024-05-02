@@ -101,10 +101,10 @@ function CreateClassModal({ label: newLabel, uri: newUri, onClose, showParentFie
                                 placeholder="Select a class"
                                 onChange={handleParentClassSelect}
                                 value={parentClass}
-                                autoLoadOption={true}
-                                openMenuOnFocus={true}
+                                autoLoadOption
+                                openMenuOnFocus
                                 allowCreate={false}
-                                copyValueButton={true}
+                                copyValueButton
                                 isClearable
                                 autoFocus={false}
                                 inputId="target-class"

@@ -156,16 +156,16 @@ const Items = ({ showDelete = false, filterClass, filterLabel, filters = {} }) =
                             return <TemplateCard template={resource} key={`pc${resource.id}`} />;
                         }
                         if (filterClass === CLASSES.SMART_REVIEW) {
-                            return <ReviewCard key={resource[0]?.id} review={resource} showBadge={false} showCurationFlags={true} />;
+                            return <ReviewCard key={resource[0]?.id} review={resource} showBadge={false} showCurationFlags />;
                         }
                         if (filterClass === CLASSES.VISUALIZATION) {
-                            return <VisualizationCard visualization={resource} showBadge={false} showCurationFlags={true} key={`pc${resource.id}`} />;
+                            return <VisualizationCard visualization={resource} showBadge={false} showCurationFlags key={`pc${resource.id}`} />;
                         }
                         if (filterClass === CLASSES.LITERATURE_LIST_PUBLISHED) {
-                            return <ListCard key={`pc${resource.id}`} versions={resource} showBadge={false} showCurationFlags={true} />;
+                            return <ListCard key={`pc${resource.id}`} versions={resource} showBadge={false} showCurationFlags />;
                         }
                         if (filterClass === CLASSES.LITERATURE_LIST) {
-                            return <ListCard key={`pc${resource.id}`} list={resource} showBadge={false} showCurationFlags={true} />;
+                            return <ListCard key={`pc${resource.id}`} list={resource} showBadge={false} showCurationFlags />;
                         }
                         return null;
                     })}

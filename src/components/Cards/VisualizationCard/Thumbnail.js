@@ -48,7 +48,7 @@ const Thumbnail = (props) => {
                 <Link href={reverse(ROUTES.VISUALIZATION, { id: props.visualization.id })}>
                     <Tippy content={props.visualization.label}>
                         <ResourceItem key={thumbnail.figureId}>
-                            <GDCVisualizationRenderer disableInteractivity={true} height="50px" width="160px" model={thumbnail} />
+                            <GDCVisualizationRenderer disableInteractivity height="50px" width="160px" model={thumbnail} />
                         </ResourceItem>
                     </Tippy>
                 </Link>

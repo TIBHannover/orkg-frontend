@@ -113,10 +113,10 @@ function ClassDetails() {
                                 )}
                             </h3>
                         ) : (
-                            <EditableHeader id={id} value={label} onChange={handleHeaderChange} entityType={ENTITIES.CLASS} curatorsOnly={true} />
+                            <EditableHeader id={id} value={label} onChange={handleHeaderChange} entityType={ENTITIES.CLASS} curatorsOnly />
                         )}
 
-                        <ItemMetadata item={classObject} showCreatedAt={true} showCreatedBy={true} editMode={isEditMode} />
+                        <ItemMetadata item={classObject} showCreatedAt showCreatedBy editMode={isEditMode} />
                     </Container>
                     <TabsContainer id={id} editMode={isEditMode} classObject={classObject} label={label} key={keyInstances} setLabel={setLabel} />
                     <ImportCSVInstances

@@ -98,7 +98,7 @@ const CellEditor = (props) => {
             <Tippy
                 singleton={source}
                 delay={700}
-                interactive={true}
+                interactive
                 interactiveDebounce={10}
                 interactiveBorder={10}
                 offset={[0, 0]}

@@ -6,8 +6,7 @@ import SectionComparison from 'components/Review/SectionComparison';
 import SectionVisualization from 'components/Review/SectionVisualization';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
-import { groupBy } from 'lodash';
-import uniq from 'lodash.uniq';
+import { groupBy, uniq } from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -171,12 +170,12 @@ const SectionContentLink = (props) => {
             />
             {(props.type === 'resource' || props.type === 'property') && hasValue && (
                 <StatementBrowser
-                    enableEdit={true}
-                    syncBackend={true}
+                    enableEdit
+                    syncBackend
                     openExistingResourcesInDialog={false}
                     initialSubjectId={selectedResource.value}
                     initialSubjectLabel="Main"
-                    newStore={true}
+                    newStore
                     key={statementBrowserKey}
                     rootNodeType={props.type === 'resource' ? 'resource' : 'predicate'}
                 />

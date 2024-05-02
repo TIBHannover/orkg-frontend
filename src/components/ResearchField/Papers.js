@@ -60,55 +60,53 @@ const Papers = ({ id, boxShadow = false, showBreadcrumbs = true }) => {
                     </SubTitle>
                 }
                 buttonGroup={
-                    <>
-                        <Tippy
-                            interactive={true}
-                            trigger="click"
-                            placement="bottom-end"
-                            onCreate={(instance) => setTippy(instance)}
-                            content={
-                                <div className="p-2" style={{ width: '150px' }}>
-                                    <FormGroup>
-                                        <Label for="sortPapers">Sort</Label>
+                    <Tippy
+                        interactive
+                        trigger="click"
+                        placement="bottom-end"
+                        onCreate={(instance) => setTippy(instance)}
+                        content={
+                            <div className="p-2" style={{ width: '150px' }}>
+                                <FormGroup>
+                                    <Label for="sortPapers">Sort</Label>
+                                    <Input
+                                        value={sort}
+                                        onChange={(e) => {
+                                            tippy.hide();
+                                            setSort(e.target.value);
+                                        }}
+                                        bsSize="sm"
+                                        type="select"
+                                        name="sort"
+                                        id="sortPapers"
+                                        disabled={isLoading}
+                                    >
+                                        <option value="combined">Top recent</option>
+                                        <option value={VISIBILITY_FILTERS.ALL_LISTED}>Recently added</option>
+                                        <option value={VISIBILITY_FILTERS.FEATURED}>Featured</option>
+                                        <option value={VISIBILITY_FILTERS.UNLISTED}>Unlisted</option>
+                                    </Input>
+                                </FormGroup>
+                                <FormGroup check>
+                                    <Label check>
                                         <Input
-                                            value={sort}
                                             onChange={(e) => {
                                                 tippy.hide();
-                                                setSort(e.target.value);
+                                                setIncludeSubFields(e.target.checked);
                                             }}
-                                            bsSize="sm"
-                                            type="select"
-                                            name="sort"
-                                            id="sortPapers"
+                                            checked={includeSubFields}
+                                            type="checkbox"
+                                            style={{ marginTop: '0.1rem' }}
                                             disabled={isLoading}
-                                        >
-                                            <option value="combined">Top recent</option>
-                                            <option value={VISIBILITY_FILTERS.ALL_LISTED}>Recently added</option>
-                                            <option value={VISIBILITY_FILTERS.FEATURED}>Featured</option>
-                                            <option value={VISIBILITY_FILTERS.UNLISTED}>Unlisted</option>
-                                        </Input>
-                                    </FormGroup>
-                                    <FormGroup check>
-                                        <Label check>
-                                            <Input
-                                                onChange={(e) => {
-                                                    tippy.hide();
-                                                    setIncludeSubFields(e.target.checked);
-                                                }}
-                                                checked={includeSubFields}
-                                                type="checkbox"
-                                                style={{ marginTop: '0.1rem' }}
-                                                disabled={isLoading}
-                                            />
-                                            Include subfields
-                                        </Label>
-                                    </FormGroup>
-                                </div>
-                            }
-                        >
-                            <SortButton sort={sort} />
-                        </Tippy>
-                    </>
+                                        />
+                                        Include subfields
+                                    </Label>
+                                </FormGroup>
+                            </div>
+                        }
+                    >
+                        <SortButton sort={sort} />
+                    </Tippy>
                 }
             >
                 Papers

@@ -24,7 +24,7 @@ function TabsContainer({ currentUserId, userId }) {
         <Tabs
             className="box rounded"
             getPopupContainer={(trigger) => trigger.parentNode}
-            destroyInactiveTabPane={true}
+            destroyInactiveTabPane
             onChange={onTabChange}
             activeKey={activeTab ?? 'comparisons'}
             items={[

@@ -203,9 +203,7 @@ const Template = () => {
                                     {label}
                                 </h3>
                             ) : (
-                                <>
-                                    <EditableHeader id={id} value={label} onChange={handleChangeLabel} entityType={ENTITIES.RESOURCE} />
-                                </>
+                                <EditableHeader id={id} value={label} onChange={handleChangeLabel} entityType={ENTITIES.RESOURCE} />
                             )}
                             <ItemMetadata
                                 item={{
@@ -215,9 +213,9 @@ const Template = () => {
                                     organization_id: organizationId,
                                     observatory_id: observatoryId,
                                 }}
-                                showCreatedAt={true}
-                                showCreatedBy={true}
-                                showProvenance={true}
+                                showCreatedAt
+                                showCreatedBy
+                                showProvenance
                                 editMode={editMode}
                             />
                         </div>

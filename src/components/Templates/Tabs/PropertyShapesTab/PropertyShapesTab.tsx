@@ -161,15 +161,13 @@ const PropertyShapesTab: FC<{}> = () => {
                     ))}
                 {propertyShapes && propertyShapes.length === 0 && <i>No properties specified.</i>}
                 {isEditMode && (
-                    <>
-                        <AddPropertyView
-                            showAddProperty={showAddProperty}
-                            handlePropertySelect={handleSelectNewProperty}
-                            toggleConfirmNewProperty={toggleConfirmNewProperty}
-                            setShowAddProperty={setShowAddProperty}
-                            key={`p${showAddProperty}`}
-                        />
-                    </>
+                    <AddPropertyView
+                        showAddProperty={showAddProperty}
+                        handlePropertySelect={handleSelectNewProperty}
+                        toggleConfirmNewProperty={toggleConfirmNewProperty}
+                        setShowAddProperty={setShowAddProperty}
+                        key={`p${showAddProperty}`}
+                    />
                 )}
                 <FormGroup className="mt-3">
                     <div>

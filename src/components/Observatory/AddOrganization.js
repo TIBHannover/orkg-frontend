@@ -49,30 +49,28 @@ function AddOrganization(props) {
     };
 
     return (
-        <>
-            <Modal isOpen={props.showDialog} toggle={props.toggle}>
-                <ModalHeader toggle={props.toggle}>Add an organization</ModalHeader>
-                <ModalBody>
-                    <>
-                        <Select
-                            options={organizations}
-                            onChange={(selected) => setSelectedOrganization(selected)}
-                            getOptionValue={({ id }) => id}
-                            getOptionLabel={({ name }) => name}
-                            classNamePrefix="react-select"
-                        />
-                        <SelectGlobalStyle />
-                    </>
-                </ModalBody>
-                <ModalFooter>
-                    <div className="text-align-center mt-2">
-                        <ButtonWithLoading color="primary" isLoading={isLoading} onClick={() => handleSubmit()}>
-                            Save
-                        </ButtonWithLoading>
-                    </div>
-                </ModalFooter>
-            </Modal>
-        </>
+        <Modal isOpen={props.showDialog} toggle={props.toggle}>
+            <ModalHeader toggle={props.toggle}>Add an organization</ModalHeader>
+            <ModalBody>
+                <>
+                    <Select
+                        options={organizations}
+                        onChange={(selected) => setSelectedOrganization(selected)}
+                        getOptionValue={({ id }) => id}
+                        getOptionLabel={({ name }) => name}
+                        classNamePrefix="react-select"
+                    />
+                    <SelectGlobalStyle />
+                </>
+            </ModalBody>
+            <ModalFooter>
+                <div className="text-align-center mt-2">
+                    <ButtonWithLoading color="primary" isLoading={isLoading} onClick={() => handleSubmit()}>
+                        Save
+                    </ButtonWithLoading>
+                </div>
+            </ModalFooter>
+        </Modal>
     );
 }
 

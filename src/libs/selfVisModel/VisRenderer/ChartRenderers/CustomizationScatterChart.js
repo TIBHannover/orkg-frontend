@@ -42,11 +42,11 @@ class CustomizationScatterChart extends Component {
         initializeFromCustomizer(this);
     }
 
-    componentDidUpdate = () => {
+    componentDidUpdate() {
         if (this.state.isInitialized) {
             this.props.createChartVisualization();
         }
-    };
+    }
 
     createValueSelectors = () => createValueSelectors(this);
 

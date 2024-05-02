@@ -165,12 +165,7 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                                     <>
                                         Not defined
                                         <span className="ms-2">
-                                            <StatementActionButton
-                                                title="Editing requires a curator role"
-                                                icon={faPen}
-                                                action={null}
-                                                isDisabled={true}
-                                            />
+                                            <StatementActionButton title="Editing requires a curator role" icon={faPen} action={null} isDisabled />
                                         </span>
                                     </>
                                 )}
@@ -198,9 +193,9 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                     syncBackend={editMode}
                     openExistingResourcesInDialog={false}
                     initialSubjectId={id}
-                    newStore={true}
-                    propertiesAsLinks={true}
-                    resourcesAsLinks={true}
+                    newStore
+                    propertiesAsLinks
+                    resourcesAsLinks
                     keyToKeepStateOnLocationChange={id}
                 />
             )}

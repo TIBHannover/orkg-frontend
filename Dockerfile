@@ -8,10 +8,10 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json ./
-RUN npm install --force
+RUN npm install
 
 # Check https://nextjs.org/docs/messages/sharp-missing-in-production
-RUN npm install sharp --force
+RUN npm install sharp
 
 # Rebuild the source code only when needed
 FROM base AS builder

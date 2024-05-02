@@ -16,7 +16,7 @@ install:
   image: node:lts-buster
   stage: install
   script:
-    - npm install --force
+    - npm install
   artifacts:
     paths:
       - node_modules/

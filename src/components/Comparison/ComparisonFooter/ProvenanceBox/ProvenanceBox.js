@@ -94,7 +94,7 @@ function ProvenanceBox() {
                                 <div className="mb-1">
                                     <i>Added by:</i>
                                 </div>
-                                <UserAvatar userId={createdBy.id} showDisplayName={true} />
+                                <UserAvatar userId={createdBy.id} showDisplayName />
                             </>
                         )}
                         {isEmpty(observatory) && !!user && user.isCurationAllowed && (

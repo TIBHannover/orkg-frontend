@@ -38,7 +38,7 @@ const ContributorsModal = ({ researchFieldId, openModal, setOpenModal, initialSo
                                 <div className="d-flex">
                                     <div className="ps-4 pe-4 pt-2 align-self-center">{index + 1}.</div>
                                     <div>
-                                        <ContributorCard contributor={contributor} showStatsDetails={true} />
+                                        <ContributorCard contributor={contributor} showStatsDetails />
                                     </div>
                                 </div>
                                 {contributors.length - 1 !== index && <hr className="mb-0 mt-3" />}

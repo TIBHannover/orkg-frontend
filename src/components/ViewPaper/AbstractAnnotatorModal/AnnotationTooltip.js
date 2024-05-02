@@ -35,15 +35,15 @@ function AnnotationTooltip(props) {
             <Tippy
                 placement="top"
                 appendTo={document.body}
-                followCursor={true}
+                followCursor
                 plugins={[followCursor]}
-                arrow={true}
+                arrow
                 onHide={() => {
                     if (reactSelectInstance) {
                         reactSelectInstance.current.blur();
                     }
                 }}
-                interactive={true}
+                interactive
                 onCreate={(instance) => (tippyInstance.current = instance)}
                 content={
                     <div style={{ width: '300px' }}>
@@ -63,9 +63,9 @@ function AnnotationTooltip(props) {
                             }}
                             key={(value) => value}
                             isClearable
-                            openMenuOnFocus={true}
-                            autoLoadOption={true}
-                            allowCreate={true}
+                            openMenuOnFocus
+                            autoLoadOption
+                            allowCreate
                             autoFocus={false}
                             innerRef={(instance) => (reactSelectInstance.current = instance)}
                         />

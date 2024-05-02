@@ -20,12 +20,10 @@ const Node = ({ renderedNode, toggleExpandNode, collapsed }) => (
                 <Sphere {...renderedNode} />
             )}
             {((renderedNode.node.data.hasObjectStatements && !renderedNode.node.data.hasFetchedObjectStatements) ||
-                collapsed.includes(renderedNode.id)) && (
-                <Ring opacity={0.4} size={renderedNode.size - 4} color={renderedNode.color} animated={true} />
-            )}
+                collapsed.includes(renderedNode.id)) && <Ring opacity={0.4} size={renderedNode.size - 4} color={renderedNode.color} animated />}
             {renderedNode.node.data.isLoading && (
                 <Html distanceFactor={180} position={[0, 0, 0]} transform>
-                    <Icon icon={faSpinner} spin={true} className="text-white" style={{}} />
+                    <Icon icon={faSpinner} spin className="text-white" style={{}} />
                 </Html>
             )}
         </mesh>

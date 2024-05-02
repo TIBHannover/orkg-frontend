@@ -8,16 +8,14 @@ const AutomaticContributionWarning = (props) => {
         props.onVerifyHandler(props.contribution.id);
     }
     return (
-        <>
-            <Alert color="smart">
-                The information of this contribution are automatically extracted.
-                {props.enableEdit && (
-                    <Button color="smart" size="sm" style={{ float: 'right' }} onClick={handleVerify}>
-                        <Icon icon={faCheck} /> Verify
-                    </Button>
-                )}
-            </Alert>
-        </>
+        <Alert color="smart">
+            The information of this contribution are automatically extracted.
+            {props.enableEdit && (
+                <Button color="smart" size="sm" style={{ float: 'right' }} onClick={handleVerify}>
+                    <Icon icon={faCheck} /> Verify
+                </Button>
+            )}
+        </Alert>
     );
 };
 

@@ -30,7 +30,7 @@ const AddComparison = () => {
                                 frameBorder="0"
                                 src="//av.tib.eu/player/51996"
                                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen={true}
+                                allowFullScreen
                             />
                         </div>
                     </Col>

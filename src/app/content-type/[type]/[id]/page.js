@@ -118,9 +118,9 @@ function ContentType() {
                             syncBackend={isEditMode}
                             openExistingResourcesInDialog={false}
                             initialSubjectId={resourceId}
-                            newStore={true}
-                            propertiesAsLinks={true}
-                            resourcesAsLinks={true}
+                            newStore
+                            propertiesAsLinks
+                            resourcesAsLinks
                             propertySuggestionsComponent={<PropertySuggestions />}
                             keyToKeepStateOnLocationChange={resourceId}
                         />

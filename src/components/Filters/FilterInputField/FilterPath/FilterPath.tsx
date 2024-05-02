@@ -25,7 +25,7 @@ const FilterPath: FC<FilterPathProps> = ({ filter }) => {
         <BreadcrumbStyled className="d-inline">
             <Tippy
                 appendTo={document.body}
-                interactive={true}
+                interactive
                 content={
                     <TippyContentStyled>
                         {!isLoading ? (

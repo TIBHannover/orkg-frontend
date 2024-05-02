@@ -195,25 +195,23 @@ function Publish(props) {
                     )}
                 </Alert>
                 {createdPaperId && dataCiteDoi && (
-                    <>
-                        <FormGroup>
-                            <Label for="doi_link">DOI</Label>
-                            <InputGroup>
-                                <Input id="doi_link" value={`https://doi.org/${dataCiteDoi}`} disabled />
-                                <CopyToClipboard
-                                    text={`https://doi.org/${dataCiteDoi}`}
-                                    onCopy={() => {
-                                        toast.dismiss();
-                                        toast.success('DOI link copied!');
-                                    }}
-                                >
-                                    <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                        <Icon icon={faClipboard} />
-                                    </Button>
-                                </CopyToClipboard>
-                            </InputGroup>
-                        </FormGroup>
-                    </>
+                    <FormGroup>
+                        <Label for="doi_link">DOI</Label>
+                        <InputGroup>
+                            <Input id="doi_link" value={`https://doi.org/${dataCiteDoi}`} disabled />
+                            <CopyToClipboard
+                                text={`https://doi.org/${dataCiteDoi}`}
+                                onCopy={() => {
+                                    toast.dismiss();
+                                    toast.success('DOI link copied!');
+                                }}
+                            >
+                                <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+                                    <Icon icon={faClipboard} />
+                                </Button>
+                            </CopyToClipboard>
+                        </InputGroup>
+                    </FormGroup>
                 )}
                 {!dataCiteDoi && (
                     <>
@@ -221,7 +219,7 @@ function Publish(props) {
                             <Label for="title">
                                 <Tooltip message="Title of the paper">Title</Tooltip>
                             </Label>
-                            <Input type="text" maxLength={MAX_LENGTH_INPUT} name="title" value={`${title} [ORKG]`} disabled={true} id="title" />
+                            <Input type="text" maxLength={MAX_LENGTH_INPUT} name="title" value={`${title} [ORKG]`} disabled id="title" />
                         </FormGroup>
                         <FormGroup>
                             <Label for="description">
@@ -249,7 +247,7 @@ function Publish(props) {
                                     setSubject({ ...i, label: i.value });
                                 }}
                                 value={subject}
-                                autoLoadOption={true}
+                                autoLoadOption
                                 openMenuOnFocus={false}
                                 allowCreate={false}
                                 inputId="research-field"
@@ -261,7 +259,7 @@ function Publish(props) {
                             </Label>
                             {!dataCiteDoi && viewPaper.id && (
                                 <AuthorsInput
-                                    disabled={true}
+                                    disabled
                                     itemLabel="creator"
                                     handler={(_creators) => setCreators(convertAuthorsToOldFormat(_creators) || [])}
                                     value={convertAuthorsToNewFormat(creators)}

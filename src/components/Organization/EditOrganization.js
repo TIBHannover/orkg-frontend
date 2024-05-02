@@ -92,58 +92,56 @@ const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, upda
     };
 
     return (
-        <>
-            <Modal isOpen={showDialog} toggle={toggle}>
-                <ModalHeader toggle={toggle}>Update {typeName}</ModalHeader>
-                <ModalBody>
-                    <>
-                        <FormGroup>
-                            <Label for="organizationLabel">{capitalize(typeName)} name</Label>
-                            <Input
-                                onChange={(e) => {
-                                    setOrganizationLabel(e.target.value);
-                                }}
-                                type="text"
-                                name="label"
-                                id="organizationLabel"
-                                value={organizationLabel}
-                                placeholder={`${typeName} name`}
-                                disabled={isSaving}
-                                maxLength={MAX_LENGTH_INPUT}
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="OrganizationUrl">{capitalize(typeName)} URL</Label>
-                            <Input
-                                onChange={(e) => setOrganizationUrl(e.target.value)}
-                                type="text"
-                                name="url"
-                                id="OrganizationUrl"
-                                value={organizationUrl}
-                                disabled={isSaving}
-                                placeholder="https://www.example.com"
-                                maxLength={MAX_LENGTH_INPUT}
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label>Logo</Label>
-                            <div>
-                                <img src={organizationPreviewSrc} style={{ width: '20%', height: '20%' }} alt="Organization logo" />
-                            </div>
-                            <br />
-                            <Input disabled={isSaving} type="file" onChange={handlePreview} />
-                        </FormGroup>
-                    </>
-                </ModalBody>
-                <ModalFooter>
-                    <div className="text-align-center mt-2">
-                        <ButtonWithLoading color="primary" isLoading={isSaving} onClick={handleSubmit}>
-                            Save
-                        </ButtonWithLoading>
-                    </div>
-                </ModalFooter>
-            </Modal>
-        </>
+        <Modal isOpen={showDialog} toggle={toggle}>
+            <ModalHeader toggle={toggle}>Update {typeName}</ModalHeader>
+            <ModalBody>
+                <>
+                    <FormGroup>
+                        <Label for="organizationLabel">{capitalize(typeName)} name</Label>
+                        <Input
+                            onChange={(e) => {
+                                setOrganizationLabel(e.target.value);
+                            }}
+                            type="text"
+                            name="label"
+                            id="organizationLabel"
+                            value={organizationLabel}
+                            placeholder={`${typeName} name`}
+                            disabled={isSaving}
+                            maxLength={MAX_LENGTH_INPUT}
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="OrganizationUrl">{capitalize(typeName)} URL</Label>
+                        <Input
+                            onChange={(e) => setOrganizationUrl(e.target.value)}
+                            type="text"
+                            name="url"
+                            id="OrganizationUrl"
+                            value={organizationUrl}
+                            disabled={isSaving}
+                            placeholder="https://www.example.com"
+                            maxLength={MAX_LENGTH_INPUT}
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label>Logo</Label>
+                        <div>
+                            <img src={organizationPreviewSrc} style={{ width: '20%', height: '20%' }} alt="Organization logo" />
+                        </div>
+                        <br />
+                        <Input disabled={isSaving} type="file" onChange={handlePreview} />
+                    </FormGroup>
+                </>
+            </ModalBody>
+            <ModalFooter>
+                <div className="text-align-center mt-2">
+                    <ButtonWithLoading color="primary" isLoading={isSaving} onClick={handleSubmit}>
+                        Save
+                    </ButtonWithLoading>
+                </div>
+            </ModalFooter>
+        </Modal>
     );
 };
 

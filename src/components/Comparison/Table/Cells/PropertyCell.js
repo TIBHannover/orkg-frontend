@@ -151,7 +151,7 @@ const PropertyCell = ({ id, label, property, similar, group, grouped = false, gr
             )}
             {showStatementBrowser && (
                 <StatementBrowserDialog
-                    show={true}
+                    show
                     type={ENTITIES.PREDICATE}
                     toggleModal={() => setShowStatementBrowser((v) => !v)}
                     id={property.id}

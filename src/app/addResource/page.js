@@ -151,14 +151,14 @@ const AddResource = () => {
                                     }}
                                     placeholder="Select or type to enter a class"
                                     value={classes}
-                                    autoLoadOption={true}
-                                    openMenuOnFocus={true}
-                                    allowCreate={true}
+                                    autoLoadOption
+                                    openMenuOnFocus
+                                    allowCreate
                                     isClearable
                                     innerRef={classesAutocompleteRef}
                                     isMulti
                                     autoFocus={false}
-                                    ols={true}
+                                    ols
                                     inputId="select-classes"
                                 />
                             )}

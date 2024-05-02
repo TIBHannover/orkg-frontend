@@ -114,8 +114,8 @@ const ResearchProblemHeader = ({ id }) => {
                             toggleModal={() => setEditMode((v) => !v)}
                             id={id}
                             label={researchProblemData.label}
-                            enableEdit={true}
-                            syncBackend={true}
+                            enableEdit
+                            syncBackend
                             onCloseModal={() => loadResearchProblemData(id)}
                         />
                     )}

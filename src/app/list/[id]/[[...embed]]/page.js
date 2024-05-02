@@ -120,13 +120,11 @@ const List = () => {
             <TitleBar
                 titleAddition={
                     publicationDate && (
-                        <>
-                            <Tippy content={`Update message: "${version.description}"`}>
-                                <SubTitle className=" mt-1">
-                                    Published on <time dateTime={version?.date}>{publicationDate}</time> - Version {versionNumber}
-                                </SubTitle>
-                            </Tippy>
-                        </>
+                        <Tippy content={`Update message: "${version.description}"`}>
+                            <SubTitle className=" mt-1">
+                                Published on <time dateTime={version?.date}>{publicationDate}</time> - Version {versionNumber}
+                            </SubTitle>
+                        </Tippy>
                     )
                 }
                 buttonGroup={

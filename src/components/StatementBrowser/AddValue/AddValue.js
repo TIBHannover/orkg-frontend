@@ -34,7 +34,7 @@ const AddValue = ({ isDisabled = false, propertyId, resourceId, syncBackend }) =
                     id={dialogResourceId}
                     label={dialogResourceLabel}
                     newStore={false}
-                    enableEdit={true}
+                    enableEdit
                 />
             )}
             <ValueItemStyle className={showAddValue ? 'editingLabel' : ''}>

@@ -121,7 +121,7 @@ const ViewList = ({ isEmbedded }) => {
                                                         paper={convertPaperToNewFormat(contentType)}
                                                         showAddToComparison={!isEmbedded}
                                                         linkTarget="_blank"
-                                                        showContributionCount={true}
+                                                        showContributionCount
                                                         route={route}
                                                     />
                                                 </ListGroupItem>

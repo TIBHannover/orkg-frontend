@@ -1,7 +1,6 @@
+import RelatedFigureModal from 'components/Comparison/ComparisonCarousel/RelatedResources/RelatedFigureModal/RelatedFigureModal';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import Lightbox from 'react-image-lightbox';
-import 'react-image-lightbox/style.css';
 import { Card, CardImg } from 'reactstrap';
 import { createGlobalStyle } from 'styled-components';
 
@@ -17,19 +16,11 @@ const RelatedFigure = ({ src = '', title = '', description = '' }) => {
     return (
         <div className="w-100 mx-1">
             <GlobalStyle />
-            <Card className="overflow-hidden" style={{ cursor: 'pointer' }} onClick={() => setIsOpen((v) => !v)}>
+            <Card className="overflow-hidden" style={{ cursor: 'pointer' }} onClick={() => setIsOpen(true)}>
                 <CardImg top width="100%" height="120px" src={src} alt={`Thumbnail: ${title}`} />
             </Card>
 
-            {isOpen && (
-                <Lightbox
-                    mainSrc={src}
-                    imageTitle={title}
-                    imageCaption={description}
-                    onCloseRequest={() => setIsOpen(false)}
-                    reactModalStyle={{ overlay: { zIndex: 1050 } }}
-                />
-            )}
+            {isOpen && <RelatedFigureModal toggle={() => setIsOpen((v) => !v)} src={src} title={title} description={description} />}
         </div>
     );
 };

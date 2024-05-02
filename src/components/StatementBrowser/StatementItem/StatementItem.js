@@ -82,13 +82,7 @@ const StatementItem = forwardRef(({ resourceId = null, showValueHelp = false, id
                                         />
                                     )}
                                     {property.isSaving && (
-                                        <StatementActionButton
-                                            isDisabled={true}
-                                            title="Changing property"
-                                            icon={faSpinner}
-                                            iconSpin={true}
-                                            action={() => null}
-                                        />
+                                        <StatementActionButton isDisabled title="Changing property" icon={faSpinner} iconSpin action={() => null} />
                                     )}
 
                                     {!property.isDeleting && (
@@ -100,7 +94,7 @@ const StatementItem = forwardRef(({ resourceId = null, showValueHelp = false, id
                                                     : "This property can not be deleted because it's required by the template"
                                             }
                                             icon={faTrash}
-                                            requireConfirmation={true}
+                                            requireConfirmation
                                             confirmationMessage="Are you sure to delete?"
                                             confirmationButtons={[
                                                 {
@@ -119,13 +113,7 @@ const StatementItem = forwardRef(({ resourceId = null, showValueHelp = false, id
                                         />
                                     )}
                                     {property.isDeleting && (
-                                        <StatementActionButton
-                                            isDisabled={true}
-                                            title="Deleting property"
-                                            icon={faSpinner}
-                                            iconSpin={true}
-                                            action={() => null}
-                                        />
+                                        <StatementActionButton isDisabled title="Deleting property" icon={faSpinner} iconSpin action={() => null} />
                                     )}
                                 </div>
                             )}

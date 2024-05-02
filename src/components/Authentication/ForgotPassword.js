@@ -27,33 +27,31 @@ class ForgotPassword extends Component {
 
     render() {
         return (
-            <>
-                <Form className="ps-3 pe-3 pt-2" onSubmit={(e) => e.preventDefault()}>
-                    <Alert color="info">If you forgot your password, you can reset it via your email address</Alert>
-                    <FormGroup>
-                        <Label for="Email">Email address</Label>
-                        <Input
-                            onChange={this.handleInputChange}
-                            value={this.state.email}
-                            type="email"
-                            name="email"
-                            id="Email"
-                            placeholder="Email address"
-                        />
-                    </FormGroup>
-                    <Button
-                        onClick={() => {
-                            this.resetPasswordPassword();
-                        }}
-                        color="primary"
-                        className="mt-4 mb-2"
-                        block
-                        type="submit"
-                    >
-                        Reset password
-                    </Button>
-                </Form>
-            </>
+            <Form className="ps-3 pe-3 pt-2" onSubmit={(e) => e.preventDefault()}>
+                <Alert color="info">If you forgot your password, you can reset it via your email address</Alert>
+                <FormGroup>
+                    <Label for="Email">Email address</Label>
+                    <Input
+                        onChange={this.handleInputChange}
+                        value={this.state.email}
+                        type="email"
+                        name="email"
+                        id="Email"
+                        placeholder="Email address"
+                    />
+                </FormGroup>
+                <Button
+                    onClick={() => {
+                        this.resetPasswordPassword();
+                    }}
+                    color="primary"
+                    className="mt-4 mb-2"
+                    block
+                    type="submit"
+                >
+                    Reset password
+                </Button>
+            </Form>
         );
     }
 }

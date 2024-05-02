@@ -24,7 +24,7 @@ const MarkUnlisted = ({ unlisted = false, size = '1x', handleChangeStatus }) => 
 
     return (
         <Tippy
-            interactive={true}
+            interactive
             content={
                 isCurationAllowed ? (
                     buttonTooltip
@@ -50,7 +50,7 @@ const MarkUnlisted = ({ unlisted = false, size = '1x', handleChangeStatus }) => 
                     $isButton={isCurationAllowed}
                     onMouseOver={() => setOver(true)}
                     onMouseLeave={() => setOver(false)}
-                    inverse={true}
+                    inverse
                     icon={unlisted || over ? faEyeSlash : faEmptyEyeSlash}
                     className={unlisted || over ? 'text-primary' : 'text-secondary'}
                     size={size}

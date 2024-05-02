@@ -140,11 +140,9 @@ const Templates = () => {
                         {totalElements === 0 && isLoadingTemplates ? <Icon icon={faSpinner} spin /> : totalElements}{' '}
                         {isFilterApplied ? 'items found by applying the filter' : 'items'}
                         {isFilterApplied && (
-                            <>
-                                <Button onClick={resetFilters} className="ms-1 ps-2 pe-2" size="sm">
-                                    Reset
-                                </Button>
-                            </>
+                            <Button onClick={resetFilters} className="ms-1 ps-2 pe-2" size="sm">
+                                Reset
+                            </Button>
                         )}
                     </div>
                 }

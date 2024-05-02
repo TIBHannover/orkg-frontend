@@ -68,9 +68,9 @@ const NumberInputField: FC<NumberInputFieldProps> = ({ filter, updateValue }) =>
                     updateValue(selected.map((v: { label: string; value: string; __isNew__?: boolean }) => convertString2FilterConfigValue(v)));
                 }}
                 classNamePrefix="react-select"
-                isClearable={true}
-                isSearchable={true}
-                isMulti={true}
+                isClearable
+                isSearchable
+                isMulti
                 value={values.map((v) => convertFilterConfigValue2String(v))}
                 noOptionsMessage={noOptionsMessage}
                 formatCreateLabel={formatCreateLabel}

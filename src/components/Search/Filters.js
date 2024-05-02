@@ -51,7 +51,7 @@ const Filters = () => {
                         <Input type="checkbox" id="createdBy" onChange={(e) => setCreatedBy(createdBy ? null : user.id)} checked={!!createdBy} />
                         <Label check for="createdBy" className="mb-0">
                             <span>
-                                Content created by <UserAvatar userId={createdBy || user.id} showDisplayName={true} />
+                                Content created by <UserAvatar userId={createdBy || user.id} showDisplayName />
                             </span>
                         </Label>
                     </FormGroup>
@@ -95,12 +95,12 @@ const Filters = () => {
                 }}
                 placeholder="Select a filter"
                 value={selectedFilters.filter((sf) => !DEFAULT_FILTERS.map((df) => df.id).includes(sf.id))}
-                autoLoadOption={true}
-                openMenuOnFocus={true}
+                autoLoadOption
+                openMenuOnFocus
                 allowCreate={false}
                 ols={false}
                 isClearable
-                isMulti={true}
+                isMulti
                 autoFocus={false}
                 isLoading={isLoadingFilterClasses}
                 inputId="other-filters"

@@ -152,7 +152,7 @@ const ResearchFieldSelector = ({
                 return fields;
             }
 
-            return await getFieldsByIds(childrenIds, fields);
+            return getFieldsByIds(childrenIds, fields);
         },
         [getFieldsByIds],
     );
@@ -246,7 +246,7 @@ const ResearchFieldSelector = ({
                     value={selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN ? { id: selectedResearchField, label: researchFieldLabel } : null}
                     allowCreate={false}
                     ols={false}
-                    autoLoadOption={true}
+                    autoLoadOption
                 />
             </div>
 

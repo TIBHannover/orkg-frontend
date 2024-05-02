@@ -12,11 +12,11 @@ class AbstractChartRenderer extends Component {
         };
     }
 
-    componentDidUpdate = (prevProps) => {
+    componentDidUpdate(prevProps) {
         if (prevProps.visualizationWidth !== this.props.visualizationWidth || prevProps.visualizationHeight !== this.props.visualizationHeight) {
             this.setState({ fakeControls: [] });
         }
-    };
+    }
 
     createRenderingData = () => {
         const sharedCustomizationState = this.selfVisModel.__sharedStateObject;

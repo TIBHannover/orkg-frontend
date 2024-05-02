@@ -241,8 +241,8 @@ function Benchmark() {
                             toggleModal={() => setEditMode((v) => !v)}
                             id={datasetId}
                             label={resourceData.label}
-                            enableEdit={true}
-                            syncBackend={true}
+                            enableEdit
+                            syncBackend
                             onCloseModal={() => loadResourceData(datasetId)}
                         />
                     )}

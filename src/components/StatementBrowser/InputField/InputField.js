@@ -43,39 +43,35 @@ export default function InputField(props) {
             />
         ),
         boolean: (
-            <>
-                <Input
-                    onChange={(e, value) => props.setInputValue(e ? e.target.value : value)}
-                    value={props.inputValue}
-                    innerRef={props.literalInputRef}
-                    type="select"
-                    name="literalValue"
-                    bsSize="sm"
-                    className="flex-grow-1 d-flex"
-                >
-                    <option value="true">True</option>
-                    <option value="false">False</option>
-                </Input>
-            </>
+            <Input
+                onChange={(e, value) => props.setInputValue(e ? e.target.value : value)}
+                value={props.inputValue}
+                innerRef={props.literalInputRef}
+                type="select"
+                name="literalValue"
+                bsSize="sm"
+                className="flex-grow-1 d-flex"
+            >
+                <option value="true">True</option>
+                <option value="false">False</option>
+            </Input>
         ),
         empty: <Input value="Value not reported in paper" type="text" bsSize="sm" className="flex-grow-1 d-flex" disabled />,
         default: (
-            <>
-                <Input
-                    placeholder={props.placeholder ? props.placeholder : 'Enter a value'}
-                    name="literalValue"
-                    type={inputFormType}
-                    bsSize="sm"
-                    value={props.inputValue}
-                    onChange={(e, value) => props.setInputValue(e ? e.target.value : value)}
-                    innerRef={props.literalInputRef}
-                    invalid={!props.isValid}
-                    onKeyDown={props.onKeyDown}
-                    className="flex-grow d-flex"
-                    onBlur={props.onBlur}
-                    autoFocus
-                />
-            </>
+            <Input
+                placeholder={props.placeholder ? props.placeholder : 'Enter a value'}
+                name="literalValue"
+                type={inputFormType}
+                bsSize="sm"
+                value={props.inputValue}
+                onChange={(e, value) => props.setInputValue(e ? e.target.value : value)}
+                innerRef={props.literalInputRef}
+                invalid={!props.isValid}
+                onKeyDown={props.onKeyDown}
+                className="flex-grow d-flex"
+                onBlur={props.onBlur}
+                autoFocus
+            />
         ),
     };
 

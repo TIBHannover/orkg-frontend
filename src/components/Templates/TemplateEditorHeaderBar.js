@@ -45,7 +45,7 @@ const TemplateEditorHeaderBar = () => {
     const { id } = useParams();
 
     return (
-        <AnimationContainer in={true} appear={true} classNames="fade" timeout={500}>
+        <AnimationContainer in appear classNames="fade" timeout={500}>
             <PaperHeaderBarContainer>
                 <Container className="d-flex align-items-center py-2">
                     {isEditMode && <Title>{id ? 'Edit mode' : 'Create template'}</Title>}

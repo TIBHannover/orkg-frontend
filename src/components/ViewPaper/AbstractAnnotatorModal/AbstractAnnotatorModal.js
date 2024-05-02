@@ -314,11 +314,9 @@ function AbstractAnnotatorModal({ toggle }) {
             </ModalBody>
             <ModalFooter>
                 {abstractDialogView === 'input' && (
-                    <>
-                        <Button color="primary" className="float-end" onClick={handleChangeAbstract}>
-                            Annotate Abstract
-                        </Button>
-                    </>
+                    <Button color="primary" className="float-end" onClick={handleChangeAbstract}>
+                        Annotate Abstract
+                    </Button>
                 )}
                 {abstractDialogView === 'list' ? (
                     <>

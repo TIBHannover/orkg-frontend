@@ -153,13 +153,13 @@ const TemplatesModal = (props) => {
                                             }}
                                             value={targetFilter}
                                             key={selectedFilter.id}
-                                            autoLoadOption={true}
+                                            autoLoadOption
                                             openMenuOnFocus={false}
                                             allowCreate={false}
                                             ols={false}
                                             cacheOptions={false}
                                             inputId={selectedFilter.id}
-                                            isClearable={true}
+                                            isClearable
                                         />
                                     </ConditionalWrapper>
                                 )}
@@ -205,7 +205,7 @@ const TemplatesModal = (props) => {
                                             label={template.label}
                                             resourceId={selectedResource}
                                             syncBackend={props.syncBackend}
-                                            isSmart={true}
+                                            isSmart
                                         />
                                     ))}
                                 </div>

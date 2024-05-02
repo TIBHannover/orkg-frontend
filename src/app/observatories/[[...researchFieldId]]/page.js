@@ -76,7 +76,7 @@ const Observatories = () => {
             <Container className="box rounded p-4 clearfix">
                 {researchFields?.length > 0 && (
                     <Tabs
-                        destroyInactiveTabPane={true}
+                        destroyInactiveTabPane
                         onChange={onTabChange}
                         activeKey={researchFieldId ?? 'all'}
                         items={[

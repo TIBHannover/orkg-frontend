@@ -65,8 +65,8 @@ const AuthorHeader = ({ authorId }) => {
                             toggleModal={() => setEditMode((v) => !v)}
                             id={author.id}
                             label={author.label}
-                            enableEdit={true}
-                            syncBackend={true}
+                            enableEdit
+                            syncBackend
                             onCloseModal={() => loadAuthorData()}
                         />
                     )}

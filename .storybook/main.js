@@ -17,16 +17,10 @@
 // }
 
 module.exports = {
-    stories: ['./**/*.stories.mdx', '../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-    addons: [
-        '@storybook/addon-links',
-        '@storybook/addon-essentials',
-        '@storybook/addon-interactions',
-        '@storybook/preset-create-react-app',
-        '@storybook/addon-mdx-gfm',
-    ],
+    stories: ['./**/*.mdx', '../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
+    addons: ['@storybook/addon-links', '@storybook/addon-essentials', '@storybook/addon-interactions', '@storybook/addon-mdx-gfm'],
     framework: {
-        name: '@storybook/react-webpack5',
+        name: '@storybook/nextjs',
         options: {},
     },
     core: {
@@ -52,6 +46,7 @@ module.exports = {
             alias: {
                 ...(baseConfig.resolve?.alias ?? {}),
                 '@opentelemetry/api': 'next/dist/compiled/@opentelemetry/api',
+                '@testing-library/react': '@storybook/test', // see: https://github.com/vercel/next.js/issues/55620#issuecomment-1758276652
             },
         };
         return baseConfig;

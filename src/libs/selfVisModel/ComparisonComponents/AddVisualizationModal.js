@@ -142,71 +142,70 @@ function AddVisualizationModal() {
     };
 
     return (
-        <>
-            <Modal
-                isOpen={isOpenVisualizationModal}
-                toggle={() => dispatch(setIsOpenVisualizationModal(!isOpenVisualizationModal))}
-                size="lg"
-                onOpened={() => {
-                    onLoadModal();
-                    setLoadedModel(true);
-                }}
-                style={{ maxWidth: '90%', marginBottom: 0 }}
-            >
-                <ModalHeader toggle={() => dispatch(setIsOpenVisualizationModal(!isOpenVisualizationModal))}>
-                    Create comparison visualization
-                    <Button
-                        outline
-                        color="secondary"
-                        size="sm"
-                        className="ms-3"
-                        onClick={() => {
-                            setShowVideoModal(!showVideoModal);
-                        }}
-                    >
-                        How to use <Icon className="ms-1" icon={faQuestionCircle} />
-                    </Button>
-                </ModalHeader>
-                <ModalBody id="selfVisServiceModalBody">
-                    <TabButtons>
-                        {/*  TAB BUTTONS */}
-                        <TabButton active={processStep === 0} onClick={() => setProcessStep(0)}>
-                            Select
-                        </TabButton>
-                        <TabButton active={processStep === 1} onClick={() => setProcessStep(1)}>
-                            Map &amp; edit
-                        </TabButton>
-                        <TabButton active={processStep === 2} onClick={() => setProcessStep(2)}>
-                            Visualize
-                        </TabButton>
-                    </TabButtons>
-                    {/*  renders different views based on the current step in the process */}
-                    {processStep === 0 && <CellSelector isLoading={!loadedModel} height={windowHeight - 50} />}
-                    {processStep === 1 && <CellEditor isLoading={!loadedModel} height={windowHeight - 50} />}
-                    {processStep === 2 && (
-                        <VisualizationWidget
-                            isLoading={!loadedModel}
-                            height={windowHeight - 10}
-                            width={windowWidth}
-                            comparePropsWithActualWidth={compareWidth}
-                        />
-                    )}
-
-                    <HelpVideoModal showDialog={showVideoModal} toggle={() => setShowVideoModal(!showVideoModal)} />
-
-                    <PublishVisualization
-                        showDialog={showPublishVisualizationDialog}
-                        toggle={() => setShowPublishVisualizationDialog(!showPublishVisualizationDialog)}
-                        closeAllAndReloadVisualizations={() => {
-                            setShowPublishVisualizationDialog(!showPublishVisualizationDialog);
-                            dispatch(setIsOpenVisualizationModal(!isOpenVisualizationModal));
-                            loadVisualizations();
-                        }}
-                        comparisonId={comparisonResource.id}
+        <Modal
+            isOpen={isOpenVisualizationModal}
+            toggle={() => dispatch(setIsOpenVisualizationModal(!isOpenVisualizationModal))}
+            size="lg"
+            onOpened={() => {
+                onLoadModal();
+                setLoadedModel(true);
+            }}
+            style={{ maxWidth: '90%', marginBottom: 0 }}
+        >
+            <ModalHeader toggle={() => dispatch(setIsOpenVisualizationModal(!isOpenVisualizationModal))}>
+                Create comparison visualization
+                <Button
+                    outline
+                    color="secondary"
+                    size="sm"
+                    className="ms-3"
+                    onClick={() => {
+                        setShowVideoModal(!showVideoModal);
+                    }}
+                >
+                    How to use <Icon className="ms-1" icon={faQuestionCircle} />
+                </Button>
+            </ModalHeader>
+            <ModalBody id="selfVisServiceModalBody">
+                <TabButtons>
+                    {/*  TAB BUTTONS */}
+                    <TabButton active={processStep === 0} onClick={() => setProcessStep(0)}>
+                        Select
+                    </TabButton>
+                    <TabButton active={processStep === 1} onClick={() => setProcessStep(1)}>
+                        Map &amp; edit
+                    </TabButton>
+                    <TabButton active={processStep === 2} onClick={() => setProcessStep(2)}>
+                        Visualize
+                    </TabButton>
+                </TabButtons>
+                {/*  renders different views based on the current step in the process */}
+                {processStep === 0 && <CellSelector isLoading={!loadedModel} height={windowHeight - 50} />}
+                {processStep === 1 && <CellEditor isLoading={!loadedModel} height={windowHeight - 50} />}
+                {processStep === 2 && (
+                    <VisualizationWidget
+                        isLoading={!loadedModel}
+                        height={windowHeight - 10}
+                        width={windowWidth}
+                        comparePropsWithActualWidth={compareWidth}
                     />
-                </ModalBody>
-                <ModalFooter className="p-2">
-                    {/*
+                )}
+
+                <HelpVideoModal showDialog={showVideoModal} toggle={() => setShowVideoModal(!showVideoModal)} />
+
+                <PublishVisualization
+                    showDialog={showPublishVisualizationDialog}
+                    toggle={() => setShowPublishVisualizationDialog(!showPublishVisualizationDialog)}
+                    closeAllAndReloadVisualizations={() => {
+                        setShowPublishVisualizationDialog(!showPublishVisualizationDialog);
+                        dispatch(setIsOpenVisualizationModal(!isOpenVisualizationModal));
+                        loadVisualizations();
+                    }}
+                    comparisonId={comparisonResource.id}
+                />
+            </ModalBody>
+            <ModalFooter className="p-2">
+                {/*
                     <Button
                         color="primary"
                         className="me-2"
@@ -219,49 +218,46 @@ function AddVisualizationModal() {
                     </Button>
                     */}
 
-                    {processStep === 1 && (
-                        <div style={{ position: 'absolute', left: 0 }}>Please select at least one mapper at the top of a column.</div>
+                {processStep === 1 && <div style={{ position: 'absolute', left: 0 }}>Please select at least one mapper at the top of a column.</div>}
+                <div className="d-flex justify-content-end">
+                    {processStep > 0 && (
+                        <Button color="light" className="me-2" onClick={() => setProcessStep(processStep - 1)}>
+                            Previous
+                        </Button>
                     )}
-                    <div className="d-flex justify-content-end">
-                        {processStep > 0 && (
-                            <Button color="light" className="me-2" onClick={() => setProcessStep(processStep - 1)}>
-                                Previous
-                            </Button>
-                        )}
-                        {processStep <= 1 && (
-                            <Button color="primary" className="me-2" onClick={() => setProcessStep(processStep + 1)}>
-                                Next
-                            </Button>
-                        )}
-                        {processStep === 2 && (
-                            <>
-                                {comparisonResource.id && (
-                                    <RequireAuthentication
-                                        component={Button}
-                                        color="primary"
-                                        className="me-2"
-                                        onClick={() => {
-                                            setShowPublishVisualizationDialog(!showPublishVisualizationDialog);
-                                        }}
-                                    >
-                                        Publish
-                                    </RequireAuthentication>
-                                )}
+                    {processStep <= 1 && (
+                        <Button color="primary" className="me-2" onClick={() => setProcessStep(processStep + 1)}>
+                            Next
+                        </Button>
+                    )}
+                    {processStep === 2 && (
+                        <>
+                            {comparisonResource.id && (
+                                <RequireAuthentication
+                                    component={Button}
+                                    color="primary"
+                                    className="me-2"
+                                    onClick={() => {
+                                        setShowPublishVisualizationDialog(!showPublishVisualizationDialog);
+                                    }}
+                                >
+                                    Publish
+                                </RequireAuthentication>
+                            )}
 
-                                {!comparisonResource.id && (
-                                    <Tippy
-                                        hideOnClick={false}
-                                        content="Cannot publish visualization to a unpublished comparison. You must publish the comparison first."
-                                    >
-                                        <span className="btn btn-primary disabled">Publish</span>
-                                    </Tippy>
-                                )}
-                            </>
-                        )}
-                    </div>
-                </ModalFooter>
-            </Modal>
-        </>
+                            {!comparisonResource.id && (
+                                <Tippy
+                                    hideOnClick={false}
+                                    content="Cannot publish visualization to a unpublished comparison. You must publish the comparison first."
+                                >
+                                    <span className="btn btn-primary disabled">Publish</span>
+                                </Tippy>
+                            )}
+                        </>
+                    )}
+                </div>
+            </ModalFooter>
+        </Modal>
     );
 }
 

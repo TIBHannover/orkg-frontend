@@ -54,11 +54,9 @@ const Diagrams = () => {
     };
 
     const buttons = (
-        <>
-            <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" href={ROUTES.NEW_DIAGRAM}>
-                <Icon icon={faPlus} /> Create diagram
-            </RequireAuthentication>
-        </>
+        <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" href={ROUTES.NEW_DIAGRAM}>
+            <Icon icon={faPlus} /> Create diagram
+        </RequireAuthentication>
     );
 
     return <ListPage label="diagrams" resourceClass={CLASSES.DIAGRAM} renderListItem={renderListItem} fetchItems={fetchItems} buttons={buttons} />;

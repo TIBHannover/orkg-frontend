@@ -117,7 +117,7 @@ function AutocompleteObservatory(props) {
                     getOptionValue={({ id }) => id}
                     getOptionLabel={({ name }) => name}
                     inputId="select-observatory"
-                    isClearable={true}
+                    isClearable
                     classNamePrefix="react-select"
                 />
             </FormGroup>
@@ -131,7 +131,7 @@ function AutocompleteObservatory(props) {
                     getOptionValue={({ id }) => id}
                     getOptionLabel={({ name }) => name}
                     inputId="select-organization"
-                    isClearable={true}
+                    isClearable
                     classNamePrefix="react-select"
                 />
             </FormGroup>

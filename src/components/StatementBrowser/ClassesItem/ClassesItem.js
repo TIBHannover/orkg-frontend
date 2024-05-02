@@ -169,20 +169,20 @@ const ClassesItem = ({ enableEdit = false, syncBackend = false }) => {
                                             }}
                                             placeholder="Specify the classes of the resource"
                                             value={classes}
-                                            autoLoadOption={true}
-                                            openMenuOnFocus={true}
-                                            allowCreate={true}
+                                            autoLoadOption
+                                            openMenuOnFocus
+                                            allowCreate
                                             innerRef={classesAutocompleteRef}
                                             isMulti
                                             autoFocus={false}
-                                            ols={true}
+                                            ols
                                             isDisabled={isSaving}
                                             cssClasses="form-control-sm"
                                             inputId="classes-autocomplete"
                                         />
 
                                         <Button onClick={() => setEditMode(false)} disabled={isSaving}>
-                                            {!isSaving ? 'Done' : <Icon icon={faSpinner} spin={true} />}
+                                            {!isSaving ? 'Done' : <Icon icon={faSpinner} spin />}
                                         </Button>
                                     </InputGroup>
                                 </div>

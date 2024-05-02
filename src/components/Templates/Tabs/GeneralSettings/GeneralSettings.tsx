@@ -95,11 +95,11 @@ const GeneralSettings: FC<{}> = () => {
                     placeholder={isEditMode ? 'Select or type to enter a class' : 'No Classes'}
                     onChange={handleClassSelect}
                     value={targetClass}
-                    autoLoadOption={true}
-                    openMenuOnFocus={true}
-                    allowCreate={true}
+                    autoLoadOption
+                    openMenuOnFocus
+                    allowCreate
                     isDisabled={!isEditMode}
-                    copyValueButton={true}
+                    copyValueButton
                     isClearable={false}
                     innerRef={classAutocompleteRef}
                     autoFocus={false}
@@ -123,85 +123,83 @@ const GeneralSettings: FC<{}> = () => {
                     {description?.length}/{MAX_DESCRIPTION_LENGTH}
                 </div>
             </FormGroup>
-            <>
-                <fieldset className="scheduler-border p-3">
-                    <legend className="mt-3">Template use cases</legend>
-                    <p>
-                        <small className="text-muted">
-                            These fields are optional, the property is used to link the contribution resource to the template instance. The research
-                            fields/problems are used to suggest this template in the relevant papers.
-                        </small>
-                    </p>
-                    <FormGroup className="mb-4">
-                        <Label for="template-property">
-                            Property <span className="text-muted fst-italic">(optional)</span>
-                        </Label>
-                        <AutoComplete
-                            entityType={ENTITIES.PREDICATE}
-                            placeholder={isEditMode ? 'Select or type to enter a property' : 'No Property'}
-                            onChange={handlePropertySelect}
-                            value={predicate}
-                            autoLoadOption={true}
-                            openMenuOnFocus={true}
-                            allowCreate={true}
-                            isDisabled={!isEditMode}
-                            autoFocus={false}
-                            isClearable
-                            innerRef={predicateAutocompleteRef}
-                            inputId="template-property"
-                        />
-                        {isEditMode && (
-                            <FormText>
-                                Specify the property of this template. This property is used to link the contribution to the template instance.
-                            </FormText>
-                        )}
-                    </FormGroup>
-                    <FormGroup className="mb-4">
-                        <Label for="template-field">
-                            Research fields <span className="text-muted fst-italic">(optional)</span>
-                        </Label>
-                        <AutoComplete
-                            entityType={ENTITIES.RESOURCE}
-                            optionsClass={CLASSES.RESEARCH_FIELD}
-                            placeholder={isEditMode ? 'Select or type to enter a research field' : 'No research fields'}
-                            onChange={handleResearchFieldSelect}
-                            value={researchFields}
-                            autoLoadOption={true}
-                            openMenuOnFocus={true}
-                            autoFocus={false}
-                            allowCreate={false}
-                            isDisabled={!isEditMode}
-                            isClearable
-                            isMulti
-                            inputId="template-field"
-                            ols={false}
-                        />
-                        {isEditMode && <FormText>Specify the research fields that uses this template.</FormText>}
-                    </FormGroup>
-                    <FormGroup className="mb-4">
-                        <Label for="template-problems">
-                            Research problems <span className="text-muted fst-italic">(optional)</span>
-                        </Label>
-                        <AutoComplete
-                            entityType={ENTITIES.RESOURCE}
-                            optionsClass={CLASSES.PROBLEM}
-                            placeholder={isEditMode ? 'Select or type to enter a research problem' : 'No research problem'}
-                            onChange={handleResearchProblemSelect}
-                            value={researchProblems}
-                            autoLoadOption={true}
-                            openMenuOnFocus={true}
-                            autoFocus={false}
-                            allowCreate={false}
-                            isDisabled={!isEditMode}
-                            isClearable
-                            isMulti
-                            inputId="template-problems"
-                            ols={false}
-                        />
-                        {isEditMode && <FormText>Specify the research problems that uses this template.</FormText>}
-                    </FormGroup>
-                </fieldset>
-            </>
+            <fieldset className="scheduler-border p-3">
+                <legend className="mt-3">Template use cases</legend>
+                <p>
+                    <small className="text-muted">
+                        These fields are optional, the property is used to link the contribution resource to the template instance. The research
+                        fields/problems are used to suggest this template in the relevant papers.
+                    </small>
+                </p>
+                <FormGroup className="mb-4">
+                    <Label for="template-property">
+                        Property <span className="text-muted fst-italic">(optional)</span>
+                    </Label>
+                    <AutoComplete
+                        entityType={ENTITIES.PREDICATE}
+                        placeholder={isEditMode ? 'Select or type to enter a property' : 'No Property'}
+                        onChange={handlePropertySelect}
+                        value={predicate}
+                        autoLoadOption
+                        openMenuOnFocus
+                        allowCreate
+                        isDisabled={!isEditMode}
+                        autoFocus={false}
+                        isClearable
+                        innerRef={predicateAutocompleteRef}
+                        inputId="template-property"
+                    />
+                    {isEditMode && (
+                        <FormText>
+                            Specify the property of this template. This property is used to link the contribution to the template instance.
+                        </FormText>
+                    )}
+                </FormGroup>
+                <FormGroup className="mb-4">
+                    <Label for="template-field">
+                        Research fields <span className="text-muted fst-italic">(optional)</span>
+                    </Label>
+                    <AutoComplete
+                        entityType={ENTITIES.RESOURCE}
+                        optionsClass={CLASSES.RESEARCH_FIELD}
+                        placeholder={isEditMode ? 'Select or type to enter a research field' : 'No research fields'}
+                        onChange={handleResearchFieldSelect}
+                        value={researchFields}
+                        autoLoadOption
+                        openMenuOnFocus
+                        autoFocus={false}
+                        allowCreate={false}
+                        isDisabled={!isEditMode}
+                        isClearable
+                        isMulti
+                        inputId="template-field"
+                        ols={false}
+                    />
+                    {isEditMode && <FormText>Specify the research fields that uses this template.</FormText>}
+                </FormGroup>
+                <FormGroup className="mb-4">
+                    <Label for="template-problems">
+                        Research problems <span className="text-muted fst-italic">(optional)</span>
+                    </Label>
+                    <AutoComplete
+                        entityType={ENTITIES.RESOURCE}
+                        optionsClass={CLASSES.PROBLEM}
+                        placeholder={isEditMode ? 'Select or type to enter a research problem' : 'No research problem'}
+                        onChange={handleResearchProblemSelect}
+                        value={researchProblems}
+                        autoLoadOption
+                        openMenuOnFocus
+                        autoFocus={false}
+                        allowCreate={false}
+                        isDisabled={!isEditMode}
+                        isClearable
+                        isMulti
+                        inputId="template-problems"
+                        ols={false}
+                    />
+                    {isEditMode && <FormText>Specify the research problems that uses this template.</FormText>}
+                </FormGroup>
+            </fieldset>
         </div>
     );
 };

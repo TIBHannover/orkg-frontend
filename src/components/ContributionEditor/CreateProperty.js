@@ -69,11 +69,7 @@ export const CreateProperty = () => {
                         <Icon className="me-1" icon={faPuzzlePiece} /> Templates
                     </Button>
                     {isTemplatesModalOpen && (
-                        <TemplatesModal
-                            syncBackend={true}
-                            setIsTemplatesModalOpen={setIsTemplatesModalOpen}
-                            isTemplatesModalOpen={isTemplatesModalOpen}
-                        />
+                        <TemplatesModal syncBackend setIsTemplatesModalOpen={setIsTemplatesModalOpen} isTemplatesModalOpen={isTemplatesModalOpen} />
                     )}
                 </>
             ) : (
@@ -86,7 +82,7 @@ export const CreateProperty = () => {
                             onNewItemSelected={handleChangeAutocomplete}
                             onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                             value={inputValue}
-                            openMenuOnFocus={true}
+                            openMenuOnFocus
                             cssClasses="form-control-sm"
                             menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
                             allowCreate

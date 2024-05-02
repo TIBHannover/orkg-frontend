@@ -69,7 +69,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
                                             <StatementActionButton
                                                 title="Delete this organization from the observatory"
                                                 icon={faTrash}
-                                                requireConfirmation={true}
+                                                requireConfirmation
                                                 confirmationMessage="Are you sure to delete?"
                                                 confirmationButtons={[
                                                     {

@@ -165,7 +165,7 @@ function TreeView({ id, label, reloadTree, ...props }) {
                     fieldNames={fieldNames}
                     defaultExpandedKeys={hierarchy.map((p) => p.id)}
                     selectedKeys={[selectedNodeId]}
-                    showLine={true}
+                    showLine
                     titleRender={titleRender}
                     showIcon={false}
                     checkable={false}

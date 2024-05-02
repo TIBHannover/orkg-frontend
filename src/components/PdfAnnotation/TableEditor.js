@@ -48,7 +48,7 @@ const TableEditor = (props) => {
     return (
         <HotTable
             data={tableData}
-            rowHeaders={true}
+            rowHeaders
             width="100%"
             height="auto"
             licenseKey="non-commercial-and-evaluation"

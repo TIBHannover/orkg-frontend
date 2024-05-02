@@ -162,18 +162,16 @@ function ComparisonCarousel() {
                                 </StyledSlider>
                             )}
                         {(isLoadingVisualizationData || isLoadingResources || isLoadingFigures) && (
-                            <>
-                                <ContentLoader
-                                    height={4}
-                                    width={50}
-                                    speed={2}
-                                    foregroundColor="#f3f3f3"
-                                    backgroundColor="#ecebeb"
-                                    style={{ borderRadius: '11px', margin: '10px 0' }}
-                                >
-                                    <rect x="0" y="0" rx="0" ry="0" width="50" height="100" />
-                                </ContentLoader>
-                            </>
+                            <ContentLoader
+                                height={4}
+                                width={50}
+                                speed={2}
+                                foregroundColor="#f3f3f3"
+                                backgroundColor="#ecebeb"
+                                style={{ borderRadius: '11px', margin: '10px 0' }}
+                            >
+                                <rect x="0" y="0" rx="0" ry="0" width="50" height="100" />
+                            </ContentLoader>
                         )}
                     </>
                 )}

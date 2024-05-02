@@ -37,7 +37,7 @@ const ItemMetadata = ({ editMode = false, showClasses = false, showCreatedAt = f
                 <Badge color="light" className="me-2">
                     <Icon icon={faUser} /> Created by{' '}
                     <span className="ms-1 d-inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
-                        <UserAvatar size={20} userId={item.created_by} showDisplayName={true} />
+                        <UserAvatar size={20} userId={item.created_by} showDisplayName />
                     </span>
                 </Badge>
             )}

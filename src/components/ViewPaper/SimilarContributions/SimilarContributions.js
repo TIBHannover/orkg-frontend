@@ -85,72 +85,68 @@ const SimilarContributions = ({ contributionId }) => {
         contributionId,
     });
     return (
-        <>
-            <div>
-                {!isLoading && similarContributions.length > 0 && (
-                    <>
-                        <Title>Similar contributions</Title>
-                        <CardsContainer>
-                            {similarContributions.slice(0, 3).map((contribution, index) => {
-                                const percentage =
-                                    parseInt(contribution.similarityPercentage, 10) === 1
-                                        ? 99
-                                        : parseInt(contribution.similarityPercentage * 100, 10);
-                                return (
-                                    <CardWrapper key={`sim${index}`} lg={4} className="mt-2 justify-content-center">
-                                        <Card
-                                            key={`s${contribution.contributionId}`}
-                                            href={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
-                                                resourceId: contribution.paperId,
-                                                contributionId: contribution.contributionId,
-                                            })}
-                                            className="justify-content-center"
-                                            role="button"
-                                        >
-                                            <Row className="h-100">
-                                                <Col className="d-none d-lg-block" lg={2} style={{ marginRight: 10 }}>
-                                                    <Similarity>
-                                                        <span>
-                                                            {percentage}
-                                                            <br />%
-                                                        </span>
-                                                    </Similarity>
-                                                </Col>
-                                                <Col>
-                                                    {contribution.title ? (
-                                                        <>
-                                                            {contribution.title} <span className="text-dark d-flex d-lg-none">{percentage}%</span>
-                                                        </>
-                                                    ) : (
-                                                        <em>No title</em>
-                                                    )}
-                                                    {contribution.contributionLabel && (
-                                                        <div className="simContributionLabel">{contribution.contributionLabel}</div>
-                                                    )}
-                                                </Col>
-                                            </Row>
-                                        </Card>
-                                    </CardWrapper>
-                                );
-                            })}
-                        </CardsContainer>
-                    </>
-                )}
-                {similarContributions.length > 0 && (
-                    <Link
-                        className="clearfix"
-                        href={`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionId},${similarContributions
-                            .slice(0, 3)
-                            .map((s) => s.contributionId)
-                            .join(',')}`}
-                    >
-                        <span style={{ margin: '7px 5px 0 0', fontSize: '95%' }} className="float-end btn btn-link p-0 border-0 align-baseline">
-                            Compare these contributions
-                        </span>
-                    </Link>
-                )}
-            </div>
-        </>
+        <div>
+            {!isLoading && similarContributions.length > 0 && (
+                <>
+                    <Title>Similar contributions</Title>
+                    <CardsContainer>
+                        {similarContributions.slice(0, 3).map((contribution, index) => {
+                            const percentage =
+                                parseInt(contribution.similarityPercentage, 10) === 1 ? 99 : parseInt(contribution.similarityPercentage * 100, 10);
+                            return (
+                                <CardWrapper key={`sim${index}`} lg={4} className="mt-2 justify-content-center">
+                                    <Card
+                                        key={`s${contribution.contributionId}`}
+                                        href={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
+                                            resourceId: contribution.paperId,
+                                            contributionId: contribution.contributionId,
+                                        })}
+                                        className="justify-content-center"
+                                        role="button"
+                                    >
+                                        <Row className="h-100">
+                                            <Col className="d-none d-lg-block" lg={2} style={{ marginRight: 10 }}>
+                                                <Similarity>
+                                                    <span>
+                                                        {percentage}
+                                                        <br />%
+                                                    </span>
+                                                </Similarity>
+                                            </Col>
+                                            <Col>
+                                                {contribution.title ? (
+                                                    <>
+                                                        {contribution.title} <span className="text-dark d-flex d-lg-none">{percentage}%</span>
+                                                    </>
+                                                ) : (
+                                                    <em>No title</em>
+                                                )}
+                                                {contribution.contributionLabel && (
+                                                    <div className="simContributionLabel">{contribution.contributionLabel}</div>
+                                                )}
+                                            </Col>
+                                        </Row>
+                                    </Card>
+                                </CardWrapper>
+                            );
+                        })}
+                    </CardsContainer>
+                </>
+            )}
+            {similarContributions.length > 0 && (
+                <Link
+                    className="clearfix"
+                    href={`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionId},${similarContributions
+                        .slice(0, 3)
+                        .map((s) => s.contributionId)
+                        .join(',')}`}
+                >
+                    <span style={{ margin: '7px 5px 0 0', fontSize: '95%' }} className="float-end btn btn-link p-0 border-0 align-baseline">
+                        Compare these contributions
+                    </span>
+                </Link>
+            )}
+        </div>
     );
 };
 
