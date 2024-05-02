@@ -85,17 +85,15 @@ const ViewShapes = ({ data }) => (
                                 <tr>
                                     <th scope="row">Template predicate</th>
                                     <td>
-                                        <>
-                                            {nodesShape.templatePredicate?.id ? (
-                                                <DescriptionTooltip id={nodesShape.templatePredicate.id} _class={ENTITIES.PREDICATE}>
-                                                    <Link target="_blank" href={reverse(ROUTES.PROPERTY, { id: nodesShape.templatePredicate.id })}>
-                                                        {nodesShape.templatePredicate.label}
-                                                    </Link>
-                                                </DescriptionTooltip>
-                                            ) : (
-                                                <>{nodesShape.templatePredicate.label}</>
-                                            )}
-                                        </>
+                                        {nodesShape.templatePredicate?.id ? (
+                                            <DescriptionTooltip id={nodesShape.templatePredicate.id} _class={ENTITIES.PREDICATE}>
+                                                <Link target="_blank" href={reverse(ROUTES.PROPERTY, { id: nodesShape.templatePredicate.id })}>
+                                                    {nodesShape.templatePredicate.label}
+                                                </Link>
+                                            </DescriptionTooltip>
+                                        ) : (
+                                            <>{nodesShape.templatePredicate.label}</>
+                                        )}
                                     </td>
                                 </tr>
                             )}
@@ -103,23 +101,21 @@ const ViewShapes = ({ data }) => (
                                 <tr>
                                     <th scope="row">Research fields</th>
                                     <td>
-                                        <>
-                                            {nodesShape.researchFields
-                                                .map((researchField) => (
-                                                    <Fragment key={researchField.id}>
-                                                        {researchField?.id ? (
-                                                            <DescriptionTooltip id={researchField.id} _class={ENTITIES.RESOURCE}>
-                                                                <Link target="_blank" href={reverse(ROUTES.RESOURCE, { id: researchField.id })}>
-                                                                    {researchField.label}
-                                                                </Link>
-                                                            </DescriptionTooltip>
-                                                        ) : (
-                                                            <>{researchField.label} </>
-                                                        )}
-                                                    </Fragment>
-                                                ))
-                                                .reduce((prev, curr) => [prev, ', ', curr])}
-                                        </>
+                                        {nodesShape.researchFields
+                                            .map((researchField) => (
+                                                <Fragment key={researchField.id}>
+                                                    {researchField?.id ? (
+                                                        <DescriptionTooltip id={researchField.id} _class={ENTITIES.RESOURCE}>
+                                                            <Link target="_blank" href={reverse(ROUTES.RESOURCE, { id: researchField.id })}>
+                                                                {researchField.label}
+                                                            </Link>
+                                                        </DescriptionTooltip>
+                                                    ) : (
+                                                        <>{researchField.label} </>
+                                                    )}
+                                                </Fragment>
+                                            ))
+                                            .reduce((prev, curr) => [prev, ', ', curr])}
                                     </td>
                                 </tr>
                             )}
@@ -127,23 +123,21 @@ const ViewShapes = ({ data }) => (
                                 <tr>
                                     <th scope="row">Research problem</th>
                                     <td>
-                                        <>
-                                            {nodesShape.researchProblems
-                                                .map((researchProblem) => (
-                                                    <Fragment key={researchProblem.id}>
-                                                        {researchProblem?.id ? (
-                                                            <DescriptionTooltip id={researchProblem.id} _class={ENTITIES.RESOURCE}>
-                                                                <Link target="_blank" href={reverse(ROUTES.RESOURCE, { id: researchProblem.id })}>
-                                                                    {researchProblem.label}
-                                                                </Link>
-                                                            </DescriptionTooltip>
-                                                        ) : (
-                                                            <>{researchProblem.label} </>
-                                                        )}
-                                                    </Fragment>
-                                                ))
-                                                .reduce((prev, curr) => [prev, ', ', curr])}
-                                        </>
+                                        {nodesShape.researchProblems
+                                            .map((researchProblem) => (
+                                                <Fragment key={researchProblem.id}>
+                                                    {researchProblem?.id ? (
+                                                        <DescriptionTooltip id={researchProblem.id} _class={ENTITIES.RESOURCE}>
+                                                            <Link target="_blank" href={reverse(ROUTES.RESOURCE, { id: researchProblem.id })}>
+                                                                {researchProblem.label}
+                                                            </Link>
+                                                        </DescriptionTooltip>
+                                                    ) : (
+                                                        <>{researchProblem.label} </>
+                                                    )}
+                                                </Fragment>
+                                            ))
+                                            .reduce((prev, curr) => [prev, ', ', curr])}
                                     </td>
                                 </tr>
                             )}

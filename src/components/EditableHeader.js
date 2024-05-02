@@ -64,7 +64,7 @@ const EditableHeader = ({ entityType, id, onChange, curatorsOnly = false, value 
                 <h3 className="mb-0">
                     {label || <small className="fst-italic">No label</small>}
                     {id.split(':')[0] === 'wikidata' ? (
-                        <StatementActionButton title="Wikidata cannot be edit" isDisabled={true} icon={faPen} action={handleEditClick} />
+                        <StatementActionButton title="Wikidata cannot be edit" isDisabled icon={faPen} action={handleEditClick} />
                     ) : (
                         <span className="ms-2">
                             <StatementActionButton title="Edit label" icon={faPen} action={handleEditClick} />

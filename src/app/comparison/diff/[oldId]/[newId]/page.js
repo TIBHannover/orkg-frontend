@@ -20,7 +20,7 @@ const ComparisonDiff = () => {
     });
 
     const getData = async ({ oldId, newId }) =>
-        await Promise.all([
+        Promise.all([
             getResource(oldId),
             getResource(newId),
             getStatementsBySubject({ id: oldId }).then((statements) => addAuthorsToStatements(statements)),

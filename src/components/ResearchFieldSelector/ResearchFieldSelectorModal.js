@@ -43,7 +43,7 @@ const ResearchFieldSelectorModal = ({ isOpen, toggle, onSelectField, title = nul
                     selectedResearchField={selectedResearchField}
                     researchFields={researchFields}
                     updateResearchField={handleUpdate}
-                    insideModal={true}
+                    insideModal
                     title={title}
                     abstract={abstract}
                 />

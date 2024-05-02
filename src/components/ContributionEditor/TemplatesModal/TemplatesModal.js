@@ -152,13 +152,13 @@ const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsT
                                             }}
                                             value={targetFilter}
                                             key={selectedFilter.id}
-                                            autoLoadOption={true}
+                                            autoLoadOption
                                             openMenuOnFocus={false}
                                             allowCreate={false}
                                             ols={false}
                                             cacheOptions={false}
                                             inputId={selectedFilter.id}
-                                            isClearable={true}
+                                            isClearable
                                         />
                                     </ConditionalWrapper>
                                 )}

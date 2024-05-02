@@ -132,7 +132,7 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
                     description={entry.description}
                     showAddToComparison
                     linkTarget="_blank"
-                    showContributionCount={true}
+                    showContributionCount
                     route={!isPaper ? reverse(ROUTES.CONTENT_TYPE, { id: contentType.id, type: contentTypeClass }) : undefined}
                 />
             </div>

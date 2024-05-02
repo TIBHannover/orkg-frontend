@@ -9,13 +9,11 @@ const AuthorPage = () => {
     const { authorId } = useParams();
 
     return (
-        <>
-            <div>
-                <AuthorHeader authorId={authorId} />
-                <AuthorWorks authorId={authorId} />
-                <ComparisonPopup />
-            </div>
-        </>
+        <div>
+            <AuthorHeader authorId={authorId} />
+            <AuthorWorks authorId={authorId} />
+            <ComparisonPopup />
+        </div>
     );
 };
 

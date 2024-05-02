@@ -3,7 +3,7 @@ import selectEvent from 'react-select-event';
 import TableCellValueCreate from 'components/ContributionEditor/TableCellValueCreate';
 
 const setup = () => {
-    render(<TableCellValueCreate contributionId="R1" propertyId="P1" isEmptyCell isVisible={true} />);
+    render(<TableCellValueCreate contributionId="R1" propertyId="P1" isEmptyCell isVisible />);
 };
 describe('TableCellValueCreate', () => {
     it('should not render anything when visible is false', () => {

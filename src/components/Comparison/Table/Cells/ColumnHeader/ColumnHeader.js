@@ -10,44 +10,42 @@ const ColumnHeader = ({ headerData, columnId, columnStyle, property, index }) =>
     const isEditing = useSelector((state) => state.comparison.isEditing);
 
     return (
-        <>
-            <Draggable draggableId={columnId} index={index} isDragDisabled={!isEditing}>
-                {(providedDraggable, snapshot) => (
-                    <div
-                        className={`th p-0 ${snapshot.isDragging ? 'shadow' : ''}`}
-                        ref={providedDraggable.innerRef}
-                        {...providedDraggable.draggableProps}
-                        {...providedDraggable.dragHandleProps}
-                        style={{
-                            ...columnStyle,
-                            ...providedDraggable.draggableProps?.style,
-                            ...providedDraggable.dragHandleProps?.style,
-                        }}
-                    >
-                        {!transpose ? (
-                            <ItemHeader key={`contribution${headerData.id}`}>
-                                <ItemHeaderInner>
-                                    <ContributionCell contribution={headerData} />
-                                </ItemHeaderInner>
-                            </ItemHeader>
-                        ) : (
-                            <ItemHeader key={`property${headerData.id}`}>
-                                <ItemHeaderInner className="d-flex flex-row align-items-center justify-content-between" transpose={transpose}>
-                                    <PropertyCell
-                                        similar={headerData.similar}
-                                        label={headerData.label}
-                                        id={headerData.id}
-                                        group={headerData.group ?? false}
-                                        grouped={headerData.grouped ?? false}
-                                        property={property}
-                                    />
-                                </ItemHeaderInner>
-                            </ItemHeader>
-                        )}
-                    </div>
-                )}
-            </Draggable>
-        </>
+        <Draggable draggableId={columnId} index={index} isDragDisabled={!isEditing}>
+            {(providedDraggable, snapshot) => (
+                <div
+                    className={`th p-0 ${snapshot.isDragging ? 'shadow' : ''}`}
+                    ref={providedDraggable.innerRef}
+                    {...providedDraggable.draggableProps}
+                    {...providedDraggable.dragHandleProps}
+                    style={{
+                        ...columnStyle,
+                        ...providedDraggable.draggableProps?.style,
+                        ...providedDraggable.dragHandleProps?.style,
+                    }}
+                >
+                    {!transpose ? (
+                        <ItemHeader key={`contribution${headerData.id}`}>
+                            <ItemHeaderInner>
+                                <ContributionCell contribution={headerData} />
+                            </ItemHeaderInner>
+                        </ItemHeader>
+                    ) : (
+                        <ItemHeader key={`property${headerData.id}`}>
+                            <ItemHeaderInner className="d-flex flex-row align-items-center justify-content-between" transpose={transpose}>
+                                <PropertyCell
+                                    similar={headerData.similar}
+                                    label={headerData.label}
+                                    id={headerData.id}
+                                    group={headerData.group ?? false}
+                                    grouped={headerData.grouped ?? false}
+                                    property={property}
+                                />
+                            </ItemHeaderInner>
+                        </ItemHeader>
+                    )}
+                </div>
+            )}
+        </Draggable>
     );
 };
 

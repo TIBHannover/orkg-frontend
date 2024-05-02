@@ -1061,7 +1061,7 @@ export function generatedFormattedLabel(resource, labelFormat) {
 export function updateResourceStatementsAction(resourceId) {
     return async (dispatch) => {
         const resource = await getResource(resourceId);
-        return await getStatementsBySubject({ id: resourceId }).then(async (statements) => {
+        return getStatementsBySubject({ id: resourceId }).then(async (statements) => {
             dispatch(
                 resourceStatementsUpdated({
                     id: resourceId,

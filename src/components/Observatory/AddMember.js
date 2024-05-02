@@ -40,42 +40,40 @@ function AddMember(props) {
     }, [props.organizationsList]);
 
     return (
-        <>
-            <Modal isOpen={props.showDialog} toggle={props.toggle}>
-                <ModalHeader toggle={props.toggle}>Add a member</ModalHeader>
-                <ModalBody>
-                    <>
-                        <FormGroup>
-                            <Label for="organization">Organization</Label>
-                            <Select
-                                value={props.organizationsList.length === 1 ? props.organizationsList[0] : selectedOrganization}
-                                options={props.organizationsList}
-                                onChange={(selected) => setSelectedOrganization(selected)}
-                                getOptionValue={({ id }) => id}
-                                getOptionLabel={({ name }) => name}
-                                inputId="organization"
-                                classNamePrefix="react-select"
-                            />
-                            <SelectGlobalStyle />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="userEmail">User email</Label>
+        <Modal isOpen={props.showDialog} toggle={props.toggle}>
+            <ModalHeader toggle={props.toggle}>Add a member</ModalHeader>
+            <ModalBody>
+                <>
+                    <FormGroup>
+                        <Label for="organization">Organization</Label>
+                        <Select
+                            value={props.organizationsList.length === 1 ? props.organizationsList[0] : selectedOrganization}
+                            options={props.organizationsList}
+                            onChange={(selected) => setSelectedOrganization(selected)}
+                            getOptionValue={({ id }) => id}
+                            getOptionLabel={({ name }) => name}
+                            inputId="organization"
+                            classNamePrefix="react-select"
+                        />
+                        <SelectGlobalStyle />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="userEmail">User email</Label>
 
-                            <InputGroup>
-                                <Input id="userEmail" onChange={(e) => setEmail(e.target.value)} type="email" value={email} />
-                            </InputGroup>
-                        </FormGroup>
-                    </>
-                </ModalBody>
-                <ModalFooter>
-                    <div className="text-align-center mt-2">
-                        <ButtonWithLoading color="primary" isLoading={isLoading} onClick={() => handleSubmit()}>
-                            Save
-                        </ButtonWithLoading>
-                    </div>
-                </ModalFooter>
-            </Modal>
-        </>
+                        <InputGroup>
+                            <Input id="userEmail" onChange={(e) => setEmail(e.target.value)} type="email" value={email} />
+                        </InputGroup>
+                    </FormGroup>
+                </>
+            </ModalBody>
+            <ModalFooter>
+                <div className="text-align-center mt-2">
+                    <ButtonWithLoading color="primary" isLoading={isLoading} onClick={() => handleSubmit()}>
+                        Save
+                    </ButtonWithLoading>
+                </div>
+            </ModalFooter>
+        </Modal>
     );
 }
 

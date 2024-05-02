@@ -74,7 +74,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                     id={dialogResourceId}
                     label={dialogResourceLabel}
                     show
-                    enableEdit={true}
+                    enableEdit
                     syncBackend
                     onCloseModal={() => updateResourceStatements(dialogResourceId)}
                 />

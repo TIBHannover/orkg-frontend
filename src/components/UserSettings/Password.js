@@ -69,80 +69,82 @@ class Password extends Component {
             });
     };
 
-    render = () => (
-        <>
-            <h5 className="mb-4">Change password</h5>
-            {Boolean(getErrorMessage(this.state.errors)) && <Alert color="danger">{getErrorMessage(this.state.errors)}</Alert>}
-            <Form>
-                <FormGroup>
-                    <Label for="current_password">Current password</Label>
-                    <Input
-                        onChange={this.handleInputChange}
-                        value={this.state.current_password}
-                        type="password"
-                        name="current_password"
-                        id="current_password"
-                        placeholder="Current password"
-                        invalid={Boolean(getErrorMessage(this.state.errors, 'current_password'))}
-                    />
-                    {Boolean(getErrorMessage(this.state.errors, 'current_password')) && (
-                        <FormFeedback>{getErrorMessage(this.state.errors, 'current_password')}</FormFeedback>
-                    )}
-                </FormGroup>
-                <Row>
-                    <div className="col-6">
-                        <FormGroup>
-                            <Label for="new_password">New password</Label>
-                            <Input
-                                onChange={this.handleInputChange}
-                                value={this.state.new_password}
-                                type="password"
-                                name="new_password"
-                                id="new_password"
-                                placeholder="New password"
-                                invalid={Boolean(getErrorMessage(this.state.errors, 'new_password'))}
-                            />
-                            {Boolean(getErrorMessage(this.state.errors, 'new_password')) && (
-                                <FormFeedback>{getErrorMessage(this.state.errors, 'new_password')}</FormFeedback>
-                            )}
-                        </FormGroup>
-                    </div>
-                    <div className="col-6">
-                        <FormGroup>
-                            <Label for="matching_password">Repeat new password</Label>
-                            <Input
-                                onChange={this.handleInputChange}
-                                value={this.state.new_matching_password}
-                                type="password"
-                                name="new_matching_password"
-                                id="new_matching_password"
-                                placeholder="Confirm new password"
-                                invalid={Boolean(getErrorMessage(this.state.errors, 'new_matching_password'))}
-                            />
-                            {Boolean(getErrorMessage(this.state.errors, 'new_matching_password')) && (
-                                <FormFeedback>{getErrorMessage(this.state.errors, 'new_matching_password')}</FormFeedback>
-                            )}
-                        </FormGroup>
-                    </div>
-                </Row>
-                <Button
-                    color="primary"
-                    onClick={() => {
-                        this.handleSave();
-                    }}
-                    className="mt-4 mb-2"
-                >
-                    {!this.state.loading ? (
-                        'Save changes'
-                    ) : (
-                        <span>
-                            <Icon icon={faSpinner} spin /> Loading
-                        </span>
-                    )}
-                </Button>
-            </Form>
-        </>
-    );
+    render() {
+        return (
+            <>
+                <h5 className="mb-4">Change password</h5>
+                {Boolean(getErrorMessage(this.state.errors)) && <Alert color="danger">{getErrorMessage(this.state.errors)}</Alert>}
+                <Form>
+                    <FormGroup>
+                        <Label for="current_password">Current password</Label>
+                        <Input
+                            onChange={this.handleInputChange}
+                            value={this.state.current_password}
+                            type="password"
+                            name="current_password"
+                            id="current_password"
+                            placeholder="Current password"
+                            invalid={Boolean(getErrorMessage(this.state.errors, 'current_password'))}
+                        />
+                        {Boolean(getErrorMessage(this.state.errors, 'current_password')) && (
+                            <FormFeedback>{getErrorMessage(this.state.errors, 'current_password')}</FormFeedback>
+                        )}
+                    </FormGroup>
+                    <Row>
+                        <div className="col-6">
+                            <FormGroup>
+                                <Label for="new_password">New password</Label>
+                                <Input
+                                    onChange={this.handleInputChange}
+                                    value={this.state.new_password}
+                                    type="password"
+                                    name="new_password"
+                                    id="new_password"
+                                    placeholder="New password"
+                                    invalid={Boolean(getErrorMessage(this.state.errors, 'new_password'))}
+                                />
+                                {Boolean(getErrorMessage(this.state.errors, 'new_password')) && (
+                                    <FormFeedback>{getErrorMessage(this.state.errors, 'new_password')}</FormFeedback>
+                                )}
+                            </FormGroup>
+                        </div>
+                        <div className="col-6">
+                            <FormGroup>
+                                <Label for="matching_password">Repeat new password</Label>
+                                <Input
+                                    onChange={this.handleInputChange}
+                                    value={this.state.new_matching_password}
+                                    type="password"
+                                    name="new_matching_password"
+                                    id="new_matching_password"
+                                    placeholder="Confirm new password"
+                                    invalid={Boolean(getErrorMessage(this.state.errors, 'new_matching_password'))}
+                                />
+                                {Boolean(getErrorMessage(this.state.errors, 'new_matching_password')) && (
+                                    <FormFeedback>{getErrorMessage(this.state.errors, 'new_matching_password')}</FormFeedback>
+                                )}
+                            </FormGroup>
+                        </div>
+                    </Row>
+                    <Button
+                        color="primary"
+                        onClick={() => {
+                            this.handleSave();
+                        }}
+                        className="mt-4 mb-2"
+                    >
+                        {!this.state.loading ? (
+                            'Save changes'
+                        ) : (
+                            <span>
+                                <Icon icon={faSpinner} spin /> Loading
+                            </span>
+                        )}
+                    </Button>
+                </Form>
+            </>
+        );
+    }
 }
 
 export default Password;

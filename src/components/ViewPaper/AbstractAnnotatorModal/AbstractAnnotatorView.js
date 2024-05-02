@@ -145,7 +145,7 @@ function AbstractAnnotatorView(props) {
                             <span className="mr-2">Certainty {props.certaintyThreshold[0].toFixed(2)}</span>
                             <Tooltip
                                 trigger="click"
-                                hideDefaultIcon={true}
+                                hideDefaultIcon
                                 message="Here you can adjust the certainty value, that means at which level you accept the confidence ratio of automatic annotations. Only the shown annotations will be used to create the contribution data in the next step."
                             />
                         </div>

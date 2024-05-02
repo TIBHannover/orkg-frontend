@@ -130,7 +130,7 @@ const TableHeaderRow = ({ property }) => {
                             onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                             value={inputValue}
                             onBlur={handleStopEdit}
-                            openMenuOnFocus={true}
+                            openMenuOnFocus
                             cssClasses="form-control-sm"
                             onChange={handleChangeAutocomplete}
                             menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements

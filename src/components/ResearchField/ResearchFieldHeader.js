@@ -60,8 +60,8 @@ const ResearchFieldHeader = ({ id }) => {
                             toggleModal={() => setEditMode((v) => !v)}
                             id={id}
                             label={researchFieldData.label}
-                            enableEdit={true}
-                            syncBackend={true}
+                            enableEdit
+                            syncBackend
                             onCloseModal={() => loadResearchFieldData(id)}
                         />
                     )}

@@ -146,10 +146,10 @@ const TemplateNew = () => {
                             placeholder="Select or type to enter a class"
                             onChange={handleClassSelect}
                             value={targetClass}
-                            autoLoadOption={true}
-                            openMenuOnFocus={true}
-                            allowCreate={true}
-                            copyValueButton={true}
+                            autoLoadOption
+                            openMenuOnFocus
+                            allowCreate
+                            copyValueButton
                             isClearable
                             innerRef={classAutocompleteRef}
                             autoFocus={false}

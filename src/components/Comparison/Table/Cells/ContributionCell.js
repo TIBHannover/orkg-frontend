@@ -22,29 +22,9 @@ const ContributionCell = ({ contribution }) => {
     return (
         <>
             {columnWidth && columnWidth < 200 && !transpose ? (
-                <>
-                    <Tippy
-                        content={
-                            <div>
-                                <Link
-                                    href={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
-                                        resourceId: contribution.paper_id,
-                                        contributionId: contribution.id,
-                                    })}
-                                    className="text-white"
-                                >
-                                    {contribution?.paper_label ?? <em>No title</em>}
-                                </Link>
-                                <br />
-                                <Contribution style={{ borderTopColor: '#000' }}>
-                                    {contribution.label} {contribution.paper_year && `- ${contribution.paper_year}`}
-                                </Contribution>
-                            </div>
-                        }
-                        interactive
-                        appendTo={document.body}
-                    >
-                        <span>
+                <Tippy
+                    content={(
+                        <div>
                             <Link
                                 href={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                                     resourceId: contribution.paper_id,
@@ -52,13 +32,31 @@ const ContributionCell = ({ contribution }) => {
                                 })}
                                 className="text-white"
                             >
-                                <div className="d-flex justify-content-center align-items-center h-100">
-                                    <Icon icon={faFile} />
-                                </div>
+                                {contribution?.paper_label ?? <em>No title</em>}
                             </Link>
-                        </span>
-                    </Tippy>
-                </>
+                            <br />
+                            <Contribution style={{ borderTopColor: '#000' }}>
+                                {contribution.label} {contribution.paper_year && `- ${contribution.paper_year}`}
+                            </Contribution>
+                        </div>
+                      )}
+                    interactive
+                    appendTo={document.body}
+                >
+                    <span>
+                        <Link
+                            href={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
+                                resourceId: contribution.paper_id,
+                                contributionId: contribution.id,
+                            })}
+                            className="text-white"
+                        >
+                            <div className="d-flex justify-content-center align-items-center h-100">
+                                <Icon icon={faFile} />
+                            </div>
+                        </Link>
+                    </span>
+                </Tippy>
             ) : (
                 <>
                     <Link

@@ -59,17 +59,15 @@ const Contributors = ({ researchFieldId }) => {
                                             <li>{pluralize('research problem', contributor.problems, true)}</li>
                                         </ul>
 
-                                        <>
-                                            <hr className="mb-1 mt-1" style={{ background: '#fff' }} />
-                                            <ul className="p-0 ps-3 mb-0 mt-2">
-                                                <li>
-                                                    <i>
-                                                        <b>{contributor.total} </b>
-                                                        {pluralize('total contribution', contributor.total, false)}
-                                                    </i>
-                                                </li>
-                                            </ul>
-                                        </>
+                                        <hr className="mb-1 mt-1" style={{ background: '#fff' }} />
+                                        <ul className="p-0 ps-3 mb-0 mt-2">
+                                            <li>
+                                                <i>
+                                                    <b>{contributor.total} </b>
+                                                    {pluralize('total contribution', contributor.total, false)}
+                                                </i>
+                                            </li>
+                                        </ul>
                                     </div>
                                 }
                             >

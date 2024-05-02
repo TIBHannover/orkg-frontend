@@ -70,7 +70,7 @@ export default function TemplateHeader(props) {
                                     <StatementActionButton
                                         title="Delete the template with its statements"
                                         icon={faTrash}
-                                        requireConfirmation={true}
+                                        requireConfirmation
                                         confirmationMessage="Are you sure to delete?"
                                         confirmationButtons={[
                                             {
@@ -90,18 +90,16 @@ export default function TemplateHeader(props) {
                             )}
                         </>
                     ) : (
-                        <>
-                            <Input
-                                value={draftLabel}
-                                onChange={(e) => setDraftLabel(e.target.value)}
-                                onKeyDown={(e) => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
-                                onBlur={(e) => {
-                                    commitChangeLabel();
-                                    dispatch(toggleEditValue({ id: props.id }));
-                                }}
-                                autoFocus
-                            />
-                        </>
+                        <Input
+                            value={draftLabel}
+                            onChange={(e) => setDraftLabel(e.target.value)}
+                            onKeyDown={(e) => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
+                            onBlur={(e) => {
+                                commitChangeLabel();
+                                dispatch(toggleEditValue({ id: props.id }));
+                            }}
+                            autoFocus
+                        />
                     )}
                 </div>
                 <div className="type">

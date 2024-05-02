@@ -91,8 +91,8 @@ const AddNew = ({ isHomePageStyle, onAdd = null }) => {
 
     return (
         <TippyStyled
-            interactive={true}
-            animateFill={true}
+            interactive
+            animateFill
             arrow={false}
             plugins={[animateFill]}
             interactiveBorder={30}

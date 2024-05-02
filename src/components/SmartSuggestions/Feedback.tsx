@@ -106,11 +106,9 @@ const Feedback: FC<FeedbackProps> = ({ type, inputData, outputData, llmTask }) =
                             </div>
                         </>
                     ) : (
-                        <>
-                            <p className="d-flex align-items-center mb-1">
-                                <Icon icon={faCheck} className="me-2" style={{ color: '#C1F8C0', fontSize: '160%' }} /> Successfully saved, thank you!
-                            </p>
-                        </>
+                        <p className="d-flex align-items-center mb-1">
+                            <Icon icon={faCheck} className="me-2" style={{ color: '#C1F8C0', fontSize: '160%' }} /> Successfully saved, thank you!
+                        </p>
                     )}
                 </div>
             }

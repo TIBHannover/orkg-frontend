@@ -8,7 +8,7 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
-import ReactDiffViewer from 'react-diff-viewer';
+import ReactDiffViewer from 'react-diff-viewer-continued';
 import useRouter from 'components/NextJsMigration/useRouter';
 import useParams from 'components/NextJsMigration/useParams';
 import { Alert, Button } from 'reactstrap';
@@ -90,7 +90,7 @@ const DiffView = ({ type, diffRoute, getData }) => {
                     <ReactDiffViewer
                         oldValue={oldText}
                         newValue={newText}
-                        splitView={true}
+                        splitView
                         showDiffOnly={false}
                         leftTitle={<DiffTitle data={oldTitleData} />}
                         rightTitle={<DiffTitle data={newTitleData} />}

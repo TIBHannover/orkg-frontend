@@ -90,7 +90,7 @@ const ClassInlineItem = ({
                     <ButtonsContainer className="item-buttons" displayButtonOnHover={displayButtonOnHover}>
                         {editMode && !isCurationAllowed && (
                             <span className="ms-2">
-                                <StatementActionButton title="Editing requires a curator role" icon={faPen} action={null} isDisabled={true} />
+                                <StatementActionButton title="Editing requires a curator role" icon={faPen} action={null} isDisabled />
                             </span>
                         )}
                         {classObject && editMode && isCurationAllowed && (
@@ -109,7 +109,7 @@ const ClassInlineItem = ({
                                     <StatementActionButton
                                         title="Remove class"
                                         icon={faTrash}
-                                        requireConfirmation={true}
+                                        requireConfirmation
                                         confirmationMessage="Are you sure?"
                                         confirmationButtons={[
                                             {
@@ -155,10 +155,10 @@ const ClassInlineItem = ({
                         placeholder="Select or create class"
                         onChange={handleClassSelect}
                         value={value}
-                        autoLoadOption={true}
-                        openMenuOnFocus={true}
-                        allowCreate={true}
-                        copyValueButton={true}
+                        autoLoadOption
+                        openMenuOnFocus
+                        allowCreate
+                        copyValueButton
                         isClearable={false}
                         autoFocus={false}
                         inputGroup={false}

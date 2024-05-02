@@ -92,7 +92,7 @@ const SideBar = () => {
             <hr />
 
             {nonRecommendedClasses.map((annotationClass) => (
-                <AnnotationCategory annotationClass={annotationClass} hideEmpty={true} key={annotationClass.iri} />
+                <AnnotationCategory annotationClass={annotationClass} hideEmpty key={annotationClass.iri} />
             ))}
 
             <HeartsAreRed className="text-center pt-3">

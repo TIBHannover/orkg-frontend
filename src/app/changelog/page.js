@@ -11,7 +11,7 @@ class Changelog extends Component {
         changelogText: null,
     };
 
-    componentDidMount = () => {
+    componentDidMount() {
         document.title = 'Changelog - ORKG';
 
         // NEXT-CODE
@@ -27,7 +27,7 @@ class Changelog extends Component {
         //             changelogText: marked(text),
         //         });
         //     });
-    };
+    }
 
     render() {
         return (

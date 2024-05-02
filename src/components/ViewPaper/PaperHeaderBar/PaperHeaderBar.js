@@ -37,7 +37,7 @@ function PaperHeaderBar(props) {
     const title = useSelector((state) => state.viewPaper.paper.title);
 
     return (
-        <AnimationContainer in={true} appear={true} classNames="fade" timeout={500}>
+        <AnimationContainer in appear classNames="fade" timeout={500}>
             <PaperHeaderBarContainer id="paperHeaderBar">
                 <Container className="d-flex align-items-center py-2">
                     <div className="title flex-grow-1 text-truncate">

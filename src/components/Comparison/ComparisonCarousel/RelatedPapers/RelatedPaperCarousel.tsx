@@ -101,22 +101,49 @@ const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAdd
                 </div>
             </div>
 
-            <>
-                <StyledSlider {...settings}>
-                    {similarPaperList.map((paper) => (
-                        <div className="w-100 mx-1" key={paper?.title}>
-                            <Card>
-                                <CardBody
-                                    className="bg-smart"
-                                    style={{
-                                        height: '150px',
-                                        borderRadius: '5px',
-                                        padding: '5px 10px',
-                                        color: 'white',
-                                    }}
-                                >
-                                    <CardTitle>
-                                        <div className="p-1 d-flex justify-content-between flex-row">
+            <StyledSlider {...settings}>
+                {similarPaperList.map((paper) => (
+                    <div className="w-100 mx-1" key={paper?.title}>
+                        <Card>
+                            <CardBody
+                                className="bg-smart"
+                                style={{
+                                    height: '150px',
+                                    borderRadius: '5px',
+                                    padding: '5px 10px',
+                                    color: 'white',
+                                }}
+                            >
+                                <CardTitle>
+                                    <div className="p-1 d-flex justify-content-between flex-row">
+                                        <div
+                                            style={{
+                                                WebkitLineClamp: 2,
+                                                overflow: 'hidden',
+                                                display: '-webkit-box',
+                                                WebkitBoxOrient: 'vertical',
+                                            }}
+                                        >
+                                            <b>{paper?.title}</b>
+                                        </div>
+                                        <div>
+                                            <Button
+                                                color="smart-darker"
+                                                size="sm"
+                                                className="float-right"
+                                                onClick={() => {
+                                                    setCurrentSimilarPaper(paper);
+                                                    setIsOpenAddContribution(true);
+                                                }}
+                                            >
+                                                Add
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </CardTitle>
+                                <CardText>
+                                    {paper?.abstract && (
+                                        <p>
                                             <div
                                                 style={{
                                                     WebkitLineClamp: 2,
@@ -125,58 +152,29 @@ const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAdd
                                                     WebkitBoxOrient: 'vertical',
                                                 }}
                                             >
-                                                <b>{paper?.title}</b>
+                                                {paper?.abstract}
                                             </div>
-                                            <div>
-                                                <Button
-                                                    color="smart-darker"
-                                                    size="sm"
-                                                    className="float-right"
-                                                    onClick={() => {
-                                                        setCurrentSimilarPaper(paper);
-                                                        setIsOpenAddContribution(true);
-                                                    }}
-                                                >
-                                                    Add
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </CardTitle>
-                                    <CardText>
-                                        {paper?.abstract && (
-                                            <p>
-                                                <div
-                                                    style={{
-                                                        WebkitLineClamp: 2,
-                                                        overflow: 'hidden',
-                                                        display: '-webkit-box',
-                                                        WebkitBoxOrient: 'vertical',
-                                                    }}
-                                                >
-                                                    {paper?.abstract}
-                                                </div>
-                                                <Button
-                                                    color="link"
-                                                    className="p-0 text-white"
-                                                    onClick={() => {
-                                                        setCurrentSimilarPaper(paper);
-                                                        setIsOpenRelatedPaperModal(true);
-                                                    }}
-                                                >
-                                                    Read more
-                                                </Button>
-                                            </p>
-                                        )}
-                                    </CardText>
-                                </CardBody>
-                            </Card>
-                        </div>
-                    ))}
-                </StyledSlider>
-            </>
+                                            <Button
+                                                color="link"
+                                                className="p-0 text-white"
+                                                onClick={() => {
+                                                    setCurrentSimilarPaper(paper);
+                                                    setIsOpenRelatedPaperModal(true);
+                                                }}
+                                            >
+                                                Read more
+                                            </Button>
+                                        </p>
+                                    )}
+                                </CardText>
+                            </CardBody>
+                        </Card>
+                    </div>
+                ))}
+            </StyledSlider>
             {isOpenAddContribution && (
                 <AddContribution
-                    allowCreate={true}
+                    allowCreate
                     onAddContributions={addContributions}
                     showDialog={isOpenAddContribution}
                     toggle={() => setIsOpenAddContribution((v) => !v)}

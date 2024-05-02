@@ -148,8 +148,8 @@ const TemplateTooltip = ({ children, id, extraContent, disabled = false }) => {
             delay={[500, 0]}
             appendTo={document.body}
             disabled={disabled}
-            interactive={true}
-            arrow={true}
+            interactive
+            arrow
         >
             <span tabIndex="0">{children}</span>
         </Tippy>

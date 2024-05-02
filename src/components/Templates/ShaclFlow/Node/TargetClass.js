@@ -17,7 +17,7 @@ function TargetClass({ data, nodeId }) {
             <Handle type="target" position={Position.Left} nodeId={nodeId} />
             <div>
                 {' '}
-                <DescriptionTooltip id={data.id} _class={ENTITIES.CLASS} showURL={true}>
+                <DescriptionTooltip id={data.id} _class={ENTITIES.CLASS} showURL>
                     {data.label}
                 </DescriptionTooltip>
             </div>

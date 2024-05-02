@@ -24,12 +24,10 @@ function CustomNode({ data }) {
         <>
             <Handle type="target" position={Position.Top} />
             {data.id !== data.label ? (
-                <>
-                    <Link href={getResourceLink(data.classes?.[0], data.id)}>
-                        {paper?.id ? `${paper.label} - ` : ''}
-                        {data.label}
-                    </Link>
-                </>
+                <Link href={getResourceLink(data.classes?.[0], data.id)}>
+                    {paper?.id ? `${paper.label} - ` : ''}
+                    {data.label}
+                </Link>
             ) : (
                 <>{data.label}</>
             )}

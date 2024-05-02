@@ -101,11 +101,7 @@ const ViewPaperVersion = () => {
                                 )}
                             </>
                         )}
-                        {!isLoading && !isLoadingFailed && (
-                            <>
-                                <PaperVersionHeader />
-                            </>
-                        )}
+                        {!isLoading && !isLoadingFailed && <PaperVersionHeader />}
                         {!isLoading && (
                             <>
                                 <hr className="mt-3" />

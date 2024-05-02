@@ -32,7 +32,7 @@ const IntegratedList: FC<IntegratedListProps> = ({ sdgId }) => {
                 className="box rounded"
                 // @ts-expect-error
                 getPopupContainer={(trigger) => trigger.parentNode}
-                destroyInactiveTabPane={true}
+                destroyInactiveTabPane
                 onChange={onTabChange}
                 activeKey={activeTab}
                 items={[

@@ -31,7 +31,7 @@ function TabsContainer({ id, classes, editMode }) {
             <Tabs
                 className="box rounded"
                 getPopupContainer={(trigger) => trigger.parentNode}
-                destroyInactiveTabPane={true}
+                destroyInactiveTabPane
                 onChange={onTabChange}
                 activeKey={activeTab ?? 'information'}
                 items={[
@@ -45,9 +45,9 @@ function TabsContainer({ id, classes, editMode }) {
                                     syncBackend={editMode}
                                     openExistingResourcesInDialog={false}
                                     initialSubjectId={id}
-                                    newStore={true}
-                                    propertiesAsLinks={true}
-                                    resourcesAsLinks={true}
+                                    newStore
+                                    propertiesAsLinks
+                                    resourcesAsLinks
                                     keyToKeepStateOnLocationChange={id}
                                 />
                             </div>

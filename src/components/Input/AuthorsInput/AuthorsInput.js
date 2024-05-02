@@ -157,7 +157,7 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                                 placeholder="Search for author or enter a new author..."
                                 onChange={handleChange}
                                 value={authorInput}
-                                allowCreate={true}
+                                allowCreate
                                 autoLoadOption={false}
                                 innerRef={inputRef}
                                 inputId="authorInput"

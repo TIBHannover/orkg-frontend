@@ -1,16 +1,10 @@
 {
-    "extends": [
-        "react-app",
-        "plugin:prettier/recommended",
-        "airbnb-base",
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "plugin:react/jsx-runtime"
-    ],
+    "parser": "@typescript-eslint/parser", // airbnb-typescript won't work without specifying the parser
+    "extends": ["airbnb", "airbnb-typescript", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "next/core-web-vitals"],
     "globals": {
         "globalThis": false
     },
-    "plugins": ["prettier", "jsx-a11y", "no-relative-import-paths"],
+    "plugins": ["no-relative-import-paths"],
     "rules": {
         "prettier/prettier": 1,
         "react/jsx-closing-bracket-location": 2,
@@ -20,23 +14,14 @@
         "no-multi-spaces": 2,
         "react/jsx-tag-spacing": 2,
         "react/jsx-curly-spacing": 2,
-        "curly": 2,
-        "react/jsx-wrap-multilines": 2,
+        "curly": 1,
+        "react/jsx-wrap-multilines": 1,
         "react/self-closing-comp": 2,
         "react/prop-types": 2,
         "no-var": 2,
         "no-const-assign": 2,
         "prefer-const": 1,
         "react/jsx-curly-brace-presence": 2,
-        "jsx-a11y/no-autofocus": [
-            2,
-            {
-                "ignoreNonDOM": true
-            }
-        ],
-        "jsx-a11y/click-events-have-key-events": 1,
-        "jsx-a11y/no-static-element-interactions": 1,
-        "jsx-a11y/no-noninteractive-element-interactions": 1,
         "no-console": [
             1,
             {
@@ -78,7 +63,47 @@
         "react/no-unescaped-entities": 0,
         "no-confusing-arrow": 0,
         "newline-per-chained-call": 0,
-        "no-unused-vars": 1,
+        // @typescript-eslint only as warnings to facilitate migration
+        "@typescript-eslint/ban-ts-comment": 1,
+        "@typescript-eslint/no-explicit-any": 1,
+        "@typescript-eslint/no-this-alias": 1,
+        "@typescript-eslint/no-var-requires": 1,
+        "@typescript-eslint/ban-types": 1,
+        "@typescript-eslint/no-unused-vars": 1,
+        "@typescript-eslint/naming-convention": 1,
+        "@typescript-eslint/no-shadow": 1,
+        "@typescript-eslint/default-param-last": 1,
+        "@typescript-eslint/no-use-before-define": 1,
+        "@typescript-eslint/return-await": 1,
+        "@typescript-eslint/no-unused-expressions": 1,
+        "react/jsx-filename-extension": 0,
+        "react/destructuring-assignment": 1,
+        "react/require-default-props": 0,
+        "react/no-unused-state": 1,
+        "react/jsx-props-no-spreading": 1,
+        "react/function-component-definition": 0,
+        "react/forbid-prop-types": 1,
+        "react/no-array-index-key": 1,
+        "react/no-unused-prop-types": 1,
+        "react/no-access-state-in-setstate": 1,
+        "react/no-arrow-function-lifecycle": 1,
+        "react/jsx-boolean-value": 1,
+        "react/jsx-no-useless-fragment": 1,
+        "react/no-unused-class-component-methods": 1,
+        "react/state-in-constructor": 1,
+        "react/no-unstable-nested-components": 1,
+        "react/button-has-type": 1,
+        "jsx-a11y/control-has-associated-label": 1,
+        "jsx-a11y/no-noninteractive-tabindex": 1,
+        "jsx-a11y/anchor-is-valid": 1,
+        "react/no-this-in-sfc": 1,
+        "jsx-a11y/interactive-supports-focus": 1,
+        "jsx-a11y/no-noninteractive-element-to-interactive-role": 1,
+        "react/prefer-stateless-function": 1,
+        "react/jsx-no-bind": 1,
+        "jsx-a11y/label-has-associated-control": 1,
+        "no-unused-vars": 0,
+        "import/named": 1,
         "no-await-in-loop": 1,
         "no-nested-ternary": 1,
         "camelcase": 1,
@@ -130,5 +155,11 @@
                 "import/no-anonymous-default-export": "off"
             }
         }
-    ]
+    ],
+    "env": {
+        "jest": true
+    },
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    }
 }

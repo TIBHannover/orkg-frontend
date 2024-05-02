@@ -135,14 +135,14 @@ const AddClass = () => {
                                 placeholder={isCurationAllowed ? 'Select or type to enter a class' : 'This field requires a curator role'}
                                 onChange={handleParentClassSelect}
                                 value={parentClass}
-                                autoLoadOption={true}
-                                openMenuOnFocus={true}
-                                allowCreate={true}
-                                copyValueButton={true}
+                                autoLoadOption
+                                openMenuOnFocus
+                                allowCreate
+                                copyValueButton
                                 isClearable
                                 autoFocus={false}
                                 innerRef={parentClassAutocompleteRef}
-                                showTreeSelector={true}
+                                showTreeSelector
                                 linkButton={parentClass && parentClass.id ? reverse(ROUTES.CLASS, { id: parentClass.id }) : ''}
                                 linkButtonTippy="Go to class page"
                                 inputId="target-class"

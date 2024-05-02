@@ -57,7 +57,7 @@ function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagra
                         {diagramResource?.created_by !== MISC.UNKNOWN_ID && (
                             <>
                                 {' created by '}
-                                <UserAvatar showDisplayName={true} userId={diagramResource?.created_by} />
+                                <UserAvatar showDisplayName userId={diagramResource?.created_by} />
                             </>
                         )}
                     </Alert>

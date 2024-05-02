@@ -177,8 +177,8 @@ const DescriptionTooltip = ({ disabled = false, showURL = false, id, _class, cla
             delay={[500, 0]}
             appendTo={document.body}
             disabled={disabled}
-            interactive={true}
-            arrow={true}
+            interactive
+            arrow
         >
             <span tabIndex="0" title="">
                 {children}

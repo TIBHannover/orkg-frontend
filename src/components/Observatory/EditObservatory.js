@@ -31,7 +31,7 @@ class EditObservatory extends Component {
         };
     }
 
-    componentDidUpdate = (prevProps) => {
+    componentDidUpdate(prevProps) {
         if (prevProps.label !== this.props.label) {
             this.setState({ label: this.props.label });
         }
@@ -43,7 +43,7 @@ class EditObservatory extends Component {
         if (prevProps.researchField !== this.props.researchField) {
             this.setState({ researchField: this.props.researchField });
         }
-    };
+    }
 
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
@@ -159,73 +159,71 @@ class EditObservatory extends Component {
     render() {
         const isLoading = this.state.isLoadingName || this.state.isLoadingDescription || this.state.isLoadingResearchField;
         return (
-            <>
-                <Modal size="lg" isOpen={this.props.showDialog} toggle={this.props.toggle}>
-                    <ModalHeader toggle={this.props.toggle}>Update observatory</ModalHeader>
-                    <ModalBody>
-                        <>
-                            {' '}
-                            <FormGroup>
-                                <Label for="observatory-name">Name</Label>
-                                <Input
-                                    onChange={this.handleChange}
-                                    type="text"
-                                    name="label"
-                                    id="observatory-name"
-                                    value={this.state.label}
-                                    placeholder="Name"
-                                    disabled={isLoading}
-                                    maxLength={MAX_LENGTH_INPUT}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="observatory-research-field">Research field</Label>
-                                <AutoComplete
-                                    inputId="observatory-research-field"
-                                    entityType={ENTITIES.RESOURCE}
-                                    optionsClass={CLASSES.RESEARCH_FIELD}
-                                    placeholder="Select research field"
-                                    onItemSelected={async (rf) => {
-                                        this.setState({ researchField: { ...rf, label: rf.value } });
-                                    }}
-                                    value={this.state.researchField && this.state.researchField.id ? this.state.researchField : null}
-                                    allowCreate={false}
-                                    ols={false}
-                                    autoLoadOption={true}
-                                    isDisabled={isLoading}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="observatory-description">Description</Label>
-                                <Input
-                                    onChange={this.handleChange}
-                                    type="textarea"
-                                    name="description"
-                                    id="observatory-description"
-                                    value={this.state.description}
-                                    rows={4}
-                                    disabled={isLoading}
-                                    maxLength={MAX_DESCRIPTION_LENGTH}
-                                />
-                                <div className="text-muted text-end">
-                                    {this.state.description?.length}/{MAX_DESCRIPTION_LENGTH}
-                                </div>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label>Sustainable development goals</Label>
-                                <SdgBox handleSave={(sdgs) => this.setState({ sdgs })} sdgs={this.state.sdgs} maxWidth="100%" isEditable />
-                            </FormGroup>
-                        </>
-                    </ModalBody>
-                    <ModalFooter>
-                        <div className="text-align-center mt-2">
-                            <Button color="primary" disabled={isLoading} onClick={this.handleSubmit}>
-                                {isLoading && <span className="fa fa-spinner fa-spin" />} Save
-                            </Button>
-                        </div>
-                    </ModalFooter>
-                </Modal>
-            </>
+            <Modal size="lg" isOpen={this.props.showDialog} toggle={this.props.toggle}>
+                <ModalHeader toggle={this.props.toggle}>Update observatory</ModalHeader>
+                <ModalBody>
+                    <>
+                        {' '}
+                        <FormGroup>
+                            <Label for="observatory-name">Name</Label>
+                            <Input
+                                onChange={this.handleChange}
+                                type="text"
+                                name="label"
+                                id="observatory-name"
+                                value={this.state.label}
+                                placeholder="Name"
+                                disabled={isLoading}
+                                maxLength={MAX_LENGTH_INPUT}
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="observatory-research-field">Research field</Label>
+                            <AutoComplete
+                                inputId="observatory-research-field"
+                                entityType={ENTITIES.RESOURCE}
+                                optionsClass={CLASSES.RESEARCH_FIELD}
+                                placeholder="Select research field"
+                                onItemSelected={async (rf) => {
+                                    this.setState({ researchField: { ...rf, label: rf.value } });
+                                }}
+                                value={this.state.researchField && this.state.researchField.id ? this.state.researchField : null}
+                                allowCreate={false}
+                                ols={false}
+                                autoLoadOption
+                                isDisabled={isLoading}
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="observatory-description">Description</Label>
+                            <Input
+                                onChange={this.handleChange}
+                                type="textarea"
+                                name="description"
+                                id="observatory-description"
+                                value={this.state.description}
+                                rows={4}
+                                disabled={isLoading}
+                                maxLength={MAX_DESCRIPTION_LENGTH}
+                            />
+                            <div className="text-muted text-end">
+                                {this.state.description?.length}/{MAX_DESCRIPTION_LENGTH}
+                            </div>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label>Sustainable development goals</Label>
+                            <SdgBox handleSave={(sdgs) => this.setState({ sdgs })} sdgs={this.state.sdgs} maxWidth="100%" isEditable />
+                        </FormGroup>
+                    </>
+                </ModalBody>
+                <ModalFooter>
+                    <div className="text-align-center mt-2">
+                        <Button color="primary" disabled={isLoading} onClick={this.handleSubmit}>
+                            {isLoading && <span className="fa fa-spinner fa-spin" />} Save
+                        </Button>
+                    </div>
+                </ModalFooter>
+            </Modal>
         );
     }
 }

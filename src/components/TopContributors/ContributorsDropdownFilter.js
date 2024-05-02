@@ -28,7 +28,7 @@ const ContributorsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort
             )}
             {researchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN && (
                 <Tippy
-                    interactive={true}
+                    interactive
                     trigger="click"
                     placement="bottom-end"
                     onCreate={(instance) => setTippy(instance)}

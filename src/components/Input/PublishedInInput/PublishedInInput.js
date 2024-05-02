@@ -30,7 +30,7 @@ const PublishedInInput = ({ value = '', onChange, inputId = null, isDisabled = f
         autoFocus={false}
         cacheOptions
         value={value}
-        isClearable={true}
+        isClearable
         isDisabled={isDisabled}
     />
 );

@@ -95,109 +95,105 @@ export default function SignUp() {
     };
 
     return (
-        <>
-            <Form className="ps-3 pe-3 pt-2" onSubmit={signUp}>
-                {Boolean(getErrorMessage(errors)) && <Alert color="danger">{getErrorMessage(errors)}</Alert>}
-                <FormGroup>
-                    <Label for="name">Display name</Label>
-                    <Input
-                        onChange={(e) => setName(e.target.value)}
-                        value={name}
-                        type="text"
-                        name="name"
-                        id="name"
-                        placeholder="Name"
-                        invalid={Boolean(getErrorMessage(errors, 'display_name'))}
-                        maxLength={MAX_LENGTH_INPUT}
-                    />
-                    {Boolean(getErrorMessage(errors, 'display_name')) && <FormFeedback>{getErrorMessage(errors, 'display_name')}</FormFeedback>}
-                </FormGroup>
-                <FormGroup>
-                    <Label for="Email">Email address</Label>
-                    <Input
-                        onChange={(e) => setEmail(e.target.value)}
-                        value={email}
-                        type="text"
-                        name="email"
-                        id="Email"
-                        placeholder="Email address"
-                        invalid={Boolean(getErrorMessage(errors, 'email'))}
-                        maxLength={MAX_LENGTH_INPUT}
-                    />
-                    {Boolean(getErrorMessage(errors, 'email')) && <FormFeedback>{getErrorMessage(errors, 'email')}</FormFeedback>}
-                </FormGroup>
-                <FormGroup>
-                    <Label for="Password">Password</Label>
-                    <Input
-                        onChange={(e) => setPassword(e.target.value)}
-                        value={password}
-                        type="password"
-                        name="password"
-                        id="Password"
-                        placeholder="Password"
-                        invalid={Boolean(getErrorMessage(errors, 'password'))}
-                    />
-                    {Boolean(getErrorMessage(errors, 'password')) && <FormFeedback>{getErrorMessage(errors, 'password')}</FormFeedback>}
-                </FormGroup>
-                <FormGroup>
-                    <Label for="matching_password">Confirm Password</Label>
-                    <Input
-                        onChange={(e) => setMatchingPassword(e.target.value)}
-                        value={matchingPassword}
-                        type="password"
-                        name="matching_password"
-                        id="matching_password"
-                        placeholder="Confirm password"
-                        invalid={Boolean(getErrorMessage(errors, 'matching_password'))}
-                    />
-                    {Boolean(getErrorMessage(errors, 'matching_password')) && (
-                        <FormFeedback>{getErrorMessage(errors, 'matching_password')}</FormFeedback>
-                    )}
-                </FormGroup>
-                <FormGroup check className="mb-0" style={{ fontSize: '90%' }}>
-                    <Input
-                        type="checkbox"
-                        id="termsConditionIsChecked"
-                        onChange={(e) => setTermsConditionIsChecked(e.target.checked)}
-                        checked={termsConditionIsChecked}
-                    />{' '}
-                    <Label check for="termsConditionIsChecked" className="mb-0">
-                        I accept the{' '}
-                        <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.TERMS_OF_USE })} target="_blank">
-                            Special Conditions ORKG
-                        </Link>
-                    </Label>
-                </FormGroup>
-                <FormGroup check style={{ fontSize: '90%' }}>
-                    <Input
-                        type="checkbox"
-                        id="dataProtectionIsChecked"
-                        onChange={(e) => setDataProtectionIsChecked(e.target.checked)}
-                        checked={dataProtectionIsChecked}
-                    />{' '}
-                    <Label check for="dataProtectionIsChecked" className="mb-0">
-                        I agree to the processing of my personal data provided here by Technische Informationsbibliothek (TIB). In accordance with the{' '}
-                        <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })} target="_blank">
-                            data protection declaration
-                        </Link>{' '}
-                        as well as the{' '}
-                        <a href="/files/infosheet-data-protection.pdf" target="_blank" rel="noopener noreferrer">
-                            info sheet data protection
-                        </a>
-                        , the data is processed exclusively by TIB in order to provide services of our platform.
-                    </Label>
-                </FormGroup>
-                <ButtonWithLoading
-                    type="submit"
-                    color="primary"
-                    className="mt-4 mb-2"
-                    block
-                    disabled={isLoading || !dataProtectionIsChecked || !termsConditionIsChecked}
-                    isLoading={isLoading}
-                >
-                    Sign up
-                </ButtonWithLoading>
-            </Form>
-        </>
+        <Form className="ps-3 pe-3 pt-2" onSubmit={signUp}>
+            {Boolean(getErrorMessage(errors)) && <Alert color="danger">{getErrorMessage(errors)}</Alert>}
+            <FormGroup>
+                <Label for="name">Display name</Label>
+                <Input
+                    onChange={(e) => setName(e.target.value)}
+                    value={name}
+                    type="text"
+                    name="name"
+                    id="name"
+                    placeholder="Name"
+                    invalid={Boolean(getErrorMessage(errors, 'display_name'))}
+                    maxLength={MAX_LENGTH_INPUT}
+                />
+                {Boolean(getErrorMessage(errors, 'display_name')) && <FormFeedback>{getErrorMessage(errors, 'display_name')}</FormFeedback>}
+            </FormGroup>
+            <FormGroup>
+                <Label for="Email">Email address</Label>
+                <Input
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                    type="text"
+                    name="email"
+                    id="Email"
+                    placeholder="Email address"
+                    invalid={Boolean(getErrorMessage(errors, 'email'))}
+                    maxLength={MAX_LENGTH_INPUT}
+                />
+                {Boolean(getErrorMessage(errors, 'email')) && <FormFeedback>{getErrorMessage(errors, 'email')}</FormFeedback>}
+            </FormGroup>
+            <FormGroup>
+                <Label for="Password">Password</Label>
+                <Input
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
+                    type="password"
+                    name="password"
+                    id="Password"
+                    placeholder="Password"
+                    invalid={Boolean(getErrorMessage(errors, 'password'))}
+                />
+                {Boolean(getErrorMessage(errors, 'password')) && <FormFeedback>{getErrorMessage(errors, 'password')}</FormFeedback>}
+            </FormGroup>
+            <FormGroup>
+                <Label for="matching_password">Confirm Password</Label>
+                <Input
+                    onChange={(e) => setMatchingPassword(e.target.value)}
+                    value={matchingPassword}
+                    type="password"
+                    name="matching_password"
+                    id="matching_password"
+                    placeholder="Confirm password"
+                    invalid={Boolean(getErrorMessage(errors, 'matching_password'))}
+                />
+                {Boolean(getErrorMessage(errors, 'matching_password')) && <FormFeedback>{getErrorMessage(errors, 'matching_password')}</FormFeedback>}
+            </FormGroup>
+            <FormGroup check className="mb-0" style={{ fontSize: '90%' }}>
+                <Input
+                    type="checkbox"
+                    id="termsConditionIsChecked"
+                    onChange={(e) => setTermsConditionIsChecked(e.target.checked)}
+                    checked={termsConditionIsChecked}
+                />{' '}
+                <Label check for="termsConditionIsChecked" className="mb-0">
+                    I accept the{' '}
+                    <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.TERMS_OF_USE })} target="_blank">
+                        Special Conditions ORKG
+                    </Link>
+                </Label>
+            </FormGroup>
+            <FormGroup check style={{ fontSize: '90%' }}>
+                <Input
+                    type="checkbox"
+                    id="dataProtectionIsChecked"
+                    onChange={(e) => setDataProtectionIsChecked(e.target.checked)}
+                    checked={dataProtectionIsChecked}
+                />{' '}
+                <Label check for="dataProtectionIsChecked" className="mb-0">
+                    I agree to the processing of my personal data provided here by Technische Informationsbibliothek (TIB). In accordance with the{' '}
+                    <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })} target="_blank">
+                        data protection declaration
+                    </Link>{' '}
+                    as well as the{' '}
+                    <a href="/files/infosheet-data-protection.pdf" target="_blank" rel="noopener noreferrer">
+                        info sheet data protection
+                    </a>
+                    , the data is processed exclusively by TIB in order to provide services of our platform.
+                </Label>
+            </FormGroup>
+            <ButtonWithLoading
+                type="submit"
+                color="primary"
+                className="mt-4 mb-2"
+                block
+                disabled={isLoading || !dataProtectionIsChecked || !termsConditionIsChecked}
+                isLoading={isLoading}
+            >
+                Sign up
+            </ButtonWithLoading>
+        </Form>
     );
 }

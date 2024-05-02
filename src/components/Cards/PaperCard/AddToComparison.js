@@ -127,7 +127,7 @@ const AddToComparison = ({ contributionId, paper, showLabel = false }) => {
                             options={options}
                             components={{ Option }}
                             openMenuOnFocus
-                            isMulti={true}
+                            isMulti
                             placeholder="Select contribution to compare"
                             classNamePrefix="react-select"
                         />

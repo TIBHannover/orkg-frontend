@@ -180,13 +180,11 @@ const Review = () => {
             <TitleBar
                 titleAddition={
                     publicationDate && (
-                        <>
-                            <Tippy content={`Update message: "${version.description}"`}>
-                                <SubTitle className=" mt-1">
-                                    Published on <time dateTime={version?.date}>{publicationDate}</time> - Version {versionNumber}
-                                </SubTitle>
-                            </Tippy>
-                        </>
+                        <Tippy content={`Update message: "${version.description}"`}>
+                            <SubTitle className=" mt-1">
+                                Published on <time dateTime={version?.date}>{publicationDate}</time> - Version {versionNumber}
+                            </SubTitle>
+                        </Tippy>
                     )
                 }
                 buttonGroup={
@@ -210,18 +208,16 @@ const Review = () => {
                             </div>
                         )}
                         {!isEditing && (
-                            <>
-                                <Button
-                                    className="flex-shrink-0"
-                                    color="secondary"
-                                    size="sm"
-                                    style={{ marginRight: 2 }}
-                                    onClick={() => window?.print()}
-                                    aria-label="Print article"
-                                >
-                                    <Icon icon={faDownload} />
-                                </Button>
-                            </>
+                            <Button
+                                className="flex-shrink-0"
+                                color="secondary"
+                                size="sm"
+                                style={{ marginRight: 2 }}
+                                onClick={() => window?.print()}
+                                aria-label="Print article"
+                            >
+                                <Icon icon={faDownload} />
+                            </Button>
                         )}
 
                         {!isEditing ? (

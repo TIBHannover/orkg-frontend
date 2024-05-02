@@ -50,7 +50,7 @@ function EditEdge({ isEditEdgeModalOpen, setIsEditEdgeModalOpen, saveEdge, addEd
                         <Autocomplete
                             entityType={selectedEntity}
                             placeholder={`Select or type to enter a ${selectedEntity}`}
-                            allowCreate={true}
+                            allowCreate
                             inputGroup={false}
                             onItemSelected={(item) => {
                                 setValue({ ...item, label: item.value, _class: selectedEntity, linked: true });
@@ -60,7 +60,7 @@ function EditEdge({ isEditEdgeModalOpen, setIsEditEdgeModalOpen, saveEdge, addEd
                             }}
                             value={value}
                             ols={false}
-                            autoLoadOption={true}
+                            autoLoadOption
                             cacheOptions={false}
                             key={selectedEntity}
                             inputId={`selectEdge${selectedEntity}`}

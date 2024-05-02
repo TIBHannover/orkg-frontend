@@ -136,7 +136,7 @@ const CellVE = (props) => {
                         )}
                         {props.type === 'property' && renderingItem === 'input' && (
                             <PropertyCellInput
-                                autoFocus={true}
+                                autoFocus
                                 value={cellLabelValue}
                                 onChange={cellValueChanged}
                                 innerRef={inputRefs}
@@ -166,7 +166,7 @@ const CellVE = (props) => {
                         )}
                         {props.type === 'contribution' && renderingItem === 'input' && (
                             <ContributionCellInput
-                                autoFocus={true}
+                                autoFocus
                                 value={cellLabelValue}
                                 onChange={cellValueChanged}
                                 innerRef={inputRefs}
@@ -197,7 +197,7 @@ const CellVE = (props) => {
                         )}
                         {props.type === 'value' && renderingItem === 'input' && (
                             <ValueCellInput
-                                autoFocus={true}
+                                autoFocus
                                 value={cellLabelValue}
                                 onChange={cellValueChanged}
                                 innerRef={inputRefs}

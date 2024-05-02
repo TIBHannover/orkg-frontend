@@ -30,7 +30,7 @@ function OntologiesModal(props) {
     };
 
     return (
-        <Modal isOpen={true} toggle={props.toggle}>
+        <Modal isOpen toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>Select sources</ModalHeader>
             <ModalBody>
                 <div className="d-flex justify-content-between align-items-end">
@@ -49,8 +49,8 @@ function OntologiesModal(props) {
                         }}
                         placeholder="Select or type to enter an ontology"
                         value={value}
-                        autoLoadOption={true}
-                        openMenuOnFocus={true}
+                        autoLoadOption
+                        openMenuOnFocus
                         allowCreate={false}
                         isClearable
                         isMulti

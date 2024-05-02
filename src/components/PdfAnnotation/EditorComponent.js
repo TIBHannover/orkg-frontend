@@ -262,12 +262,12 @@ class EditorComponent extends BaseEditorComponent {
                                 }}
                                 onInput={(e, value) => this.handleInputChange(e ? e.target.value : value)}
                                 value={value}
-                                disableBorderRadiusLeft={true}
-                                disableBorderRadiusRight={true}
+                                disableBorderRadiusLeft
+                                disableBorderRadiusRight
                                 cssClasses="form-control-sm"
-                                eventListener={true}
+                                eventListener
                                 innerRef={this.resourceInputRef}
-                                openMenuOnFocus={true}
+                                openMenuOnFocus
                                 allowCreate={!(this.state.valueClass && this.state.valueClass === CLASSES.RESEARCH_FIELD)}
                             />
                         ) : (
@@ -286,7 +286,7 @@ class EditorComponent extends BaseEditorComponent {
                         )}
                         {this.state.type === 'resource' && !this.state.valueClass && (
                             <Dropdown isOpen={this.state.dropdownValueTypeOpen} toggle={() => this.toggle('dropdownValueTypeOpen')}>
-                                <StyledDropdownToggle disableBorderRadiusLeft={true}>
+                                <StyledDropdownToggle disableBorderRadiusLeft>
                                     <small>{`${this.state.valueType.charAt(0).toUpperCase() + this.state.valueType.slice(1)} `}</small>
                                     <Icon size="xs" icon={faBars} />
                                 </StyledDropdownToggle>

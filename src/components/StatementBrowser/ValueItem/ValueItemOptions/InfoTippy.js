@@ -12,7 +12,7 @@ const InfoTippy = (props) => {
     const value = useSelector((state) => state.statementBrowser.values.byId[props.id]);
     return (
         <Tippy
-            interactive={true}
+            interactive
             content={
                 <div className="p-1">
                     <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
@@ -26,7 +26,7 @@ const InfoTippy = (props) => {
                             <li>
                                 Created by:{' '}
                                 {value.statementCreatedBy !== MISC.UNKNOWN_ID ? (
-                                    <UserAvatar linkTarget="_blank" size={18} showDisplayName={true} userId={value.statementCreatedBy} />
+                                    <UserAvatar linkTarget="_blank" size={18} showDisplayName userId={value.statementCreatedBy} />
                                 ) : (
                                     'Unknown'
                                 )}

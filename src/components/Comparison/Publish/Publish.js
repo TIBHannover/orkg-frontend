@@ -129,7 +129,7 @@ function Publish(props) {
                         {comparisonResource.hasPreviousVersion.created_by !== MISC.UNKNOWN_ID && (
                             <>
                                 {' created by '}
-                                <UserAvatar showDisplayName={true} userId={comparisonResource.hasPreviousVersion.created_by} />
+                                <UserAvatar showDisplayName userId={comparisonResource.hasPreviousVersion.created_by} />
                             </>
                         )}
                     </Alert>
@@ -354,9 +354,9 @@ function Publish(props) {
                                             setConference(e);
                                         }}
                                         getOptionValue={({ id }) => id}
-                                        isSearchable={true}
+                                        isSearchable
                                         getOptionLabel={({ name }) => name}
-                                        isClearable={true}
+                                        isClearable
                                         classNamePrefix="react-select"
                                         inputId="conference"
                                         value={conference}

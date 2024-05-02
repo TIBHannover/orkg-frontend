@@ -91,7 +91,7 @@ const StatementActionButton: FC<StatementActionButtonProps> = ({
                 onHide={onHide}
                 // @ts-expect-error
                 onCreate={(tippyInst) => (tippy.current = tippyInst)}
-                interactive={true}
+                interactive
                 trigger="click"
                 appendTo={appendTo}
                 content={
@@ -103,11 +103,9 @@ const StatementActionButton: FC<StatementActionButtonProps> = ({
             </Tippy>
         </Tippy>
     ) : (
-        <>
-            <Tippy appendTo={appendTo} hideOnClick={false} interactive={interactive} trigger="mouseenter" content={title}>
-                {tippyChildren}
-            </Tippy>
-        </>
+        <Tippy appendTo={appendTo} hideOnClick={false} interactive={interactive} trigger="mouseenter" content={title}>
+            {tippyChildren}
+        </Tippy>
     );
 };
 

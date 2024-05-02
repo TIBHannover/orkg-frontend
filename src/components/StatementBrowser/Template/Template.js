@@ -21,7 +21,7 @@ const Template = (props) => {
     return (
         <AnimationContainer
             classNames="fadeIn mt-3 pb-3"
-            in={true}
+            in
             timeout={!property.isAnimated ? { enter: 700 } : { enter: 0 }}
             addEndListener={() => {
                 if (!property.isAnimated) {
@@ -47,7 +47,7 @@ const Template = (props) => {
                         syncBackend={props.syncBackend}
                         isLastItem={propertyIds.length === index + 1}
                         showValueHelp={false}
-                        inTemplate={true}
+                        inTemplate
                         contextStyle="Template"
                         resourceId={props.value.resourceId}
                     />
@@ -58,7 +58,7 @@ const Template = (props) => {
                         <div className="row gx-0">
                             <div className="col-4 propertyHolder" />
                         </div>
-                        <AddProperty syncBackend={props.syncBackend} inTemplate={true} resourceId={props.value.resourceId} />
+                        <AddProperty syncBackend={props.syncBackend} inTemplate resourceId={props.value.resourceId} />
                     </AddPropertyWrapper>
                 )}
             </div>

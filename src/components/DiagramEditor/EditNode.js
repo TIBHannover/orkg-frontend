@@ -22,7 +22,7 @@ function EditNode({ isEditNodeModalOpen, setIsEditNodeModalOpen, saveNode, addNo
                     <Autocomplete
                         entityType={ENTITIES.RESOURCE}
                         placeholder="Select or type to enter a resource"
-                        allowCreate={true}
+                        allowCreate
                         inputGroup={false}
                         onItemSelected={(i) => {
                             setValue({ ...i, label: i.value, _class: ENTITIES.RESOURCE, linked: true });
@@ -33,7 +33,7 @@ function EditNode({ isEditNodeModalOpen, setIsEditNodeModalOpen, saveNode, addNo
                         value={value}
                         ols={false}
                         inputId="selectNode"
-                        allowCreateDuplicate={true}
+                        allowCreateDuplicate
                     />
                 </div>
             </ModalBody>

@@ -174,7 +174,7 @@ const AddObservatory = () => {
                                         value={researchField}
                                         allowCreate={false}
                                         ols={false}
-                                        autoLoadOption={true}
+                                        autoLoadOption
                                         isDisabled={loading}
                                         inputId="ObservatoryResearchField"
                                     />
@@ -200,15 +200,9 @@ const AddObservatory = () => {
                             </div>
                         )}
                         {(!user || !user.isCurationAllowed) && (
-                            <>
-                                <Button
-                                    color="link"
-                                    className="p-0 mb-2 mt-2 clearfix"
-                                    onClick={() => dispatch(openAuthDialog({ action: 'signin' }))}
-                                >
-                                    <Icon className="me-1" icon={faUser} /> Sign in to create an observatory
-                                </Button>
-                            </>
+                            <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => dispatch(openAuthDialog({ action: 'signin' }))}>
+                                <Icon className="me-1" icon={faUser} /> Sign in to create an observatory
+                            </Button>
                         )}
                     </Container>
                 </>

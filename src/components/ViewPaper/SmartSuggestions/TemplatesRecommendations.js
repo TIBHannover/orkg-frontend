@@ -30,13 +30,13 @@ function TemplatesRecommendations({ target, title = '', abstract = '' }) {
                             >
                                 <div>
                                     <TemplateButton
-                                        addMode={true}
+                                        addMode
                                         tippyTarget={target}
                                         id={template.id}
                                         label={template.label}
                                         resourceId={selectedResource}
-                                        syncBackend={true}
-                                        isSmart={true}
+                                        syncBackend
+                                        isSmart
                                     />
                                 </div>
                             </AnimationContainer>

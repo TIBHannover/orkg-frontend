@@ -35,36 +35,32 @@ const Benchmarks = (props) => {
 
     return (
         <>
-            <>
-                <Container className="d-flex align-items-center mt-4 mb-4">
-                    <div className="d-flex flex-md-grow-1  align-items-center">
-                        <h1 className="h5 mb-0 me-2">Benchmarks</h1>
-                    </div>
-                </Container>
-                <Container className="p-0">
-                    <BenchmarksCarousel
-                        problemId={props.id}
-                        benchmarks={benchmarks}
-                        isLoading={isLoading}
-                        isLastPageReached={isLastPageReached}
-                        hasNextPage={hasNextPage}
-                        loadNextPage={loadNextPage}
-                        handleKeyDown={handleKeyDown}
-                        page={page}
-                    />
+            <Container className="d-flex align-items-center mt-4 mb-4">
+                <div className="d-flex flex-md-grow-1  align-items-center">
+                    <h1 className="h5 mb-0 me-2">Benchmarks</h1>
+                </div>
+            </Container>
+            <Container className="p-0">
+                <BenchmarksCarousel
+                    problemId={props.id}
+                    benchmarks={benchmarks}
+                    isLoading={isLoading}
+                    isLastPageReached={isLastPageReached}
+                    hasNextPage={hasNextPage}
+                    loadNextPage={loadNextPage}
+                    handleKeyDown={handleKeyDown}
+                    page={page}
+                />
 
-                    {isLoading && page === 0 && (
-                        <>
-                            <ContentLoader height="100%" width="100%" viewBox="0 0 100 10" style={{ width: '100% !important' }}>
-                                <rect x="0" y="0" rx="1" ry="1" width="20" height="10" />
-                                <rect x="25" y="0" rx="1" ry="1" width="20" height="10" />
-                                <rect x="50" y="0" rx="1" ry="1" width="20" height="10" />
-                                <rect x="75" y="0" rx="1" ry="1" width="20" height="10" />
-                            </ContentLoader>
-                        </>
-                    )}
-                </Container>
-            </>
+                {isLoading && page === 0 && (
+                    <ContentLoader height="100%" width="100%" viewBox="0 0 100 10" style={{ width: '100% !important' }}>
+                        <rect x="0" y="0" rx="1" ry="1" width="20" height="10" />
+                        <rect x="25" y="0" rx="1" ry="1" width="20" height="10" />
+                        <rect x="50" y="0" rx="1" ry="1" width="20" height="10" />
+                        <rect x="75" y="0" rx="1" ry="1" width="20" height="10" />
+                    </ContentLoader>
+                )}
+            </Container>
         </>
     );
 };

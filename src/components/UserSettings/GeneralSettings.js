@@ -83,62 +83,64 @@ class GeneralSettings extends Component {
             });
     };
 
-    render = () => (
-        <>
-            <h5 className="mb-4">General account settings</h5>
-            {Boolean(getErrorMessage(this.state.errors)) && <Alert color="danger">{getErrorMessage(this.state.errors)}</Alert>}
-            <Form>
-                <FormGroup>
-                    <Label for="display_name">Display name</Label>
-                    <Input
-                        onChange={this.handleInputChange}
-                        value={this.state.display_name}
-                        name="display_name"
-                        id="display_name"
-                        placeholder="Display name"
-                        invalid={Boolean(getErrorMessage(this.state.errors, 'display_name'))}
-                    />
-                    {Boolean(getErrorMessage(this.state.errors, 'display_name')) && (
-                        <FormFeedback>{getErrorMessage(this.state.errors, 'display_name')}</FormFeedback>
-                    )}
-                </FormGroup>
-                <FormGroup>
-                    <Label for="Email">Email address</Label>
-                    <Input
-                        onChange={this.handleInputChange}
-                        value={this.state.email}
-                        type="email"
-                        name="email"
-                        id="Email"
-                        placeholder="Email address"
-                        disabled
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="Email">Avatar picture</Label>
-                    <Alert color="info" className="d-flex align-items-center">
-                        <StyledGravatar className="rounded-circle me-3" email={this.state.email} size={40} />
-                        <p className="m-0">
-                            We use Gravatar, a service that associates an avatar image with your primary email address.
-                            <a className="ms-1" href="https://en.gravatar.com/" target="_blank" rel="noopener noreferrer">
-                                Change your avatar image at gravatar.com <Icon size="sm" icon={faExternalLinkAlt} />
-                            </a>
-                        </p>
-                    </Alert>
-                </FormGroup>
-                <ButtonWithLoading
-                    color="primary"
-                    onClick={() => {
-                        this.handleSave();
-                    }}
-                    className="mt-4 mb-2"
-                    isLoading={this.state.loading}
-                >
-                    Save changes
-                </ButtonWithLoading>
-            </Form>
-        </>
-    );
+    render() {
+        return (
+            <>
+                <h5 className="mb-4">General account settings</h5>
+                {Boolean(getErrorMessage(this.state.errors)) && <Alert color="danger">{getErrorMessage(this.state.errors)}</Alert>}
+                <Form>
+                    <FormGroup>
+                        <Label for="display_name">Display name</Label>
+                        <Input
+                            onChange={this.handleInputChange}
+                            value={this.state.display_name}
+                            name="display_name"
+                            id="display_name"
+                            placeholder="Display name"
+                            invalid={Boolean(getErrorMessage(this.state.errors, 'display_name'))}
+                        />
+                        {Boolean(getErrorMessage(this.state.errors, 'display_name')) && (
+                            <FormFeedback>{getErrorMessage(this.state.errors, 'display_name')}</FormFeedback>
+                        )}
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="Email">Email address</Label>
+                        <Input
+                            onChange={this.handleInputChange}
+                            value={this.state.email}
+                            type="email"
+                            name="email"
+                            id="Email"
+                            placeholder="Email address"
+                            disabled
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="Email">Avatar picture</Label>
+                        <Alert color="info" className="d-flex align-items-center">
+                            <StyledGravatar className="rounded-circle me-3" email={this.state.email} size={40} />
+                            <p className="m-0">
+                                We use Gravatar, a service that associates an avatar image with your primary email address.
+                                <a className="ms-1" href="https://en.gravatar.com/" target="_blank" rel="noopener noreferrer">
+                                    Change your avatar image at gravatar.com <Icon size="sm" icon={faExternalLinkAlt} />
+                                </a>
+                            </p>
+                        </Alert>
+                    </FormGroup>
+                    <ButtonWithLoading
+                        color="primary"
+                        onClick={() => {
+                            this.handleSave();
+                        }}
+                        className="mt-4 mb-2"
+                        isLoading={this.state.loading}
+                    >
+                        Save changes
+                    </ButtonWithLoading>
+                </Form>
+            </>
+        );
+    }
 }
 
 const mapDispatchToProps = (dispatch) => ({

@@ -120,7 +120,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                         </Dropdown>
                         <div className="d-flex me-2 align-items-center">
                             <Tippy
-                                interactive={true}
+                                interactive
                                 trigger="click"
                                 content={
                                     <div className="p-1" style={{ minWidth: 300 }}>
@@ -128,15 +128,15 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                                         <div>
                                             <AutoComplete
                                                 entityType={ENTITIES.CLASS}
-                                                isMulti={true}
+                                                isMulti
                                                 placeholder="Select a class"
                                                 onChange={(selected) => {
                                                     setBlackListClasses(!selected ? [] : selected);
                                                 }}
                                                 value={blackListClasses}
-                                                autoLoadOption={true}
-                                                openMenuOnFocus={true}
-                                                copyValueButton={true}
+                                                autoLoadOption
+                                                openMenuOnFocus
+                                                copyValueButton
                                                 isClearable={false}
                                                 autoFocus={false}
                                                 inputId={classSelectorId}

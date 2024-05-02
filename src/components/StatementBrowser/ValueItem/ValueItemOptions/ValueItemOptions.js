@@ -98,13 +98,11 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                                 />
                             )}
 
-                        {value.isSaving && (
-                            <StatementActionButton isDisabled={true} title="Saving value" icon={faSpinner} iconSpin={true} action={() => null} />
-                        )}
+                        {value.isSaving && <StatementActionButton isDisabled title="Saving value" icon={faSpinner} iconSpin action={() => null} />}
                         {resource?.existingResourceId && value.shared > 1 && (
                             <StatementActionButton
-                                isDisabled={true}
-                                interactive={true}
+                                isDisabled
+                                interactive
                                 title={
                                     <>
                                         A shared resource cannot be edited directly{' '}
@@ -129,7 +127,7 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                                 title="Delete value"
                                 icon={faTrash}
                                 action={handleDeleteValue}
-                                requireConfirmation={true}
+                                requireConfirmation
                                 confirmationMessage="Are you sure to delete?"
                                 confirmationButtons={[
                                     {
@@ -148,7 +146,7 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                         )}
 
                         {value.isDeleting && (
-                            <StatementActionButton isDisabled={true} title="Deleting value" icon={faSpinner} iconSpin={true} action={() => null} />
+                            <StatementActionButton isDisabled title="Deleting value" icon={faSpinner} iconSpin action={() => null} />
                         )}
                     </>
                 )}

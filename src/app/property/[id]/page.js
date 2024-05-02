@@ -100,7 +100,7 @@ function Property() {
                                     value={property?.label}
                                     onChange={handleHeaderChange}
                                     entityType={ENTITIES.PREDICATE}
-                                    curatorsOnly={true}
+                                    curatorsOnly
                                 />
                                 {isDeletionAllowed && (
                                     <Button color="danger" size="sm" className="mt-2 mb-3" style={{ marginLeft: 'auto' }} onClick={deleteProperty}>
@@ -109,7 +109,7 @@ function Property() {
                                 )}
                             </>
                         )}
-                        <ItemMetadata item={property} showCreatedAt={true} showCreatedBy={true} />
+                        <ItemMetadata item={property} showCreatedAt showCreatedBy />
                     </Container>
                     <Container className="mt-3 p-1 box rounded">
                         <h3 className="ps-4 pt-4">Statements</h3>
@@ -120,9 +120,9 @@ function Property() {
                                 syncBackend={isEditMode}
                                 openExistingResourcesInDialog={false}
                                 initialSubjectId={propertyId}
-                                newStore={true}
-                                propertiesAsLinks={true}
-                                resourcesAsLinks={true}
+                                newStore
+                                propertiesAsLinks
+                                resourcesAsLinks
                                 keyToKeepStateOnLocationChange={propertyId}
                             />
                             <PropertyStatements propertyId={propertyId} />

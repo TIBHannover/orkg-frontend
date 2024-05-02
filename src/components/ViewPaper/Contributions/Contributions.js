@@ -82,7 +82,7 @@ const Contributions = (props) => {
                         }
                         moreIcon={<Icon size="lg" icon={faAngleDown} />}
                         activeKey={selectedContributionId}
-                        destroyInactiveTabPane={true}
+                        destroyInactiveTabPane
                         onChange={onTabChange}
                         items={contributions?.map((contribution) => ({
                             label: (
@@ -118,7 +118,7 @@ const Contributions = (props) => {
                                                     openExistingResourcesInDialog={false}
                                                     initOnLocationChange={false}
                                                     keyToKeepStateOnLocationChange={contributionId ?? resourceId}
-                                                    renderTemplateBox={true}
+                                                    renderTemplateBox
                                                 />
                                             </FormGroup>
 
@@ -128,12 +128,10 @@ const Contributions = (props) => {
                                         </div>
                                     )}
                                     {isLoadingContributionFailed && (
-                                        <>
-                                            <Alert className="mt-4 mb-5" color="danger">
-                                                {contributions.length === 0 && 'This paper has no contributions yet'}
-                                                {contributions.length !== 0 && "Contribution doesn't exist"}
-                                            </Alert>
-                                        </>
+                                        <Alert className="mt-4 mb-5" color="danger">
+                                            {contributions.length === 0 && 'This paper has no contributions yet'}
+                                            {contributions.length !== 0 && "Contribution doesn't exist"}
+                                        </Alert>
                                     )}
                                 </div>
                             ),
@@ -159,7 +157,7 @@ const Contributions = (props) => {
 
                     {contributions?.length > 0 && (
                         <div className="d-flex mb-3 rounded px-3 py-2" style={{ border: '1px solid rgb(219,221,229)' }}>
-                            <AddToComparison showLabel={true} paper={{ id: resourceId, label: paperTitle, contributions }} />
+                            <AddToComparison showLabel paper={{ id: resourceId, label: paperTitle, contributions }} />
                         </div>
                     )}
 

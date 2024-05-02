@@ -91,15 +91,7 @@ const Help = (props) => {
     ];
 
     return (
-        <>
-            <Steps
-                onExit={handleCloseTour}
-                enabled={props.isOpen}
-                initialStep={0}
-                steps={tourSteps}
-                options={{ tooltipClass: 'introjs-ORKG-tooltip' }}
-            />
-        </>
+        <Steps onExit={handleCloseTour} enabled={props.isOpen} initialStep={0} steps={tourSteps} options={{ tooltipClass: 'introjs-ORKG-tooltip' }} />
     );
 };
 

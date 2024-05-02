@@ -50,7 +50,7 @@ const AddResearchProblem = (props) => {
                             value={problem || ''}
                             allowCreate={false}
                             ols={false}
-                            autoLoadOption={true}
+                            autoLoadOption
                         />
                     </FormGroup>
                 </>

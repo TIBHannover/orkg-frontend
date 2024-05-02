@@ -130,7 +130,7 @@ const RelativeBreadcrumbs = ({ researchField }) => {
                 <Tippy
                     appendTo={document.body}
                     onTrigger={onTrigger}
-                    interactive={true}
+                    interactive
                     content={
                         <TippyContentStyled>
                             {!isLoading ? (

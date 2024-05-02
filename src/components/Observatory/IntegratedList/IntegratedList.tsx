@@ -14,9 +14,7 @@ const IntegratedList: FC<IntegratedListProps> = ({ content }) => {
     return (
         <>
             {!isLoading &&
-                items?.map((item: Resource) => (
-                    <CardFactory showBadge={true} showCurationFlags={true} showAddToComparison={true} key={`item${item.id}`} item={item} />
-                ))}
+                items?.map((item: Resource) => <CardFactory showBadge showCurationFlags showAddToComparison key={`item${item.id}`} item={item} />)}
             {isLoading && (
                 <div className="list-group-item text-start p-5">
                     <ContentLoader speed={2} width={400} height={50} viewBox="0 0 400 50" style={{ width: '100% !important' }}>

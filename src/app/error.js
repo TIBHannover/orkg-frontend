@@ -9,9 +9,9 @@ import { faBug } from '@fortawesome/free-solid-svg-icons';
 import TitleBar from 'components/TitleBar/TitleBar';
 
 class InternalServerError extends Component {
-    componentDidMount = () => {
+    componentDidMount() {
         document.title = 'Internal Server Error - ORKG';
-    };
+    }
 
     render() {
         return (

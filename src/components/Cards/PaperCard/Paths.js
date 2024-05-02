@@ -65,11 +65,7 @@ function Paths({ paths }) {
                                         </div>
                                     </Link>
                                 </DescriptionTooltip>
-                                {i !== path.length - 2 && (
-                                    <>
-                                        <Icon icon={faAnglesRight} className="mx-1" />
-                                    </>
-                                )}
+                                {i !== path.length - 2 && <Icon icon={faAnglesRight} className="mx-1" />}
                             </Fragment>
                         ))}
                         {index + 1 < data.length && <hr className="my-1" />}

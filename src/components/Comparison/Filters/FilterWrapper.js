@@ -25,7 +25,7 @@ const FilterWrapper = (props) => {
     }, [JSON.stringify(rules), disabled]);
 
     return (
-        <Tippy content={content} arrow={true} disabled={rules.length === 0 && !disabled}>
+        <Tippy content={content} arrow disabled={rules.length === 0 && !disabled}>
             <span>{props.children}</span>
         </Tippy>
     );

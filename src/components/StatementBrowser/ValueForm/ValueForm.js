@@ -175,7 +175,7 @@ const ValueForm = (props) => {
                         value={inputValue}
                         additionalData={newResources}
                         autoLoadOption={!!valueClass}
-                        openMenuOnFocus={true}
+                        openMenuOnFocus
                         disableBorderRadiusRight
                         disableBorderRadiusLeft={!valueClass}
                         cssClasses="form-control-sm"
@@ -230,7 +230,7 @@ const ValueForm = (props) => {
                 </StyledButton>
                 <StyledButton outline disabled={inputFormType !== 'empty' && (!inputValue?.toString() || disabledCreate)} onClick={() => onSubmit()}>
                     {disabledCreate ? (
-                        <Tippy hideOnClick={false} content="Please use the existing research problem that has this label." arrow={true}>
+                        <Tippy hideOnClick={false} content="Please use the existing research problem that has this label." arrow>
                             <span>Create</span>
                         </Tippy>
                     ) : (
@@ -263,7 +263,7 @@ const ValueForm = (props) => {
                                     ]}
                                 />
                             }
-                            interactive={true}
+                            interactive
                             appendTo={document.body}
                             trigger="manual"
                             placement="top"

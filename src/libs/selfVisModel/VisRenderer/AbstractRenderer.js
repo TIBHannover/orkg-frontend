@@ -19,7 +19,7 @@ export default class AbstractRenderer extends Component {
         }
     }
 
-    componentDidUpdate = (prevProps) => {
+    componentDidUpdate(prevProps) {
         // always make sure that you have the pointer to the data;
         // this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
         if (prevProps.isInputTableExpanded !== this.props.isInputTableExpanded) {
@@ -28,7 +28,7 @@ export default class AbstractRenderer extends Component {
              * so here we hack it with an timeout* */
             setTimeout(this.applySelectorMethod, 400);
         }
-    };
+    }
 
     applySelectorMethod = () => {
         this.setState({ updateFlipFlop: !this.state.updateFlipFlop });

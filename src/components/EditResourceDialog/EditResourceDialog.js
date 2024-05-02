@@ -72,12 +72,12 @@ const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate = null, show
                         }}
                         placeholder="Specify the classes of the resource"
                         value={classes}
-                        autoLoadOption={true}
-                        openMenuOnFocus={true}
-                        allowCreate={true}
+                        autoLoadOption
+                        openMenuOnFocus
+                        allowCreate
                         isMulti
                         autoFocus={false}
-                        ols={true}
+                        ols
                         fixedOptions={fixedClasses}
                         inputId="classes-autocomplete"
                     />

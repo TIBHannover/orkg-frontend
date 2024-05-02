@@ -165,10 +165,10 @@ function AbstractRangesList(props) {
                                         }}
                                         key={(value) => value}
                                         isClearable
-                                        openMenuOnFocus={true}
-                                        autoLoadOption={true}
-                                        allowCreate={true}
-                                        autoFocus={true}
+                                        openMenuOnFocus
+                                        autoLoadOption
+                                        allowCreate
+                                        autoFocus
                                     />
                                 )}
                             </div>

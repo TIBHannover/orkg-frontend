@@ -80,7 +80,7 @@ const FilterInputField: FC<FilterInputFieldProps> = ({ filter, updateFilterValue
                         updateValue(selected ? [{ op: 'EQ', value: selected.value }] : []);
                     }}
                     classNamePrefix="react-select"
-                    isClearable={true}
+                    isClearable
                     isSearchable={false}
                     value={BOOLEAN_OPTIONS.find((o) => o.value === values?.[0]?.value)}
                     options={BOOLEAN_OPTIONS}
@@ -94,12 +94,12 @@ const FilterInputField: FC<FilterInputFieldProps> = ({ filter, updateFilterValue
                 placeholder="Select or type to enter a resource"
                 onChange={(selected) => updateValue(selected?.map((v: Resource) => convertResource2FilterConfigValue(v)))}
                 value={values?.map((v) => convertFilterConfigValue2Resource(v))}
-                autoLoadOption={true}
-                openMenuOnFocus={true}
+                autoLoadOption
+                openMenuOnFocus
                 isClearable
                 autoFocus={false}
                 ols={false}
-                isMulti={true}
+                isMulti
             />
         ),
         number: <NumberInputField filter={filter} updateValue={updateValue} />,

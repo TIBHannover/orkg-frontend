@@ -119,15 +119,15 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
                                 setPath(selected);
                             }}
                             value={!isLoadingEntities ? path : 'Loading...'}
-                            autoLoadOption={true}
-                            openMenuOnFocus={true}
+                            autoLoadOption
+                            openMenuOnFocus
                             allowCreate={false}
                             copyValueButton={false}
                             isClearable
                             innerRef={pathAutocompleteRef}
                             autoFocus={false}
                             ols={false}
-                            isMulti={true}
+                            isMulti
                             isDisabled={isLoadingEntities}
                         />
                         <FormText>Select the path of properties to the value, they should be in the correct order</FormText>
@@ -145,8 +145,8 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
                                 setRange(selected);
                             }}
                             value={!isLoadingEntities ? range : 'Loading...'}
-                            autoLoadOption={true}
-                            openMenuOnFocus={true}
+                            autoLoadOption
+                            openMenuOnFocus
                             allowCreate={false}
                             copyValueButton={false}
                             isClearable

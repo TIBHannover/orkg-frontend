@@ -53,14 +53,12 @@ const IntegratedListHeader: FC<IntegratedListHeaderProps> = ({ id, page, isLoadi
             <div className="d-md-flex align-items-center">
                 <div className="d-flex flex-md-grow-1 align-items-center">
                     <h1 className="h5 mb-0 me-2">Content</h1>
-                    <>
-                        <SubtitleSeparator />
-                        <SubTitle>
-                            <small className="text-muted text-small mt-1">
-                                {page === 1 && isLoading ? <Icon icon={faSpinner} spin /> : <>{`${totalElements} items`}</>}
-                            </small>
-                        </SubTitle>
-                    </>
+                    <SubtitleSeparator />
+                    <SubTitle>
+                        <small className="text-muted text-small mt-1">
+                            {page === 1 && isLoading ? <Icon icon={faSpinner} spin /> : <>{`${totalElements} items`}</>}
+                        </small>
+                    </SubTitle>
                 </div>
                 <div
                     className="d-md-flex mt-sm-2  me-md-2 rounded"

@@ -176,7 +176,7 @@ class ComparisonPopup extends Component {
                                                 onShown={this.onShown}
                                                 onHide={this.onHide}
                                                 onCreate={this.onCreate}
-                                                interactive={true}
+                                                interactive
                                                 trigger="click"
                                                 content={
                                                     <div

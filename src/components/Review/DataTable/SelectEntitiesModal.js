@@ -116,7 +116,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                         placeholder={`Enter a ${addEntityType === ENTITIES.PREDICATE ? 'property' : 'resource'}`}
                         onItemSelected={(item) => handleSelectEntity(item.id)}
                         onBlur={() => setAddEntityType(null)}
-                        openMenuOnFocus={true}
+                        openMenuOnFocus
                         cssClasses="form-control-sm"
                     />
                 ) : (

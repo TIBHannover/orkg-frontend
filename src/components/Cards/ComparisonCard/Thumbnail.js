@@ -81,7 +81,7 @@ const Thumbnail = (props) => {
                 <Link href={reverse(ROUTES.COMPARISON, { comparisonId: props.id })}>
                     <Tippy content={props.visualizations[0].label}>
                         <ResourceItem key={thumbnail.figureId}>
-                            <GDCVisualizationRenderer disableInteractivity={true} height="50px" width="160px" model={thumbnail} />
+                            <GDCVisualizationRenderer disableInteractivity height="50px" width="160px" model={thumbnail} />
                         </ResourceItem>
                     </Tippy>
                 </Link>

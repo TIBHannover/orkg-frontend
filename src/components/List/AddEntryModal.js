@@ -201,109 +201,107 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
     };
 
     return (
-        <>
-            <Modal isOpen={isOpen} toggle={(v) => setIsOpen(!v)} size="lg">
-                <ModalHeader toggle={(v) => setIsOpen(!v)}>Add entries</ModalHeader>
-                <ModalBody>
-                    <ButtonGroup className="w-100 mb-4">
-                        <Button size="sm" color={tab === 'title' ? 'primary' : 'light'} style={{ marginRight: 2 }} onClick={() => switchTab('title')}>
-                            Title
-                        </Button>
-                        <Button size="sm" color={tab === 'doi' ? 'primary' : 'light'} style={{ marginRight: 2 }} onClick={() => switchTab('doi')}>
-                            DOI
-                        </Button>
-                        <Button size="sm" color={tab === 'bibtex' ? 'primary' : 'light'} onClick={() => switchTab('bibtex')}>
-                            BibTeX
-                        </Button>
-                    </ButtonGroup>
-                    {tab === 'title' && (
-                        <FormGroup>
-                            <InputGroup>
-                                <Input
-                                    value={contentType}
-                                    type="select"
-                                    style={{ width: 120 }}
-                                    className="flex-grow-0"
-                                    onChange={(e) => setContentType(e.target.value)}
-                                >
-                                    <option value="all">All</option>
-                                    <option value={CLASSES.PAPER}>Papers</option>
-                                    <option value={CLASSES.DATASET}>Datasets</option>
-                                    <option value={CLASSES.SOFTWARE}>Software</option>
-                                </Input>
-                                <div className="form-control form-control p-0 border-0">
-                                    <PaperTitleInput
-                                        key={contentType} // reset autocomplete when content type changes
-                                        contentType={contentType}
-                                        value={title}
-                                        onChange={(v) => setTitle(v)}
-                                        onOptionClick={handleAutocompleteSelect}
-                                        performExistingPaperLookup={false}
-                                        performOrkgLookup={true}
-                                        placeholder="Enter a title"
-                                        borderRadius="0 6px 6px 0"
-                                    />
-                                </div>
-                            </InputGroup>
-                        </FormGroup>
-                    )}
-                    {tab === 'doi' && (
-                        <FormGroup>
-                            <InputGroup>
-                                <Input
-                                    value={doi}
-                                    placeholder="Enter DOIs, whitespace separated"
-                                    className="form-control"
-                                    onChange={(e) => setDoi(e.target.value)}
-                                />
-                                <Button outline color="primary" style={{ minWidth: 130 }} disabled={isLoadingCite} onClick={() => handleParse(doi)}>
-                                    {!isLoadingCite ? 'Lookup' : <Icon icon={faSpinner} spin />}
-                                </Button>
-                            </InputGroup>
-                        </FormGroup>
-                    )}
-                    {tab === 'bibtex' && (
-                        <FormGroup>
-                            <InputGroup>
-                                <Textarea
-                                    placeholder="Enter BibTeX"
-                                    value={bibTex}
-                                    minRows="3"
-                                    maxRows="10"
-                                    className="form-control"
-                                    onChange={(e) => setBibTex(e.target.value)}
-                                    maxLength={MAX_LENGTH_INPUT}
-                                />
-                            </InputGroup>
-                            <Button color="secondary" size="sm" className="mt-2" disabled={isLoadingCite} onClick={() => handleParse(bibTex)}>
-                                {!isLoadingCite ? 'Parse' : <Icon icon={faSpinner} spin />}
-                            </Button>
-                        </FormGroup>
-                    )}
-                    {results.map((result, index) => (
-                        <MetadataTable
-                            key={index}
-                            title={result.title}
-                            authors={result.authors}
-                            publicationMonth={result.publicationMonth}
-                            publicationYear={result.publicationYear}
-                            venue={result.publishedIn}
-                            contentTypeId={result.existingContentTypeId}
-                        />
-                    ))}
-                </ModalBody>
-                <ModalFooter className="d-flex">
-                    <div className="flex-grow-1">
-                        <Link href={reverse(ROUTES.CONTENT_TYPE_NEW_NO_TYPE)} target="_blank">
-                            <Button color="light">Create new</Button>
-                        </Link>
-                    </div>
-                    <Button color="primary" className="float-end" onClick={handleAdd} disabled={results.length === 0}>
-                        {!isLoading ? `Add${results.length > 1 ? ` (${results.length})` : ''}` : <Icon icon={faSpinner} spin />}
+        <Modal isOpen={isOpen} toggle={(v) => setIsOpen(!v)} size="lg">
+            <ModalHeader toggle={(v) => setIsOpen(!v)}>Add entries</ModalHeader>
+            <ModalBody>
+                <ButtonGroup className="w-100 mb-4">
+                    <Button size="sm" color={tab === 'title' ? 'primary' : 'light'} style={{ marginRight: 2 }} onClick={() => switchTab('title')}>
+                        Title
                     </Button>
-                </ModalFooter>
-            </Modal>
-        </>
+                    <Button size="sm" color={tab === 'doi' ? 'primary' : 'light'} style={{ marginRight: 2 }} onClick={() => switchTab('doi')}>
+                        DOI
+                    </Button>
+                    <Button size="sm" color={tab === 'bibtex' ? 'primary' : 'light'} onClick={() => switchTab('bibtex')}>
+                        BibTeX
+                    </Button>
+                </ButtonGroup>
+                {tab === 'title' && (
+                    <FormGroup>
+                        <InputGroup>
+                            <Input
+                                value={contentType}
+                                type="select"
+                                style={{ width: 120 }}
+                                className="flex-grow-0"
+                                onChange={(e) => setContentType(e.target.value)}
+                            >
+                                <option value="all">All</option>
+                                <option value={CLASSES.PAPER}>Papers</option>
+                                <option value={CLASSES.DATASET}>Datasets</option>
+                                <option value={CLASSES.SOFTWARE}>Software</option>
+                            </Input>
+                            <div className="form-control form-control p-0 border-0">
+                                <PaperTitleInput
+                                    key={contentType} // reset autocomplete when content type changes
+                                    contentType={contentType}
+                                    value={title}
+                                    onChange={(v) => setTitle(v)}
+                                    onOptionClick={handleAutocompleteSelect}
+                                    performExistingPaperLookup={false}
+                                    performOrkgLookup
+                                    placeholder="Enter a title"
+                                    borderRadius="0 6px 6px 0"
+                                />
+                            </div>
+                        </InputGroup>
+                    </FormGroup>
+                )}
+                {tab === 'doi' && (
+                    <FormGroup>
+                        <InputGroup>
+                            <Input
+                                value={doi}
+                                placeholder="Enter DOIs, whitespace separated"
+                                className="form-control"
+                                onChange={(e) => setDoi(e.target.value)}
+                            />
+                            <Button outline color="primary" style={{ minWidth: 130 }} disabled={isLoadingCite} onClick={() => handleParse(doi)}>
+                                {!isLoadingCite ? 'Lookup' : <Icon icon={faSpinner} spin />}
+                            </Button>
+                        </InputGroup>
+                    </FormGroup>
+                )}
+                {tab === 'bibtex' && (
+                    <FormGroup>
+                        <InputGroup>
+                            <Textarea
+                                placeholder="Enter BibTeX"
+                                value={bibTex}
+                                minRows="3"
+                                maxRows="10"
+                                className="form-control"
+                                onChange={(e) => setBibTex(e.target.value)}
+                                maxLength={MAX_LENGTH_INPUT}
+                            />
+                        </InputGroup>
+                        <Button color="secondary" size="sm" className="mt-2" disabled={isLoadingCite} onClick={() => handleParse(bibTex)}>
+                            {!isLoadingCite ? 'Parse' : <Icon icon={faSpinner} spin />}
+                        </Button>
+                    </FormGroup>
+                )}
+                {results.map((result, index) => (
+                    <MetadataTable
+                        key={index}
+                        title={result.title}
+                        authors={result.authors}
+                        publicationMonth={result.publicationMonth}
+                        publicationYear={result.publicationYear}
+                        venue={result.publishedIn}
+                        contentTypeId={result.existingContentTypeId}
+                    />
+                ))}
+            </ModalBody>
+            <ModalFooter className="d-flex">
+                <div className="flex-grow-1">
+                    <Link href={reverse(ROUTES.CONTENT_TYPE_NEW_NO_TYPE)} target="_blank">
+                        <Button color="light">Create new</Button>
+                    </Link>
+                </div>
+                <Button color="primary" className="float-end" onClick={handleAdd} disabled={results.length === 0}>
+                    {!isLoading ? `Add${results.length > 1 ? ` (${results.length})` : ''}` : <Icon icon={faSpinner} spin />}
+                </Button>
+            </ModalFooter>
+        </Modal>
     );
 };
 

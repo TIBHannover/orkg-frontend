@@ -35,7 +35,7 @@ function StatementCard({ statement }) {
                 <div className="col-sm">{statement.object.label}</div>
                 <div className="col-sm">
                     <Tippy
-                        interactive={true}
+                        interactive
                         content={
                             <div className="p-1">
                                 <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
@@ -49,7 +49,7 @@ function StatementCard({ statement }) {
                                         <li>
                                             Created by:{' '}
                                             {statement.created_by !== MISC.UNKNOWN_ID ? (
-                                                <UserAvatar linkTarget="_blank" size={18} showDisplayName={true} userId={statement.created_by} />
+                                                <UserAvatar linkTarget="_blank" size={18} showDisplayName userId={statement.created_by} />
                                             ) : (
                                                 'Unknown'
                                             )}

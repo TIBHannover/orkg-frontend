@@ -75,7 +75,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                 <Contribution className="contribution-editor">
                     <ContributionButton color="link" className="user-select-auto" onClick={() => setIsOpenContributionModal(true)}>
                         <Tippy
-                            interactive={true}
+                            interactive
                             appendTo={document.body}
                             content={
                                 <>

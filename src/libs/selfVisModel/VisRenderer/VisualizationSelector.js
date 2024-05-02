@@ -22,16 +22,16 @@ export default class VisualizationSelector extends Component {
         this.selfVisModel.setRenderingEngine('Google-Charts'); // we only have GC at the moment;
     }
 
-    componentDidMount = () => {
+    componentDidMount() {
         this.setState({ visualizationMethod: this.selfVisModel.getRenderingMethod() ? this.selfVisModel.getRenderingMethod() : 'Table' });
-    };
+    }
 
-    componentDidUpdate = (prevProps) => {
+    componentDidUpdate(prevProps) {
         this.selfVisModel.setRenderingMethod(this.state.visualizationMethod);
         if (this.props.propagationFunction) {
             this.props.propagationFunction();
         }
-    };
+    }
 
     createVisualizationSelector = () => {
         const items = this.supportedVisualizationMethods.map((item, id) => (

@@ -63,7 +63,7 @@ const TemplateComponentProperty: FC<TemplateComponentPropertyProps> = ({ id, dra
                                 title="Delete property"
                                 icon={faTrash}
                                 action={() => handleDeletePropertyShape(id)}
-                                requireConfirmation={true}
+                                requireConfirmation
                                 confirmationMessage="Are you sure to delete?"
                                 confirmationButtons={[
                                     {
@@ -93,9 +93,9 @@ const TemplateComponentProperty: FC<TemplateComponentPropertyProps> = ({ id, dra
                                 setIsEditing(false);
                             }}
                             value={property}
-                            autoLoadOption={true}
-                            openMenuOnFocus={true}
-                            allowCreate={true}
+                            autoLoadOption
+                            openMenuOnFocus
+                            allowCreate
                             cssClasses="form-control-sm"
                             onBlur={() => {
                                 setIsEditing(false);

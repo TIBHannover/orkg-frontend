@@ -87,7 +87,7 @@ const DraftReviews = () => {
                 renderListItem={renderListItem}
                 fetchItems={fetchItems}
                 pageSize={50}
-                disableSearch={true}
+                disableSearch
                 hideTitleBar
             />
         </div>

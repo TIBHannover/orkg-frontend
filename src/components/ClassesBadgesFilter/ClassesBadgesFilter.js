@@ -95,15 +95,15 @@ const ClassesBadgesFilter = ({ disabled = false, classesFilter, setClassesFilter
                 classNamePrefix="react-select"
                 placeholder=""
                 components={{ Control, MultiValueContainer: () => null, Option: CustomOption }}
-                isMulti={true}
+                isMulti
                 hideSelectedOptions={false}
                 getOptionLabel={({ label }) => label}
-                openMenuOnClick={true}
+                openMenuOnClick
                 getOptionValue={({ id }) => id}
                 isClearable={false}
                 isDisabled={disabled}
                 styles={customStyles}
-                blurInputOnSelect={true}
+                blurInputOnSelect
             />
             <SelectGlobalStyle />
         </div>

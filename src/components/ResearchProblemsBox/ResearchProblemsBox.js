@@ -60,7 +60,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
                                         title="Delete this research problem from the observatory"
                                         icon={faTrash}
                                         key={`problem${rp.id}`}
-                                        requireConfirmation={true}
+                                        requireConfirmation
                                         confirmationMessage="Are you sure?"
                                         confirmationButtons={[
                                             {

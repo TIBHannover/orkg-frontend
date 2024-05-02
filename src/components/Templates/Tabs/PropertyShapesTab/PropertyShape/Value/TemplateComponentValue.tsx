@@ -89,11 +89,11 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                             handleClassOfPropertySelect(selected, action, id);
                         }}
                         value={range}
-                        autoLoadOption={true}
-                        openMenuOnFocus={true}
-                        allowCreate={true}
+                        autoLoadOption
+                        openMenuOnFocus
+                        allowCreate
                         isDisabled={!isEditMode}
-                        copyValueButton={true}
+                        copyValueButton
                         isClearable
                         defaultOptions={DATA_TYPES.filter((dt) => dt.classId !== CLASSES.RESOURCE).map((dt) => ({ label: dt.name, id: dt.classId }))}
                         innerRef={classAutocompleteRef}
@@ -101,7 +101,7 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                         linkButtonTippy="Go to class page"
                         cssClasses="form-control-sm"
                         autoFocus={false}
-                        ols={true}
+                        ols
                     />
                 </InputGroup>
                 <div className="mt-2">
@@ -128,51 +128,47 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                     </FormGroup>
                 </div>
                 {cardinality === 'range' && (
-                    <>
-                        <div className="mt-2">
-                            <FormGroup row>
-                                <Label className="text-end text-muted" for="minCountValueInput" sm={3}>
-                                    <small>Minimum Occurrence</small>
-                                </Label>
-                                <Col sm={9}>
-                                    <Input
-                                        disabled={!isEditMode}
-                                        onChange={onChange}
-                                        bsSize="sm"
-                                        value={propertyShape.min_count || ''}
-                                        type="number"
-                                        min="0"
-                                        step="1"
-                                        name="min_count"
-                                        id="minCountValueInput"
-                                        placeholder="Minimum number of occurrences in the resource"
-                                    />
-                                </Col>
-                            </FormGroup>
-                            <FormGroup row>
-                                <Label className="text-end text-muted" for="maxCountValueInput" sm={3}>
-                                    <small>Maximum Occurrence</small>
-                                </Label>
-                                <Col sm={9}>
-                                    <Input
-                                        disabled={!isEditMode}
-                                        onChange={onChange}
-                                        bsSize="sm"
-                                        value={propertyShape.max_count !== null ? propertyShape.max_count : ''}
-                                        type="number"
-                                        min="0"
-                                        step="1"
-                                        name="max_count"
-                                        id="maxCountValueInput"
-                                        placeholder="Maximum number of occurrences in the resource"
-                                    />
-                                    {isEditMode && (
-                                        <FormText className="d-block">Clear the input field if there is no restriction (unbounded)</FormText>
-                                    )}
-                                </Col>
-                            </FormGroup>
-                        </div>
-                    </>
+                    <div className="mt-2">
+                        <FormGroup row>
+                            <Label className="text-end text-muted" for="minCountValueInput" sm={3}>
+                                <small>Minimum Occurrence</small>
+                            </Label>
+                            <Col sm={9}>
+                                <Input
+                                    disabled={!isEditMode}
+                                    onChange={onChange}
+                                    bsSize="sm"
+                                    value={propertyShape.min_count || ''}
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    name="min_count"
+                                    id="minCountValueInput"
+                                    placeholder="Minimum number of occurrences in the resource"
+                                />
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label className="text-end text-muted" for="maxCountValueInput" sm={3}>
+                                <small>Maximum Occurrence</small>
+                            </Label>
+                            <Col sm={9}>
+                                <Input
+                                    disabled={!isEditMode}
+                                    onChange={onChange}
+                                    bsSize="sm"
+                                    value={propertyShape.max_count !== null ? propertyShape.max_count : ''}
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    name="max_count"
+                                    id="maxCountValueInput"
+                                    placeholder="Maximum number of occurrences in the resource"
+                                />
+                                {isEditMode && <FormText className="d-block">Clear the input field if there is no restriction (unbounded)</FormText>}
+                            </Col>
+                        </FormGroup>
+                    </div>
                 )}
                 <FormGroup row>
                     <Label className="text-end text-muted" for="placeholderInput" sm={3}>

@@ -24,7 +24,7 @@ const AuthorWorks = ({ authorId = null, authorString = null }) => {
             return (
                 <PaperCard
                     paper={convertPaperToNewFormat(item)}
-                    showBadge={true}
+                    showBadge
                     showCurationFlags={false}
                     showAddToComparison={false}
                     key={`p${item.id}`}
@@ -35,7 +35,7 @@ const AuthorWorks = ({ authorId = null, authorString = null }) => {
             return (
                 <ComparisonCard
                     comparison={convertComparisonToNewFormat(item)}
-                    showBadge={true}
+                    showBadge
                     showCurationFlags={false}
                     showAddToComparison={false}
                     key={`c${item.id}`}
@@ -44,19 +44,14 @@ const AuthorWorks = ({ authorId = null, authorString = null }) => {
         }
         if (item?.classes?.includes(CLASSES.VISUALIZATION)) {
             return (
-                <VisualizationCard
-                    visualization={convertVisualizationToNewFormat(item)}
-                    showBadge={true}
-                    showCurationFlags={false}
-                    key={`v${item.id}`}
-                />
+                <VisualizationCard visualization={convertVisualizationToNewFormat(item)} showBadge showCurationFlags={false} key={`v${item.id}`} />
             );
         }
         if (item?.classes?.includes(CLASSES.SMART_REVIEW)) {
             return (
                 <ReviewCard
                     review={convertReviewToNewFormat([item])}
-                    showBadge={true}
+                    showBadge
                     showCurationFlags={false}
                     showAddToComparison={false}
                     key={`c${item.id}`}

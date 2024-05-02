@@ -36,8 +36,8 @@ const TableCellButtons = ({ onEdit = null, onDelete = null, backgroundColor, sty
         <ButtonsContainer style={{ backgroundColor, ...style }} className={buttonClasses}>
             {onEdit && (value?.shared ?? 0) > 1 && (
                 <StatementActionButton
-                    isDisabled={true}
-                    interactive={true}
+                    isDisabled
+                    interactive
                     appendTo={document.body}
                     title={
                         <>
@@ -70,7 +70,7 @@ const TableCellButtons = ({ onEdit = null, onDelete = null, backgroundColor, sty
                 icon={faTrash}
                 appendTo={document.body}
                 isDisabled={!onDelete}
-                requireConfirmation={true}
+                requireConfirmation
                 confirmationMessage="Are you sure to delete?"
                 confirmationButtons={[
                     {
