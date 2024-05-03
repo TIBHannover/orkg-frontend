@@ -67,7 +67,7 @@ function TabsContainer({ currentUserId, userId }) {
                 {
                     label: 'Templates',
                     key: 'templates',
-                    children: <Items filterLabel="templates" filterClass={CLASSES.NODE_SHAPE} filters={{ created_by: userId }} showDelete={false} />,
+                    children: <Items filterLabel="templates" filterClass={CLASSES.NODE_SHAPE} filters={{ createdBy: userId }} showDelete={false} />,
                 },
             ]}
         />
