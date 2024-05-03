@@ -11,6 +11,7 @@ import EditPaperModal from 'components/PaperForm/EditPaperModal';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import OpenCitations from 'components/ViewPaper/OpenCitations/OpenCitations';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
+import { VISIBILITY } from 'constants/contentTypes';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
@@ -35,8 +36,8 @@ const PaperHeader = (props) => {
     const showDeleteButton = props.editMode && (isCurationAllowed || userCreatedThisPaper);
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: viewPaper.id,
-        unlisted: viewPaper.visibility === 'unlisted',
-        featured: viewPaper.visibility === 'featured',
+        unlisted: viewPaper.visibility === VISIBILITY.UNLISTED,
+        featured: viewPaper.visibility === VISIBILITY.FEATURED,
     });
 
     useEffect(() => {
