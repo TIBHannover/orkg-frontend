@@ -135,8 +135,8 @@
         "type-check": "tsc --noEmit",
         "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\"",
         "prepare": "husky install",
-        "storybook": "APP_ENV= && BROWSER=true storybook dev -p 6006",
-        "build-storybook": "APP_ENV= && storybook build --output-dir public/storybook"
+        "storybook": "BROWSER=true storybook dev -p 6006",
+        "build-storybook": "storybook build --output-dir public/storybook"
     },
     "devDependencies": {
         "@babel/preset-env": "^7.21.4",
