@@ -286,10 +286,10 @@ export const selectContribution =
  * @return {String=} the paper link
  */
 export const getPaperLink = (state) => {
-    if (state.viewPaper.publicationInfo?.url) {
-        return state.viewPaper.publicationInfo?.url;
+    if (state.viewPaper.paper.publication_info?.url) {
+        return state.viewPaper.paper.publication_info?.url;
     }
-    if (state.viewPaper.identifiers?.doi?.[0] && state.viewPaper.identifiers?.doi?.[0].startsWith('10.')) {
+    if (state.viewPaper.paper.identifiers?.doi?.[0] && state.viewPaper.paper.identifiers?.doi?.[0].startsWith('10.')) {
         return `https://doi.org/${state.viewPaper.identifiers?.doi?.[0]}`;
     }
     return '';
