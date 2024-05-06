@@ -1,9 +1,9 @@
-import { faChevronDown, faExternalLinkAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faExternalLinkAlt, faGift, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon, FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { scrollbarWidth } from '@xobotyi/scrollbar-width';
 import HomeBannerBg from 'assets/img/graph-background.svg';
-import Logo from 'assets/img/logo.svg';
-import LogoWhite from 'assets/img/logo_white.svg';
+import Logo from 'assets/img/birthday/logo.svg';
+import LogoWhite from 'assets/img/birthday/logo_white.svg';
 import Authentication from 'components/Authentication/Authentication';
 import Jumbotron from 'components/Home/Jumbotron';
 import AboutMenu from 'components/Layout/Header/AboutMenu';
@@ -40,6 +40,7 @@ import {
 import { getUserInformation } from 'services/backend/users';
 import { openAuthDialog, resetAuth, updateAuth } from 'slices/authSlice';
 import styled, { createGlobalStyle } from 'styled-components';
+import ConfettiExplosion from 'react-confetti-explosion';
 
 const cookies = new Cookies();
 
@@ -183,6 +184,8 @@ const Header = () => {
     const [isOpenAboutMenu, setIsOpenAboutMenu] = useState(false);
     const [isOpenViewMenu, setIsOpenViewMenu] = useState(false);
     const [logoutTimeoutId, setLogoutTimeoutId] = useState(null);
+    const [isExploding, setIsExploding] = useState(false);
+
     const pathname = usePathname();
     const isHomePath = pathname === ROUTES.HOME || !!match(ROUTES.HOME_WITH_RESEARCH_FIELD)(pathname);
     const [isTransparentNavbar, setIsTransparentNavbar] = useState(isHomePath);
@@ -315,9 +318,37 @@ const Header = () => {
             >
                 <GlobalStyle $scrollbarWidth={scrollbarWidth(true)} $cookieInfoDismissed={cookieInfoDismissed} />
 
-                <Link href={ROUTES.HOME} className="me-4 p-0" onClick={closeMenu}>
+                <Link
+                    href={ROUTES.HOME}
+                    className="me-4 p-0 position-relative"
+                    onClick={closeMenu}
+                    style={{ color: isTransparentNavbar ? '#545a71' : '#EF815E' }}
+                >
                     {!isTransparentNavbar && <Image src={Logo} alt="Logo ORKG" />}
                     {isTransparentNavbar && <Image src={LogoWhite} alt="Logo ORKG in light colors" />}
+                    {
+                        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+                        <div
+                            className="position-absolute"
+                            style={{
+                                bottom: -3,
+                                right: 4,
+                                fontSize: '0.85rem',
+                                background: isTransparentNavbar ? '#C1C3CA' : '#FBE6E6',
+                                padding: '0 10px',
+                                borderRadius: '25px',
+                                fontWeight: '500',
+                                lineHeight: '1.3',
+                            }}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.nativeEvent.stopImmediatePropagation();
+                                setIsExploding(true);
+                            }}
+                        >
+                            <Icon icon={faGift} size="sm" /> 5 years
+                        </div>
+                    }
                 </Link>
 
                 <NavbarToggler onClick={toggleNavBar} />
@@ -508,6 +539,14 @@ const Header = () => {
                             </DropdownMenu>
                         </ButtonDropdown>
                         <Nfdi4dsButton />
+                        {isExploding && (
+                            <ConfettiExplosion
+                                onComplete={() => setIsExploding(false)}
+                                zIndex={10000}
+                                particleCount={200}
+                                colors={['#D4A9E9', '#9DF3C2', '#FDC3B1', '#FEE6A6', '#E86161']}
+                            />
+                        )}
                     </Nav>
 
                     <SearchForm placeholder="Search..." onSearch={closeMenu} />
