@@ -875,7 +875,7 @@ export function getSuggestedProperties(state) {
         const propertyShapes = getPropertyShapesByContributionID(state, contributionId);
         return propertyShapes.filter((x) => !existingPropertyIds.includes(x.path.id));
     });
-    return uniqBy(flatten(comp), 'property.id');
+    return uniqBy(flatten(comp), 'path.id');
 }
 
 /**
