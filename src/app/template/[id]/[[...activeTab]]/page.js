@@ -53,6 +53,7 @@ const Template = () => {
         failureStatus,
         hasFailed,
         label,
+        id: loadedId,
         created_by: createdBy,
         created_at: createdAt,
         observatory_id: observatoryId,
@@ -72,10 +73,10 @@ const Template = () => {
     const { contributor } = useContributor({ userId: createdBy });
 
     useEffect(() => {
-        if (id) {
+        if (id && loadedId !== id) {
             dispatch(loadTemplate(id));
         }
-    }, [dispatch, id]);
+    }, [loadedId, dispatch, id]);
 
     useEffect(() => {
         document.title = `${label ? `${label} - ` : ''}Template - ORKG`;
