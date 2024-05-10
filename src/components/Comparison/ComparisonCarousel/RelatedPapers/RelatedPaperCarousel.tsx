@@ -11,10 +11,10 @@ import { GetSimilarPapersParams, getSimilarPapers, similarPaperURL } from 'servi
 import { SimilarPaper } from 'services/orkgSimpaper/types';
 import useSWR from 'swr';
 
-interface RelatedPapersCarouselProps {
+type RelatedPapersCarouselProps = {
     contributionIds: string[];
     handleAddContributions: (ids: string[]) => void;
-}
+};
 
 const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAddContributions, contributionIds }) => {
     const [isOpenCreatePaper, setIsOpenCreatePaper] = useState(false);
@@ -22,14 +22,13 @@ const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAdd
     const [isOpenAddContribution, setIsOpenAddContribution] = useState(false);
     const [isOpenRelatedPaperModal, setIsOpenRelatedPaperModal] = useState(false);
     const [currentSimilarPaper, setCurrentSimilarPaper] = useState<SimilarPaper>();
-
     const settings = {
         dots: false,
         infinite: false,
         speed: 500,
-        slidesToShow: 3,
+        slidesToShow: 4,
         centerMode: false,
-        slidesToScroll: 5,
+        slidesToScroll: 4,
         nextArrow: <Icon icon={faArrowCircleRight} />,
         prevArrow: <Icon icon={faArrowCircleLeft} />,
         rows: 1,
@@ -101,49 +100,22 @@ const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAdd
                 </div>
             </div>
 
-            <StyledSlider {...settings}>
-                {similarPaperList.map((paper) => (
-                    <div className="w-100 mx-1" key={paper?.title}>
-                        <Card>
-                            <CardBody
-                                className="bg-smart"
-                                style={{
-                                    height: '150px',
-                                    borderRadius: '5px',
-                                    padding: '5px 10px',
-                                    color: 'white',
-                                }}
-                            >
-                                <CardTitle>
-                                    <div className="p-1 d-flex justify-content-between flex-row">
-                                        <div
-                                            style={{
-                                                WebkitLineClamp: 2,
-                                                overflow: 'hidden',
-                                                display: '-webkit-box',
-                                                WebkitBoxOrient: 'vertical',
-                                            }}
-                                        >
-                                            <b>{paper?.title}</b>
-                                        </div>
-                                        <div>
-                                            <Button
-                                                color="smart-darker"
-                                                size="sm"
-                                                className="float-right"
-                                                onClick={() => {
-                                                    setCurrentSimilarPaper(paper);
-                                                    setIsOpenAddContribution(true);
-                                                }}
-                                            >
-                                                Add
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </CardTitle>
-                                <CardText>
-                                    {paper?.abstract && (
-                                        <p>
+            <div>
+                <StyledSlider {...settings}>
+                    {similarPaperList.map((paper) => (
+                        <div className="w-100 mx-1" key={paper?.title}>
+                            <Card>
+                                <CardBody
+                                    className="bg-smart"
+                                    style={{
+                                        height: '150px',
+                                        borderRadius: '5px',
+                                        padding: '5px 10px',
+                                        color: 'white',
+                                    }}
+                                >
+                                    <CardTitle>
+                                        <div className="p-1 d-flex justify-content-between flex-row">
                                             <div
                                                 style={{
                                                     WebkitLineClamp: 2,
@@ -154,24 +126,54 @@ const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAdd
                                             >
                                                 {paper?.abstract}
                                             </div>
-                                            <Button
-                                                color="link"
-                                                className="p-0 text-white"
-                                                onClick={() => {
-                                                    setCurrentSimilarPaper(paper);
-                                                    setIsOpenRelatedPaperModal(true);
-                                                }}
-                                            >
-                                                Read more
-                                            </Button>
-                                        </p>
-                                    )}
-                                </CardText>
-                            </CardBody>
-                        </Card>
-                    </div>
-                ))}
-            </StyledSlider>
+                                            <div>
+                                                <Button
+                                                    color="smart-darker"
+                                                    size="sm"
+                                                    className="float-right"
+                                                    onClick={() => {
+                                                        setCurrentSimilarPaper(paper);
+                                                        setIsOpenAddContribution(true);
+                                                    }}
+                                                >
+                                                    Add
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </CardTitle>
+                                    <CardText className="text-break">
+                                        {paper?.abstract && (
+                                            <p>
+                                                <div
+                                                    className="text-break"
+                                                    style={{
+                                                        WebkitLineClamp: 2,
+                                                        overflow: 'hidden',
+                                                        display: '-webkit-box',
+                                                        WebkitBoxOrient: 'vertical',
+                                                    }}
+                                                >
+                                                    {paper?.abstract}
+                                                </div>
+                                                <Button
+                                                    color="link"
+                                                    className="p-0 text-white"
+                                                    onClick={() => {
+                                                        setCurrentSimilarPaper(paper);
+                                                        setIsOpenRelatedPaperModal(true);
+                                                    }}
+                                                >
+                                                    Read more
+                                                </Button>
+                                            </p>
+                                        )}
+                                    </CardText>
+                                </CardBody>
+                            </Card>
+                        </div>
+                    ))}
+                </StyledSlider>
+            </div>
             {isOpenAddContribution && (
                 <AddContribution
                     allowCreate

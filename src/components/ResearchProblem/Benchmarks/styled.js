@@ -170,10 +170,10 @@ const StyledSlider = styled(Slider)`
     }
 
     & .slick-prev {
-        left: -25px;
+        left: -35px;
     }
     [dir='rtl'] .slick-prev {
-        right: -25px;
+        right: -35px;
         left: auto;
     }
     & .slick-prev:before {
@@ -184,11 +184,11 @@ const StyledSlider = styled(Slider)`
     }
 
     & .slick-next {
-        right: -25px;
+        right: -35px;
     }
     [dir='rtl'] .slick-next {
         right: auto;
-        left: -25px;
+        left: -35px;
     }
     & .slick-next:before {
         content: '→';
