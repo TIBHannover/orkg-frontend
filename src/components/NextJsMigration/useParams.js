@@ -8,6 +8,7 @@ import { useParams as useParamsNext } from 'next/navigation';
 
 // export default useParams;
 
+// WARNING: this file cannot be removed when the Nextjs migration files are removed. It is required for decoding the URL params.
 // NEXT-CODE
 const useParams = (params) => {
     const urlParams = useParamsNext(params);
@@ -17,7 +18,9 @@ const useParams = (params) => {
     // https://nextjs.org/docs/pages/building-your-application/routing/dynamic-routes#optional-catch-all-segments
     for (const key in urlParams) {
         if (isArray(urlParams[key])) {
-            urlParams[key] = urlParams[key][0];
+            urlParams[key] = decodeURIComponent(urlParams[key][0]);
+        } else {
+            urlParams[key] = decodeURIComponent(urlParams[key]);
         }
     }
     return urlParams;
