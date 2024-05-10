@@ -1,15 +1,14 @@
 'use client';
 
+import redirect from 'components/NextJsMigration/redirect';
+import useParams from 'components/NextJsMigration/useParams';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import { Container } from 'reactstrap';
-import ROUTES from 'constants/routes';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { filterSubjectOfStatementsByPredicateAndClass } from 'utils';
-import { reverse } from 'named-urls';
-import NotFound from 'app/not-found';
-import useParams from 'components/NextJsMigration/useParams';
-import redirect from 'components/NextJsMigration/redirect';
 
 /**
  * Component for redirecting visualization IDs to the comparison view
@@ -36,7 +35,7 @@ export default function Visualization() {
     }, [visualizationId]);
 
     if (error) {
-        return <NotFound />;
+        return redirect(`${reverse(ROUTES.RESOURCE, { id: visualizationId })}?noRedirect`);
     }
     if (comparisonId) {
         return redirect(`${reverse(ROUTES.COMPARISON, { comparisonId })}#Vis${visualizationId}`);
