@@ -18,8 +18,8 @@ import { Button, ListGroup } from 'reactstrap';
 import { getComparisons } from 'services/backend/comparisons';
 import { getLiteratureLists } from 'services/backend/literatureLists';
 import { getPapers } from 'services/backend/papers';
-import { getResources } from 'services/backend/resources';
 import { getReviews } from 'services/backend/reviews';
+import { getTemplates } from 'services/backend/templates';
 import { getVisualizations } from 'services/backend/visualizations';
 
 const Items = ({ showDelete = false, filterClass, filterLabel, filters = {} }) => {
@@ -47,15 +47,7 @@ const Items = ({ showDelete = false, filterClass, filterLabel, filters = {} }) =
             } else if (filterClass === CLASSES.LITERATURE_LIST) {
                 response = await getLiteratureLists({ page: p, size: pageSize, visibility: null, ...filters });
             } else if (filterClass === CLASSES.NODE_SHAPE) {
-                response = await getResources({
-                    include: [CLASSES.NODE_SHAPE],
-                    page: p,
-                    size: pageSize,
-                    sortBy: 'created_at',
-                    desc: true,
-                    createdBy: filters.created_by,
-                    ...filters,
-                });
+                response = await getTemplates({ page: p, size: pageSize, visibility: null, ...filters });
             }
             if (response.totalElements === 0) {
                 setIsLoading(false);
