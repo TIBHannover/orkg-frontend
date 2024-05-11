@@ -7,12 +7,7 @@ import PropTypes from 'prop-types';
 import { Component, createRef } from 'react';
 import { toast } from 'react-toastify';
 import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import {
-    updateObservatory,
-    updateObservatoryDescription,
-    updateObservatoryName,
-    updateObservatoryResearchField,
-} from 'services/backend/observatories';
+import { updateObservatory } from 'services/backend/observatories';
 
 export const MAX_DESCRIPTION_LENGTH = 750;
 
@@ -56,10 +51,6 @@ class EditObservatory extends Component {
         const { researchField } = this.state;
         const { sdgs } = this.state;
 
-        let isUpdatedLabel = true;
-        let isUpdatedDescription = true;
-        let isUpdatedResearchField = true;
-
         toast.dismiss();
 
         if (value !== this.props.label && value.length === 0) {
@@ -77,80 +68,19 @@ class EditObservatory extends Component {
             return false;
         }
 
-        if (value !== this.props.label && value.length !== 0) {
-            await this.updateObservatoryName(id, value);
-            isUpdatedLabel = true;
-        }
-
-        if (description !== this.props.description && description.length !== 0) {
-            await this.updateObservatoryDescription(id, description);
-            isUpdatedDescription = true;
-        }
-
-        if (!isEqual(researchField, this.props.researchField) && researchField !== null) {
-            await this.updateObservatoryResearchField(id, researchField);
-            isUpdatedResearchField = true;
-        }
-
-        if (!isEqual(sdgs, this.props.sdgs)) {
-            await this.updateObservatorySdgs(id, sdgs);
-            isUpdatedResearchField = true;
-        }
-
-        if (isUpdatedLabel || isUpdatedDescription || isUpdatedResearchField) {
-            toast.success('Observatory updated successfully');
-            this.props.updateObservatoryMetadata(value, description, researchField, sdgs);
-            this.props.toggle();
-        } else {
-            this.props.toggle();
-        }
+        await this.updateObservatory(id, value, description, researchField, sdgs);
+        toast.success('Observatory updated successfully');
+        this.props.updateObservatoryMetadata(value, description, researchField, sdgs);
+        this.props.toggle();
     };
 
-    updateObservatoryName = async (id, name) => {
-        this.setState({ isLoadingName: true });
+    updateObservatory = async (id, name, description, researchField, sdgs) => {
+        this.setState({ isLoadingName: true, isLoadingDescription: true, isLoadingResearchField: true });
         try {
-            await updateObservatoryName(id, name);
-            this.setState({ isLoadingName: false });
+            await updateObservatory(id, { name, description, research_field: researchField?.id, sdgs: sdgs.map((sdg) => sdg?.id) });
+            this.setState({ isLoadingName: false, isLoadingDescription: false, isLoadingResearchField: false });
         } catch (error) {
-            this.setState({ isLoadingName: false });
-            console.error(error);
-            toast.error(`Error updating an observatory ${error.message}`);
-        }
-    };
-
-    updateObservatoryDescription = async (id, description) => {
-        this.setState({ isLoadingDescription: true });
-        try {
-            await updateObservatoryDescription(id, description);
-            this.setState({ isLoadingDescription: false });
-        } catch (error) {
-            this.setState({ isLoadingDescription: false });
-            console.error(error);
-            toast.error(`Error updating an observatory ${error.message}`);
-        }
-    };
-
-    updateObservatoryResearchField = async (id, researchField) => {
-        this.setState({ isLoadingResearchField: true });
-        try {
-            await updateObservatoryResearchField(id, researchField.id);
-            this.setState({ isLoadingResearchField: false });
-        } catch (error) {
-            this.setState({ isLoadingResearchField: false });
-            console.error(error);
-            toast.error(`Error updating an observatory ${error.message}`);
-        }
-    };
-
-    updateObservatorySdgs = async (id, sdgs) => {
-        this.setState({ isLoadingResearchField: true });
-        try {
-            await updateObservatory(id, {
-                sdgs: sdgs.map((sdg) => sdg.id),
-            });
-            this.setState({ isLoadingResearchField: false });
-        } catch (error) {
-            this.setState({ isLoadingResearchField: false });
+            this.setState({ isLoadingName: false, isLoadingDescription: false, isLoadingResearchField: false });
             console.error(error);
             toast.error(`Error updating an observatory ${error.message}`);
         }

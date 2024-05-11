@@ -10,7 +10,7 @@ import { faPlus, faTrash, faCheck, faTimes } from '@fortawesome/free-solid-svg-i
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { toast } from 'react-toastify';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
-import { deleteOrganizationFromObservatory } from 'services/backend/observatories';
+import { updateObservatory } from 'services/backend/observatories';
 import capitalize from 'capitalize';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import { getOrganizationLogoUrl } from 'services/backend/organizations';
@@ -25,7 +25,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
     }, [organizationsList]);
 
     const deleteOrganization = async (organization) => {
-        await deleteOrganizationFromObservatory(observatoryId, organization.id)
+        await updateObservatory(observatoryId, { organizations: organizationsList.filter((o) => o.id !== organization?.id).map((o) => o.id) })
             .then((_) => {
                 toggleOrganizationItem(organization);
                 toast.success('Organization deleted successfully');
