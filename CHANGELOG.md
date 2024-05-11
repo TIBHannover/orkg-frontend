@@ -3,6 +3,32 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.141.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.140.0...v0.141.0) - 2024-05-11
+
+### Changes
+
+- refactor: migrate multiple components to TypeScript [`#1289`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1289)
+- observatories(EditObservatories)=&gt; updated endpoint to updateObservatory [`#1307`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1307)
+- feat(Resource): support setting the extraction method  [`#1312`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1312)
+- Comparison(RelatedPaperCarousal)=&gt; added slidesToshow = 4, [`#1306`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1306)
+- fix: redirect to resource page if the visualization is not linked to any comparison [`#1314`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1314)
+- fix: applying template to all contributions in the contribution editor [`#1315`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1315)
+- fix: Warning after editing contribution label [`#1322`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1322)
+- Enable environment variables in storybook [`#1323`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1323)
+- fix: unlisted badge missing in paper view [`#1324`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1324)
+- fix: Paper url is not displayed under the "Access Paper" button [`#1327`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1327)
+- fix: decode values of useParams and fix redirection in CheckSlug [`#1329`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1329)
+- fix: Error in accessing templates from profile [`#1325`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1325)
+- fix(TemplateEditor): switching tab reloads the template [`#1330`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1330)
+- fix(ContributionEditor): listing suggested properties [`#1331`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1331)
+- feat(Header): add ORKG birthday logo [`#1328`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1328)
+- refactor: remove react-image-lightbox and update react-diff-viewer [`#1320`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1320)
+- fix(Mastodon): solve hydration error by using next-client-cookies [`#1318`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1318)
+- Layout(Footer): added a new L3S logo [`#1316`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1316)
+- chore: Console error about Header component [`#1317`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1317)
+- style: always have parentheses for arrow function arguments [`#1302`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1302)
+
+---
 ## [v0.140.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.139.1...v0.140.0) - 2024-04-25
 
 ### Changes
