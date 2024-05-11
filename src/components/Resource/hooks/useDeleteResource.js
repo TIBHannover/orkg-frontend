@@ -1,6 +1,6 @@
 import Confirm from 'components/Confirmation/Confirmation';
 import useRouter from 'components/NextJsMigration/useRouter';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { deleteResource as deleteResourceNetwork } from 'services/backend/resources';

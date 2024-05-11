@@ -8,7 +8,7 @@ import { faExternalLinkAlt, faEllipsisV, faGlobe, faSpinner, faPen } from '@fort
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import useAuthor from 'components/Author/hooks/useAuthor';

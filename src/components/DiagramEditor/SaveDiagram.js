@@ -4,7 +4,7 @@ import useRouter from 'components/NextJsMigration/useRouter';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import THING_TYPES from 'constants/thingTypes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';

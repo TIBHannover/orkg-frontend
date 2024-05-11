@@ -1,11 +1,12 @@
 import StepContainer from 'components/StepContainer';
+import { StoryFn } from '@storybook/react';
 
 export default {
     title: 'StepContainer',
     component: StepContainer,
 };
 
-const Template = (args) => (
+const Template: StoryFn<typeof StepContainer> = (args) => (
     <>
         <StepContainer {...args} />
         <StepContainer step="2" topLine bottomLine />

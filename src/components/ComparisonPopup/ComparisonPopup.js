@@ -6,7 +6,7 @@ import { loadComparisonFromLocalStorage, removeFromComparison } from 'slices/vie
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { Cookies } from 'react-cookie';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { faFile } from '@fortawesome/free-regular-svg-icons';

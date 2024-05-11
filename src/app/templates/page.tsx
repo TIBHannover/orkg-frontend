@@ -134,7 +134,6 @@ const Templates = () => {
     return (
         <>
             <TitleBar
-                // @ts-expect-error
                 titleAddition={
                     <div className="text-muted mt-1">
                         {totalElements === 0 && isLoadingTemplates ? <Icon icon={faSpinner} spin /> : totalElements}{' '}
@@ -146,7 +145,6 @@ const Templates = () => {
                         )}
                     </div>
                 }
-                // @ts-expect-error
                 buttonGroup={
                     <>
                         <RequireAuthentication

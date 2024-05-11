@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import Link from 'components/NextJsMigration/Link';
 import ObservatoriesCarousel from 'components/ObservatoriesCarousel/ObservatoriesCarousel';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
 import Tippy from '@tippyjs/react';
 

@@ -12,7 +12,7 @@ import Video from 'components/ValuePlugins/Video/Video';
 import { ENTITIES } from 'constants/graphSettings';
 import { LICENSE_URL } from 'constants/misc';
 import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';

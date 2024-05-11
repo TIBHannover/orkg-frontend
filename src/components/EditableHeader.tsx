@@ -3,8 +3,7 @@ import CuratorModal from 'components/CuratorModal/CuratorModal';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { StyledButton } from 'components/StatementBrowser/styled';
 import { ENTITIES } from 'constants/graphSettings';
-import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useState, FC, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Input, InputGroup } from 'reactstrap';
@@ -12,13 +11,23 @@ import { updatePredicate } from 'services/backend/predicates';
 import { updateResource } from 'services/backend/resources';
 import { updateClass } from 'services/backend/classes';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
+import { RootStore } from 'slices/types';
 
-const EditableHeader = ({ entityType, id, onChange, curatorsOnly = false, value }) => {
-    const [label, setLabel] = useState(value);
+type EditableHeaderProp = {
+    id: string;
+    value: string;
+    onChange: (arg: string) => void;
+    entityType: (typeof ENTITIES)[keyof typeof ENTITIES];
+    curatorsOnly: boolean;
+};
+const EditableHeader: FC<EditableHeaderProp> = ({ entityType, id, onChange, curatorsOnly = false, value }) => {
+    const [label, setLabel] = useState<string>(value);
     const [isLoading, setIsLoading] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [isOpenCuratorModal, setIsOpenCuratorModal] = useState(false);
-    const isCurator = useSelector((state) => state.auth.user?.isCurationAllowed);
+
+    const user = useSelector((state: RootStore) => state.auth.user);
+    const isCurator = user ? user.isCurationAllowed : false;
 
     const handleSubmitClick = async () => {
         setIsLoading(true);
@@ -35,7 +44,9 @@ const EditableHeader = ({ entityType, id, onChange, curatorsOnly = false, value 
             onChange(label);
             setIsEditMode(false);
         } catch (error) {
-            toast.error(`Error updating resource : ${error.message}`);
+            if (error instanceof Error) {
+                toast.error(`Error updating resource : ${error.message}`);
+            }
         } finally {
             setIsLoading(false);
         }
@@ -89,14 +100,6 @@ const EditableHeader = ({ entityType, id, onChange, curatorsOnly = false, value 
             {isOpenCuratorModal && <CuratorModal toggle={() => setIsOpenCuratorModal((v) => !v)} />}
         </div>
     );
-};
-
-EditableHeader.propTypes = {
-    id: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-    entityType: PropTypes.oneOf([ENTITIES.RESOURCE, ENTITIES.PREDICATE]),
-    curatorsOnly: PropTypes.bool,
 };
 
 export default EditableHeader;

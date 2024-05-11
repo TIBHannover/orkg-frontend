@@ -2,11 +2,11 @@ import { faHistory } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import HistoryModal from 'components/Comparison/HistoryModal/HistoryModal';
 import Link from 'components/NextJsMigration/Link';
-import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Alert } from 'reactstrap';
+import ROUTES from 'constants/routes';
 
 const NewerVersionWarning = ({ versions, showViewHistory = true, comparisonId }) => {
     const [isOpenHistoryModal, setIsOpenHistoryModal] = useState(false);

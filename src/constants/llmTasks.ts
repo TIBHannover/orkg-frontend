@@ -1,4 +1,6 @@
-const LLM_TASK_NAMES = {
+const LLM_TASK_NAMES: {
+    [key: string]: string;
+} = {
     RECOMMEND_PROPERTIES: 'recommendProperties',
     RECOMMEND_RESEARCH_PROBLEMS: 'recommendResearchProblems',
     RECOMMEND_MATERIALS: 'recommendMaterials',

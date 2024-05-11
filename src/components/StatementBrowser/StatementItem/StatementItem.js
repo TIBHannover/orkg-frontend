@@ -14,7 +14,7 @@ import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { useSelector } from 'react-redux';
 import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import useStatementItem from 'components/StatementBrowser/StatementItem/hooks/useStatementItem';
 import SortableValueItem from 'components/StatementBrowser/StatementItem/SortableValueItem';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';

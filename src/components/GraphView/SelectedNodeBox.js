@@ -5,7 +5,7 @@ import Tippy from '@tippyjs/react';
 import CopyId from 'components/CopyId/CopyId';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { Fragment } from 'react';

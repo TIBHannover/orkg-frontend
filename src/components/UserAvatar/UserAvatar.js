@@ -5,7 +5,7 @@ import Link from 'components/NextJsMigration/Link';
 import hideOnEsc from 'components/Tippy/hideOnEsc';
 import useContributor from 'components/hooks/useContributor';
 import { MISC } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import Gravatar from 'react-gravatar';

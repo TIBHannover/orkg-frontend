@@ -2,7 +2,7 @@ import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH, faSpinner, faHome, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
 import { getParentResearchFields } from 'services/backend/statements';

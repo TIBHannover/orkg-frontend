@@ -1,4 +1,6 @@
-const THING_TYPES = {
+const THING_TYPES: {
+    [key: string]: string;
+} = {
     COMPARISON: 'COMPARISON',
     DIAGRAM: 'DIAGRAM',
     VISUALIZATION: 'VISUALIZATION',

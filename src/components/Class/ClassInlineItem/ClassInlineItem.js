@@ -7,7 +7,7 @@ import StatementActionButton from 'components/StatementBrowser/StatementActionBu
 import { StyledButton } from 'components/StatementBrowser/styled';
 import { useSelector } from 'react-redux';
 import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';

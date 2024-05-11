@@ -5,7 +5,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTimes, faEllipsisV, faExternalLinkAlt, faComments } from '@fortawesome/free-solid-svg-icons';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import PropTypes from 'prop-types';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useSelector } from 'react-redux';
 import Publish from 'components/ViewPaper/Publish/Publish';

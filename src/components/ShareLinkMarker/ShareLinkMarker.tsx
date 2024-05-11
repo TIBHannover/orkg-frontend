@@ -5,7 +5,6 @@ import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import Tippy, { useSingleton } from '@tippyjs/react';
-import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import { getFacebookSharerLink, getTwitterSharerLink, getLinkedInSharerLink } from 'components/ShareLinkMarker/helpers';
 import usePathname from 'components/NextJsMigration/usePathname';
@@ -28,7 +27,7 @@ export const ShareSideBox = styled.div`
     }
 `;
 
-const ShareLinkMarker = ({ typeOfLink, title }) => {
+const ShareLinkMarker = ({ typeOfLink, title }: { typeOfLink: string; title: string }) => {
     const [source, target] = useSingleton();
     const pathname = usePathname();
     const shareUrl = `${window.location.protocol}//${window.location.host}${pathname}`;
@@ -58,6 +57,7 @@ const ShareLinkMarker = ({ typeOfLink, title }) => {
                 <span>
                     <CopyToClipboard
                         text={shareUrl}
+                        // @ts-expect-error
                         target="_blank"
                         className="text-secondary p-0"
                         onCopy={() => {
@@ -73,13 +73,6 @@ const ShareLinkMarker = ({ typeOfLink, title }) => {
             </Tippy>
         </ShareSideBox>
     );
-};
-
-ShareLinkMarker.propTypes = {
-    /** What is the type of the content being shared? (e.g. resource, paper, review) */
-    typeOfLink: PropTypes.string.isRequired,
-    /** The title of the content being share (e.g. the paper title) */
-    title: PropTypes.string,
 };
 
 export default ShareLinkMarker;

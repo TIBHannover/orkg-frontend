@@ -4,7 +4,7 @@ import Tippy from '@tippyjs/react';
 import Link from 'components/NextJsMigration/Link';
 import { PropertyStyle, StatementsGroupStyle, ValueItemStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import { getConfigByType } from 'constants/DataTypes';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { Badge, ListGroup } from 'reactstrap';

@@ -1,6 +1,6 @@
 import useRouter from 'components/NextJsMigration/useRouter';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { find, flatten } from 'lodash';
 import { reverse } from 'named-urls';
 import { useCallback, useEffect, useState } from 'react';

@@ -1,6 +1,6 @@
 import useComparisonVersions from 'components/Comparison/hooks/useComparisonVersions';
 import HistoryModalComponent from 'components/HistoryModal/HistoryModal';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';

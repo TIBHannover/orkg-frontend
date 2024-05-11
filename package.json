@@ -17,6 +17,7 @@
         "@jonkoops/matomo-tracker-react": "^0.7.0",
         "@reduxjs/toolkit": "^1.9.3",
         "@tippyjs/react": "^4.2.6",
+        "@types/react-copy-to-clipboard": "^5.0.7",
         "@webscopeio/react-textarea-autocomplete": "^4.9.2",
         "@xobotyi/scrollbar-width": "^1.9.5",
         "array-move": "^3.0.1",

@@ -1,11 +1,16 @@
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faXTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import Tippy, { useSingleton } from '@tippyjs/react';
-import PropTypes from 'prop-types';
 import { getFacebookSharerLink, getTwitterSharerLink, getLinkedInSharerLink } from 'components/ShareLinkMarker/helpers';
 import usePathname from 'components/NextJsMigration/usePathname';
+import { FC } from 'react';
 
-const ShareCreatedContent = ({ typeOfLink, title }) => {
+type ShareCreatedContentProps = {
+    typeOfLink: string;
+    title: string;
+};
+
+const ShareCreatedContent: FC<ShareCreatedContentProps> = ({ typeOfLink, title }) => {
     const [source, target] = useSingleton();
     const pathname = usePathname();
     const shareUrl = `${window.location.protocol}//${window.location.host}${pathname}`;
@@ -31,13 +36,6 @@ const ShareCreatedContent = ({ typeOfLink, title }) => {
             </Tippy>
         </div>
     );
-};
-
-ShareCreatedContent.propTypes = {
-    /** What is the type of the content being shared? (e.g. resource, paper, review) */
-    typeOfLink: PropTypes.string.isRequired,
-    /** The title of the content being share (e.g. the paper title) */
-    title: PropTypes.string,
 };
 
 export default ShareCreatedContent;

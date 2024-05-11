@@ -9,7 +9,7 @@ import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 
 const TypeTooltipContent = ({ valueClass, entity, switchEntityType }) => (
     <>

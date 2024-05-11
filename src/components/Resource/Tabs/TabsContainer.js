@@ -8,9 +8,8 @@ import { reverse } from 'named-urls';
 import useRouter from 'components/NextJsMigration/useRouter';
 import useParams from 'components/NextJsMigration/useParams';
 import PropTypes from 'prop-types';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import ResourceUsage from 'components/Resource/Tabs/ResourceUsage';
-import Trend from 'components/Resource/Tabs/Trend';
 
 function TabsContainer({ id, classes, editMode }) {
     const { activeTab } = useParams();
@@ -30,7 +29,6 @@ function TabsContainer({ id, classes, editMode }) {
         <Container className="mt-3 p-0">
             <Tabs
                 className="box rounded"
-                getPopupContainer={(trigger) => trigger.parentNode}
                 destroyInactiveTabPane
                 onChange={onTabChange}
                 activeKey={activeTab ?? 'information'}

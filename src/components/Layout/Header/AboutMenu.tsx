@@ -2,7 +2,7 @@ import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Link from 'components/NextJsMigration/Link';
 import usePathname from 'components/NextJsMigration/usePathname';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { get, groupBy } from 'lodash';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';

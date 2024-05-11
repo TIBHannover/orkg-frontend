@@ -1,6 +1,6 @@
 import Link from 'components/NextJsMigration/Link';
 import env from 'components/NextJsMigration/env';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import greetingTime from 'greeting-time';
 import { reverse } from 'named-urls';
 import { useEffect, useRef, useState } from 'react';

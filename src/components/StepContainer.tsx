@@ -1,7 +1,7 @@
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import { ReactNode, FC } from 'react';
 
 const StepStyled = styled.div`
     height: 29px;
@@ -48,8 +48,15 @@ const TitleStyled = styled.h1`
         color: ${(props) => props.theme.secondary};
     }
 `;
-
-const StepContainer = ({ step, title, topLine = false, bottomLine = false, active = false, children = null }) => {
+type StepContainerProps = {
+    step?: string;
+    title?: string;
+    topLine?: boolean;
+    bottomLine?: boolean;
+    active?: boolean;
+    children?: ReactNode;
+};
+const StepContainer: FC<StepContainerProps> = ({ step, title, topLine = false, bottomLine = false, active = false, children = null }) => {
     const activeClasses = active ? 'active' : '';
     const topClasses = classNames({
         top: true,
@@ -78,15 +85,6 @@ const StepContainer = ({ step, title, topLine = false, bottomLine = false, activ
             )}
         </>
     );
-};
-
-StepContainer.propTypes = {
-    step: PropTypes.string.isRequired,
-    title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-    topLine: PropTypes.bool,
-    bottomLine: PropTypes.bool,
-    active: PropTypes.bool,
-    children: PropTypes.node,
 };
 
 export default StepContainer;

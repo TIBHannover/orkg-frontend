@@ -18,7 +18,7 @@ import env from 'components/NextJsMigration/env';
 import loadImage from 'components/NextJsMigration/loadImage';
 import usePathname from 'components/NextJsMigration/usePathname';
 import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { match } from 'path-to-regexp';
 import { useEffect, useState } from 'react';

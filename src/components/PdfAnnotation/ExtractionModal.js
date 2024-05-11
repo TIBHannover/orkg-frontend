@@ -4,7 +4,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert } from 'react
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import ExtractReferencesModal from 'components/PdfAnnotation/ExtractReferencesModal';
 import useExtractionModal from 'components/PdfAnnotation/hooks/useExtractionModal';

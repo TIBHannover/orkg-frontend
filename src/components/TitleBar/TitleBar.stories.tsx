@@ -3,6 +3,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Button, Container } from 'reactstrap';
+import { StoryFn } from '@storybook/react';
 
 export default {
     title: 'TitleBar',
@@ -16,7 +17,7 @@ export default {
     },
 };
 
-const Template = (args) => <TitleBar {...args} />;
+const Template: StoryFn<typeof TitleBar> = (args) => <TitleBar {...args} />;
 
 export const Default = Template.bind({});
 
@@ -24,7 +25,7 @@ Default.args = {
     buttonGroup: null,
     titleAddition: '100 items',
     children: 'Paper list',
-    wrap: '',
+    wrap: false,
     titleSize: 'h4',
 };
 
@@ -46,7 +47,7 @@ WithoutTitleAddition.args = {
     titleAddition: '',
 };
 
-const TemplateWithContainer = (args) => (
+const TemplateWithContainer: StoryFn<typeof TitleBar> = (args) => (
     <div style={{ background: 'WhiteSmoke', padding: '10px 10px 50px 10px' }}>
         <TitleBar {...args} />
         <Container className="box rounded p-4 clearfix">Lorum ipsum dolor sit amet</Container>

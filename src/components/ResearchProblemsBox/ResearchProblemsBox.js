@@ -1,7 +1,7 @@
 import Link from 'components/NextJsMigration/Link';
 import { useState } from 'react';
 import { Button } from 'reactstrap';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
 import AddResearchProblem from 'components/Observatory/AddResearchProblem';

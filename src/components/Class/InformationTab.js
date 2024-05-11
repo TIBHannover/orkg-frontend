@@ -5,7 +5,7 @@ import Link from 'components/NextJsMigration/Link';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { orderBy } from 'lodash';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';

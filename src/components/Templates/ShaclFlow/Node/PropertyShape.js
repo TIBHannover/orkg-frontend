@@ -1,6 +1,6 @@
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import Handle from 'components/Templates/ShaclFlow/Node/Handle';
-import DATA_TYPES from 'constants/DataTypes.js';
+import DATA_TYPES from 'constants/DataTypes';
 import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { Position } from 'reactflow';

@@ -18,7 +18,7 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faPen, faSave, faRefresh, faTimes, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import Tippy from '@tippyjs/react';
 import useDiagramEditor from 'components/DiagramEditor/hooks/useDiagramEditor';
 

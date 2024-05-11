@@ -9,7 +9,7 @@ import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationC
 import useRouter from 'components/NextJsMigration/useRouter';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
 import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { flatten } from 'lodash';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';

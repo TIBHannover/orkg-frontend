@@ -2,8 +2,8 @@ export type AuthSliceType = {
     dialogIsOpen: boolean;
     action: string;
     user:
-        | null
         | 0
+        | null
         | {
               displayName: string;
               id: string;

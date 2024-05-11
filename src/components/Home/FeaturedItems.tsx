@@ -1,6 +1,6 @@
 import Link from 'components/NextJsMigration/Link';
 import { FormGroup, Label, Input, ListGroup, Button } from 'reactstrap';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import styled from 'styled-components';
 import { CLASSES, RESOURCES } from 'constants/graphSettings';
 import ContentLoader from 'components/ContentLoader/ContentLoader';

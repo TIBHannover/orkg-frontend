@@ -7,7 +7,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import MakeLatex from 'make-latex';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import Tooltip from 'components/Utils/Tooltip';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { useSelector } from 'react-redux';

@@ -12,7 +12,7 @@ import Breadcrumbs from 'components/ViewPaperVersion/BreadCrumbs';
 import CSVWTable from 'components/ViewPaperVersion/CSVWTable/CSVWTable';
 import useContributions from 'components/ViewPaperVersion/ContributionsVersion/hooks/useContributions';
 import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import ContentLoader from 'components/ContentLoader/ContentLoader';

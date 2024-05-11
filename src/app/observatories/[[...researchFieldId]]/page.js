@@ -9,7 +9,7 @@ import Tabs from 'components/Tabs/Tabs';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import Tippy from '@tippyjs/react';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect } from 'react';
 import useRouter from 'components/NextJsMigration/useRouter';

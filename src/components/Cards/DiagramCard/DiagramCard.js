@@ -2,7 +2,7 @@ import Link from 'components/NextJsMigration/Link';
 import { Row, Col } from 'reactstrap';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
 
 const DiagramCardStyled = styled.div`

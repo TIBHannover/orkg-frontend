@@ -1,5 +1,5 @@
 import Tippy from '@tippyjs/react';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import THING_TYPES from 'constants/thingTypes';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import { isEqual } from 'lodash';

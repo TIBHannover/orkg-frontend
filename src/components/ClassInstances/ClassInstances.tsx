@@ -5,7 +5,7 @@ import Link from 'components/NextJsMigration/Link';
 import useRouter from 'components/NextJsMigration/useRouter';
 import useSearchParams from 'components/NextJsMigration/useSearchParams';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { debounce } from 'lodash';
 import { reverse } from 'named-urls';
 import { Form, FormGroup, Input, Label, Table } from 'reactstrap';

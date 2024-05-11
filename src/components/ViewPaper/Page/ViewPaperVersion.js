@@ -11,7 +11,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import Contributions from 'components/ViewPaperVersion/ContributionsVersion/Contributions';
 import PaperVersionHeader from 'components/ViewPaperVersion/PaperVersionHeader';
 import useViewPaperVersion from 'components/ViewPaperVersion/hooks/useViewPaperVersion';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useState } from 'react';
 import ContentLoader from 'components/ContentLoader/ContentLoader';

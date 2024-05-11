@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import Confirm from 'components/Confirmation/Confirmation';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import useRouter from 'components/NextJsMigration/useRouter';
 import { EXTRACTION_METHODS } from 'constants/misc';
 import {

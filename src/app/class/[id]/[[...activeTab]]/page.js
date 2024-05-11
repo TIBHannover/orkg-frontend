@@ -8,7 +8,7 @@ import ImportCSVInstances from 'components/ClassInstances/ImportCSVInstances';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
 import { useEffect, useState } from 'react';

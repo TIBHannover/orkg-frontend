@@ -26,7 +26,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import CONTENT_TYPES from 'constants/contentTypes';
 import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';

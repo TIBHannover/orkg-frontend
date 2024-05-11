@@ -8,7 +8,7 @@ import Link from 'components/NextJsMigration/Link';
 import Tooltip from 'components/Utils/Tooltip';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import THING_TYPES from 'constants/thingTypes';
 import { flatten } from 'lodash';
 import { reverse } from 'named-urls';

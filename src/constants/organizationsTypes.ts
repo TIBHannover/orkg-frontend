@@ -1,4 +1,6 @@
-export const ORGANIZATIONS_MISC = {
+export const ORGANIZATIONS_MISC: {
+    [key: string]: string;
+} = {
     GENERAL: 'GENERAL',
     EVENT: 'CONFERENCE',
     JOURNAL: 'JOURNAL',
@@ -12,7 +14,9 @@ export const ORGANIZATIONS_TYPES = [
     { id: ORGANIZATIONS_MISC.JOURNAL, label: 'Journal', requireDate: false, alternateLabel: 'journal' },
 ];
 
-export const CONFERENCE_REVIEW_MISC = {
+export const CONFERENCE_REVIEW_MISC: {
+    [key: string]: string;
+} = {
     SINGLE_BLIND: 'SINGLE_BLIND',
     DOUBLE_BLIND: 'DOUBLE_BLIND',
     OPENREVIEW: 'OPENREVIEW',
