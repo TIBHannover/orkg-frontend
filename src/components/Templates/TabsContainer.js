@@ -10,7 +10,7 @@ import Format from 'components/Templates/Tabs/Format/Format';
 import GeneralSettings from 'components/Templates/Tabs/GeneralSettings/GeneralSettings';
 import PropertyShapesTab from 'components/Templates/Tabs/PropertyShapesTab/PropertyShapesTab';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
@@ -66,7 +66,6 @@ function TabsContainer({ id }) {
             >
                 <Tabs
                     className="box rounded"
-                    getPopupContainer={(trigger) => trigger.parentNode}
                     destroyInactiveTabPane={false}
                     onChange={onTabChange}
                     activeKey={activeTab ?? 'description'}

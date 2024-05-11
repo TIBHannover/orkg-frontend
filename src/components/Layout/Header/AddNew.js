@@ -4,7 +4,7 @@ import { Button } from 'reactstrap';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
 import { animateFill } from 'tippy.js';

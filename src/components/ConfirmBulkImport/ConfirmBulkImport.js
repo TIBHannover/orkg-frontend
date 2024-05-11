@@ -3,7 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PaperList from 'components/ConfirmBulkImport/PaperList';
 import useImportBulkData from 'components/ConfirmBulkImport/useImportBulkData';
 import Link from 'components/NextJsMigration/Link';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';

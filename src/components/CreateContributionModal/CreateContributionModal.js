@@ -4,7 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import useCreateContribution from 'components/CreateContributionModal/hooks/useCreateContribution';
 import Tooltip from 'components/Utils/Tooltip';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';

@@ -1,8 +1,7 @@
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { SubtitleSeparator } from 'components/styled';
-import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { FC, useState, ReactNode } from 'react';
 import { Button, ButtonGroup, Container } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -69,7 +68,15 @@ const H1Styled = styled.h1`
     overflow: hidden;
 `;
 
-const TitleBar = ({ buttonGroup = null, titleAddition = null, children = '', wrap = true, titleSize = 'h4' }) => {
+type TitleBarProps = {
+    buttonGroup?: ReactNode | string;
+    titleAddition?: ReactNode | string;
+    children?: ReactNode | string;
+    titleSize?: string;
+    wrap?: boolean;
+};
+
+const TitleBar: FC<TitleBarProps> = ({ buttonGroup = null, titleAddition = null, children = '', wrap = true, titleSize = 'h4' }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
@@ -95,13 +102,4 @@ const TitleBar = ({ buttonGroup = null, titleAddition = null, children = '', wra
         </ContainerStyled>
     );
 };
-
-TitleBar.propTypes = {
-    buttonGroup: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
-    titleAddition: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
-    children: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
-    titleSize: PropTypes.string,
-    wrap: PropTypes.bool,
-};
-
 export default TitleBar;

@@ -117,10 +117,16 @@ const DATA_TYPES = [
     weight: 0
 } */
 
-export const getConfigByType = (type) =>
-    DATA_TYPES.find((dt) => dt.type === type) || { type: MISC.DEFAULT_LITERAL_DATATYPE, validation: Joi.string(), inputFormType: 'textarea' };
+export const getConfigByType = (type: string) =>
+    DATA_TYPES.find((dt) => dt.type === type) || {
+        type: MISC.DEFAULT_LITERAL_DATATYPE,
+        validation: Joi.string(),
+        inputFormType: 'textarea',
+        weight: 0,
+        schema: null,
+    };
 
-export const getConfigByClassId = (classId) =>
+export const getConfigByClassId = (classId: string) =>
     DATA_TYPES.find((dt) => dt.classId === classId) || {
         name: 'Resource',
         type: ENTITIES.RESOURCE,
@@ -131,7 +137,7 @@ export const getConfigByClassId = (classId) =>
         weight: 0,
     };
 
-export const getSuggestionByTypeAndValue = (type, value) => {
+export const getSuggestionByTypeAndValue = (type: string, value: string) => {
     const suggestions = DATA_TYPES.filter((dt) => dt.type !== type)
         .filter((dt) => {
             let error;
@@ -145,13 +151,18 @@ export const getSuggestionByTypeAndValue = (type, value) => {
     return orderBy(suggestions, ['weight'], ['desc']);
 };
 
-export const getSuggestionByValue = (value) =>
+export const getSuggestionByValue = (value: string) =>
     orderBy(
         DATA_TYPES.filter((dataType) => dataType.type !== ENTITIES.RESOURCE).filter((dataType) => !dataType.schema?.validate(value)?.error),
         ['weight'],
         ['desc'],
     );
 
-export const checkDataTypeIsInValid = ({ value, dataType }) => !!getConfigByType(dataType).schema.validate(value)?.error;
+type CheckDataType = {
+    value: string;
+    dataType: string; // Change string to a more specific type if applicable
+};
+
+export const checkDataTypeIsInValid = ({ value, dataType }: CheckDataType) => !!getConfigByType(dataType).schema?.validate(value)?.error;
 
 export default DATA_TYPES;

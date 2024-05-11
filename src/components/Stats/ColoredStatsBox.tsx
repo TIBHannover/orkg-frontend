@@ -44,16 +44,17 @@ const Label = styled.div`
 
 export type ColoredStatsBoxProps = {
     label: string;
-    number: number;
-    className: string;
+    number?: number;
+    className?: string;
     isLoading: boolean;
-    link: string;
+    link?: string;
 };
 const ColoredStatsBox: FC<ColoredStatsBoxProps> = ({ link, isLoading, label, className = null, number = 0 }) => (
     <StatsBoxStyled className={`d-flex flex-grow-1 ${className} text-center box rounded mb-3 mx-2`}>
         <ConditionalWrapper
             condition={link}
-            wrapper={(children: any) => (
+            // @ts-expect-error
+            wrapper={(children) => (
                 // @ts-expect-error
                 <Link className="flex-grow-1" href={link}>
                     {children}

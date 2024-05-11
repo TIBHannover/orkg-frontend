@@ -11,7 +11,7 @@ import ExternalDescription from 'components/ResearchProblem/ExternalDescription'
 import Contributors from 'components/TopContributors/Contributors';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { useSelector } from 'react-redux';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import CheckSlug from 'components/CheckSlug/CheckSlug';

@@ -4,7 +4,7 @@ import { Button } from 'reactstrap';
 import { getProblemsByOrganizationId } from 'services/backend/organizations';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverseWithSlug } from 'utils';
 import { truncate } from 'lodash';
 import InternalServerError from 'app/error';

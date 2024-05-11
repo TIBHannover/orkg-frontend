@@ -1,7 +1,7 @@
 import Link from 'components/NextJsMigration/Link';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import PropTypes from 'prop-types';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverseWithSlug } from 'utils';
 
 const ResearchProblemsModal = ({ problems, openModal, setOpenModal }) => (

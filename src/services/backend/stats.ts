@@ -12,9 +12,8 @@ export type ResearchFieldStat = {
     papers: number;
     comparisons: number;
 };
-export const getStats = (
-    extra: string[] = [],
-): Promise<{
+
+export type Statistics = {
     statements: number;
     resources: number;
     predicates: number;
@@ -33,7 +32,9 @@ export const getStats = (
     organizations: number;
     orphaned_nodes: number;
     extras: { [key: string]: number };
-}> => submitGetRequest(`${statsUrl}?extra=${extra.join(',')}`);
+};
+
+export const getStats = (extra: string[] = []): Promise<Statistics> => submitGetRequest(`${statsUrl}?extra=${extra.join(',')}`);
 
 export const getResearchFieldsStats = (): Promise<{
     [key: string]: number;

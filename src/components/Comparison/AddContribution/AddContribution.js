@@ -5,7 +5,7 @@ import Link from 'components/NextJsMigration/Link';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import REGEX from 'constants/regex';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { debounce } from 'lodash';
 import { reverse } from 'named-urls';
 import pluralize from 'pluralize';

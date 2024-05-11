@@ -1,7 +1,7 @@
 import Link from 'components/NextJsMigration/Link';
 import { useEffect } from 'react';
 import { Button, Container } from 'reactstrap';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { openAuthDialog } from 'slices/authSlice';

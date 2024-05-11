@@ -4,7 +4,7 @@ import useRouter from 'components/NextJsMigration/useRouter';
 import useSearchParams from 'components/NextJsMigration/useSearchParams';
 import Tabs from 'components/Tabs/Tabs';
 import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 
 function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFieldId: string; researchFieldLabel: string }) {
@@ -54,13 +54,11 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFi
         },
     ];
 
-    const activeKey = items.map((i) => i.label.toLowerCase()).includes(searchParams.get('tab') ?? '') ? searchParams.get('tab') : 'comparisons';
+    const activeKey = items.map((i) => i.label.toLowerCase()).includes(searchParams.get('tab') ?? '') ? searchParams.get('tab')! : 'comparisons';
 
     return (
-        // @ts-expect-error
         <Tabs
             className="box rounded"
-            getPopupContainer={(trigger: HTMLElement) => trigger?.parentNode}
             onChange={onTabChange}
             activeKey={activeKey}
             items={items.map(({ label, classId }) => ({

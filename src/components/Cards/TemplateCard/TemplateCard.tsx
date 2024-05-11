@@ -3,7 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Link from 'components/NextJsMigration/Link';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import { FC } from 'react';

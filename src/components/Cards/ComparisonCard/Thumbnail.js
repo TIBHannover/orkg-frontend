@@ -2,7 +2,7 @@ import Link from 'components/NextJsMigration/Link';
 import { useState, useEffect, memo } from 'react';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
 import { PREDICATES } from 'constants/graphSettings';
 import { filterObjectOfStatementsByPredicateAndClass } from 'utils';

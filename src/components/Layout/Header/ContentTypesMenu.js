@@ -2,7 +2,7 @@ import Link from 'components/NextJsMigration/Link';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { supportedContentTypes } from 'components/ContentType/types';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { upperFirst } from 'lodash';
 import { reverse } from 'named-urls';
 import pluralize from 'pluralize';

@@ -4,7 +4,7 @@ import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
 import useRouter from 'components/NextJsMigration/useRouter';
 import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
 import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import THING_TYPES from 'constants/thingTypes';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';

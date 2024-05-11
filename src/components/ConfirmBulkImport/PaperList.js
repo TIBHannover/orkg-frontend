@@ -3,7 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import StatementList from 'components/ConfirmBulkImport/StatementList';
 import Link from 'components/NextJsMigration/Link';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';

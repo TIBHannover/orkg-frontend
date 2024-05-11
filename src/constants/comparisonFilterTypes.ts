@@ -1,4 +1,4 @@
-export const FILTER_TYPES = {
+export const FILTER_TYPES: { [key: string]: string } = {
     ONE_OF: 'oneOf',
     GTE: 'gte',
     LTE: 'lte',
@@ -6,5 +6,5 @@ export const FILTER_TYPES = {
     LTE_DATE: 'lteDate',
     NEQ_DATE: 'nEqDate',
     NEQ: 'nEq',
-    INC: 'inc',
 };
+export default FILTER_TYPES;

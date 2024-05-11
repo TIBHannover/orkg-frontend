@@ -3,7 +3,7 @@ import Link from 'components/NextJsMigration/Link';
 import { reverse } from 'named-urls';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faFile, faChartBar, faPaperclip, faCodeBranch } from '@fortawesome/free-solid-svg-icons';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Tippy from '@tippyjs/react';

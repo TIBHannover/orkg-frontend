@@ -1,7 +1,7 @@
 import Link from 'components/NextJsMigration/Link';
 import { reverse } from 'named-urls';
 import { getLinkByEntityType } from 'utils';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

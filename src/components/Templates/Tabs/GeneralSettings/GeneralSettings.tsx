@@ -3,7 +3,7 @@ import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { ChangeEvent, FC, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

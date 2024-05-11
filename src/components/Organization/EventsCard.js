@@ -1,7 +1,7 @@
 import Link from 'components/NextJsMigration/Link';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
 
 const EventsCardStyled = styled.li`

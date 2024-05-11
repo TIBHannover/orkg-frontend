@@ -7,7 +7,7 @@ import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { StyledItemProvenanceBox } from 'components/ViewPaper/ProvenanceBox/styled';
 import { MISC } from 'constants/graphSettings';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import { FC, useState } from 'react';

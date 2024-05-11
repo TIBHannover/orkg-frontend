@@ -9,7 +9,7 @@ import useParams from 'components/NextJsMigration/useParams';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useVenuePapers from 'components/Venue/useVenuePapers';
 import { SubTitle } from 'components/styled';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import pluralize from 'pluralize';
 import { useEffect, useState } from 'react';

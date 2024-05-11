@@ -7,7 +7,7 @@ import StatementActionButton from 'components/StatementBrowser/StatementActionBu
 import { PropertyStyle } from 'components/StatementBrowser/styled';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { FC, useState } from 'react';
 import { ConnectDragSource } from 'react-dnd';

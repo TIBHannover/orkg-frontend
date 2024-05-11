@@ -5,7 +5,7 @@ import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip
 import Link from 'components/NextJsMigration/Link';
 import { BreadcrumbStyled, TippyContentStyled } from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { FC } from 'react';
 import { getPredicatesByIds, predicatesUrl } from 'services/backend/predicates';

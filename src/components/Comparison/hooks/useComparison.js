@@ -3,7 +3,7 @@ import useParams from 'components/NextJsMigration/useParams';
 import useRouter from 'components/NextJsMigration/useRouter';
 import useSearchParams from 'components/NextJsMigration/useSearchParams';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import THING_TYPES from 'constants/thingTypes';
 import { isEmpty, uniq, without } from 'lodash';
 import { reverse } from 'named-urls';

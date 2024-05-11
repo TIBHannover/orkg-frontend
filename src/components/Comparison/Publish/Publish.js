@@ -18,7 +18,7 @@ import Tooltip from 'components/Utils/Tooltip';
 import { MISC } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';

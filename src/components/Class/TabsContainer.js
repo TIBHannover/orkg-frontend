@@ -3,7 +3,7 @@ import TreeView from 'components/Class/TreeView';
 import ClassInstances from 'components/ClassInstances/ClassInstances';
 import Tabs from 'components/Tabs/Tabs';
 import { TabHeaderStyle } from 'components/Tabs/styled';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';

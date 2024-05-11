@@ -10,7 +10,7 @@ import EditPaperModal from 'components/PaperForm/EditPaperModal';
 import useUsedTemplates from 'components/StatementBrowser/TemplatesModal/hooks/useUsedTemplates';
 import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
 import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';

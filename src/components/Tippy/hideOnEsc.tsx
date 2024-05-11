@@ -9,8 +9,8 @@
 const hideOnEsc = {
     name: 'hideOnEsc',
     defaultValue: true,
-    fn({ hide }) {
-        function onKeyDown(event) {
+    fn({ hide }: { hide: () => void }) {
+        function onKeyDown(event: KeyboardEvent) {
             if (event.keyCode === 27) {
                 hide();
             }

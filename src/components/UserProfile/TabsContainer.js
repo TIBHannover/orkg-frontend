@@ -3,7 +3,7 @@ import useRouter from 'components/NextJsMigration/useRouter';
 import Tabs from 'components/Tabs/Tabs';
 import Items from 'components/UserProfile/Items';
 import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 
@@ -23,7 +23,6 @@ function TabsContainer({ currentUserId, userId }) {
     return (
         <Tabs
             className="box rounded"
-            getPopupContainer={(trigger) => trigger.parentNode}
             destroyInactiveTabPane
             onChange={onTabChange}
             activeKey={activeTab ?? 'comparisons'}

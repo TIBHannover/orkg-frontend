@@ -3,7 +3,7 @@ import { Label, ListGroup, Alert, Input } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle, ValueItemStyle } from 'components/StatementBrowser/styled';
 import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 
 export default function BioassaySelectItem(props) {
     return (

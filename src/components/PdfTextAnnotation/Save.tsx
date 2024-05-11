@@ -5,7 +5,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import Link from 'components/NextJsMigration/Link';
 import { CLASSES, PREDICATES, RESOURCES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import createPaperMergeIfExists from 'helpers/createPaperMergeIfExists';
 import { uniqueId } from 'lodash';
 import { reverse } from 'named-urls';

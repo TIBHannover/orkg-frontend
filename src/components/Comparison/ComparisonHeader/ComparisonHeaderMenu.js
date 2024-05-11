@@ -29,7 +29,7 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import TitleBar from 'components/TitleBar/TitleBar';
 import ComparisonAuthorsModel from 'components/TopAuthors/ComparisonAuthorsModel';
 import { SubTitle } from 'components/styled';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import AddVisualizationModal from 'libs/selfVisModel/ComparisonComponents/AddVisualizationModal';
 import { uniq, without } from 'lodash';
 import { reverse } from 'named-urls';

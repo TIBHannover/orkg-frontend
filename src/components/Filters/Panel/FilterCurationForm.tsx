@@ -1,10 +1,10 @@
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ModalWithLoading from 'components/ModalWithLoading/ModalWithLoading';
-import DATA_TYPES from 'constants/DataTypes.js';
+import DATA_TYPES from 'constants/DataTypes';
 import FILTER_SOURCE from 'constants/filters';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import { motion } from 'framer-motion';
 import { reverse } from 'named-urls';
 import { ChangeEvent, FC, useCallback, useEffect, useRef, useState } from 'react';

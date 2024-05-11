@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
+import DATA_TYPES from 'constants/DataTypes';
 import { LOCATION_CHANGE } from 'components/ResetStoreOnNavigate/ResetStoreOnNavigate';
-import DATA_TYPES from 'constants/DataTypes.js';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import ROUTES from 'constants/routes';

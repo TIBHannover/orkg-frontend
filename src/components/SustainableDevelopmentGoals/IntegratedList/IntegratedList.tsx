@@ -27,11 +27,8 @@ const IntegratedList: FC<IntegratedListProps> = ({ sdgId }) => {
 
     return (
         <Container className="mt-4 p-0">
-            {/* @ts-expect-error-error */}
             <Tabs
                 className="box rounded"
-                // @ts-expect-error
-                getPopupContainer={(trigger) => trigger.parentNode}
                 destroyInactiveTabPane
                 onChange={onTabChange}
                 activeKey={activeTab}

@@ -4,7 +4,7 @@ import { Card, CardTitle, CardText, Row, Col, CardBody, Badge } from 'reactstrap
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
 
 const Comparison = styled(Card)`

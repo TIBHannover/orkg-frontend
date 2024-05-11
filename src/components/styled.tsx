@@ -1,5 +1,6 @@
 import { Button, CarouselIndicators } from 'reactstrap';
 import styled from 'styled-components';
+// @ts-expect-error
 import Gravatar from 'react-gravatar';
 
 export const SubtitleSeparator = styled.div`
@@ -36,7 +37,16 @@ export const StyledGravatar = styled(Gravatar)`
     }
 `;
 
-export const StyledDotGravatar = styled.div`
+type StyledDotGravatarProps = {
+    size?: number;
+    theme: {
+        secondary: string;
+        lightDarker: string;
+        primary: string;
+    };
+};
+
+export const StyledDotGravatar = styled.div<StyledDotGravatarProps>`
     width: ${(props) => props.size || 48}px;
     height: ${(props) => props.size || 48}px;
     display: inline-block;

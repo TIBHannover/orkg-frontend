@@ -21,8 +21,8 @@ import TemplateEditorHeaderBar from 'components/Templates/TemplateEditorHeaderBa
 import TitleBar from 'components/TitleBar/TitleBar';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import useContributor from 'components/hooks/useContributor';
+import ROUTES from 'constants/routes';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

@@ -1,5 +1,6 @@
 import Tabs from 'components/Tabs/Tabs';
 import { useState } from 'react';
+import { StoryFn } from '@storybook/react';
 
 export default {
     title: 'Tabs',
@@ -13,15 +14,18 @@ export default {
     },
 };
 
-const Template = (args) => {
+const Template: StoryFn<typeof Tabs> = (args) => {
     const [activeKey, setActiveKey] = useState(args.activeKey ?? 1);
 
     return (
         <Tabs
             {...args}
+            // @ts-expect-error
             activeKey={activeKey}
             onChange={(...params) => {
-                args.onChange(...params);
+                if (args.onChange) {
+                    args.onChange(...params);
+                }
                 setActiveKey(...params);
             }}
         />
@@ -31,24 +35,24 @@ const Template = (args) => {
 export const Default = Template.bind({});
 
 Default.args = {
-    activeKey: 1,
+    activeKey: '1',
     onChange: () => {},
     destroyInactiveTabPane: true,
     moreIcon: '>',
     items: [
         {
             label: 'Tab 1',
-            key: 1,
+            key: '1',
             children: <div>Tab 1 content</div>,
         },
         {
             label: 'Tab 2',
-            key: 2,
+            key: '2',
             children: <div>Tab 2 content</div>,
         },
         {
             label: 'Tab 3',
-            key: 3,
+            key: '3',
             children: <div>Tab 3 content</div>,
         },
     ],
