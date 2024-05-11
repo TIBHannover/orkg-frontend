@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { getAllOrganizations } from 'services/backend/organizations';
 import { useState, useEffect } from 'react';
-import { addOrganizationToObservatory } from 'services/backend/observatories';
+import { updateObservatory } from 'services/backend/observatories';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import Select from 'react-select';
 import { differenceBy } from 'lodash';
@@ -30,7 +30,7 @@ function AddOrganization(props) {
     const handleSubmit = async (e) => {
         setIsLoading(true);
         if (selectedOrganization) {
-            await addOrganizationToObservatory(props.id, selectedOrganization.id)
+            await updateObservatory(props.id, { organizations: [...props.organizations.map((o) => o.id), selectedOrganization?.id] })
                 .then((_) => {
                     toast.success('Organization added successfully');
                     setIsLoading(false);

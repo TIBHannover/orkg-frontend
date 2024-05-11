@@ -72,29 +72,20 @@ export const getObservatoryById = async (id: string): Promise<Observatory> => {
     }));
 };
 
-export const updateObservatoryName = (id: string, value: string): Promise<Observatory> =>
-    submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/name`, { 'Content-Type': 'application/json' }, { value });
-
-export const updateObservatoryDescription = (id: string, value: string): Promise<Observatory> =>
-    submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/description`, { 'Content-Type': 'application/json' }, { value });
-
-export const updateObservatoryResearchField = (id: string, value: string): Promise<Observatory> =>
-    submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/research_field`, { 'Content-Type': 'application/json' }, { value });
-
 export const updateObservatory = (
     id: string,
     {
         name,
-        organizations,
         description,
         research_field,
         sdgs,
+        organizations,
     }: {
-        name?: string;
-        organizations?: string[];
-        description?: string;
-        research_field?: string;
-        sdgs?: string[];
+        name?: string | undefined;
+        description?: string | undefined;
+        research_field?: string | undefined;
+        sdgs?: string[] | undefined;
+        organizations?: string[] | undefined;
     },
 ): Promise<null> =>
     submitPatchRequest(
@@ -126,12 +117,6 @@ export const getUsersByObservatoryId = ({
     );
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/users?${params}`);
 };
-
-export const addOrganizationToObservatory = (id: string, organization_id: string): Promise<Observatory> =>
-    submitPutRequest(`${observatoriesUrl}add/${encodeURIComponent(id)}/organization`, { 'Content-Type': 'application/json' }, { organization_id });
-
-export const deleteOrganizationFromObservatory = (id: string, organization_id: string): Promise<Observatory> =>
-    submitPutRequest(`${observatoriesUrl}delete/${encodeURIComponent(id)}/organization`, { 'Content-Type': 'application/json' }, { organization_id });
 
 export type GetContentByObservatoryIdParams = {
     id: string;
