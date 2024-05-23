@@ -127,7 +127,7 @@ const Observatory = () => {
                                         {description || <small className="fst-italic">No Description provided</small>}
                                     </p>
                                 )}
-                                <div className="align-items-end w-100">
+                                <div className="align-items-end">
                                     <SdgBox sdgs={sdgs} maxWidth="100%" />
                                 </div>
                             </div>
