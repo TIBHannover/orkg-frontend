@@ -54,7 +54,7 @@ const AddPaperAdditionalButtons = ({
             setResearchField(newData.researchField);
             toast.success('Data successfully inserted');
 
-            if (newData?.extractedContributionData?.length > 0) {
+            if (newData?.extractedContributionData) {
                 setExtractedContributionData(newData.extractedContributionData);
                 toast.success('SciKGTeX contribution data is extracted and will be added to the paper');
             }

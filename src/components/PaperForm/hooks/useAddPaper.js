@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createPaper } from 'services/backend/papers';
 import { createResource } from 'services/backend/resources';
-import { createResourceStatement } from 'services/backend/statements';
+import { createResourceStatement, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { getErrorMessage } from 'utils';
 
 const useAddPaper = ({ onCreate = null }) => {
@@ -19,7 +19,7 @@ const useAddPaper = ({ onCreate = null }) => {
     const [abstract, setAbstract] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [url, setUrl] = useState('');
-    const [extractedContributionData, setExtractedContributionData] = useState([]);
+    const [extractedContributionData, setExtractedContributionData] = useState(null);
     const organizationId = useSelector((state) => state.auth.user?.organization_id);
     const observatoryId = useSelector((state) => state.auth.user?.observatory_id);
 
@@ -46,15 +46,26 @@ const useAddPaper = ({ onCreate = null }) => {
                 authors,
                 observatories: observatoryId ? [observatoryId] : [],
                 organizations: organizationId ? [organizationId] : [],
+                ...(extractedContributionData && { contents: extractedContributionData }),
             });
 
-            const contribution = await createResource('Contribution 1', [CLASSES.CONTRIBUTION]);
-            await createResourceStatement(paperId, PREDICATES.HAS_CONTRIBUTION, contribution.id);
+            let contributionId = null;
+            // if there are no contributions created yet, create a new one
+            if (!extractedContributionData) {
+                const contribution = await createResource('Contribution 1', [CLASSES.CONTRIBUTION]);
+                await createResourceStatement(paperId, PREDICATES.HAS_CONTRIBUTION, contribution.id);
+                contributionId = contribution.id;
+            } else {
+                const statements = getStatementsBySubjectAndPredicate({ subjectId: paperId, predicateId: PREDICATES.HAS_CONTRIBUTION });
+                if (statements.length > 0) {
+                    contributionId = statements[0].object.id;
+                }
+            }
 
             if (onCreate) {
                 onCreate({
                     paperId,
-                    contributionId: contribution.id,
+                    contributionId,
                 });
             }
         } catch (e) {
