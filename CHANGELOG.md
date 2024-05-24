@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.141.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.141.0...v0.141.1) - 2024-05-24
+
+### Changes
+
+- fix(AddPaper): add extracted SciKGTeX contribution data [`#1333`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1333)
+- style(Observatory): allow description text to get a large space [`#1334`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1334)
+
+---
 ## [v0.141.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.140.0...v0.141.0) - 2024-05-11
 
 ### Changes
