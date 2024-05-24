@@ -252,21 +252,25 @@ export const convertPdf = (form: FormData): Promise<any> =>
     });
 
 type extractSciKgTexResponse = {
-    predicates: any[];
-    paper: {
-        title: string;
-        authors: {
-            label: string;
-        }[];
-        researchField: string;
+    title: string;
+    authors: {
+        name: string;
+    }[];
+    research_fields: string[];
+    contents: {
         contributions: {
-            name: string;
-            values: {
+            label: string;
+            statements: {
                 [key: string]: {
-                    text: string;
+                    id: string;
                 }[];
             };
         }[];
+        literals: {
+            [key: string]: {
+                label: string;
+            };
+        };
     };
 };
 export const extractMetadataPdf = (form: FormData): Promise<NlpResponse<extractSciKgTexResponse>> =>

@@ -9,7 +9,7 @@ const UploadPdfModal = ({ toggle, onUpdateData }) => {
     const handleOnDrop = async (files) => {
         let title = '';
         let authors = [];
-        let extractedContributionData = [];
+        let extractedContributionData = null;
         let researchField = null;
         let doi = null;
         let hasSciKGTeXAnnotations = false;
@@ -18,11 +18,12 @@ const UploadPdfModal = ({ toggle, onUpdateData }) => {
             const form = new FormData();
             form.append('file', files[0]);
             const responseData = await extractMetadataPdf(form);
-            const extractedResearchField = await getResource(responseData.payload.paper.researchField);
-            title = responseData.payload.paper.title;
-            authors = responseData.payload.paper.authors.map((author) => author);
-            extractedContributionData = responseData.payload.paper.contributions;
+            const extractedResearchField = await getResource(responseData.payload.research_fields?.[0]);
+            title = responseData.payload.title;
+            authors = responseData.payload.authors;
+            extractedContributionData = responseData.payload.contents;
             researchField = extractedResearchField;
+
             hasSciKGTeXAnnotations = true;
         } catch (error) {
             console.error('Something went wrong while parsing the PDF', error);
@@ -33,8 +34,12 @@ const UploadPdfModal = ({ toggle, onUpdateData }) => {
                 const processedPdf = await new window.DOMParser().parseFromString(await processPdf({ pdf: files[0] }), 'text/xml');
                 title = processedPdf.querySelector('fileDesc titleStmt title')?.textContent;
                 authors = [...processedPdf.querySelectorAll('fileDesc biblStruct author')].map((author) => ({
-                    label: [...author.querySelectorAll('forename, surname')].map((name) => name?.textContent).join(' '),
-                    orcid: author.querySelector('idno[type="ORCID"]')?.textContent ?? undefined,
+                    name: [...author.querySelectorAll('forename, surname')].map((name) => name?.textContent).join(' '),
+                    identifiers: {
+                        orcid: author.querySelector('idno[type="ORCID"]')?.textContent
+                            ? [author.querySelector('idno[type="ORCID"]')?.textContent]
+                            : [],
+                    },
                 }));
                 doi = processedPdf.querySelector('fileDesc biblStruct idno[type="DOI"]')?.textContent ?? '';
             } catch (e) {
