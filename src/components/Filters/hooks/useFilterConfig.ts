@@ -59,14 +59,14 @@ const useFilterConfig = ({
             }));
         const params = new URLSearchParams(searchParams.toString());
         params.set('filter_config', JSON.stringify(activeFilters));
-        router.push(`?${params.toString()}`);
+        router.push(`?${params.toString()}`, { scroll: false });
     };
 
     const resetFilters = () => {
         const params = new URLSearchParams(searchParams.toString());
         setFilters((prev) => prev.map((f) => ({ ...f, values: [] })));
         params.delete('filter_config');
-        router.push(`?${params.toString()}`);
+        router.push(`?${params.toString()}`, { scroll: false });
     };
 
     const updateFilterValue = (filter: FilterConfig, value: FilterConfigValue[] | string) => {
