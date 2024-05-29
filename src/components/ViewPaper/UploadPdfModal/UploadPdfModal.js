@@ -18,7 +18,10 @@ const UploadPdfModal = ({ toggle, onUpdateData }) => {
             const form = new FormData();
             form.append('file', files[0]);
             const responseData = await extractMetadataPdf(form);
-            const extractedResearchField = await getResource(responseData.payload.research_fields?.[0]);
+            let extractedResearchField = null;
+            if (responseData.payload.research_fields?.[0]) {
+                extractedResearchField = await getResource(responseData.payload.research_fields?.[0]);
+            }
             title = responseData.payload.title;
             authors = responseData.payload.authors;
             extractedContributionData = responseData.payload.contents;
