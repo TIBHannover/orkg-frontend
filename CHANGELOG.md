@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.141.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.141.1...v0.141.2) - 2024-05-30
+
+### Changes
+
+- fix(Comparison): decoding predicates list [`#1335`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1335)
+- fix: check if research field is provided from SciKGTeX extraction [`#1339`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1339)
+
+---
 ## [v0.141.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.141.0...v0.141.1) - 2024-05-24
 
 ### Changes
