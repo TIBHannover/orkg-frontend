@@ -201,7 +201,13 @@ export function getComparisonURLConfigOfReduxState(comparisonState) {
 export function getComparisonConfigObject(comparisonState) {
     return {
         contributions: activatedContributionsToList(comparisonState.contributions),
-        predicates: comparisonState.configuration.predicatesList.map((predicate) => decodeURIComponent(predicate)),
+        predicates: comparisonState.configuration.predicatesList.map((predicate) => {
+            try {
+                return decodeURIComponent(predicate);
+            } catch (e) {
+                return predicate;
+            }
+        }),
         type: comparisonState.configuration.comparisonType,
         transpose: comparisonState.configuration.transpose,
     };
