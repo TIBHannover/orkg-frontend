@@ -15,7 +15,7 @@
         "react/jsx-tag-spacing": 2,
         "react/jsx-curly-spacing": 2,
         "curly": 1,
-        "react/jsx-wrap-multilines": 1,
+        "react/jsx-wrap-multilines": ["error", { "declaration": false, "assignment": false }],
         "react/self-closing-comp": 2,
         "react/prop-types": 2,
         "no-var": 2,
