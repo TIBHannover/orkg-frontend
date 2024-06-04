@@ -52,10 +52,15 @@ const AddPaper = () => {
     useEffect(() => {
         document.title = 'Add paper - ORKG';
         const entry = searchParams.get('entry');
+        const queryParamTitle = searchParams.get('title');
         if (entry) {
             setDoi(entry);
         }
-    }, [searchParams, setDoi]);
+        if (!entry && queryParamTitle) {
+            setTitle(queryParamTitle);
+            setIsMetadataExpanded(true);
+        }
+    }, [searchParams, setDoi, setTitle, setIsMetadataExpanded]);
 
     return (
         <div>
