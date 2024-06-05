@@ -1,9 +1,8 @@
-import { Alert } from 'reactstrap';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import env from 'components/NextJsMigration/env';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import env from 'components/NextJsMigration/env';
+import { CLASSES } from 'constants/graphSettings';
+import { Alert } from 'reactstrap';
 
 const PREVENT_EDIT_CASES = [
     {
@@ -45,32 +44,23 @@ const PREVENT_EDIT_CASES = [
         }),
     },
     {
-        condition: async (resource) => {
-            if (resource.classes.includes(CLASSES.COMPARISON)) {
-                const st = await getStatementsBySubjectAndPredicate({ subjectId: resource.id, predicateId: PREDICATES.HAS_DOI });
-                if (st.length > 0) {
-                    return true;
-                }
-                return false;
-            }
-            return false;
-        },
+        condition: (resource) => resource.classes.includes(CLASSES.COMPARISON),
         warningOnEdit: (
             <Alert className="container" color="danger">
-                This resource should not be edited because it has a published DOI, please make sure that you know what are you doing!
+                This resource should not be edited because it is published, please make sure that you know what are you doing!
             </Alert>
         ),
         preventModalProps: () => ({
-            header: 'Published DOI!',
-            content: <>This resource can not be edited because it has a published DOI.</>,
+            header: 'Editing not possible',
+            content: <>This resource can not be edited because it is a published comparison.</>,
         }),
     },
 ];
 
-const getPreventEditCase = async (resource) => {
+const getPreventEditCase = (resource) => {
     for (const preventCase of PREVENT_EDIT_CASES) {
         // eslint-disable-next-line no-await-in-loop
-        const resultCondition = await preventCase.condition(resource);
+        const resultCondition = preventCase.condition(resource);
         if (resultCondition) {
             return preventCase;
         }

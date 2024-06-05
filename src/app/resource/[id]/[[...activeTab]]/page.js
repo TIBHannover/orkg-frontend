@@ -73,7 +73,7 @@ function Resource() {
         const findResource = async () => {
             setIsLoading(true);
             getResource(id)
-                .then(async (responseJson) => {
+                .then((responseJson) => {
                     document.title = `${responseJson.label} - Resource - ORKG`;
                     setResource(responseJson);
                     const link = getDedicatedLink(responseJson.classes);
@@ -86,7 +86,7 @@ function Resource() {
                             { replace: true },
                         );
                     }
-                    const prevent = await getPreventEditCase(responseJson);
+                    const prevent = getPreventEditCase(responseJson);
                     setPreventEditCase(prevent);
                     setIsLoading(false);
                 })
