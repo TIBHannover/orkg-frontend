@@ -15,7 +15,7 @@ const MarkdownRenderer = ({ text = null }) => {
     const converter = new Showdown.Converter({
         openLinksInNewWindow: true,
         extensions: [footnotes, showdownVideoPlugin],
-        underline: true,
+        underline: true, // enabled for backward compatibility, option not visible in toolbar
     });
     converter.setFlavor('github');
 

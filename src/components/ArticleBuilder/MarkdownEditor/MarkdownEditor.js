@@ -8,9 +8,9 @@ import {
     faListOl,
     faQuoteLeft,
     faTable,
-    faUnderline,
     faVideo,
     faExternalLinkAlt,
+    faStrikethrough,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -219,9 +219,9 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                                     <Icon icon={faItalic} />
                                 </div>
                             </Tippy>
-                            <Tippy content="Add underlined text">
-                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '__', '__')}>
-                                    <Icon icon={faUnderline} />
+                            <Tippy content="Add strikethrough text">
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '~~', '~~')}>
+                                    <Icon icon={faStrikethrough} />
                                 </div>
                             </Tippy>
                         </ButtonGroup>
