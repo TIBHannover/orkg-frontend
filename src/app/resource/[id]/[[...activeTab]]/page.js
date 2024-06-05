@@ -55,7 +55,7 @@ function Resource() {
 
     const isShared = resource?.shared > 0;
     const isUserIsCreator = resource?.created_by === user?.id;
-    const { isCurationAllowed } = user;
+    const isCurationAllowed = user && user.isCurationAllowed;
     const isDeletionAllowed = !isShared && (isUserIsCreator || isCurationAllowed);
 
     const getDedicatedLink = useCallback((_classes) => {
