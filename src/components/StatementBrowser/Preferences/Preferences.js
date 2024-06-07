@@ -5,11 +5,9 @@ import { setIsHelpModalOpen, updatePreferences } from 'slices/statementBrowserSl
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { Cookies } from 'react-cookie';
 import PropTypes from 'prop-types';
+import { useCookies } from 'react-cookie';
 import env from 'components/NextJsMigration/env';
-
-const cookies = new Cookies();
 
 export const PreferencesStyle = styled.div`
     overflow-wrap: break-word;
@@ -20,11 +18,13 @@ export const PreferencesStyle = styled.div`
 `;
 
 export default function Preferences({ closeTippy }) {
+    const [, setCookie] = useCookies(['preferences.showClasses', 'preferences.showDescriptionTooltips', 'preferences.showInlineDataTypes']);
+
     const preferences = useSelector((state) => state.statementBrowser.preferences);
     const dispatch = useDispatch();
 
     const settingsInputSwitched = (e) => {
-        cookies.set(`preferences.${e.target.name}`, e.target.checked.toString(), { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 604800 });
+        setCookie(`preferences.${e.target.name}`, e.target.checked, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
         dispatch(updatePreferences({ [e.target.name]: e.target.checked }));
     };
 
@@ -44,14 +44,14 @@ export default function Preferences({ closeTippy }) {
                 </Button>
             </h5>
             <div className="mb-2">
-                <Input type="switch" id="showClasses" name="showClasses" onChange={settingsInputSwitched} checked={preferences.showClasses} />{' '}
+                <Input type="checkbox" id="showClasses" name="showClasses" onChange={settingsInputSwitched} checked={preferences.showClasses} />{' '}
                 <Label for="showClasses" className="mb-0">
                     Show classes of resources
                 </Label>
             </div>
             <div className="mb-2">
                 <Input
-                    type="switch"
+                    type="checkbox"
                     id="showDescriptionTooltips"
                     name="showDescriptionTooltips"
                     onChange={settingsInputSwitched}
@@ -63,7 +63,7 @@ export default function Preferences({ closeTippy }) {
             </div>
             <div className="mb-2">
                 <Input
-                    type="switch"
+                    type="checkbox"
                     id="showInlineDataTypes"
                     name="showInlineDataTypes"
                     onChange={settingsInputSwitched}
