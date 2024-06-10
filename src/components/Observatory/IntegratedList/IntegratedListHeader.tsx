@@ -38,14 +38,14 @@ const IntegratedListHeader: FC<IntegratedListHeaderProps> = ({ id, page, isLoadi
                 'classesFilter',
                 (classesFilter?.includes(_id) ? classesFilter.filter((v) => v !== _id) : [...(classesFilter ?? []), _id]).join(','),
             );
-            router.push(`?${params.toString()}`);
+            router.push(`?${params.toString()}`, { scroll: false });
         }
     };
 
     const handleChangeVisibility = (e: ChangeEvent<HTMLInputElement>) => {
         const params = new URLSearchParams(searchParams.toString());
         params.set('sort', e.target.value);
-        router.push(`?${params.toString()}`);
+        router.push(`?${params.toString()}`, { scroll: false });
     };
 
     return (

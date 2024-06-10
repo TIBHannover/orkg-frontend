@@ -15,14 +15,14 @@ function useObservatoryContent({ observatoryId, pageSize = 30 }: { observatoryId
     if (!searchParams.get('classesFilter')) {
         const params = new URLSearchParams(searchParams.toString());
         params.set('classesFilter', searchParams.get('filter_config') ? CLASSES.PAPER : DEFAULT_CLASSES_FILTER.map((c) => c.id).join(','));
-        router.push(`?${params.toString()}`);
+        router.push(`?${params.toString()}`, { scroll: false });
     }
     if (searchParams.get('filter_config') && searchParams.get('classesFilter') !== CLASSES.PAPER) {
         toast.dismiss();
         toast.info('Filters are only available on the paper type');
         const params = new URLSearchParams(searchParams.toString());
         params.set('classesFilter', CLASSES.PAPER);
-        router.push(`?${params.toString()}`);
+        router.push(`?${params.toString()}`, { scroll: false });
     }
 
     const getKey = (pageIndex: number): GetContentByObservatoryIdParams => ({
