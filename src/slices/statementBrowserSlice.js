@@ -21,7 +21,7 @@ const cookies = new Cookies();
 
 const getPreferenceFromCookies = (p) => {
     const cookieName = `preferences.${p}`;
-    return cookies.get(cookieName) ? cookies.get(cookieName) === 'true' : undefined;
+    return cookies.get(cookieName) ?? undefined;
 };
 
 const initialState = {
