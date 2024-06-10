@@ -161,5 +161,6 @@
     },
     "parserOptions": {
         "project": "./tsconfig.json"
-    }
+    },
+    "ignorePatterns": ["next.config.js"]
 }
