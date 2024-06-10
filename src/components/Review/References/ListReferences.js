@@ -1,5 +1,6 @@
-import { Cite } from '@citation-js/core';
 import useParams from 'components/NextJsMigration/useParams';
+import ROUTES from 'constants/routes';
+import { submitPostRequest } from 'network';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Alert } from 'reactstrap';
@@ -52,19 +53,18 @@ const ListReferences = () => {
 
             try {
                 // by passing the full bibtex to citation-js, we get sorting and formatting of references for free
-                const parsedCitation = await Cite.async(bibtex);
-                const _bibliography = parsedCitation.format('bibliography', {
-                    format: 'html',
-                    template: 'apa',
-                    lang: 'en-US',
-                    prepend: (data) =>
-                        `<li  class="${window?.location?.hash === `#reference${data.id}` ? 'blink-figure' : ''}" id="reference${data.id}">`,
-                    append: () => '</li>',
-                });
-
-                setBibliography(_bibliography);
+                const _bibliography = await submitPostRequest(
+                    ROUTES.CITATIONS,
+                    { 'Content-Type': 'application/json' },
+                    { bibtex },
+                    true,
+                    false,
+                    true,
+                    false,
+                );
+                setBibliography(_bibliography.bibliography);
             } catch (e) {
-                console.log(e);
+                console.error(e);
                 setError(true);
             }
         };

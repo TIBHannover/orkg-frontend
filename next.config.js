@@ -24,6 +24,9 @@ module.exports = {
         config.externals = [...config.externals, 'canvas', 'jsdom']; // to fix pdf-text-annotation: https://github.com/kkomelin/isomorphic-dompurify/issues/54
         return config;
     },
+    experimental: {
+        serverComponentsExternalPackages: ['citeproc'],
+    },
     output: 'standalone',
     env: {
         version, // ensure the version is available for display in the footer

@@ -89,6 +89,8 @@ const routes = {
     DIAGRAMS: '/diagrams',
     DIAGRAM: '/diagram/:id',
     NEW_DIAGRAM: '/diagram/',
+    /* API */
+    CITATIONS: '/citations/',
     /* Legacy routes */
     PREDICATES: '/predicates',
     PREDICATE: '/predicate/:id',
