@@ -1,6 +1,11 @@
 const { version } = require('./package.json');
 
-module.exports = {
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true',
+});
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
     swcMinify: true, // different minification, speeds up compiling in dev mode
     reactStrictMode: false, // otherwise, list items are rendered twice (e.g. /resources, /paper etc. ): https://github.com/vercel/next.js/issues/35822
     eslint: {
@@ -102,3 +107,5 @@ module.exports = {
         ];
     },
 };
+
+module.exports = withBundleAnalyzer(nextConfig);
