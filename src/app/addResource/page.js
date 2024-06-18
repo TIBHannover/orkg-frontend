@@ -1,7 +1,7 @@
 'use client';
 
 import { Cite } from '@citation-js/core';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import useRouter from 'components/NextJsMigration/useRouter';
@@ -142,7 +142,7 @@ const AddResource = () => {
                                 Classes <span className="text-muted fst-italic">(optional)</span>
                             </Label>
                             {!isLoadingDefaultClasses && (
-                                <AutoComplete
+                                <Autocomplete
                                     entityType={ENTITIES.CLASS}
                                     onChange={(selected, action) => {
                                         // blur the field allows to focus and open the menu again
@@ -151,14 +151,12 @@ const AddResource = () => {
                                     }}
                                     placeholder="Select or type to enter a class"
                                     value={classes}
-                                    autoLoadOption
                                     openMenuOnFocus
                                     allowCreate
                                     isClearable
                                     innerRef={classesAutocompleteRef}
                                     isMulti
-                                    autoFocus={false}
-                                    ols
+                                    enableExternalSources
                                     inputId="select-classes"
                                 />
                             )}

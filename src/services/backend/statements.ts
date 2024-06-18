@@ -7,6 +7,66 @@ import { getTemplate } from 'services/backend/templates';
 
 export const statementsUrl = `${url}statements/`;
 
+type GetStatementsParams = {
+    subjectClasses?: string[];
+    subjectId?: string;
+    subjectLabel?: string;
+    predicateId?: string;
+    createdBy?: string;
+    createdAtStart?: string;
+    createdAtEnd?: string;
+    objectClasses?: string[];
+    objectId?: string;
+    objectLabel?: string;
+    page?: number;
+    size?: number;
+    sortBy?: string;
+    desc?: boolean;
+    returnContent?: boolean;
+};
+
+export const getStatements = ({
+    subjectClasses = [],
+    subjectId = undefined,
+    subjectLabel = undefined,
+    predicateId = undefined,
+    createdBy = undefined,
+    createdAtStart = undefined,
+    createdAtEnd = undefined,
+    objectClasses = [],
+    objectId = undefined,
+    objectLabel = undefined,
+    page = 0,
+    size = 9999,
+    sortBy = 'created_at',
+    desc = true,
+    returnContent = true,
+}: GetStatementsParams): Promise<Statement[]> => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = qs.stringify(
+        {
+            subject_classes: subjectClasses.join(','),
+            subject_id: subjectId,
+            subject_label: subjectLabel,
+            predicate_id: predicateId,
+            created_by: createdBy,
+            created_at_start: createdAtStart,
+            created_at_end: createdAtEnd,
+            object_classes: objectClasses.join(','),
+            object_id: objectId,
+            object_label: objectLabel,
+            page,
+            size,
+            sort,
+        },
+        {
+            skipNulls: true,
+        },
+    );
+
+    return submitGetRequest(`${statementsUrl}?${params}`).then((res) => (returnContent ? res.content : res));
+};
+
 export const createResourceStatement = (subjectId: string, predicateId: string, objectId: string): Promise<Statement> =>
     submitPostRequest(
         `${statementsUrl}`,
@@ -89,7 +149,6 @@ export const getStatementsBySubject = ({
             skipNulls: true,
         },
     );
-
     return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`).then((res) => res.content);
 };
 
@@ -101,6 +160,7 @@ export const getStatementsBySubject = ({
  * @param {String} maxLevel - The number of levels in the graph to fetch
  * @param {Array} blacklist - List of classes ids to ignore while parsing the graph
  * @return {Promise} Promise object
+ * @deprecated use getStatements
  */
 export const getStatementsBundleBySubject = ({
     id,

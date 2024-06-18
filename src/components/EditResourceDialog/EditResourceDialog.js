@@ -3,7 +3,7 @@ import { Button, Input, Modal, ModalBody, ModalHeader, FormGroup, Label } from '
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { updateResource } from 'services/backend/resources';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -62,7 +62,7 @@ const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate = null, show
                 </FormGroup>
                 <FormGroup>
                     <Label for="label">Classes</Label>
-                    <AutoComplete
+                    <Autocomplete
                         entityType={ENTITIES.CLASS}
                         onChange={(selected, action) => {
                             if (action.removedValue && action.removedValue.isFixed) {
@@ -72,12 +72,10 @@ const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate = null, show
                         }}
                         placeholder="Specify the classes of the resource"
                         value={classes}
-                        autoLoadOption
                         openMenuOnFocus
                         allowCreate
                         isMulti
-                        autoFocus={false}
-                        ols
+                        enableExternalSources
                         fixedOptions={fixedClasses}
                         inputId="classes-autocomplete"
                     />

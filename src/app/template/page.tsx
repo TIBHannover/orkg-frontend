@@ -3,7 +3,10 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
+import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
+import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
+import { OptionType } from 'components/Autocomplete/types';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import Link from 'components/NextJsMigration/Link';
@@ -17,16 +20,15 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { SelectInstance } from 'react-select';
+import { ActionMeta, SelectInstance, SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
-import { Container, FormGroup, FormText, Input, Label } from 'reactstrap';
+import { Container, FormGroup, FormText, Input, InputGroup, Label } from 'reactstrap';
 import { createClass, getClassById } from 'services/backend/classes';
 import { createTemplate } from 'services/backend/templates';
-import { Class } from 'services/backend/types';
 
 const TemplateNew = () => {
     const [label, setLabel] = useState('');
-    const [targetClass, setTargetClass] = useState<Class | null>(null);
+    const [targetClass, setTargetClass] = useState<SingleValue<OptionType> | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -35,7 +37,7 @@ const TemplateNew = () => {
 
     const user = useSelector((state: any) => state.auth.user);
 
-    const classAutocompleteRef = useRef<SelectInstance<Class> | null>(null);
+    const classAutocompleteRef = useRef<SelectInstance<OptionType | null>>(null);
 
     useEffect(() => {
         document.title = 'Create new template - ORKG';
@@ -83,7 +85,7 @@ const TemplateNew = () => {
         setIsLoading(false);
     };
 
-    const handleClassSelect = async (selected: Class | null, { action }: any) => {
+    const handleClassSelect = async (selected: SingleValue<OptionType>, { action }: ActionMeta<OptionType>) => {
         if (action === 'select-option') {
             setTargetClass(selected);
         } else if (action === 'create-option' && selected) {
@@ -141,22 +143,20 @@ const TemplateNew = () => {
                         <Label for="target-class">
                             Target class <span className="text-muted fst-italic">(optional)</span>
                         </Label>
-                        <AutoComplete
-                            entityType={ENTITIES.CLASS}
-                            placeholder="Select or type to enter a class"
-                            onChange={handleClassSelect}
-                            value={targetClass}
-                            autoLoadOption
-                            openMenuOnFocus
-                            allowCreate
-                            copyValueButton
-                            isClearable
-                            innerRef={classAutocompleteRef}
-                            autoFocus={false}
-                            linkButton={targetClass && targetClass.id ? reverse(ROUTES.CLASS, { id: targetClass.id }) : ''}
-                            linkButtonTippy="Go to class page"
-                            inputId="target-class"
-                        />
+                        <InputGroup>
+                            <Autocomplete
+                                entityType={ENTITIES.CLASS}
+                                placeholder="Select or type to enter a class"
+                                onChange={handleClassSelect}
+                                value={targetClass}
+                                openMenuOnFocus
+                                allowCreate
+                                isClearable
+                                inputId="target-class"
+                            />
+                            <CopyIdButton value={targetClass} />
+                            <LinkButton value={targetClass} />
+                        </InputGroup>
                         <FormText>Specify the class of this template. If not specified, a class is generated automatically.</FormText>
                     </FormGroup>
                 )}

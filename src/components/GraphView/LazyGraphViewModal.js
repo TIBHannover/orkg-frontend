@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { GraphCanvas, lightTheme, useSelection } from 'reagraph';
 // import RobotoFont from 'components/GraphView/roboto-medium-webfont.woff';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES } from 'constants/graphSettings';
 import Tippy from '@tippyjs/react';
 
@@ -126,7 +126,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                                     <div className="p-1" style={{ minWidth: 300 }}>
                                         <Label for={classSelectorId}>Blacklisted classes</Label>
                                         <div>
-                                            <AutoComplete
+                                            <Autocomplete
                                                 entityType={ENTITIES.CLASS}
                                                 isMulti
                                                 placeholder="Select a class"
@@ -134,15 +134,11 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                                                     setBlackListClasses(!selected ? [] : selected);
                                                 }}
                                                 value={blackListClasses}
-                                                autoLoadOption
                                                 openMenuOnFocus
-                                                copyValueButton
                                                 isClearable={false}
-                                                autoFocus={false}
                                                 inputId={classSelectorId}
-                                                cssClasses="form-control-sm"
-                                                isValidNewOption={false}
-                                                ols={false}
+                                                size="sm"
+                                                enableExternalSources={false}
                                             />
                                         </div>
                                     </div>

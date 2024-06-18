@@ -2,7 +2,7 @@
 
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { MAX_DESCRIPTION_LENGTH } from 'components/Observatory/EditObservatory';
 import Tooltip from 'components/Utils/Tooltip';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
@@ -165,16 +165,12 @@ const AddObservatory = () => {
 
                                 <FormGroup>
                                     <Label for="ObservatoryResearchField">Research field</Label>
-                                    <AutoComplete
+                                    <Autocomplete
                                         entityType={ENTITIES.RESOURCE}
-                                        optionsClass={CLASSES.RESEARCH_FIELD}
-                                        onItemSelected={async (rf) => {
-                                            setResearchField({ ...rf, label: rf.value });
-                                        }}
+                                        includeClasses={[CLASSES.RESEARCH_FIELD]}
+                                        onChange={(rf) => setResearchField(rf)}
                                         value={researchField}
-                                        allowCreate={false}
-                                        ols={false}
-                                        autoLoadOption
+                                        enableExternalSources={false}
                                         isDisabled={loading}
                                         inputId="ObservatoryResearchField"
                                     />

@@ -1,20 +1,20 @@
+import { OptionType } from 'components/Autocomplete/types';
 import { StatementsGroupStyle } from 'components/StatementBrowser/styled';
 import TemplateComponentProperty from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/Property/TemplateComponentProperty';
 import TemplateComponentValue from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/Value/TemplateComponentValue';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import ItemTypes from 'constants/dndTypes';
-import { useRef, FC } from 'react';
+import { FC, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { ActionMeta } from 'react-select';
-import { Predicate, Class } from 'services/backend/types';
+import { ActionMeta, SingleValue } from 'react-select';
 import { handleSortableHoverReactDnd } from 'utils';
 
 type PropertyShapeProps = {
     id: number;
     moveCard: (_dragIndex: number, _hoverIndex: number) => void;
     handleDeletePropertyShape: (_index: number) => void;
-    handlePropertiesSelect: (_selected: Predicate, _action: ActionMeta<Predicate>, _index: number) => void;
-    handleClassOfPropertySelect: (_selected: Class, _action: ActionMeta<Class>, _index: number) => void;
+    handlePropertiesSelect: (_selected: SingleValue<OptionType>, _action: ActionMeta<OptionType>, _index: number) => void;
+    handleClassOfPropertySelect: (_selected: SingleValue<OptionType>, _action: ActionMeta<OptionType>, _index: number) => void;
 };
 
 const PropertyShape: FC<PropertyShapeProps> = ({ id, moveCard, handleDeletePropertyShape, handlePropertiesSelect, handleClassOfPropertySelect }) => {

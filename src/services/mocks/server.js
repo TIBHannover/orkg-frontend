@@ -5,8 +5,8 @@ import predicates from 'services/mocks/backend/predicates';
 import statements from 'services/mocks/backend/statements';
 import templates from 'services/mocks/backend/templates';
 import classes from 'services/mocks/backend/classes';
-import geonames from 'services/mocks/geonames/index';
-import wikidata from 'services/mocks/wikidata/index';
+import geonames from 'services/mocks/geonames';
+import wikidata from 'services/mocks/wikidata';
 import defaultHandlers from 'services/mocks/defaultHandlers';
 
 export const server = setupServer(

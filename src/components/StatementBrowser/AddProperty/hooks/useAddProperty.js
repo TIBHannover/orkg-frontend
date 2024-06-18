@@ -56,7 +56,7 @@ function useAddProperty({ resourceId, syncBackend }) {
             />
         ) : null;
 
-    const handlePropertySelect = ({ id, value: label }) => {
+    const handlePropertySelect = ({ id, label }) => {
         setShowAddProperty(false);
         dispatch(
             createProperty({

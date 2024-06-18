@@ -8,7 +8,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { setLabelCache } from 'slices/pdfAnnotationSlice';
 import Tippy from '@tippyjs/react';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { createResource } from 'services/backend/resources';
 import { createPredicate } from 'services/backend/predicates';
@@ -229,7 +229,7 @@ class EditorComponent extends BaseEditorComponent {
                 <div style={containerStyle} ref={this.mainElementRef} id="editorElement">
                     <InputGroup size="sm">
                         {this.state.valueType === 'resource' || this.state.type === 'property' ? (
-                            <AutoComplete
+                            <Autocomplete
                                 entityType={this.state.type === 'property' ? ENTITIES.PREDICATE : ENTITIES.RESOURCE}
                                 excludeClasses={[
                                     CLASSES.CONTRIBUTION,
@@ -239,7 +239,7 @@ class EditorComponent extends BaseEditorComponent {
                                     CLASSES.PAPER_DELETED,
                                     CLASSES.CONTRIBUTION_DELETED,
                                 ]}
-                                optionsClass={this.state.valueClass ? this.state.valueClass : undefined}
+                                includeClasses={this.state.valueClass ? [this.state.valueClass] : undefined}
                                 placeholder={this.state.type === 'property' ? 'Enter a property' : 'Enter a resource'}
                                 onChange={async (i) => {
                                     let valueID;
@@ -260,12 +260,13 @@ class EditorComponent extends BaseEditorComponent {
                                         });
                                     }
                                 }}
-                                onInput={(e, value) => this.handleInputChange(e ? e.target.value : value)}
+                                onInputChange={(newValue, actionMeta) => {
+                                    if (actionMeta.action !== 'menu-close' && actionMeta.action !== 'input-blur') {
+                                        this.handleInputChange(newValue);
+                                    }
+                                }}
                                 value={value}
-                                disableBorderRadiusLeft
-                                disableBorderRadiusRight
-                                cssClasses="form-control-sm"
-                                eventListener
+                                size="sm"
                                 innerRef={this.resourceInputRef}
                                 openMenuOnFocus
                                 allowCreate={!(this.state.valueClass && this.state.valueClass === CLASSES.RESEARCH_FIELD)}

@@ -18,7 +18,6 @@ import { getStatementsBySubjectAndPredicate } from 'services/backend/statements'
 function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabled, value }) {
     const [showAuthorForm, setShowAuthorForm] = useState(false);
     const [authorInput, setAuthorInput] = useState('');
-    const [authorAutocompleteLabel, setAuthorAutocompleteLabel] = useState('');
     const [authorNameLoading, setAuthorNameLoading] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editIndex, setEditIndex] = useState(0);
@@ -153,16 +152,14 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                             </Label>
                             <Autocomplete
                                 entityType={ENTITIES.RESOURCE}
-                                optionsClass={CLASSES.AUTHOR}
+                                includeClasses={[CLASSES.AUTHOR]}
                                 placeholder="Search for author or enter a new author..."
                                 onChange={handleChange}
                                 value={authorInput}
                                 allowCreate
-                                autoLoadOption={false}
                                 innerRef={inputRef}
                                 inputId="authorInput"
-                                onChangeInputValue={(value) => setAuthorAutocompleteLabel(value)}
-                                ols={false}
+                                enableExternalSources={false}
                             />
                         </FormGroup>
                     </ModalBody>

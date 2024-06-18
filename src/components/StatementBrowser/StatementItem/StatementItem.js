@@ -10,7 +10,7 @@ import StatementActionButton from 'components/StatementBrowser/StatementActionBu
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import defaultProperties from 'constants/defaultProperties';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { useSelector } from 'react-redux';
 import { reverse } from 'named-urls';
@@ -121,21 +121,21 @@ const StatementItem = forwardRef(({ resourceId = null, showValueHelp = false, id
                     ) : (
                         <div>
                             <InputGroup size="sm">
-                                <AutoComplete
+                                <Autocomplete
                                     entityType={ENTITIES.PREDICATE}
-                                    cssClasses="form-control-sm"
+                                    size="sm"
                                     placeholder={predicateLabel}
                                     onChange={(selectedOption, a) => {
                                         handleChange(selectedOption, a);
                                         dispatch(toggleEditPropertyLabel({ id }));
                                     }}
                                     onKeyDown={(e) => e.keyCode === 27 && e.target.blur()}
-                                    disableBorderRadiusRight
                                     allowCreate
-                                    defaultOptions={defaultProperties}
+                                    additionalOptions={defaultProperties}
                                     onBlur={() => {
                                         dispatch(toggleEditPropertyLabel({ id }));
                                     }}
+                                    autoFocus
                                 />
                             </InputGroup>
                         </div>

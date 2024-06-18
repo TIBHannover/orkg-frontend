@@ -1,14 +1,15 @@
 import arrayMove from 'array-move';
+import { OptionType } from 'components/Autocomplete/types';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import AddPropertyView from 'components/StatementBrowser/AddProperty/AddPropertyView';
 import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
 import PropertyShape from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/PropertyShape';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import { useCallback, useState, FC, ChangeEvent } from 'react';
+import { ChangeEvent, FC, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ActionMeta } from 'react-select';
+import { ActionMeta, SingleValue } from 'react-select';
 import { Col, FormGroup, Input, Label, Row } from 'reactstrap';
-import { Class, Predicate, PropertyShape as PropertyShapeType, PropertyShapeLiteralType, PropertyShapeResourceType } from 'services/backend/types';
+import { PropertyShapeLiteralType, PropertyShapeResourceType, PropertyShape as PropertyShapeType } from 'services/backend/types';
 import { updateIsClosed, updatePropertyShapes } from 'slices/templateEditorSlice';
 
 const PropertyShapesTab: FC<{}> = () => {
@@ -27,8 +28,8 @@ const PropertyShapesTab: FC<{}> = () => {
         dispatch(updatePropertyShapes(propertyShapes.filter((item, j: number) => index !== j)));
     };
 
-    const handlePropertiesSelect = async (selected: Predicate, action: ActionMeta<Predicate>, index: number) => {
-        if (action.action === 'create-option') {
+    const handlePropertiesSelect = async (selected: SingleValue<OptionType>, action: ActionMeta<OptionType>, index: number) => {
+        if (selected && action.action === 'create-option') {
             setIsOpenConfirmModal(true);
             setPropertyLabel(selected.label);
             setPropertyIndex(index);
@@ -36,7 +37,7 @@ const PropertyShapesTab: FC<{}> = () => {
             const templatePropertyShapes = propertyShapes.map((item, j: number) => {
                 const _item = { ...item };
                 if (j === index) {
-                    _item.path = selected;
+                    _item.path = selected as OptionType;
                 }
                 return _item;
             });
@@ -79,13 +80,13 @@ const PropertyShapesTab: FC<{}> = () => {
         setPropertyIndex(null);
     };
 
-    const handleClassOfPropertySelect = async (selected: Class, action: ActionMeta<Class>, index: number) => {
-        if (action.action === 'create-option') {
+    const handleClassOfPropertySelect = async (selected: SingleValue<OptionType>, action: ActionMeta<OptionType>, index: number) => {
+        if (selected && action.action === 'create-option') {
             const newClass = await ConfirmClass({
                 label: selected.label,
             });
             if (newClass) {
-                selected = { id: newClass.id, label: newClass.label } as Class;
+                selected = { id: newClass.id, label: newClass.label } as OptionType;
             } else {
                 return null;
             }
@@ -93,12 +94,15 @@ const PropertyShapesTab: FC<{}> = () => {
         const templatePropertyShapes = propertyShapes.map((item, j: number) => {
             const _item = { ...item };
             if (j === index) {
-                if (['Decimal', 'Integer', 'String', 'Boolean', 'Date', 'URI'].includes(selected?.id)) {
+                if (selected && ['Decimal', 'Integer', 'String', 'Boolean', 'Date', 'URI'].includes(selected?.id)) {
                     if ('class' in _item) delete _item.class;
                     (_item as PropertyShapeLiteralType).datatype = selected;
-                } else {
+                } else if (selected) {
                     (_item as PropertyShapeResourceType).class = selected;
                     if ('datatype' in _item) delete _item.datatype;
+                } else {
+                    if ('datatype' in _item) delete _item.datatype;
+                    if ('class' in _item) delete _item.class;
                 }
             }
             return _item;
@@ -107,7 +111,7 @@ const PropertyShapesTab: FC<{}> = () => {
         dispatch(updatePropertyShapes(templatePropertyShapes));
     };
 
-    const handleSelectNewProperty = ({ id, value: label }: { id: string; value: string }) => {
+    const handleSelectNewProperty = ({ id, label }: { id: string; label: string }) => {
         const templatePropertyShapes = [...propertyShapes, { path: { id, label }, value: {}, min_count: '0', max_count: null, order: null }];
         dispatch(updatePropertyShapes(templatePropertyShapes));
         setShowAddProperty(false);

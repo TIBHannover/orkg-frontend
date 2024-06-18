@@ -114,10 +114,13 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                     <Autocomplete
                         entityType={addEntityType}
                         placeholder={`Enter a ${addEntityType === ENTITIES.PREDICATE ? 'property' : 'resource'}`}
-                        onItemSelected={(item) => handleSelectEntity(item.id)}
-                        onBlur={() => setAddEntityType(null)}
+                        onChange={(value, { action }) => {
+                            if (action === 'select-option') {
+                                handleSelectEntity(value.id);
+                            }
+                        }}
                         openMenuOnFocus
-                        cssClasses="form-control-sm"
+                        size="sm"
                     />
                 ) : (
                     <>

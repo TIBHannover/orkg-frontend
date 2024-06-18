@@ -51,16 +51,15 @@ function EditEdge({ isEditEdgeModalOpen, setIsEditEdgeModalOpen, saveEdge, addEd
                             entityType={selectedEntity}
                             placeholder={`Select or type to enter a ${selectedEntity}`}
                             allowCreate
-                            inputGroup={false}
-                            onItemSelected={(item) => {
-                                setValue({ ...item, label: item.value, _class: selectedEntity, linked: true });
-                            }}
-                            onNewItemSelected={(item) => {
-                                setValue({ id: item, label: item, value: item, _class: selectedEntity, linked: false });
+                            onChange={(item, { action }) => {
+                                if (action === 'select-option') {
+                                    setValue({ ...item, _class: selectedEntity, linked: true, value: item.label });
+                                } else if (action === 'create-option' && item) {
+                                    setValue({ id: item.label, label: item.label, value: item.label, _class: selectedEntity, linked: false });
+                                }
                             }}
                             value={value}
-                            ols={false}
-                            autoLoadOption
+                            enableExternalSources={false}
                             cacheOptions={false}
                             key={selectedEntity}
                             inputId={`selectEdge${selectedEntity}`}

@@ -1,10 +1,22 @@
 import env from 'components/NextJsMigration/env';
 import { submitGetRequest } from 'network';
+import { OptionType, ExternalServiceResponse } from 'components/Autocomplete/types';
+import { AUTOCOMPLETE_SOURCE } from 'constants/autocompleteSources';
 
 export const wikidataUrl = env('NEXT_PUBLIC_WIKIDATA_URL');
 export const wikidataSparql = env('NEXT_PUBLIC_WIKIDATA_SPARQL');
 
-export const searchEntity = async ({ value, page, pageSize, type }) => {
+export const searchEntity = async ({
+    value,
+    page,
+    pageSize,
+    type = 'item',
+}: {
+    value: string;
+    page: number;
+    pageSize: number;
+    type?: string;
+}): Promise<ExternalServiceResponse> => {
     if (!type) {
         return { options: [], hasMore: false };
     }
@@ -22,19 +34,19 @@ export const searchEntity = async ({ value, page, pageSize, type }) => {
                 index === 0 &&
                 page === 0 &&
                 (result.label?.toLowerCase() === value?.toLowerCase() ||
-                    !!result.aliases?.find((alias) => alias?.toLowerCase() === value?.toLowerCase()));
+                    !!result.aliases?.find((alias: string) => alias?.toLowerCase() === value?.toLowerCase()));
 
-            const item = {
+            const item: OptionType = {
                 id: result.id,
                 label: result.label,
                 description: result.description,
                 external: true,
-                source: 'wikidata-api',
+                source: AUTOCOMPLETE_SOURCE.WIKIDATA,
                 ontology: 'Wikidata',
                 statements: [],
                 tooltipData: [],
                 isRecommended,
-                uri: result.url,
+                uri: `https://www.wikidata.org/entity/${result.id}`,
             };
             newOptions.push(item);
         }
@@ -43,7 +55,7 @@ export const searchEntity = async ({ value, page, pageSize, type }) => {
     return { options: newOptions, hasMore: results ? !!results['search-continue'] : false };
 };
 
-export const searchAuthorOnWikidataByORCID = (orcid) => {
+export const searchAuthorOnWikidataByORCID = (orcid: string) => {
     const query = `SELECT ?item ?itemLabel ?dblpId WHERE {
                     ?item wdt:P496 "${orcid}" ;
                         wdt:P2456 ?dblpId .

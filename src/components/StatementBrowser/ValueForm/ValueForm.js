@@ -3,7 +3,7 @@ import { InputGroup, FormFeedback } from 'reactstrap';
 import { toggleEditValue } from 'slices/statementBrowserSlice';
 import { StyledButton } from 'components/StatementBrowser/styled';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import InputField from 'components/StatementBrowser/InputField/InputField';
 import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
 import a from 'indefinite';
@@ -130,11 +130,11 @@ const ValueForm = (props) => {
         }
     }, [inputDataType, setEntityType, setInputFormType, setInputValue]);
 
-    let optionsClass;
+    let optionsClasses = [];
     if (entityType === ENTITIES.RESOURCE && valueClass) {
-        optionsClass = valueClass.id;
+        optionsClasses = [valueClass.id];
     } else if (inputDataType === 'list') {
-        optionsClass = CLASSES.LIST;
+        optionsClasses = [CLASSES.LIST];
     }
 
     return (
@@ -149,7 +149,7 @@ const ValueForm = (props) => {
                     syncBackend={props.syncBackend}
                 />
                 {!editMode && inputFormType === 'autocomplete' ? (
-                    <AutoComplete
+                    <Autocomplete
                         entityType={entityType}
                         excludeClasses={
                             entityType === ENTITIES.RESOURCE && !valueClass
@@ -164,21 +164,24 @@ const ValueForm = (props) => {
                                   ]
                                 : []
                         }
-                        optionsClass={optionsClass}
+                        includeClasses={optionsClasses}
                         placeholder={propertyShape?.placeholder ? propertyShape.placeholder : `Enter a ${entityType}`}
-                        onItemSelected={(i) => {
-                            handleAddValue(entityType, { ...i, label: i.value, selected: true });
-                            props.setShowAddValue?.(false);
+                        onChange={(i, { action }) => {
+                            if (action === 'select-option') {
+                                handleAddValue(entityType, { ...i, selected: true });
+                                props.setShowAddValue?.(false);
+                            }
                         }}
-                        ols={!optionsClass}
-                        onInput={(e, value) => setInputValue(e ? e.target.value : value)}
-                        value={inputValue}
-                        additionalData={newResources}
-                        autoLoadOption={!!valueClass}
+                        enableExternalSources={optionsClasses.length === 0}
+                        onInputChange={(newValue, actionMeta) => {
+                            if (actionMeta.action !== 'menu-close' && actionMeta.action !== 'input-blur') {
+                                setInputValue(newValue);
+                            }
+                        }}
+                        inputValue={inputValue}
+                        defaultAdditional={newResources}
                         openMenuOnFocus
-                        disableBorderRadiusRight
-                        disableBorderRadiusLeft={!valueClass}
-                        cssClasses="form-control-sm"
+                        size="sm"
                         onKeyDown={(e) => {
                             if (e.keyCode === 27) {
                                 // escape
@@ -189,7 +192,7 @@ const ValueForm = (props) => {
                             }
                         }}
                         innerRef={(ref) => (autocompleteInputRef.current = ref)}
-                        handleCreateExistingLabel={handleCreateExistingLabel}
+                        isValidNewOption={handleCreateExistingLabel}
                     />
                 ) : (
                     <InputField

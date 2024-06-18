@@ -26,7 +26,7 @@ export const updateResourceClasses = (id: string, classes: string[] | null = nul
 export const createResource = (label: string, classes: string[] = [], id: string | undefined = undefined): Promise<Resource> =>
     submitPostRequest(resourcesUrl, { 'Content-Type': 'application/json' }, { label, classes, id });
 
-export const getResource = (id: string): Promise<Resource> => submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`);
+export const getResource = (id: string): Promise<Resource> => submitGetRequest(`${resourcesUrl}${id}/`);
 
 export const getResourcesByIds = (ids: string[]): Promise<Resource[]> => Promise.all(ids.map((id) => getResource(id)));
 

@@ -241,15 +241,15 @@ function Publish(props) {
 
                             <Autocomplete
                                 entityType={ENTITIES.RESOURCE}
-                                optionsClass={CLASSES.RESEARCH_FIELD}
+                                includeClasses={[CLASSES.RESEARCH_FIELD]}
                                 placeholder="Enter a research field"
-                                onItemSelected={(i) => {
-                                    setSubject({ ...i, label: i.value });
+                                onChange={(value, { action }) => {
+                                    if (action === 'select-option') {
+                                        setSubject(value);
+                                    }
                                 }}
                                 value={subject}
-                                autoLoadOption
                                 openMenuOnFocus={false}
-                                allowCreate={false}
                                 inputId="research-field"
                             />
                         </FormGroup>
@@ -268,8 +268,6 @@ function Publish(props) {
                         </FormGroup>
                     </>
                 )}
-
-                <></>
             </ModalBody>
             {!dataCiteDoi && (
                 <ModalFooter>

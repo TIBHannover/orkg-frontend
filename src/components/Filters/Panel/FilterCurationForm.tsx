@@ -1,17 +1,17 @@
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
+import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
+import { OptionType } from 'components/Autocomplete/types';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ModalWithLoading from 'components/ModalWithLoading/ModalWithLoading';
 import DATA_TYPES from 'constants/DataTypes';
-import FILTER_SOURCE from 'constants/filters';
+import { FILTER_SOURCE } from 'constants/filters';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { motion } from 'framer-motion';
-import { reverse } from 'named-urls';
-import { ChangeEvent, FC, useCallback, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FC, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { SelectInstance } from 'react-select';
+import { MultiValue, SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
-import { Alert, Button, FormGroup, FormText, Input, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert, Button, FormGroup, FormText, Input, InputGroup, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { getClassById } from 'services/backend/classes';
 import { getPredicatesByIds } from 'services/backend/predicates';
 import { Class, FilterConfig, Predicate } from 'services/backend/types';
@@ -28,14 +28,13 @@ type FilterCurationFormProps = {
 
 const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, toggle, handleSave, filter = null }) => {
     const [label, setLabel] = useState(filter ? filter.label : '');
-    const [path, setPath] = useState<Predicate[] | string[]>(filter ? filter.path : []);
-    const [range, setRange] = useState<Class | string | null>(filter ? filter.range : null);
+    const [path, setPath] = useState<MultiValue<OptionType> | null>(null);
+    const [range, setRange] = useState<SingleValue<OptionType>>(null);
     const [featured, setFeatured] = useState(filter ? filter.featured : false);
     const [persisted, setPersisted] = useState(filter ? filter.persisted : false);
     const [exact, setExact] = useState(filter ? filter.exact : true);
+
     const [isLoadingEntities, setIsLoadingEntities] = useState(false);
-    const classAutocompleteRef = useRef<SelectInstance<Class> | null>(null);
-    const pathAutocompleteRef = useRef<SelectInstance<Predicate[]> | null>(null);
     const isCurator = useSelector((state: RootStore) => isCurationAllowed(state));
 
     const handleSaveClick = async () => {
@@ -46,7 +45,7 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
 
         await handleSave(filter?.id ?? null, {
             label,
-            path: path?.map((p) => (p as Predicate).id),
+            path: path?.map((p) => (p as Predicate).id) ?? [],
             range: (range as Class).id ?? null,
             featured: persisted && featured,
             exact,
@@ -108,59 +107,51 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
                     </FormGroup>
                     <FormGroup>
                         <Label for="path">Path</Label>
-                        <AutoComplete
-                            entityType={ENTITIES.PREDICATE}
-                            placeholder="Select or type to enter a property"
-                            onChange={(selected) => {
-                                // blur the field allows to focus and open the menu again
-                                if (pathAutocompleteRef.current) {
-                                    pathAutocompleteRef.current.blur();
-                                }
-                                setPath(selected);
-                            }}
-                            value={!isLoadingEntities ? path : 'Loading...'}
-                            autoLoadOption
-                            openMenuOnFocus
-                            allowCreate={false}
-                            copyValueButton={false}
-                            isClearable
-                            innerRef={pathAutocompleteRef}
-                            autoFocus={false}
-                            ols={false}
-                            isMulti
-                            isDisabled={isLoadingEntities}
-                        />
+                        {!isLoadingEntities ? (
+                            <Autocomplete
+                                entityType={ENTITIES.PREDICATE}
+                                placeholder="Select or type to enter a property"
+                                onChange={(selected) => {
+                                    setPath(selected as MultiValue<OptionType>);
+                                }}
+                                value={path}
+                                openMenuOnFocus
+                                allowCreate={false}
+                                isClearable
+                                enableExternalSources={false}
+                                isMulti
+                            />
+                        ) : (
+                            'Loading...'
+                        )}
+
                         <FormText>Select the path of properties to the value, they should be in the correct order</FormText>
                     </FormGroup>
                     <FormGroup>
                         <Label for="range">Range</Label>
-                        <AutoComplete
-                            entityType={ENTITIES.CLASS}
-                            placeholder="Select or type to enter a class"
-                            onChange={(selected) => {
-                                // blur the field allows to focus and open the menu again
-                                if (classAutocompleteRef.current) {
-                                    classAutocompleteRef.current.blur();
-                                }
-                                setRange(selected);
-                            }}
-                            value={!isLoadingEntities ? range : 'Loading...'}
-                            autoLoadOption
-                            openMenuOnFocus
-                            allowCreate={false}
-                            copyValueButton={false}
-                            isClearable
-                            defaultOptions={DATA_TYPES.filter((dt) => dt.classId !== CLASSES.RESOURCE).map((dt) => ({
-                                label: dt.name,
-                                id: dt.classId,
-                            }))}
-                            innerRef={classAutocompleteRef}
-                            linkButton={(range as Class)?.id ? reverse(ROUTES.CLASS, { id: (range as Class).id }) : ''}
-                            linkButtonTippy="Go to class page"
-                            autoFocus={false}
-                            ols={false}
-                            isDisabled={isLoadingEntities}
-                        />
+                        {!isLoadingEntities ? (
+                            <InputGroup>
+                                <Autocomplete
+                                    entityType={ENTITIES.CLASS}
+                                    placeholder="Select or type to enter a class"
+                                    onChange={(selected) => {
+                                        setRange(selected as SingleValue<OptionType>);
+                                    }}
+                                    value={range}
+                                    openMenuOnFocus
+                                    allowCreate={false}
+                                    isClearable
+                                    additionalOptions={DATA_TYPES.filter((dt) => dt.classId !== CLASSES.RESOURCE).map((dt) => ({
+                                        label: dt.name,
+                                        id: dt.classId,
+                                    }))}
+                                    enableExternalSources={false}
+                                />
+                                <LinkButton value={range as OptionType} />
+                            </InputGroup>
+                        ) : (
+                            'Loading...'
+                        )}
                         <FormText>Select the class of the value</FormText>
                     </FormGroup>
                     <FormGroup check>

@@ -33,7 +33,7 @@ export const getClasses = ({
     exact?: boolean;
     uri?: string | null;
     returnContent?: boolean;
-}): Promise<PaginatedResponse<Class> | Class[]> => {
+}): Promise<PaginatedResponse<Class> | Class[] | Class> => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
         { page, size, exact, ...(q ? { q } : { sort }), uri },

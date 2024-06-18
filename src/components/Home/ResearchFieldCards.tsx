@@ -1,17 +1,17 @@
 import { faStream } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
+import { OptionType } from 'components/Autocomplete/types';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import Link from 'components/NextJsMigration/Link';
 import useRouter from 'components/NextJsMigration/useRouter';
-import { CLASSES, RESOURCES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, RESOURCES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import pluralize from 'pluralize';
-import { useId, useRef, useState } from 'react';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
+import { useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Button } from 'reactstrap';
-import { resourcesUrl } from 'services/backend/resources';
 import { ResearchFieldStat } from 'services/backend/stats';
 import { Node } from 'services/backend/types';
 import styled from 'styled-components';
@@ -101,10 +101,6 @@ const ShowMore = styled(Card)`
     color: ${(props) => props.theme.bodyColor} !important;
     text-align: center;
 `;
-type SelectedType = {
-    id: string;
-    value: string;
-};
 
 const MAX_FIELDS = 30;
 
@@ -123,12 +119,10 @@ const ResearchFieldCards = ({
     isLoading: boolean;
     isLoadingStats: boolean;
 }) => {
-    // Assuming rfAutocompleteRef is a ref pointing to an HTMLInputElement or null
-    const rfAutocompleteRef = useRef<HTMLInputElement | null>(null);
     const [showMoreFields, setShowMoreFields] = useState(false);
     const router = useRouter();
     const researchFieldsSliced = showMoreFields ? researchFields : researchFields.slice(0, MAX_FIELDS);
-    const instanceId = useId();
+
     return (
         <>
             <div className="row" style={{ position: 'relative' }}>
@@ -138,18 +132,18 @@ const ResearchFieldCards = ({
                 <div className="col-md-4 mt-2 mt-md-0 flex-row-reverse d-flex">
                     <div style={{ minWidth: 300 }} id="tour-research-field-bar">
                         <Autocomplete
-                            requestUrl={resourcesUrl}
-                            optionsClass={CLASSES.RESEARCH_FIELD}
+                            entityType={ENTITIES.RESOURCE}
+                            includeClasses={[CLASSES.RESEARCH_FIELD]}
                             placeholder="Search for fields..."
-                            onItemSelected={(selected: SelectedType) => {
-                                // blur the field allows to focus and open the menu again
-                                rfAutocompleteRef.current && rfAutocompleteRef.current.blur();
-                                router.push(
-                                    reverseWithSlug(ROUTES.HOME_WITH_RESEARCH_FIELD, {
-                                        researchFieldId: selected.id,
-                                        slug: selected.value,
-                                    }),
-                                );
+                            onChange={(selected) => {
+                                if (selected) {
+                                    router.push(
+                                        reverseWithSlug(ROUTES.HOME_WITH_RESEARCH_FIELD, {
+                                            researchFieldId: (selected as OptionType).id,
+                                            slug: (selected as OptionType).label,
+                                        }),
+                                    );
+                                }
                             }}
                             value={
                                 selectedFieldId !== RESOURCES.RESEARCH_FIELD_MAIN
@@ -159,13 +153,10 @@ const ResearchFieldCards = ({
                                       }
                                     : null
                             }
+                            enableExternalSources={false}
                             allowCreate={false}
-                            ols={false}
-                            autoLoadOption
-                            cssClasses="form-control-sm"
+                            size="sm"
                             isDisabled={isLoading}
-                            innerRef={rfAutocompleteRef}
-                            instanceId={instanceId}
                         />
                     </div>
                     {selectedFieldId !== RESOURCES.RESEARCH_FIELD_MAIN && (

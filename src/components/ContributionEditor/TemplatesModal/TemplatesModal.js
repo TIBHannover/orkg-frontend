@@ -141,7 +141,7 @@ const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsT
                                     >
                                         <Autocomplete
                                             entityType={selectedFilter.entityType}
-                                            optionsClass={selectedFilter.entityType === ENTITIES.RESOURCE ? selectedFilter.id : undefined}
+                                            includeClasses={selectedFilter.entityType === ENTITIES.RESOURCE ? [selectedFilter.id] : []}
                                             placeholder={selectedFilter.placeholder}
                                             onChange={(i, { action }) => {
                                                 if (action === 'select-option') {
@@ -152,10 +152,8 @@ const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsT
                                             }}
                                             value={targetFilter}
                                             key={selectedFilter.id}
-                                            autoLoadOption
                                             openMenuOnFocus={false}
-                                            allowCreate={false}
-                                            ols={false}
+                                            enableExternalSources={false}
                                             cacheOptions={false}
                                             inputId={selectedFilter.id}
                                             isClearable

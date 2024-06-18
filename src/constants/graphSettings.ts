@@ -1,3 +1,5 @@
+import { EntityType } from 'services/backend/types';
+
 export const PREDICATES: {
     [key: string]: string;
 } = {
@@ -189,7 +191,7 @@ export const MISC: {
 
 /* entities usually are returned by the backend (in _class) to specify the type of node  */
 export const ENTITIES: {
-    [key: string]: 'class' | 'predicate' | 'resource' | 'literal';
+    [key: string]: EntityType;
 } = {
     CLASS: 'class',
     PREDICATE: 'predicate',

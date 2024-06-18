@@ -1,6 +1,7 @@
 import Link from 'components/NextJsMigration/Link';
 import { faCheck, faPen, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
+import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
@@ -150,23 +151,20 @@ const ClassInlineItem = ({
             )}
             {isCurationAllowed && isChangingValue && (
                 <InputGroup size="sm">
-                    <AutoComplete
+                    <Autocomplete
                         entityType={ENTITIES.CLASS}
                         placeholder="Select or create class"
                         onChange={handleClassSelect}
                         value={value}
-                        autoLoadOption
                         openMenuOnFocus
                         allowCreate
-                        copyValueButton
                         isClearable={false}
-                        autoFocus={false}
-                        inputGroup={false}
                         innerRef={classAutocompleteRef}
                         inputId="target-class"
-                        cssClasses="form-control-sm"
+                        size="sm"
                     />
-                    <StyledButton outline onClick={() => setIsChangingValue(false)}>
+                    <CopyIdButton value={value} />
+                    <StyledButton size="sm" outline onClick={() => setIsChangingValue(false)}>
                         Cancel
                     </StyledButton>
                 </InputGroup>

@@ -1,4 +1,4 @@
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import SdgBox from 'components/SustainableDevelopmentGoals/SdgBox';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
@@ -109,18 +109,18 @@ class EditObservatory extends Component {
                         </FormGroup>
                         <FormGroup>
                             <Label for="observatory-research-field">Research field</Label>
-                            <AutoComplete
+                            <Autocomplete
                                 inputId="observatory-research-field"
                                 entityType={ENTITIES.RESOURCE}
-                                optionsClass={CLASSES.RESEARCH_FIELD}
+                                includeClasses={[CLASSES.RESEARCH_FIELD]}
                                 placeholder="Select research field"
-                                onItemSelected={async (rf) => {
-                                    this.setState({ researchField: { ...rf, label: rf.value } });
+                                onChange={(value, { action }) => {
+                                    if (action === 'select-option') {
+                                        this.setState({ researchField: value });
+                                    }
                                 }}
-                                value={this.state.researchField && this.state.researchField.id ? this.state.researchField : null}
-                                allowCreate={false}
-                                ols={false}
-                                autoLoadOption
+                                value={this.state.researchField}
+                                enableExternalSources={false}
                                 isDisabled={isLoading}
                             />
                         </FormGroup>

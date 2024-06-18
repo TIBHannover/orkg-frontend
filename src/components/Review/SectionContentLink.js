@@ -132,12 +132,12 @@ const SectionContentLink = (props) => {
 
     const entityType = props.type === 'property' ? ENTITIES.PREDICATE : ENTITIES.RESOURCE;
     const hasValue = selectedResource && selectedResource?.value;
-    let optionsClass;
+    let optionsClasses = [];
 
     if (props.type === 'comparison') {
-        optionsClass = CLASSES.COMPARISON;
+        optionsClasses = [CLASSES.COMPARISON];
     } else if (props.type === 'visualization') {
-        optionsClass = CLASSES.VISUALIZATION;
+        optionsClasses = [CLASSES.VISUALIZATION];
     }
 
     return (
@@ -158,15 +158,12 @@ const SectionContentLink = (props) => {
                         : []
                 }
                 entityType={entityType}
-                optionsClass={optionsClass}
+                includeClasses={optionsClasses}
                 placeholder={`Select a ${props.type}`}
                 onChange={handleItemSelected}
                 value={selectedResource}
                 openMenuOnFocus={false}
                 allowCreate={props.type === 'resource'} // only allow create for resources
-                autoFocus={false}
-                cssClasses="mb-2"
-                classNamePrefix="react-select"
             />
             {(props.type === 'resource' || props.type === 'property') && hasValue && (
                 <StatementBrowser

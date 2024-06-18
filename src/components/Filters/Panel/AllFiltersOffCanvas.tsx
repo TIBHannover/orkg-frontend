@@ -5,7 +5,7 @@ import FilterLabel from 'components/Filters/FilterInputField/FilterLabel';
 import FilterCurationForm from 'components/Filters/Panel/FilterCurationForm';
 import useCurateFilters from 'components/Filters/hooks/useCurateFilters';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
-import FILTER_SOURCE from 'constants/filters';
+import { FILTER_SOURCE } from 'constants/filters';
 import { Dispatch, FC, Fragment, SetStateAction, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Alert, Badge, Button, Label, Offcanvas, OffcanvasBody, OffcanvasHeader } from 'reactstrap';

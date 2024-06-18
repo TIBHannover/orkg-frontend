@@ -1,0 +1,49 @@
+import { faExternalLink, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
+import { SourceBadge } from 'components/Autocomplete/styled';
+import { Ontology } from 'components/Autocomplete/types';
+import { MAXIMUM_DESCRIPTION_LENGTH } from 'constants/autocompleteSources';
+import { truncate } from 'lodash';
+import { useContext } from 'react';
+import type { GroupBase } from 'react-select';
+import { OptionProps, components } from 'react-select';
+import { ThemeContext } from 'styled-components';
+
+export const CustomOption = <OptionT extends Ontology, Group extends GroupBase<OptionT>, IsMulti extends boolean = false>(
+    props: OptionProps<OptionT, IsMulti, Group>,
+) => {
+    const { innerProps, ...propsWithoutInnerProps } = props;
+    const { data, children, isFocused, isSelected } = props;
+    const { onClick, ...newInnerProps } = innerProps;
+    const truncatedDescription = truncate(data.description ? data.description : '', { length: MAXIMUM_DESCRIPTION_LENGTH });
+    const theme = useContext(ThemeContext);
+
+    const iconColor = !isFocused ? theme?.lightDarker : theme?.secondary;
+    const textClassName = !isFocused && !isSelected ? 'text-muted' : '';
+
+    return (
+        <components.Option {...propsWithoutInnerProps} innerProps={newInnerProps}>
+            <div className="d-flex justify-content-between align-items-center">
+                <div className="flex-grow-1 d-flex px-2 py-1 flex-column" role="button" tabIndex={0} onKeyDown={undefined} onClick={onClick}>
+                    <div>{children}</div>
+                    <span>{truncatedDescription && <div className={`small ${textClassName}`}>{truncatedDescription}</div>}</span>
+                </div>
+
+                {data.description && data.description !== truncatedDescription && (
+                    <Tippy content={data.description}>
+                        <span>
+                            <Icon icon={faInfoCircle} color={iconColor} />
+                        </span>
+                    </Tippy>
+                )}
+
+                <SourceBadge href={data.uri} target="_blank" rel="noreferrer" className="ms-1 d-flex align-items-center px-2 py-1">
+                    {data.shortLabel} <Icon icon={faExternalLink} color={theme?.dark} size="xs" className="ms-1" />
+                </SourceBadge>
+            </div>
+        </components.Option>
+    );
+};
+
+export default CustomOption;

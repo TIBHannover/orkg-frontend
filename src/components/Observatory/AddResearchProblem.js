@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Label, FormGroup } from 'reactstrap';
 import { addResourceToObservatory } from 'services/backend/resources';
 import { toast } from 'react-toastify';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import PropTypes from 'prop-types';
 import { CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
@@ -37,23 +37,21 @@ const AddResearchProblem = (props) => {
         <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>Add research problem</ModalHeader>
             <ModalBody>
-                <>
-                    <FormGroup>
-                        <Label for="ResearchProblem">Research problem</Label>
-                        <AutoComplete
-                            entityType={ENTITIES.RESOURCE}
-                            optionsClass={CLASSES.PROBLEM}
-                            placeholder="Select a research problem"
-                            onItemSelected={async (rp) => {
-                                setProblem({ ...rp, label: rp.value });
-                            }}
-                            value={problem || ''}
-                            allowCreate={false}
-                            ols={false}
-                            autoLoadOption
-                        />
-                    </FormGroup>
-                </>
+                <FormGroup>
+                    <Label for="ResearchProblem">Research problem</Label>
+                    <Autocomplete
+                        entityType={ENTITIES.RESOURCE}
+                        includeClasses={[CLASSES.PROBLEM]}
+                        placeholder="Select a research problem"
+                        onChange={(value, { action }) => {
+                            if (action === 'select-option') {
+                                setProblem(value);
+                            }
+                        }}
+                        value={problem}
+                        enableExternalSources={false}
+                    />
+                </FormGroup>
             </ModalBody>
             <ModalFooter>
                 <div className="text-align-center mt-2">

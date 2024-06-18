@@ -148,7 +148,7 @@ describe('AddValue', () => {
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: 'resource label 1' } });
         // await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         await selectEvent.select(screen.getByRole('combobox', { name: /Enter a resource/i }), 'resource label 1');
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
         await waitFor(() => expect(screen.getByRole('button', { name: 'resource label 1' })).toBeInTheDocument());
         const addButton = screen.getByRole('button', { name: 'Add value' });
         await waitFor(() => expect(addButton).toBeInTheDocument());

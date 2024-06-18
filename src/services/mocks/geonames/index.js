@@ -1,5 +1,5 @@
 import { http } from 'msw';
-import { geonamesUrl } from 'services/geoNames/index';
+import { geonamesUrl } from 'services/geoNames';
 
 const getGeoNames = (req, res, ctx) =>
     res(

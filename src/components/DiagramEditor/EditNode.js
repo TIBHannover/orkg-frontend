@@ -23,17 +23,16 @@ function EditNode({ isEditNodeModalOpen, setIsEditNodeModalOpen, saveNode, addNo
                         entityType={ENTITIES.RESOURCE}
                         placeholder="Select or type to enter a resource"
                         allowCreate
-                        inputGroup={false}
-                        onItemSelected={(i) => {
-                            setValue({ ...i, label: i.value, _class: ENTITIES.RESOURCE, linked: true });
-                        }}
-                        onNewItemSelected={(item) => {
-                            setValue({ id: item, label: item, value: item, _class: ENTITIES.RESOURCE, linked: false });
+                        onChange={(item, { action }) => {
+                            if (action === 'select-option') {
+                                setValue({ ...item, _class: ENTITIES.RESOURCE, linked: true, value: item.label });
+                            } else if (action === 'create-option' && item) {
+                                setValue({ id: item.label, label: item.label, value: item.label, _class: ENTITIES.RESOURCE, linked: false });
+                            }
                         }}
                         value={value}
-                        ols={false}
+                        enableExternalSources={false}
                         inputId="selectNode"
-                        allowCreateDuplicate
                     />
                 </div>
             </ModalBody>

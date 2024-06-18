@@ -1,23 +1,24 @@
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
+import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
+import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
+import { OptionType } from 'components/Autocomplete/types';
 import { ValuesStyle } from 'components/StatementBrowser/styled';
 import ValidationRulesNumber from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/ValidationRules/ValidationRulesNumber';
 import ValidationRulesString from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/ValidationRules/ValidationRulesString';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import DATA_TYPES from 'constants/DataTypes';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { useRef, useState, FC, ChangeEvent } from 'react';
+import { ChangeEvent, FC, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ActionMeta, SelectInstance, SingleValue } from 'react-select';
 import { Col, FormGroup, FormText, Input, InputGroup, Label } from 'reactstrap';
-import { updatePropertyShapes } from 'slices/templateEditorSlice';
 import { Class, PropertyShape } from 'services/backend/types';
-import { ActionMeta, SelectInstance } from 'react-select';
+import { updatePropertyShapes } from 'slices/templateEditorSlice';
 
 type TemplateComponentValueProps = {
     id: number;
-    handleClassOfPropertySelect: (selected: Class, action: ActionMeta<Class>, index: number) => void;
+    handleClassOfPropertySelect: (selected: SingleValue<OptionType>, action: ActionMeta<OptionType>, index: number) => void;
 };
 
 const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleClassOfPropertySelect }) => {
@@ -32,7 +33,6 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
         '1,*': '1,*',
     };
     const [cardinality, setCardinality] = useState(mapOptions[strCardinality] || 'range');
-    const classAutocompleteRef = useRef<SelectInstance<Class> | null>(null);
     const { isEditMode } = useIsEditMode();
 
     const dispatch = useDispatch();
@@ -80,29 +80,23 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
         <ValuesStyle className="col-8 valuesList">
             <div>
                 <InputGroup size="sm">
-                    <AutoComplete
+                    <Autocomplete
                         entityType={ENTITIES.CLASS}
                         placeholder={isEditMode ? 'Select or type to enter a class' : 'No Class'}
-                        onChange={(selected: Class, action: ActionMeta<Class>) => {
-                            // blur the field allows to focus and open the menu again
-                            classAutocompleteRef.current && classAutocompleteRef.current.blur();
+                        onChange={(selected: SingleValue<OptionType>, action: ActionMeta<OptionType>) => {
                             handleClassOfPropertySelect(selected, action, id);
                         }}
                         value={range}
-                        autoLoadOption
                         openMenuOnFocus
                         allowCreate
                         isDisabled={!isEditMode}
-                        copyValueButton
                         isClearable
                         defaultOptions={DATA_TYPES.filter((dt) => dt.classId !== CLASSES.RESOURCE).map((dt) => ({ label: dt.name, id: dt.classId }))}
-                        innerRef={classAutocompleteRef}
-                        linkButton={range && range.id ? reverse(ROUTES.CLASS, { id: range.id }) : ''}
-                        linkButtonTippy="Go to class page"
-                        cssClasses="form-control-sm"
-                        autoFocus={false}
-                        ols
+                        size="sm"
+                        enableExternalSources
                     />
+                    <CopyIdButton value={range} />
+                    <LinkButton value={range} />
                 </InputGroup>
                 <div className="mt-2">
                     <FormGroup row>

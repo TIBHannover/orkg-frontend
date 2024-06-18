@@ -5,7 +5,8 @@ import REGEX from 'constants/regex';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, Form, FormFeedback, FormGroup, FormText, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
+import { Button, Form, FormFeedback, FormGroup, FormText, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { createClass, setParentClassByID } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
 import { createLiteralStatement } from 'services/backend/statements';
@@ -96,19 +97,18 @@ function CreateClassModal({ label: newLabel, uri: newUri, onClose, showParentFie
                             <Label for="URIInput">
                                 Subclass of <span className="text-muted fst-italic">(optional)</span>
                             </Label>
-                            <Autocomplete
-                                entityType={ENTITIES.CLASS}
-                                placeholder="Select a class"
-                                onChange={handleParentClassSelect}
-                                value={parentClass}
-                                autoLoadOption
-                                openMenuOnFocus
-                                allowCreate={false}
-                                copyValueButton
-                                isClearable
-                                autoFocus={false}
-                                inputId="target-class"
-                            />
+                            <InputGroup>
+                                <Autocomplete
+                                    entityType={ENTITIES.CLASS}
+                                    placeholder="Select a class"
+                                    onChange={handleParentClassSelect}
+                                    value={parentClass}
+                                    openMenuOnFocus
+                                    isClearable
+                                    inputId="target-class"
+                                />
+                                <CopyIdButton value={parentClass} />
+                            </InputGroup>
                             <small>
                                 <FormText color="muted">Enter the parent class for this new class.</FormText>
                             </small>
