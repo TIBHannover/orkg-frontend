@@ -3,6 +3,22 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.142.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.141.2...v0.142.0) - 2024-06-18
+
+### Changes
+
+- refactor: Autocomplete component [`#1343`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1343)
+- fix: bundle analyzer, replace source-map-explorer with @next/bundle-analyzer [`#1349`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1349)
+- fix(review): use route handlers to generate references [`#1347`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1347)
+- ux: disable scroll to the top while changing filters or sorting on observatory page [`#1336`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1336)
+- fix(Statement browser): Preferences are not well persisted [`#1348`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1348)
+- fix(Resource): sign out when in edit mode [`#1346`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1346)
+- fix: prevent editing of published comparisons [`#1345`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1345)
+- feat: replace underline with strikethrough in markdown editor toolbar [`#1344`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1344)
+- feat(AddPaper): support adding title via query parameter [`#1342`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1342)
+- lint: update react/jsx-wrap-multilines [`#1337`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1337)
+
+---
 ## [v0.141.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.141.1...v0.141.2) - 2024-05-30
 
 ### Changes
