@@ -71,6 +71,7 @@ const TableHeaderRow = ({ property }) => {
 
     const handleChangeAutocomplete = async (selected, { action }) => {
         if (action === 'create-option') {
+            setInputValue(selected.label);
             setIsOpenConfirmModal(true);
         } else {
             handleCreate({ id: selected.id });
@@ -127,12 +128,17 @@ const TableHeaderRow = ({ property }) => {
                         <Autocomplete
                             entityType={ENTITIES.PREDICATE}
                             placeholder="Enter a property"
-                            onInput={(e, value) => setInputValue(e ? e.target.value : value)}
-                            value={inputValue}
+                            onChange={handleChangeAutocomplete}
+                            onInputChange={(newValue, actionMeta) => {
+                                if (actionMeta.action !== 'menu-close' && actionMeta.action !== 'input-blur') {
+                                    setInputValue(newValue);
+                                }
+                            }}
+                            value={property}
                             onBlur={handleStopEdit}
                             openMenuOnFocus
-                            cssClasses="form-control-sm"
-                            onChange={handleChangeAutocomplete}
+                            autoFocus
+                            size="sm"
                             menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
                             allowCreate
                         />

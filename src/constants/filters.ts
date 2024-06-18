@@ -17,5 +17,3 @@ export const OPERATORS_MAP: { [_key in string]: FilterConfigOperator } = {
     '<': 'LT',
     '=': 'EQ',
 };
-
-export default FILTER_SOURCE;

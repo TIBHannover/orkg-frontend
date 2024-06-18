@@ -1,4 +1,4 @@
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { useState } from 'react';
@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 
 const ResearchFieldInput = ({ value = '', onChange, inputId = '', isDisabled = false, title = '', abstract = '' }) => {
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
-    const [inputValue, setInputValue] = useState(null);
 
     const handleSelectField = ({ id, label }) => {
         onChange({
@@ -18,20 +17,15 @@ const ResearchFieldInput = ({ value = '', onChange, inputId = '', isDisabled = f
 
     return (
         <InputGroup>
-            <AutoComplete
+            <Autocomplete
                 inputId={inputId}
-                allowCreate={false}
-                ols={false}
-                autoFocus={false}
+                enableExternalSources={false}
                 entityType={ENTITIES.RESOURCE}
-                optionsClass={CLASSES.RESEARCH_FIELD}
+                includeClasses={[CLASSES.RESEARCH_FIELD]}
                 onChange={onChange}
                 cacheOptions
                 value={value || null}
                 isClearable={false}
-                onBlur={() => setInputValue('')}
-                onChangeInputValue={(e) => setInputValue(e)}
-                inputValue={inputValue}
                 isDisabled={isDisabled}
             />
 

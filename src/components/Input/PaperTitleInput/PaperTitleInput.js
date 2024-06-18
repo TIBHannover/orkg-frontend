@@ -1,5 +1,4 @@
 import useExistingPaper from 'components/ExistingPaperModal/useExistingPaper';
-import { StyledAutoCompleteInputFormControl } from 'components/Autocomplete/Autocomplete';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import Menu from 'components/Input/PaperTitleInput/Menu';
 import PaperOption from 'components/Input/PaperTitleInput/PaperOption';
@@ -9,10 +8,21 @@ import { useState } from 'react';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import { getResources } from 'services/backend/resources';
 import { getPapersByTitle } from 'services/semanticScholar';
-import { withTheme } from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 
 const PAGE_SIZE = 10;
 const MIN_INPUT_LENGTH = 3;
+
+export const StyledAutoCompleteInputFormControl = styled.div`
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    &.default {
+        height: auto !important;
+        min-height: calc(1.8125rem + 4px);
+    }
+    cursor: text;
+    padding: 0 !important;
+`;
 
 function PaperTitleInput({
     value,

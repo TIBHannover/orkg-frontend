@@ -332,7 +332,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
         [dispatch, property?.existingPredicateId, propertyId, resourceId, syncBackend, valueClass],
     );
 
-    const handleCreateExistingLabel = (inputValue, selectOptions) => {
+    const handleCreateExistingLabel = (inputValue, selectValue, selectOptions) => {
         // check if label exists
         if (
             isUniqLabel &&

@@ -2,7 +2,10 @@
 
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
+import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
+import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
+import TreeSelector from 'components/Autocomplete/ValueButtons/TreeSelector';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import useRouter from 'components/NextJsMigration/useRouter';
@@ -15,7 +18,7 @@ import { reverse } from 'named-urls';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Container, Form, FormGroup, FormText, Input, Label } from 'reactstrap';
+import { Container, Form, FormGroup, FormText, Input, InputGroup, Label } from 'reactstrap';
 import requireAuthentication from 'requireAuthentication';
 import { createClass, setParentClassByID } from 'services/backend/classes';
 import { getErrorMessage } from 'utils';
@@ -130,24 +133,24 @@ const AddClass = () => {
                             <Label for="URIInput">
                                 Subclass of <span className="text-muted fst-italic">(optional)</span>
                             </Label>
-                            <AutoComplete
-                                entityType={ENTITIES.CLASS}
-                                placeholder={isCurationAllowed ? 'Select or type to enter a class' : 'This field requires a curator role'}
-                                onChange={handleParentClassSelect}
-                                value={parentClass}
-                                autoLoadOption
-                                openMenuOnFocus
-                                allowCreate
-                                copyValueButton
-                                isClearable
-                                autoFocus={false}
-                                innerRef={parentClassAutocompleteRef}
-                                showTreeSelector
-                                linkButton={parentClass && parentClass.id ? reverse(ROUTES.CLASS, { id: parentClass.id }) : ''}
-                                linkButtonTippy="Go to class page"
-                                inputId="target-class"
-                                isDisabled={!isCurationAllowed}
-                            />
+                            <InputGroup>
+                                <Autocomplete
+                                    entityType={ENTITIES.CLASS}
+                                    placeholder={isCurationAllowed ? 'Select or type to enter a class' : 'This field requires a curator role'}
+                                    onChange={handleParentClassSelect}
+                                    value={parentClass}
+                                    openMenuOnFocus
+                                    allowCreate
+                                    isClearable
+                                    innerRef={parentClassAutocompleteRef}
+                                    inputId="target-class"
+                                    isDisabled={!isCurationAllowed}
+                                    enableExternalSources
+                                />
+                                <TreeSelector onChange={handleParentClassSelect} value={parentClass} isDisabled={!isCurationAllowed} />
+                                <CopyIdButton value={parentClass} />
+                                <LinkButton value={parentClass} />
+                            </InputGroup>
                             {isCurationAllowed && (
                                 <FormText color="muted">
                                     Enter the parent class for this new class. Select an existing class, or create a new one by typing its name.

@@ -1,3 +1,5 @@
+export type EntityType = 'class' | 'predicate' | 'resource' | 'literal';
+
 export type SortByOptions = 'id' | 'label' | 'created_at' | 'created_by' | 'visibility';
 
 export type VisibilityOptions = 'combined' | 'ALL_LISTED' | 'UNLISTED' | 'FEATURED' | 'NON_FEATURED' | 'DELETED';

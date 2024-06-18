@@ -1,7 +1,7 @@
 import Link from 'components/NextJsMigration/Link';
 import { faPen, faPuzzlePiece, faSpinner, faTags } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import Confirm from 'components/ConfirmationModal/ConfirmationModal';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
@@ -158,26 +158,20 @@ const ClassesItem = ({ enableEdit = false, syncBackend = false }) => {
                             {enableEdit && editMode && (
                                 <div className="flex-grow-1 ms-1 ">
                                     <InputGroup size="sm">
-                                        <AutoComplete
+                                        <Autocomplete
                                             entityType={ENTITIES.CLASS}
                                             onChange={(selected, action) => {
-                                                // blur the field allows to focus and open the menu again
-                                                if (classesAutocompleteRef.current) {
-                                                    classesAutocompleteRef.current.blur();
-                                                }
                                                 handleChangeClasses(selected, action);
                                             }}
                                             placeholder="Specify the classes of the resource"
                                             value={classes}
-                                            autoLoadOption
                                             openMenuOnFocus
                                             allowCreate
                                             innerRef={classesAutocompleteRef}
                                             isMulti
-                                            autoFocus={false}
-                                            ols
+                                            enableExternalSources
                                             isDisabled={isSaving}
-                                            cssClasses="form-control-sm"
+                                            size="sm"
                                             inputId="classes-autocomplete"
                                         />
 

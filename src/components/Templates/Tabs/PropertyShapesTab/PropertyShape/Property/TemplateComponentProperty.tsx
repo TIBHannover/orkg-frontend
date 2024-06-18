@@ -1,8 +1,9 @@
 import { faArrowsAlt, faCheck, faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import Link from 'components/NextJsMigration/Link';
+import { OptionType } from 'components/Autocomplete/types';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { PropertyStyle } from 'components/StatementBrowser/styled';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
@@ -12,7 +13,7 @@ import { reverse } from 'named-urls';
 import { FC, useState } from 'react';
 import { ConnectDragSource } from 'react-dnd';
 import { useSelector } from 'react-redux';
-import { ActionMeta } from 'react-select';
+import { ActionMeta, SingleValue } from 'react-select';
 import { InputGroup } from 'reactstrap';
 import { Predicate } from 'services/backend/types';
 import styled from 'styled-components';
@@ -27,7 +28,7 @@ type TemplateComponentPropertyProps = {
     id: number;
     dragRef: ConnectDragSource;
     handleDeletePropertyShape: (_index: number) => void;
-    handlePropertiesSelect: (_selected: Predicate, _action: ActionMeta<Predicate>, _index: number) => void;
+    handlePropertiesSelect: (_selected: SingleValue<OptionType>, _action: ActionMeta<OptionType>, _index: number) => void;
 };
 
 const TemplateComponentProperty: FC<TemplateComponentPropertyProps> = ({ id, dragRef, handleDeletePropertyShape, handlePropertiesSelect }) => {
@@ -85,18 +86,17 @@ const TemplateComponentProperty: FC<TemplateComponentPropertyProps> = ({ id, dra
             ) : (
                 <div>
                     <InputGroup size="sm">
-                        <AutoComplete
+                        <Autocomplete
                             entityType={ENTITIES.PREDICATE}
                             placeholder={isEditing ? 'Select or type to enter a property' : 'No properties'}
-                            onChange={(selected: Predicate, action: ActionMeta<Predicate>) => {
+                            onChange={(selected, action) => {
                                 handlePropertiesSelect(selected, action, id);
                                 setIsEditing(false);
                             }}
                             value={property}
-                            autoLoadOption
                             openMenuOnFocus
                             allowCreate
-                            cssClasses="form-control-sm"
+                            size="sm"
                             onBlur={() => {
                                 setIsEditing(false);
                             }}

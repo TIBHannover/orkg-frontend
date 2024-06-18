@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { InputGroup, FormFeedback } from 'reactstrap';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import InputField from 'components/StatementBrowser/InputField/InputField';
 import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
 import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataTypes';
@@ -187,7 +187,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                 <span>
                     <InputGroup size="sm" style={{ minWidth: 295, zIndex: 100 }}>
                         {!editMode && inputFormType === 'autocomplete' ? (
-                            <AutoComplete
+                            <Autocomplete
                                 entityType={entityType}
                                 excludeClasses={
                                     entityType === ENTITIES.RESOURCE && !valueClass
@@ -202,29 +202,34 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                           ]
                                         : []
                                 }
-                                optionsClass={entityType === ENTITIES.RESOURCE && valueClass ? valueClass.id : undefined}
+                                includeClasses={entityType === ENTITIES.RESOURCE && valueClass ? [valueClass.id] : []}
                                 placeholder={propertyShape?.placeholder ? propertyShape.placeholder : `Enter a ${entityType}`}
-                                onItemSelected={(i) => {
-                                    dispatch(addValue(entityType, { ...i, label: i.value, selected: true }, valueClass, contributionId, propertyId));
-                                    closeForm?.(false);
+                                onChange={(i, { action }) => {
+                                    if (action === 'select-option') {
+                                        dispatch(addValue(entityType, { ...i, selected: true }, valueClass, contributionId, propertyId));
+                                        closeForm?.(false);
+                                    } else if (action === 'create-option' && i) {
+                                        dispatch(
+                                            addValue(
+                                                entityType,
+                                                { label: i.label, selected: false, datatype: getDataType() },
+                                                valueClass,
+                                                contributionId,
+                                                propertyId,
+                                            ),
+                                        );
+                                        closeForm?.(false);
+                                    }
                                 }}
-                                onNewItemSelected={(label) => {
-                                    dispatch(
-                                        addValue(
-                                            entityType,
-                                            { label, selected: false, datatype: getDataType() },
-                                            valueClass,
-                                            contributionId,
-                                            propertyId,
-                                        ),
-                                    );
-                                    closeForm?.(false);
+                                isClearable={false}
+                                enableExternalSources={!valueClass}
+                                onInputChange={(newValue, actionMeta) => {
+                                    if (actionMeta.action !== 'menu-close' && actionMeta.action !== 'input-blur') {
+                                        setInputValue(newValue);
+                                    }
                                 }}
-                                ols={!valueClass}
-                                onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                                 menuPortalTarget={document.body}
                                 value={inputValue}
-                                autoLoadOption={!!valueClass}
                                 openMenuOnFocus
                                 allowCreate
                                 allowCreateDuplicate={!isUniqLabel}
@@ -235,8 +240,8 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                     }
                                 }}
                                 innerRef={(ref) => (autocompleteInputRef.current = ref)}
-                                cssClasses="form-control-sm"
-                                onOntologySelectorIsOpenStatusChange={(status) => setOntologyModalIsOpen(status)}
+                                size="sm"
+                                onOntologySelectorModalStatusChange={(status) => setOntologyModalIsOpen(status)}
                             />
                         ) : (
                             <>

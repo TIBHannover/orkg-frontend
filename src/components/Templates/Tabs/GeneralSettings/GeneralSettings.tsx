@@ -1,22 +1,20 @@
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
+import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
+import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
+import { OptionType } from 'components/Autocomplete/types';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
-import { ChangeEvent, FC, useRef, useState } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ActionMeta, SelectInstance } from 'react-select';
-import { FormGroup, FormText, Input, Label } from 'reactstrap';
-import { Class, Predicate, Resource } from 'services/backend/types';
+import { ActionMeta, MultiValue, SingleValue } from 'react-select';
+import { FormGroup, FormText, Input, InputGroup, Label } from 'reactstrap';
 import { updateDescription, updatePredicate, updateResearchFields, updateResearchProblems, updateTargetClass } from 'slices/templateEditorSlice';
 
 export const MAX_DESCRIPTION_LENGTH = 350;
 
 const GeneralSettings: FC<{}> = () => {
-    const classAutocompleteRef = useRef<SelectInstance<Class> | null>(null);
-    const predicateAutocompleteRef = useRef<SelectInstance<Predicate> | null>(null);
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
     const [propertyLabel, setPropertyLabel] = useState('');
     const { isEditMode } = useIsEditMode();
@@ -36,7 +34,7 @@ const GeneralSettings: FC<{}> = () => {
         dispatch(updateDescription(e.target.value));
     };
 
-    const handlePropertySelect = async (selected: Predicate | null, { action }: ActionMeta<Predicate>) => {
+    const handlePropertySelect = async (selected: SingleValue<OptionType>, { action }: ActionMeta<OptionType>) => {
         if (action === 'select-option') {
             dispatch(updatePredicate(selected));
         } else if (action === 'create-option' && selected) {
@@ -52,7 +50,7 @@ const GeneralSettings: FC<{}> = () => {
         setIsOpenConfirmModal(false);
     };
 
-    const handleClassSelect = async (selected: Class | null, { action }: ActionMeta<Class>) => {
+    const handleClassSelect = async (selected: SingleValue<OptionType>, { action }: ActionMeta<OptionType>) => {
         if (action === 'select-option') {
             dispatch(updateTargetClass(selected));
         } else if (action === 'create-option' && selected) {
@@ -63,20 +61,19 @@ const GeneralSettings: FC<{}> = () => {
                 selected.id = newClass.id;
                 dispatch(updateTargetClass(selected));
             }
-            // blur the field allows to focus and open the menu again
-            classAutocompleteRef.current && classAutocompleteRef.current.blur();
         } else if (action === 'clear') {
             dispatch(updateTargetClass(null));
         }
     };
 
-    const handleResearchFieldSelect = (selected: Resource[] | null) => {
+    const handleResearchFieldSelect = (selected: MultiValue<OptionType>) => {
         dispatch(updateResearchFields(!selected ? [] : selected));
     };
 
-    const handleResearchProblemSelect = (selected: Resource[] | null) => {
+    const handleResearchProblemSelect = (selected: MultiValue<OptionType>) => {
         dispatch(updateResearchProblems(!selected ? [] : selected));
     };
+
     return (
         <div className="p-4">
             {isOpenConfirmModal && (
@@ -90,23 +87,21 @@ const GeneralSettings: FC<{}> = () => {
 
             <FormGroup className="mb-4">
                 <Label for="target-class">Target class</Label>
-                <AutoComplete
-                    entityType={ENTITIES.CLASS}
-                    placeholder={isEditMode ? 'Select or type to enter a class' : 'No Classes'}
-                    onChange={handleClassSelect}
-                    value={targetClass}
-                    autoLoadOption
-                    openMenuOnFocus
-                    allowCreate
-                    isDisabled={!isEditMode}
-                    copyValueButton
-                    isClearable={false}
-                    innerRef={classAutocompleteRef}
-                    autoFocus={false}
-                    linkButton={targetClass && targetClass.id ? reverse(ROUTES.CLASS, { id: targetClass.id }) : ''}
-                    linkButtonTippy="Go to class page"
-                    inputId="target-class"
-                />
+                <InputGroup>
+                    <Autocomplete
+                        entityType={ENTITIES.CLASS}
+                        placeholder={isEditMode ? 'Select or type to enter a class' : 'No Classes'}
+                        onChange={handleClassSelect}
+                        value={targetClass}
+                        openMenuOnFocus
+                        allowCreate
+                        isDisabled={!isEditMode}
+                        isClearable={false}
+                        inputId="target-class"
+                    />
+                    <CopyIdButton value={targetClass} />
+                    <LinkButton value={targetClass} />
+                </InputGroup>
             </FormGroup>
             <FormGroup className="mb-4">
                 <Label for="template-description">Description</Label>
@@ -135,18 +130,15 @@ const GeneralSettings: FC<{}> = () => {
                     <Label for="template-property">
                         Property <span className="text-muted fst-italic">(optional)</span>
                     </Label>
-                    <AutoComplete
+                    <Autocomplete
                         entityType={ENTITIES.PREDICATE}
                         placeholder={isEditMode ? 'Select or type to enter a property' : 'No Property'}
                         onChange={handlePropertySelect}
                         value={predicate}
-                        autoLoadOption
                         openMenuOnFocus
                         allowCreate
                         isDisabled={!isEditMode}
-                        autoFocus={false}
                         isClearable
-                        innerRef={predicateAutocompleteRef}
                         inputId="template-property"
                     />
                     {isEditMode && (
@@ -159,21 +151,19 @@ const GeneralSettings: FC<{}> = () => {
                     <Label for="template-field">
                         Research fields <span className="text-muted fst-italic">(optional)</span>
                     </Label>
-                    <AutoComplete
+                    <Autocomplete
                         entityType={ENTITIES.RESOURCE}
-                        optionsClass={CLASSES.RESEARCH_FIELD}
+                        includeClasses={[CLASSES.RESEARCH_FIELD]}
                         placeholder={isEditMode ? 'Select or type to enter a research field' : 'No research fields'}
                         onChange={handleResearchFieldSelect}
                         value={researchFields}
-                        autoLoadOption
                         openMenuOnFocus
-                        autoFocus={false}
                         allowCreate={false}
                         isDisabled={!isEditMode}
                         isClearable
                         isMulti
                         inputId="template-field"
-                        ols={false}
+                        enableExternalSources={false}
                     />
                     {isEditMode && <FormText>Specify the research fields that uses this template.</FormText>}
                 </FormGroup>
@@ -181,21 +171,19 @@ const GeneralSettings: FC<{}> = () => {
                     <Label for="template-problems">
                         Research problems <span className="text-muted fst-italic">(optional)</span>
                     </Label>
-                    <AutoComplete
+                    <Autocomplete
                         entityType={ENTITIES.RESOURCE}
-                        optionsClass={CLASSES.PROBLEM}
+                        includeClasses={[CLASSES.PROBLEM]}
                         placeholder={isEditMode ? 'Select or type to enter a research problem' : 'No research problem'}
                         onChange={handleResearchProblemSelect}
                         value={researchProblems}
-                        autoLoadOption
                         openMenuOnFocus
-                        autoFocus={false}
                         allowCreate={false}
                         isDisabled={!isEditMode}
                         isClearable
                         isMulti
                         inputId="template-problems"
-                        ols={false}
+                        enableExternalSources={false}
                     />
                     {isEditMode && <FormText>Specify the research problems that uses this template.</FormText>}
                 </FormGroup>

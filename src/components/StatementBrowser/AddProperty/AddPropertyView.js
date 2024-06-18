@@ -1,18 +1,18 @@
-import { ButtonGroup, InputGroup } from 'reactstrap';
-import { AddPropertyStyle, AddPropertyContentStyle, AddPropertyFormStyle, StyledButton } from 'components/StatementBrowser/styled';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { ENTITIES } from 'constants/graphSettings';
-import defaultProperties from 'constants/defaultProperties';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import PropTypes from 'prop-types';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import SmartPropertyGuidelinesCheck from 'components/SmartSuggestions/SmartPropertyGuidelinesCheck';
-import { useState } from 'react';
 import SmartPropertySuggestions from 'components/SmartSuggestions/SmartPropertySuggestions';
+import { AddPropertyContentStyle, AddPropertyFormStyle, AddPropertyStyle, StyledButton } from 'components/StatementBrowser/styled';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import defaultProperties from 'constants/defaultProperties';
+import { ENTITIES } from 'constants/graphSettings';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { ButtonGroup, InputGroup } from 'reactstrap';
 
 const AddPropertyView = ({
     inTemplate = false,
@@ -69,26 +69,35 @@ const AddPropertyView = ({
                                 <Icon className="icon" icon={faPlus} />
                             </span>
 
-                            <AutoComplete
+                            <Autocomplete
                                 entityType={ENTITIES.PREDICATE}
-                                cssClasses="form-control-sm"
+                                size="sm"
                                 placeholder="Select or type to enter a property"
-                                onItemSelected={handlePropertySelect}
-                                onNewItemSelected={toggleConfirmNewProperty}
+                                onChange={(value, { action }) => {
+                                    if (action === 'select-option') {
+                                        handlePropertySelect(value);
+                                    } else if (action === 'create-option' && value) {
+                                        toggleConfirmNewProperty(value.label);
+                                    } else if (action === 'clear') {
+                                        setInputValue('');
+                                    }
+                                }}
                                 onKeyDown={(e) => {
                                     if (e.keyCode === 27) {
                                         // escape
                                         setShowAddProperty(false);
                                     }
                                 }}
-                                additionalData={newProperties}
-                                disableBorderRadiusRight
+                                defaultAdditional={newProperties}
                                 allowCreate
+                                autoFocus
                                 defaultOptions={defaultProperties}
-                                inputGroup={false}
                                 inputId="addProperty"
-                                onInput={(e, value) => setInputValue(e ? e.target.value : value)}
-                                value={inputValue}
+                                onInputChange={(newValue, actionMeta) => {
+                                    if (actionMeta.action !== 'menu-close' && actionMeta.action !== 'input-blur') {
+                                        setInputValue(newValue);
+                                    }
+                                }}
                             />
                             <SmartPropertyGuidelinesCheck label={inputValue} />
                             <StyledButton className="w-auto" outline onClick={() => setShowAddProperty(false)}>

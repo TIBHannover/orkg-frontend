@@ -2,7 +2,7 @@
 
 import { faEllipsisV, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import AutoComplete from 'components/Autocomplete/AutocompleteStringDefaultValue';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
 import Link from 'components/NextJsMigration/Link';
 import useRouter from 'components/NextJsMigration/useRouter';
@@ -112,12 +112,10 @@ const Templates = () => {
         searchParams.get('q')?.toString();
 
     const filterCommonProps = {
-        autoLoadOption: true,
         openMenuOnFocus: true,
         allowCreate: false,
         isClearable: true,
-        autoFocus: false,
-        ols: false,
+        enableExternalSources: false,
     };
 
     const resetFilters = () => {
@@ -203,13 +201,13 @@ const Templates = () => {
                                         Include subfields
                                     </Label>
                                 </Label>
-                                <AutoComplete
+                                <Autocomplete
                                     entityType={ENTITIES.RESOURCE}
-                                    optionsClass={CLASSES.RESEARCH_FIELD}
+                                    includeClasses={[CLASSES.RESEARCH_FIELD]}
                                     placeholder="Select or type to enter a research field"
-                                    onChange={(v: Node | null) => handleChangeFilter(v, 'researchField')}
+                                    onChange={(v) => handleChangeFilter(v as Node, 'researchField')}
                                     inputId="filter-research-field"
-                                    defaultValue={searchParams.get('researchField')?.toString()}
+                                    defaultValueId={searchParams.get('researchField')?.toString()}
                                     {...filterCommonProps}
                                 />
                             </FormGroup>
@@ -217,13 +215,13 @@ const Templates = () => {
                         <Col md={6}>
                             <FormGroup>
                                 <Label for="filter-research-problem">Filter by research problem</Label>
-                                <AutoComplete
+                                <Autocomplete
                                     entityType={ENTITIES.RESOURCE}
-                                    optionsClass={CLASSES.PROBLEM}
+                                    includeClasses={[CLASSES.PROBLEM]}
                                     placeholder="Select or type to enter a research problem"
-                                    onChange={(v: Node | null) => handleChangeFilter(v, 'researchProblem')}
+                                    onChange={(v) => handleChangeFilter(v as Node, 'researchProblem')}
                                     inputId="filter-research-problem"
-                                    defaultValue={searchParams.get('researchProblem')?.toString()}
+                                    defaultValueId={searchParams.get('researchProblem')?.toString()}
                                     {...filterCommonProps}
                                 />
                             </FormGroup>
@@ -245,12 +243,12 @@ const Templates = () => {
                         <Col md={6}>
                             <FormGroup>
                                 <Label for="filter-class">Filter by class</Label>
-                                <AutoComplete
+                                <Autocomplete
                                     entityType={ENTITIES.CLASS}
                                     placeholder="Select or type to enter a class"
-                                    onChange={(v: Node | null) => handleChangeFilter(v, 'targetClass')}
+                                    onChange={(v) => handleChangeFilter(v as Node, 'targetClass')}
                                     inputId="filter-class"
-                                    defaultValue={searchParams.get('targetClass')?.toString()}
+                                    defaultValueId={searchParams.get('targetClass')?.toString()}
                                     {...filterCommonProps}
                                 />
                             </FormGroup>

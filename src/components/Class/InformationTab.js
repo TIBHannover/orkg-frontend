@@ -71,7 +71,9 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
             <Table bordered>
                 <tbody>
                     <tr>
-                        <th scope="row">URI</th>
+                        <th scope="row" style={{ width: '30%' }}>
+                            URI
+                        </th>
                         <td>
                             <i>{classObject?.uri && classObject.uri !== 'null' ? <a href={classObject.uri}>{classObject.uri}</a> : 'Not Defined'}</i>
                         </td>

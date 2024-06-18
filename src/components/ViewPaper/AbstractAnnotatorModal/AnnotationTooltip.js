@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
@@ -10,7 +10,6 @@ import { createPredicate } from 'services/backend/predicates';
 
 function AnnotationTooltip(props) {
     const tippyInstance = useRef(null);
-    const reactSelectInstance = useRef(null);
     const dispatch = useDispatch();
     const [defaultOptions, setDefaultOptions] = useState([]);
 
@@ -38,18 +37,13 @@ function AnnotationTooltip(props) {
                 followCursor
                 plugins={[followCursor]}
                 arrow
-                onHide={() => {
-                    if (reactSelectInstance) {
-                        reactSelectInstance.current.blur();
-                    }
-                }}
                 interactive
                 onCreate={(instance) => (tippyInstance.current = instance)}
                 content={
                     <div style={{ width: '300px' }}>
-                        <AutoComplete
+                        <Autocomplete
                             entityType={ENTITIES.PREDICATE}
-                            defaultOptions={defaultOptions}
+                            additionalOptions={defaultOptions}
                             placeholder="Select or type to enter a property"
                             onChange={(e, a) => {
                                 handleChangeAnnotationClass(e, a, props.range);
@@ -64,10 +58,7 @@ function AnnotationTooltip(props) {
                             key={(value) => value}
                             isClearable
                             openMenuOnFocus
-                            autoLoadOption
                             allowCreate
-                            autoFocus={false}
-                            innerRef={(instance) => (reactSelectInstance.current = instance)}
                         />
                     </div>
                 }

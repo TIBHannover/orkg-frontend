@@ -240,13 +240,15 @@ const ResearchFieldSelector = ({
             <div className="mb-3">
                 <Autocomplete
                     entityType={ENTITIES.RESOURCE}
-                    optionsClass={CLASSES.RESEARCH_FIELD}
+                    includeClasses={[CLASSES.RESEARCH_FIELD]}
                     placeholder="Search for fields..."
-                    onItemSelected={handleFieldSelect}
+                    onChange={(value, { action }) => {
+                        if (action === 'select-option') {
+                            handleFieldSelect(value);
+                        }
+                    }}
                     value={selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN ? { id: selectedResearchField, label: researchFieldLabel } : null}
-                    allowCreate={false}
-                    ols={false}
-                    autoLoadOption
+                    enableExternalSources={false}
                 />
             </div>
 

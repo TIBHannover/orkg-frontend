@@ -32,9 +32,10 @@ describe('AddProperty', () => {
         const addButton = screen.getByRole('button', { name: 'Add property' });
         await userEvent.click(addButton);
         await userEvent.type(screen.getByRole('combobox'), 'Property label 1');
-        // await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
+        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         await selectEvent.openMenu(screen.getByRole('combobox'));
         await selectEvent.select(screen.getByRole('combobox'), 'property label 1');
+        await waitForElementToBeRemoved(() => screen.queryAllByText(/Cancel/i));
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
         await waitFor(() => expect(screen.getByRole('link', { name: 'property label 1' })).toBeInTheDocument());
     });
@@ -45,8 +46,9 @@ describe('AddProperty', () => {
         const addButton = screen.getByRole('button', { name: 'Add property' });
         await userEvent.click(addButton);
         await userEvent.type(screen.getByRole('combobox'), 'property 1');
-        // await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
+        await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         await selectEvent.select(screen.getByRole('combobox'), /property 1/i);
+        await waitForElementToBeRemoved(() => screen.queryAllByText(/Cancel/i));
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
         await waitFor(() => expect(screen.getByText('property 1')).toBeInTheDocument());
         // Add the same property ('Property 1')
@@ -55,6 +57,7 @@ describe('AddProperty', () => {
         await userEvent.type(screen.getByRole('combobox'), 'property 1');
         // await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
         await selectEvent.select(screen.getByRole('combobox'), /property 1/i);
+        await waitForElementToBeRemoved(() => screen.queryAllByText(/Cancel/i));
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
         await waitFor(() => expect(screen.getByText(/The property property 1 exists already/i)).toBeInTheDocument());
         await waitFor(() => expect(screen.getAllByText('property 1')).toHaveLength(1));

@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ENTITIES } from 'constants/graphSettings';
 import capitalize from 'capitalize';
 import styled from 'styled-components';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import toArray from 'lodash/toArray';
 
 const ListGroupItemStyle = styled(ListGroupItem)`
@@ -145,9 +145,9 @@ function AbstractRangesList(props) {
                                         </RangeItemOption>
                                     </>
                                 ) : (
-                                    <AutoComplete
+                                    <Autocomplete
                                         entityType={ENTITIES.PREDICATE}
-                                        defaultOptions={defaultOptions}
+                                        additionalOptions={defaultOptions}
                                         placeholder="Select or type to enter a property"
                                         onChange={(e, a) => {
                                             handleChangeAnnotationClass(e, a, range);
@@ -166,7 +166,6 @@ function AbstractRangesList(props) {
                                         key={(value) => value}
                                         isClearable
                                         openMenuOnFocus
-                                        autoLoadOption
                                         allowCreate
                                         autoFocus
                                     />

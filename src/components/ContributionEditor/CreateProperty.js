@@ -1,17 +1,16 @@
 import { faPlusCircle, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { createProperty } from 'slices/contributionEditorSlice';
-import TemplatesModal from 'components/ContributionEditor/TemplatesModal/TemplatesModal';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
+import TemplatesModal from 'components/ContributionEditor/TemplatesModal/TemplatesModal';
+import SmartPropertyGuidelinesCheck from 'components/SmartSuggestions/SmartPropertyGuidelinesCheck';
+import SmartPropertySuggestions from 'components/SmartSuggestions/SmartPropertySuggestions';
+import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
+import { StyledButton } from 'components/StatementBrowser/styled';
 import { ENTITIES } from 'constants/graphSettings';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, ButtonGroup, InputGroup } from 'reactstrap';
-import { isString } from 'lodash';
-import { StyledButton } from 'components/StatementBrowser/styled';
-import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
-import SmartPropertySuggestions from 'components/SmartSuggestions/SmartPropertySuggestions';
-import SmartPropertyGuidelinesCheck from 'components/SmartSuggestions/SmartPropertyGuidelinesCheck';
+import { createProperty } from 'slices/contributionEditorSlice';
 
 export const CreateProperty = () => {
     const [isCreating, setIsCreating] = useState(false);
@@ -35,15 +34,6 @@ export const CreateProperty = () => {
         setIsCreating(false);
         setInputValue('');
         setIsOpenConfirmModal(false);
-    };
-
-    const handleChangeAutocomplete = async (selected) => {
-        if (isString(selected)) {
-            setPropertyLabel(selected);
-            setIsOpenConfirmModal(true);
-        } else {
-            handleCreate(selected);
-        }
     };
 
     return (
@@ -78,12 +68,24 @@ export const CreateProperty = () => {
                         <Autocomplete
                             entityType={ENTITIES.PREDICATE}
                             placeholder="Enter a property"
-                            onItemSelected={handleChangeAutocomplete}
-                            onNewItemSelected={handleChangeAutocomplete}
-                            onInput={(e, value) => setInputValue(e ? e.target.value : value)}
-                            value={inputValue}
+                            onChange={(value, { action }) => {
+                                if (action === 'select-option') {
+                                    handleCreate(value);
+                                } else if (action === 'create-option' && value) {
+                                    setPropertyLabel(value.label);
+                                    setIsOpenConfirmModal(true);
+                                } else if (action === 'clear') {
+                                    setPropertyLabel(null);
+                                }
+                            }}
+                            onInputChange={(newValue, actionMeta) => {
+                                if (actionMeta.action !== 'menu-close' && actionMeta.action !== 'input-blur') {
+                                    setInputValue(newValue);
+                                }
+                            }}
+                            autoFocus
                             openMenuOnFocus
-                            cssClasses="form-control-sm"
+                            size="sm"
                             menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
                             allowCreate
                         />

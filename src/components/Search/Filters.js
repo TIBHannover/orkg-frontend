@@ -1,7 +1,7 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import useFilters from 'components/Search/hooks/useFilters';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { ENTITIES } from 'constants/graphSettings';
@@ -82,7 +82,7 @@ const Filters = () => {
             ))}
             <br />
             <Label for="other-filters">Other filters</Label>
-            <AutoComplete
+            <Autocomplete
                 entityType={ENTITIES.CLASS}
                 onChange={(_, action) => {
                     if (action.action === 'select-option') {
@@ -95,13 +95,10 @@ const Filters = () => {
                 }}
                 placeholder="Select a filter"
                 value={selectedFilters.filter((sf) => !DEFAULT_FILTERS.map((df) => df.id).includes(sf.id))}
-                autoLoadOption
                 openMenuOnFocus
-                allowCreate={false}
-                ols={false}
+                enableExternalSources={false}
                 isClearable
                 isMulti
-                autoFocus={false}
                 isLoading={isLoadingFilterClasses}
                 inputId="other-filters"
             />

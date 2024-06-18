@@ -1,5 +1,6 @@
-import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
+import { OptionType } from 'components/Autocomplete/types';
 import NumberInputField from 'components/Filters/FilterInputField/NumberInputField';
 import { getConfigByClassId } from 'constants/DataTypes';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
@@ -8,7 +9,7 @@ import { FC, useEffect, useState } from 'react';
 import Select from 'react-select';
 import { Input } from 'reactstrap';
 import { getResourcesByIds, resourcesUrl } from 'services/backend/resources';
-import { FilterConfig, FilterConfigValue, Resource } from 'services/backend/types';
+import { FilterConfig, FilterConfigValue } from 'services/backend/types';
 import useSWR from 'swr';
 
 type FilterInputFieldProps = {
@@ -69,7 +70,7 @@ const FilterInputField: FC<FilterInputFieldProps> = ({ filter, updateFilterValue
     const convertFilterConfigValue2Resource = (filterConfigValue: FilterConfigValue) =>
         !isString(filterConfigValue.value) ? filterConfigValue.value : resources?.find((r) => r.id === filterConfigValue.value);
 
-    const convertResource2FilterConfigValue = (value: Resource) => ({ op: 'EQ', value });
+    const convertResource2FilterConfigValue = (value: OptionType) => ({ op: 'EQ', value });
 
     const Forms = {
         boolean: (
@@ -88,18 +89,19 @@ const FilterInputField: FC<FilterInputFieldProps> = ({ filter, updateFilterValue
             </>
         ),
         autocomplete: (
-            <AutoComplete
+            <Autocomplete
                 entityType={ENTITIES.RESOURCE}
                 baseClass={filter.range}
                 placeholder="Select or type to enter a resource"
-                onChange={(selected) => updateValue(selected?.map((v: Resource) => convertResource2FilterConfigValue(v)))}
-                value={values?.map((v) => convertFilterConfigValue2Resource(v))}
-                autoLoadOption
+                onChange={(selected) =>
+                    updateValue((selected as OptionType[])?.map((v) => convertResource2FilterConfigValue(v) as FilterConfigValue))
+                }
+                value={values?.map((v) => convertFilterConfigValue2Resource(v) as OptionType)}
                 openMenuOnFocus
                 isClearable
-                autoFocus={false}
-                ols={false}
+                enableExternalSources={false}
                 isMulti
+                allowCreate={false}
             />
         ),
         number: <NumberInputField filter={filter} updateValue={updateValue} />,

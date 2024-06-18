@@ -8,8 +8,8 @@ const PublishedInInput = ({ value = '', onChange, inputId = null, isDisabled = f
         inputId={inputId}
         allowCreate
         entityType={ENTITIES.RESOURCE}
-        optionsClass={CLASSES.VENUE}
-        ols={false}
+        includeClasses={[CLASSES.VENUE]}
+        enableExternalSources={false}
         onChange={async (selected, action) => {
             if (action.action === 'select-option') {
                 onChange(selected);
@@ -27,7 +27,6 @@ const PublishedInInput = ({ value = '', onChange, inputId = null, isDisabled = f
                 });
             }
         }}
-        autoFocus={false}
         cacheOptions
         value={value}
         isClearable
