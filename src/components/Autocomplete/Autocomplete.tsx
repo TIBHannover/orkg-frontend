@@ -148,6 +148,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
                 }}
                 noOptionsMessage={noOptionsMessage}
                 aria-label={placeholder?.toString()}
+                {...(allowCreate ? { createOptionPosition: 'first' } : {})}
             />
             <OntologiesModal />
         </>
