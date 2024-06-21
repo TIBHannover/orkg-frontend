@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.142.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.142.0...v0.142.1) - 2024-06-21
+
+### Changes
+
+- fix(ContributionEditor): cannot create new resources [`#1356`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1356)
+
+---
 ## [v0.142.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.141.2...v0.142.0) - 2024-06-18
 
 ### Changes
