@@ -14,6 +14,7 @@ import Tippy from '@tippyjs/react';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import useTableCellForm from 'components/ContributionEditor/TableCellForm/hooks/useTableCellForm';
+import { compareOption } from 'utils';
 
 const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
     const refContainer = useRef(null);
@@ -58,7 +59,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
         // setIsCreating(false);
         if (!ontologyModalIsOpen) {
             if (!editMode) {
-                if (inputValue === '' && inputFormType !== 'empty') {
+                if ((inputValue === '' && inputFormType !== 'empty') || entityType === ENTITIES.RESOURCE) {
                     closeForm(false);
                 }
                 createValue();
@@ -71,7 +72,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
     });
 
     const createValue = () => {
-        if ((entityType === ENTITIES.LITERAL && inputValue.trim()) || entityType === ENTITIES.RESOURCE || inputFormType === 'empty') {
+        if ((entityType === ENTITIES.LITERAL && inputValue.trim()) || inputFormType === 'empty') {
             onSubmit();
         }
     };
@@ -228,18 +229,26 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                         setInputValue(newValue);
                                     }
                                 }}
-                                menuPortalTarget={document.body}
+                                menuPortalTarget={document?.body}
                                 value={inputValue}
                                 openMenuOnFocus
                                 allowCreate
-                                allowCreateDuplicate={!isUniqLabel}
+                                isValidNewOption={(val, selectValue, selectOptions) => {
+                                    if (val && !isUniqLabel) {
+                                        return true;
+                                    }
+                                    return !(
+                                        !val ||
+                                        selectValue.some((option) => compareOption(val, option)) ||
+                                        selectOptions.some((option) => compareOption(val, option))
+                                    );
+                                }}
                                 onKeyDown={(e) => {
                                     if (e.keyCode === 27) {
                                         // escape
                                         closeForm?.(false);
                                     }
                                 }}
-                                innerRef={(ref) => (autocompleteInputRef.current = ref)}
                                 size="sm"
                                 onOntologySelectorModalStatusChange={(status) => setOntologyModalIsOpen(status)}
                             />
