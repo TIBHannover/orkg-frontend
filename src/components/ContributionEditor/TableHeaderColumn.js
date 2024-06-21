@@ -20,6 +20,7 @@ import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
 import { contributionUpdated, fetchTemplatesOfClassIfNeeded, paperUpdated } from 'slices/contributionEditorSlice';
 import { getPaper } from 'services/backend/papers';
+import PaperTitle from 'components/PaperTitle/PaperTitle';
 
 const TableHeaderColumn = ({ contribution, paper }) => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -68,7 +69,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                             className="text-secondary-darker p-0 text-start text-decoration-none user-select-auto"
                             onClick={env('NEXT_PUBLIC_PWC_USER_ID') !== contribution.created_by ? handleEditPaper : undefined}
                         >
-                            {paper.label || <em>No title</em>}
+                            <PaperTitle title={paper.label} />
                         </Button>
                     </span>
                 </Tippy>

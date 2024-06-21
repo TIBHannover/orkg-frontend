@@ -33,6 +33,7 @@ import { getDatasetsBenchmarksByResearchProblemId } from 'services/backend/datas
 import { reverseWithSlug } from 'utils';
 import useRouter from 'components/NextJsMigration/useRouter';
 import useParams from 'components/NextJsMigration/useParams';
+import PaperTitle from 'components/PaperTitle/PaperTitle';
 
 function getTicksAxisH(data) {
     const dateRange = data.slice(1).map((value) => value[0]);
@@ -98,7 +99,7 @@ function Benchmark() {
                 accessor: 'paper_title',
                 Cell: (cell) => (
                     <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: cell.row.original.paper_id })} style={{ textDecoration: 'none' }}>
-                        {cell.row.original.paper_title ?? '-'}
+                        <PaperTitle title={cell.row.original.paper_title} />
                     </Link>
                 ),
             },

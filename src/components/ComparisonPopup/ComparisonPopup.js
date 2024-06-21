@@ -24,6 +24,7 @@ import {
     Remove,
     StartComparison,
 } from 'components/ComparisonPopup/styled';
+import PaperTitle from 'components/PaperTitle/PaperTitle';
 
 const cookies = new Cookies();
 
@@ -235,7 +236,7 @@ class ComparisonPopup extends Component {
                                                             contributionId,
                                                         })}
                                                     >
-                                                        {byId[contributionId].paperTitle}
+                                                        <PaperTitle title={byId[contributionId].paperTitle} />
                                                     </Title>
                                                     <Number>{byId[contributionId].contributionTitle}</Number>
                                                 </div>

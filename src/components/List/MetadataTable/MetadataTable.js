@@ -7,6 +7,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import moment from 'moment';
+import PaperTitle from 'components/PaperTitle/PaperTitle';
 
 function MetadataTable({ title = '', authors = [], publicationMonth = null, publicationYear = null, venue = '', contentTypeId = null }) {
     return (
@@ -19,7 +20,7 @@ function MetadataTable({ title = '', authors = [], publicationMonth = null, publ
                             {contentTypeId ? (
                                 <Tippy content="Entry will be linked to ORKG resource">
                                     <Link target="_blank" href={`${reverse(ROUTES.RESOURCE, { id: contentTypeId })}?noRedirect`}>
-                                        {title} <Icon icon={faExternalLinkAlt} />
+                                        <PaperTitle title={title} /> <Icon icon={faExternalLinkAlt} />
                                     </Link>
                                 </Tippy>
                             ) : (

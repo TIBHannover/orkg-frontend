@@ -7,6 +7,7 @@ import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatu
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import Link from 'components/NextJsMigration/Link';
+import PaperTitle from 'components/PaperTitle/PaperTitle';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CardBadge } from 'components/styled';
@@ -112,7 +113,7 @@ const PaperCard: FC<PaperCardType> = ({
                                 })
                             }
                         >
-                            {paper.title ? paper.title : <em>No title</em>}
+                            <PaperTitle title={paper.title} />
                         </Link>
                         {showBadge && (
                             <div className="d-inline-block ms-2">
