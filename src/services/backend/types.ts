@@ -182,18 +182,25 @@ export type User = {
     is_curation_allowed: boolean;
 };
 
+type AuthorIdentifiers = {
+    orcid?: string[];
+    google_scholar?: string[];
+    research_gate?: string[];
+    linked_in?: string[];
+    wikidata?: string[];
+    web_of_science?: string[];
+};
+
 export type Author = {
-    id: string;
+    id: string | null;
     name: string;
-    identifiers: {
-        orcid: string[];
-        google_scholar: string[];
-        research_gate: string[];
-        linked_in: string[];
-        wikidata: string[];
-        web_of_science: string[];
-        homepage: string[];
-    }[];
+    identifiers: AuthorIdentifiers;
+    homepage?: string;
+};
+
+export type UpdateAuthor = Omit<Author, 'id' | 'identifiers'> & {
+    id?: string | null;
+    identifiers?: AuthorIdentifiers;
 };
 
 export type FilterConfigOperator = 'EQ' | 'LT' | 'GT' | 'GE' | 'LE' | 'NE';
@@ -218,6 +225,15 @@ export type FilterConfig = {
     source?: string;
 };
 
+type PaperPublicationInfo = {
+    published_month?: number | null;
+    published_year?: number | null;
+    published_in?: Node;
+    url?: string | null;
+};
+
+export type UpdatePaperPublicationInfo = Omit<PaperPublicationInfo, 'published_in'> & { published_in?: string | null };
+
 export type Paper = {
     id: string;
     title: string;
@@ -225,12 +241,7 @@ export type Paper = {
     identifiers: {
         doi?: string[];
     };
-    publication_info: {
-        published_month?: number | null;
-        published_year?: number | null;
-        published_in?: string | null | Node;
-        url?: string | null;
-    };
+    publication_info: PaperPublicationInfo;
     authors: Author[];
     contributions: Node[];
     organizations: string[];
@@ -357,9 +368,13 @@ export type CreateContribution = CreateContributionData & {
 };
 
 export type CreatePaperParams = Partial<
-    Omit<Paper, 'id' | 'research_fields' | 'sdgs'> & { research_fields: string[]; contents: CreatePaperContents }
+    Omit<Paper, 'id' | 'research_fields' | 'sdgs' | 'authors' | 'publication_info'> & { research_fields: string[]; contents: CreatePaperContents }
 > & {
     sdgs?: string[];
+} & {
+    authors: UpdateAuthor[];
+} & {
+    publication_info: UpdatePaperPublicationInfo;
 };
 export type UpdatePaperParams = Partial<Omit<Paper, 'id' | 'research_fields' | 'sdgs'> & { research_fields: string[] }> & {
     sdgs?: string[];
@@ -457,6 +472,33 @@ export type Review = {
     references: string[];
 };
 
+export type LiteratureListSectionListEntry = {
+    description: string;
+    value: {
+        id: string;
+        label: string;
+        classes: string[];
+    };
+};
+
+export type LiteratureListSectionType = 'text' | 'list';
+
+export type LiteratureListSectionBase = {
+    id: string;
+    type: LiteratureListSectionType;
+};
+
+export type LiteratureListSectionText = LiteratureListSectionBase & {
+    text: string;
+    heading: string;
+    heading_size: number;
+};
+export type LiteratureListSectionList = LiteratureListSectionBase & {
+    entries: LiteratureListSectionListEntry[];
+};
+
+export type LiteratureListSection = LiteratureListSectionText | LiteratureListSectionList;
+
 export type LiteratureList = {
     id: string;
     title: string;
@@ -467,11 +509,13 @@ export type LiteratureList = {
             id: string;
             label: string;
             created_at: string;
+            created_by: string;
         };
         published: {
             id: string;
             label: string;
             created_at: string;
+            created_by: string;
             changelog: string;
         }[];
     };
@@ -483,18 +527,10 @@ export type LiteratureList = {
     created_by: string;
     visibility: Visibility;
     published: boolean;
-    sections: {
-        id: string;
-        heading: string;
-        classes: string[];
-        text?: string;
-        type: string;
-        comparison?: {
-            id: string;
-            label: string;
-            classes: string[];
-        };
-    }[];
+    sections: LiteratureListSection[];
+    acknowledgements: {
+        [contributorId: string]: number;
+    };
 };
 
 export type Verified = boolean | null;
@@ -546,4 +582,15 @@ export type Activity = {
         gravatar_id: string;
         gravatar_url: string;
     };
+};
+
+export type ApiError = {
+    status: number;
+    error: number;
+    path: string;
+    timestamp: string;
+    errors?: {
+        field: string;
+        message: string;
+    }[];
 };

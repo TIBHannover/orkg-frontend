@@ -4,11 +4,11 @@ import { FC } from 'react';
 import { Author } from 'services/backend/types';
 
 type AuthorsProps = {
-    authors: Author[];
+    authors?: Author[];
     maxAuthors?: number;
 };
 
-const Authors: FC<AuthorsProps> = ({ authors, maxAuthors = 5 }) =>
+const Authors: FC<AuthorsProps> = ({ authors = [], maxAuthors = 5 }) =>
     authors?.length > 0 && (
         <>
             <Icon size="sm" icon={faUser} />{' '}
