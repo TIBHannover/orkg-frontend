@@ -41,18 +41,18 @@ export const getStatements = ({
     sortBy = 'created_at',
     desc = true,
     returnContent = true,
-}: GetStatementsParams): Promise<Statement[]> => {
+}: GetStatementsParams): Promise<PaginatedResponse<Statement> | Statement[]> => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
         {
-            subject_classes: subjectClasses.join(','),
+            subject_classes: subjectClasses.length > 0 ? subjectClasses.join(',') : undefined,
             subject_id: subjectId,
             subject_label: subjectLabel,
             predicate_id: predicateId,
             created_by: createdBy,
             created_at_start: createdAtStart,
             created_at_end: createdAtEnd,
-            object_classes: objectClasses.join(','),
+            object_classes: objectClasses.length > 0 ? objectClasses.join(',') : undefined,
             object_id: objectId,
             object_label: objectLabel,
             page,
@@ -64,7 +64,7 @@ export const getStatements = ({
         },
     );
 
-    return submitGetRequest(`${statementsUrl}?${params}`).then((res) => (returnContent ? res.content : res));
+    return submitGetRequest(`${statementsUrl}?${params}`).then((res: PaginatedResponse<Statement>) => (returnContent ? res.content : res));
 };
 
 export const createResourceStatement = (subjectId: string, predicateId: string, objectId: string): Promise<Statement> =>
@@ -129,6 +129,10 @@ export const deleteStatementById = (id: string): Promise<null> => submitDeleteRe
 
 export const deleteStatementsByIds = (ids: string[]): Promise<null> => submitDeleteRequest(`${statementsUrl}?ids=${ids.join()}`);
 
+/**
+ * @deprecated This function is deprecated. Use the getStatements function instead.
+ * @see getStatements
+ */
 export const getStatementsBySubject = ({
     id,
     page = 0,
@@ -142,14 +146,7 @@ export const getStatementsBySubject = ({
     sortBy?: string;
     desc?: boolean;
 }): Promise<Statement[]> => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = qs.stringify(
-        { page, size, sort },
-        {
-            skipNulls: true,
-        },
-    );
-    return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`).then((res) => res.content);
+    return getStatements({ subjectId: id, page, size, sortBy, desc, returnContent: true }) as Promise<Statement[]>;
 };
 
 /**
@@ -211,6 +208,10 @@ export const getStatementsBySubjects = ({
     );
 };
 
+/**
+ * @deprecated This function is deprecated. Use the getStatements function instead.
+ * @see getStatements
+ */
 export const getStatementsByObject = async ({
     id,
     page = 0,
@@ -226,21 +227,13 @@ export const getStatementsByObject = async ({
     desc?: boolean;
     returnContent?: boolean;
 }): Promise<PaginatedResponse<Statement> | Statement[]> => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = qs.stringify(
-        { page, size, sort },
-        {
-            skipNulls: true,
-        },
-    );
-
-    const statements = await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/?${params}`).then((res) =>
-        returnContent ? res.content : res,
-    );
-
-    return statements;
+    return getStatements({ objectId: id, page, size, sortBy, desc, returnContent });
 };
 
+/**
+ * @deprecated This function is deprecated. Use the getStatements function instead.
+ * @see getStatements
+ */
 export const getStatementsByPredicate = ({
     id,
     page = 0,
@@ -256,17 +249,13 @@ export const getStatementsByPredicate = ({
     desc?: boolean;
     returnContent?: boolean;
 }): Promise<PaginatedResponse<Statement> | Statement[]> => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = qs.stringify(
-        { page, size, sort },
-        {
-            skipNulls: true,
-        },
-    );
-
-    return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/?${params}`).then((res) => (returnContent ? res.content : res));
+    return getStatements({ predicateId: id, page, size, sortBy, desc, returnContent });
 };
 
+/**
+ * @deprecated This function is deprecated. Use the getStatements function instead.
+ * @see getStatements
+ */
 export const getStatementsBySubjectAndPredicate = ({
     subjectId,
     predicateId,
@@ -282,16 +271,13 @@ export const getStatementsBySubjectAndPredicate = ({
     sortBy?: string;
     desc?: boolean;
 }): Promise<Statement[]> => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = qs.stringify(
-        { page, size, sort },
-        {
-            skipNulls: true,
-        },
-    );
-    return submitGetRequest(`${statementsUrl}subject/${subjectId}/predicate/${predicateId}/?${params}`).then((res) => res.content);
+    return getStatements({ subjectId, predicateId, page, size, sortBy, desc, returnContent: true }) as Promise<Statement[]>;
 };
 
+/**
+ * @deprecated This function is deprecated. Use the getStatements function instead.
+ * @see getStatements
+ */
 export const getStatementsByObjectAndPredicate = ({
     objectId,
     predicateId,
@@ -309,19 +295,13 @@ export const getStatementsByObjectAndPredicate = ({
     desc?: boolean;
     returnContent?: boolean;
 }): Promise<PaginatedResponse<Statement> | Statement[]> => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = qs.stringify(
-        { page, size, sort },
-        {
-            skipNulls: true,
-        },
-    );
-
-    return submitGetRequest(`${statementsUrl}object/${objectId}/predicate/${predicateId}/?${params}`).then((res) =>
-        returnContent ? res.content : res,
-    );
+    return getStatements({ objectId, predicateId, page, size, sortBy, desc, returnContent });
 };
 
+/**
+ * @deprecated This function is deprecated. Use the getStatements function instead.
+ * @see getStatements
+ */
 export const getStatementsByPredicateAndLiteral = ({
     literal,
     predicateId,
@@ -341,14 +321,17 @@ export const getStatementsByPredicateAndLiteral = ({
     desc?: boolean;
     returnContent?: boolean;
 }): Promise<PaginatedResponse<Statement> | Statement[]> => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = qs.stringify(
-        { size, subjectClass, page, sort, q: literal },
-        {
-            skipNulls: true,
-        },
-    );
-    return submitGetRequest(`${statementsUrl}predicate/${predicateId}/literals/?${params}`).then((res) => (returnContent ? res.content : res));
+    return getStatements({
+        objectLabel: literal,
+        subjectClasses: subjectClass ? [subjectClass] : [],
+        objectClasses: ['Literal'],
+        predicateId,
+        page,
+        size,
+        sortBy,
+        desc,
+        returnContent,
+    });
 };
 
 /**
@@ -376,7 +359,7 @@ export const getParentResearchFields = (researchFieldId: string, parents: Resour
         });
         return Promise.resolve(parents);
     }
-    return getStatementsByObjectAndPredicate({
+    return getStatements({
         objectId: researchFieldId,
         predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD,
     }).then((parentResearchField) => {
@@ -400,7 +383,7 @@ export const getParentResearchProblems = (researchProblemId: string, parents: Re
     if (parents.length > 5) {
         return Promise.resolve(parents);
     }
-    return getStatementsByObjectAndPredicate({
+    return getStatements({
         objectId: researchProblemId,
         predicateId: PREDICATES.SUB_PROBLEM,
     }).then((parentResearchProblem) => {
@@ -421,7 +404,7 @@ export const getParentResearchProblems = (researchProblemId: string, parents: Re
  * @param {String} classID class ID
  */
 export const getTemplatesByClass = (classID: string): Promise<string[]> =>
-    getStatementsByObjectAndPredicate({
+    getStatements({
         objectId: classID,
         predicateId: PREDICATES.SHACL_TARGET_CLASS,
     })

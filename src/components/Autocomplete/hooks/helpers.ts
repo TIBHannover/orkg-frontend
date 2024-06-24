@@ -10,7 +10,7 @@ import { getEntities, getEntity } from 'services/backend/misc';
 import { createPredicate } from 'services/backend/predicates';
 import { createResource, getResources } from 'services/backend/resources';
 import { createLiteralStatement, getStatements } from 'services/backend/statements';
-import { Class, EntityType, Predicate, Resource } from 'services/backend/types';
+import { Class, EntityType, Predicate, Resource, Statement } from 'services/backend/types';
 import getGeoNames from 'services/geoNames';
 import { getOntologyTerms, selectTerms } from 'services/ols';
 import { searchEntity } from 'services/wikidata';
@@ -186,13 +186,13 @@ export const getExternalData = ({
 const findOrCreateProperty = async (value: OptionType) => {
     let property;
     property = value.uri
-        ? await getStatements({
+        ? ((await getStatements({
               subjectLabel: value.label,
               objectLabel: value.uri,
               predicateId: PREDICATES.SAME_AS,
               size: 1,
               returnContent: true,
-          })
+          })) as Statement[])
         : [];
     property = property.length > 0 ? property[0].subject : null;
     if (!property) {
@@ -210,14 +210,14 @@ const findOrCreateProperty = async (value: OptionType) => {
 const findOrCreateResource = async (value: OptionType) => {
     let resource;
     resource = value.uri
-        ? await getStatements({
+        ? ((await getStatements({
               subjectLabel: value.label,
               objectLabel: value.uri,
               subjectClasses: [CLASSES.EXTERNAL],
               predicateId: PREDICATES.SAME_AS,
               size: 1,
               returnContent: true,
-          })
+          })) as Statement[])
         : [];
     resource = resource.length > 0 ? resource[0].subject : null;
     if (!resource) {
