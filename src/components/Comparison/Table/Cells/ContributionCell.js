@@ -10,6 +10,7 @@ import { Contribution, Delete } from 'components/Comparison/styled';
 import { memo } from 'react';
 import { isEqual } from 'lodash';
 import Tippy from '@tippyjs/react';
+import PaperTitle from 'components/PaperTitle/PaperTitle';
 
 const ContributionCell = ({ contribution }) => {
     const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const ContributionCell = ({ contribution }) => {
         <>
             {columnWidth && columnWidth < 200 && !transpose ? (
                 <Tippy
-                    content={(
+                    content={
                         <div>
                             <Link
                                 href={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
@@ -39,7 +40,7 @@ const ContributionCell = ({ contribution }) => {
                                 {contribution.label} {contribution.paper_year && `- ${contribution.paper_year}`}
                             </Contribution>
                         </div>
-                      )}
+                    }
                     interactive
                     appendTo={document.body}
                 >
@@ -65,7 +66,7 @@ const ContributionCell = ({ contribution }) => {
                             contributionId: contribution.id,
                         })}
                     >
-                        {contribution?.paper_label ?? <em>No title</em>}
+                        <PaperTitle title={contribution?.paper_label} />
                     </Link>
                     <br />
                     <Contribution>

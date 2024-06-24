@@ -8,6 +8,7 @@ import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlis
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import Link from 'components/NextJsMigration/Link';
 import EditPaperModal from 'components/PaperForm/EditPaperModal';
+import PaperTitle from 'components/PaperTitle/PaperTitle';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import OpenCitations from 'components/ViewPaper/OpenCitations/OpenCitations';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
@@ -70,8 +71,7 @@ const PaperHeader = (props) => {
             )}
             <div className="d-flex align-items-start">
                 <h2 className={`h4 ${version ? 'mt-1' : 'mt-4'} mb-3 flex-grow-1`}>
-                    {viewPaper.title ? viewPaper.title : <em>No title</em>}{' '}
-                    <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                    <PaperTitle title={viewPaper.title} /> <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
                     <div className="d-inline-block ms-1">
                         <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
                     </div>

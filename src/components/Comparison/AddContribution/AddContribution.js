@@ -18,6 +18,7 @@ import { getPaperByDoi } from 'services/backend/papers';
 import { getResources } from 'services/backend/resources';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import styled from 'styled-components';
+import PaperTitle from 'components/PaperTitle/PaperTitle';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
@@ -240,7 +241,7 @@ export default function AddContribution({
                                 {paperResult.map((paper, index) => (
                                     <StyledListGroupItem key={`result-${index}`} className="pt-2 pb-2">
                                         <Label check className="pe-2 ps-2">
-                                            <Input type="checkbox" onChange={(e) => togglePaper(paper, e)} /> {paper.label}{' '}
+                                            <Input type="checkbox" onChange={(e) => togglePaper(paper, e)} /> <PaperTitle title={paper.label} />{' '}
                                             <Tippy content="Open paper in new window">
                                                 <span>
                                                     <Link
