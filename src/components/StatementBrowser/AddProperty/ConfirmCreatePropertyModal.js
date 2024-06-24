@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Button, FormGroup, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { createPredicate } from 'services/backend/predicates';
 import { createLiteral } from 'services/backend/literals';
@@ -7,6 +7,7 @@ import { createLiteralStatement } from 'services/backend/statements';
 import { PREDICATES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
+import { SmartDescriptiveProperty } from 'components/SmartSuggestions/DescriptivePropertySuggestions';
 
 const ConfirmCreatePropertyModal = ({ toggle, onCreate, shouldPerformCreate = false, shouldHideDescriptionInput = false, label }) => {
     const [description, setDescription] = useState('');
@@ -34,16 +35,21 @@ const ConfirmCreatePropertyModal = ({ toggle, onCreate, shouldPerformCreate = fa
             <ModalBody>
                 Often there are existing properties that you can use as well. It is better to use existing properties than new ones.
                 {!shouldHideDescriptionInput && (
-                    <FormGroup className="mt-4">
-                        <Label for="property-description">Property description</Label>
-                        <Input
-                            onChange={(e) => setDescription(e.target.value)}
-                            value={description}
-                            type="textarea"
-                            id="property-description"
-                            placeholder="E.g. date of acceptance of the resource"
-                            maxLength={MAX_LENGTH_INPUT}
-                        />
+                    <FormGroup>
+                        <div className="position-relative">
+                            <Input
+                                type="textarea"
+                                name="description"
+                                value={description}
+                                id="property-description"
+                                placeholder="E.g. date of acceptance of the resource"
+                                onChange={(e) => setDescription(e.target.value)}
+                                maxLength={MAX_LENGTH_INPUT}
+                                rows={5}
+                                className="mt-2"
+                            />
+                            <SmartDescriptiveProperty propertyLabel={label} setDescription={setDescription} />
+                        </div>
                     </FormGroup>
                 )}
             </ModalBody>
