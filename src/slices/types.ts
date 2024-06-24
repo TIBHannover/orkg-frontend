@@ -23,6 +23,7 @@ export type StatementBrowser = {
     isHelpModalOpen: boolean;
     helpCenterArticleId: string;
 };
+
 // TODO: add additional slices here when they are migrated to TypeScript
 export type RootStore = {
     auth: AuthSliceType;

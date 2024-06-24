@@ -1,3 +1,5 @@
+'use client';
+
 import { faQuestionCircle, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
