@@ -7,6 +7,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { ActionButton } from 'components/ContributionTabs/styled';
+import { ENTITIES } from 'constants/graphSettings';
+import MathJax from 'components/ValuePlugins/MathJax/MathJax';
 
 export const StyledInput = styled(Input)`
     background: #fff;
@@ -81,7 +83,7 @@ const ContributionTab = (props) => {
                     wrapper={(children) => <Tippy content={props.contribution.label}>{children}</Tippy>}
                 >
                     <div className="text-truncate d-inline-block" style={{ maxWidth: 300 }}>
-                        {props.contribution.label}
+                        <MathJax type={ENTITIES.LITERAL}>{props.contribution.label}</MathJax>
                     </div>
                 </ConditionalWrapper>
             )}
