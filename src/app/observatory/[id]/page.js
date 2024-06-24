@@ -21,6 +21,7 @@ import { SubTitle } from 'components/styled';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, Col, Container, Row } from 'reactstrap';
+import ReadMore from 'components/ReadMore/ReadMore';
 import { getObservatoryById } from 'services/backend/observatories';
 import { getOrganization } from 'services/backend/organizations';
 
@@ -123,10 +124,17 @@ const Observatory = () => {
                         <>
                             <div className="d-flex justify-content-between">
                                 {description && (
-                                    <p className="m-0 flex-grow-1" style={{ whiteSpace: 'pre-wrap' }}>
-                                        {description || <small className="fst-italic">No Description provided</small>}
-                                    </p>
+                                    <div className="m-0 flex-grow-1" style={{ whiteSpace: 'pre-wrap' }}>
+                                        <div className="text-break">
+                                            {description ? (
+                                                <ReadMore text={description} />
+                                            ) : (
+                                                <small className="fst-italic">No Description provided</small>
+                                            )}
+                                        </div>
+                                    </div>
                                 )}
+
                                 <div className="align-items-end">
                                     <SdgBox sdgs={sdgs} maxWidth="100%" />
                                 </div>
