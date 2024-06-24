@@ -85,7 +85,7 @@ const ListCard: FC<ListCardProps> = ({ list, showBadge = false, showCurationFlag
                             All versions:{' '}
                             {list.versions?.published.map((version, index) => (
                                 <span key={version.id}>
-                                    <Tippy content={version.changelog}>
+                                    <Tippy content={version.changelog ? version.changelog : 'No changelog title'}>
                                         {/* @ts-expect-error */}
                                         <Link href={reverse(ROUTES.LIST, { id: version.id })}>
                                             Version {(list.versions.published?.length ?? 0) - index}
