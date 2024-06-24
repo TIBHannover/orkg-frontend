@@ -1,4 +1,3 @@
-// @ts-expect-error
 import { Cite } from '@citation-js/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

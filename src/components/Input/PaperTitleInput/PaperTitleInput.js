@@ -55,13 +55,13 @@ function PaperTitleInput({
             return emptyList;
         }
 
-        try {
-            const title = titleQuery.trim();
-            let options = [];
-            let hasMore = false;
-            // let resources = {};
+        const title = titleQuery.trim();
+        let options = [];
+        let hasMore = false;
+        // let resources = {};
 
-            // TODO: deduplicate results from ORKG and semantic scholar (based on title or DOI)
+        // TODO: deduplicate results from ORKG and semantic scholar (based on title or DOI)
+        try {
             if (performOrkgLookup) {
                 const searchClasses = contentType === 'all' ? [CLASSES.PAPER, CLASSES.DATASET, CLASSES.SOFTWARE] : [contentType];
 
@@ -89,6 +89,10 @@ function PaperTitleInput({
                 options = resources.content.map(result => ({ ...result, isOrkgResource: true }));
                 hasMore = !resources.last; */
             }
+        } catch (err) {
+            console.error(err);
+        }
+        try {
             // only perform semantic scholar lookup if type type includes papers
             if ((!performOrkgLookup || !hasMore) && performSemanticScholarLookup) {
                 const papers = await getPapersByTitle({
@@ -107,17 +111,16 @@ function PaperTitleInput({
                 ];
                 hasMore = !!papers.next;
             }
-            return {
-                options,
-                hasMore,
-                additional: {
-                    page: page + 1,
-                },
-            };
         } catch (err) {
             console.error(err);
-            return emptyList;
         }
+        return {
+            options,
+            hasMore,
+            additional: {
+                page: page + 1,
+            },
+        };
     };
 
     const handleInputChange = (inputValue, { action }) => {

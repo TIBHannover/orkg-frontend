@@ -2,6 +2,7 @@ import { faCalendar, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
 import Authors from 'components/Cards/PaperCard/Authors';
+import Description from 'components/Cards/PaperCard/Description/Description';
 import Paths from 'components/Cards/PaperCard/Paths';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
@@ -28,7 +29,7 @@ const PaperCardStyled = styled.div`
 `;
 
 type PaperCardType = {
-    paper: Paper;
+    paper: Partial<Paper>;
     onSelect?: (event: ChangeEvent<HTMLInputElement>) => void;
     paths?: string[];
     selectable?: boolean;
@@ -40,9 +41,11 @@ type PaperCardType = {
     showBadge?: boolean;
     showCurationFlags?: boolean;
     isListGroupItem?: boolean;
-    description?: { label: string };
+    description?: string;
     showContributionCount?: boolean;
+    isDescriptionEditable?: boolean;
     route?: string;
+    handleUpdateDescription?: (description: string) => void;
 };
 
 const PaperCard: FC<PaperCardType> = ({
@@ -59,6 +62,8 @@ const PaperCard: FC<PaperCardType> = ({
     showCurationFlags = true,
     isListGroupItem = true,
     description = null,
+    isDescriptionEditable = false,
+    handleUpdateDescription = () => {},
     showContributionCount = false,
     route = null,
 }) => {
@@ -143,11 +148,7 @@ const PaperCard: FC<PaperCardType> = ({
                                 : ''}{' '}
                             {paper.publication_info?.published_year ?? null}
                         </small>
-                        {description?.label && (
-                            <p className="mb-0 mt-1 w-100 pt-0" style={{ lineHeight: 1.2, whiteSpace: 'pre-line' }}>
-                                <small className="text-muted">{description?.label}</small>
-                            </p>
-                        )}
+                        <Description description={description} isEditable={isDescriptionEditable} handleUpdate={handleUpdateDescription} />
                     </div>
                 </div>
             </div>

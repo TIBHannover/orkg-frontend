@@ -102,4 +102,5 @@ const TitleBar: FC<TitleBarProps> = ({ buttonGroup = null, titleAddition = null,
         </ContainerStyled>
     );
 };
+
 export default TitleBar;

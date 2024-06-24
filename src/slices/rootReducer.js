@@ -2,7 +2,6 @@ import { combineReducers } from 'redux';
 import auth from 'slices/authSlice';
 import statementBrowser from 'slices/statementBrowserSlice';
 import viewPaper from 'slices/viewPaperSlice';
-import list from 'slices/listSlice';
 import contributionEditor from 'slices/contributionEditorSlice';
 import review from 'slices/reviewSlice';
 import templateEditor from 'slices/templateEditorSlice';
@@ -17,7 +16,6 @@ export default (routerReducer) =>
         auth,
         statementBrowser,
         viewPaper,
-        list,
         contributionEditor,
         review,
         templateEditor,

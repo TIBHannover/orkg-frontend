@@ -85,7 +85,8 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
 
     // initial data loading
     useEffect(() => {
-        if (!label) {
+        // ensure value can be set to empty string, so specifically check for undefined
+        if (typeof label === 'undefined') {
             return;
         }
         setMarkdownValue(label);
@@ -114,7 +115,6 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
             return;
         }
         setEditMode(false);
-
         handleUpdate(markdownValue);
     };
 

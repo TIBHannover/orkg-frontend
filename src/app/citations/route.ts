@@ -1,5 +1,4 @@
 /* eslint-disable import/prefer-default-export */
-// @ts-expect-error
 import { Cite } from '@citation-js/core';
 import '@citation-js/plugin-bibtex';
 import '@citation-js/plugin-csl';

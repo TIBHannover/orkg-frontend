@@ -52,6 +52,7 @@ const DiffView = ({ type, diffRoute, getData }) => {
                 setNewTitleData(newTitleData);
                 setHasFailed(false);
             } catch (e) {
+                console.error(e);
                 setHasFailed(true);
             }
             setIsLoading(false);
