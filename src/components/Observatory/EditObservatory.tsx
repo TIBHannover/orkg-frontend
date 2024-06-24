@@ -3,20 +3,11 @@ import SdgBox from 'components/SustainableDevelopmentGoals/SdgBox';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import { isEqual } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, FC, ChangeEvent, FormEvent } from 'react';
 import { toast } from 'react-toastify';
 import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { updateObservatory } from 'services/backend/observatories';
-
-type ResearchField = {
-    id: string;
-    label: string;
-};
-
-type Sdg = {
-    id: string;
-    label: string;
-};
+import { Node } from 'services/backend/types';
 
 type EditObservatoryProps = {
     showDialog: boolean;
@@ -24,12 +15,12 @@ type EditObservatoryProps = {
     label: string;
     id: string;
     description: string;
-    researchField: ResearchField | null;
-    sdgs: Sdg[];
-    updateObservatoryMetadata: (label: string, description: string, researchField: ResearchField | null, sdgs: Sdg[]) => void;
+    researchField: Node | null;
+    sdgs: Node[];
+    updateObservatoryMetadata: (label: string, description: string, researchField: Node | null, sdgs: Node[]) => void;
 };
 
-const EditObservatory: React.FC<EditObservatoryProps> = ({
+const EditObservatory: FC<EditObservatoryProps> = ({
     showDialog,
     toggle,
     label: initialLabel,
@@ -41,10 +32,9 @@ const EditObservatory: React.FC<EditObservatoryProps> = ({
 }) => {
     const [label, setLabel] = useState(initialLabel);
     const [description, setDescription] = useState(initialDescription);
-    const [isLoadingName, setIsLoadingName] = useState(false);
-    const [isLoadingDescription, setIsLoadingDescription] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [researchField, setResearchField] = useState(initialResearchField);
-    const [isLoadingResearchField, setIsLoadingResearchField] = useState(false);
+
     const [sdgs, setSdgs] = useState(initialSdgs);
 
     useEffect(() => {
@@ -59,7 +49,7 @@ const EditObservatory: React.FC<EditObservatoryProps> = ({
         setResearchField(initialResearchField);
     }, [initialResearchField]);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         if (name === 'label') {
             setLabel(value);
@@ -67,17 +57,15 @@ const EditObservatory: React.FC<EditObservatoryProps> = ({
             setDescription(value);
         }
     };
-    const updateObservatoryData = async (id: string, name: string, description: string, researchField: ResearchField | null, sdgs: Sdg[]) => {
-        setIsLoadingName(true);
-        setIsLoadingDescription(true);
-        setIsLoadingResearchField(true);
+    const updateObservatoryData = async (id: string, name: string, description: string, researchField: Node | null, sdgs: Node[]) => {
+        setIsLoading(true);
 
         try {
             await updateObservatory(id, {
                 name,
                 description,
                 research_field: researchField?.id,
-                sdgs: sdgs.map((sdg: Sdg) => sdg?.id),
+                sdgs: sdgs.map((sdg: Node) => sdg?.id),
             });
         } catch (error: unknown) {
             console.error(error);
@@ -87,12 +75,10 @@ const EditObservatory: React.FC<EditObservatoryProps> = ({
                 toast.error('Error updating an observatory');
             }
         } finally {
-            setIsLoadingName(false);
-            setIsLoadingDescription(false);
-            setIsLoadingResearchField(false);
+            setIsLoading(false);
         }
     };
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         toast.dismiss();
 
@@ -116,8 +102,6 @@ const EditObservatory: React.FC<EditObservatoryProps> = ({
         updateObservatoryMetadata(label, description, researchField, sdgs);
         toggle();
     };
-
-    const isLoading = isLoadingName || isLoadingDescription || isLoadingResearchField;
 
     return (
         <Modal size="lg" isOpen={showDialog} toggle={toggle}>
@@ -153,20 +137,6 @@ const EditObservatory: React.FC<EditObservatoryProps> = ({
                         enableExternalSources={false}
                         isDisabled={isLoading}
                     />
-                    {/* <AutoComplete
-                        inputId="observatory-research-field"
-                        entityType={ENTITIES.RESOURCE}
-                        optionsClass={CLASSES.RESEARCH_FIELD}
-                        placeholder="Select research field"
-                        onItemSelected={async (rf: ResearchField) => {
-                            setResearchField({ ...rf, label: rf.value });
-                        }}
-                        value={researchField && researchField.id ? researchField : null}
-                        allowCreate={false}
-                        ols={false}
-                        autoLoadOption
-                        isDisabled={isLoading}
-                    /> */}
                 </FormGroup>
                 <FormGroup>
                     <Label for="observatory-description">Description</Label>
