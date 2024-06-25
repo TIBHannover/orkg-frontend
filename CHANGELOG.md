@@ -3,6 +3,20 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.143.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.142.1...v0.143.0) - 2024-06-25
+
+### Changes
+
+- refactor: use new literature list endpoints, rewrite to TypeScript [`#1326`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1326)
+- show default changelog tooltip when no changelog was provided [`#1358`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1358)
+- refactor: Autocomplete component [`#1350`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1350)
+- feat: handle rendering of face markups, LaTeX, MathML in orkg paper titles [`#1357`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1357)
+- Observatory/EditObservatory =&gt; converted class component into functional component [`#1332`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1332)
+- ContributionTabs/ContributionTabs =&gt; imported ValuePlugins with prop type ENTITIES.LITERAL to wrap contribution.label [`#1351`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1351)
+- DescriptivePropertySuggestion [`#1321`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1321)
+- Observatory/EditObservatory =&gt; converted class component into functional component [`#1338`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1338)
+
+---
 ## [v0.142.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.142.0...v0.142.1) - 2024-06-21
 
 ### Changes
