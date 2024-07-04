@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.143.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.143.0...v0.143.1) - 2024-07-04
+
+### Changes
+
+- fix: issues while importing SHACL file [`#1360`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1360)
+
+---
 ## [v0.143.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.142.1...v0.143.0) - 2024-06-25
 
 ### Changes
