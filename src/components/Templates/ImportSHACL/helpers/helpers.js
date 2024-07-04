@@ -70,21 +70,15 @@ export const mapPredicate = async (g, predicateNode) => {
     }
     if (labelNode) {
         // Search for a predicate with the exact label
-        let fetchedPredicate = await getPredicates({ q: labelNode?.value, exact: true });
+        const fetchedPredicate = await getPredicates({ q: labelNode?.value, exact: true });
         if (fetchedPredicate.totalElements) {
             [result] = fetchedPredicate.content;
         } else {
-            // Search for a predicate with same label
-            fetchedPredicate = await getPredicates({ q: labelNode?.value, size: 1 });
-            if (fetchedPredicate.totalElements) {
-                [result] = fetchedPredicate.content;
-            } else {
-                return {
-                    extractedId,
-                    label: labelNode?.value,
-                    uri: !predicateNode?.value?.toString().includes('orkg.org') ? predicateNode.value : null,
-                };
-            }
+            return {
+                extractedId,
+                label: labelNode?.value,
+                uri: !predicateNode?.value?.toString().includes('orkg.org') ? predicateNode.value : null,
+            };
         }
     } else {
         // Search for a predicate using the same as statement

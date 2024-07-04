@@ -11,6 +11,7 @@ import useImportSHACL from 'components/Templates/ImportSHACL/hooks/useImportSHAC
 import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
+import requireAuthentication from 'requireAuthentication';
 import { Accordion, Button, ListGroup } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -197,4 +198,4 @@ function ImportSHACL() {
     );
 }
 
-export default ImportSHACL;
+export default requireAuthentication(ImportSHACL);

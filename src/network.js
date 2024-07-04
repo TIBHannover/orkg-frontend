@@ -87,8 +87,8 @@ export const submitPostRequest = (
                     // 204 No Content
                     return resolve(null);
                 }
-                const json = response.json();
-                if (returnResponseHeaders) {
+                const json = response.json().catch(() => resolve(null));
+                if (json.then && returnResponseHeaders) {
                     return resolve({ headers: response.headers, data: json });
                 }
                 if (json.then) {
