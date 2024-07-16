@@ -25,7 +25,7 @@ import ItemMetadata from 'components/Search/ItemMetadata';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import CONTENT_TYPES from 'constants/contentTypes';
-import { ENTITIES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -55,7 +55,7 @@ function Resource() {
 
     const isShared = resource?.shared > 0;
     const isUserIsCreator = resource?.created_by === user?.id;
-    const isCurationAllowed = user && user.isCurationAllowed;
+    const isCurationAllowed = user && (user.isCurationAllowed || (user.id === resource.created_by && resource.classes.includes(CLASSES.COMPARISON)));
     const isDeletionAllowed = !isShared && (isUserIsCreator || isCurationAllowed);
 
     const getDedicatedLink = useCallback((_classes) => {
