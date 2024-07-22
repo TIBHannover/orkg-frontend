@@ -8,7 +8,7 @@ import { CLASSES } from 'constants/graphSettings';
 const COLOR_NODE = '#80869B';
 const COLOR_NODE_START = '#E86161';
 const MAX_NODE_LABEL_LENGTH = 20;
-const EDGE_SIZE = 5;
+const EDGE_SIZE = 3;
 
 const useGraphView = ({ resourceId }) => {
     const [nodes, setNodes] = useState([]);
