@@ -2,8 +2,7 @@ import { faVideo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { ENTITIES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
-import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { FC, ReactElement, useState } from 'react';
 import { renderToString } from 'react-dom/server';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
@@ -24,7 +23,13 @@ const IframeFullWidth = styled.iframe`
 
 // Plugin for video previews of TIB AV portal, Youtube, Dailymotion and Vimeo
 
-const Video = ({ children, type, options = { inModal: false } }) => {
+type ValuePluginsProps = {
+    children: ReactElement;
+    type: typeof ENTITIES.LITERAL | typeof ENTITIES.RESOURCE;
+    options?: { isModal?: boolean };
+};
+
+const Video: FC<ValuePluginsProps> = ({ children, type, options = { inModal: false } }) => {
     const [showVideoDialog, setShowVideoDialog] = useState(false);
 
     const label = children;
@@ -57,7 +62,7 @@ const Video = ({ children, type, options = { inModal: false } }) => {
         } else if (labelToText.match(new RegExp(REGEX.VIMEO_URL))) {
             providerUrl = 'https://player.vimeo.com/video/';
         }
-        if (!options.inModal) {
+        if (!('inModal' in options) || ('inModal' in options && !options.inModal)) {
             return (
                 <VideoContainer>
                     <IframeFullWidth title="Video" scrolling="no" src={`${providerUrl}${videoId}`} allowFullScreen />
@@ -89,12 +94,6 @@ const Video = ({ children, type, options = { inModal: false } }) => {
         );
     }
     return label;
-};
-
-Video.propTypes = {
-    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-    type: PropTypes.oneOf([ENTITIES.RESOURCE, ENTITIES.LITERAL]),
-    options: PropTypes.object.isRequired,
 };
 
 export default Video;

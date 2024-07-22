@@ -15,10 +15,11 @@ const RootLayout = ({ children }) => (
     <html lang="en">
         <head>
             <PublicEnvScript />
-
             <meta charSet="utf-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
             <meta name="theme-color" content="#000000" />
+            <link rel="manifest" href="/manifest.json" />
+            <link rel="shortcut icon" href="/favicon.ico" />
             <meta
                 httpEquiv="Content-Security-Policy"
                 content="default-src 'self' ;
@@ -45,6 +46,7 @@ const RootLayout = ({ children }) => (
                           https://www.gstatic.com
                           https://platform.twitter.com
                           https://*.twimg.com
+                          https://unpkg.com/leaflet@1.9.4/dist/leaflet.css 
                       ;
                       font-src 'self'
                           data:
@@ -92,11 +94,14 @@ const RootLayout = ({ children }) => (
                           https://mastodon.social
                       ;"
             />
-            <link rel="manifest" href="/manifest.json" />
-            <link rel="shortcut icon" href="/favicon.ico" />
-
             <title>Open Research Knowledge Graph</title>
             <meta property="og:image" content="/og_image.png" />
+            <link
+                rel="stylesheet"
+                href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+                integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+                crossOrigin=""
+            />
         </head>
         <body>
             <NextTopLoader color="#e86161" />
