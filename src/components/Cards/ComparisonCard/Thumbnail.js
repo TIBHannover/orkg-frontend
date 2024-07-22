@@ -1,17 +1,16 @@
-import Link from 'components/NextJsMigration/Link';
-import { useState, useEffect, memo } from 'react';
-import { reverse } from 'named-urls';
-import styled from 'styled-components';
-import ROUTES from 'constants/routes';
-import PropTypes from 'prop-types';
-import { PREDICATES } from 'constants/graphSettings';
-import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
-import { getThing } from 'services/similarity';
 import Tippy from '@tippyjs/react';
-import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
-import { getStatementsBySubject } from 'services/backend/statements';
-import { isEqual } from 'lodash';
+import Link from 'components/NextJsMigration/Link';
+import { PREDICATES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
 import THING_TYPES from 'constants/thingTypes';
+import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
+import { isEqual } from 'lodash';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
+import { memo, useEffect, useState } from 'react';
+import { getStatements } from 'services/backend/statements';
+import { getThing } from 'services/similarity';
+import styled from 'styled-components';
 
 const ResourceItem = styled.div`
     overflow: hidden;
@@ -33,53 +32,53 @@ const ThumbnailImg = styled.img`
 const Thumbnail = (props) => {
     const [thumbnail, setThumbnail] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const { id, figures, visualizations } = props;
 
     useEffect(() => {
         const loadThumbnail = () => {
-            if (props.visualizations?.length > 0) {
+            if (visualizations?.length > 0) {
                 setIsLoading(true);
-                getThing({ thingType: THING_TYPES.VISUALIZATION, thingKey: props.visualizations[0].id })
+                getThing({ thingType: THING_TYPES.VISUALIZATION, thingKey: visualizations[0].id })
                     .then((visualization) => {
                         setThumbnail(visualization);
                         setIsLoading(false);
                     })
                     .catch((err) => {
-                        console.log(err);
+                        console.error(err);
                     });
-            } else if (props.figures?.length > 0) {
+            } else if (figures?.length > 0) {
                 setIsLoading(true);
-                getStatementsBySubject({
-                    id: props.figures[0].id,
-                })
+                getStatements({ subjectId: figures[0].id, predicate: PREDICATES.IMAGE, returnContent: true })
                     .then((figuresStatements) => {
-                        const img = filterObjectOfStatementsByPredicateAndClass(figuresStatements, PREDICATES.IMAGE, true);
-                        setThumbnail({
-                            src: img ? img.label : '',
-                        });
+                        if (figuresStatements.length > 0) {
+                            setThumbnail({
+                                src: figuresStatements[0].object.label,
+                            });
+                        }
                         setIsLoading(false);
                     })
                     .catch((err) => {
-                        console.log(err);
+                        console.error(err);
                     });
             }
         };
         loadThumbnail();
-    }, [props.figures, props.visualizations]);
+    }, [figures, visualizations]);
 
     return (
         <>
             {!isLoading && thumbnail && thumbnail.src && (
-                <Link href={`${reverse(ROUTES.COMPARISON, { comparisonId: props.id })}#${props.figures[0].id}`}>
-                    <Tippy content={props.figures[0].label}>
-                        <ResourceItem key={props.figures[0].id}>
-                            <ThumbnailImg src={thumbnail.src} alt={props.figures[0].label} />
+                <Link href={`${reverse(ROUTES.COMPARISON, { comparisonId: id })}#${figures[0].id}`}>
+                    <Tippy content={figures[0].label}>
+                        <ResourceItem key={figures[0].id}>
+                            <ThumbnailImg src={thumbnail.src} alt={figures[0].label} />
                         </ResourceItem>
                     </Tippy>
                 </Link>
             )}
             {!isLoading && thumbnail && !thumbnail.src && (
-                <Link href={reverse(ROUTES.COMPARISON, { comparisonId: props.id })}>
-                    <Tippy content={props.visualizations[0].label}>
+                <Link href={reverse(ROUTES.COMPARISON, { comparisonId: id })}>
+                    <Tippy content={visualizations[0].label}>
                         <ResourceItem key={thumbnail.figureId}>
                             <GDCVisualizationRenderer disableInteractivity height="50px" width="160px" model={thumbnail} />
                         </ResourceItem>
