@@ -193,6 +193,7 @@ const ValueForm = (props) => {
                         }}
                         innerRef={(ref) => (autocompleteInputRef.current = ref)}
                         isValidNewOption={handleCreateExistingLabel}
+                        autoFocus
                     />
                 ) : (
                     <InputField
