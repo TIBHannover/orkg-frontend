@@ -1,6 +1,7 @@
 import 'assets/scss/CustomBootstrap.scss';
 import 'assets/scss/DefaultLayout.scss';
 import 'react-toastify/dist/ReactToastify.css';
+import 'leaflet/dist/leaflet.css';
 import styled, { createGlobalStyle } from 'styled-components';
 import 'tippy.js/dist/tippy.css';
 import { Wrapper } from '../src/testUtils';

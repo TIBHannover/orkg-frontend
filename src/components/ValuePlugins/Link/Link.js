@@ -49,7 +49,7 @@ const Link = (props) => {
 };
 
 Link.propTypes = {
-    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
+    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
     type: PropTypes.oneOf([ENTITIES.RESOURCE, ENTITIES.LITERAL]),
 };
 

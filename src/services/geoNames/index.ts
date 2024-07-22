@@ -3,8 +3,13 @@ import env from 'components/NextJsMigration/env';
 import { AUTOCOMPLETE_SOURCE } from 'constants/autocompleteSources';
 import { CLASSES } from 'constants/graphSettings';
 
-export const geonamesUrl = env('NEXT_PUBLIC_GEONAMES_API_SEARCH_URL');
+export const geonamesUrl = env('NEXT_PUBLIC_GEONAMES_API_URL');
 export const geonamesUsername = env('NEXT_PUBLIC_GEONAMES_API_USERNAME');
+
+export type Coordinates = {
+    lat: string;
+    long: string;
+};
 
 const extractIdFromGeonamesURL = (url: string) => {
     // geonameId: integer id of record in geonames database https://download.geonames.org/export/dump/
@@ -27,7 +32,9 @@ export default async function getGeoNames({
 }): Promise<ExternalServiceResponse> {
     const options: OptionType[] = [];
     const responseXML = await fetch(
-        `${geonamesUrl}?q=${encodeURIComponent(value.trim())}&maxRows=${pageSize}&startRow=${page * pageSize}&type=rdf&username=${geonamesUsername}`,
+        `${geonamesUrl}search?q=${encodeURIComponent(value.trim())}&maxRows=${pageSize}&startRow=${
+            page * pageSize
+        }&type=rdf&username=${geonamesUsername}`,
     );
     let parsedContent: Document;
     try {
@@ -86,4 +93,19 @@ export default async function getGeoNames({
         options.push(itemData);
     });
     return { options, hasMore: options.length > 0 };
+}
+
+export async function getById(id: string): Promise<Coordinates> {
+    const responseXML = await fetch(`${geonamesUrl}get?geonameId=${id}&type=rdf&username=${geonamesUsername}`);
+    let parsedContent: Document;
+    try {
+        const data = await responseXML.text();
+        parsedContent = new window.DOMParser().parseFromString(data, 'text/xml'); // parse as xml
+    } catch (e) {
+        return { lat: '', long: '' };
+    }
+
+    const lat = parsedContent.getElementsByTagName('lat');
+    const long = parsedContent.getElementsByTagName('lng');
+    return { lat: lat?.[0]?.textContent ?? '', long: long?.[0]?.textContent ?? '' };
 }

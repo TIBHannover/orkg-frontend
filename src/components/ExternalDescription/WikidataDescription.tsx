@@ -4,13 +4,35 @@ import WIKIDATA_LOGO from 'assets/img/sameas/wikidatawiki.png';
 import { wikidataSparql } from 'services/wikidata/index';
 import { PropertyStyle, StatementsGroupStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import { groupBy } from 'lodash';
-import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FC } from 'react';
 import { Row } from 'reactstrap';
 import Image from 'components/NextJsMigration/Image';
+import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
+import { ENTITIES } from 'constants/graphSettings';
 
-const WikidataDescription = ({ externalResource }) => {
-    const [statementsByProperty, setStatementsByProperty] = useState({});
+type WikidataDescriptionProp = {
+    externalResource: string;
+};
+
+type WikidataStatement = {
+    property: {
+        value: string;
+        type: string;
+    };
+    propertyLabel: {
+        value: string;
+    };
+    object: {
+        value: string;
+        type: string;
+    };
+    objectLabel: {
+        value: string;
+    };
+};
+
+const WikidataDescription: FC<WikidataDescriptionProp> = ({ externalResource }) => {
+    const [statementsByProperty, setStatementsByProperty] = useState<Record<string, WikidataStatement[]>>({});
     const [isLoading, setIsLoading] = useState(false);
     const [hasFailed, setHasFailed] = useState(false);
 
@@ -64,7 +86,7 @@ const WikidataDescription = ({ externalResource }) => {
             {Object.keys(statementsByProperty).map((propertyUri) => (
                 <StatementsGroupStyle key={propertyUri} className="noTemplate list-group-item">
                     <Row className="row gx-0">
-                        <PropertyStyle className="col-4" tabIndex="0">
+                        <PropertyStyle className="col-4">
                             <div>
                                 <a
                                     href={statementsByProperty[propertyUri]?.[0]?.property?.value}
@@ -85,7 +107,7 @@ const WikidataDescription = ({ externalResource }) => {
                                             {value.objectLabel?.value}
                                         </a>
                                     ) : (
-                                        value?.object?.value
+                                        <ValuePlugins type={ENTITIES.LITERAL}>{value?.object?.value}</ValuePlugins>
                                     )}
                                 </div>
                             ))}
@@ -95,10 +117,6 @@ const WikidataDescription = ({ externalResource }) => {
             ))}
         </div>
     );
-};
-
-WikidataDescription.propTypes = {
-    externalResource: PropTypes.string.isRequired,
 };
 
 export default WikidataDescription;

@@ -1,6 +1,3 @@
-import type { GroupBase } from 'react-select';
-import type { ComponentProps, UseAsyncPaginateParams } from 'react-select-async-paginate';
-import type { CreatableProps } from 'react-select/creatable';
 import type { Class, EntityType, Node, Predicate, Resource } from 'services/backend/types';
 
 export type AdditionalType = {
