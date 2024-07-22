@@ -157,7 +157,6 @@ export const getStatementsBySubject = ({
  * @param {String} maxLevel - The number of levels in the graph to fetch
  * @param {Array} blacklist - List of classes ids to ignore while parsing the graph
  * @return {Promise} Promise object
- * @deprecated use getStatements
  */
 export const getStatementsBundleBySubject = ({
     id,
