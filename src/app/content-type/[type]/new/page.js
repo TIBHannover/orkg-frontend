@@ -14,7 +14,9 @@ import { upperFirst } from 'lodash';
 import { reverse } from 'named-urls';
 import pluralize from 'pluralize';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { Alert, Button, Container, Form, FormGroup, Input, InputGroup, Label } from 'reactstrap';
+import requireAuthentication from 'requireAuthentication';
 import { createResource } from 'services/backend/resources';
 
 const TYPES = [
@@ -49,12 +51,22 @@ const ContentTypeNew = () => {
         setSelectedClassId(params.type || TYPES[0].id);
     }, [params.type]);
 
+    useEffect(() => {
+        document.title = `Add to ORKG - ORKG`;
+    }, []);
+
     const handleCreate = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        const _resource = await createResource(title, [selectedClassId]);
-        setResource(_resource);
-        router.push({ pathname: reverse(ROUTES.CONTENT_TYPE, { id: _resource.id, type: selectedClassId }), search: '?isEditMode=true' });
+        try {
+            const _resource = await createResource(title, [selectedClassId]);
+            setResource(_resource);
+            router.push(`${reverse(ROUTES.CONTENT_TYPE, { id: _resource.id, type: selectedClassId })}?isEditMode=true`);
+        } catch (error) {
+            console.error(error);
+            setIsLoading(false);
+            toast.error(`Error creating resource : ${error.message}`);
+        }
     };
 
     return (
@@ -141,4 +153,4 @@ const ContentTypeNew = () => {
     );
 };
 
-export default ContentTypeNew;
+export default requireAuthentication(ContentTypeNew);

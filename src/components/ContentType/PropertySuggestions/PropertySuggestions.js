@@ -56,21 +56,21 @@ const PropertySuggestions = () => {
                                 dispatch(
                                     createProperty({
                                         resourceId: selectedResource,
-                                        existingPredicateId: c.property.id,
-                                        label: c.property.label,
+                                        existingPredicateId: c.path.id,
+                                        label: c.path.label,
                                         isTemplate: false,
                                         createAndSelect: true,
                                     }),
                                 );
                             }}
-                            key={`suggested-property-${c.property.id}`}
+                            key={`suggested-property-${c.path.id}`}
                             className="py-2 px-3"
                             style={{ cursor: 'pointer' }}
                         >
-                            <DescriptionTooltip id={c.property.id} _class={ENTITIES.PREDICATE}>
+                            <DescriptionTooltip id={c.path.id} _class={ENTITIES.PREDICATE}>
                                 <div className="d-flex">
                                     <div className="flex-grow-1" style={{ fontSize: '90%' }}>
-                                        <Icon icon={faPlus} className="me-1 text-muted" /> {c.property.label}
+                                        <Icon icon={faPlus} className="me-1 text-muted" /> {c.path.label}
                                     </div>
                                 </div>
                             </DescriptionTooltip>
