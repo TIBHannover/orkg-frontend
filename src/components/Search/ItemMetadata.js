@@ -14,7 +14,15 @@ import { toast } from 'react-toastify';
 import { capitalize } from 'lodash';
 import { EXTRACTION_METHODS } from 'constants/misc';
 
-const ItemMetadata = ({ editMode = false, showClasses = false, showCreatedAt = false, showCreatedBy = false, showProvenance = false, item }) => {
+const ItemMetadata = ({
+    editMode = false,
+    showClasses = false,
+    showCreatedAt = false,
+    showCreatedBy = false,
+    showProvenance = false,
+    showExtractionMethod = false,
+    item,
+}) => {
     const [extractionMethod, setExtractionMethod] = useState(item?.extraction_method);
 
     const handleSave = async (selectedOption) => {
@@ -55,31 +63,32 @@ const ItemMetadata = ({ editMode = false, showClasses = false, showCreatedAt = f
                         </span>
                     </Badge>
                 )}
-
-                <Badge color="light" className="me-2">
-                    <Icon icon={faSearch} /> Extraction:{' '}
-                    {editMode ? (
-                        <span className="ms-1 d-inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
-                            <Input
-                                bsSize="sm"
-                                className="mb-3 py-0"
-                                type="select"
-                                value={extractionMethod}
-                                onChange={(e) => handleSave(e.target.value)}
-                            >
-                                {Object.values(EXTRACTION_METHODS).map((method) => (
-                                    <option key={method} value={method}>
-                                        {capitalize(method)}
-                                    </option>
-                                ))}
-                            </Input>
-                        </span>
-                    ) : (
-                        <span className="ms-1 d-inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
-                            {capitalize(extractionMethod)}
-                        </span>
-                    )}
-                </Badge>
+                {showExtractionMethod && (
+                    <Badge color="light" className="me-2">
+                        <Icon icon={faSearch} /> Extraction:{' '}
+                        {editMode ? (
+                            <span className="ms-1 d-inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
+                                <Input
+                                    bsSize="sm"
+                                    className="mb-3 py-0"
+                                    type="select"
+                                    value={extractionMethod}
+                                    onChange={(e) => handleSave(e.target.value)}
+                                >
+                                    {Object.values(EXTRACTION_METHODS).map((method) => (
+                                        <option key={method} value={method}>
+                                            {capitalize(method)}
+                                        </option>
+                                    ))}
+                                </Input>
+                            </span>
+                        ) : (
+                            <span className="ms-1 d-inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
+                                {capitalize(extractionMethod)}
+                            </span>
+                        )}
+                    </Badge>
+                )}
 
                 {showProvenance && (
                     <span className="d-inline-block">
@@ -103,6 +112,7 @@ ItemMetadata.propTypes = {
     showCreatedAt: PropTypes.bool,
     showCreatedBy: PropTypes.bool,
     showProvenance: PropTypes.bool,
+    showExtractionMethod: PropTypes.bool,
 };
 
 export default ItemMetadata;

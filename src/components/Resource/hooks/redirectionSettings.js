@@ -69,6 +69,11 @@ const DEDICATED_PAGE_LINKS = {
         route: ROUTES.LIST,
         routeParams: 'id',
     },
+    [CLASSES.ROSETTA_STONE_STATEMENT]: {
+        label: 'Statement',
+        route: ROUTES.RS_STATEMENT,
+        routeParams: 'id',
+    },
 };
 
 export default DEDICATED_PAGE_LINKS;

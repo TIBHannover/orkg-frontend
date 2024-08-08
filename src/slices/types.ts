@@ -18,6 +18,7 @@ export type AuthSliceType = {
     redirectRoute: null | string;
 };
 
+// TODO: not complete yet
 export type StatementBrowser = {
     isHelpModalOpen: boolean;
     helpCenterArticleId: string;

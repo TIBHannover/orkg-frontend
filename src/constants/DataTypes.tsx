@@ -1,10 +1,21 @@
-import Joi from 'joi';
+import Joi, { AnySchema } from 'joi';
 import { MISC, ENTITIES, CLASSES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import { orderBy } from 'lodash';
 // https://www.w3.org/TR/xmlschema-2
 
-const DATA_TYPES = [
+export type InputFormType = 'text' | 'textarea' | 'autocomplete' | 'boolean' | 'date' | 'empty';
+
+const DATA_TYPES: {
+    name: string;
+    tooltip?: JSX.Element | string;
+    type: string;
+    _class: string;
+    classId: string;
+    schema: AnySchema | null;
+    inputFormType: InputFormType;
+    weight: number;
+}[] = [
     {
         name: 'Resource',
         tooltip: (

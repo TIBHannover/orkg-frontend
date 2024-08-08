@@ -72,10 +72,10 @@ const Format: FC<{}> = () => {
                             </thead>
                             <tbody>
                                 {propertyShapes.map((propertyShape: PropertyShape) => (
-                                    <tr key={`row${propertyShape.path.id}`}>
-                                        <th scope="row">{propertyShape.path.id}</th>
+                                    <tr key={`row${propertyShape.path?.id}`}>
+                                        <th scope="row">{propertyShape.path?.id}</th>
                                         <td style={{}}>{propertyShape.placeholder}</td>
-                                        <td style={{}}>{propertyShape.path.label}</td>
+                                        <td style={{}}>{propertyShape.path?.label}</td>
                                     </tr>
                                 ))}
                             </tbody>

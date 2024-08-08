@@ -35,11 +35,11 @@ const useContributions = ({ paperId, contributionId }) => {
         if (contributions?.length && (selectedContributionId !== contributionId || !contributionId)) {
             try {
                 // apply selected contribution
-                if (contributionId && !contributions.some((el) => el.id === contributionId)) {
+                if (contributionId && !contributions.some((el) => el.id === contributionId) && contributionId !== 'statements') {
                     throw new Error('Contribution not found');
                 }
                 const selected = contributionId && contributions.some((el) => el.id === contributionId) ? contributionId : contributions[0].id;
-                dispatch(setSelectedContributionId(selected));
+                dispatch(setSelectedContributionId(contributionId !== 'statements' ? selected : 'statements'));
             } catch {
                 setLoadingContributionFailed(true);
             }
@@ -48,21 +48,26 @@ const useContributions = ({ paperId, contributionId }) => {
 
     useEffect(() => {
         const handleSelectContribution = (cId) => {
-            setIsLoading(true);
-            // get the contribution label
-            const contributionResource = contributions?.find((c) => c.id === selectedContributionId);
-            if (contributionResource) {
-                setLoadingContributionFailed(false);
-                dispatch(
-                    selectContribution({
-                        contributionId: cId,
-                        contributionLabel: contributionResource.label,
-                    }),
-                );
+            if (cId !== 'statements') {
+                setIsLoading(true);
+                // get the contribution label
+                const contributionResource = contributions?.find((c) => c.id === selectedContributionId);
+                if (contributionResource) {
+                    setLoadingContributionFailed(false);
+                    dispatch(
+                        selectContribution({
+                            contributionId: cId,
+                            contributionLabel: contributionResource.label,
+                        }),
+                    );
+                } else {
+                    setLoadingContributionFailed(true);
+                }
+                setIsLoading(false);
             } else {
-                setLoadingContributionFailed(true);
+                setLoadingContributionFailed(false);
+                setIsLoading(false);
             }
-            setIsLoading(false);
         };
         handleSelectContribution(selectedContributionId);
     }, [contributions, dispatch, selectedContributionId]);

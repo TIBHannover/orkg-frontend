@@ -156,7 +156,7 @@ const PropertyShapesTab: FC<{}> = () => {
                     propertyShapes.map((templateProperty, index: number) => (
                         <PropertyShape
                             id={index}
-                            key={`tc${templateProperty.path.id}`}
+                            key={`tc${templateProperty.path?.id}`}
                             handleDeletePropertyShape={handleDeletePropertyShape}
                             moveCard={moveCard}
                             handlePropertiesSelect={handlePropertiesSelect}

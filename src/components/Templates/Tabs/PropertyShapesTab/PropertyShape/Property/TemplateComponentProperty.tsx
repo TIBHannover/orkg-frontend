@@ -1,9 +1,9 @@
-import { faArrowsAlt, faCheck, faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faGripVertical, faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
+import { OptionType } from 'components/Autocomplete/types';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import Link from 'components/NextJsMigration/Link';
-import { OptionType } from 'components/Autocomplete/types';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { PropertyStyle } from 'components/StatementBrowser/styled';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
@@ -15,7 +15,6 @@ import { ConnectDragSource } from 'react-dnd';
 import { useSelector } from 'react-redux';
 import { ActionMeta, SingleValue } from 'react-select';
 import { InputGroup } from 'reactstrap';
-import { Predicate } from 'services/backend/types';
 import styled from 'styled-components';
 
 const DragHandler = styled.div`
@@ -41,7 +40,7 @@ const TemplateComponentProperty: FC<TemplateComponentPropertyProps> = ({ id, dra
         <PropertyStyle className="col-4">
             {isEditMode && (
                 <DragHandler ref={dragRef}>
-                    <Icon icon={faArrowsAlt} />
+                    <Icon icon={faGripVertical} />
                 </DragHandler>
             )}
             {!isEditing ? (

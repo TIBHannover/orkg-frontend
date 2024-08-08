@@ -211,7 +211,7 @@ function Resource() {
                             </>
                         )}
 
-                        <ItemMetadata item={resource} showCreatedAt showCreatedBy showProvenance editMode={isEditMode} />
+                        <ItemMetadata item={resource} showCreatedAt showCreatedBy showProvenance showExtractionMethod editMode={isEditMode} />
                     </Container>
                     <TabsContainer classes={resource?.classes} id={id} editMode={isEditMode} />
 

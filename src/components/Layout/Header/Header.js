@@ -504,6 +504,9 @@ const Header = () => {
                                 <DropdownItem tag={Link} href={ROUTES.TEMPLATES} onClick={closeMenu} active={pathname === ROUTES.TEMPLATES}>
                                     Templates
                                 </DropdownItem>
+                                <DropdownItem tag={Link} href={ROUTES.RS_TEMPLATES} onClick={closeMenu} active={pathname === ROUTES.RS_TEMPLATES}>
+                                    Statement types
+                                </DropdownItem>
                                 <DropdownItem divider />
                                 <DropdownItem header>Data export</DropdownItem>
                                 <DropdownItem tag={Link} href={ROUTES.DATA} onClick={closeMenu} active={pathname === ROUTES.DATA}>

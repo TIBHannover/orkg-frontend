@@ -1,5 +1,5 @@
 import { CLASSES } from 'constants/graphSettings';
-import { Visibility, VisibilityFilter } from 'services/backend/types';
+import { Visibility, VisibilityFilter, Certainty } from 'services/backend/types';
 
 const contentTypes: string[] = [
     CLASSES.PAPER,
@@ -25,6 +25,12 @@ export const VISIBILITY: { [key: string]: Visibility } = {
     FEATURED: 'FEATURED',
     UNLISTED: 'UNLISTED',
     DELETED: 'DELETED',
+};
+
+export const CERTAINTY: { [key: string]: Certainty } = {
+    LOW: 'LOW',
+    MODERATE: 'MODERATE',
+    HIGH: 'HIGH',
 };
 
 export default contentTypes;

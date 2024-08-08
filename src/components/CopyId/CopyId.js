@@ -5,9 +5,9 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { Button, Input, InputGroup, InputGroupText } from 'reactstrap';
 
-const CopyId = ({ id }) => (
+const CopyId = ({ id, text = 'ID' }) => (
     <InputGroup size="sm">
-        <InputGroupText className="py-0">ID</InputGroupText>
+        <InputGroupText className="py-0">{text}</InputGroupText>
         <Input
             bsSize="sm"
             className="text-muted py-0 bg-white"
@@ -33,6 +33,7 @@ const CopyId = ({ id }) => (
 
 CopyId.propTypes = {
     id: PropTypes.string.isRequired,
+    text: PropTypes.string,
 };
 
 export default CopyId;
