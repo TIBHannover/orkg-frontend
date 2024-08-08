@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.145.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.144.0...v0.145.0) - 2024-08-08
+
+### Changes
+
+- fix: data access page of incubating point to main ORKG [`#1370`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1370)
+- feat: prototype Rosetta Stone [`#1355`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1355)
+
+---
 ## [v0.144.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.143.1...v0.144.0) - 2024-08-02
 
 ### Changes
