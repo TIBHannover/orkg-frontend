@@ -65,7 +65,7 @@ const Time = styled.div`
     }
 `;
 
-const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => {
+const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff, showFeaturedButtons = true }) => {
     const [selectedVersion1, setSelectedVersion1] = useState(null);
     const [selectedVersion2, setSelectedVersion2] = useState(null);
     const router = useRouter();
@@ -139,14 +139,16 @@ const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => 
                                     </Time>
                                     <div>
                                         Version {versions.length - i}
-                                        <div className="ms-1 d-inline-block ">
-                                            <MarkFeaturedUnlistedContainer
-                                                size="xs"
-                                                id={version?.id}
-                                                featured={version?.featured}
-                                                unlisted={version?.unlisted}
-                                            />
-                                        </div>
+                                        {showFeaturedButtons && (
+                                            <div className="ms-1 d-inline-block ">
+                                                <MarkFeaturedUnlistedContainer
+                                                    size="xs"
+                                                    id={version?.id}
+                                                    featured={version?.featured}
+                                                    unlisted={version?.unlisted}
+                                                />
+                                            </div>
+                                        )}
                                         {version.description && (
                                             <>
                                                 : <em>{version.description}</em>
@@ -177,6 +179,7 @@ HistoryModal.propTypes = {
     title: PropTypes.string.isRequired,
     versions: PropTypes.array,
     routeDiff: PropTypes.string.isRequired,
+    showFeaturedButtons: PropTypes.bool,
 };
 
 export default HistoryModal;

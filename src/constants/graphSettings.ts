@@ -153,6 +153,7 @@ export const CLASSES: {
     QUALITY_REVIEW: 'QualityReview',
     LIST: 'List',
     QUALITY_FEEDBACK: 'QualityFeedback',
+    ROSETTA_STONE_STATEMENT: 'RosettaStoneStatement',
 };
 
 export const RESOURCES: {

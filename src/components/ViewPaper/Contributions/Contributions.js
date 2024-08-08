@@ -8,6 +8,7 @@ import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tabs from 'components/Tabs/Tabs';
 import ContributionComparisons from 'components/ViewPaper/ContributionComparisons/ContributionComparisons';
 import AutomaticContributionWarning from 'components/ViewPaper/Contributions/AutomaticContributionWarning';
+import RosettaStoneStatements from 'components/RosettaStone/Statements/RosettaStoneStatements';
 import useContributions from 'components/ViewPaper/Contributions/hooks/useContributions';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import SmartSuggestions from 'components/ViewPaper/SmartSuggestions/SmartSuggestions';
@@ -44,12 +45,12 @@ const Contributions = (props) => {
     const isAddingContribution = useSelector((state) => state.viewPaper.isAddingContribution);
 
     const onTabChange = (key) => {
-        router.push(
-            `${reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
-                resourceId,
-                contributionId: key,
-            })}${props.enableEdit ? `?isEditMode=${props.enableEdit}` : ''}`,
-        );
+        const url =
+            key === 'contributions'
+                ? reverse(ROUTES.VIEW_PAPER, { resourceId })
+                : reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId, contributionId: key });
+
+        router.push(`${url}${props.enableEdit ? `?isEditMode=${props.enableEdit}` : ''}`);
     };
 
     const { fetchAbstract, isLoading: isLoadingAbstract, abstract } = useFetchAbstract();
@@ -60,6 +61,7 @@ const Contributions = (props) => {
         }
     }, [props.enableEdit, abstract, fetchAbstract]);
 
+    const selectedTab = selectedContributionId === 'statements' ? 'statements' : 'contributions';
     return (
         <div>
             <Row>
@@ -75,67 +77,97 @@ const Contributions = (props) => {
                     )}
 
                     <Tabs
-                        tabBarExtraContent={
-                            props.enableEdit ? (
-                                <AddContributionButton disabled={isAddingContribution} onClick={() => handleCreateContribution()} />
-                            ) : null
-                        }
                         moreIcon={<Icon size="lg" icon={faAngleDown} />}
-                        activeKey={selectedContributionId}
+                        activeKey={selectedTab}
                         destroyInactiveTabPane
                         onChange={onTabChange}
-                        items={contributions?.map((contribution) => ({
-                            label: (
-                                <ContributionTab
-                                    handleChangeContributionLabel={handleChangeContributionLabel}
-                                    isSelected={contribution.id === selectedContributionId}
-                                    canDelete={contributions.length !== 1}
-                                    contribution={contribution}
-                                    key={contribution.id}
-                                    toggleDeleteContribution={toggleDeleteContribution}
-                                    enableEdit={props.enableEdit}
-                                />
-                            ),
-                            key: contribution.id,
-                            children: (
-                                <div
-                                    className="p-4"
-                                    style={{ backgroundColor: contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC ? '#ecf6f8' : '' }}
-                                >
-                                    {contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC && (
-                                        <AutomaticContributionWarning
-                                            contribution={contribution}
-                                            onVerifyHandler={handleAutomaticContributionVerification}
-                                            enableEdit={props.enableEdit}
-                                        />
-                                    )}
-                                    {!isLoadingContributionFailed && (
-                                        <div>
-                                            <FormGroup>
-                                                <StatementBrowser
-                                                    enableEdit={props.enableEdit}
-                                                    syncBackend={props.enableEdit}
-                                                    openExistingResourcesInDialog={false}
-                                                    initOnLocationChange={false}
-                                                    keyToKeepStateOnLocationChange={contributionId ?? resourceId}
-                                                    renderTemplateBox
-                                                />
-                                            </FormGroup>
+                        className="rounded"
+                        style={{ background: '#F8F9FB' }}
+                        items={[
+                            {
+                                label: 'Contributions',
+                                key: 'contributions',
+                                children: (
+                                    <Tabs
+                                        tabBarExtraContent={
+                                            props.enableEdit ? (
+                                                <AddContributionButton disabled={isAddingContribution} onClick={() => handleCreateContribution()} />
+                                            ) : null
+                                        }
+                                        moreIcon={<Icon size="lg" icon={faAngleDown} />}
+                                        activeKey={selectedContributionId}
+                                        destroyInactiveTabPane
+                                        onChange={onTabChange}
+                                        items={[
+                                            ...(contributions?.map((contribution) => ({
+                                                label: (
+                                                    <ContributionTab
+                                                        handleChangeContributionLabel={handleChangeContributionLabel}
+                                                        isSelected={contribution.id === selectedContributionId}
+                                                        canDelete={contributions.length !== 1}
+                                                        contribution={contribution}
+                                                        key={contribution.id}
+                                                        toggleDeleteContribution={toggleDeleteContribution}
+                                                        enableEdit={props.enableEdit}
+                                                    />
+                                                ),
+                                                key: contribution.id,
+                                                children: (
+                                                    <div
+                                                        className="p-4"
+                                                        style={{
+                                                            backgroundColor:
+                                                                contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC ? '#ecf6f8' : '',
+                                                        }}
+                                                    >
+                                                        {contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC && (
+                                                            <AutomaticContributionWarning
+                                                                contribution={contribution}
+                                                                onVerifyHandler={handleAutomaticContributionVerification}
+                                                                enableEdit={props.enableEdit}
+                                                            />
+                                                        )}
+                                                        {!isLoadingContributionFailed && (
+                                                            <div>
+                                                                <FormGroup>
+                                                                    <StatementBrowser
+                                                                        enableEdit={props.enableEdit}
+                                                                        syncBackend={props.enableEdit}
+                                                                        openExistingResourcesInDialog={false}
+                                                                        initOnLocationChange={false}
+                                                                        keyToKeepStateOnLocationChange={contributionId ?? resourceId}
+                                                                        renderTemplateBox
+                                                                    />
+                                                                </FormGroup>
 
-                                            {/* selectedContribution && <SimilarContributions contributionId={selectedContribution} /> */}
+                                                                {/* selectedContribution && <SimilarContributions contributionId={selectedContribution} /> */}
 
-                                            {contribution.id && <ContributionComparisons contributionId={contribution.id} />}
-                                        </div>
-                                    )}
-                                    {isLoadingContributionFailed && (
-                                        <Alert className="mt-4 mb-5" color="danger">
-                                            {contributions.length === 0 && 'This paper has no contributions yet'}
-                                            {contributions.length !== 0 && "Contribution doesn't exist"}
-                                        </Alert>
-                                    )}
-                                </div>
-                            ),
-                        }))}
+                                                                {contribution.id && <ContributionComparisons contributionId={contribution.id} />}
+                                                            </div>
+                                                        )}
+                                                        {isLoadingContributionFailed && (
+                                                            <Alert className="mt-4 mb-5" color="danger">
+                                                                {contributions.length === 0 && 'This paper has no contributions yet'}
+                                                                {contributions.length !== 0 && "Contribution doesn't exist"}
+                                                            </Alert>
+                                                        )}
+                                                    </div>
+                                                ),
+                                            })) ?? []),
+                                        ]}
+                                    />
+                                ),
+                            },
+                            {
+                                label: 'Statements',
+                                key: 'statements',
+                                children: (
+                                    <div className="p-4">
+                                        <RosettaStoneStatements context={resourceId} />
+                                    </div>
+                                ),
+                            },
+                        ]}
                     />
 
                     {!isLoading && contributions?.length === 0 && (
@@ -161,7 +193,7 @@ const Contributions = (props) => {
                         </div>
                     )}
 
-                    {props.enableEdit && (
+                    {selectedContributionId !== 'statements' && props.enableEdit && (
                         <div className="mb-3">
                             <SmartSuggestions isLoadingAbstract={isLoadingAbstract} title={paperTitle} abstract={abstract} />
                         </div>

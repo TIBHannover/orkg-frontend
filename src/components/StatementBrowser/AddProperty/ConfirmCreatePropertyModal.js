@@ -1,16 +1,23 @@
-import { useState } from 'react';
-import { Button, FormGroup, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import PropTypes from 'prop-types';
-import { createPredicate } from 'services/backend/predicates';
-import { createLiteral } from 'services/backend/literals';
-import { createLiteralStatement } from 'services/backend/statements';
-import { PREDICATES } from 'constants/graphSettings';
-import { toast } from 'react-toastify';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
 import { SmartDescriptiveProperty } from 'components/SmartSuggestions/DescriptivePropertySuggestions';
+import { PREDICATES } from 'constants/graphSettings';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { Button, FormGroup, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { createLiteral } from 'services/backend/literals';
+import { createPredicate } from 'services/backend/predicates';
+import { createLiteralStatement } from 'services/backend/statements';
 
 const ConfirmCreatePropertyModal = ({ toggle, onCreate, shouldPerformCreate = false, shouldHideDescriptionInput = false, label }) => {
     const [description, setDescription] = useState('');
+
+    const isContributionEditor = true;
+
+    const paperTitles = useSelector((state) =>
+        isContributionEditor ? Object.values(state.contributionEditor.papers).map((p) => p.label) : [state.viewPaper.title],
+    );
 
     const handleCreate = async () => {
         let id = null;

@@ -36,10 +36,21 @@ export type PaginatedResponse<T> = {
 export type ExtractionMethod = 'UNKNOWN' | 'MANUAL' | 'AUTOMATIC';
 export type Visibility = 'DEFAULT' | 'FEATURED' | 'UNLISTED' | 'DELETED';
 export type VisibilityFilter = 'combined' | 'ALL_LISTED' | 'UNLISTED' | 'FEATURED' | 'NON_FEATURED' | 'DELETED';
+export type Certainty = 'LOW' | 'MODERATE' | 'HIGH';
 
 export type Node = {
     id: string;
     label: string;
+};
+
+export type NewLiteral = {
+    label: string;
+    data_type: string;
+};
+
+export type NewResource = {
+    label: string;
+    classes: string[];
 };
 
 export type Resource = {
@@ -260,11 +271,13 @@ export type PropertyShapeUntypedType = {
     label?: string;
     placeholder: string;
     description: string;
-    min_count?: number;
-    max_count?: number;
-    path: Node;
+    min_count?: number | string;
+    max_count?: number | string;
+    path?: Node;
     created_at?: string;
     created_by?: string;
+    preposition?: string;
+    postposition?: string;
 };
 
 export type PropertyShapeLiteralType = PropertyShapeUntypedType & {
@@ -315,6 +328,100 @@ export type CreateTemplateParams = {
     properties: PropertyShape[];
     organizations: string[];
     observatories: string[];
+};
+
+export type RosettaStoneTemplate = {
+    __isNew__?: boolean;
+    id: string;
+    label: string;
+    description: string;
+    formatted_label: string;
+    example_usage: string;
+    target_class: Node;
+    properties: PropertyShape[];
+    organizations: string[];
+    observatories: string[];
+    created_at: string;
+    created_by: string;
+    visibility: Visibility;
+    unlisted_by: string;
+};
+
+export type RosettaStoneStatement = {
+    id: string;
+    template_id: string;
+    latest_version_id?: string;
+    version_id?: string;
+    is_latest_version: boolean;
+    context: string;
+    subjects: Node[];
+    objects: Node[][];
+    created_at: string;
+    created_by: string;
+    certainty: Certainty;
+    negated: boolean;
+    organizations: string[];
+    observatories: string[];
+    extraction_method: ExtractionMethod;
+    visibility: Visibility;
+    unlisted_by?: string;
+    modifiable: boolean;
+};
+
+export type CreateRosettaStoneTemplateParams = {
+    label: string;
+    description: string;
+    example_usage: string;
+    formatted_label: string;
+    properties: (Omit<PropertyShape, 'path'> & { path: string })[];
+    organizations: string[];
+    observatories: string[];
+};
+
+export type CreateRosettaStoneStatementParams = {
+    template_id: string;
+    context: string;
+    subjects: string[];
+    objects: string[][] | string[];
+    certainty: Certainty;
+    resources: {
+        [key: string]: NewResource;
+    };
+    literals: {
+        [key: string]: NewLiteral;
+    };
+    lists: {
+        [key: string]: Node;
+    };
+    classes: {
+        [key: string]: Node;
+    };
+    negated: boolean;
+    organizations: string[];
+    observatories: string[];
+    extraction_method: ExtractionMethod;
+};
+
+export type UpdateRosettaStoneStatementParams = {
+    subjects: string[];
+    objects: string[][] | string[];
+    certainty: Certainty;
+    resources: {
+        [key: string]: NewResource;
+    };
+    literals: {
+        [key: string]: NewLiteral;
+    };
+    lists: {
+        [key: string]: Node;
+    };
+    classes: {
+        [key: string]: Node;
+    };
+    negated: boolean;
+    organizations: string[];
+    observatories: string[];
+    extraction_method: ExtractionMethod;
 };
 
 export type UpdateTemplateParams = Partial<Omit<Template, 'id' | 'created_at' | 'created_by' | 'visibility' | 'unlisted_by'>>;
@@ -589,6 +696,7 @@ export type ApiError = {
     error: number;
     path: string;
     timestamp: string;
+    message?: string;
     errors?: {
         field: string;
         message: string;

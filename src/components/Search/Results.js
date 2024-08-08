@@ -1,11 +1,11 @@
-import Link from 'components/NextJsMigration/Link';
-import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
-import { CLASSES } from 'constants/graphSettings';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import { getResourceLink } from 'utils';
+import Link from 'components/NextJsMigration/Link';
 import ItemMetadata from 'components/Search/ItemMetadata';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import PropTypes from 'prop-types';
+import { Button, ListGroup, ListGroupItem } from 'reactstrap';
+import styled from 'styled-components';
+import { getResourceLink } from 'utils';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
@@ -65,6 +65,7 @@ const Results = (props) => (
                                     item={item}
                                     showClasses={props.showClasses}
                                     showCreatedAt={item.classes && item.classes.includes(CLASSES.COMPARISON)}
+                                    showExtractionMethod={item._class === ENTITIES.RESOURCE}
                                 />
                             </StyledListGroupItem>
                         ))}

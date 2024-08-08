@@ -447,6 +447,10 @@ export const ORKGTabsStyle = styled.div`
         border-bottom-right-radius: 0;
         border-bottom:0;
     }
+    /* For nested tab styling */
+    .rc-tabs .rc-tabs .rc-tabs-nav {
+        border-width: 0!important;
+    }
     .rc-tabs > .rc-tabs-nav .rc-tabs-nav-wrap,
     .rc-tabs > div > .rc-tabs-nav .rc-tabs-nav-wrap {
         position: relative;
@@ -539,6 +543,10 @@ export const ORKGTabsStyle = styled.div`
         background: ${(props) => props.theme.primary};
         pointer-events: none;
     }
+    /* For nested tab styling */
+    .rc-tabs .rc-tabs .rc-tabs-ink-bar {
+        background: ${(props) => props.theme.secondary};
+    }
     .rc-tabs .rc-tabs-tab {
         position: relative;
         display: inline-flex;
@@ -593,8 +601,16 @@ export const ORKGTabsStyle = styled.div`
     .rc-tabs .rc-tabs-tab:hover {
         color: ${(props) => props.theme.primary};
     }
+    /* For nested tab styling */
+    .rc-tabs .rc-tabs .rc-tabs-tab:hover {
+        color: ${(props) => props.theme.secondary};
+    }
     .rc-tabs .rc-tabs-tab.rc-tabs-tab-active .rc-tabs-tab-btn {
         color: ${(props) => props.theme.primary};
+    }
+    /* For nested tab styling */
+    .rc-tabs .rc-tabs .rc-tabs-tab.rc-tabs-tab-active .rc-tabs-tab-btn {
+        color: ${(props) => props.theme.secondary};
     }
     .rc-tabs-left .rc-tabs-tab.rc-tabs-tab-active {
         background: ${(props) => props.theme.primary};
@@ -640,6 +656,10 @@ export const ORKGTabsStyle = styled.div`
         border-top-left-radius: 0;
         border-top-right-radius: 0;
         border-top:0;
+    }
+    /* For nested tab styling */
+    .rc-tabs .rc-tabs-content-holder .rc-tabs .rc-tabs-content-holder {
+        border-width: 0;
     }
     .rc-tabs .rc-tabs-tabpane {
         outline: none;
