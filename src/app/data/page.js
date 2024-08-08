@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
-import { Container, Button, Card, CardTitle, CardText, Row, Col } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPython } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import env from 'components/NextJsMigration/env';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { useEffect } from 'react';
+import { Button, Card, CardText, CardTitle, Col, Container, Row } from 'reactstrap';
 
 const Data = () => {
     useEffect(() => {
@@ -66,7 +67,7 @@ const Data = () => {
                                         tag="a"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        href="https://www.orkg.org/triplestore"
+                                        href={`${env('NEXT_PUBLIC_URL')}/triplestore`}
                                     >
                                         Virtuoso Query Editor
                                     </Button>
@@ -78,7 +79,7 @@ const Data = () => {
                                         tag="a"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        href="https://www.orkg.org/sparql"
+                                        href={`${env('NEXT_PUBLIC_URL')}/sparql`}
                                     >
                                         Visual SPARQL Editor
                                     </Button>
@@ -98,7 +99,7 @@ const Data = () => {
                                 tag="a"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                href="https://orkg.org/api/rdf/dump"
+                                href={`${env('NEXT_PUBLIC_URL')}/api/rdf/dump`}
                             >
                                 Download RDF dump
                             </Button>
