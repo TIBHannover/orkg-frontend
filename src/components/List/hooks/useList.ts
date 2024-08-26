@@ -141,6 +141,7 @@ const useList = (listId?: string) => {
         try {
             const { statements } = await getStatementsBundleBySubject({
                 id,
+                blacklist: [CLASSES.RESEARCH_FIELD],
             });
             if (!statements || statements.length === 0) {
                 throw new Error('No statements found for the list');
