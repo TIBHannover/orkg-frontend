@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import usePage from 'components/Page/usePage';
 import { CmsPage } from 'components/styled';
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
@@ -83,7 +83,6 @@ const SBEditorHelpModal = () => {
                         <ul className="ms-3">
                             {articles.map((article) => (
                                 <li key={article.id}>
-                                    {/* @ts-expect-error */}
                                     <Link
                                         target="_blank"
                                         rel="noopener noreferrer"

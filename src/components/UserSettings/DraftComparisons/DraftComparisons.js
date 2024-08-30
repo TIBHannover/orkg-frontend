@@ -2,7 +2,7 @@ import { faAngleDoubleLeft, faAngleDoubleRight, faCalendar, faClock, faPen, faSp
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { getComparisonURLFromConfig } from 'components/Comparison/hooks/helpers';
 import Confirm from 'components/Confirmation/Confirmation';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import EditTitleModal from 'components/UserSettings/DraftComparisons/EditTitleModal';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';

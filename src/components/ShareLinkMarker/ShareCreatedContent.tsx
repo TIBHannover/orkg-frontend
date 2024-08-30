@@ -2,7 +2,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faXTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import Tippy, { useSingleton } from '@tippyjs/react';
 import { getFacebookSharerLink, getTwitterSharerLink, getLinkedInSharerLink } from 'components/ShareLinkMarker/helpers';
-import usePathname from 'components/NextJsMigration/usePathname';
+import { usePathname } from 'next/navigation';
 import { FC } from 'react';
 
 type ShareCreatedContentProps = {

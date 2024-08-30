@@ -1,5 +1,5 @@
 import capitalize from 'capitalize';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { VISIBILITY } from 'constants/contentTypes';
 import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';

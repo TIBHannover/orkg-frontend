@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Confirm from 'components/Confirmation/Confirmation';

@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { Badge } from 'reactstrap';
 import DATA_TYPES from 'constants/DataTypes';
 import { useSelector } from 'react-redux';

@@ -1,6 +1,6 @@
 import { url } from 'constants/misc';
 import { submitGetRequest } from 'network';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { Contributor } from 'services/backend/types';
 
 export const contributorsUrl = `${url}contributors/`;

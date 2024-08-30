@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { Component } from 'react';
 import { Card, CardTitle, CardText, Row, Col, CardBody, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

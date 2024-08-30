@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';

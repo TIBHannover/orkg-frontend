@@ -1,5 +1,5 @@
 import { Ontology, OntologyTerm, OptionType } from 'components/Autocomplete/types';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { AUTOCOMPLETE_SOURCE } from 'constants/autocompleteSources';
 import { submitGetRequest } from 'network';
 import qs from 'qs';

@@ -1,5 +1,5 @@
 import { OptionType } from 'components/Autocomplete/types';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { ENTITIES } from 'constants/graphSettings';
 import { FC, Fragment } from 'react';
 import { PropertyShape } from 'services/backend/types';
@@ -21,7 +21,6 @@ const StatementValue: FC<StatementValueProps> = ({ value, propertyShape }) => {
                 <Fragment key={`v${v.id}`}>
                     {'datatype' in v && <span>{v.label}</span>}
                     {!('datatype' in v) && (
-                        // @ts-expect-error link
                         <Link href={getLinkByEntityType(ENTITIES.RESOURCE, v.id)} target="_blank">
                             {v?.label}
                         </Link>

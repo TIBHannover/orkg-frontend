@@ -1,6 +1,6 @@
 import { faMastodon } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { sanitize } from 'isomorphic-dompurify';
 import moment from 'moment';
 import { useCookies } from 'next-client-cookies';

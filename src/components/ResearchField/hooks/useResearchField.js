@@ -4,7 +4,7 @@ import { getStatementsBySubjectAndPredicate, getStatementsBySubject } from 'serv
 import { getResearchFieldsStats } from 'services/backend/stats';
 import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import { orderBy } from 'lodash';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import { PREDICATES } from 'constants/graphSettings';
 
 function useResearchField(initialVal = {}) {

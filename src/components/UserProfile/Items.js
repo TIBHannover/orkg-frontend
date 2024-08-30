@@ -6,7 +6,7 @@ import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
 import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
 import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
-import useRouter from 'components/NextJsMigration/useRouter';
+import { useRouter } from 'next/navigation';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';

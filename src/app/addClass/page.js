@@ -8,7 +8,7 @@ import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
 import TreeSelector from 'components/Autocomplete/ValueButtons/TreeSelector';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import useRouter from 'components/NextJsMigration/useRouter';
+import { useRouter } from 'next/navigation';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { ENTITIES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';

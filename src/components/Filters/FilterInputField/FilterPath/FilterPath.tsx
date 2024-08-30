@@ -2,7 +2,7 @@ import { faAngleDoubleRight, faEllipsis, faRoute, faSpinner } from '@fortawesome
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { BreadcrumbStyled, TippyContentStyled } from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
@@ -45,7 +45,6 @@ const FilterPath: FC<FilterPathProps> = ({ filter }) => {
                                     path.map((property, index: number) => (
                                         <span key={property.id}>
                                             <DescriptionTooltip id={property.id} _class={ENTITIES.PREDICATE}>
-                                                {/* @ts-expect-error */}
                                                 <Link href={reverse(ROUTES.PREDICATE, { id: property.id })} target="_blank">
                                                     {property.label}
                                                 </Link>

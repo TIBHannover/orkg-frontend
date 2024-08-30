@@ -1,5 +1,5 @@
-import redirect from 'components/NextJsMigration/redirect';
-import useParams from 'components/NextJsMigration/useParams';
+import { redirect } from 'next/navigation';
+import useParams from 'components/useParams/useParams';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';

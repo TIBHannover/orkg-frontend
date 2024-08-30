@@ -1,7 +1,7 @@
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import { activatedContributionsToList, getComparisonConfigObject, getPropertyObjectFromData } from 'components/Comparison/hooks/helpers';
 import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
-import useRouter from 'components/NextJsMigration/useRouter';
+import { useRouter } from 'next/navigation';
 import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
 import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
 import ROUTES from 'constants/routes';

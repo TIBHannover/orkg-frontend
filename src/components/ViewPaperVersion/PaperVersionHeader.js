@@ -2,7 +2,7 @@ import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';

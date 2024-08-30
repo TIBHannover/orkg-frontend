@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { useState, FC } from 'react';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import useTopChangelog from 'components/LastUpdatesBox/hooks/useTopChangelog';
@@ -33,18 +33,14 @@ const LastUpdatesBox: FC<LastUpdatesBoxProps> = ({ researchFieldId }) => {
                                     <div className="time">{moment(activity.created_at).fromNow()}</div>
                                     <div className="action">
                                         {activity.profile?.id ? (
-                                            <>
-                                                {/* @ts-expect-error */}
-                                                <Link href={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>
-                                                    {activity.profile.display_name}
-                                                </Link>
-                                            </>
+                                            <Link href={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>
+                                                {activity.profile.display_name}
+                                            </Link>
                                         ) : (
                                             <i>Anonymous user</i>
                                         )}{' '}
                                         added
                                         {` ${getResourceTypeLabel(activity.classes?.length > 0 ? activity.classes[0] : '')} `}
-                                        {/* @ts-expect-error */}
                                         <Link href={getResourceLink(activity.classes?.length > 0 ? activity.classes[0] : '', activity.id)}>
                                             {truncate(activity.label, { length: 50 })}
                                         </Link>

@@ -1,5 +1,5 @@
-import Link from 'components/NextJsMigration/Link';
-import env from 'components/NextJsMigration/env';
+import Link from 'next/link';
+import { env } from 'next-runtime-env';
 import ROUTES from 'constants/routes';
 import greetingTime from 'greeting-time';
 import { reverse } from 'named-urls';
@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Cookies } from 'react-cookie';
 import Gravatar from 'react-gravatar';
 import { useDispatch, useSelector } from 'react-redux';
-import useRouter from 'components/NextJsMigration/useRouter';
+import { useRouter } from 'next/navigation';
 import { Button, ButtonGroup, Row } from 'reactstrap';
 import { resetAuth } from 'slices/authSlice';
 import styled from 'styled-components';

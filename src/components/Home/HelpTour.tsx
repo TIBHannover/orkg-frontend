@@ -5,7 +5,7 @@ import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { Button } from 'reactstrap';
 import Tippy from '@tippyjs/react';
 import { useState, FC } from 'react';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { Steps } from 'intro.js-react';
 
 type HelpButtonProps = {

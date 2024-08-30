@@ -3,7 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tabs from 'components/Tabs/Tabs';
 import ContributionComparisons from 'components/ViewPaper/ContributionComparisons/ContributionComparisons';

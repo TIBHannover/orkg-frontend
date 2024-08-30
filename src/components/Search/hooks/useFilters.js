@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import REGEX from 'constants/regex';
 import { getClassById } from 'services/backend/classes';
@@ -9,8 +9,7 @@ import { isEmpty, isString } from 'lodash';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import dotProp from 'dot-prop-immutable';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export const useFilters = () => {
     const { searchTerm } = useParams();

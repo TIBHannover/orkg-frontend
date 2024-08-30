@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { FC, ReactNode } from 'react';
 import { Row, Col } from 'reactstrap';
 import styled from 'styled-components';
@@ -31,7 +31,6 @@ const ShortRecord: FC<ShortRecordProps> = ({ href, header, children }) => (
     <StyledShortRecord className="list-group-item px-4 py-3">
         <Row>
             <Col sm={12}>
-                {/* @ts-expect-error */}
                 <Link href={href}>{header || <i>No label</i>}</Link>
                 <br />
                 <small>{children}</small>

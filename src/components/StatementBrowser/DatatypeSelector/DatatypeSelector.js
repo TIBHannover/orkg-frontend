@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { useContext, useCallback } from 'react';
 import Select, { components } from 'react-select';
 import DATA_TYPES, { getConfigByType } from 'constants/DataTypes';

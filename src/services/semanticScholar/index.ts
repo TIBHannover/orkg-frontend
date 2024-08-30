@@ -1,4 +1,4 @@
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { submitGetRequest } from 'network';
 
 export const semanticScholarUrl = env('NEXT_PUBLIC_SEMANTIC_SCHOLAR_URL');

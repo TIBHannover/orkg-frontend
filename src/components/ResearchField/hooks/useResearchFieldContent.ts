@@ -1,4 +1,4 @@
-import useRouter from 'components/NextJsMigration/useRouter';
+import { useRouter } from 'next/navigation';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import ROUTES from 'constants/routes';
 import { find, flatten } from 'lodash';

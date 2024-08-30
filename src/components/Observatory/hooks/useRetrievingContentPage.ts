@@ -1,4 +1,4 @@
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { useSearchParams } from 'next/navigation';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { find, flatten } from 'lodash';
 import { getStatementsBySubjects, statementsUrl } from 'services/backend/statements';

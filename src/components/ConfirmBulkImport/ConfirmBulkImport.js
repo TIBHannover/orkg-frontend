@@ -2,7 +2,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PaperList from 'components/ConfirmBulkImport/PaperList';
 import useImportBulkData from 'components/ConfirmBulkImport/useImportBulkData';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';

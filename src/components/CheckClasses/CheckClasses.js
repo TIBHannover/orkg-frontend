@@ -1,7 +1,7 @@
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import redirect from 'components/NextJsMigration/redirect';
+import { redirect } from 'next/navigation';
 
 /**
  * Component to check if classes of the resource and the route are valid, and makes a redirect to resource page if not

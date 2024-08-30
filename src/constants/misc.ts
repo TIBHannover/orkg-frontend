@@ -1,6 +1,6 @@
 'use client';
 
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { ExtractionMethod } from 'services/backend/types';
 
 export const url: string = `${env('NEXT_PUBLIC_BACKEND_URL')}api/`;

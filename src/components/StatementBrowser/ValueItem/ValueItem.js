@@ -1,5 +1,5 @@
-import Link from 'components/NextJsMigration/Link';
-import env from 'components/NextJsMigration/env';
+import Link from 'next/link';
+import { env } from 'next-runtime-env';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';

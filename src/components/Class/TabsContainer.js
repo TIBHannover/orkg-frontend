@@ -7,8 +7,8 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useParams from 'components/NextJsMigration/useParams';
+import { useRouter } from 'next/navigation';
+import useParams from 'components/useParams/useParams';
 import { Col, Container, Row } from 'reactstrap';
 
 function TabsContainer({ id, label, classObject, editMode }) {

@@ -1,6 +1,6 @@
 import { url } from 'constants/misc';
 import { submitGetRequest, submitPutRequest, submitPostRequest, submitDeleteRequest } from 'network';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { Contributor, User } from 'services/backend/types';
 
 export const userUrl = `${url}user/`;

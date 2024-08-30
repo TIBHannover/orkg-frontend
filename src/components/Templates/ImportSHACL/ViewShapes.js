@@ -1,6 +1,6 @@
 import Tippy from '@tippyjs/react';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';

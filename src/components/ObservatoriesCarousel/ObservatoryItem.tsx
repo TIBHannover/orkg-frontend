@@ -1,6 +1,6 @@
 import { faCubes, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import useObservatoryStats from 'components/Observatory/hooks/useObservatoryStats';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import ROUTES from 'constants/routes';
@@ -49,7 +49,6 @@ const ObservatoryItem = ({ observatory, onExiting, onExited, active }: Observato
         <CarouselItem in={active} onExiting={onExiting} onExited={onExited} className="pb-1 pb-4 flex-grow-1">
             <ObservatoryCardStyled className=" d-flex flex-grow-1" style={{ border: 0 }}>
                 <CardBody className="pt-0 mb-0">
-                    {/* @ts-expect-error */}
                     <Link href={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })} style={{ textDecoration: 'none' }}>
                         <CardTitle tag="h5">{observatory.name}</CardTitle>
                         <CardSubtitle tag="h6" style={{ height: '20px' }} className="mb-1 text-muted">
@@ -57,7 +56,6 @@ const ObservatoryItem = ({ observatory, onExiting, onExited, active }: Observato
                         </CardSubtitle>
                     </Link>
                     <div className="mt-3 mb-3 ps-2 pe-2">
-                        {/* @ts-expect-error */}
                         <Link
                             className="text-center d-flex"
                             href={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}

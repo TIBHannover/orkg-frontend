@@ -1,4 +1,4 @@
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import ROUTES from 'constants/routes';
 import { submitPostRequest } from 'network';
 import { useEffect, useState } from 'react';

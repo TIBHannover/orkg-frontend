@@ -1,5 +1,4 @@
-import useRouter from 'components/NextJsMigration/useRouter';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { DEFAULT_CLASSES_FILTER } from 'components/Observatory/IntegratedList/IntegratedListHeader';
 import { CLASSES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';

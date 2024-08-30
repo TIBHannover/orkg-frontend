@@ -1,5 +1,5 @@
 import Tippy from '@tippyjs/react';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import THING_TYPES from 'constants/thingTypes';

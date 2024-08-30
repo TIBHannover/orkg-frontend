@@ -1,7 +1,7 @@
 'use client';
 
-import Image from 'components/NextJsMigration/Image';
-import Link from 'components/NextJsMigration/Link';
+import Image from 'next/image';
+import Link from 'next/link';
 import { getImage } from 'components/SustainableDevelopmentGoals/helpers';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { SUSTAINABLE_DEVELOPMENT_GOALS } from 'constants/graphSettings';
@@ -27,7 +27,6 @@ const SustainableDevelopmentGoals = () => {
             </Container>
             <Container className="box rounded p-3">
                 {Object.values(SUSTAINABLE_DEVELOPMENT_GOALS).map((sdg) => (
-                    // @ts-expect-error
                     <Link href={reverse(ROUTES.SUSTAINABLE_DEVELOPMENT_GOAL, { sdg })} key={sdg}>
                         <Image
                             src={getImage(sdg)}

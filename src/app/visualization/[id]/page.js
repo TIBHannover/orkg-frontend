@@ -1,7 +1,7 @@
 'use client';
 
-import redirect from 'components/NextJsMigration/redirect';
-import useParams from 'components/NextJsMigration/useParams';
+import { redirect } from 'next/navigation';
+import useParams from 'components/useParams/useParams';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';

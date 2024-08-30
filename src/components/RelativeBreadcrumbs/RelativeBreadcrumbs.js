@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { useState } from 'react';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';

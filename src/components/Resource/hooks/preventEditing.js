@@ -1,6 +1,6 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { CLASSES } from 'constants/graphSettings';
 import { Alert } from 'reactstrap';
 

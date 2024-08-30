@@ -3,7 +3,7 @@
  * https://gitlab.com/TIBHannover/orkg/orkg-simcomp/
  */
 
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { submitGetRequest, submitPostRequest } from 'network';
 import qs from 'qs';
 

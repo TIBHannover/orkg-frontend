@@ -5,7 +5,7 @@ import CopyId from 'components/CopyId/CopyId';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import styled from 'styled-components';
 
 const StyledBox = styled.div`

@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { Badge } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import { reverseWithSlug } from 'utils';

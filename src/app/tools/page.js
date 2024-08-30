@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import AddPaperWizard from 'assets/img/tools/add-paper-wizard.png';
 import CsvImport from 'assets/img/tools/csv-import.png';
 import PdfSentenceAnnotation from 'assets/img/tools/pdf-sentence-annotation.png';
@@ -9,7 +9,7 @@ import ContributionEditor from 'assets/img/tools/contribution-editor.png';
 import ROUTES from 'constants/routes';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
-import Image from 'components/NextJsMigration/Image';
+import Image from 'next/image';
 
 const ToolsContainer = styled(Container)`
     display: flex;

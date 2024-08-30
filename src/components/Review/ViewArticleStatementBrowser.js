@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { PropertyStyle, StatementsGroupStyle, ValueItemStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import ROUTES from 'constants/routes';
 import { cloneDeep, orderBy } from 'lodash';

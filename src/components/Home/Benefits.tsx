@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselItem } from 'reactstrap';
 import { CarouselIndicatorsStyled } from 'components/styled';
 import styled from 'styled-components';
-import Image from 'components/NextJsMigration/Image';
+import Image from 'next/image';
 import { RootStore } from 'slices/types';
 
 const CarouselContainer = styled.div`

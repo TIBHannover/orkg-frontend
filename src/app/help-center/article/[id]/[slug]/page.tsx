@@ -2,8 +2,8 @@
 
 import NotFound from 'app/not-found';
 import CheckSlug from 'components/CheckSlug/CheckSlug';
-import Link from 'components/NextJsMigration/Link';
-import useParams from 'components/NextJsMigration/useParams';
+import Link from 'next/link';
+import useParams from 'components/useParams/useParams';
 import PageContentLoader from 'components/Page/PageContentLoader';
 import usePage from 'components/Page/usePage';
 import TitleBar from 'components/TitleBar/TitleBar';
@@ -46,12 +46,10 @@ const HelpCenterArticle = () => {
                     <>
                         <Breadcrumb>
                             <BreadcrumbItem>
-                                {/* @ts-expect-error */}
                                 <Link href={ROUTES.HELP_CENTER}>Help center</Link>
                             </BreadcrumbItem>
                             {page.attributes?.help_category?.data && (
                                 <BreadcrumbItem>
-                                    {/* @ts-expect-error */}
                                     <Link
                                         href={reverse(ROUTES.HELP_CENTER_CATEGORY, {
                                             id: page.attributes.help_category.data?.id,

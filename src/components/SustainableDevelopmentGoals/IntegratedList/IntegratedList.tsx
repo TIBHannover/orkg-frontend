@@ -1,5 +1,4 @@
-import useRouter from 'components/NextJsMigration/useRouter';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Tabs from 'components/Tabs/Tabs';
 import Items from 'components/UserProfile/Items';
 import { CLASSES } from 'constants/graphSettings';

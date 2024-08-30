@@ -2,7 +2,7 @@
 
 import AuthorWorks from 'components/Author/AuthorWorks';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { Alert, Container } from 'reactstrap';
 

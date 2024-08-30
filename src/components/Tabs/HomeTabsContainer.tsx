@@ -1,7 +1,6 @@
 import FeaturedItems from 'components/Home/FeaturedItems';
-import useParams from 'components/NextJsMigration/useParams';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import useParams from 'components/useParams/useParams';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Tabs from 'components/Tabs/Tabs';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';

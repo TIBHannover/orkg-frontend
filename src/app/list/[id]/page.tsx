@@ -15,8 +15,8 @@ import ExportBibtexModal from 'components/List/ExportBibtexModal/ExportBibtexMod
 import HistoryModal from 'components/List/HistoryModal/HistoryModal';
 import ViewList from 'components/List/ViewList/ViewList';
 import useList from 'components/List/hooks/useList';
-import Link from 'components/NextJsMigration/Link';
-import useRouter from 'components/NextJsMigration/useRouter';
+import Link from 'next/link';
+import { useRouter, useParams } from 'next/navigation';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
@@ -24,7 +24,6 @@ import { SubTitle } from 'components/styled';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
-import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 

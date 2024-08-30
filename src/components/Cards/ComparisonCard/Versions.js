@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { reverse } from 'named-urls';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faFile, faChartBar, faPaperclip, faCodeBranch } from '@fortawesome/free-solid-svg-icons';

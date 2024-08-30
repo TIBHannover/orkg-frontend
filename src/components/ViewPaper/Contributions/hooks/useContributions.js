@@ -8,7 +8,7 @@ import Confirm from 'components/Confirmation/Confirmation';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
-import useRouter from 'components/NextJsMigration/useRouter';
+import { useRouter } from 'next/navigation';
 import { EXTRACTION_METHODS } from 'constants/misc';
 import {
     selectContribution,

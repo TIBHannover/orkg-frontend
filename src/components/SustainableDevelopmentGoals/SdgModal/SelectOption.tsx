@@ -1,4 +1,4 @@
-import Image from 'components/NextJsMigration/Image';
+import Image from 'next/image';
 import { OptionType } from 'components/SustainableDevelopmentGoals/SdgModal/SdgModal';
 import { getImage, getSdgNumber } from 'components/SustainableDevelopmentGoals/helpers';
 import { FC } from 'react';

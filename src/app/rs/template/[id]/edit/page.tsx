@@ -2,13 +2,12 @@
 
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
-import useRouter from 'components/NextJsMigration/useRouter';
+import { useRouter, useParams } from 'next/navigation';
 import RosettaTemplateEditor from 'components/RosettaStone/RosettaTemplateEditor/RosettaTemplateEditor';
 import RosettaTemplateEditorProvider from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Container } from 'reactstrap';

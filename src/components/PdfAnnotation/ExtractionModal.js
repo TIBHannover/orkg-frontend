@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { useState } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert } from 'reactstrap';
 import PropTypes from 'prop-types';

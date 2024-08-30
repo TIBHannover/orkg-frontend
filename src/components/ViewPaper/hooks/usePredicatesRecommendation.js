@@ -4,7 +4,7 @@ import { uniqBy } from 'lodash';
 import { getRecommendedPredicates } from 'services/orkgNlp';
 import { getExistingPredicatesByResource } from 'slices/statementBrowserSlice';
 import { setPredicatesRawResponse } from 'slices/viewPaperSlice';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 
 const usePredicatesRecommendation = ({ title, abstract }) => {
     const selectedResource = useSelector((state) => state.statementBrowser.selectedResource);

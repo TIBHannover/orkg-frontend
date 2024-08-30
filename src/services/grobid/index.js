@@ -1,4 +1,4 @@
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 
 const grobidUrl = env('NEXT_PUBLIC_GROBID_URL');
 

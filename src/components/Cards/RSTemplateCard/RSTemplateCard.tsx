@@ -1,6 +1,6 @@
 import { faCalendar, faShapes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import ROUTES from 'constants/routes';
 import { toInteger } from 'lodash';
@@ -31,7 +31,6 @@ const RSTemplateCard: FC<RSTemplateCardProps> = ({ template }) => {
             <div className="col-md-9 d-flex p-0">
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
-                        {/* @ts-expect-error */}
                         <Link href={reverse(ROUTES.RS_TEMPLATE, { id: template.id })}>{template.label ? template.label : <em>No title</em>}</Link>
                     </div>
                     <div className="small text-muted">{formattedLabelWithPlaceholders}</div>

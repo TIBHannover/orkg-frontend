@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Card, CardFooter } from 'reactstrap';
 import { getParentResearchFields, getStatementsBySubjectAndPredicate } from 'services/backend/statements';

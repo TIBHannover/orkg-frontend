@@ -1,7 +1,6 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Filters from 'components/Filters/Filters';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';

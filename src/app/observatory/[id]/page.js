@@ -7,7 +7,7 @@ import NotFound from 'app/not-found';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import EditObservatory from 'components/Observatory/EditObservatory';
 import IntegratedListWrapper from 'components/Observatory/IntegratedList/IntegratedListWrapper';
 import MembersBox from 'components/Observatory/MembersBox';

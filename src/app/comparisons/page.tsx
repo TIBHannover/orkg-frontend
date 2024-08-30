@@ -6,8 +6,7 @@ import comparisonsThumbnail from 'assets/img/video_thumbnails/comparisons.png';
 import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
 import ListPage from 'components/ListPage/ListPage';
 import VideoExplainer from 'components/ListPage/VideoExplainer';
-import Link from 'components/NextJsMigration/Link';
-import loadImage from 'components/NextJsMigration/loadImage';
+import Link from 'next/link';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
@@ -51,7 +50,6 @@ const Comparisons = () => {
             >
                 <Icon icon={faPlus} /> Create comparison
             </RequireAuthentication>
-            {/* @ts-expect-error */}
             <Link style={{ marginLeft: '1px' }} className="btn btn-secondary btn-sm flex-shrink-0" href={ROUTES.FEATURED_COMPARISONS}>
                 Featured comparisons
             </Link>
@@ -61,7 +59,7 @@ const Comparisons = () => {
     const infoContainerText = (
         <div className="d-flex">
             <VideoExplainer
-                previewStyle={{ width: 65, height: 35, background: `url(${loadImage(comparisonsThumbnail)})` }}
+                previewStyle={{ width: 65, height: 35, background: `url(${comparisonsThumbnail.src})` }}
                 video={
                     <iframe
                         width="560"

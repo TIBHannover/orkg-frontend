@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faLink, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { goToResourceHistory } from 'slices/statementBrowserSlice';

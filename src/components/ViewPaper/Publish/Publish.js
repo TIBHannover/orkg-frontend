@@ -4,7 +4,7 @@ import Autocomplete from 'components/Autocomplete/Autocomplete';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
 import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import Tooltip from 'components/Utils/Tooltip';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';

@@ -1,6 +1,6 @@
 import { faCalendar, faLock, faShapes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import ROUTES from 'constants/routes';
@@ -18,7 +18,6 @@ const TemplateCard: FC<TemplateCardProps> = ({ template }) => (
         <div className="col-md-9 d-flex p-0">
             <div className="d-flex flex-column flex-grow-1">
                 <div className="mb-2">
-                    {/* @ts-expect-error */}
                     <Link href={reverse(ROUTES.TEMPLATE, { id: template.id })}>{template.label ? template.label : <em>No title</em>}</Link>
                 </div>
                 <div className="mb-1">
@@ -34,7 +33,7 @@ const TemplateCard: FC<TemplateCardProps> = ({ template }) => (
                 </div>
                 <div className="mb-1">
                     <small>
-                        Target class: {/* @ts-expect-error */}
+                        Target class:
                         <Link target="_blank" href={reverse(ROUTES.CLASS, { id: template.target_class.id })}>
                             {template.target_class.label}
                         </Link>{' '}

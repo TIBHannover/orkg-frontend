@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import Tippy, { useSingleton } from '@tippyjs/react';
 import { Button } from 'reactstrap';
 import { getFacebookSharerLink, getTwitterSharerLink, getLinkedInSharerLink } from 'components/ShareLinkMarker/helpers';
-import usePathname from 'components/NextJsMigration/usePathname';
+import { usePathname } from 'next/navigation';
 
 export const ShareSideBox = styled.div`
     position: absolute;

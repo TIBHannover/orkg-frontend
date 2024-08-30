@@ -1,4 +1,4 @@
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { submitGetRequest } from 'network';
 import { OptionType, ExternalServiceResponse } from 'components/Autocomplete/types';
 import { AUTOCOMPLETE_SOURCE } from 'constants/autocompleteSources';

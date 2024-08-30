@@ -9,9 +9,8 @@ import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
 import { OptionType } from 'components/Autocomplete/types';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import Link from 'components/NextJsMigration/Link';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import TitleBar from 'components/TitleBar/TitleBar';
 import Unauthorized from 'components/Unauthorized/Unauthorized';
 import { ENTITIES } from 'constants/graphSettings';
@@ -123,7 +122,7 @@ const TemplateNew = () => {
                 <hr className="mt-3 mb-3" />
                 {searchParams.get('classID') && targetClass?.id && (
                     <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
-                        You are creating a template for the class {/* @ts-expect-error */}
+                        You are creating a template for the class
                         <Link target="_blank" href={reverse(ROUTES.CLASS, { id: targetClass.id })}>
                             {targetClass.label}
                         </Link>

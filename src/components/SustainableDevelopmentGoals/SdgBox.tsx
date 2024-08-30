@@ -1,6 +1,6 @@
 import { faEllipsis, faPen } from '@fortawesome/free-solid-svg-icons';
-import Image from 'components/NextJsMigration/Image';
-import Link from 'components/NextJsMigration/Link';
+import Image from 'next/image';
+import Link from 'next/link';
 import ActionButtonView from 'components/StatementBrowser/StatementActionButton/ActionButtonView';
 import SdgModal from 'components/SustainableDevelopmentGoals/SdgModal/SdgModal';
 import { getImage, getSdgNumber, sortSdgs } from 'components/SustainableDevelopmentGoals/helpers';
@@ -41,7 +41,6 @@ const SdgBox: FC<SdgBoxProps> = ({ handleSave, sdgs = [], maxWidth = 200, maxIte
                 {sortSdgs(sdgs)
                     .slice(0, maxItems)
                     .map((sdg) => (
-                        // @ts-expect-error
                         <SdgStyled
                             href={reverse(ROUTES.SUSTAINABLE_DEVELOPMENT_GOAL, { sdg: sdg.id })}
                             className="position-relative position-relative me-1 mb-1"

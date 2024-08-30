@@ -2,7 +2,7 @@ import { Cite } from '@citation-js/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { CLASSES, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import createPaperMergeIfExists from 'helpers/createPaperMergeIfExists';
@@ -233,7 +233,7 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
 
                 {paperId && (
                     <Alert color="success">
-                        Annotations successfully saved {/* @ts-expect-error  */}
+                        Annotations successfully saved
                         <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: paperId })}>click here to view the paper</Link>
                     </Alert>
                 )}

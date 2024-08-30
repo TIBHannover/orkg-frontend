@@ -1,6 +1,4 @@
-import usePathname from 'components/NextJsMigration/usePathname';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { firstLoad, openAuthDialog } from 'slices/authSlice';
 

@@ -5,7 +5,7 @@ import RosettaTemplateEditorProvider from 'components/RosettaStone/RosettaTempla
 import TitleBar from 'components/TitleBar/TitleBar';
 import { useEffect } from 'react';
 import { Container } from 'reactstrap';
-import useRouter from 'components/NextJsMigration/useRouter';
+import { useRouter } from 'next/navigation';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import requireAuthentication from 'requireAuthentication';

@@ -2,7 +2,7 @@
 
 import { faPython } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { useEffect } from 'react';
 import { Button, Card, CardText, CardTitle, Col, Container, Row } from 'reactstrap';

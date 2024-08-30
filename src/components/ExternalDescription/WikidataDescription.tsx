@@ -6,7 +6,7 @@ import { PropertyStyle, StatementsGroupStyle, ValuesStyle } from 'components/Sta
 import { groupBy } from 'lodash';
 import { useEffect, useState, FC } from 'react';
 import { Row } from 'reactstrap';
-import Image from 'components/NextJsMigration/Image';
+import Image from 'next/image';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from 'constants/graphSettings';
 

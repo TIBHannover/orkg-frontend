@@ -7,7 +7,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 
 export const PreferencesStyle = styled.div`
     overflow-wrap: break-word;

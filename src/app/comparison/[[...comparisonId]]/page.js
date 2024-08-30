@@ -11,8 +11,8 @@ import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingC
 import useComparison from 'components/Comparison/hooks/useComparison';
 import { ContainerAnimated } from 'components/Comparison/styled';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import useParams from 'components/NextJsMigration/useParams';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import useParams from 'components/useParams/useParams';
+import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';

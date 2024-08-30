@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
@@ -7,7 +7,7 @@ import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import useRouter from 'components/NextJsMigration/useRouter';
+import { useRouter } from 'next/navigation';
 import Select, { components } from 'react-select';
 import { Alert, Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';

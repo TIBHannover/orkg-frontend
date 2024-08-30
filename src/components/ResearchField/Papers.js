@@ -2,7 +2,7 @@ import { faChevronDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { SubTitle } from 'components/styled';

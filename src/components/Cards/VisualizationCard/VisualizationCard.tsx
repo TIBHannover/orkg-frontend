@@ -5,7 +5,7 @@ import useVisualizationResearchField from 'components/Cards/VisualizationCard/ho
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CardBadge } from 'components/styled';
@@ -59,7 +59,6 @@ const VisualizationCard: FC<VisualizationCardProps> = ({ visualization, showBadg
                 )}
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
-                        {/* @ts-expect-error */}
                         <Link href={reverse(ROUTES.VISUALIZATION, { id: visualization.id })}>
                             {visualization.title ? visualization.title : <em>No title</em>}
                         </Link>

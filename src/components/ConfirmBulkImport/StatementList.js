@@ -1,7 +1,7 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { PropertyStyle, StatementsGroupStyle, ValueItemStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import { getConfigByType } from 'constants/DataTypes';
 import ROUTES from 'constants/routes';

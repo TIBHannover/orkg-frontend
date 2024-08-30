@@ -4,7 +4,7 @@ import Confirm from 'components/Confirmation/Confirmation';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { updateResourceClasses } from 'services/backend/resources';
 import { toast } from 'react-toastify';
-import useRouter from 'components/NextJsMigration/useRouter';
+import { useRouter } from 'next/navigation';
 import ROUTES from 'constants/routes';
 import pluralize from 'pluralize';
 

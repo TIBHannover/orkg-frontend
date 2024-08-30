@@ -1,6 +1,6 @@
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { getComparisonConfigObject } from 'components/Comparison/hooks/helpers';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { CLASSES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';

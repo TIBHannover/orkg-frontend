@@ -6,9 +6,9 @@ import ROUTES from 'constants/routes';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import NotFound from 'app/not-found';
-import redirect from 'components/NextJsMigration/redirect';
+import { redirect } from 'next/navigation';
 
 /**
  * Component for redirecting contribution IDs to the paper view

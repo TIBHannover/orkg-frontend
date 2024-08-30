@@ -1,9 +1,9 @@
 'use client';
 
 import NotFound from 'app/not-found';
-import Image from 'components/NextJsMigration/Image';
-import Link from 'components/NextJsMigration/Link';
-import useParams from 'components/NextJsMigration/useParams';
+import Image from 'next/image';
+import Link from 'next/link';
+import useParams from 'components/useParams/useParams';
 import IntegratedList from 'components/SustainableDevelopmentGoals/IntegratedList/IntegratedList';
 import { getImage } from 'components/SustainableDevelopmentGoals/helpers';
 import TitleBar from 'components/TitleBar/TitleBar';
@@ -45,7 +45,6 @@ const SustainableDevelopmentGoal = () => {
                         key={sdg}
                         className="rounded m-1"
                     >
-                        {/* @ts-expect-error */}
                         <Link href={reverse(ROUTES.SUSTAINABLE_DEVELOPMENT_GOAL, { sdg })}>
                             <Image
                                 src={getImage(sdg)}

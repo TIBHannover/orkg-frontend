@@ -6,7 +6,7 @@ import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFie
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import EditPaperModal from 'components/PaperForm/EditPaperModal';
 import PaperTitle from 'components/PaperTitle/PaperTitle';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';

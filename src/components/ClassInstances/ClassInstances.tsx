@@ -1,9 +1,8 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Link from 'components/NextJsMigration/Link';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import { debounce } from 'lodash';
@@ -92,13 +91,11 @@ const ClassInstances = ({ title = 'class', classId }: ClassInstancesProps) => {
                                     <tr key={instance.id}>
                                         <td>
                                             <DescriptionTooltip id={instance.id} _class={instance._class} classes={instance.classes}>
-                                                {/* @ts-expect-error */}
                                                 <Link href={`${reverse(ROUTES.RESOURCE, { id: instance.id })}?noRedirect`}>{instance.id}</Link>
                                             </DescriptionTooltip>
                                         </td>
                                         <td>
                                             <DescriptionTooltip id={instance.id} _class={instance._class} classes={instance.classes}>
-                                                {/* @ts-expect-error */}
                                                 <Link href={`${reverse(ROUTES.RESOURCE, { id: instance.id })}?noRedirect`}>{instance.label}</Link>
                                             </DescriptionTooltip>
                                         </td>

@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import PropTypes from 'prop-types';

@@ -6,9 +6,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { openAuthDialog, toggleAuthDialog } from 'slices/authSlice';
 import styled from 'styled-components';
-import usePathname from 'components/NextJsMigration/usePathname';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 const AnimationContainer = styled(CSSTransition)`
     &.fadeIn-enter {

@@ -2,7 +2,7 @@ import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { OptionType } from 'components/Autocomplete/types';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { FC } from 'react';
 import { SingleValue } from 'react-select';
 import { getLinkByEntityType } from 'utils';
@@ -17,7 +17,6 @@ const LinkButton: FC<LinkButtonProps> = ({ value }) => {
     }
 
     return (
-        // @ts-expect-error
         <Link
             target="_blank"
             href={getLinkByEntityType(value._class || 'class', value.id)}

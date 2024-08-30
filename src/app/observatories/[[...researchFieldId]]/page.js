@@ -12,8 +12,8 @@ import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect } from 'react';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useParams from 'components/NextJsMigration/useParams';
+import { useRouter } from 'next/navigation';
+import useParams from 'components/useParams/useParams';
 import { Container } from 'reactstrap';
 
 const Observatories = () => {
