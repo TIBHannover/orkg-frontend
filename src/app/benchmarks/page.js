@@ -3,10 +3,11 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import BenchmarkCard from 'components/Benchmarks/BenchmarkCard/BenchmarkCard';
-import usePaginate from 'components/hooks/usePaginate';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
-import TitleBar from 'components/TitleBar/TitleBar';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
+import usePaginate from 'components/hooks/usePaginate';
+import TitleBar from 'components/TitleBar/TitleBar';
+import pluralize from 'pluralize';
 import { Button, Container, Row } from 'reactstrap';
 import { getAllBenchmarks } from 'services/backend/benchmarks';
 
@@ -38,7 +39,8 @@ const Benchmarks = () => {
             <TitleBar
                 titleAddition={
                     <div className="text-muted mt-1">
-                        on {benchmarks.length === 0 && isLoading ? <Icon icon={faSpinner} spin /> : totalElements} research problem
+                        on {benchmarks.length === 0 && isLoading ? <Icon icon={faSpinner} spin /> : totalElements} research{' '}
+                        {pluralize('problem', totalElements, false)}
                     </div>
                 }
             >
