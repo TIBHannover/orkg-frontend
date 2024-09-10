@@ -1,4 +1,4 @@
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 
 export const getCitationByDOI = (DOI, style = '', header = 'text/x-bibliography') => {
     let headers = '';

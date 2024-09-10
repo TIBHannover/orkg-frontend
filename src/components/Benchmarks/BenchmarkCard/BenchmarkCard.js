@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { Card, CardBody } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';

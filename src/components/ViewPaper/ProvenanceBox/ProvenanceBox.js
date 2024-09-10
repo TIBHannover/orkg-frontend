@@ -1,5 +1,5 @@
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import Provenance from 'components/ViewPaper/ProvenanceBox/Provenance';
 import Timeline from 'components/ViewPaper/ProvenanceBox/Timeline';
 import { AnimationContainer, ErrorMessage, ProvenanceBoxTabs, SidebarStyledBox } from 'components/ViewPaper/ProvenanceBox/styled';

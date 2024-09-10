@@ -12,11 +12,10 @@ import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
 import Nfdi4dsButton from 'components/Layout/Header/Nfdi4dsButton';
 import SearchForm from 'components/Layout/Header/SearchForm';
 import UserTooltip from 'components/Layout/Header/UserTooltip';
-import Image from 'components/NextJsMigration/Image';
-import Link from 'components/NextJsMigration/Link';
-import env from 'components/NextJsMigration/env';
-import loadImage from 'components/NextJsMigration/loadImage';
-import usePathname from 'components/NextJsMigration/usePathname';
+import Image from 'next/image';
+import Link from 'next/link';
+import { env } from 'next-runtime-env';
+import { usePathname } from 'next/navigation';
 import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -105,7 +104,7 @@ const StyledTopBar = styled.div`
 
     &.home-page {
         // For the background
-        background: #5f6474 url(${loadImage(HomeBannerBg)});
+        background: #5f6474 url(${HomeBannerBg.src});
         background-position-x: 0%, 0%;
         background-position-y: 0%, 0%;
         background-size: auto, auto;

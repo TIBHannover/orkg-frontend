@@ -1,5 +1,5 @@
-import useParams from 'components/NextJsMigration/useParams';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import useParams from 'components/useParams/useParams';
+import { useSearchParams } from 'next/navigation';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import ROUTES from 'constants/routes';

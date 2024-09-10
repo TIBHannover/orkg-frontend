@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { faPlusCircle, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { contributionsRemoved, loadContributions } from 'slices/contributionEditorSlice';
@@ -16,11 +16,11 @@ import routes from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { Alert, Button, Container } from 'reactstrap';
 import TitleBar from 'components/TitleBar/TitleBar';
 import AddPaperModal from 'components/PaperForm/AddPaperModal';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { useSearchParams } from 'next/navigation';
 import RelatedPapersCarousel from 'components/Comparison/ComparisonCarousel/RelatedPapers/RelatedPaperCarousel';
 
 const ContributionEditor = () => {

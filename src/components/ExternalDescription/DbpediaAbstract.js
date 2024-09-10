@@ -5,7 +5,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import DBPEDIA_LOGO from 'assets/img/sameas/dbpedia.png';
 import PropTypes from 'prop-types';
 import { getAbstractByURI } from 'services/dbpedia';
-import Image from 'components/NextJsMigration/Image';
+import Image from 'next/image';
 
 class DbpediaAbstract extends Component {
     constructor(props) {

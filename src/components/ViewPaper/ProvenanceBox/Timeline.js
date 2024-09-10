@@ -1,11 +1,11 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Alert, Button } from 'reactstrap';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import { MISC } from 'constants/graphSettings';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { StyledActivity } from 'components/ViewPaper/ProvenanceBox/styled';
 
 const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, hasNextPageContributors, handleLoadMoreContributors }) => (

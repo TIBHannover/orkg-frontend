@@ -1,5 +1,5 @@
 import ContentLoader from 'components/ContentLoader/ContentLoader';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import ItemMetadata from 'components/Search/ItemMetadata';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';

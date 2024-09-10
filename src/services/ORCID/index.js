@@ -1,5 +1,5 @@
 import { submitGetRequest } from 'network';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 
 const url = env('NEXT_PUBLIC_ORCID_API_URL');
 

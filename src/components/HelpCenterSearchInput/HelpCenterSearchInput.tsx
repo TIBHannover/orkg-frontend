@@ -1,5 +1,5 @@
-import useParams from 'components/NextJsMigration/useParams';
-import useRouter from 'components/NextJsMigration/useRouter';
+import useParams from 'components/useParams/useParams';
+import { useRouter } from 'next/navigation';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';

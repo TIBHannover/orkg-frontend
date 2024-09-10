@@ -2,7 +2,7 @@ import { faCalendar, faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import ROUTES from 'constants/routes';
 import { downloadJPG, downloadPDF } from 'libs/googleChartDownloadFunctions';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';

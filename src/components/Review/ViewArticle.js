@@ -7,9 +7,9 @@ import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFie
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import Link from 'components/NextJsMigration/Link';
-import env from 'components/NextJsMigration/env';
-import useParams from 'components/NextJsMigration/useParams';
+import Link from 'next/link';
+import { env } from 'next-runtime-env';
+import useParams from 'components/useParams/useParams';
 import Acknowledgements from 'components/Review/Acknowledgements';
 import SectionDataTable from 'components/Review/DataTable/SectionOntology';
 import MarkdownRenderer from 'components/Review/MarkdownRenderer';

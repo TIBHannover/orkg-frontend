@@ -1,7 +1,7 @@
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import Link from 'components/NextJsMigration/Link';
-import env from 'components/NextJsMigration/env';
+import Link from 'next/link';
+import { env } from 'next-runtime-env';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import ROUTES_CMS from 'constants/routesCms';

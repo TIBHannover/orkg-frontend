@@ -4,8 +4,8 @@ import { faAngleDoubleDown, faEllipsisV, faSpinner } from '@fortawesome/free-sol
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import Link from 'components/NextJsMigration/Link';
-import useParams from 'components/NextJsMigration/useParams';
+import Link from 'next/link';
+import useParams from 'components/useParams/useParams';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useVenuePapers from 'components/Venue/useVenuePapers';
 import { SubTitle } from 'components/styled';

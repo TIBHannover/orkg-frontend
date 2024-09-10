@@ -5,7 +5,7 @@ import { Col, Row, Container } from 'reactstrap';
 import InternalServerError from 'app/error';
 import { SubTitle } from 'components/styled';
 import NotFound from 'app/not-found';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { getConferenceById } from 'services/backend/conferences-series';
 import Comparisons from 'components/Organization/Comparisons';

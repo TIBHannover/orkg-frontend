@@ -3,7 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { OptionType } from 'components/Autocomplete/types';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { PropertyStyle } from 'components/StatementBrowser/styled';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
@@ -46,7 +46,6 @@ const TemplateComponentProperty: FC<TemplateComponentPropertyProps> = ({ id, dra
             {!isEditing ? (
                 <div className="propertyLabel">
                     {property?.id ? (
-                        // @ts-expect-error
                         <Link href={reverse(ROUTES.PROPERTY, { id: property.id })} target="_blank" className="text-dark">
                             <DescriptionTooltip id={property.id} _class={ENTITIES.PREDICATE}>
                                 {property.label}

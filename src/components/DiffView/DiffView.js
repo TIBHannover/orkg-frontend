@@ -9,10 +9,9 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import ReactDiffViewer from 'react-diff-viewer-continued';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useParams from 'components/NextJsMigration/useParams';
+import { useRouter, useSearchParams } from 'next/navigation';
+import useParams from 'components/useParams/useParams';
 import { Alert, Button } from 'reactstrap';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
 
 const DiffView = ({ type, diffRoute, getData }) => {
     const { oldId, newId } = useParams();

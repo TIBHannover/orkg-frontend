@@ -1,9 +1,8 @@
 import { isString } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useDebounce, usePrevious, useWindowScroll } from 'react-use';
-import useRouter from 'components/NextJsMigration/useRouter';
-import usePathname from 'components/NextJsMigration/usePathname';
-import useParams from 'components/NextJsMigration/useParams';
+import { useRouter, usePathname } from 'next/navigation';
+import useParams from 'components/useParams/useParams';
 
 const useScroll = () => {
     const [scrollTop, setScrollTop] = useState(null);

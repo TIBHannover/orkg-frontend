@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Table, Collapse } from 'reactstrap';

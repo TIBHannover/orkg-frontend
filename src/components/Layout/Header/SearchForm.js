@@ -5,12 +5,11 @@ import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import REGEX from 'constants/regex';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import { Form, Input, Button, InputGroup } from 'reactstrap';
 import { isString } from 'lodash';
 import { getLinkByEntityType, getEntityTypeByID } from 'utils';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 
 const SearchForm = ({ placeholder, onSearch = null }) => {

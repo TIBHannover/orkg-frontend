@@ -4,7 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import WIKIPEDIA_LOGO from 'assets/img/sameas/wikipedia.png';
 import PropTypes from 'prop-types';
-import Image from 'components/NextJsMigration/Image';
+import Image from 'next/image';
 
 class WikipediaSummary extends Component {
     constructor(props) {

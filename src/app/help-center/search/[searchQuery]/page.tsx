@@ -1,8 +1,8 @@
 'use client';
 
 import HelpCenterSearchInput from 'components/HelpCenterSearchInput/HelpCenterSearchInput';
-import Link from 'components/NextJsMigration/Link';
-import useParams from 'components/NextJsMigration/useParams';
+import Link from 'next/link';
+import useParams from 'components/useParams/useParams';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { useEffect, useState } from 'react';
@@ -52,7 +52,6 @@ const HelpCenterSearch = () => {
 
                 <Breadcrumb>
                     <BreadcrumbItem>
-                        {/* @ts-expect-error */}
                         <Link href={ROUTES.HELP_CENTER}>Help center</Link>
                     </BreadcrumbItem>
                     <BreadcrumbItem active>Search results</BreadcrumbItem>
@@ -64,7 +63,6 @@ const HelpCenterSearch = () => {
                     <ul>
                         {articles.map((article) => (
                             <li key={article.id}>
-                                {/* @ts-expect-error */}
                                 <Link
                                     href={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                         id: article.id,

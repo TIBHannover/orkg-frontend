@@ -1,6 +1,6 @@
 import FEEDBACK_QUESTIONS from 'components/Comparison/QualityReportModal/FeedbackQuestions';
 import { getPropertyObjectFromData } from 'components/Comparison/hooks/helpers';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import THING_TYPES from 'constants/thingTypes';

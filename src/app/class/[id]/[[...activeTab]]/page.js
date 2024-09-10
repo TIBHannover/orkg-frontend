@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { faFileCsv, faPen, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import TabsContainer from 'components/Class/TabsContainer';
@@ -13,7 +13,7 @@ import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
 import { useEffect, useState } from 'react';
 import { getClassById } from 'services/backend/classes';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 import EditableHeader from 'components/EditableHeader';
 import ItemMetadata from 'components/Search/ItemMetadata';

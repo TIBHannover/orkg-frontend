@@ -2,7 +2,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import GEONAMES_LOGO from 'assets/img/sameas/geonames.png';
 import { CoordinatesDisplay } from 'components/ExternalDescription/CoordinatesDisplay';
-import Image from 'components/NextJsMigration/Image';
+import Image from 'next/image';
 import { FC } from 'react';
 import { getById } from 'services/geoNames';
 import useSWR from 'swr';

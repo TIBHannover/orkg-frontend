@@ -2,8 +2,8 @@
 
 import NotFound from 'app/not-found';
 import CheckSlug from 'components/CheckSlug/CheckSlug';
-import Link from 'components/NextJsMigration/Link';
-import useParams from 'components/NextJsMigration/useParams';
+import Link from 'next/link';
+import useParams from 'components/useParams/useParams';
 import PageContentLoader from 'components/Page/PageContentLoader';
 import usePage from 'components/Page/usePage';
 import TitleBar from 'components/TitleBar/TitleBar';
@@ -76,7 +76,6 @@ const About = () => {
                             <Nav>
                                 {menuItems.map((item) => (
                                     <NavItem key={item.id} className={item.id === page?.id ? 'rounded bg-light' : ''}>
-                                        {/* @ts-expect-error */}
                                         <Link
                                             className="nav-link"
                                             href={reverseWithSlug(ROUTES.ABOUT, { id: item.id, slug: item.attributes?.title })}

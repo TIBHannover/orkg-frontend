@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { faCheck, faPen, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';

@@ -2,7 +2,7 @@ import { faCheck, faClock, faClose, faInfo } from '@fortawesome/free-solid-svg-i
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import CopyId from 'components/CopyId/CopyId';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import VersionsModal from 'components/RosettaStone/SingleStatement/VersionsModal';
 import ActionButtonView from 'components/StatementBrowser/StatementActionButton/ActionButtonView';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
@@ -92,7 +92,7 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
                             </div>
                         )}
                         <li className="mb-1">
-                            Template: {/* @ts-expect-error */}
+                            Template:
                             <Link target="_blank" href={reverse(ROUTES.RS_TEMPLATE, { id: template.id })}>
                                 {template.label ? template.label : <em>No title</em>}
                             </Link>

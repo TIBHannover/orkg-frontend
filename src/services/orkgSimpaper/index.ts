@@ -1,4 +1,4 @@
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { submitGetRequest } from 'network';
 import qs from 'qs';
 import { SimilarPaper } from 'services/orkgSimpaper/types';

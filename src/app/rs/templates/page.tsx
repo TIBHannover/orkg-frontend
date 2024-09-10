@@ -3,9 +3,8 @@
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import RSTemplateCard from 'components/Cards/RSTemplateCard/RSTemplateCard';
-import Link from 'components/NextJsMigration/Link';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { MAX_LENGTH_INPUT } from 'constants/misc';

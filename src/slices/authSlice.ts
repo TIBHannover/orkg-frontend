@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { Cookies } from 'react-cookie';
 import { Dispatch } from 'redux';
 import { getUserInformation } from 'services/backend/users';

@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { faCakeCandles } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import capitalize from 'capitalize';
@@ -18,7 +18,7 @@ import { useEffect, useState } from 'react';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import Gravatar from 'react-gravatar';
 import { useSelector } from 'react-redux';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import { Container, Row } from 'reactstrap';
 import { getContributorInformationById } from 'services/backend/contributors';
 import { getObservatoryById } from 'services/backend/observatories';

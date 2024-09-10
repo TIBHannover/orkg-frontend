@@ -6,7 +6,7 @@ import { isEqual } from 'lodash';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { memo, useEffect, useState } from 'react';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { getThing } from 'services/similarity';
 import styled from 'styled-components';
 

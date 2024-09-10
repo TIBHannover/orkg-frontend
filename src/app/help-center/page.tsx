@@ -1,7 +1,7 @@
 'use client';
 
 import HelpCenterSearchInput from 'components/HelpCenterSearchInput/HelpCenterSearchInput';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { times } from 'lodash';
@@ -62,7 +62,6 @@ const HelpCenter = () => {
                     {categories.map((category) => (
                         <Col key={category.id} md="6">
                             <h2 className="h4">
-                                {/* @ts-expect-error */}
                                 <Link
                                     href={reverse(ROUTES.HELP_CENTER_CATEGORY, {
                                         id: category.id,
@@ -75,7 +74,6 @@ const HelpCenter = () => {
                             <ul className="ps-3 mb-0">
                                 {category.attributes?.help_articles?.data?.slice(0, 5)?.map((article) => (
                                     <li key={article.id}>
-                                        {/* @ts-expect-error */}
                                         <Link
                                             href={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                                 id: article.id,
@@ -88,7 +86,6 @@ const HelpCenter = () => {
                                 ))}
                             </ul>
                             <div className="mt-2 mb-4">
-                                {/* @ts-expect-error */}
                                 <Link
                                     href={reverse(ROUTES.HELP_CENTER_CATEGORY, {
                                         id: category.id,

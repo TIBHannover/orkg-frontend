@@ -1,4 +1,4 @@
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import { RESOURCES } from 'constants/graphSettings';
 import { useEffect, useState } from 'react';
 import { getFieldChildren } from 'services/backend/researchFields';

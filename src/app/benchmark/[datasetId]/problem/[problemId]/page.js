@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { faEllipsisV, faPen, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import CodeURLsTooltip from 'components/Benchmarks/BenchmarkCard/CodeURLsTooltip';
@@ -31,8 +31,8 @@ import {
 } from 'reactstrap';
 import { getDatasetsBenchmarksByResearchProblemId } from 'services/backend/datasets';
 import { reverseWithSlug } from 'utils';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useParams from 'components/NextJsMigration/useParams';
+import { useRouter } from 'next/navigation';
+import useParams from 'components/useParams/useParams';
 import PaperTitle from 'components/PaperTitle/PaperTitle';
 
 function getTicksAxisH(data) {

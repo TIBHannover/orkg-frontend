@@ -14,7 +14,7 @@ import useList from 'components/List/hooks/useList';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import { VISIBILITY } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';

@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import useScroll from 'components/Review/hooks/useScroll';
 import propTypes from 'prop-types';
 import { useSelector } from 'react-redux';

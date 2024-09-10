@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';

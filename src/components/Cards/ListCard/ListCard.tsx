@@ -6,7 +6,7 @@ import useCardData from 'components/Cards/hooks/useCardData';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CardBadge } from 'components/styled';
@@ -62,7 +62,6 @@ const ListCard: FC<ListCardProps> = ({ list, showBadge = false, showCurationFlag
                 )}
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
-                        {/* @ts-expect-error */}
                         <Link href={reverse(ROUTES.LIST, { id: list.id })}>{list.title}</Link>
                         {showBadge && (
                             <div className="d-inline-block ms-2">
@@ -86,7 +85,6 @@ const ListCard: FC<ListCardProps> = ({ list, showBadge = false, showCurationFlag
                             {list.versions?.published.map((version, index) => (
                                 <span key={version.id}>
                                     <Tippy content={version.changelog ? version.changelog : 'No changelog title'}>
-                                        {/* @ts-expect-error */}
                                         <Link href={reverse(ROUTES.LIST, { id: version.id })}>
                                             Version {(list.versions.published?.length ?? 0) - index}
                                         </Link>

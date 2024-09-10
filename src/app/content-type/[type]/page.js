@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { supportedContentTypes } from 'components/ContentType/types';
@@ -13,7 +13,7 @@ import { reverse } from 'named-urls';
 import NotFound from 'app/not-found';
 import pluralize from 'pluralize';
 import { useEffect, useState } from 'react';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import { getResources } from 'services/backend/resources';
 
 function ContentTypes() {

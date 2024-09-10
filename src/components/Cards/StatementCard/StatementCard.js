@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { reverse } from 'named-urls';
 import { getLinkByEntityType } from 'utils';
 import ROUTES from 'constants/routes';

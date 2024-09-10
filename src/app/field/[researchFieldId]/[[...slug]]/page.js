@@ -8,7 +8,7 @@ import useResearchFieldObservatories from 'components/ResearchField/hooks/useRes
 import LastUpdatesBox from 'components/LastUpdatesBox/LastUpdatesBox';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import IntegratedList from 'components/ResearchField/IntegratedList';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import ResearchProblemsBox from 'components/ResearchProblemsBox/ResearchProblemsBox';
 
 const ResearchField = () => {

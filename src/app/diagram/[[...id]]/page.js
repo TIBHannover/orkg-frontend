@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { useEffect } from 'react';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import { Controls, MarkerType, MiniMap } from 'reactflow';
 import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Alert } from 'reactstrap';
 import ContextMenu from 'components/DiagramEditor/ContextMenu';

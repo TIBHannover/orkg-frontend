@@ -17,7 +17,7 @@ import NotFound from 'app/not-found';
 import Unauthorized from 'components/Unauthorized/Unauthorized';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import { Button, Container } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
 

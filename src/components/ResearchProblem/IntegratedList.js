@@ -1,7 +1,7 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import CardFactory from 'components/Cards/CardFactory/CardFactory';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { useSearchParams } from 'next/navigation';
 import useResearchProblemContent from 'components/ResearchProblem/hooks/useResearchProblemContent';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';

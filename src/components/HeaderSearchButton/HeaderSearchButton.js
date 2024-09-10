@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { Button } from 'reactstrap';
-import useRouter from 'components/NextJsMigration/useRouter';
+import { useRouter } from 'next/navigation';
 import { SearchStyled, InputStyled, SearchButtonStyled } from 'components/styled';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 

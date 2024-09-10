@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Container } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -8,7 +8,7 @@ import { faSpinner, faPlus } from '@fortawesome/free-solid-svg-icons';
 import OrganizationCard from 'components/Cards/OrganizationCard/OrganizationCard';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { getAllOrganizations, getConferences } from 'services/backend/organizations';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import ROUTES from 'constants/routes';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { useSelector } from 'react-redux';

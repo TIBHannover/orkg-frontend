@@ -2,7 +2,7 @@ import { faCheck, faClose, faPen, faTimes, faTrash } from '@fortawesome/free-sol
 import Tippy from '@tippyjs/react';
 import { OptionType } from 'components/Autocomplete/types';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import useEditStatement from 'components/RosettaStone/SingleStatement/hooks/useEditStatement';
 import InfoBox from 'components/RosettaStone/SingleStatement/InfoBox';
 import StatementInputField from 'components/RosettaStone/SingleStatement/StatementInputField';
@@ -165,7 +165,6 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
                 </div>
                 {showContext && isLoadingContext && <div className="d-inline-block">Loading...</div>}
                 {showContext && !isLoadingContext && context && (
-                    // @ts-expect-error
                     <Link href={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: context.id, contributionId: 'statements' })}>
                         <Badge color="light">Context: {context.title}</Badge>
                     </Link>

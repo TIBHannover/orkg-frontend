@@ -1,6 +1,5 @@
 import { mergeFilters } from 'components/Filters/helpers';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import { useRouter, useSearchParams } from 'next/navigation';
 import useObservatoryFilters from 'components/Observatory/hooks/useObservatoryFilters';
 import { FILTER_SOURCE } from 'constants/filters';
 import { orderBy } from 'lodash';

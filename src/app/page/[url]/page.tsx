@@ -6,7 +6,7 @@ import { CmsPage } from 'components/styled';
 import TitleBar from 'components/TitleBar/TitleBar';
 import NotFound from 'app/not-found';
 import { useEffect } from 'react';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import { Container } from 'reactstrap';
 import { getPageByUrl } from 'services/cms';
 

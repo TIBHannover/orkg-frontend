@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { Row, Col } from 'reactstrap';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';

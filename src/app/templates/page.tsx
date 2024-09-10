@@ -4,9 +4,8 @@ import { faEllipsisV, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icon
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
-import Link from 'components/NextJsMigration/Link';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';

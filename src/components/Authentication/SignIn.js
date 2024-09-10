@@ -1,7 +1,7 @@
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import env from 'components/NextJsMigration/env';
-import useRouter from 'components/NextJsMigration/useRouter';
+import { env } from 'next-runtime-env';
+import { useRouter } from 'next/navigation';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Cookies } from 'react-cookie';

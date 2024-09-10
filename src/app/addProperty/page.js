@@ -1,7 +1,7 @@
 'use client';
 
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import useRouter from 'components/NextJsMigration/useRouter';
+import { useRouter } from 'next/navigation';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';

@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import comparisonPublishImg from 'assets/img/AddComparison/comparison-publish-preview.png';
@@ -9,7 +9,7 @@ import csvImportPreview from 'assets/img/AddComparison/csv-import-preview.png';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { Button, Col, Container, Row } from 'reactstrap';
-import Image from 'components/NextJsMigration/Image';
+import Image from 'next/image';
 import { useEffect } from 'react';
 
 const AddComparison = () => {

@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'reactstrap';
 import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
@@ -9,7 +9,7 @@ import Members from 'components/Organization/Members';
 import Observatories from 'components/Organization/Observatories';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt, faGlobe, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 import { useSelector } from 'react-redux';
 import NotFound from 'app/not-found';
 import styled from 'styled-components';

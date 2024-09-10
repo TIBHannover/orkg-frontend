@@ -7,7 +7,7 @@ import Paths from 'components/Cards/PaperCard/Paths';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import PaperTitle from 'components/PaperTitle/PaperTitle';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
@@ -108,7 +108,6 @@ const PaperCard: FC<PaperCardType> = ({
                 )}
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
-                        {/* @ts-expect-error */}
                         <Link
                             target={linkTarget || undefined}
                             href={

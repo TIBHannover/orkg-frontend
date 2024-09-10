@@ -6,7 +6,7 @@ import ViewPaper from 'components/ViewPaper/Page/ViewPaper';
 import { getResource } from 'services/backend/resources';
 import { CLASSES } from 'constants/graphSettings';
 import ViewPaperVersion from 'components/ViewPaper/Page/ViewPaperVersion';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 
 /**
  * This component checks if the paper if a published version or live version and return the correct page

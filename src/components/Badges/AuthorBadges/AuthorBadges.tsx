@@ -1,6 +1,6 @@
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { FC, useState } from 'react';
@@ -21,7 +21,6 @@ const AuthorBadges: FC<AuthorBadgesProps> = ({ authors }) => {
         <>
             {authorsLimited.map((author, index) =>
                 author.id ? (
-                    // @ts-expect-error
                     <Link
                         key={index}
                         href={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
@@ -35,7 +34,6 @@ const AuthorBadges: FC<AuthorBadgesProps> = ({ authors }) => {
                         </Badge>
                     </Link>
                 ) : (
-                    // @ts-expect-error
                     <Link
                         key={index}
                         href={reverse(ROUTES.AUTHOR_LITERAL, { authorString: encodeURIComponent(author.name) })}

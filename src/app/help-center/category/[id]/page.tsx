@@ -1,8 +1,8 @@
 'use client';
 
 import NotFound from 'app/not-found';
-import Link from 'components/NextJsMigration/Link';
-import useParams from 'components/NextJsMigration/useParams';
+import Link from 'next/link';
+import useParams from 'components/useParams/useParams';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { useEffect, useState } from 'react';
@@ -48,7 +48,6 @@ const HelpCenterCategory = () => {
                     <>
                         <Breadcrumb>
                             <BreadcrumbItem>
-                                {/* @ts-expect-error */}
                                 <Link href={ROUTES.HELP_CENTER}>Help center</Link>
                             </BreadcrumbItem>
                             <BreadcrumbItem active>{category.attributes?.title}</BreadcrumbItem>
@@ -57,7 +56,6 @@ const HelpCenterCategory = () => {
                         <ul>
                             {category.attributes?.help_articles?.data?.map((article) => (
                                 <li key={article.id}>
-                                    {/* @ts-expect-error */}
                                     <Link
                                         href={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                             id: article.id,

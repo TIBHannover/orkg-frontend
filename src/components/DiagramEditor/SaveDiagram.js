@@ -1,6 +1,6 @@
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import Link from 'components/NextJsMigration/Link';
-import useRouter from 'components/NextJsMigration/useRouter';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';

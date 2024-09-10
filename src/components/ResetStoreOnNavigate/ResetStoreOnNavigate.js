@@ -1,6 +1,6 @@
 'use client';
 
-import usePathname from 'components/NextJsMigration/usePathname';
+import { usePathname } from 'next/navigation';
 import { useLayoutEffect } from 'react';
 import { useDispatch } from 'react-redux';
 

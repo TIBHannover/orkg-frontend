@@ -20,11 +20,10 @@ import useComparisonVersions from 'components/Comparison/hooks/useComparisonVers
 import { ComparisonTypeButton } from 'components/Comparison/styled';
 import Confirm from 'components/Confirmation/Confirmation';
 import GraphViewModal from 'components/GraphView/GraphViewModal';
-import Image from 'components/NextJsMigration/Image';
-import Link from 'components/NextJsMigration/Link';
-import env from 'components/NextJsMigration/env';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useSearchParams from 'components/NextJsMigration/useSearchParams';
+import Image from 'next/image';
+import Link from 'next/link';
+import { env } from 'next-runtime-env';
+import { useRouter, useSearchParams } from 'next/navigation';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ComparisonAuthorsModel from 'components/TopAuthors/ComparisonAuthorsModel';

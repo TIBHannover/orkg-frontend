@@ -9,7 +9,7 @@ import ResearchFieldCards from 'components/Home/ResearchFieldCards';
 import useResearchFieldSelector from 'components/Home/hooks/useResearchFieldSelector';
 import HomeAlerts from 'components/HomeAlerts/HomeAlerts';
 import LastUpdatesBox from 'components/LastUpdatesBox/LastUpdatesBox';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import HomeTabsContainer from 'components/Tabs/HomeTabsContainer';
 import ContributorsBox from 'components/TopContributors/ContributorsBox';
 import { RESOURCES } from 'constants/graphSettings';

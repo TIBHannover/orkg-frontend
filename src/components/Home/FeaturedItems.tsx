@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { FormGroup, Label, Input, ListGroup, Button } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import styled from 'styled-components';

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Confirm from 'components/Confirmation/Confirmation';
 import { deletePredicate as deletePredicateNetwork } from 'services/backend/predicates';
 import { toast } from 'react-toastify';
-import useRouter from 'components/NextJsMigration/useRouter';
+import { useRouter } from 'next/navigation';
 import ROUTES from 'constants/routes';
 
 function useDeleteProperty({ propertyId, redirect = false }) {

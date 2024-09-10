@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { useRef } from 'react';
 import { Button } from 'reactstrap';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
@@ -12,7 +12,7 @@ import AddPaperWizard from 'assets/img/tools/add-paper-wizard.png';
 import ContributionEditor from 'assets/img/tools/contribution-editor.png';
 import styled from 'styled-components';
 import { reverse } from 'named-urls';
-import Image from 'components/NextJsMigration/Image';
+import Image from 'next/image';
 
 const LabelStyled = styled.span`
     @media (max-width: ${(props) => props.theme.gridBreakpoints.lg}) {

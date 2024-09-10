@@ -8,7 +8,7 @@ import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { forwardRef, memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import styled from 'styled-components';
 
 const Value = styled.div`

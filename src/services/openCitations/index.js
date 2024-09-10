@@ -1,4 +1,4 @@
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { submitGetRequest } from 'network';
 
 export const openCitationsUrl = env('NEXT_PUBLIC_OPEN_CITATIONS_URL');

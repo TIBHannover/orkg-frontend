@@ -1,5 +1,5 @@
 import Confirm from 'components/Confirmation/Confirmation';
-import useRouter from 'components/NextJsMigration/useRouter';
+import { useRouter } from 'next/navigation';
 import ROUTES from 'constants/routes';
 import { useState } from 'react';
 import { toast } from 'react-toastify';

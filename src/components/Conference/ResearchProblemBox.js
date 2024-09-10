@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Button } from 'reactstrap';
 import { getProblemsByOrganizationId } from 'services/backend/organizations';

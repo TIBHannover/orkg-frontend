@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { Col } from 'reactstrap';
 import styled from 'styled-components';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';

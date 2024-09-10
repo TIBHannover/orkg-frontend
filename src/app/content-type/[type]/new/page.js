@@ -3,9 +3,9 @@
 import { faBars, faComments, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { supportedContentTypes } from 'components/ContentType/types';
-import Link from 'components/NextJsMigration/Link';
-import useParams from 'components/NextJsMigration/useParams';
-import useRouter from 'components/NextJsMigration/useRouter';
+import Link from 'next/link';
+import useParams from 'components/useParams/useParams';
+import { useRouter } from 'next/navigation';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { CLASSES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';

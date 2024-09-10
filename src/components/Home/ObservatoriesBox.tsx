@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import ObservatoriesCarousel from 'components/ObservatoriesCarousel/ObservatoriesCarousel';
 import ROUTES from 'constants/routes';
 import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
@@ -23,7 +23,6 @@ const ObservatoriesBox: FC<ObservatoriesBoxProps> = ({ researchFieldId }) => {
                 <Tippy content="Observatories organize research contributions in a particular research field and are curated by research organizations active in the respective field.">
                     <span>Observatories</span>
                 </Tippy>
-                {/* @ts-expect-error */}
                 <Link href={ROUTES.OBSERVATORIES}>
                     <span style={{ fontSize: '0.9rem', float: 'right', marginTop: 2, marginBottom: 15 }}>More observatories</span>
                 </Link>

@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import useRouter from 'components/NextJsMigration/useRouter';
-import useParams from 'components/NextJsMigration/useParams';
+import { useRouter } from 'next/navigation';
+import useParams from 'components/useParams/useParams';
 import { Container, Button, Form, FormGroup, Input, Label, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { createOrganization } from 'services/backend/organizations';

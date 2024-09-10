@@ -3,7 +3,7 @@
  * https://gitlab.com/TIBHannover/orkg/nlp/orkg-nlp-api
  */
 
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { PREDICATES } from 'constants/graphSettings';
 import { keyBy, mapValues, uniq } from 'lodash';
 import { submitPostRequest } from 'network';

@@ -3,7 +3,7 @@ import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowser
 import { generatedFormattedLabel, updateResourceStatementsAction } from 'slices/contributionEditorSlice';
 import PropTypes from 'prop-types';
 import { uniq } from 'lodash';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
 

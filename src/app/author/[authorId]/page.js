@@ -3,7 +3,7 @@
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import AuthorHeader from 'components/Author/AuthorHeader';
 import AuthorWorks from 'components/Author/AuthorWorks';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 
 const AuthorPage = () => {
     const { authorId } = useParams();

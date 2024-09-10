@@ -10,7 +10,7 @@ import { MatomoProvider, createInstance } from '@jonkoops/matomo-tracker-react';
 import theme from 'assets/scss/ThemeVariables';
 import { MathJaxContext } from 'better-react-mathjax';
 import DefaultLayout from 'components/Layout/DefaultLayout';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import ResetStoreOnNavigate from 'components/ResetStoreOnNavigate/ResetStoreOnNavigate';
 import MATH_JAX_CONFIG from 'constants/mathJax';
 import REGEX from 'constants/regex';

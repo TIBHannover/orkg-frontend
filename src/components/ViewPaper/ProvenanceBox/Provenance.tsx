@@ -1,7 +1,7 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import capitalize from 'capitalize';
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { StyledItemProvenanceBox } from 'components/ViewPaper/ProvenanceBox/styled';
@@ -54,7 +54,6 @@ const Provenance: FC<ProvenanceProps> = ({
                                     <b>Belongs to observatory</b>
                                 </div>
                                 {observatoryInfo.display_id && (
-                                    // @ts-expect-error
                                     <Link
                                         href={reverse(ROUTES.OBSERVATORY, {
                                             id: observatoryInfo.display_id,
@@ -73,7 +72,6 @@ const Provenance: FC<ProvenanceProps> = ({
                                         <b>Belongs to organization</b>
                                     </div>
                                 )}
-                                {/* @ts-expect-error */}
                                 <Link
                                     href={reverse(ROUTES.ORGANIZATION, {
                                         type: capitalize(ORGANIZATIONS_MISC.GENERAL),
@@ -110,7 +108,6 @@ const Provenance: FC<ProvenanceProps> = ({
                             <b>Added by</b>
                         </div>
                         <UserAvatar userId={createdBy.id} />
-                        {/* @ts-expect-error */}
                         <Link
                             href={reverse(ROUTES.USER_PROFILE, {
                                 userId: createdBy.id,
@@ -132,7 +129,6 @@ const Provenance: FC<ProvenanceProps> = ({
                             .filter((c) => c.created_by.id !== MISC.UNKNOWN_ID)
                             .map((contributor, index) => (
                                 <div key={`cntbrs-${contributor.created_by.id}${index}`}>
-                                    {/* @ts-expect-error */}
                                     <Link
                                         href={reverse(ROUTES.USER_PROFILE, {
                                             userId: contributor.created_by.id,

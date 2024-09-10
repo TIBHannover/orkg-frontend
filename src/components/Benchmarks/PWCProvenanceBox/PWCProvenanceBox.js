@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import PWC_LOGO from 'assets/img/poweredby/papers-with-code.png';
-import Image from 'components/NextJsMigration/Image';
+import Image from 'next/image';
 
 const PWCProvenanceBoxStyled = styled.div`
     border: 2px solid ${(props) => props.theme.light};

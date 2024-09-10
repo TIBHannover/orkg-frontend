@@ -1,4 +1,4 @@
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 import { upperFirst } from 'lodash';
 import { submitGetRequest } from 'network';
 

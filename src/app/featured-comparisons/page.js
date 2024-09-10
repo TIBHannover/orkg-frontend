@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import { Fragment, useState, useEffect, useCallback } from 'react';
 import { Container, Alert, Row } from 'reactstrap';
 import ROUTES from 'constants/routes';
@@ -13,7 +13,7 @@ import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { kebabCase, isString } from 'lodash';
 import styled from 'styled-components';
 import TitleBar from 'components/TitleBar/TitleBar';
-import useParams from 'components/NextJsMigration/useParams';
+import useParams from 'components/useParams/useParams';
 
 const Header = styled.h2`
     &:hover a {

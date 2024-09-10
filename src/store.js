@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 // import { createReduxHistoryContext } from 'redux-first-history';
 // import { createBrowserHistory } from 'history';
-// import env from 'components/NextJsMigration/env';
+// import { env } from 'next-runtime-env';
 import combinedReducers from 'slices/rootReducer';
 
 // CRA-CODE

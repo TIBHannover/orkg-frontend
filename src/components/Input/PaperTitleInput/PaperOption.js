@@ -1,4 +1,4 @@
-import Link from 'components/NextJsMigration/Link';
+import Link from 'next/link';
 import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';

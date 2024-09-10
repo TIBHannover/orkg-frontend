@@ -6,8 +6,7 @@ import reviewsThumbnail from 'assets/img/video_thumbnails/reviews.png';
 import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
 import ListPage from 'components/ListPage/ListPage';
 import VideoExplainer from 'components/ListPage/VideoExplainer';
-import Link from 'components/NextJsMigration/Link';
-import loadImage from 'components/NextJsMigration/loadImage';
+import Link from 'next/link';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
@@ -86,7 +85,7 @@ const Reviews = () => {
     const infoContainerText = (
         <div className="d-flex">
             <VideoExplainer
-                previewStyle={{ width: 65, height: 35, background: `url(${loadImage(reviewsThumbnail)})` }}
+                previewStyle={{ width: 65, height: 35, background: `url(${reviewsThumbnail.src})` }}
                 video={
                     <iframe
                         width="560"

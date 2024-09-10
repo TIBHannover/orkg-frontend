@@ -1,5 +1,5 @@
 import { submitGetRequest } from 'network';
-import env from 'components/NextJsMigration/env';
+import { env } from 'next-runtime-env';
 
 export const mastodonUrl = `${env('NEXT_PUBLIC_MASTODON_URL')}`;
 const accountId = env('NEXT_PUBLIC_MASTODON_ACCOUNT_ID');

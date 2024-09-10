@@ -8,8 +8,8 @@ import NewerVersionWarning from 'components/Comparison/HistoryModal/NewerVersion
 import usePublish from 'components/Comparison/hooks/usePublish';
 import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
 import ResearchFieldInput from 'components/Input/ResearchFieldInput/ResearchFieldInput';
-import Link from 'components/NextJsMigration/Link';
-import env from 'components/NextJsMigration/env';
+import Link from 'next/link';
+import { env } from 'next-runtime-env';
 import ShareCreatedContent from 'components/ShareLinkMarker/ShareCreatedContent';
 import SmartDescriptivenessCheck from 'components/SmartSuggestions/SmartDescriptivenessCheck';
 import SdgBox from 'components/SustainableDevelopmentGoals/SdgBox';
