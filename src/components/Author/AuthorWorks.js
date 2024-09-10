@@ -94,7 +94,7 @@ const AuthorWorks = ({ authorId = null, authorString = null }) => {
                             tag="div"
                             onClick={!isNextPageLoading ? handleLoadMore : undefined}
                         >
-                            More load...
+                            Load more...
                         </ListGroupItem>
                     )}
                     {!hasNextPage && isLastPageReached && page > 1 && totalElements !== 0 && (
