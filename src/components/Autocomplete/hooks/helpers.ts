@@ -152,10 +152,11 @@ export const getExternalData = ({
     }
     // OLS
     const selectedOlsOntologies = selectedOntologies.filter((ontology) => ontology.source === AUTOCOMPLETE_SOURCE.OLS_API);
-    if (entityType !== ENTITIES.RESOURCE && includeClasses.length === 0 && selectedOlsOntologies.length > 0) {
+    if (includeClasses.length === 0 && selectedOlsOntologies.length > 0) {
         const classes = {
             [ENTITIES.CLASS]: 'class',
             [ENTITIES.PREDICATE]: 'property',
+            [ENTITIES.RESOURCE]: 'individual',
             default: 'individual',
         };
         if (value) {
