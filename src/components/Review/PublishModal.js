@@ -52,6 +52,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
         try {
             const { statements } = await getStatementsBundleBySubject({
                 id,
+                blacklist: [CLASSES.RESEARCH_FIELD],
             });
             const paperTitle = statements.find((statement) => statement.subject.id === id).subject.label;
             const versionResource = await createResource(paperTitle, [CLASSES.SMART_REVIEW_PUBLISHED]);
