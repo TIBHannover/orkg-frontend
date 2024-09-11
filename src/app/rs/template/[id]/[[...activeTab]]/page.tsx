@@ -101,7 +101,7 @@ const RSTemplatePage = () => {
                                 </i>
                             )}
                         </h3>
-                        {user && (
+                        {!!user && (
                             <>
                                 <Tippy content={preventDeletionTooltipText} disabled={canDeleteTemplate}>
                                     <span>
