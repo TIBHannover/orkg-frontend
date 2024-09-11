@@ -63,7 +63,7 @@ function PropertyShape({ data }) {
                             {data.path.label}
                         </span>
                     </DescriptionTooltip>{' '}
-                    [{data.minCount}..{data.maxCount ?? '*'}]
+                    [{data.min_count}..{data.max_count ?? '*'}]
                 </div>
                 {initialType && (
                     <DescriptionTooltip id={range.id} _class={ENTITIES.CLASS} showPageURL showURL>
