@@ -3,6 +3,23 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.146.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.145.0...v0.146.0) - 2024-09-12
+
+### Changes
+
+- feat(ClassPage): show statement type [`#1381`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1381)
+- fix(Template diagram): wrong cardinality [`#1383`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1383)
+- fix(StatementType): Edit buttons display '0' when permission is falsy [`#1382`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1382)
+- fix: Page of a missing property shows internal server error [`#1375`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1375)
+- fix: Button label on user page "more load" instead of "load more" [`#1380`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1380)
+- fix(Review): blacklist research fields when publishing [`#1379`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1379)
+- feat: activate the search for resources (individuals) in getExternalData [`#1378`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1378)
+- fix: Pluralize header on benchmarks page [`#1374`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1374)
+- Contributions =&gt; AddedMentionings component, called getResource Api to fetcha single resource, AddItem component [`#1371`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1371)
+- refactor: remove Next.js migration components [`#1373`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1373)
+- fix(LiteratureList): blacklist research fields when publishing [`#1372`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1372)
+
+---
 ## [v0.145.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.144.0...v0.145.0) - 2024-08-08
 
 ### Changes
