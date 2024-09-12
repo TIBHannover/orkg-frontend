@@ -244,7 +244,12 @@ type PaperPublicationInfo = {
 };
 
 export type UpdatePaperPublicationInfo = Omit<PaperPublicationInfo, 'published_in'> & { published_in?: string | null };
-
+export type Mentioning = {
+    id: string;
+    _class: string;
+    classes: string[];
+    label: string;
+};
 export type Paper = {
     id: string;
     title: string;
@@ -264,6 +269,7 @@ export type Paper = {
     visibility: Visibility;
     unlisted_by: string;
     sdgs: Node[];
+    mentionings: Mentioning[];
 };
 
 export type PropertyShapeUntypedType = {
@@ -483,9 +489,13 @@ export type CreatePaperParams = Partial<
 } & {
     publication_info: UpdatePaperPublicationInfo;
 };
-export type UpdatePaperParams = Partial<Omit<Paper, 'id' | 'research_fields' | 'sdgs'> & { research_fields: string[] }> & {
-    sdgs?: string[];
-};
+export type UpdatePaperParams = Partial<
+    Omit<Paper, 'id' | 'research_fields' | 'sdgs' | 'mentionings'> & {
+        sdgs: string[];
+        mentionings: string[];
+        research_fields: string[];
+    }
+>;
 
 export type Visualization = {
     id: string;

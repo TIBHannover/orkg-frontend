@@ -35,13 +35,29 @@ const useContributions = ({ paperId, contributionId }) => {
         if (contributions?.length && (selectedContributionId !== contributionId || !contributionId)) {
             try {
                 // apply selected contribution
-                if (contributionId && !contributions.some((el) => el.id === contributionId) && contributionId !== 'statements') {
+                if (
+                    contributionId &&
+                    !contributions.some((el) => el.id === contributionId) &&
+                    contributionId !== 'statements' &&
+                    contributionId !== 'mentions'
+                ) {
                     throw new Error('Contribution not found');
                 }
                 const selected = contributionId && contributions.some((el) => el.id === contributionId) ? contributionId : contributions[0].id;
-                dispatch(setSelectedContributionId(contributionId !== 'statements' ? selected : 'statements'));
-            } catch {
+
+                let newSelectedContributionId = '';
+                if (contributionId === 'statements') {
+                    newSelectedContributionId = 'statements';
+                } else if (contributionId === 'mentions') {
+                    newSelectedContributionId = 'mentions';
+                } else {
+                    newSelectedContributionId = selected;
+                }
+
+                dispatch(setSelectedContributionId(newSelectedContributionId));
+            } catch (e) {
                 setLoadingContributionFailed(true);
+                console.error(e);
             }
         }
     }, [contributionId, contributions, dispatch, selectedContributionId]);
