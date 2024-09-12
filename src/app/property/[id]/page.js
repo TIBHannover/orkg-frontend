@@ -2,6 +2,8 @@
 
 import { faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import InternalServerError from 'app/error';
+import NotFound from 'app/not-found';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 import EditableHeader from 'components/EditableHeader';
 import PropertyStatements from 'components/Property/PropertyStatements/PropertyStatements';
@@ -12,49 +14,39 @@ import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { ENTITIES } from 'constants/graphSettings';
-import InternalServerError from 'app/error';
-import NotFound from 'app/not-found';
-import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import useParams from 'components/useParams/useParams';
 import { Button, Container } from 'reactstrap';
-import { getPredicate } from 'services/backend/predicates';
+import { getPredicate, predicatesUrl } from 'services/backend/predicates';
+import useSWR from 'swr';
 
 function Property() {
-    const [error, setError] = useState(null);
-    const [property, setProperty] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
-    const params = useParams();
+    const { id: propertyId } = useParams();
     const user = useSelector((state) => state.auth.user);
     const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
-    const isUserIsCreator = property.created_by === user?.id;
-    const isDeletionAllowed = isUserIsCreator || isCurationAllowed;
-    const propertyId = params.id;
 
     const { deleteProperty } = useDeleteProperty({ propertyId, redirect: true });
-    useEffect(() => {
-        const findPredicate = async () => {
-            setIsLoading(true);
-            try {
-                const responseJson = await getPredicate(propertyId);
-                document.title = `${responseJson.label} - Property - ORKG`;
 
-                setProperty(responseJson);
-                setIsLoading(false);
-            } catch (err) {
-                console.error(err);
-                setProperty(null);
-                setError(err);
-                setIsLoading(false);
-            }
-        };
-        findPredicate();
-    }, [propertyId]);
+    const fetcher = async (id) => {
+        const response = await getPredicate(id);
+        document.title = `${response.label} - Property - ORKG`;
+        return response;
+    };
+
+    const {
+        data: property,
+        error,
+        isLoading,
+        mutate,
+    } = useSWR(propertyId ? [propertyId, predicatesUrl, 'getPredicate'] : null, ([params]) => fetcher(params));
 
     const handleHeaderChange = (value) => {
-        setProperty((prev) => ({ ...prev, label: value }));
+        mutate();
     };
+
+    const isUserIsCreator = property?.created_by === user?.id;
+    const isDeletionAllowed = isUserIsCreator || isCurationAllowed;
 
     return (
         <>
@@ -96,7 +88,7 @@ function Property() {
                         ) : (
                             <>
                                 <EditableHeader
-                                    id={params.id}
+                                    id={propertyId}
                                     value={property?.label}
                                     onChange={handleHeaderChange}
                                     entityType={ENTITIES.PREDICATE}
