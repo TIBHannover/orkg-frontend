@@ -111,6 +111,7 @@ export const CLASSES: {
     FEATURED_COMPARISON_CATEGORY: 'FeaturedComparisonCategory',
     FEATURED_COMPARISON_HOME_PAGE: 'FeaturedComparisonHomePage',
     NODE_SHAPE: 'NodeShape',
+    ROSETTA_NODE_SHAPE: 'RosettaNodeShape',
     PROPERTY_SHAPE: 'PropertyShape',
     PREDICATE: 'Predicates',
     CLASS: 'Classes',

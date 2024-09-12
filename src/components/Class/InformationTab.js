@@ -1,68 +1,49 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import ClassInlineItem from 'components/Class/ClassInlineItem/ClassInlineItem';
 import useCountInstances from 'components/Class/hooks/useCountInstances';
-import Link from 'next/link';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { orderBy } from 'lodash';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button, Table } from 'reactstrap';
-import { deleteParentByID, getChildrenByID, getParentByID, setParentClassByID } from 'services/backend/classes';
-import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { classesUrl, deleteParentByID, getChildrenByID, getParentByID, setParentClassByID } from 'services/backend/classes';
+import { getStatements, statementsUrl } from 'services/backend/statements';
+import useSWR from 'swr';
 import { getErrorMessage } from 'utils';
 
 function InformationTab({ id, classObject, editMode, callBackToReloadTree, showStatementsBrowser = true }) {
-    const [template, setTemplate] = useState(null);
-    const [parent, setParent] = useState(null);
-    const [children, setChildren] = useState([]);
     const { countInstances, isLoading: isLoadingCount } = useCountInstances(id);
     const [showMoreChildren, setShowMoreChildren] = useState(false);
     const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
 
-    useEffect(() => {
-        const findTemplate = async () => {
-            // Get the template of the class
-            getStatementsByObjectAndPredicate({
-                objectId: id,
-                predicateId: PREDICATES.SHACL_TARGET_CLASS,
-            })
-                .then((statements) =>
-                    Promise.all(statements.filter((statement) => statement.subject.classes?.includes(CLASSES.NODE_SHAPE)).map((st) => st.subject)),
-                )
-                .then((templates) => {
-                    if (templates.length > 0) {
-                        setTemplate(templates[0]);
-                    } else {
-                        setTemplate(null);
-                    }
-                });
-        };
-        const findParent = async () => {
-            getParentByID(id).then((p) => {
-                setParent(p);
-            });
-        };
-        const findChildren = async () => {
-            getChildrenByID({ id }).then((p) => {
-                setChildren(
-                    orderBy(
-                        p.content.map((c) => c.class),
-                        [(c) => c.label.toLowerCase()],
-                        ['asc'],
-                    ),
-                );
-            });
-        };
-        findTemplate();
-        findParent();
-        findChildren();
-    }, [id]);
+    const { data: rsTemplateStatements } = useSWR(
+        [{ subjectClasses: [CLASSES.ROSETTA_NODE_SHAPE], objectId: id, predicateId: PREDICATES.SHACL_TARGET_CLASS }, statementsUrl, 'getStatements'],
+        ([params]) => getStatements(params),
+    );
+
+    const { data: templateStatements } = useSWR(
+        [{ subjectClasses: [CLASSES.NODE_SHAPE], objectId: id, predicateId: PREDICATES.SHACL_TARGET_CLASS }, statementsUrl, 'getStatements'],
+        ([params]) => getStatements(params),
+    );
+
+    const rsTemplate = rsTemplateStatements?.length > 0 ? rsTemplateStatements[0].subject : null;
+    const template = templateStatements?.length > 0 ? templateStatements[0].subject : null;
+
+    const { data: parent, mutate: mutateParent } = useSWR([id, classesUrl, 'getParentByID'], ([params]) => getParentByID(params));
+    const { data: childrenObjects, mutate: mutateChildren } = useSWR([{ id }, classesUrl, 'getChildrenByID'], ([params]) => getChildrenByID(params));
+
+    const children = orderBy(
+        childrenObjects?.content.map((c) => c.class),
+        [(c) => c.label.toLowerCase()],
+        ['asc'],
+    );
 
     const _children = !showMoreChildren && children?.length > 0 ? children.slice(0, 9) : children;
 
@@ -75,7 +56,7 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                             URI
                         </th>
                         <td>
-                            <i>{classObject?.uri && classObject.uri !== 'null' ? <a href={classObject.uri}>{classObject.uri}</a> : 'Not Defined'}</i>
+                            <i>{classObject?.uri && classObject.uri !== 'null' ? <a href={classObject.uri}>{classObject.uri}</a> : 'Not defined'}</i>
                         </td>
                     </tr>
                     <tr>
@@ -98,7 +79,7 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                                     }
                                     try {
                                         await setParentClassByID(id, _parent.id);
-                                        setParent(_parent);
+                                        mutateParent();
                                     } catch (e) {
                                         toast.error(`Error adding parent class! ${getErrorMessage(e) ?? e?.message}`);
                                     }
@@ -106,7 +87,7 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                                 }}
                                 onDelete={async () => {
                                     await deleteParentByID(id);
-                                    setParent(null);
+                                    mutateParent();
                                     callBackToReloadTree();
                                 }}
                             />
@@ -125,7 +106,7 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                                                 onDelete={async () => {
                                                     try {
                                                         await deleteParentByID(child.id);
-                                                        setChildren((prev) => prev.filter((c) => c.id !== child.id));
+                                                        mutateChildren();
                                                     } catch (e) {
                                                         toast.error(`Error removing subclass! ${getErrorMessage(e) ?? e?.message}`);
                                                     }
@@ -154,7 +135,7 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                                         onChange={async (chil) => {
                                             try {
                                                 await setParentClassByID(chil.id, id);
-                                                setChildren((prev) => [...prev, chil]);
+                                                mutateChildren();
                                             } catch (e) {
                                                 toast.error(`Error adding subclass! ${getErrorMessage(e) ?? e?.message}`);
                                             }
@@ -181,8 +162,18 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                                 <Link href={reverse(ROUTES.TEMPLATE, { id: template.id })}>{template.label}</Link>
                             ) : (
                                 <i>
-                                    Not Defined <Link href={`${reverse(ROUTES.ADD_TEMPLATE)}?classID=${id}`}>Create a template</Link>
+                                    Not defined <Link href={`${reverse(ROUTES.ADD_TEMPLATE)}?classID=${id}`}>Create a template</Link>
                                 </i>
+                            )}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Statement type</th>
+                        <td>
+                            {rsTemplate ? (
+                                <Link href={reverse(ROUTES.RS_TEMPLATE, { id: rsTemplate.id })}>{rsTemplate.label}</Link>
+                            ) : (
+                                <i>Not defined</i>
                             )}
                         </td>
                     </tr>
@@ -207,12 +198,10 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
 
 InformationTab.propTypes = {
     id: PropTypes.string.isRequired,
-    label: PropTypes.string,
     classObject: PropTypes.object,
     editMode: PropTypes.bool.isRequired,
     callBackToReloadTree: PropTypes.func,
     showStatementsBrowser: PropTypes.bool,
-    // setLabel: PropTypes.func,
 };
 
 export default InformationTab;
