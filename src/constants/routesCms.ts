@@ -3,7 +3,7 @@
  * Links to /page/:url
  */
 
-const routes = {
+const ROUTES_CMS = {
     TERMS_OF_USE: 'terms-of-use',
     DATA_PROTECTION: 'data-protection',
     IMPRINT: 'imprint',
@@ -12,4 +12,4 @@ const routes = {
     ACCESSIBILITY_STATEMENT: 'accessibility-statement',
 };
 
-export default routes;
+export default ROUTES_CMS;
