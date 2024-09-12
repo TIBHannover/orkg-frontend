@@ -1,14 +1,16 @@
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
+import Mentionings from 'components/ViewPaper/Mentionings/Mentionings';
+import RosettaStoneStatements from 'components/RosettaStone/Statements/RosettaStoneStatements';
 import useParams from 'components/useParams/useParams';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tabs from 'components/Tabs/Tabs';
 import ContributionComparisons from 'components/ViewPaper/ContributionComparisons/ContributionComparisons';
 import AutomaticContributionWarning from 'components/ViewPaper/Contributions/AutomaticContributionWarning';
-import RosettaStoneStatements from 'components/RosettaStone/Statements/RosettaStoneStatements';
 import useContributions from 'components/ViewPaper/Contributions/hooks/useContributions';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import SmartSuggestions from 'components/ViewPaper/SmartSuggestions/SmartSuggestions';
@@ -19,13 +21,11 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { useSelector } from 'react-redux';
 import { Alert, Col, FormGroup, Row } from 'reactstrap';
 
 const Contributions = (props) => {
     const { resourceId, contributionId } = useParams();
-
     const {
         isLoading,
         isLoadingContributionFailed,
@@ -61,7 +61,16 @@ const Contributions = (props) => {
         }
     }, [props.enableEdit, abstract, fetchAbstract]);
 
-    const selectedTab = selectedContributionId === 'statements' ? 'statements' : 'contributions';
+    let selectedTab;
+
+    if (selectedContributionId === 'statements') {
+        selectedTab = 'statements';
+    } else if (selectedContributionId === 'mentions') {
+        selectedTab = 'mentions';
+    } else {
+        selectedTab = 'contributions';
+    }
+
     return (
         <div>
             <Row>
@@ -140,8 +149,6 @@ const Contributions = (props) => {
                                                                     />
                                                                 </FormGroup>
 
-                                                                {/* selectedContribution && <SimilarContributions contributionId={selectedContribution} /> */}
-
                                                                 {contribution.id && <ContributionComparisons contributionId={contribution.id} />}
                                                             </div>
                                                         )}
@@ -164,6 +171,15 @@ const Contributions = (props) => {
                                 children: (
                                     <div className="p-4">
                                         <RosettaStoneStatements context={resourceId} />
+                                    </div>
+                                ),
+                            },
+                            {
+                                label: 'Mentions',
+                                key: 'mentions',
+                                children: (
+                                    <div className="p-4">
+                                        <Mentionings id={resourceId} />
                                     </div>
                                 ),
                             },
