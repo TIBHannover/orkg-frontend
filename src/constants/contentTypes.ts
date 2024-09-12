@@ -1,7 +1,7 @@
 import { CLASSES } from 'constants/graphSettings';
 import { Visibility, VisibilityFilter, Certainty } from 'services/backend/types';
 
-const contentTypes: string[] = [
+const CONTENT_TYPES: string[] = [
     CLASSES.PAPER,
     CLASSES.CONTRIBUTION,
     CLASSES.COMPARISON,
@@ -33,4 +33,4 @@ export const CERTAINTY: { [key: string]: Certainty } = {
     HIGH: 'HIGH',
 };
 
-export default contentTypes;
+export default CONTENT_TYPES;

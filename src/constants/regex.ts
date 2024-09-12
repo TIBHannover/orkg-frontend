@@ -1,4 +1,4 @@
-const regex = {
+const REGEX = {
     // eslint-disable-next-line
     URL: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/i,
     // eslint-disable-next-line no-useless-escape
@@ -20,4 +20,4 @@ const regex = {
     ORCID: /([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))/g,
     CSW_ROW_TITLES_VALUE: /^(row \d+)$/,
 };
-export default regex;
+export default REGEX;

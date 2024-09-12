@@ -123,6 +123,6 @@ const legacyRoutes = {
     LITERATURE_LIST_DIFF: '/literature-list/diff/:oldId-:newId',
     LEGACY_PREDICATE: '/predicate/:id',
 };
-const allRoutes = { ...routes, ...legacyRoutes };
+const ROUTES = { ...routes, ...legacyRoutes };
 
-export default allRoutes;
+export default ROUTES;
