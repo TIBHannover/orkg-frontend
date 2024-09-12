@@ -1,23 +1,22 @@
-import { useState, useEffect } from 'react';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import PropTypes from 'prop-types';
-import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
-import REGEX from 'constants/regex';
-import useParams from 'components/useParams/useParams';
-import { Form, Input, Button, InputGroup } from 'reactstrap';
-import { isString } from 'lodash';
-import { getLinkByEntityType, getEntityTypeByID } from 'utils';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
+import REGEX from 'constants/regex';
+import ROUTES from 'constants/routes';
+import { isString } from 'lodash';
+import { reverse } from 'named-urls';
+import { useRouter, useSearchParams } from 'next/navigation';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Button, Form, Input, InputGroup } from 'reactstrap';
+import { getEntityTypeByID, getLinkByEntityType } from 'utils';
 
 const SearchForm = ({ placeholder, onSearch = null }) => {
     const [value, setValue] = useState('');
-    const { searchTerm: urlSearchQuery } = useParams();
+
     const router = useRouter();
     const searchParams = useSearchParams();
-
+    const urlSearchQuery = searchParams.get('q') || '';
     useEffect(() => {
         const decodedValue = isString(urlSearchQuery) ? decodeURIComponent(urlSearchQuery) : urlSearchQuery;
         setValue(decodedValue || '');
@@ -38,9 +37,9 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
         } else if (isString(value) && value) {
             const types = searchParams.get('types')?.split(',');
             const createdBy = searchParams.get('createdBy');
-            route = `${reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) })}?types=${`${
-                types?.length > 0 ? types.join(',') : ''
-            }`}&createdBy=${createdBy ?? ''}
+            route = `${reverse(ROUTES.SEARCH)}?q=${encodeURIComponent(value)}&types=${`${types?.length > 0 ? types.join(',') : ''}`}&createdBy=${
+                createdBy ?? ''
+            }
                     `;
         }
         onSearch && onSearch();

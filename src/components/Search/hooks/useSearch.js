@@ -1,11 +1,10 @@
-import useParams from 'components/useParams/useParams';
-import { useSearchParams } from 'next/navigation';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import ROUTES from 'constants/routes';
 import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import { isEmpty } from 'lodash';
 import { reverse } from 'named-urls';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getClassById, getClasses } from 'services/backend/classes';
@@ -19,9 +18,8 @@ const IGNORED_CLASSES = [CLASSES.CONTRIBUTION, CLASSES.CONTRIBUTION_DELETED, CLA
 const itemsPerFilter = 10;
 
 export const useSearch = () => {
-    const { searchTerm } = useParams();
     const searchParams = useSearchParams();
-
+    const searchTerm = searchParams.get('q') || '';
     const [results, setResults] = useState({});
     const [selectedFilters, setSelectedFilters] = useState([]);
 

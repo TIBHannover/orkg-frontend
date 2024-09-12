@@ -57,7 +57,7 @@ const routes = {
     VENUE_PAGE: '/venue/:venueId',
     AUTHOR_PAGE: '/author/:authorId',
     AUTHOR_LITERAL: '/author-literal/:authorString',
-    SEARCH: '/search/:searchTerm',
+    SEARCH: '/search',
     STATS: '/stats',
     DATA: '/data',
     CHANGELOG: '/changelog',
