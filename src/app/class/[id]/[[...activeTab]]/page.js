@@ -3,56 +3,43 @@
 import Link from 'next/link';
 import { faFileCsv, faPen, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import TabsContainer from 'components/Class/TabsContainer';
-import ImportCSVInstances from 'components/ClassInstances/ImportCSVInstances';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import ROUTES from 'constants/routes';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
-import { useEffect, useState } from 'react';
-import { getClassById } from 'services/backend/classes';
+import TabsContainer from 'components/Class/TabsContainer';
+import ImportCSVInstances from 'components/ClassInstances/ImportCSVInstances';
 import useParams from 'components/useParams/useParams';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 import EditableHeader from 'components/EditableHeader';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ItemMetadata from 'components/Search/ItemMetadata';
+import TitleBar from 'components/TitleBar/TitleBar';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { ENTITIES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
+import { useState } from 'react';
 import { Button, Container } from 'reactstrap';
+import { classesUrl, getClassById } from 'services/backend/classes';
+import useSWR from 'swr';
 
 function ClassDetails() {
-    const [error, setError] = useState(null);
-    const [label, setLabel] = useState('');
-    const [classObject, setClassObject] = useState({});
-    const [isLoading, setIsLoading] = useState(true);
     const [keyInstances, setKeyInstances] = useState(1);
     const [modalImportIsOpen, setModalImportIsOpen] = useState(false);
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
     const { id } = useParams();
 
-    useEffect(() => {
-        const findClass = async () => {
-            setIsLoading(true);
-            try {
-                const responseJson = await getClassById(id);
-                document.title = `${responseJson.label} - Class - ORKG`;
-                setLabel(responseJson.label);
-                setClassObject(responseJson);
-                setIsLoading(false);
-                setError(null);
-            } catch (err) {
-                console.error(err);
-                setLabel(null);
-                setError(err);
-                setIsLoading(false);
-            }
-        };
-        findClass();
-    }, [id]);
-
-    const handleHeaderChange = (val) => {
-        setLabel(val);
+    const fetcher = async (_id) => {
+        const response = await getClassById(_id);
+        document.title = `${response.label} - Class - ORKG`;
+        return response;
     };
+
+    const { data: classObject, error, isLoading, mutate } = useSWR(id ? [id, classesUrl, 'getClassById'] : null, ([params]) => fetcher(params));
+
+    const handleHeaderChange = (value) => {
+        mutate();
+    };
+
+    const label = classObject?.label ?? '';
 
     return (
         <>
@@ -118,7 +105,7 @@ function ClassDetails() {
 
                         <ItemMetadata item={classObject} showCreatedAt showCreatedBy editMode={isEditMode} />
                     </Container>
-                    <TabsContainer id={id} editMode={isEditMode} classObject={classObject} label={label} key={keyInstances} setLabel={setLabel} />
+                    <TabsContainer id={id} editMode={isEditMode} classObject={classObject} label={label} key={keyInstances} />
                     <ImportCSVInstances
                         classId={id}
                         showDialog={modalImportIsOpen}
