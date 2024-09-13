@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.146.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.146.0...v0.146.1) - 2024-09-13
+
+### Changes
+
+- refactor: use new publish comparison endpoints [`#1377`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1377)
+- fix: use useSearchParams instead of useParams in search page [`#1376`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1376)
+- refactor: rename default exports for constants files [`#1384`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1384)
+
+---
 ## [v0.146.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.145.0...v0.146.0) - 2024-09-12
 
 ### Changes
