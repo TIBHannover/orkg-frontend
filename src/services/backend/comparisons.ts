@@ -1,6 +1,6 @@
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { url } from 'constants/misc';
-import { submitGetRequest, submitPostRequest } from 'network';
+import { getCreatedIdFromHeaders, submitGetRequest, submitPostRequest } from 'network';
 import qs from 'qs';
 import { prepareParams } from 'services/backend/misc';
 import {
@@ -40,27 +40,6 @@ export const getAuthorsByComparisonId = ({
     return submitGetRequest(`${comparisonUrl}${encodeURIComponent(id)}/authors?${params}`);
 };
 
-export const publishComparisonDoi = ({
-    id,
-    subject,
-    description,
-    authors,
-}: {
-    id: string;
-    subject: string;
-    description: string;
-    authors: Author[];
-}): Promise<null> =>
-    submitPostRequest(
-        `${comparisonUrl}${encodeURIComponent(id)}/publish`,
-        { 'Content-Type': 'application/json' },
-        {
-            subject,
-            description,
-            authors,
-        },
-    );
-
 export const getComparison = (id: string): Promise<Comparison> => submitGetRequest(`${comparisonUrl}${encodeURIComponent(id)}`);
 
 export const getComparisons = ({
@@ -75,3 +54,69 @@ export const getComparisons = ({
     const params = prepareParams({ page, size, sortBy, verified, visibility, created_by, sdg });
     return submitGetRequest(`${comparisonUrl}?${params}`);
 };
+
+export const createComparison = (data: Partial<Comparison>): Promise<string> =>
+    submitPostRequest(
+        `${comparisonUrl}`,
+        {
+            'Content-Type': 'application/vnd.orkg.comparison.v2+json;charset=UTF-8',
+            Accept: 'application/vnd.orkg.comparison.v2+json',
+        },
+        data,
+        true,
+        true,
+        true,
+        true,
+    ).then(({ headers }) => getCreatedIdFromHeaders(headers));
+
+type PublishComparisonParams = {
+    subject: string;
+    description: string;
+    authors: Author[];
+    config: {
+        predicates: string[];
+        contributions: string[];
+        transpose: boolean;
+        type: string;
+    };
+    data: {
+        contributions: {
+            id: string;
+            label: string;
+            paper_id: string;
+            paper_label: string;
+            paper_year: number;
+            active: boolean;
+        }[];
+        predicates: {
+            id: string;
+            label: string;
+            n_contributions: number;
+            active: boolean;
+            similar_predicates: string[];
+        }[];
+        data: {
+            id: string;
+            label: string;
+            classes: string[];
+            path: string[];
+            path_labels: string[];
+            _class: string;
+        }[][];
+    };
+    assign_doi: boolean;
+};
+
+export const publishComparison = (comparisonId: string, data: PublishComparisonParams): Promise<string> =>
+    submitPostRequest(
+        `${comparisonUrl}${encodeURIComponent(comparisonId)}/publish`,
+        {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        },
+        data,
+        true,
+        true,
+        true,
+        true,
+    );
