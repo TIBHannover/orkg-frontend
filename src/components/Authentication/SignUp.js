@@ -178,7 +178,7 @@ export default function SignUp() {
                         data protection declaration
                     </Link>{' '}
                     as well as the{' '}
-                    <a href="/files/infosheet-data-protection.pdf" target="_blank" rel="noopener noreferrer">
+                    <a href="/infosheet-data-protection.pdf" target="_blank" rel="noopener noreferrer">
                         info sheet data protection
                     </a>
                     , the data is processed exclusively by TIB in order to provide services of our platform.

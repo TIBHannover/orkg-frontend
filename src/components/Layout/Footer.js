@@ -77,7 +77,7 @@ const Footer = () => (
                             </li>
                             <li>
                                 <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })}>Data protection</Link> (
-                                <a href="/files/infosheet-data-protection.pdf" target="_blank" rel="noreferrer">
+                                <a href="/infosheet-data-protection.pdf" target="_blank" rel="noreferrer">
                                     Info sheet
                                 </a>
                                 )
