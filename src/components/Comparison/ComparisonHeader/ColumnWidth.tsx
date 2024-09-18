@@ -18,7 +18,7 @@ const ColumnWidth = () => {
     const dispatch = useDispatch();
 
     const handleChangeColumnWidth = (width: number) => {
-        setCookie('comparisonColumnWidth', width, { path: env('PUBLIC_URL'), maxAge: 60 * 60 * 24 * 7 }); // << one week
+        setCookie('comparisonColumnWidth', width, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 60 * 60 * 24 * 7 }); // << one week
         dispatch(setConfigurationAttribute({ attribute: 'columnWidth', value: width }));
     };
 
@@ -37,6 +37,7 @@ const ColumnWidth = () => {
                     onChange={(e) => setLocalColumnWidth(e.target.valueAsNumber)}
                     onBlur={(e) => handleChangeColumnWidth(e.target.valueAsNumber)}
                     onKeyDown={(e) => e.key === 'Enter' && handleChangeColumnWidth(e.currentTarget.valueAsNumber)}
+                    onFocus={(e) => e.target.select()}
                     min={25}
                     max={500}
                 />
