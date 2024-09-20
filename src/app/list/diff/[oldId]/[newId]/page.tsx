@@ -4,10 +4,10 @@ import Tippy from '@tippyjs/react';
 import DiffView from 'components/DiffView/DiffView';
 import useDiff from 'components/DiffView/useDiff';
 import useList from 'components/List/hooks/useList';
+import useParams from 'components/useParams/useParams';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
-import { useParams } from 'next/navigation';
 import { LiteratureList } from 'services/backend/types';
 
 const ListDiff = () => {

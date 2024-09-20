@@ -20,6 +20,14 @@
         "react/prop-types": 2,
         "no-var": 2,
         "no-const-assign": 2,
+        "no-restricted-imports": [
+            2,
+            {
+                "name": "next/navigation",
+                "importNames": ["useParams"],
+                "message": "Please import from `components/useParams/useParams` instead."
+            }
+        ],
         "prefer-const": 1,
         "react/jsx-curly-brace-presence": 2,
         "no-console": [

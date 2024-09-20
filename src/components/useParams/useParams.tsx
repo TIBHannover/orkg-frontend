@@ -1,8 +1,9 @@
 import { isArray } from 'lodash';
+// eslint-disable-next-line no-restricted-imports
 import { useParams as useParamsNext } from 'next/navigation';
 
 // useParams for decoding params
-const useParams = () => {
+const useParams = <T extends Record<string, string>>() => {
     const urlParams = useParamsNext();
 
     // catch-all routes are returned as array, we are currently not using multiple values for routes, so we just take the first value
@@ -15,7 +16,7 @@ const useParams = () => {
             urlParams[key] = decodeURIComponent(urlParams[key] as string);
         }
     }
-    return urlParams;
+    return urlParams as T;
 };
 
 export default useParams;

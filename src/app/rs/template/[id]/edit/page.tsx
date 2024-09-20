@@ -2,7 +2,7 @@
 
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import RosettaTemplateEditor from 'components/RosettaStone/RosettaTemplateEditor/RosettaTemplateEditor';
 import RosettaTemplateEditorProvider from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 import TitleBar from 'components/TitleBar/TitleBar';
@@ -16,6 +16,7 @@ import { isCurationAllowed } from 'slices/authSlice';
 import { RootStore } from 'slices/types';
 import useSWR from 'swr';
 import { guid } from 'utils';
+import useParams from 'components/useParams/useParams';
 
 const RSTemplateEditPage = () => {
     const { id } = useParams<{ id: string; activeTab: string }>();

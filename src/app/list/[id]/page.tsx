@@ -16,7 +16,7 @@ import HistoryModal from 'components/List/HistoryModal/HistoryModal';
 import ViewList from 'components/List/ViewList/ViewList';
 import useList from 'components/List/hooks/useList';
 import Link from 'next/link';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
@@ -26,6 +26,7 @@ import moment from 'moment';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import { Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
+import useParams from 'components/useParams/useParams';
 
 const List = () => {
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
