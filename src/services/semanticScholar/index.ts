@@ -73,5 +73,5 @@ export const getAbstractByTitle = async (title) =>
 // @ts-expect-error TODO
 export const getAuthorsByLabel = ({ label, limit }) =>
     submitGetRequest(
-        `${semanticScholarUrl}graph/v1/author/search?query=${encodeURIComponent(label)}&fields=name,aliases,url,citationCount,hIndex&limit=${limit}`,
+        `${semanticScholarUrl}graph/v1/author/search?query=${encodeURIComponent(label)}&fields=name,url,citationCount,hIndex&limit=${limit}`,
     );
