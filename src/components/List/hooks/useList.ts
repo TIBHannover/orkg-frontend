@@ -1,9 +1,9 @@
 import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
+import useParams from 'components/useParams/useParams';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import THING_TYPES from 'constants/thingTypes';
 import errorHandler from 'helpers/errorHandler';
 import { uniqueId } from 'lodash';
-import { useParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { createLiteral } from 'services/backend/literals';
 import { getLiteratureList, getLiteratureListPublishedContentById, listsUrl, updateLiteratureList } from 'services/backend/literatureLists';
