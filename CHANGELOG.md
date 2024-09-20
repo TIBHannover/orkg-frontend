@@ -3,6 +3,17 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.146.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.146.1...v0.146.2) - 2024-09-20
+
+### Changes
+
+- fix(Comparison): show citations of top authors [`#1386`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1386)
+- fix(Routing): use custom useParams instead next/navigation [`#1389`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1389)
+- fix(Comparison): column minimum width [`#1388`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1388)
+- fix(StatementType): Display descriptions in the UI [`#1387`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1387)
+- fix: move infosheet-data-protection to the root of public folder [`#1385`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1385)
+
+---
 ## [v0.146.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.146.0...v0.146.1) - 2024-09-13
 
 ### Changes
