@@ -57,7 +57,7 @@ const AddPropertyView = ({
                             {!isDisabled && (
                                 <SmartPropertySuggestions
                                     properties={propertyLabels}
-                                    handleCreate={({ id, label }) => handlePropertySelect({ id, value: label })}
+                                    handleCreate={({ id, label }) => handlePropertySelect({ id, label })}
                                 />
                             )}
                         </ButtonGroup>
