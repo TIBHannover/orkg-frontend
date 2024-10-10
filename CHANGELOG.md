@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.146.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.146.2...v0.146.3) - 2024-10-10
+
+### Changes
+
+- fix(StatementBrowser): Clicking on smart suggestion for adding property [`#1391`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1391)
+
+---
 ## [v0.146.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.146.1...v0.146.2) - 2024-09-20
 
 ### Changes
