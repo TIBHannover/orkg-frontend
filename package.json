@@ -55,6 +55,7 @@
         "next-runtime-env": "^3.2.0",
         "nextjs-toploader": "^1.6.6",
         "node-html-parser": "^6.1.5",
+        "nuqs": "^1.19.1",
         "olap-cube": "^1.0.0",
         "path-to-regexp": "^6.2.1",
         "pdfjs-dist": "2.16.105",

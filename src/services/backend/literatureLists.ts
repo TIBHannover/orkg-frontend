@@ -14,6 +14,8 @@ import {
     SdgParam,
     VerifiedParam,
     VisibilityParam,
+    ObservatoryIdParam,
+    ResearchFieldIdParams,
 } from 'services/backend/types';
 
 export const listsUrl = `${url}literature-lists/`;
@@ -25,10 +27,32 @@ export const getLiteratureLists = ({
     verified = null,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
     created_by,
+    research_field,
+    include_subfields,
+    observatory_id,
     sdg,
     published,
-}: PaginationParams & VerifiedParam & VisibilityParam & CreatedByParam & SdgParam & PublishedParam): Promise<PaginatedResponse<LiteratureList>> => {
-    const params = prepareParams({ page, size, sortBy, verified, visibility, created_by, sdg, published });
+}: PaginationParams &
+    VerifiedParam &
+    VisibilityParam &
+    CreatedByParam &
+    SdgParam &
+    PublishedParam &
+    ObservatoryIdParam &
+    ResearchFieldIdParams): Promise<PaginatedResponse<LiteratureList>> => {
+    const params = prepareParams({
+        page,
+        size,
+        sortBy,
+        verified,
+        visibility,
+        created_by,
+        observatory_id,
+        sdg,
+        published,
+        research_field,
+        include_subfields,
+    });
     return submitGetRequest(`${listsUrl}?${params}`);
 };
 

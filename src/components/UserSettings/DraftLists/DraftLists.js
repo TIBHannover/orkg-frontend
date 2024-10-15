@@ -36,9 +36,8 @@ const DraftLists = () => {
             include: [resourceClass],
             page,
             size: pageSize,
-            sortBy: 'created_at',
-            createdBy: user.id,
-            desc: true,
+            sortBy: [{ property: 'created_at', direction: 'desc' }],
+            created_by: user.id,
         });
 
         if (resources.length) {

@@ -1,6 +1,6 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import CardFactory from 'components/Cards/CardFactory/CardFactory';
+import CardFactory from 'components/Cards/CardFactory/CardFactoryOldFormat';
 import { useSearchParams } from 'next/navigation';
 import useResearchProblemContent from 'components/ResearchProblem/hooks/useResearchProblemContent';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
@@ -61,7 +61,7 @@ const IntegratedList = ({ id, slug, boxShadow = false }) => {
                     <SubtitleSeparator />
                     <SubTitle>
                         <small className="text-muted text-small mt-1">
-                            {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : <>{`${totalElements} items`}</>}
+                            {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : `${totalElements} items`}
                         </small>
                     </SubTitle>
                 </div>

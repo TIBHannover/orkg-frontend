@@ -8,10 +8,13 @@ import { getResource, getResources } from 'services/backend/resources';
 import {
     Class,
     CreatedByParam,
+    ObservatoryIdParam,
+    OrganizationIdParam,
     PaginatedResponse,
     PaginationParams,
     Predicate,
     PublishedParam,
+    ResearchFieldIdParams,
     Resource,
     SdgParam,
     VerifiedParam,
@@ -114,7 +117,17 @@ export const mergePaginateResponses = (
     last: response1.last && response2.last,
 });
 
-export const prepareParams = (params: PaginationParams & VerifiedParam & VisibilityParam & CreatedByParam & SdgParam & PublishedParam): string =>
+export const prepareParams = (
+    params: PaginationParams &
+        VerifiedParam &
+        VisibilityParam &
+        CreatedByParam &
+        SdgParam &
+        PublishedParam &
+        ObservatoryIdParam &
+        OrganizationIdParam &
+        ResearchFieldIdParams,
+): string =>
     qs.stringify(
         {
             page: params.page,
@@ -125,6 +138,10 @@ export const prepareParams = (params: PaginationParams & VerifiedParam & Visibil
             created_by: params.created_by,
             sdg: params.sdg,
             published: params.published,
+            observatory_id: params.observatory_id,
+            organization_id: params.organization_id,
+            research_field: params.research_field,
+            include_subfields: params.include_subfields,
         },
         {
             skipNulls: true,

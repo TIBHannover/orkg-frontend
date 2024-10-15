@@ -7,11 +7,13 @@ import {
     Author,
     Comparison,
     CreatedByParam,
+    ObservatoryIdParam,
     PaginatedResponse,
     PaginationParams,
     SdgParam,
     VerifiedParam,
     VisibilityParam,
+    ResearchFieldIdParams,
 } from 'services/backend/types';
 
 export const comparisonUrl = `${url}comparisons/`;
@@ -49,9 +51,14 @@ export const getComparisons = ({
     verified = null,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
     created_by,
+    observatory_id,
+    research_field,
+    include_subfields,
     sdg,
-}: PaginationParams & VerifiedParam & VisibilityParam & CreatedByParam & SdgParam): Promise<PaginatedResponse<Comparison>> => {
-    const params = prepareParams({ page, size, sortBy, verified, visibility, created_by, sdg });
+}: PaginationParams & VerifiedParam & VisibilityParam & CreatedByParam & SdgParam & ObservatoryIdParam & ResearchFieldIdParams): Promise<
+    PaginatedResponse<Comparison>
+> => {
+    const params = prepareParams({ page, size, sortBy, verified, visibility, created_by, observatory_id, sdg, research_field, include_subfields });
     return submitGetRequest(`${comparisonUrl}?${params}`);
 };
 

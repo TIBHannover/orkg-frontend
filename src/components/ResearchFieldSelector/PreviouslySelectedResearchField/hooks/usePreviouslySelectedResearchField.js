@@ -15,9 +15,8 @@ const usePreviouslySelectedResearchField = () => {
             include: [CLASSES.PAPER],
             page: 0,
             size: 8,
-            sortBy: 'created_at',
-            desc: true,
-            createdBy: userId,
+            sortBy: [{ property: 'created_at', direction: 'desc' }],
+            created_by: userId,
         }).then((result) => {
             const papers = result.content.map((p) =>
                 getStatementsBySubjectAndPredicate({ subjectId: p.id, predicateId: PREDICATES.HAS_RESEARCH_FIELD }),

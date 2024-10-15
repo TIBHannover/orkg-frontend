@@ -1,14 +1,14 @@
-import CardFactory from 'components/Cards/CardFactory/CardFactory';
-import useRetrievingContentPage from 'components/Observatory/hooks/useRetrievingContentPage';
-import { FC } from 'react';
+import CardFactory from 'components/Cards/CardFactory/CardFactoryOldFormat';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
+import useRetrievingContentPage from 'components/ContentTypeList/hooks/useRetrievingContentPage';
+import { FC } from 'react';
 import { Resource } from 'services/backend/types';
 
-type IntegratedListProps = {
+type ContentTypeAsResourceListProps = {
     content: Resource[];
 };
 
-const IntegratedList: FC<IntegratedListProps> = ({ content }) => {
+const ContentTypeAsResourceList: FC<ContentTypeAsResourceListProps> = ({ content }) => {
     const { items, isLoading } = useRetrievingContentPage({ content });
 
     return (
@@ -27,4 +27,4 @@ const IntegratedList: FC<IntegratedListProps> = ({ content }) => {
     );
 };
 
-export default IntegratedList;
+export default ContentTypeAsResourceList;

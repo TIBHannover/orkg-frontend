@@ -1,18 +1,18 @@
 'use client';
 
-import { Container, Row, Col } from 'reactstrap';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import ResearchFieldHeader from 'components/ResearchField/ResearchFieldHeader';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
+import LastUpdatesBox from 'components/LastUpdatesBox/LastUpdatesBox';
 import ObservatoriesCarousel from 'components/ObservatoriesCarousel/ObservatoriesCarousel';
 import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
-import LastUpdatesBox from 'components/LastUpdatesBox/LastUpdatesBox';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import IntegratedList from 'components/ResearchField/IntegratedList';
-import useParams from 'components/useParams/useParams';
+import ResearchFieldHeader from 'components/ResearchField/ResearchFieldHeader';
+import ResearchFieldTabsContainer from 'components/ResearchField/ResearchFieldTabsContainer';
 import ResearchProblemsBox from 'components/ResearchProblemsBox/ResearchProblemsBox';
+import useParams from 'components/useParams/useParams';
+import { Col, Container, Row } from 'reactstrap';
 
 const ResearchField = () => {
-    const { researchFieldId, slug } = useParams();
+    const { researchFieldId } = useParams();
 
     const { observatories, isLoading } = useResearchFieldObservatories({ researchFieldId });
 
@@ -39,7 +39,10 @@ const ResearchField = () => {
                 </Row>
             </Container>
 
-            <IntegratedList slug={slug} id={researchFieldId} boxShadow />
+            <Container className="p-0 mt-2">
+                <ResearchFieldTabsContainer id={researchFieldId} />
+            </Container>
+
             <ComparisonPopup />
         </>
     );

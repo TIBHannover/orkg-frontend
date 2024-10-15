@@ -1,24 +1,31 @@
 import { faCalendar, faLock, faShapes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Link from 'next/link';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
+import { CardBadge } from 'components/styled';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { FC } from 'react';
 import { Template } from 'services/backend/types';
 
 type TemplateCardProps = {
     template: Template;
+    showBadge?: boolean;
 };
 
-const TemplateCard: FC<TemplateCardProps> = ({ template }) => (
+const TemplateCard: FC<TemplateCardProps> = ({ template, showBadge = false }) => (
     <div className="list-group-item d-flex py-3 pe-4 ps-4">
         <div className="col-md-9 d-flex p-0">
             <div className="d-flex flex-column flex-grow-1">
                 <div className="mb-2">
                     <Link href={reverse(ROUTES.TEMPLATE, { id: template.id })}>{template.label ? template.label : <em>No title</em>}</Link>
+                    {showBadge && (
+                        <div className="d-inline-block ms-2">
+                            <CardBadge color="primary">Template</CardBadge>
+                        </div>
+                    )}
                 </div>
                 <div className="mb-1">
                     <small>

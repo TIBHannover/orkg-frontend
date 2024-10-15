@@ -265,6 +265,7 @@ export type Paper = {
     extraction_method: ExtractionMethod;
     created_at: string;
     created_by: string;
+    observatory_id: string;
     verified: boolean;
     visibility: Visibility;
     unlisted_by: string;
@@ -512,6 +513,7 @@ export type Visualization = {
 
 export type ComparisonVersion = {
     created_at: string;
+    created_by: string;
     id: string;
     label: string;
 };
@@ -572,6 +574,7 @@ export type Review = {
     extraction_method: ExtractionMethod;
     created_at: string;
     created_by: string;
+    observatory_id: string;
     visibility: Visibility;
     published: boolean;
     sections: {
@@ -642,6 +645,7 @@ export type LiteratureList = {
     extraction_method: ExtractionMethod;
     created_at: string;
     created_by: string;
+    observatory_id: string;
     visibility: Visibility;
     published: boolean;
     sections: LiteratureListSection[];
@@ -668,6 +672,19 @@ export type VisibilityParam = {
 
 export type CreatedByParam = {
     created_by?: string;
+};
+
+export type ObservatoryIdParam = {
+    observatory_id?: string;
+};
+
+export type OrganizationIdParam = {
+    organization_id?: string;
+};
+
+export type ResearchFieldIdParams = {
+    research_field?: string;
+    include_subfields?: boolean;
 };
 
 export type SdgParam = {
@@ -712,3 +729,7 @@ export type ApiError = {
         message: string;
     }[];
 };
+
+export type Item = {
+    _class: string;
+} & (Paper | Comparison | LiteratureList | Visualization | Review | Template | Resource | RosettaStoneTemplate);

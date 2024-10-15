@@ -1,11 +1,11 @@
 import { mergeFilters } from 'components/Filters/helpers';
-import { useRouter, useSearchParams } from 'next/navigation';
+import useLocalStorageFilters from 'components/Filters/hooks/useLocalStorageFilters';
 import useObservatoryFilters from 'components/Observatory/hooks/useObservatoryFilters';
 import { FILTER_SOURCE } from 'constants/filters';
 import { orderBy } from 'lodash';
+import { parseAsJson, useQueryState } from 'nuqs';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { FilterConfig, FilterConfigValue } from 'services/backend/types';
-import useLocalStorageFilters from 'components/Filters/hooks/useLocalStorageFilters';
 
 const useFilterConfig = ({
     oId,
@@ -23,13 +23,14 @@ const useFilterConfig = ({
 } => {
     // Load default filters
     const { isLoading: isLoadingFilters, filters: defaultFilters, refreshFilters: refreshObservatoryFilters } = useObservatoryFilters({ id: oId });
-    const searchParams = useSearchParams();
-    const router = useRouter();
+
+    const [filterConfig, setFilterConfig] = useQueryState<FilterConfig[]>('filter_config', parseAsJson());
+
     // Get filters from the local storage
     const { localStorageFilters: storedFilters, refresh: refreshLocalStorageFilters } = useLocalStorageFilters();
 
     // Parse filters from sources
-    let urlFilters = JSON.parse(searchParams.get('filter_config') || '[]') as FilterConfig[];
+    let urlFilters = filterConfig ?? [];
     urlFilters = urlFilters.map((f) => ({ ...f, source: FILTER_SOURCE.URL }));
     // Combine filters based on priority
     // Combine url filters with default filters
@@ -56,16 +57,12 @@ const useFilterConfig = ({
                 values: f.values?.map(({ op, value }) => (typeof value === 'object' ? { op, value: value?.id } : { op, value })),
                 exact: f.exact,
             }));
-        const params = new URLSearchParams(searchParams.toString());
-        params.set('filter_config', JSON.stringify(activeFilters));
-        router.push(`?${params.toString()}`, { scroll: false });
+        setFilterConfig(activeFilters, { scroll: false, history: 'push' });
     };
 
     const resetFilters = () => {
-        const params = new URLSearchParams(searchParams.toString());
         setFilters((prev) => prev.map((f) => ({ ...f, values: [] })));
-        params.delete('filter_config');
-        router.push(`?${params.toString()}`, { scroll: false });
+        setFilterConfig(null, { scroll: false, history: 'push' });
     };
 
     const updateFilterValue = (filter: FilterConfig, value: FilterConfigValue[] | string) => {

@@ -89,9 +89,9 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
                 searchCall = getTemplates({
                     page,
                     ...(sf.predicate === PREDICATES.SHACL_TARGET_CLASS && { targetClass: target.id }),
-                    ...(sf.predicate === PREDICATES.TEMPLATE_OF_RESEARCH_FIELD && { researchField: target.id, includeSubfields: true }),
+                    ...(sf.predicate === PREDICATES.TEMPLATE_OF_RESEARCH_FIELD && { research_field: target.id, include_subfields: true }),
                     ...(sf.predicate === PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM && { researchProblem: target.id }),
-                    includeSubfields: true,
+                    include_subfields: true,
                     size: pageSize,
                 });
             } else {

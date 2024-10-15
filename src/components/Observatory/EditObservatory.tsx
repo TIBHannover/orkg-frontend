@@ -57,6 +57,7 @@ const EditObservatory: FC<EditObservatoryProps> = ({
             setDescription(value);
         }
     };
+
     const updateObservatoryData = async (id: string, name: string, description: string, researchField: Node | null, sdgs: Node[]) => {
         setIsLoading(true);
 

@@ -51,6 +51,6 @@ function useDeletePapers({ paperIds, redirect = false, finishLoadingCallback = (
         }
     };
 
-    return [deletePapers, isLoading];
+    return { deletePapers, isLoading };
 }
 export default useDeletePapers;

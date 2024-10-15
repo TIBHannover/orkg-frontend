@@ -9,7 +9,7 @@ import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 import useParams from 'components/useParams/useParams';
 import EditObservatory from 'components/Observatory/EditObservatory';
-import IntegratedListWrapper from 'components/Observatory/IntegratedList/IntegratedListWrapper';
+import ObservatoryTabsContainer from 'components/Observatory/ObservatoryTabsContainer';
 import MembersBox from 'components/Observatory/MembersBox';
 import ObservatoryModal from 'components/Observatory/ObservatoryModal/ObservatoryModal';
 import OrganizationsBox from 'components/Observatory/OrganizationsBox';
@@ -119,7 +119,7 @@ const Observatory = () => {
                     <EditModeHeader isVisible={isEditMode} />
                     <Container
                         className={`box py-3 px-4 mb-4 clearfix position-relative 
-                              ${isEditMode ? 'rounded-bottom' : 'rounded'}`}
+                        ${isEditMode ? 'rounded-bottom' : 'rounded'}`}
                     >
                         <>
                             <div className="d-flex justify-content-between">
@@ -174,7 +174,10 @@ const Observatory = () => {
                             </Col>
                         </Row>
                     </Container>
-                    <IntegratedListWrapper id={observatoryId} boxShadow />
+                    <Container className="p-0 mt-2">
+                        <ObservatoryTabsContainer id={observatoryId} boxShadow />
+                    </Container>
+
                     <EditObservatory
                         showDialog={showEditDialog}
                         toggle={() => setShowEditDialog((v) => !v)}

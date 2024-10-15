@@ -6,7 +6,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import capitalize from 'capitalize';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
-import TabsContainer from 'components/UserProfile/TabsContainer';
+import UserProfileTabsContainer from 'components/UserProfile/UserProfileTabsContainer';
 import UserStatistics from 'components/UserProfile/UserStatistics';
 import { MISC } from 'constants/graphSettings';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
@@ -202,7 +202,7 @@ const UserProfile = (props) => {
                 )}
             </Container>
             <Container className="mt-4 p-0">
-                <TabsContainer currentUserId={currentUserId} userId={userId} />
+                <UserProfileTabsContainer currentUserId={currentUserId} id={userId} />
             </Container>
             <ComparisonPopup />
         </>

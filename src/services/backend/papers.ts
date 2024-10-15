@@ -10,9 +10,11 @@ import {
     CreatePaperParams,
     CreatedByParam,
     ExtractionMethod,
+    ObservatoryIdParam,
     PaginatedResponse,
     PaginationParams,
     Paper,
+    ResearchFieldIdParams,
     Resource,
     SdgParam,
     Statement,
@@ -131,13 +133,18 @@ export const getPaperByTitle = async (title: string): Promise<Paper | null> => {
 export const getPapers = ({
     page = 0,
     size = 999,
-    sortBy = [{ property: 'created_at', direction: 'desc' }],
-    verified = null,
+    sortBy,
+    verified,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
     created_by,
+    observatory_id,
+    research_field,
+    include_subfields,
     sdg,
-}: PaginationParams & VerifiedParam & VisibilityParam & CreatedByParam & SdgParam): Promise<PaginatedResponse<Paper>> => {
-    const params = prepareParams({ page, size, sortBy, verified, visibility, created_by, sdg });
+}: PaginationParams & VisibilityParam & VerifiedParam & CreatedByParam & SdgParam & ObservatoryIdParam & ResearchFieldIdParams): Promise<
+    PaginatedResponse<Paper>
+> => {
+    const params = prepareParams({ page, size, sortBy, verified, visibility, created_by, observatory_id, sdg, research_field, include_subfields });
     return submitGetRequest(`${papersUrl}?${params}`, {
         'Content-Type': 'application/vnd.orkg.paper.v2+json;charset=UTF-8',
         Accept: 'application/vnd.orkg.paper.v2+json',

@@ -8,6 +8,8 @@ export const DEFAULT_COMPARISON_METHOD: string = 'PATH';
 export const DIAGRAM_CONTEXT_MENU_ID: string = 'diagram-context-menu';
 export const LICENSE_URL: string = 'https://creativecommons.org/publicdomain/zero/1.0/';
 
+export const ALL_CONTENT_TYPES_ID = 'All';
+
 export const EXTRACTION_METHODS: {
     [key in ExtractionMethod]: ExtractionMethod;
 } = {

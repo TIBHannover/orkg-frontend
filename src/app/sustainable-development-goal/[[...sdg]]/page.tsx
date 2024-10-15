@@ -4,7 +4,7 @@ import NotFound from 'app/not-found';
 import Image from 'next/image';
 import Link from 'next/link';
 import useParams from 'components/useParams/useParams';
-import IntegratedList from 'components/SustainableDevelopmentGoals/IntegratedList/IntegratedList';
+import SgdTabsContainer from 'components/SustainableDevelopmentGoals/SgdTabsContainer';
 import { getImage } from 'components/SustainableDevelopmentGoals/helpers';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { SUSTAINABLE_DEVELOPMENT_GOALS } from 'constants/graphSettings';
@@ -56,7 +56,7 @@ const SustainableDevelopmentGoal = () => {
                     </motion.div>
                 ))}
             </Container>
-            <IntegratedList key={selectedSdg.toString()} sdgId={selectedSdg.toString()} />
+            <SgdTabsContainer key={selectedSdg.toString()} sdgId={selectedSdg.toString()} />
         </>
     );
 };

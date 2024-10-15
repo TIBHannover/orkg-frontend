@@ -76,7 +76,7 @@ export const useSearch = () => {
                     q: searchQuery,
                     include: [filterType],
                     returnContent: true,
-                    createdBy: !isEmpty(searchParams.get('createdBy')) ? searchParams.get('createdBy') : undefined,
+                    created_by: !isEmpty(searchParams.get('createdBy')) ? searchParams.get('createdBy') : undefined,
                 });
             }
 
