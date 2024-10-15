@@ -31,8 +31,7 @@ const Resources = () => {
         } = await getResources({
             page,
             size: pageSize,
-            sortBy: 'created_at',
-            desc: true,
+            sortBy: [{ property: 'created_at', direction: 'desc' }],
         });
 
         return {

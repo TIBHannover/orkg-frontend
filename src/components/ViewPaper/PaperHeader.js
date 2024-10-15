@@ -29,7 +29,7 @@ const PaperHeader = (props) => {
     const version = useSelector((state) => state.viewPaper.version);
     const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
     const userId = useSelector((state) => state.auth.user?.id);
-    const [deletePapers] = useDeletePapers({ paperIds: [viewPaper.id], redirect: true });
+    const { deletePapers } = useDeletePapers({ paperIds: [viewPaper.id], redirect: true });
     const [altMetrics, setAltMetrics] = useState(null);
     const dispatch = useDispatch();
     // make sure a user is signed in (not null)

@@ -9,12 +9,14 @@ import { reverse } from 'named-urls';
 import { FC } from 'react';
 import ReactStringReplace from 'react-string-replace';
 import { RosettaStoneTemplate } from 'services/backend/types';
+import { CardBadge } from 'components/styled';
 
 type RSTemplateCardProps = {
     template: RosettaStoneTemplate;
+    showBadge?: boolean;
 };
 
-const RSTemplateCard: FC<RSTemplateCardProps> = ({ template }) => {
+const RSTemplateCard: FC<RSTemplateCardProps> = ({ template, showBadge = false }) => {
     const replacementFunction = (match: string) => {
         const i = toInteger(match);
         return <i>{template.properties[i].placeholder}</i>;
@@ -32,6 +34,11 @@ const RSTemplateCard: FC<RSTemplateCardProps> = ({ template }) => {
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
                         <Link href={reverse(ROUTES.RS_TEMPLATE, { id: template.id })}>{template.label ? template.label : <em>No title</em>}</Link>
+                        {showBadge && (
+                            <div className="d-inline-block ms-2">
+                                <CardBadge color="primary">Statement type</CardBadge>
+                            </div>
+                        )}
                     </div>
                     <div className="small text-muted">{formattedLabelWithPlaceholders}</div>
                     {template.description && (

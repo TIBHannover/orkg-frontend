@@ -1,12 +1,10 @@
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { MISC } from 'constants/graphSettings';
 import { url as baseUrl } from 'constants/misc';
-import { submitDeleteRequest, submitGetRequest, submitPatchRequest, submitPostRequest, submitPutRequest } from 'network';
+import { submitDeleteRequest, submitGetRequest, submitPatchRequest, submitPostRequest } from 'network';
 import qs from 'qs';
-import { mergePaginateResponses } from 'services/backend/misc';
 import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
 import { getResource } from 'services/backend/resources';
-import { Contributor, FilterConfig, Observatory, PaginatedResponse, Resource, SortByOptions, VisibilityOptions } from 'services/backend/types';
+import { Contributor, FilterConfig, Observatory, PaginatedResponse } from 'services/backend/types';
 
 export const observatoriesUrl = `${baseUrl}observatories/`;
 
@@ -116,54 +114,6 @@ export const getUsersByObservatoryId = ({
         },
     );
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/users?${params}`);
-};
-
-export type GetContentByObservatoryIdParams = {
-    id: string;
-    page?: number;
-    size?: number;
-    sortBy?: SortByOptions;
-    desc?: boolean;
-    visibility?: VisibilityOptions;
-    classes?: string[];
-    filters?: FilterConfig[];
-};
-
-/**
- * Get content of an observatory
- * @param {String} id observatory id
- * @param {Number} page Page number
- * @param {Number} size Number of items per page
- * @param {SortByOptions} sortBy Sort field
- * @param {Boolean} desc  ascending order and descending order.
- * @param {VisibilityOptions} visibility Visibility of paper
- * @param {string[]} classes Classes IDs Filter
- * @param {FilterConfig} filters The filter config to use
- * @return {Promise} Promise of paginated list of resources
- */
-export const getContentByObservatoryId = ({
-    id,
-    page = 0,
-    size = 9999,
-    sortBy = 'created_at',
-    desc = true,
-    visibility = VISIBILITY_FILTERS.ALL_LISTED,
-    classes = [],
-    filters = [],
-}: GetContentByObservatoryIdParams): Promise<PaginatedResponse<Resource>> => {
-    // Sort is not supported in this endpoint
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const url = filters.length > 0 ? `${observatoriesUrl}${encodeURIComponent(id)}/papers?` : `${observatoriesUrl}${encodeURIComponent(id)}/class?`;
-    const paramsObj = { page, size, sort, visibility, classes: classes.join(','), filter_config: JSON.stringify(filters) };
-    if (visibility === VISIBILITY_FILTERS.TOP_RECENT) {
-        const paramsFeaturedObj = qs.stringify({ ...paramsObj, visibility: VISIBILITY_FILTERS.FEATURED }, { skipNulls: true });
-        const paramsNoFeaturedObj = qs.stringify({ ...paramsObj, visibility: VISIBILITY_FILTERS.NON_FEATURED }, { skipNulls: true });
-        return Promise.all([submitGetRequest(url + paramsFeaturedObj), submitGetRequest(url + paramsNoFeaturedObj)]).then(([featured, noFeatured]) =>
-            mergePaginateResponses(featured, noFeatured),
-        );
-    }
-    const params = qs.stringify(paramsObj, { skipNulls: true });
-    return submitGetRequest(url + params);
 };
 
 export const createObservatory = (

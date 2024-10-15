@@ -10,7 +10,7 @@ import useResearchFieldSelector from 'components/Home/hooks/useResearchFieldSele
 import HomeAlerts from 'components/HomeAlerts/HomeAlerts';
 import LastUpdatesBox from 'components/LastUpdatesBox/LastUpdatesBox';
 import { env } from 'next-runtime-env';
-import HomeTabsContainer from 'components/Tabs/HomeTabsContainer';
+import HomeTabsContainer from 'components/Home/HomeTabsContainer';
 import ContributorsBox from 'components/TopContributors/ContributorsBox';
 import { RESOURCES } from 'constants/graphSettings';
 import { Helmet } from 'react-helmet';

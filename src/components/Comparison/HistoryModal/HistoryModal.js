@@ -22,6 +22,7 @@ function HistoryModal({ comparedComparisonId, toggle, showDialog, comparisonId }
 
     return (
         <HistoryModalComponent
+            isLoading={isLoading}
             id={comparisonId}
             show={showDialog}
             toggle={toggle}

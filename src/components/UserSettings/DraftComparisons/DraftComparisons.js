@@ -35,8 +35,8 @@ const DraftComparisons = () => {
             include: [CLASSES.COMPARISON_DRAFT],
             page,
             size: 10,
-            sortBy: 'created_at',
-            createdBy: userId,
+            sortBy: [{ property: 'created_at', direction: 'desc' }],
+            created_by: userId,
         });
 
         let draftComparisonUrls = await Promise.all(

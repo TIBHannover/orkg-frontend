@@ -2,7 +2,7 @@ import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES, MISC } from 'constants/graphSettings';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { getContentByObservatoryId } from 'services/backend/observatories';
+import { getContentTypes } from 'services/backend/contentTypes';
 import { getResearchProblemsByResearchFieldId } from 'services/backend/researchFields';
 import { addResourceToObservatory } from 'services/backend/resources';
 import { mergeAlternate } from 'utils';
@@ -19,30 +19,30 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
 
     const loadData = useCallback(
         (_page, total) => {
-            const apiFunc = by === 'ResearchField' ? getResearchProblemsByResearchFieldId : getContentByObservatoryId;
+            const apiFunc = by === 'ResearchField' ? getResearchProblemsByResearchFieldId : getContentTypes;
             setIsLoading(true);
             // problems
             let problemsService;
             if (sort === 'combined') {
                 // in case of combined sort we list 50% featured and 50% newest items (new not featured)
                 const newService = apiFunc({
-                    id,
+                    ...(by === 'ResearchField' ? { id } : { observatory_id: id }),
                     page: _page,
                     size: Math.round(pageSize / 2),
-                    sortBy: 'created_at',
+                    sortBy: by === 'ResearchField' ? 'created_at' : [{ property: 'created_at', direction: 'desc' }],
                     desc: true,
                     ...(by === 'ResearchField' ? { subfields: includeSubFields } : {}),
-                    ...(by === 'Observatory' ? { classes: [CLASSES.PROBLEM] } : {}),
+                    ...(by === 'Observatory' ? { contentType: CLASSES.PROBLEM } : {}),
                     visibility: VISIBILITY_FILTERS.NON_FEATURED,
                 });
                 const featuredService = apiFunc({
-                    id,
+                    ...(by === 'ResearchField' ? { id } : { observatory_id: id }),
                     page: _page,
                     size: Math.round(pageSize / 2),
-                    sortBy: 'created_at',
+                    sortBy: by === 'ResearchField' ? 'created_at' : [{ property: 'created_at', direction: 'desc' }],
                     desc: true,
                     ...(by === 'ResearchField' ? { subfields: includeSubFields } : {}),
-                    ...(by === 'Observatory' ? { classes: [CLASSES.PROBLEM] } : {}),
+                    ...(by === 'Observatory' ? { contentType: CLASSES.PROBLEM } : {}),
                     visibility: VISIBILITY_FILTERS.FEATURED,
                 });
                 problemsService = Promise.all([newService, featuredService]).then(([newC, featuredC]) => {
@@ -55,13 +55,13 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
                 });
             } else {
                 problemsService = apiFunc({
-                    id,
+                    ...(by === 'ResearchField' ? { id } : { observatory_id: id }),
                     page: _page,
                     size: pageSize,
-                    sortBy: 'created_at',
-                    desc: true,
+                    sortBy: by === 'ResearchField' ? 'created_at' : [{ property: 'created_at', direction: 'desc' }],
+                    ...(by === 'ResearchField' ? { desc: true } : {}),
                     ...(by === 'ResearchField' ? { subfields: includeSubFields } : {}),
-                    ...(by === 'Observatory' ? { classes: [CLASSES.PROBLEM] } : {}),
+                    ...(by === 'Observatory' ? { contentType: CLASSES.PROBLEM } : {}),
                     visibility: sort,
                 });
             }

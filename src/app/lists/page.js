@@ -36,8 +36,7 @@ const Lists = () => {
             include: [resourceClass],
             page,
             size: pageSize,
-            sortBy: 'created_at',
-            desc: true,
+            sortBy: [{ property: 'created_at', direction: 'desc' }],
         });
 
         if (resources.length) {

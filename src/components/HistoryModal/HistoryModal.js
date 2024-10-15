@@ -65,7 +65,7 @@ const Time = styled.div`
     }
 `;
 
-const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff, showFeaturedButtons = true }) => {
+const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff, showFeaturedButtons = true, isLoading = false }) => {
     const [selectedVersion1, setSelectedVersion1] = useState(null);
     const [selectedVersion2, setSelectedVersion2] = useState(null);
     const router = useRouter();
@@ -83,7 +83,14 @@ const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff, showF
         <Modal isOpen={show} toggle={toggle}>
             <ModalHeader toggle={toggle}>{title}</ModalHeader>
             <ModalBody>
-                {versions.length > 0 && (
+                {isLoading && (
+                    <div className="d-flex justify-content-center">
+                        <div className="spinner-border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                )}
+                {!isLoading && versions.length > 0 && (
                     <div>
                         <div className="p-2">
                             {versions.length > 1 && (
@@ -180,6 +187,7 @@ HistoryModal.propTypes = {
     versions: PropTypes.array,
     routeDiff: PropTypes.string.isRequired,
     showFeaturedButtons: PropTypes.bool,
+    isLoading: PropTypes.bool,
 };
 
 export default HistoryModal;

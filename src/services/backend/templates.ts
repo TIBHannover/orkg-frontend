@@ -3,7 +3,18 @@ import { url } from 'constants/misc';
 import { uniqBy } from 'lodash';
 import { getCreatedIdFromHeaders, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
-import { CreateTemplateParams, PaginatedResponse, PaginationParams, Template, UpdateTemplateParams, VisibilityParam } from 'services/backend/types';
+import {
+    CreatedByParam,
+    CreateTemplateParams,
+    ObservatoryIdParam,
+    OrganizationIdParam,
+    PaginatedResponse,
+    PaginationParams,
+    ResearchFieldIdParams,
+    Template,
+    UpdateTemplateParams,
+    VisibilityParam,
+} from 'services/backend/types';
 
 export const templatesUrl = `${url}templates/`;
 
@@ -40,30 +51,29 @@ export const updateTemplate = (id: string, data: UpdateTemplateParams): Promise<
 export type getTemplatesParams = {
     q?: string | null;
     exact?: boolean;
-    createdBy?: string | null;
-    researchField?: string | null;
-    includeSubfields?: boolean | null;
     researchProblem?: string | null;
     targetClass?: string | null;
     createdAtStart?: string | null;
     createdAtEnd?: string | null;
-    observatoryId?: string | null;
-    organizationId?: string | null;
 } & PaginationParams &
-    VisibilityParam;
+    VisibilityParam &
+    CreatedByParam &
+    ResearchFieldIdParams &
+    ObservatoryIdParam &
+    OrganizationIdParam;
 
 export const getTemplates = ({
     q = null,
     exact = false,
-    createdBy = null,
-    researchField = null,
-    includeSubfields = null,
+    created_by = undefined,
+    research_field = undefined,
+    include_subfields = undefined,
     researchProblem = null,
     targetClass = null,
     createdAtStart = null,
     createdAtEnd = null,
-    observatoryId = null,
-    organizationId = null,
+    observatory_id = undefined,
+    organization_id = undefined,
     page = 0,
     size = 999,
     sortBy = [{ property: 'created_at', direction: 'desc' }],
@@ -76,15 +86,15 @@ export const getTemplates = ({
             sort: sortBy?.map((p) => `${p.property},${p.direction}`),
             ...(q ? { q, exact } : {}),
             visibility,
-            created_by: createdBy,
-            research_field: researchField,
-            include_subfields: includeSubfields,
+            created_by,
+            research_field,
+            include_subfields,
             research_problem: researchProblem,
             target_class: targetClass,
             created_at_start: createdAtStart,
             created_at_end: createdAtEnd,
-            observatory_id: observatoryId,
-            organization_id: organizationId,
+            observatory_id,
+            organization_id,
         },
         {
             skipNulls: true,
@@ -109,8 +119,8 @@ export const getFeaturedTemplates = async ({
         researchFields?.length > 0
             ? researchFields.map((rf) =>
                   getTemplates({
-                      researchField: rf,
-                      includeSubfields: false,
+                      research_field: rf,
+                      include_subfields: false,
                   }),
               )
             : [];

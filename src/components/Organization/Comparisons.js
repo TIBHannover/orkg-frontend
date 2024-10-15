@@ -20,7 +20,7 @@ const Comparisons = ({ organizationsId }) => {
     const loadComparisons = useCallback(
         (page) => {
             setIsLoadingComparisons(true);
-            getResources({ organizationId: organizationsId, size: 10, page })
+            getResources({ organization_id: organizationsId, size: 10, page })
                 .then((comparisons) =>
                     // Fetch the data of each comparison
                     getStatementsBySubjects({

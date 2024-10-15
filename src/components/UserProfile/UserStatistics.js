@@ -34,6 +34,10 @@ const STATISTICS = [
         label: 'Templates',
         class: CLASSES.NODE_SHAPE,
     },
+    {
+        label: 'Statement types',
+        class: CLASSES.ROSETTA_NODE_SHAPE,
+    },
 ];
 
 const UserStatistics = ({ userId }) => {
@@ -47,7 +51,7 @@ const UserStatistics = ({ userId }) => {
             }
             try {
                 setIsLoading(true);
-                const statsPromises = STATISTICS.map((statistic) => getResources({ include: [statistic.class], createdBy: userId }));
+                const statsPromises = STATISTICS.map((statistic) => getResources({ include: [statistic.class], created_by: userId }));
                 const _stats = (await Promise.all(statsPromises)).map((statistic, index) => ({
                     number: statistic.totalElements,
                     label: STATISTICS[index].label,
@@ -64,7 +68,10 @@ const UserStatistics = ({ userId }) => {
     return (
         <Row className="border rounded p-2 mt-3">
             {statistics.map((statistic, index) => (
-                <Col key={statistic.label} className={`d-flex flex-column align-items-center ${index + 1 < statistics.length ? 'border-end' : ''}`}>
+                <Col
+                    key={statistic.label}
+                    className={` text-wrap d-flex flex-column align-items-center ${index + 1 < statistics.length ? 'border-end' : ''}`}
+                >
                     <span className="h4 m-0">{statistic.number}</span>
                     <span>{pluralize(statistic.label, statistic.number)}</span>
                 </Col>

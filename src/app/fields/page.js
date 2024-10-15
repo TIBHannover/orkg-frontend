@@ -1,20 +1,25 @@
 'use client';
 
-import Link from 'next/link';
-import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Papers from 'components/ResearchField/Papers';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
+import ContentTypeListHeader from 'components/ContentTypeList/ContentTypeListHeader';
+import ContentTypeList from 'components/ContentTypeList/ContentTypeList';
+import ContentTypeSubFieldsFilter from 'components/ContentTypeList/ContentTypeSubFieldsFilter';
+import ContentTypeVisibilityFilter from 'components/ContentTypeList/ContentTypeVisibilityFilter';
+import CopyId from 'components/CopyId/CopyId';
+import useResearchFieldContent from 'components/ResearchField/hooks/useResearchFieldContent';
 import ResearchFieldSelector from 'components/ResearchFieldSelector/ResearchFieldSelector';
-import { getResearchFieldsStats } from 'services/backend/stats';
-import { RESOURCES } from 'constants/graphSettings';
+import { SubTitle } from 'components/styled';
+import TitleBar from 'components/TitleBar/TitleBar';
+import { CLASSES, RESOURCES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { Button, ButtonDropdown, Col, Container, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'reactstrap';
+import { getResearchFieldsStats } from 'services/backend/stats';
 import { reverseWithSlug } from 'utils';
-import TitleBar from 'components/TitleBar/TitleBar';
-import CopyId from 'components/CopyId/CopyId';
 
 const ResearchFields = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -47,6 +52,11 @@ const ResearchFields = () => {
             setResearchFields(data.researchFields);
         }
     }, []);
+
+    const { items, isLoading, hasNextPage, isLastPageReached, totalElements, page, handleLoadMore } = useResearchFieldContent({
+        researchFieldId: selectedResearchField,
+        defaultContentType: CLASSES.PAPER,
+    });
 
     return (
         <>
@@ -112,7 +122,25 @@ const ResearchFields = () => {
                                         </div>
                                     </div>
                                     <hr />
-                                    <Papers id={selectedResearchField} boxShadow={false} showBreadcrumbs={false} />
+                                    <ContentTypeListHeader
+                                        label="Papers"
+                                        isLoading={isLoading}
+                                        totalElements={totalElements}
+                                        page={page}
+                                        showSubFieldsFilter
+                                    />
+                                    <ContentTypeList
+                                        contentType={CLASSES.PAPER}
+                                        pageLabel="research field"
+                                        isLoading={isLoading}
+                                        items={items ?? []}
+                                        hasNextPage={hasNextPage}
+                                        isLastPageReached={isLastPageReached}
+                                        totalElements={totalElements}
+                                        page={page}
+                                        handleLoadMore={handleLoadMore}
+                                        flush={false}
+                                    />
                                 </>
                             )}
                         </Col>

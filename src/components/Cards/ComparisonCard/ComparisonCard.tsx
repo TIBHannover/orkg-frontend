@@ -46,6 +46,7 @@ const ComparisonCard: FC<ComparisonCardProps> = ({
         unlisted: comparison?.visibility === VISIBILITY.UNLISTED,
         featured: comparison?.visibility === VISIBILITY.FEATURED,
     });
+
     return (
         <ComparisonCardStyled
             style={{ flexWrap: 'wrap' }}
@@ -101,9 +102,7 @@ const ComparisonCard: FC<ComparisonCardProps> = ({
                             <small className="text-muted">{truncate(comparison.description, { length: 200 })}</small>
                         </div>
                     )}
-                    {showHistory && comparison.versions && comparison.versions.length > 1 && (
-                        <Versions versions={comparison.versions} id={comparison.id} />
-                    )}
+                    {showHistory && comparison.versions && comparison.versions.length > 1 && <Versions versions={comparison.versions} />}
                 </div>
             </div>
             <div className="col-md-3 d-flex align-items-end flex-column p-0">

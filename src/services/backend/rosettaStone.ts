@@ -13,6 +13,7 @@ import {
     RosettaStoneTemplate,
     VisibilityParam,
     UpdateRosettaStoneStatementParams,
+    CreatedByParam,
 } from 'services/backend/types';
 
 export const rosettaStoneUrl = `${url}rosetta-stone/`;
@@ -28,16 +29,17 @@ export type GetTemplatesParams = {
     exact?: boolean;
     createdBy?: string | null;
 } & PaginationParams &
-    VisibilityParam;
+    VisibilityParam &
+    CreatedByParam;
 
 export const getTemplates = ({
     q = null,
     exact = false,
-    createdBy = null,
     page = 0,
     size = 999,
     sortBy = [{ property: 'created_at', direction: 'desc' }],
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
+    created_by,
 }: GetTemplatesParams): Promise<PaginatedResponse<RosettaStoneTemplate>> => {
     const params = qs.stringify(
         {
@@ -46,7 +48,7 @@ export const getTemplates = ({
             sort: sortBy?.map((p) => `${p.property},${p.direction}`),
             ...(q ? { q, exact } : {}),
             visibility,
-            created_by: createdBy,
+            created_by,
         },
         {
             skipNulls: true,

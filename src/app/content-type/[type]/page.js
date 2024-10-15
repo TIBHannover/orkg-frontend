@@ -50,8 +50,7 @@ function ContentTypes() {
             include: [type],
             page,
             size: pageSize,
-            sortBy: 'created_at',
-            desc: true,
+            sortBy: [{ property: 'created_at', direction: 'desc' }],
         });
 
         return {
