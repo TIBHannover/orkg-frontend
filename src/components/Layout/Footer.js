@@ -76,6 +76,11 @@ const Footer = () => (
                                 <Link href={ROUTES.HELP_CENTER}>Help center</Link>
                             </li>
                             <li>
+                                <a href="https://academy.orkg.org" target="_blank" rel="noreferrer">
+                                    Academy
+                                </a>
+                            </li>
+                            <li>
                                 <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })}>Data protection</Link> (
                                 <a href="/infosheet-data-protection.pdf" target="_blank" rel="noreferrer">
                                     Info sheet

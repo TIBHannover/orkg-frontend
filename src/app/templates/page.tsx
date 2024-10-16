@@ -75,7 +75,11 @@ const Templates = () => {
         <>
             Templates allows to specify the structure of content types, and they can be used when describing research contributions.{' '}
             <a href="https://orkg.org/about/19/Templates" rel="noreferrer" target="_blank">
-                Learn more in the help center
+                Visit the help center
+            </a>{' '}
+            or{' '}
+            <a href="https://academy.orkg.org/orkg-academy/main/courses/template-course.html" rel="noreferrer" target="_blank">
+                learn more in the academy
             </a>
             .
         </>

@@ -525,6 +525,9 @@ const Header = () => {
                                 <DropdownItem tag={Link} href={ROUTES.HELP_CENTER} onClick={closeMenu} active={pathname === ROUTES.HELP_CENTER}>
                                     Help center
                                 </DropdownItem>
+                                <DropdownItem tag="a" href="https://academy.orkg.org" target="_blank" rel="noreferrer">
+                                    Academy
+                                </DropdownItem>
                                 <DropdownItem
                                     tag="a"
                                     target="_blank"
