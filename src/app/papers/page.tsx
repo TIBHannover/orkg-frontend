@@ -83,7 +83,11 @@ const Papers: FC = () => {
         <>
             ORKG papers describe scholarly articles in a structured and semantic manner.{' '}
             <a href="https://orkg.org/about/20/Papers" rel="noreferrer" target="_blank">
-                Learn more in the help center
+                Visit the help center
+            </a>{' '}
+            or{' '}
+            <a href="https://academy.orkg.org/orkg-academy/main/courses/paper-course.html" rel="noreferrer" target="_blank">
+                learn more in the academy
             </a>
             .
         </>

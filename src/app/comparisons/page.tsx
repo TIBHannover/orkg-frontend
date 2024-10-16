@@ -74,7 +74,11 @@ const Comparisons = () => {
             <span>
                 ORKG comparisons provide condensed overviews of the state-of-the-art for a particular research question.{' '}
                 <a href="https://orkg.org/about/15/Comparisons" rel="noreferrer" target="_blank">
-                    Learn more in the help center
+                    Visit the help center
+                </a>{' '}
+                or{' '}
+                <a href="https://academy.orkg.org/orkg-academy/main/courses/comparison-course.html" rel="noreferrer" target="_blank">
+                    learn more in the academy
                 </a>
                 .
             </span>
