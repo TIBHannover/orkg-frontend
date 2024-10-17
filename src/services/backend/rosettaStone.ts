@@ -1,8 +1,6 @@
-'use client';
-
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { url } from 'constants/misc';
-import { getCreatedIdFromHeaders, submitGetRequest, submitPostRequest, submitDeleteRequest } from 'network';
+import { getCreatedIdFromHeaders, submitGetRequest, submitPostRequest, submitDeleteRequest, submitPutRequest } from 'network';
 import qs from 'qs';
 import {
     CreateRosettaStoneStatementParams,
@@ -13,12 +11,13 @@ import {
     RosettaStoneTemplate,
     VisibilityParam,
     UpdateRosettaStoneStatementParams,
+    UpdateRosettaStoneTemplateParams,
     CreatedByParam,
 } from 'services/backend/types';
 
 export const rosettaStoneUrl = `${url}rosetta-stone/`;
 
-export const getTemplate = (id: string): Promise<RosettaStoneTemplate> =>
+export const getRSTemplate = (id: string): Promise<RosettaStoneTemplate> =>
     submitGetRequest(`${rosettaStoneUrl}templates/${id}`, {
         'Content-Type': 'application/vnd.orkg.rosetta-stone-template.v1+json;charset=UTF-8',
         Accept: 'application/vnd.orkg.rosetta-stone-template.v1+json',
@@ -32,7 +31,7 @@ export type GetTemplatesParams = {
     VisibilityParam &
     CreatedByParam;
 
-export const getTemplates = ({
+export const getRSTemplates = ({
     q = null,
     exact = false,
     page = 0,
@@ -62,7 +61,7 @@ export const getTemplates = ({
     });
 };
 
-export const createTemplate = (data: CreateRosettaStoneTemplateParams): Promise<string> =>
+export const createRSTemplate = (data: CreateRosettaStoneTemplateParams): Promise<string> =>
     submitPostRequest(
         `${rosettaStoneUrl}templates`,
         {
@@ -76,13 +75,27 @@ export const createTemplate = (data: CreateRosettaStoneTemplateParams): Promise<
         true,
     ).then(({ headers }) => getCreatedIdFromHeaders(headers)); // get the id from the location header;
 
-export const deleteTemplate = (id: string): Promise<null> =>
+export const updateRSTemplate = (id: string, data: UpdateRosettaStoneTemplateParams): Promise<string> =>
+    submitPutRequest(
+        `${rosettaStoneUrl}templates/${id}`,
+        {
+            'Content-Type': 'application/vnd.orkg.rosetta-stone-template.v1+json;charset=UTF-8',
+            Accept: 'application/vnd.orkg.rosetta-stone-template.v1+json',
+        },
+        data,
+        true,
+        true,
+        true,
+        true,
+    ).then(({ headers }) => getCreatedIdFromHeaders(headers)); // get the id from the location header;
+
+export const deleteRSTemplate = (id: string): Promise<null> =>
     submitDeleteRequest(`${rosettaStoneUrl}templates/${id}`, {
         'Content-Type': 'application/json',
         Accept: 'application/vnd.orkg.rosetta-stone-template.v1+json',
     });
 
-export const getStatement = (id: string): Promise<RosettaStoneStatement> =>
+export const getRSStatement = (id: string): Promise<RosettaStoneStatement> =>
     submitGetRequest(`${rosettaStoneUrl}statements/${id}`, {
         'Content-Type': 'application/vnd.orkg.rosetta-stone-statement.v1+json;charset=UTF-8',
         Accept: 'application/vnd.orkg.rosetta-stone-statement.v1+json',
@@ -95,7 +108,7 @@ export type GetStatementsParams = {
 } & PaginationParams &
     VisibilityParam;
 
-export const getStatements = ({
+export const getRSStatements = ({
     context,
     template_id,
     page = 0,
@@ -124,14 +137,14 @@ export const getStatements = ({
     });
 };
 
-export const getStatementVersions = ({ id }: { id: string }): Promise<RosettaStoneStatement[]> => {
+export const getRSStatementVersions = ({ id }: { id: string }): Promise<RosettaStoneStatement[]> => {
     return submitGetRequest(`${rosettaStoneUrl}statements/${id}/versions`, {
         'Content-Type': 'application/vnd.orkg.rosetta-stone-statement.v1+json;charset=UTF-8',
         Accept: 'application/vnd.orkg.rosetta-stone-statement.v1+json',
     });
 };
 
-export const createStatement = (data: CreateRosettaStoneStatementParams): Promise<RosettaStoneStatement> =>
+export const createRSStatement = (data: CreateRosettaStoneStatementParams): Promise<RosettaStoneStatement> =>
     submitPostRequest(
         `${rosettaStoneUrl}statements`,
         {
@@ -145,7 +158,7 @@ export const createStatement = (data: CreateRosettaStoneStatementParams): Promis
         true,
     ).then(({ headers }) => getCreatedIdFromHeaders(headers)); // get the id from the location header;
 
-export const updateStatement = (id: string, data: UpdateRosettaStoneStatementParams): Promise<string> =>
+export const updateRSStatement = (id: string, data: UpdateRosettaStoneStatementParams): Promise<string> =>
     submitPostRequest(
         `${rosettaStoneUrl}statements/${id}`,
         {
@@ -159,6 +172,6 @@ export const updateStatement = (id: string, data: UpdateRosettaStoneStatementPar
         true,
     ).then(({ headers }) => getCreatedIdFromHeaders(headers)); // get the id from the location header;
 
-export const deleteStatement = (id: string): Promise<null> => submitDeleteRequest(`${rosettaStoneUrl}statements/${id}`);
+export const deleteRSStatement = (id: string): Promise<null> => submitDeleteRequest(`${rosettaStoneUrl}statements/${id}`);
 
-export const fullyDeleteStatement = (id: string): Promise<null> => submitDeleteRequest(`${rosettaStoneUrl}statements/${id}/versions`);
+export const fullyDeleteRSStatement = (id: string): Promise<null> => submitDeleteRequest(`${rosettaStoneUrl}statements/${id}/versions`);

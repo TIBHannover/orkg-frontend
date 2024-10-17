@@ -14,7 +14,7 @@ import moment from 'moment';
 import { reverse } from 'named-urls';
 import { Dispatch, FC, SetStateAction, useContext, useEffect, useRef, useState } from 'react';
 import { Range, getTrackBackground } from 'react-range';
-import { getStatementVersions } from 'services/backend/rosettaStone';
+import { getRSStatementVersions } from 'services/backend/rosettaStone';
 import { Certainty, RosettaStoneStatement, RosettaStoneTemplate } from 'services/backend/types';
 import { ThemeContext } from 'styled-components';
 import type { Instance } from 'tippy.js';
@@ -38,7 +38,7 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
     const onTrigger = () => {
         if (!isLoaded && statement.latest_version_id) {
             setIsLoading(true);
-            getStatementVersions({ id: statement.id })
+            getRSStatementVersions({ id: statement.id })
                 .then((_versions) => {
                     if (_versions.length) {
                         setVersions(_versions.reverse());

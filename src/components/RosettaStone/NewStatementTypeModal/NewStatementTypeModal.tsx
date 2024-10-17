@@ -20,7 +20,6 @@ const NewStatementTypeModal: FC<NewStatementTypeModalProps> = ({ initialLabel, i
                 dispatch({ type: 'initState', payload: null });
                 dispatch({ type: 'setLabel', payload: initialLabel ?? '' });
             }}
-            onClosed={() => dispatch({ type: 'setStep', payload: 1 })}
             isOpen={isOpen}
             toggle={toggle}
             size="lg"

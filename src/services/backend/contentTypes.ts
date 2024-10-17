@@ -10,7 +10,7 @@ import { observatoriesUrl } from 'services/backend/observatories';
 import { getPapers } from 'services/backend/papers';
 import { getResources } from 'services/backend/resources';
 import { getReviews } from 'services/backend/reviews';
-import { getTemplates as getRosettaTemplates } from 'services/backend/rosettaStone';
+import { getRSTemplates } from 'services/backend/rosettaStone';
 import { getTemplates } from 'services/backend/templates';
 import {
     CreatedByParam,
@@ -113,7 +113,7 @@ const getAPIFunction = (cType: string, paramsObj: Omit<GetContentParams, 'conten
         case CLASSES.NODE_SHAPE:
             return getTemplates(paramsObj);
         case CLASSES.ROSETTA_NODE_SHAPE:
-            return getRosettaTemplates(paramsObj);
+            return getRSTemplates(paramsObj);
         default:
             return getGenericContentTypes({ ...paramsObj, classes: [cType] }); // default fallback
     }

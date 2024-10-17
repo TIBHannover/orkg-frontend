@@ -6,7 +6,14 @@ import errorHandler from 'helpers/errorHandler';
 import { differenceWith, toInteger } from 'lodash';
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { createStatement, deleteStatement, fullyDeleteStatement, getTemplate, rosettaStoneUrl, updateStatement } from 'services/backend/rosettaStone';
+import {
+    createRSStatement,
+    deleteRSStatement,
+    fullyDeleteRSStatement,
+    getRSTemplate,
+    rosettaStoneUrl,
+    updateRSStatement,
+} from 'services/backend/rosettaStone';
 import { NewLiteral, NewResource, Node, RosettaStoneStatement } from 'services/backend/types';
 import { RootStore } from 'slices/types';
 import useSWR from 'swr';
@@ -36,8 +43,8 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
     const [isNegate, setIsNegate] = useState(statement.negated);
     const [certainty, setCertainty] = useState(statement.certainty);
     // Template
-    const { data: template } = useSWR(statement.template_id ? [statement.template_id, rosettaStoneUrl, 'getTemplate'] : null, ([params]) =>
-        getTemplate(params),
+    const { data: template } = useSWR(statement.template_id ? [statement.template_id, rosettaStoneUrl, 'getRSTemplate'] : null, ([params]) =>
+        getRSTemplate(params),
     );
 
     useEffect(() => {
@@ -57,7 +64,7 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
 
     const handleDeleteStatement = async () => {
         if (statement.latest_version_id) {
-            await deleteStatement(statement.id);
+            await deleteRSStatement(statement.id);
             reloadStatements();
         } else if (setNewStatements) {
             setNewStatements((prev) => prev.filter((s) => s.id !== statement.id));
@@ -65,7 +72,7 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
     };
 
     const handleDeleteStatementPermanently = async () => {
-        await fullyDeleteStatement(statement.id);
+        await fullyDeleteRSStatement(statement.id);
         reloadStatements();
     };
 
@@ -157,9 +164,9 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
         };
         try {
             if (statement.latest_version_id) {
-                await updateStatement(statement.id, data);
+                await updateRSStatement(statement.id, data);
             } else {
-                await createStatement({ ...data, template_id: template.id, context: statement.context });
+                await createRSStatement({ ...data, template_id: template.id, context: statement.context });
                 handleDeleteStatement();
             }
             setIsEditing(false);

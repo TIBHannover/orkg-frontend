@@ -385,6 +385,16 @@ export type CreateRosettaStoneTemplateParams = {
     observatories: string[];
 };
 
+export type UpdateRosettaStoneTemplateParams = {
+    label?: string;
+    description?: string;
+    example_usage?: string;
+    formatted_label?: string;
+    properties?: (Omit<PropertyShape, 'path'> & { path: string })[];
+    organizations?: string[];
+    observatories?: string[];
+};
+
 export type CreateRosettaStoneStatementParams = {
     template_id: string;
     context: string;

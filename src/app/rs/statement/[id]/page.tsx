@@ -8,7 +8,7 @@ import useParams from 'components/useParams/useParams';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { useEffect } from 'react';
 import { Container, ListGroup } from 'reactstrap';
-import { getStatement, rosettaStoneUrl } from 'services/backend/rosettaStone';
+import { getRSStatement, rosettaStoneUrl } from 'services/backend/rosettaStone';
 import useSWR from 'swr';
 
 const RSStatementPage = () => {
@@ -19,7 +19,7 @@ const RSStatementPage = () => {
         isLoading,
         error,
         mutate: reloadStatement,
-    } = useSWR(id ? [id, rosettaStoneUrl, 'getStatement'] : null, ([params]) => getStatement(params));
+    } = useSWR(id ? [id, rosettaStoneUrl, 'getRSStatement'] : null, ([params]) => getRSStatement(params));
 
     useEffect(() => {
         document.title = `Statement - ORKG`;

@@ -61,13 +61,13 @@ function PaperMenuBar(props) {
                 <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                     <Icon icon={faEllipsisV} />
                 </DropdownToggle>
-                <DropdownMenu end>
+                <DropdownMenu>
                     <RequireAuthentication component={DropdownItem} onClick={() => setShowPublishDialog((v) => !v)}>
                         Publish
                     </RequireAuthentication>
                     <DropdownItem divider />
                     <DropdownItem onClick={() => props.toggle('showGraphModal')}>View graph</DropdownItem>
-                    <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
+                    <DropdownItem tag={Link} href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                         View resource
                     </DropdownItem>
                 </DropdownMenu>

@@ -4,8 +4,10 @@ import { PropertyShape } from 'services/backend/types';
 import { guid } from 'utils';
 
 export type RosettaTemplateEditorType = {
-    step: number;
+    id?: string;
+    numberLockedProperties: number;
     examples: string;
+    lockedExamples: string;
     label: string;
     description: string;
     properties: PropertyShape[];
@@ -14,7 +16,6 @@ export type RosettaTemplateEditorType = {
 
 type RosettaTemplateEditorAction =
     | { type: 'initState'; payload: null }
-    | { type: 'setStep'; payload: number }
     | { type: 'setLabel'; payload: string }
     | { type: 'setDescription'; payload: string }
     | { type: 'setExamples'; payload: string }
@@ -26,8 +27,10 @@ type RosettaTemplateEditorAction =
 
 const getInitialData = () => {
     const initialState = {
-        step: 1,
+        id: undefined,
+        numberLockedProperties: 0,
         examples: '',
+        lockedExamples: '',
         label: '',
         description: '',
         properties: [
@@ -47,9 +50,6 @@ export const rosettaTemplateEditorReducer = (autocompleteState: RosettaTemplateE
     switch (action.type) {
         case 'initState': {
             return { ...getInitialData() };
-        }
-        case 'setStep': {
-            return { ...autocompleteState, step: action.payload };
         }
         case 'setLabel': {
             return { ...autocompleteState, label: action.payload };

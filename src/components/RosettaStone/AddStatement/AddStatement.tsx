@@ -12,7 +12,7 @@ import { ActionMeta, SingleValue } from 'react-select';
 import { withAsyncPaginate } from 'react-select-async-paginate';
 import Creatable from 'react-select/creatable';
 import { ButtonGroup, InputGroup } from 'reactstrap';
-import { getTemplates } from 'services/backend/rosettaStone';
+import { getRSTemplates } from 'services/backend/rosettaStone';
 import { RosettaStoneTemplate } from 'services/backend/types';
 
 type AdditionalType = {
@@ -41,7 +41,7 @@ const AddStatement: FC<AddStatementProps> = ({ handleAddStatement }) => {
         const responseItems: RosettaStoneTemplate[] = [];
         let hasMore = false;
 
-        const orkgResponseItems = await getTemplates({ q: search, page, size: PAGE_SIZE });
+        const orkgResponseItems = await getRSTemplates({ q: search, page, size: PAGE_SIZE });
 
         if ('content' in orkgResponseItems) {
             responseItems.push(...(orkgResponseItems?.content ?? []));
@@ -102,7 +102,7 @@ const AddStatement: FC<AddStatementProps> = ({ handleAddStatement }) => {
                         components={{ Option: SelectOption }}
                         onChange={onChange}
                         formatCreateLabel={(inputValue: string) => `Create new statement type "${inputValue}"`}
-                        placeholder="Search statement type by verb/predicate (e.g., has measurement, develops from)"
+                        placeholder="Search statement type by verb/predicate (e.g., has measurement, develops from) or define a new one"
                         createOptionPosition="first"
                         autoFocus
                         openMenuOnFocus

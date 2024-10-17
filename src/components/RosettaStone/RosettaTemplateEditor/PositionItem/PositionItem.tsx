@@ -1,7 +1,10 @@
 import { faCheck, faGripVertical, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import SlotForms from 'components/RosettaStone/RosettaTemplateEditor/SlotForms/SlotForms';
-import { useRosettaTemplateEditorDispatch } from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
+import {
+    useRosettaTemplateEditorDispatch,
+    useRosettaTemplateEditorState,
+} from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import type { Identifier } from 'dnd-core';
 import { parseInt } from 'lodash';
@@ -22,6 +25,10 @@ const ItemTypes = {
 };
 
 const PositionItem: FC<PositionItemProps> = ({ i, property, moveCard }) => {
+    const { numberLockedProperties } = useRosettaTemplateEditorState();
+
+    const isLocked = !!numberLockedProperties && numberLockedProperties >= i + 1;
+
     const dispatch = useRosettaTemplateEditorDispatch();
 
     const isRequiredObject = (p: PropertyShape) => p?.min_count !== null && p?.min_count !== undefined && parseInt(p.min_count.toString()) > 0;
@@ -34,7 +41,7 @@ const PositionItem: FC<PositionItemProps> = ({ i, property, moveCard }) => {
 
     const [{ handlerId }, drop] = useDrop<PropertyShape & { index: number }, void, { handlerId: Identifier | null }>({
         accept: ItemTypes.OBJECT_POSITION,
-        canDrop: () => i !== 0 && i !== 1,
+        canDrop: () => i !== 0 && i !== 1 && !isLocked,
         collect: (monitor) => {
             return {
                 handlerId: monitor.getHandlerId(),
@@ -55,16 +62,18 @@ const PositionItem: FC<PositionItemProps> = ({ i, property, moveCard }) => {
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
-        canDrag: () => i !== 0 && i !== 1,
+        canDrag: () => i !== 0 && i !== 1 && !isLocked,
     });
 
     const opacity = isDragging ? 0 : 1;
     drag(drop(ref));
 
+    const deleteButtonMessage = isLocked ? 'This position cannot be deleted because it is locked' : 'Delete object position';
+
     return (
         <AccordionItem style={{ opacity }}>
             <AccordionHeader innerRef={ref} data-handler-id={handlerId} targetId={property?.id ?? i.toString()} className="d-flex">
-                {i !== 0 && i !== 1 && (
+                {i !== 0 && i !== 1 && !isLocked && (
                     <div className="me-1 d-flex flex-column" style={{ marginLeft: '-15px', cursor: 'move' }}>
                         <Icon icon={faGripVertical} className="text-secondary" />
                         <Icon icon={faGripVertical} className="text-secondary" style={{ marginTop: '-1.4px' }} />
@@ -80,10 +89,10 @@ const PositionItem: FC<PositionItemProps> = ({ i, property, moveCard }) => {
                     )}
                 </div>
                 <StatementActionButton
-                    title={i === 0 || i === 1 ? 'Subject and Verb position are required' : 'Delete object position'}
+                    title={i === 0 || i === 1 ? 'Subject and Verb position are required' : deleteButtonMessage}
                     icon={faTrash}
                     requireConfirmation
-                    isDisabled={i === 0 || i === 1}
+                    isDisabled={i === 0 || i === 1 || isLocked}
                     confirmationMessage="Are you sure to delete?"
                     confirmationButtons={[
                         {
@@ -101,7 +110,7 @@ const PositionItem: FC<PositionItemProps> = ({ i, property, moveCard }) => {
                 />
             </AccordionHeader>
             <AccordionBody accordionId={property.id ?? i.toString()} style={{ background: '#fff' }}>
-                <SlotForms index={i} />
+                <SlotForms index={i} isLocked={isLocked} />
             </AccordionBody>
         </AccordionItem>
     );

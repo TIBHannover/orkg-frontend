@@ -200,8 +200,8 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                     </Col>
                 </FormGroup>
 
-                {range && ['Decimal', 'Integer'].includes(range.id) && <ValidationRulesNumber id={id} />}
-                {range && ['String'].includes(range.id) && <ValidationRulesString id={id} />}
+                {range && [CLASSES.INTEGER, CLASSES.DECIMAL].includes(range.id) && <ValidationRulesNumber id={id} />}
+                {range && [CLASSES.STRING].includes(range.id) && <ValidationRulesString id={id} />}
             </div>
         </ValuesStyle>
     );
