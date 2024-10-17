@@ -57,7 +57,7 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
         autocomplete: (
             <AutoComplete
                 entityType={ENTITIES.RESOURCE}
-                includeClasses={range?.id ? [range.id] : []}
+                baseClass={range?.id ? range.id : ''}
                 excludeClasses={[CLASSES.ROSETTA_STONE_STATEMENT]}
                 placeholder={propertyShape.placeholder}
                 onChange={(selected, { action }) => {

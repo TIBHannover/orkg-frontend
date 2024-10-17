@@ -22,7 +22,7 @@ import { useSelector } from 'react-redux';
 import ReactStringReplace from 'react-string-replace';
 import { toast } from 'react-toastify';
 import { Badge, Button, Container, ListGroup } from 'reactstrap';
-import { deleteTemplate, getStatements, getTemplate, rosettaStoneUrl } from 'services/backend/rosettaStone';
+import { deleteRSTemplate, getRSStatements, getRSTemplate, rosettaStoneUrl } from 'services/backend/rosettaStone';
 import { isCurationAllowed } from 'slices/authSlice';
 import { RootStore } from 'slices/types';
 import useSWR from 'swr';
@@ -33,13 +33,13 @@ const RSTemplatePage = () => {
     const user = useSelector((state: RootStore) => state.auth.user);
     const isCurator = useSelector((state: RootStore) => isCurationAllowed(state));
 
-    const { data: template, isLoading, error } = useSWR(id ? [id, rosettaStoneUrl, 'getTemplate'] : null, ([params]) => getTemplate(params));
+    const { data: template, isLoading, error } = useSWR(id ? [id, rosettaStoneUrl, 'getRSTemplate'] : null, ([params]) => getRSTemplate(params));
     const {
         data: statements,
         isLoading: isLoadingStatements,
 
         mutate: reloadStatements,
-    } = useSWR(id ? [id, rosettaStoneUrl, 'getStatements'] : null, ([params]) => getStatements({ template_id: params }));
+    } = useSWR(id ? [id, rosettaStoneUrl, 'getRSStatements'] : null, ([params]) => getRSStatements({ template_id: params }));
     const router = useRouter();
 
     const onTabChange = (key: string) => router.push(reverse(ROUTES.RS_TEMPLATE_TABS, { id, activeTab: key }));
@@ -53,7 +53,7 @@ const RSTemplatePage = () => {
 
     const replacementFunction = (match: string) => {
         const i = toInteger(match);
-        return <i>{template?.properties[i].placeholder}</i>;
+        return <i key={i}>{template?.properties[i].placeholder}</i>;
     };
 
     const handleDeleteTemplate = async () => {
@@ -64,7 +64,7 @@ const RSTemplatePage = () => {
 
         if (confirm) {
             try {
-                await deleteTemplate(id);
+                await deleteRSTemplate(id);
                 toast.success('Template deleted successfully');
 
                 router.push(ROUTES.RS_TEMPLATES);
@@ -84,7 +84,7 @@ const RSTemplatePage = () => {
     const { totalElements } = statements ?? { totalElements: 0 };
 
     const canDeleteTemplate = !!(user && !isLoadingStatements && totalElements === 0 && (isCurator || user?.id === template?.created_by));
-    const canEditTemplate = !!(user && !isLoadingStatements && totalElements === 0 && (isCurator || user?.id === template?.created_by));
+    const canEditTemplate = !!user;
 
     return (
         <>
@@ -92,7 +92,25 @@ const RSTemplatePage = () => {
             {!isLoading && error && (error.statusCode === 404 ? <NotFound /> : <InternalServerError />)}
             {!isLoading && !error && template && (
                 <>
-                    <TitleBar>Statement type</TitleBar>
+                    <TitleBar
+                        buttonGroup={
+                            <Tippy content={preventEditTooltipText} disabled={canEditTemplate}>
+                                <span>
+                                    <Button
+                                        color="secondary"
+                                        size="sm"
+                                        tag={Link}
+                                        href={reverse(ROUTES.RS_TEMPLATE_EDIT, { id })}
+                                        disabled={!canEditTemplate}
+                                    >
+                                        <Icon icon={faPen} /> Edit statement type
+                                    </Button>
+                                </span>
+                            </Tippy>
+                        }
+                    >
+                        Statement type
+                    </TitleBar>
 
                     <Container className={`box clearfix pt-4 pb-4 ps-4 pe-4 ${isEditMode ? 'rounded-bottom' : 'rounded'}`}>
                         <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
@@ -103,37 +121,20 @@ const RSTemplatePage = () => {
                             )}
                         </h3>
                         {!!user && (
-                            <>
-                                <Tippy content={preventDeletionTooltipText} disabled={canDeleteTemplate}>
-                                    <span>
-                                        <Button
-                                            color="danger"
-                                            size="sm"
-                                            className="mt-2 mb-3"
-                                            style={{ marginLeft: 'auto' }}
-                                            onClick={handleDeleteTemplate}
-                                            disabled={!canDeleteTemplate}
-                                        >
-                                            <Icon icon={faTrash} /> Delete statement type
-                                        </Button>
-                                    </span>
-                                </Tippy>
-                                <Tippy content={preventEditTooltipText} disabled={canEditTemplate}>
-                                    <span>
-                                        <Button
-                                            color="secondary"
-                                            size="sm"
-                                            tag={Link}
-                                            className="mt-2 mb-3 ms-2"
-                                            style={{ marginLeft: 'auto' }}
-                                            href={reverse(ROUTES.RS_TEMPLATE_EDIT, { id })}
-                                            disabled={!canEditTemplate}
-                                        >
-                                            <Icon icon={faPen} /> Edit statement type
-                                        </Button>
-                                    </span>
-                                </Tippy>
-                            </>
+                            <Tippy content={preventDeletionTooltipText} disabled={canDeleteTemplate}>
+                                <span>
+                                    <Button
+                                        color="danger"
+                                        size="sm"
+                                        className="mt-2 mb-3"
+                                        style={{ marginLeft: 'auto' }}
+                                        onClick={handleDeleteTemplate}
+                                        disabled={!canDeleteTemplate}
+                                    >
+                                        <Icon icon={faTrash} /> Delete statement type
+                                    </Button>
+                                </span>
+                            </Tippy>
                         )}
 
                         <ItemMetadata item={template} showCreatedAt showCreatedBy editMode={isEditMode} />

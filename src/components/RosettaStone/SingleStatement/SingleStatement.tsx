@@ -17,7 +17,7 @@ import { useSelector } from 'react-redux';
 import ReactStringReplace from 'react-string-replace';
 import { Badge, FormGroup, Input, Label, ListGroupItem } from 'reactstrap';
 import { getPaper, papersUrl } from 'services/backend/papers';
-import { getTemplate, rosettaStoneUrl } from 'services/backend/rosettaStone';
+import { getRSTemplate, rosettaStoneUrl } from 'services/backend/rosettaStone';
 import { RosettaStoneStatement } from 'services/backend/types';
 import { isCurationAllowed } from 'slices/authSlice';
 import { RootStore } from 'slices/types';
@@ -56,8 +56,8 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
 
     // Template
     const { data: template, isLoading: isLoadingTemplate } = useSWR(
-        statement.template_id ? [statement.template_id, rosettaStoneUrl, 'getTemplate'] : null,
-        ([params]) => getTemplate(params),
+        statement.template_id ? [statement.template_id, rosettaStoneUrl, 'getRSTemplate'] : null,
+        ([params]) => getRSTemplate(params),
     );
 
     if (isLoadingTemplate) {
@@ -89,7 +89,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
                 // p2 is the index
                 const i = parseInt(p2, 10);
                 const value = i === 0 ? statement.subjects : statement.objects[i - 1];
-                return value.length === 0 ? '' : match;
+                return !value || value.length === 0 ? '' : match;
             })
             .replace(/\[\]/g, '') // This part will clean up any leftover empty square brackets if any.
             .replaceAll(']', ' ')
@@ -161,7 +161,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
                             <Badge color="danger">NOT</Badge>
                         </div>
                     )}
-                    {formattedLabelWithInputs}
+                    {formattedLabelWithInputs}.
                 </div>
                 {showContext && isLoadingContext && <div className="d-inline-block">Loading...</div>}
                 {showContext && !isLoadingContext && context && (

@@ -11,15 +11,19 @@ import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { ChangeEvent, FC, useRef, useState } from 'react';
 import { ActionMeta, SelectInstance, SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
-import { FormGroup, Input, InputGroup, InputGroupText, Label } from 'reactstrap';
+import { Alert, FormGroup, Input, InputGroup, InputGroupText, Label } from 'reactstrap';
 import { Class, Node } from 'services/backend/types';
 
 type SlotFormsProps = {
     index: number;
+    isLocked?: boolean;
 };
 
-const SlotForms: FC<SlotFormsProps> = ({ index }) => {
-    const { properties } = useRosettaTemplateEditorState();
+const SlotForms: FC<SlotFormsProps> = ({ index, isLocked = false }) => {
+    const { properties, numberLockedProperties } = useRosettaTemplateEditorState();
+
+    const canAddRequiredObject = !numberLockedProperties;
+
     const dispatch = useRosettaTemplateEditorDispatch();
     const slot = properties[index] ?? {};
 
@@ -86,6 +90,11 @@ const SlotForms: FC<SlotFormsProps> = ({ index }) => {
 
     return (
         <div>
+            {isLocked && (
+                <Alert color="warning">
+                    This slot cannot be edited. You can only add new object positions, as the positions for the current statement type are locked
+                </Alert>
+            )}
             <FormGroup className="mt-2">
                 <Label for={`placeholder${index}`}>{index !== 1 ? 'Placeholder' : 'What is the predicate or verb of the statement?'}</Label>
                 <Input
@@ -94,6 +103,7 @@ const SlotForms: FC<SlotFormsProps> = ({ index }) => {
                     type="text"
                     id={`placeholder${index}`}
                     placeholder={index !== 1 ? 'Placeholder' : 'verb'}
+                    disabled={isLocked}
                 />
                 {index !== 1 && (
                     <p className="text-mute">
@@ -120,6 +130,7 @@ const SlotForms: FC<SlotFormsProps> = ({ index }) => {
                                 value={slot.preposition}
                                 type="text"
                                 id={`preposition${index}`}
+                                disabled={isLocked}
                             />
                             <InputGroupText>{slot.placeholder ? slot.placeholder : _placeholder}</InputGroupText>
                             <Input
@@ -128,6 +139,7 @@ const SlotForms: FC<SlotFormsProps> = ({ index }) => {
                                 }
                                 value={slot.postposition}
                                 type="text"
+                                disabled={isLocked}
                             />
                         </InputGroup>
                     </FormGroup>
@@ -154,6 +166,7 @@ const SlotForms: FC<SlotFormsProps> = ({ index }) => {
                                         : []
                                 }
                                 enableExternalSources
+                                isDisabled={isLocked}
                             />
                         </InputGroup>
                     </FormGroup>
@@ -167,7 +180,7 @@ const SlotForms: FC<SlotFormsProps> = ({ index }) => {
                                     <HelpIcon content="Here, you can specify whether the object is required or optional. Required means that it has to be provided for the statement to be saved to the ORKG, whereas optional objects do not have to be specified. 'Optional - Zero or more' means that the same object can be added more than once, but can also be left empty. 'Optional-optional' means that it can only be added once to a given statement of that type, but can be left empty. 'Required - Exactly one' means that this object must be specified for this statement type, but only once, whereas 'Required - One or more' means that at least one must be specified, but more can be added." />
                                 )}
                             </Label>
-                            <Input onChange={onChangeCardinality} value={cardinality} type="select" id="cardinalityValueInput">
+                            <Input onChange={onChangeCardinality} value={cardinality} type="select" id="cardinalityValueInput" disabled={isLocked}>
                                 <option value="range">Custom...</option>
                                 {index !== 0 && (
                                     <optgroup label="Optional">
@@ -175,10 +188,12 @@ const SlotForms: FC<SlotFormsProps> = ({ index }) => {
                                         <option value="0,1">Optional [0,1]</option>
                                     </optgroup>
                                 )}
-                                <optgroup label="Required">
-                                    <option value="1,1">Exactly one [1,1]</option>
-                                    <option value="1,*">One or more [1,*]</option>
-                                </optgroup>
+                                {canAddRequiredObject && (
+                                    <optgroup label="Required">
+                                        <option value="1,1">Exactly one [1,1]</option>
+                                        <option value="1,*">One or more [1,*]</option>
+                                    </optgroup>
+                                )}
                             </Input>
                         </FormGroup>
                     </div>
@@ -192,12 +207,16 @@ const SlotForms: FC<SlotFormsProps> = ({ index }) => {
                                     }
                                     value={slot.min_count}
                                     type="number"
-                                    min={index === 0 ? '1' : '0'}
+                                    min={index === 0 || !canAddRequiredObject ? '1' : '0'}
                                     step="1"
                                     name="minCount"
                                     id="minCountValueInput"
                                     placeholder="Minimum number of occurrences in the statement"
+                                    disabled={isLocked || !canAddRequiredObject}
                                 />
+                                <p className="text-mute">
+                                    <small>Only optional positions can be added</small>
+                                </p>
                             </FormGroup>
                             <FormGroup>
                                 <Label for="maxCountValueInput">Maximum Occurrence</Label>
@@ -212,6 +231,7 @@ const SlotForms: FC<SlotFormsProps> = ({ index }) => {
                                     name="maxCount"
                                     id="maxCountValueInput"
                                     placeholder="Maximum number of occurrences in the statement"
+                                    disabled={isLocked}
                                 />
                                 <p className="text-mute">
                                     <small>Clear the input field if there is no restriction (unbounded)</small>
@@ -236,6 +256,7 @@ const SlotForms: FC<SlotFormsProps> = ({ index }) => {
                             id={`description${index}`}
                             placeholder="Description"
                             rows="4"
+                            disabled={isLocked}
                         />
                     </FormGroup>
                 </>

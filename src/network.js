@@ -101,16 +101,27 @@ export const submitPostRequest = (
     });
 };
 
-export const submitPutRequest = (url, headers, data, jsonStringify = true) => {
+export const submitPutRequest = (
+    url,
+    headers,
+    data,
+    jsonStringify = true,
+    send_token = true,
+    parseResponse = true,
+    returnResponseHeaders = false,
+) => {
     if (!url) {
         throw new Error('Cannot submit PUT request. URL is null or undefined.');
     }
 
-    const cookies = new Cookies();
-    const token = cookies.get('token') ? cookies.get('token') : null;
     const myHeaders = new Headers(headers);
-    if (token) {
-        myHeaders.append('Authorization', `Bearer ${token}`);
+
+    if (send_token) {
+        const cookies = new Cookies();
+        const token = cookies.get('token') ? cookies.get('token') : null;
+        if (token) {
+            myHeaders.append('Authorization', `Bearer ${token}`);
+        }
     }
     let _data = data;
     if (jsonStringify) {
@@ -131,11 +142,14 @@ export const submitPutRequest = (url, headers, data, jsonStringify = true) => {
                         statusText: response.statusText,
                     });
                 }
-                if (response.status === 204) {
-                    // HTTP 204 No Content success status
-                    return resolve();
+                if (response.status === 204 && !parseResponse) {
+                    // 204 No Content
+                    return resolve(null);
                 }
-                const json = response.json();
+                const json = response.json().catch(() => resolve(null));
+                if (json.then && returnResponseHeaders) {
+                    return resolve({ headers: response.headers, data: json });
+                }
                 if (json.then) {
                     json.then(resolve).catch(reject);
                 } else {

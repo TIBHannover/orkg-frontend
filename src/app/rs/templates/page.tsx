@@ -13,7 +13,7 @@ import { debounce } from 'lodash';
 import { reverse } from 'named-urls';
 import { useEffect } from 'react';
 import { Button, Container, Form, FormGroup, Input, Label, ListGroup, ListGroupItem } from 'reactstrap';
-import { getTemplates, GetTemplatesParams, rosettaStoneUrl } from 'services/backend/rosettaStone';
+import { getRSTemplates, GetTemplatesParams, rosettaStoneUrl } from 'services/backend/rosettaStone';
 import { VisibilityOptions } from 'services/backend/types';
 import useSWRInfinite from 'swr/infinite';
 
@@ -32,8 +32,8 @@ const Templates = () => {
     });
 
     const { data, isLoading, isValidating, size, setSize } = useSWRInfinite(
-        (pageIndex) => [getKey(pageIndex), rosettaStoneUrl, 'getTemplates'],
-        ([params]) => getTemplates(params),
+        (pageIndex) => [getKey(pageIndex), rosettaStoneUrl, 'getRSTemplates'],
+        ([params]) => getRSTemplates(params),
         { revalidateIfStale: true, revalidateOnFocus: true, revalidateOnReconnect: true },
     );
 
