@@ -23,7 +23,7 @@ function StatementPlaceholder() {
             type = 'verb';
             color = theme?.secondary;
         }
-        return <PositionCard property={property} index={index} type={type} color={color} />;
+        return <PositionCard key={property?.id} property={property} index={index} type={type} color={color} />;
     };
 
     return (

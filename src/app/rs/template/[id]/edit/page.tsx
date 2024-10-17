@@ -11,7 +11,9 @@ import { reverse } from 'named-urls';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Container } from 'reactstrap';
-import { deleteTemplate, getStatements, getTemplate, rosettaStoneUrl } from 'services/backend/rosettaStone';
+import { getRSStatements, getRSTemplate, rosettaStoneUrl } from 'services/backend/rosettaStone';
+import { getStatements, statementsUrl } from 'services/backend/statements';
+import { PaginatedResponse, Statement } from 'services/backend/types';
 import { isCurationAllowed } from 'slices/authSlice';
 import { RootStore } from 'slices/types';
 import useSWR from 'swr';
@@ -23,9 +25,13 @@ const RSTemplateEditPage = () => {
     const user = useSelector((state: RootStore) => state.auth.user);
     const isCurator = useSelector((state: RootStore) => isCurationAllowed(state));
 
-    const { data: template, isLoading, error } = useSWR(id ? [id, rosettaStoneUrl, 'getTemplate'] : null, ([params]) => getTemplate(params));
-    const { data: statements, isLoading: isLoadingStatements } = useSWR(id ? [id, rosettaStoneUrl, 'getStatements'] : null, ([params]) =>
-        getStatements({ template_id: params }),
+    const { data: template, isLoading, error } = useSWR(id ? [id, rosettaStoneUrl, 'getRSTemplate'] : null, ([params]) => getRSTemplate(params));
+    const { data: rsStatements, isLoading: isLoadingRSStatements } = useSWR(id ? [id, rosettaStoneUrl, 'getRSStatements'] : null, ([params]) =>
+        getRSStatements({ size: 1, template_id: params }),
+    );
+    const { data: statements, isLoading: isLoadingStatements } = useSWR(
+        id ? [id, statementsUrl, 'getStatements'] : null,
+        ([params]) => getStatements({ objectId: params, size: 1, returnContent: false }) as Promise<PaginatedResponse<Statement>>,
     );
     const router = useRouter();
 
@@ -53,7 +59,7 @@ const RSTemplateEditPage = () => {
         return position && position?.indexOf('{') !== -1 ? position.substring(0, position.indexOf('{')).trim() : '';
     };
 
-    if (isLoading) {
+    if (isLoading || isLoadingRSStatements || isLoadingStatements) {
         return <Container>Loading...</Container>;
     }
 
@@ -61,9 +67,12 @@ const RSTemplateEditPage = () => {
         return null;
     }
 
+    const { totalElements: rsTotalElements } = rsStatements ?? { totalElements: 0 };
     const { totalElements } = statements ?? { totalElements: 0 };
 
-    const canEditTemplate = !!(user && !isLoadingStatements && totalElements === 0 && (isCurator || user?.id === template?.created_by));
+    const canEditTemplate = !!user;
+
+    const canFullyUpdate = !!(user && !isLoadingRSStatements && !isLoadingStatements && rsTotalElements === 0 && totalElements === 0);
 
     if (!canEditTemplate) {
         return (
@@ -76,8 +85,11 @@ const RSTemplateEditPage = () => {
     const positions: string[] = extractPositions(template?.formatted_label || '');
 
     const initializeRosettaTemplateEditor = {
+        id,
+        numberLockedProperties: canFullyUpdate ? 0 : template.properties.length + 1, // +1 because of the verb position that is not in the template.properties
         step: 1,
         examples: template.example_usage,
+        lockedExamples: template.example_usage,
         label: template.label,
         description: template.description,
         properties: [
@@ -112,7 +124,6 @@ const RSTemplateEditPage = () => {
                                     )
                                 }
                                 onCreate={async (templateId) => {
-                                    await deleteTemplate(id);
                                     router.push(
                                         reverse(ROUTES.RS_TEMPLATE, {
                                             id: templateId,

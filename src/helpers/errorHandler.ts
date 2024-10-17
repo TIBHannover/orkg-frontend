@@ -27,6 +27,10 @@ const errorHandler = ({
         }
         throw new BackendError(`Backend error: ${apiError.error}`, apiError);
     } else {
+        if (error && typeof error === 'object' && 'message' in error && shouldShowToast) {
+            // @ts-expect-error: error.message is available in the backend error object
+            toast.error(error.message);
+        }
         if (error instanceof Error && shouldShowToast) {
             toast.error(error.message);
         }

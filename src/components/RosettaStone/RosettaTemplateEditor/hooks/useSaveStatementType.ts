@@ -6,11 +6,12 @@ import { CLASSES } from 'constants/graphSettings';
 import errorHandler from 'helpers/errorHandler';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { createTemplate } from 'services/backend/rosettaStone';
+import { createRSTemplate, rosettaStoneUrl, updateRSTemplate } from 'services/backend/rosettaStone';
 import { RootStore } from 'slices/types';
+import { mutate } from 'swr';
 
-function useNewStatementType() {
-    const { examples, label, description, properties } = useRosettaTemplateEditorState();
+const useSaveStatementType = () => {
+    const { id, examples, label, description, properties } = useRosettaTemplateEditorState();
 
     const user = useSelector((state: RootStore) => state.auth.user);
 
@@ -30,11 +31,10 @@ function useNewStatementType() {
         return finalFormattedLabel;
     };
 
-    const handleAddStatementType = async (): Promise<string | undefined> => {
+    const handleSaveStatementType = async (): Promise<string | undefined> => {
         dispatch({ type: 'setIsSaving', payload: true });
-
         try {
-            const savedTemplate = await createTemplate({
+            const data = {
                 label,
                 description,
                 example_usage: examples,
@@ -62,8 +62,13 @@ function useNewStatementType() {
                     })),
                 observatories: user && 'observatory_id' in user && user.observatory_id ? [user.observatory_id] : [],
                 organizations: user && 'organization_id' in user && user.organization_id ? [user.organization_id] : [],
-            });
-            toast.success('Template created successfully');
+            };
+            const savedTemplate = await (id ? updateRSTemplate(id, data) : createRSTemplate(data));
+            if (id) {
+                // revalidate cache
+                mutate([id, rosettaStoneUrl, 'getRSTemplate']);
+            }
+            toast.success(`Template ${id ? 'updated' : 'created'} successfully`);
             return savedTemplate;
         } catch (e: unknown) {
             errorHandler({ error: e, shouldShowToast: true, fieldLabels: { label: 'Label', example_usage: 'Example sentences' } });
@@ -74,8 +79,8 @@ function useNewStatementType() {
     };
 
     return {
-        handleAddStatementType,
+        handleSaveStatementType,
     };
-}
+};
 
-export default useNewStatementType;
+export default useSaveStatementType;

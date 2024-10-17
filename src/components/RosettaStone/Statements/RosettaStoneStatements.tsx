@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ListGroup, ListGroupItem } from 'reactstrap';
-import { getStatements, rosettaStoneUrl } from 'services/backend/rosettaStone';
+import { getRSStatements, rosettaStoneUrl } from 'services/backend/rosettaStone';
 import { RosettaStoneStatement } from 'services/backend/types';
 import { RootStore } from 'slices/types';
 import useSWR from 'swr';
@@ -27,7 +27,7 @@ const RosettaStoneStatements: FC<RosettaStoneStatementsProps> = ({ context }) =>
         data: statements,
         isLoading,
         mutate,
-    } = useSWR(context ? [{ context }, rosettaStoneUrl, 'getStatements'] : null, ([params]) => getStatements(params));
+    } = useSWR(context ? [{ context }, rosettaStoneUrl, 'getRSStatements'] : null, ([params]) => getRSStatements(params));
 
     const allStatements = [...(statements?.content ?? []), ...newStatements];
 
