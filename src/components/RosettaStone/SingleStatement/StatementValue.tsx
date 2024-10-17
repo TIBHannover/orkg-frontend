@@ -18,7 +18,7 @@ const StatementValue: FC<StatementValueProps> = ({ value, propertyShape }) => {
     return (
         <span>
             {value.map((v, i) => (
-                <Fragment key={`v${v.id}`}>
+                <Fragment key={`v${i}`}>
                     {'datatype' in v && <span>{v.label}</span>}
                     {!('datatype' in v) && (
                         <Link href={getLinkByEntityType(ENTITIES.RESOURCE, v.id)} target="_blank">

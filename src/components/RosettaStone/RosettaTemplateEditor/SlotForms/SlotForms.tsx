@@ -2,6 +2,8 @@ import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { OptionType } from 'components/Autocomplete/types';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import HelpIcon from 'components/RosettaStone/RosettaTemplateEditor/HelpIcon/HelpIcon';
+import NumberConstraints from 'components/RosettaStone/RosettaTemplateEditor/SlotForms/LiteralConstraints/NumberConstraints';
+import StringConstraints from 'components/RosettaStone/RosettaTemplateEditor/SlotForms/LiteralConstraints/StringConstraints';
 import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
@@ -259,6 +261,8 @@ const SlotForms: FC<SlotFormsProps> = ({ index, isLocked = false }) => {
                             disabled={isLocked}
                         />
                     </FormGroup>
+                    {range && [CLASSES.INTEGER, CLASSES.DECIMAL].includes(range.id) && <NumberConstraints index={index} isLocked={isLocked} />}
+                    {range && [CLASSES.STRING].includes(range.id) && <StringConstraints index={index} isLocked={isLocked} />}
                 </>
             )}
         </div>

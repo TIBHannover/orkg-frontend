@@ -80,7 +80,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
                 />
             );
         }
-        return <StatementValue propertyShape={template.properties[i]} value={value} />;
+        return <StatementValue key={i} propertyShape={template.properties[i]} value={value} />;
     };
 
     const removeEmptySegments = (label: string) => {
