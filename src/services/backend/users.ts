@@ -110,9 +110,9 @@ export const registerWithEmailAndPassword = (
     return submitPostRequest(`${url}auth/register`, headers, data, true, false);
 };
 
-export const addUserToObservatory = (user_email: string, observatory_id: string, organization_id: string): Promise<Contributor> => {
+export const addUserToObservatory = (contributor_id: string, observatory_id: string, organization_id: string): Promise<Contributor> => {
     const headers = { 'Content-Type': 'application/json' };
-    return submitPutRequest(`${userUrl}observatory`, headers, { user_email, observatory_id, organization_id });
+    return submitPutRequest(`${userUrl}observatory`, headers, { contributor_id, observatory_id, organization_id });
 };
 
 export const deleteUserFromObservatoryById = (id: string): Promise<null> =>
