@@ -3,6 +3,17 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.147.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.146.3...v0.147.0) - 2024-10-17
+
+### Changes
+
+- fix(Routing): use custom useParams instead next/navigation [`#1394`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1394)
+- fix(Routing): use custom useParams instead next/navigation [`#1390`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1390)
+- feat: add links to ORKG academy [`#1396`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1396)
+- refactor: useContributor [`#1392`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1392)
+- Observatory/EditObservatory =&gt; converted class component into functional component [`#1340`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1340)
+
+---
 ## [v0.146.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.146.2...v0.146.3) - 2024-10-10
 
 ### Changes
@@ -382,7 +393,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Diff): show link to compare to latest version [`#1229`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1229)
 
 ---
-## [v0.128.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.127.0...v0.128.0) - 2023-11-01
+## [v0.128.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.126.1...v0.128.0) - 2023-11-01
 
 ### Changes
 
@@ -394,12 +405,6 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Search): Clicking search button with empty search string [`#1223`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1223)
 - fix(Header): sometimes missing correct style (transparent) [`#1222`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1222)
 - feat(Home): replace 'react-responsive-tabs' with custom tabs [`#1190`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1190)
-
----
-## [v0.127.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.126.1...v0.127.0) - 2023-10-24
-
-### Changes
-
 - Resolve "Integrate the Sck-KG-Tex endpoint in frontend" [`#1212`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1212)
 - fix: Remove sorting for research field changelog endpoint [`#1220`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1220)
 - legal: update license to CC0 [`#1219`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1219)
