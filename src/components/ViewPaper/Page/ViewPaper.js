@@ -1,10 +1,9 @@
 import NotFound from 'app/not-found';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 import GraphViewModal from 'components/GraphView/GraphViewModal';
-import { env } from 'next-runtime-env';
-import useParams from 'components/useParams/useParams';
 import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import TitleBar from 'components/TitleBar/TitleBar';
 import Contributions from 'components/ViewPaper/Contributions/Contributions';
@@ -12,12 +11,13 @@ import PaperHeader from 'components/ViewPaper/PaperHeader';
 import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
 import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import useViewPaper from 'components/ViewPaper/hooks/useViewPaper';
+import useParams from 'components/useParams/useParams';
 import { LICENSE_URL } from 'constants/misc';
 import moment from 'moment';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
+import { env } from 'next-runtime-env';
 import { Helmet } from 'react-helmet';
+import { InView } from 'react-intersection-observer';
 import { useSelector } from 'react-redux';
-import VisibilitySensor from 'react-visibility-sensor';
 import { Container } from 'reactstrap';
 
 const ViewPaper = () => {
@@ -69,8 +69,7 @@ const ViewPaper = () => {
                         <meta property="og:description" content={getSEODescription()} />
                         <script type="application/ld+json">{JSON.stringify(ldJson)}</script>
                     </Helmet>
-
-                    <VisibilitySensor onChange={handleShowHeaderBar}>
+                    <InView as="div" onChange={(inView) => handleShowHeaderBar(inView)}>
                         <TitleBar
                             buttonGroup={
                                 <PaperMenuBar
@@ -82,7 +81,7 @@ const ViewPaper = () => {
                         >
                             Paper
                         </TitleBar>
-                    </VisibilitySensor>
+                    </InView>
 
                     <EditModeHeader isVisible={isEditMode} />
 

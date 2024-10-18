@@ -31,6 +31,9 @@ const nextConfig = {
     },
     experimental: {
         serverComponentsExternalPackages: ['citeproc'],
+        turbo: {
+            resolveExtensions: ['.mdx', '.tsx', '.ts', '.jsx', '.js', '.mjs', '.json'],
+        },
     },
     output: 'standalone',
     env: {
