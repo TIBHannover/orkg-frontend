@@ -2,24 +2,20 @@
 
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
+import useRosettaStatements from 'components/RosettaStone/SingleStatement/hooks/useStatements';
 import SingleStatement from 'components/RosettaStone/SingleStatement/SingleStatement';
+import ItemMetadata from 'components/Search/ItemMetadata';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useParams from 'components/useParams/useParams';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { useEffect } from 'react';
 import { Container, ListGroup } from 'reactstrap';
-import { getRSStatement, rosettaStoneUrl } from 'services/backend/rosettaStone';
-import useSWR from 'swr';
 
 const RSStatementPage = () => {
     const { id } = useParams<{ id: string }>();
     const { isEditMode } = useIsEditMode();
-    const {
-        data: statement,
-        isLoading,
-        error,
-        mutate: reloadStatement,
-    } = useSWR(id ? [id, rosettaStoneUrl, 'getRSStatement'] : null, ([params]) => getRSStatement(params));
+
+    const { data: statement, isLoading, error, mutate: reloadStatement } = useRosettaStatements({ id });
 
     useEffect(() => {
         document.title = `Statement - ORKG`;
@@ -41,7 +37,9 @@ const RSStatementPage = () => {
                                 </i>
                             )}
                         </h3>
+                        <ItemMetadata item={statement} showCreatedAt showCreatedBy showProvenance showExtractionMethod editMode={isEditMode} />
                     </Container>
+
                     <Container className="mt-3 p-0">
                         <ListGroup>
                             <SingleStatement showContext key={statement.id} statement={statement} reloadStatements={reloadStatement} />

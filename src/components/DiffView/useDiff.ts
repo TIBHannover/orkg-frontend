@@ -1,7 +1,6 @@
-import { useCallback } from 'react';
-import { isString } from 'lodash';
-import { LiteratureList } from 'services/backend/types';
 import { isListSection, isTextSection } from 'components/List/helpers/typeGuards';
+import { useCallback } from 'react';
+import { LiteratureList } from 'services/backend/types';
 
 const useDiff = () => {
     // @ts-expect-error awaiting TS migration
@@ -104,14 +103,7 @@ const useDiff = () => {
         return comparisonText;
     }, []);
 
-    const isOldIdHigherThanNewId = useCallback(({ oldId, newId }: { oldId: string; newId: string }) => {
-        const numericOldId = isString(oldId) && parseInt(oldId.replace('R', ''));
-        const numericNewId = isString(newId) && parseInt(newId.replace('R', ''));
-
-        return numericOldId > numericNewId;
-    }, []);
-
-    return { reviewToPlainText, comparisonToPlainText, isOldIdHigherThanNewId, listToPlainText };
+    return { reviewToPlainText, comparisonToPlainText, listToPlainText };
 };
 
 export default useDiff;

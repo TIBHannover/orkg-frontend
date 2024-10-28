@@ -71,7 +71,7 @@ const routes = {
     REVIEWS: '/reviews',
     REVIEW_NEW: '/review/new',
     REVIEW_DIFF: '/review/diff/:oldId/:newId',
-    ROSETTA_STONE_DIFF: '/rosettastone-statement/diff/:oldId/:newId',
+    ROSETTA_STONE_DIFF: '/rs/diff/:oldId/:newId',
     TOOLS: '/tools',
     CONTRIBUTION_EDITOR: '/contribution-editor',
     ADD_COMPARISON: '/add-comparison',

@@ -1,4 +1,5 @@
 import { OptionType } from 'components/Autocomplete/types';
+import useRosettaTemplate from 'components/RosettaStone/SingleStatement/hooks/useRosettaTemplate';
 import { getConfigByClassId } from 'constants/DataTypes';
 import { CLASSES } from 'constants/graphSettings';
 import { EXTRACTION_METHODS } from 'constants/misc';
@@ -6,17 +7,9 @@ import errorHandler from 'helpers/errorHandler';
 import { differenceWith, toInteger } from 'lodash';
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import {
-    createRSStatement,
-    deleteRSStatement,
-    fullyDeleteRSStatement,
-    getRSTemplate,
-    rosettaStoneUrl,
-    updateRSStatement,
-} from 'services/backend/rosettaStone';
+import { createRSStatement, deleteRSStatement, fullyDeleteRSStatement, updateRSStatement } from 'services/backend/rosettaStone';
 import { NewLiteral, NewResource, Node, RosettaStoneStatement } from 'services/backend/types';
 import { RootStore } from 'slices/types';
-import useSWR from 'swr';
 import { guid } from 'utils';
 
 type UseEditStatementProps = {
@@ -42,10 +35,9 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
     // Statement metadata
     const [isNegate, setIsNegate] = useState(statement.negated);
     const [certainty, setCertainty] = useState(statement.certainty);
+
     // Template
-    const { data: template } = useSWR(statement.template_id ? [statement.template_id, rosettaStoneUrl, 'getRSTemplate'] : null, ([params]) =>
-        getRSTemplate(params),
-    );
+    const { data: template } = useRosettaTemplate({ id: statement.template_id ?? '' });
 
     useEffect(() => {
         setLocalValues(initialLocalValues());
