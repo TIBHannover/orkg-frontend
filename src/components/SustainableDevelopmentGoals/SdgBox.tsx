@@ -1,11 +1,11 @@
 import { faEllipsis, faPen } from '@fortawesome/free-solid-svg-icons';
-import Image from 'next/image';
-import Link from 'next/link';
-import ActionButtonView from 'components/StatementBrowser/StatementActionButton/ActionButtonView';
+import ActionButtonView from 'components/ActionButton/ActionButtonView';
 import SdgModal from 'components/SustainableDevelopmentGoals/SdgModal/SdgModal';
 import { getImage, getSdgNumber, sortSdgs } from 'components/SustainableDevelopmentGoals/helpers';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Image from 'next/image';
+import Link from 'next/link';
 import { FC, useState } from 'react';
 import { Node } from 'services/backend/types';
 import styled from 'styled-components';
@@ -57,7 +57,6 @@ const SdgBox: FC<SdgBoxProps> = ({ handleSave, sdgs = [], maxWidth = 200, maxIte
                 <div className="d-flex flex-column justify-content-around ms-2 mb-1">
                     {(sdgs.length > maxItems || isEditable) && (
                         <ActionButtonView
-                            // @ts-expect-error
                             icon={isEditable ? faPen : faEllipsis}
                             action={() => setIsOpenModal(true)}
                             isDisabled={false}

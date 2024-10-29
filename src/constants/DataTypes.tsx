@@ -1,21 +1,51 @@
+import { CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import Joi, { AnySchema } from 'joi';
-import { MISC, ENTITIES, CLASSES } from 'constants/graphSettings';
-import REGEX from 'constants/regex';
 import { orderBy } from 'lodash';
+import { EntityType } from 'services/backend/types';
 // https://www.w3.org/TR/xmlschema-2
 
-export type InputFormType = 'text' | 'textarea' | 'autocomplete' | 'boolean' | 'date' | 'empty';
+export type StandardInputType =
+    | 'text'
+    | 'email'
+    | 'select'
+    | 'file'
+    | 'radio'
+    | 'checkbox'
+    | 'switch'
+    | 'textarea'
+    | 'button'
+    | 'reset'
+    | 'submit'
+    | 'date'
+    | 'datetime-local'
+    | 'hidden'
+    | 'image'
+    | 'month'
+    | 'number'
+    | 'range'
+    | 'search'
+    | 'tel'
+    | 'url'
+    | 'week'
+    | 'password'
+    | 'datetime'
+    | 'time'
+    | 'color';
 
-const DATA_TYPES: {
+export type InputType = StandardInputType | 'autocomplete' | 'empty' | 'boolean';
+
+export type DataType = {
     name: string;
-    tooltip?: JSX.Element | string;
+    tooltip?: string | JSX.Element;
     type: string;
-    _class: string;
+    _class: EntityType | 'empty';
     classId: string;
     schema: AnySchema | null;
-    inputFormType: InputFormType;
+    inputFormType: InputType;
     weight: number;
-}[] = [
+};
+
+const DATA_TYPES: DataType[] = [
     {
         name: 'Resource',
         tooltip: (
@@ -83,7 +113,7 @@ const DATA_TYPES: {
         type: 'xsd:anyURI',
         _class: ENTITIES.LITERAL,
         classId: CLASSES.URI,
-        schema: Joi.string().regex(REGEX.URL).message('"value" must be a valid URL'),
+        schema: Joi.string().uri().message('"value" must be a valid URL'),
         inputFormType: 'text',
         weight: 1,
     },
@@ -129,13 +159,7 @@ const DATA_TYPES: {
 } */
 
 export const getConfigByType = (type: string) =>
-    DATA_TYPES.find((dt) => dt.type === type) || {
-        type: MISC.DEFAULT_LITERAL_DATATYPE,
-        validation: Joi.string(),
-        inputFormType: 'textarea',
-        weight: 0,
-        schema: null,
-    };
+    DATA_TYPES.find((dt) => dt.type === type) || (DATA_TYPES.find((dt) => dt.type === MISC.DEFAULT_LITERAL_DATATYPE) as DataType);
 
 export const getConfigByClassId = (classId: string) =>
     DATA_TYPES.find((dt) => dt.classId === classId) || {
@@ -175,5 +199,7 @@ type CheckDataType = {
 };
 
 export const checkDataTypeIsInValid = ({ value, dataType }: CheckDataType) => !!getConfigByType(dataType).schema?.validate(value)?.error;
+
+export const LITERAL_DATA_TYPES_CLASS_IDS = DATA_TYPES.filter((dt) => dt._class === ENTITIES.LITERAL).map((t) => t.classId);
 
 export default DATA_TYPES;

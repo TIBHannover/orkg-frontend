@@ -1,2 +1,0 @@
-# redirect all requests to index.html. Required for deploying merge request branches to Netlify 
-/* /index.html 200

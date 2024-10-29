@@ -1,5 +1,5 @@
-import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
-import SBEditorHelpModal from 'components/StatementBrowser/SBEditorHelpModal/SBEditorHelpModal';
+import useContributionEditor from 'components/ContributionEditor/TableCellForm/hooks/useContributionEditor';
+import SBEditorHelpModal from 'components/ContributionEditor/SBEditorHelpModal/SBEditorHelpModal';
 import { Alert } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { memo, useMemo } from 'react';
@@ -79,7 +79,7 @@ const EditorTable = ({ scrollContainerBody }) => {
                     </div>
                 </ScrollSyncPane>
                 {rows.length === 0 && (
-                    <Alert className="mt-0" color="info">
+                    <Alert fade={false} className="mt-0" color="info">
                         Start adding properties or use templates by using the buttons below
                     </Alert>
                 )}

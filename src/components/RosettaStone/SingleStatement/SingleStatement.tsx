@@ -7,7 +7,7 @@ import useEditStatement from 'components/RosettaStone/SingleStatement/hooks/useE
 import InfoBox from 'components/RosettaStone/SingleStatement/InfoBox';
 import StatementInputField from 'components/RosettaStone/SingleStatement/StatementInputField';
 import StatementValue from 'components/RosettaStone/SingleStatement/StatementValue';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import ActionButton from 'components/ActionButton/ActionButton';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import ROUTES from 'constants/routes';
 import { toInteger } from 'lodash';
@@ -117,7 +117,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
                 {isEditMode && (
                     <span className="ms-2">
                         {statement.latest_version_id && (
-                            <StatementActionButton
+                            <ActionButton
                                 title={editButtonTitle}
                                 icon={isEditing ? faClose : faPen}
                                 action={() => setIsEditing((v) => !v)}
@@ -125,7 +125,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
                                 appendTo={document.body}
                             />
                         )}
-                        <StatementActionButton
+                        <ActionButton
                             title={statement.modifiable ? 'Delete statement' : 'Not modifiable statement'}
                             icon={faTrash}
                             requireConfirmation

@@ -7,7 +7,7 @@ import { contributionsRemoved, loadContributions } from 'slices/contributionEdit
 import CreateProperty from 'components/ContributionEditor/CreateProperty';
 import PropertySuggestions from 'components/ContributionEditor/PropertySuggestions/PropertySuggestions';
 import EditorTable from 'components/ContributionEditor/EditorTable';
-import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
+import useContributionEditor from 'components/ContributionEditor/TableCellForm/hooks/useContributionEditor';
 import TableLoadingIndicator from 'components/ContributionEditor/TableLoadingIndicator';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
 import TableScrollContainer from 'components/Comparison/Table/TableScrollContainer';

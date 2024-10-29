@@ -3,14 +3,6 @@ import { LOCATION_CHANGE } from 'components/ResetStoreOnNavigate/ResetStoreOnNav
 import { MISC } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { match } from 'path-to-regexp';
-import {
-    clearResourceHistory,
-    createContributionObject,
-    createResourceAction as createResource,
-    fetchStatementsForResource,
-    loadContributionHistory,
-    selectResourceAction as selectResource,
-} from 'slices/statementBrowserSlice';
 import { asyncLocalStorage, guid } from 'utils';
 
 const initialState = {
@@ -37,7 +29,6 @@ const initialState = {
         allIds: [],
     },
     contributions: [],
-    selectedContributionId: '',
     abstract: '',
     isAbstractFetched: false,
     fetchAbstractTitle: '',
@@ -73,6 +64,14 @@ export const viewPaperSlice = createSlice({
         },
         setIsSavingContribution: (state, { payload: { id, status } }) => {
             state.contributions[state.contributions.map((c) => c.id).indexOf(id)].isSaving = status;
+        },
+        updatePaperContributionLabel: (state, { payload }) => {
+            state.contributions = state.contributions.map((c) => {
+                if (c.id === payload.id) {
+                    return { ...c, label: payload.label };
+                }
+                return c;
+            });
         },
         setPaperContributions: (state, { payload }) => {
             state.contributions = payload;
@@ -114,9 +113,6 @@ export const viewPaperSlice = createSlice({
         },
         setFetchAbstractTitle: (state, { payload }) => {
             state.fetchAbstractTitle = payload;
-        },
-        setSelectedContributionId: (state, { payload }) => {
-            state.selectedContributionId = payload;
         },
         setNerResources: (state, { payload }) => {
             state.nerResources = payload;
@@ -193,6 +189,7 @@ export const {
     setIsDeletingContribution,
     setIsSavingContribution,
     setPaperContributions,
+    updatePaperContributionLabel,
     setPaperAuthors,
     setPaperObservatory,
     loadComparisonFromLocalStorage,
@@ -201,7 +198,6 @@ export const {
     setAbstract,
     setIsAbstractFetched,
     setFetchAbstractTitle,
-    setSelectedContributionId,
     setNerResources,
     setNerProperties,
     setNerRawResponse,
@@ -222,63 +218,6 @@ export const {
 } = viewPaperSlice.actions;
 
 export default viewPaperSlice.reducer;
-
-export const selectContribution =
-    ({ contributionId: id, contributionLabel }) =>
-    (dispatch, getState) => {
-        const contributionIsLoaded = !!getState().statementBrowser.resources.byId[id];
-
-        if (!contributionIsLoaded) {
-            // let resourceId = guid(); //use this as ID in the future, when changing the data is possible
-
-            dispatch(
-                createResource({
-                    // only needed for connecting properties, label is shown in the breadcrumb
-                    resourceId: id,
-                    label: contributionLabel,
-                    existingResourceId: id,
-                }),
-            );
-            // this will create or set the selected contribution id in the statementBrowser (HERE CREATE)
-            dispatch(
-                createContributionObject({
-                    id,
-                }),
-            );
-
-            dispatch(
-                fetchStatementsForResource({
-                    resourceId: id,
-                    depth: 3, // load depth 3 the first time
-                }),
-            );
-            dispatch(clearResourceHistory());
-        }
-        // this will create or set the selected contribution id in the statementBrowser (HERE SELECT)
-        Promise.resolve(
-            dispatch(
-                createContributionObject({
-                    id,
-                }),
-            ),
-        ).then(() => {
-            dispatch(
-                selectResource({
-                    increaseLevel: false,
-                    resourceId: id,
-                    label: contributionLabel,
-                    resetLevel: false,
-                }),
-            );
-
-            // this will load the contribution data/history into the statementBrowser
-            dispatch(
-                loadContributionHistory({
-                    id,
-                }),
-            );
-        });
-    };
 
 /**
  * Get paper link

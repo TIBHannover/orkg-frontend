@@ -23,6 +23,7 @@ type GetStatementsParams = {
     sortBy?: string;
     desc?: boolean;
     returnContent?: boolean;
+    returnFormattedLabels?: boolean;
 };
 
 export const getStatements = ({
@@ -41,7 +42,15 @@ export const getStatements = ({
     sortBy = 'created_at',
     desc = true,
     returnContent = true,
+    returnFormattedLabels = false,
 }: GetStatementsParams): Promise<PaginatedResponse<Statement> | Statement[]> => {
+    let headers;
+    if (returnFormattedLabels) {
+        headers = {
+            'Content-Type': 'application/json;charset=utf-8',
+            Accept: 'application/json;formatted-labels=V1',
+        };
+    }
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = qs.stringify(
         {
@@ -64,7 +73,7 @@ export const getStatements = ({
         },
     );
 
-    return submitGetRequest(`${statementsUrl}?${params}`).then((res: PaginatedResponse<Statement>) => (returnContent ? res.content : res));
+    return submitGetRequest(`${statementsUrl}?${params}`, headers).then((res: PaginatedResponse<Statement>) => (returnContent ? res.content : res));
 };
 
 export const createResourceStatement = (subjectId: string, predicateId: string, objectId: string): Promise<Statement> =>

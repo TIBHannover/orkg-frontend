@@ -23,16 +23,7 @@ const TippyStyle = styled(Tippy)`
     }
 `;
 
-export const SmartSuggestions = ({
-    children,
-    tooltipContent,
-    isOpenSmartTooltip,
-    setIsOpenSmartTooltip,
-    inputData,
-    outputData,
-    llmTask,
-    handleReload,
-}) => {
+const SmartSuggestions = ({ children, tooltipContent, isOpenSmartTooltip, setIsOpenSmartTooltip, inputData, outputData, llmTask, handleReload }) => {
     const { trackEvent } = useMatomo();
 
     useEffect(() => {

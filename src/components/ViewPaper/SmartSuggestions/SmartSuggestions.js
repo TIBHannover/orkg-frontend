@@ -6,14 +6,13 @@ import AbstractAnnotatorModal from 'components/ViewPaper/AbstractAnnotatorModal/
 import AbstractModal from 'components/ViewPaper/AbstractModal/AbstractModal';
 import Bioassays from 'components/ViewPaper/BioassaysModal/Bioassays';
 import NERSuggestions from 'components/ViewPaper/SmartSuggestions/NERSuggestions';
-import PredicatesRecommendations from 'components/ViewPaper/SmartSuggestions/PredicatesRecommendations';
 import TemplatesRecommendations from 'components/ViewPaper/SmartSuggestions/TemplatesRecommendations';
 import { SuggestionsBox } from 'components/ViewPaper/SmartSuggestions/styled';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
 
-const SmartSuggestions = ({ isLoadingAbstract, title = '', abstract = '' }) => {
+const SmartSuggestions = ({ isLoadingAbstract, title = '', abstract = '', resourceId }) => {
     const [source, target] = useSingleton();
 
     const [isOpenAbstractModal, setIsOpenAbstractModal] = useState(false);
@@ -68,14 +67,15 @@ const SmartSuggestions = ({ isLoadingAbstract, title = '', abstract = '' }) => {
                         <Icon icon={faMagic} /> Annotator
                     </Button>
                 )}
-                <Bioassays />
+                <Bioassays resourceId={resourceId} />
             </ButtonGroup>
 
-            <NERSuggestions title={title} abstract={abstract} />
-            <TemplatesRecommendations target={target} title={title} abstract={abstract} />
-            <PredicatesRecommendations title={title} abstract={abstract} />
+            <NERSuggestions title={title} abstract={abstract} resourceId={resourceId} />
+            <TemplatesRecommendations target={target} title={title} abstract={abstract} resourceId={resourceId} />
             {isOpenAbstractModal && <AbstractModal toggle={() => setIsOpenAbstractModal((v) => !v)} />}
-            {isOpenAbstractAnnotationModal && <AbstractAnnotatorModal toggle={() => setIsOpenAbstractAnnotationModal((v) => !v)} />}
+            {isOpenAbstractAnnotationModal && (
+                <AbstractAnnotatorModal resourceId={resourceId} toggle={() => setIsOpenAbstractAnnotationModal((v) => !v)} />
+            )}
         </SuggestionsBox>
     );
 };
@@ -84,6 +84,7 @@ SmartSuggestions.propTypes = {
     title: PropTypes.string,
     abstract: PropTypes.string,
     isLoadingAbstract: PropTypes.bool,
+    resourceId: PropTypes.string.isRequired,
     isAbstractFetched: PropTypes.bool,
 };
 

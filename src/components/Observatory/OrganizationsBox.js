@@ -9,7 +9,7 @@ import { Button } from 'reactstrap';
 import { faPlus, faTrash, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { toast } from 'react-toastify';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import ActionButton from 'components/ActionButton/ActionButton';
 import { updateObservatory } from 'services/backend/observatories';
 import capitalize from 'capitalize';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
@@ -66,7 +66,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
                                     </Link>
                                     {isEditMode && !!user && user.isCurationAllowed && (
                                         <div className="position-absolute" style={{ top: 3, right: 0 }}>
-                                            <StatementActionButton
+                                            <ActionButton
                                                 title="Delete this organization from the observatory"
                                                 icon={faTrash}
                                                 requireConfirmation

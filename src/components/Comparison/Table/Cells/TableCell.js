@@ -1,18 +1,18 @@
-import { Fragment, memo, useState } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { ENTITIES } from 'constants/graphSettings';
-import { Button } from 'reactstrap';
+import { faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faChevronCircleUp, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
-import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import TableCellLiteral from 'components/Comparison/Table/Cells/TableCellLiteral';
 import PathTooltipContent from 'components/Comparison/Table/Cells/PathTooltipContent';
+import TableCellLiteral from 'components/Comparison/Table/Cells/TableCellLiteral';
+import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
+import { ENTITIES } from 'constants/graphSettings';
 import { isEqual } from 'lodash';
-import { getCellPadding } from 'slices/comparisonSlice';
+import PropTypes from 'prop-types';
+import { Fragment, memo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Button } from 'reactstrap';
+import { getCellPadding } from 'slices/comparisonSlice';
+import styled from 'styled-components';
 
 export const Item = styled.div`
     margin: 0;
@@ -132,13 +132,13 @@ const TableCell = ({ entities }) => {
             </Item>
 
             {modal && (
-                <StatementBrowserDialog
+                <DataBrowserDialog
+                    defaultHistory={[...path.map((p) => p.id), dialogResourceId]}
                     show={modal}
                     toggleModal={() => setModal((v) => !v)}
                     id={dialogResourceId}
                     label={dialogResourceLabel}
                     type={dialogResourceType}
-                    initialPath={path}
                 />
             )}
         </>

@@ -1,10 +1,9 @@
-import { createReference, createSection, updateSectionLink } from 'slices/reviewSlice';
 import { Cite } from '@citation-js/core';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+import DataBrowser from 'components/DataBrowser/DataBrowser';
 import SectionComparison from 'components/Review/SectionComparison';
 import SectionVisualization from 'components/Review/SectionVisualization';
-import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { groupBy, uniq } from 'lodash';
 import PropTypes from 'prop-types';
@@ -14,6 +13,7 @@ import { toast } from 'react-toastify';
 import { Alert, Button } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 import { getStatementsByObjectAndPredicate, getStatementsBySubjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
+import { createReference, createSection, updateSectionLink } from 'slices/reviewSlice';
 import { addAuthorsToStatements, getPaperData } from 'utils';
 
 const SectionContentLink = (props) => {
@@ -166,16 +166,7 @@ const SectionContentLink = (props) => {
                 allowCreate={props.type === 'resource'} // only allow create for resources
             />
             {(props.type === 'resource' || props.type === 'property') && hasValue && (
-                <StatementBrowser
-                    enableEdit
-                    syncBackend
-                    openExistingResourcesInDialog={false}
-                    initialSubjectId={selectedResource.value}
-                    initialSubjectLabel="Main"
-                    newStore
-                    key={statementBrowserKey}
-                    rootNodeType={props.type === 'resource' ? 'resource' : 'predicate'}
-                />
+                <DataBrowser isEditMode id={selectedResource.value} key={selectedResource.value} />
             )}
             {props.type === 'comparison' && hasValue && (
                 <>

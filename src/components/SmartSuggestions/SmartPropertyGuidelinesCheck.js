@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
 import { getLlmResponse } from 'services/orkgNlp';
 
-export const SmartPropertyGuidelinesCheck = ({ label = '' }) => {
+const SmartPropertyGuidelinesCheck = ({ label = '' }) => {
     const [response, setResponse] = useState({});
     const [isOpenSmartTooltip, setIsOpenSmartTooltip] = useState(false);
     const [isLoading, setIsLoading] = useState(false);

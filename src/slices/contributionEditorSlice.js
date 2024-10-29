@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { LOCATION_CHANGE } from 'components/ResetStoreOnNavigate/ResetStoreOnNavigate';
+import DATA_TYPES from 'constants/DataTypes';
 import { CLASSES, ENTITIES, MISC, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { flatten, intersection, uniq, uniqBy } from 'lodash';
 import { toast } from 'react-toastify';
@@ -41,12 +42,22 @@ const initialState = {
     isLoading: false,
     hasFailed: false,
     previousInputDataType: MISC.DEFAULT_LITERAL_DATATYPE,
+    isHelpModalOpen: false,
+    helpCenterArticleId: null,
+    isTemplatesModalOpen: false,
 };
 
 export const contributionEditorSlice = createSlice({
     name: 'contributionEditor',
     initialState,
     reducers: {
+        setIsHelpModalOpen: (state, { payload: { isOpen, articleId } }) => {
+            state.isHelpModalOpen = isOpen;
+            state.helpCenterArticleId = articleId;
+        },
+        setIsTemplateModalOpen: (state, { payload: { isOpen } }) => {
+            state.isTemplatesModalOpen = isOpen;
+        },
         contributionsAdded: (state, { payload: { contributions, statements, resources, literals, papers, properties } }) => ({
             ...state,
             contributions: {
@@ -176,6 +187,8 @@ export const contributionEditorSlice = createSlice({
 });
 
 export const {
+    setIsHelpModalOpen,
+    setIsTemplateModalOpen,
     contributionsAdded,
     setIsLoading,
     setHasFailed,
@@ -1073,3 +1086,36 @@ export function updateResourceStatementsAction(resourceId) {
         });
     };
 }
+
+/**
+ * Check if the input filed is Literal
+ *  (if one of the default data type: Date, String, Number)
+ * @param {Object[]} propertyShapes Array of propertyShapes
+ * @return {Boolean} if this input field is Literal
+ */
+export const isLiteral = (propertyShapes) => {
+    let _isLiteral = false;
+    for (const typeId of propertyShapes.map((tc) => tc.datatype?.id)) {
+        if (
+            DATA_TYPES.filter((dt) => dt._class === ENTITIES.LITERAL)
+                .map((t) => t.classId)
+                .includes(typeId)
+        ) {
+            _isLiteral = true;
+            break;
+        }
+    }
+    return _isLiteral;
+};
+
+/**
+ * Get the type of value
+ * @param {Object[]} propertyShapes Array of propertyShapes
+ * @return {Object=} the class of value or null
+ */
+export const getValueClass = (propertyShapes) =>
+    propertyShapes &&
+    propertyShapes.length > 0 &&
+    ((propertyShapes[0].class && propertyShapes[0].class.id) || (propertyShapes[0].datatype && propertyShapes[0].datatype.id))
+        ? propertyShapes[0].class || propertyShapes[0].datatype
+        : null;

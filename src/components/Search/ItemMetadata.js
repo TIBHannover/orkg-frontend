@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { faArrowRight, faCalendar, faTags, faUser, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import CopyId from 'components/CopyId/CopyId';
@@ -30,6 +30,10 @@ const ItemMetadata = ({
         await updateResource(item.id, item?.label, item?.classes, selectedOption);
         toast.success('Resource extraction method updated successfully');
     };
+
+    useEffect(() => {
+        setExtractionMethod(item?.extraction_method);
+    }, [item?.extraction_method]);
 
     return (
         <div className="d-flex">

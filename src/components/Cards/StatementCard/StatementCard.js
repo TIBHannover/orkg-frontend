@@ -9,7 +9,7 @@ import { faInfo, faClock } from '@fortawesome/free-solid-svg-icons';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import Tippy from '@tippyjs/react';
 import moment from 'moment';
-import ActionButtonView from 'components/StatementBrowser/StatementActionButton/ActionButtonView';
+import ActionButtonView from 'components/ActionButton/ActionButtonView';
 import { MISC } from 'constants/graphSettings';
 
 function StatementCard({ statement }) {

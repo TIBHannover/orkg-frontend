@@ -1,6 +1,6 @@
-import styled, { createGlobalStyle } from 'styled-components';
-import type { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select';
 import { OptionType } from 'components/Autocomplete/types';
+import type { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select';
+import styled, { createGlobalStyle } from 'styled-components';
 
 export const SelectGlobalStyle = createGlobalStyle`
     // react-select
@@ -30,6 +30,8 @@ export const SelectGlobalStyle = createGlobalStyle`
     // can be activated in react select by using "classNamePrefix="react-select-dark""
     .react-select-dark__control {
         cursor: pointer !important;
+        background-color: ${(props) => props.theme.light} !important; 
+        color: ${(props) => props.theme.secondaryDarker} !important; 
     }
     .react-select-dark__control--is-focused {
         border-color: rgba(232, 97, 97, 0.25) !important;
@@ -59,10 +61,19 @@ export const SourceBadge = styled.a`
 
 export const customClassNames = {
     // @ts-expect-error state should be state manager of react select
-    container: (state) => `form-control p-0 border-0 ${state.selectProps.size && state.selectProps.size === 'sm' ? 'form-control-sm' : ''}`,
+    container: (state) =>
+        `${state.selectProps.noFormControl ? '' : 'form-control'} p-0 border-0 ${
+            state.selectProps.size && state.selectProps.size === 'sm' ? 'form-control-sm' : ''
+        }`,
 };
 
 export const customStyles: StylesConfig<OptionType, boolean, GroupBase<OptionType>> = {
+    container: (provided, state) =>
+        ({
+            ...provided,
+            // @ts-expect-error state should be state manager of react select
+            ...(state.selectProps.noFormControl ? { borderRadius: '6px 0 0 6px' } : {}),
+        } as CSSObjectWithLabel),
     control: (provided, state) =>
         ({
             ...provided,
@@ -75,6 +86,8 @@ export const customStyles: StylesConfig<OptionType, boolean, GroupBase<OptionTyp
                 ...(state.selectProps.size && state.selectProps.size === 'sm' ? { padding: '0 8px !important' } : {}),
             },
         } as CSSObjectWithLabel),
+    clearIndicator: (provided, state) =>
+        ({ ...provided, ...(state.selectProps.size && state.selectProps.size === 'sm' ? { padding: '4px !important' } : {}) } as CSSObjectWithLabel),
     indicatorsContainer: (provided, state) =>
         ({
             ...provided,
@@ -100,12 +113,12 @@ export const customStyles: StylesConfig<OptionType, boolean, GroupBase<OptionTyp
     multiValueLabel: (provided, state) =>
         ({
             ...provided,
-            ...(state.data.isFixed ? { paddingRight: '6px' } : {}),
+            ...('isFixed' in state.data && state.data.isFixed ? { paddingRight: '6px' } : {}),
         } as CSSObjectWithLabel),
     multiValueRemove: (provided, state) =>
         ({
             ...provided,
-            ...(state.data.isFixed ? { display: 'none' } : {}),
+            ...('isFixed' in state.data && state.data.isFixed ? { display: 'none' } : {}),
             cursor: 'pointer',
         } as CSSObjectWithLabel),
 };

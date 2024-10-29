@@ -1,21 +1,21 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
-import { getAnnotations } from 'services/annotation/index';
-import { useSelector, useDispatch } from 'react-redux';
-import { createAnnotation, clearAnnotations, setAbstractDialogView, setAbstract as setAbstractGlobal } from 'slices/viewPaperSlice';
-import { fillStatements } from 'slices/statementBrowserSlice';
+import { faMagic, faSpinner, faThList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faThList, faMagic } from '@fortawesome/free-solid-svg-icons';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import randomcolor from 'randomcolor';
-import styled from 'styled-components';
-import { guid } from 'utils';
-import toArray from 'lodash/toArray';
-import { ENTITIES } from 'constants/graphSettings';
-import PropTypes from 'prop-types';
-import AbstractRangesList from 'components/ViewPaper/AbstractAnnotatorModal/AbstractRangesList';
 import AbstractAnnotatorView from 'components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotatorView';
 import AbstractInputView from 'components/ViewPaper/AbstractAnnotatorModal/AbstractInputView';
+import AbstractRangesList from 'components/ViewPaper/AbstractAnnotatorModal/AbstractRangesList';
+import toArray from 'lodash/toArray';
+import PropTypes from 'prop-types';
+import randomcolor from 'randomcolor';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { getAnnotations } from 'services/annotation/index';
+import { createResource } from 'services/backend/resources';
+import { createResourceStatement, statementsUrl } from 'services/backend/statements';
+import { clearAnnotations, createAnnotation, setAbstractDialogView, setAbstract as setAbstractGlobal } from 'slices/viewPaperSlice';
+import styled from 'styled-components';
+import { mutate } from 'swr';
 
 const AnimationContainer = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -60,7 +60,7 @@ const CLASS_COLORS = {
     method: '#D2B8E5',
 };
 
-function AbstractAnnotatorModal({ toggle }) {
+function AbstractAnnotatorModal({ toggle, resourceId }) {
     const [isAbstractLoading, setIsAbstractLoading] = useState(false);
     const [isAbstractFailedLoading, setIsAbstractFailedLoading] = useState(false);
     const [isAnnotationLoading, setIsAnnotationLoading] = useState(false);
@@ -77,9 +77,6 @@ function AbstractAnnotatorModal({ toggle }) {
 
     const abstractDialogView = useSelector((state) => state.viewPaper.abstractDialogView);
     const ranges = useSelector((state) => state.viewPaper.ranges);
-    const selectedContributionId = useSelector((state) => state.viewPaper.selectedContributionId);
-    const properties = useSelector((state) => state.statementBrowser.properties);
-    const values = useSelector((state) => state.statementBrowser.values);
 
     const getAnnotation = useCallback(() => {
         if (!abstract) {
@@ -171,81 +168,28 @@ function AbstractAnnotatorModal({ toggle }) {
         return newColor;
     };
 
-    const getExistingPredicateId = (property) => {
-        if (properties.allIds.length > 0) {
-            const p = properties.allIds.filter((pId) => properties.byId[pId].label === property.label);
-            if (p.length > 0) {
-                // Property Already exists
-                return p[0];
-            }
-        }
-        return false;
-    };
-
-    const getExistingRange = (range) => {
-        if (properties.allIds.length > 0) {
-            const p = properties.allIds.filter((pId) => properties.byId[pId].label === range.class.label);
-            if (p.length > 0) {
-                // Property Already exists
-                // Check value
-                const v = properties.byId[p[0]].valueIds.filter((id) => {
-                    if (values.byId[id].label === range.text) {
-                        return id;
-                    }
-                    return false;
-                });
-                if (v.length > 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    };
-
-    const handleInsertData = () => {
-        const classesID = {};
-        const createdProperties = {};
-        const statements = { properties: [], values: [] };
+    const handleInsertData = async () => {
         const rangesArray = toArray(ranges).filter((r) => r.certainty >= certaintyThreshold);
         if (rangesArray.length > 0) {
-            rangesArray.map(async (range) => {
-                let propertyId;
-                if (!getExistingRange(range) && range.class.id) {
-                    if (classesID[range.class.id]) {
-                        propertyId = classesID[range.class.id];
-                    } else {
-                        const pID = guid();
-                        classesID[range.class.id] = pID;
-                        propertyId = pID;
-                    }
-                    if (!createdProperties[propertyId]) {
-                        const existingPredicateId = getExistingPredicateId(range.class);
-                        if (!existingPredicateId) {
-                            let _existingPredicateId = CLASS_OPTIONS.find((_class) => _class.id === range.class.id)?.id;
-                            if (!_existingPredicateId && range.class.id.toLowerCase() !== range.class.label.toLowerCase()) {
-                                _existingPredicateId = range.class.id;
-                            }
-                            statements.properties.push({
-                                propertyId,
-                                existingPredicateId: _existingPredicateId,
-                                label: range.class.label,
-                            });
-                        } else {
-                            propertyId = existingPredicateId;
-                        }
-                        createdProperties[propertyId] = propertyId;
-                    }
-                    statements.values.push({
-                        label: range.text,
-                        _class: ENTITIES.RESOURCE,
-                        propertyId,
-                    });
-                }
-                return null;
-            });
+            await Promise.all(
+                rangesArray.map(async (range) => {
+                    const object = await createResource(range.text);
+                    // Add the statements to the selected contribution
+                    return createResourceStatement(resourceId, range.class.id, object.id);
+                }),
+            );
         }
-        // Add the statements to the selected contribution
-        dispatch(fillStatements({ statements, resourceId: selectedContributionId, syncBackend: true }));
+        // revalidate the cache of the selected contribution
+        mutate([
+            {
+                subjectId: resourceId,
+                returnContent: true,
+                returnFormattedLabels: true,
+            },
+            statementsUrl,
+            'getStatements',
+        ]);
+        dispatch(clearAnnotations());
         toggle();
     };
 
@@ -354,6 +298,7 @@ function AbstractAnnotatorModal({ toggle }) {
 
 AbstractAnnotatorModal.propTypes = {
     toggle: PropTypes.func.isRequired,
+    resourceId: PropTypes.string.isRequired,
 };
 
 export default AbstractAnnotatorModal;

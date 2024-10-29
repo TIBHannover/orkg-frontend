@@ -10,7 +10,7 @@ import { Steps } from 'intro.js-react';
 
 type HelpButtonProps = {
     id: string;
-    woochat?: string;
+    $woochat?: string;
 };
 
 const HelpButton = styled.div<HelpButtonProps>`
@@ -21,8 +21,8 @@ const HelpButton = styled.div<HelpButtonProps>`
     padding-left: 0;
     list-style: none;
     padding: 0;
-    bottom: ${(props) => (props.woochat ? '100px' : '24px')};
-    right: ${(props) => (props.woochat ? '8px' : '24px')};
+    bottom: ${(props) => (props.$woochat ? '100px' : '24px')};
+    right: ${(props) => (props.$woochat ? '8px' : '24px')};
 
     color: #80869b;
 
@@ -223,7 +223,7 @@ const HelpTour = () => {
                 options={{ tooltipClass: 'introjs-ORKG-tooltip' }}
             />
 
-            <HelpButton id="helpIcon" woochat={env('NEXT_PUBLIC_CHATWOOT_WEBSITE_TOKEN')}>
+            <HelpButton id="helpIcon" $woochat={env('NEXT_PUBLIC_CHATWOOT_WEBSITE_TOKEN')}>
                 <Tippy
                     visible={isTooltipVisible}
                     appendTo={typeof window !== 'undefined' ? document.body : undefined}

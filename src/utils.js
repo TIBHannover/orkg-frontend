@@ -5,7 +5,7 @@ import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import ROUTES from 'constants/routes';
 import { unescape } from 'he';
-import { isString, sortBy, uniqBy } from 'lodash';
+import { isString, sortBy, uniqBy, isNaN } from 'lodash';
 import { reverse } from 'named-urls';
 import qs from 'qs';
 import { Cookies } from 'react-cookie';
@@ -437,6 +437,14 @@ export const getVisualizationData = (resource, visualizationStatements) => {
     };
 };
 
+const isNumeric = (str) => {
+    if (typeof str !== 'string') return false; // we only process strings!
+    return (
+        !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+        !isNaN(parseFloat(str))
+    );
+};
+
 /**
  * Sort Method
  *
@@ -445,24 +453,24 @@ export const getVisualizationData = (resource, visualizationStatements) => {
  */
 export const sortMethod = (a, b) => {
     // force null and undefined to the bottom
-    a = a === null || a === undefined ? -Infinity : a;
-    b = b === null || b === undefined ? -Infinity : b;
+    let _a = a === null || a === undefined ? -Infinity : a;
+    let _b = b === null || b === undefined ? -Infinity : b;
     // check if a and b are numbers (contains only digits)
-    const aisnum = /^(\d|.)+$/.test(a);
-    const bisnum = /^(\d|.)+$/.test(b);
-    if (aisnum && bisnum) {
-        a = parseFloat(a);
-        b = parseFloat(b);
+    const aIsNum = isNumeric(_a);
+    const bIsNum = isNumeric(_b);
+    if (aIsNum && bIsNum) {
+        _a = parseFloat(_a);
+        _b = parseFloat(_b);
     } else {
         // force any string values to lowercase
-        a = typeof a === 'string' ? a.toLowerCase() : a;
-        b = typeof b === 'string' ? b.toLowerCase() : b;
+        _a = typeof _a === 'string' ? _a.toLowerCase() : _a;
+        _b = typeof _b === 'string' ? _b.toLowerCase() : _b;
     }
     // Return either 1 or -1 to indicate a sort priority
-    if (a > b) {
+    if (_a > _b) {
         return 1;
     }
-    if (a < b) {
+    if (_a < _b) {
         return -1;
     }
     // returning 0 or undefined will use any subsequent column sorting methods or the row index as a tiebreaker

@@ -1,9 +1,9 @@
-import { reloadDataTableStatements } from 'slices/reviewSlice';
-import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
+import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from 'reactstrap';
+import { reloadDataTableStatements } from 'slices/reviewSlice';
 
 const OntologyItem = ({ id, label, type, isEditable, sectionId }) => {
     const [isModelOpen, setIsModalOpen] = useState(false);
@@ -25,9 +25,7 @@ const OntologyItem = ({ id, label, type, isEditable, sectionId }) => {
             <Button color="link" className="p-0 text-wrap text-start" style={{ maxWidth: '100%' }} onClick={() => setIsModalOpen(true)}>
                 {label}
             </Button>
-            {isModelOpen && (
-                <StatementBrowserDialog toggleModal={handleToggleModal} id={id} label={label} show enableEdit={isEditable} syncBackend type={type} />
-            )}
+            {isModelOpen && <DataBrowserDialog toggleModal={handleToggleModal} id={id} label={label} show isEditMode={isEditable} />}
         </>
     );
 };

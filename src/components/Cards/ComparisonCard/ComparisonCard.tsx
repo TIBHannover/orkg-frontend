@@ -18,9 +18,9 @@ import { FC } from 'react';
 import { Comparison } from 'services/backend/types';
 import styled from 'styled-components';
 
-const ComparisonCardStyled = styled.li<{ rounded: string }>`
+const ComparisonCardStyled = styled.li<{ $rounded: string }>`
     &:last-child {
-        border-bottom-right-radius: ${(props) => (props.rounded === 'true' ? '0 !important' : '')};
+        border-bottom-right-radius: ${(props) => (props.$rounded === 'true' ? '0 !important' : '')};
     }
 `;
 
@@ -50,7 +50,7 @@ const ComparisonCard: FC<ComparisonCardProps> = ({
     return (
         <ComparisonCardStyled
             style={{ flexWrap: 'wrap' }}
-            rounded={rounded}
+            $rounded={rounded}
             className={`list-group-item d-flex py-3 pe-4 ${showCurationFlags ? ' ps-3  ' : ' ps-4  '}`}
         >
             <div className="col-md-9 d-flex p-0">

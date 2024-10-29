@@ -92,7 +92,8 @@ export default async function getGeoNames({
         }
         options.push(itemData);
     });
-    return { options, hasMore: options.length > 0 };
+
+    return { options, hasMore: options.length > pageSize };
 }
 
 export async function getById(id: string): Promise<Coordinates> {

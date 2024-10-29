@@ -1,15 +1,15 @@
-import Tabs from 'components/Tabs/Tabs';
-import { Container } from 'reactstrap';
-import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
+import DataBrowser from 'components/DataBrowser/DataBrowser';
+import useParams from 'components/useParams/useParams';
+import { useRouter } from 'next/navigation';
 import ObjectStatements from 'components/Resource/Tabs/ObjectStatements';
 import PreviewFactory from 'components/Resource/Tabs/Preview/PreviewFactory/PreviewFactory';
-import { CLASSES } from 'constants/graphSettings';
-import { reverse } from 'named-urls';
-import { useRouter } from 'next/navigation';
-import useParams from 'components/useParams/useParams';
-import PropTypes from 'prop-types';
-import ROUTES from 'constants/routes';
 import ResourceUsage from 'components/Resource/Tabs/ResourceUsage';
+import Tabs from 'components/Tabs/Tabs';
+import { CLASSES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
+import { Container } from 'reactstrap';
 
 function TabsContainer({ id, classes, editMode }) {
     const { activeTab } = useParams();
@@ -38,20 +38,11 @@ function TabsContainer({ id, classes, editMode }) {
                         key: 'information',
                         children: (
                             <div className="p-4">
-                                <StatementBrowser
-                                    enableEdit={editMode}
-                                    syncBackend={editMode}
-                                    openExistingResourcesInDialog={false}
-                                    initialSubjectId={id}
-                                    newStore
-                                    propertiesAsLinks
-                                    resourcesAsLinks
-                                    keyToKeepStateOnLocationChange={id}
-                                />
+                                <DataBrowser isEditMode={editMode} id={id} valuesAsLinks propertiesAsLinks canEditSharedRootLevel />
                             </div>
                         ),
                     },
-                    ...(classes?.includes(CLASSES.VISUALIZATION)
+                    ...(classes?.includes(CLASSES.VISUALIZATION) || classes?.includes(CLASSES.CSVW_TABLE)
                         ? [
                               {
                                   label: 'Preview',

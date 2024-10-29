@@ -4,7 +4,7 @@ import Tippy from '@tippyjs/react';
 import CopyId from 'components/CopyId/CopyId';
 import Link from 'next/link';
 import VersionsModal from 'components/RosettaStone/SingleStatement/VersionsModal';
-import ActionButtonView from 'components/StatementBrowser/StatementActionButton/ActionButtonView';
+import ActionButtonView from 'components/ActionButton/ActionButtonView';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CERTAINTY } from 'constants/contentTypes';
 import { MISC } from 'constants/graphSettings';
@@ -201,7 +201,6 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
             trigger="click"
         >
             <span>
-                {/* @ts-expect-error awaiting TS migration */}
                 <ActionButtonView action={(e) => e.stopPropagation()} title="Show information about this statement" icon={faInfo} />
                 <VersionsModal
                     versions={versions}

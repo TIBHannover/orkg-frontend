@@ -1,9 +1,9 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
+import ActionButton from 'components/ActionButton/ActionButton';
 import ClassInlineItem from 'components/Class/ClassInlineItem/ClassInlineItem';
 import useCountInstances from 'components/Class/hooks/useCountInstances';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
-import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import DataBrowser from 'components/DataBrowser/DataBrowser';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { orderBy } from 'lodash';
 import { reverse } from 'named-urls';
@@ -148,7 +148,7 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                                     <>
                                         Not defined
                                         <span className="ms-2">
-                                            <StatementActionButton title="Editing requires a curator role" icon={faPen} action={null} isDisabled />
+                                            <ActionButton title="Editing requires a curator role" icon={faPen} action={null} isDisabled />
                                         </span>
                                     </>
                                 )}
@@ -179,19 +179,7 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree, showS
                     </tr>
                 </tbody>
             </Table>
-            {showStatementsBrowser && (
-                <StatementBrowser
-                    rootNodeType={ENTITIES.CLASS}
-                    enableEdit={editMode}
-                    syncBackend={editMode}
-                    openExistingResourcesInDialog={false}
-                    initialSubjectId={id}
-                    newStore
-                    propertiesAsLinks
-                    resourcesAsLinks
-                    keyToKeepStateOnLocationChange={id}
-                />
-            )}
+            <DataBrowser isEditMode={editMode} id={id} showHeader={false} propertiesAsLinks valuesAsLinks />
         </div>
     );
 }

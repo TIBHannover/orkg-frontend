@@ -5,12 +5,12 @@
 
 import { env } from 'next-runtime-env';
 import { PREDICATES } from 'constants/graphSettings';
+import { AGRICULTURE_FIELDS_LIST, COMPUTER_SCIENCE_FIELDS_LIST } from 'constants/nlpFieldLists';
 import { keyBy, mapValues, uniq } from 'lodash';
 import { submitPostRequest } from 'network';
 import { getPredicate } from 'services/backend/predicates';
 import { getResources } from 'services/backend/resources';
 import { getParentResearchFields } from 'services/backend/statements';
-import { COMPUTER_SCIENCE_FIELDS_LIST, AGRICULTURE_FIELDS_LIST } from 'constants/nlpFieldLists';
 // import fetch from 'cross-fetch';
 import { Resource } from 'services/backend/types';
 
@@ -282,7 +282,13 @@ type recommendedPredicatesResponse = {
         label: string;
     }[];
 };
-export const getRecommendedPredicates = async ({ title, abstract }: { title: string; abstract: string }): Promise<recommendedPredicatesResponse> => {
+export const getRecommendedPredicates = async ({
+    title,
+    abstract,
+}: {
+    title?: string;
+    abstract?: string;
+}): Promise<recommendedPredicatesResponse> => {
     const { payload } = await submitPostRequest(
         `${nlpServiceUrl}clustering/predicates`,
         {
@@ -310,7 +316,7 @@ export const getTemplateRecommendations = async ({
 }: {
     title: string;
     abstract: string;
-    topN: number;
+    topN?: number;
 }): Promise<recommendedTemplatesResponse> => {
     const { payload } = await submitPostRequest(
         `${nlpServiceUrl}nli/templates`,

@@ -2,22 +2,19 @@
 
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import PropertySuggestions from 'components/ContentType/PropertySuggestions/PropertySuggestions';
-import { supportedContentTypes } from 'components/ContentType/types';
-import EditableHeader from 'components/EditableHeader';
-import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import { ENTITIES } from 'constants/graphSettings';
-import { upperFirst } from 'lodash';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
+import { supportedContentTypes } from 'components/ContentType/types';
+import DataBrowser from 'components/DataBrowser/DataBrowser';
+import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import useParams from 'components/useParams/useParams';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import TitleBar from 'components/TitleBar/TitleBar';
 import Unauthorized from 'components/Unauthorized/Unauthorized';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+import { upperFirst } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import useParams from 'components/useParams/useParams';
 import { Button, Container } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
 
@@ -97,33 +94,7 @@ function ContentType() {
                     </TitleBar>
                     <EditModeHeader isVisible={isEditMode} />
                     <Container className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${isEditMode ? 'rounded-bottom' : 'rounded'}`}>
-                        <div className="">
-                            {!isEditMode ? (
-                                <div className="pb-2">
-                                    <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                        {resource.label || (
-                                            <i>
-                                                <small>No label</small>
-                                            </i>
-                                        )}
-                                    </h3>
-                                </div>
-                            ) : (
-                                <EditableHeader id={params.id} value={resource.label} onChange={handleHeaderChange} entityType={ENTITIES.RESOURCE} />
-                            )}
-                        </div>
-                        <hr />
-                        <StatementBrowser
-                            enableEdit={isEditMode}
-                            syncBackend={isEditMode}
-                            openExistingResourcesInDialog={false}
-                            initialSubjectId={resourceId}
-                            newStore
-                            propertiesAsLinks
-                            resourcesAsLinks
-                            propertySuggestionsComponent={<PropertySuggestions />}
-                            keyToKeepStateOnLocationChange={resourceId}
-                        />
+                        <DataBrowser isEditMode={isEditMode} id={resourceId} propertiesAsLinks valuesAsLinks />
                     </Container>
                 </>
             )}

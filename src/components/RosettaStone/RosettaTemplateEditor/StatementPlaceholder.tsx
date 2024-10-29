@@ -2,14 +2,14 @@ import PositionCard from 'components/RosettaStone/RosettaTemplateEditor/Position
 import { useRosettaTemplateEditorState } from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 import { parseInt } from 'lodash';
 import { useContext } from 'react';
-import { PropertyShape } from 'services/backend/types';
+import { RSPropertyShape } from 'services/backend/types';
 import { ThemeContext } from 'styled-components';
 
 function StatementPlaceholder() {
     const { properties } = useRosettaTemplateEditorState();
     const theme = useContext(ThemeContext);
 
-    const renderCard = (property: PropertyShape, index: number) => {
+    const renderCard = (property: RSPropertyShape, index: number) => {
         let color = '#5bafbd';
         let type = 'object';
         if (property && 'min_count' in property && property.min_count && parseInt(property.min_count.toString()) > 0) {

@@ -13,7 +13,7 @@ import { Button } from 'reactstrap';
 import { createPredicate, getPredicates } from 'services/backend/predicates';
 import { getLlmResponse } from 'services/orkgNlp';
 
-export const SmartPropertySuggestions = ({ properties, handleCreate }) => {
+const SmartPropertySuggestions = ({ properties, handleCreate }) => {
     const [recommendedProperties, setRecommendedProperties] = useState([]);
     const [isOpenSmartTooltip, setIsOpenSmartTooltip] = useState(false);
     const [isLoading, setIsLoading] = useState(false);

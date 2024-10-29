@@ -1,6 +1,6 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import CuratorModal from 'components/CuratorModal/CuratorModal';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import ActionButton from 'components/ActionButton/ActionButton';
 import { StyledButton } from 'components/StatementBrowser/styled';
 import { ENTITIES } from 'constants/graphSettings';
 import { useState, FC, useEffect } from 'react';
@@ -75,10 +75,10 @@ const EditableHeader: FC<EditableHeaderProp> = ({ entityType, id, onChange, cura
                 <h3 className="mb-0">
                     {label || <small className="fst-italic">No label</small>}
                     {id.split(':')[0] === 'wikidata' ? (
-                        <StatementActionButton title="Wikidata cannot be edit" isDisabled icon={faPen} action={handleEditClick} />
+                        <ActionButton title="Wikidata cannot be edit" isDisabled icon={faPen} action={handleEditClick} />
                     ) : (
                         <span className="ms-2">
-                            <StatementActionButton title="Edit label" icon={faPen} action={handleEditClick} />
+                            <ActionButton title="Edit label" icon={faPen} action={handleEditClick} />
                         </span>
                     )}
                 </h3>

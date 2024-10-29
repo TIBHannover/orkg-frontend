@@ -1,16 +1,16 @@
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import TableCellButtons from 'components/ContributionEditor/TableCellButtons';
 import { Properties, PropertiesInner } from 'components/Comparison/styled';
+import Confirm from 'components/Confirmation/Confirmation';
+import TableCellButtons from 'components/ContributionEditor/TableCellButtons';
+import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
+import ConfirmCreatePropertyModal from 'components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
+import { env } from 'next-runtime-env';
+import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
-import Confirm from 'components/Confirmation/Confirmation';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteProperty, updateProperty, canDeletePropertyAction } from 'slices/contributionEditorSlice';
-import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import { Button } from 'reactstrap';
-import { ENTITIES } from 'constants/graphSettings';
-import { env } from 'next-runtime-env';
-import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
+import { canDeletePropertyAction, deleteProperty, updateProperty } from 'slices/contributionEditorSlice';
 
 const TableHeaderRow = ({ property }) => {
     const [isOpenStatementBrowser, setIsOpenStatementBrowser] = useState(false);
@@ -111,14 +111,13 @@ const TableHeaderRow = ({ property }) => {
                         </PropertiesInner>
                     </Properties>
                     {isOpenStatementBrowser && (
-                        <StatementBrowserDialog
-                            type="property"
+                        <DataBrowserDialog
+                            isEditMode
                             toggleModal={() => setIsOpenStatementBrowser((v) => !v)}
                             id={property.id}
                             label={property.label}
+                            type={ENTITIES.PREDICATE}
                             show
-                            enableEdit
-                            syncBackend
                         />
                     )}
                 </>

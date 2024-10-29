@@ -1,31 +1,31 @@
-import Link from 'next/link';
-import { useState } from 'react';
-import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Badge, Row, Col } from 'reactstrap';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import { SubTitle } from 'components/styled';
+import { faEllipsisV, faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import useResearchProblem from 'components/ResearchProblem/hooks/useResearchProblem';
-import useResearchProblemResearchFields from 'components/ResearchProblem/hooks/useResearchProblemResearchFields';
-import AuthorsBox from 'components/TopAuthors/AuthorsBox';
+import CheckClasses from 'components/CheckClasses/CheckClasses';
+import CheckSlug from 'components/CheckSlug/CheckSlug';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
+import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
 import FeaturedMark from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import ROUTES from 'constants/routes';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
-import CheckSlug from 'components/CheckSlug/CheckSlug';
-import { reverseWithSlug } from 'utils';
-import CheckClasses from 'components/CheckClasses/CheckClasses';
-import { CLASSES } from 'constants/graphSettings';
-import TitleBar from 'components/TitleBar/TitleBar';
-import SuperResearchProblemBox from 'components/ResearchProblem/SuperResearchProblemBox/SuperResearchProblemBox';
-import ResearchFieldsBox from 'components/ResearchProblem/ResearchFieldBox/ResearchFieldsBox';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import Contributors from 'components/ResearchProblem/Contributors';
+import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
+import ResearchFieldsBox from 'components/ResearchProblem/ResearchFieldBox/ResearchFieldsBox';
+import SuperResearchProblemBox from 'components/ResearchProblem/SuperResearchProblemBox/SuperResearchProblemBox';
+import useResearchProblem from 'components/ResearchProblem/hooks/useResearchProblem';
+import useResearchProblemResearchFields from 'components/ResearchProblem/hooks/useResearchProblemResearchFields';
+import TitleBar from 'components/TitleBar/TitleBar';
+import AuthorsBox from 'components/TopAuthors/AuthorsBox';
+import { SubTitle } from 'components/styled';
+import { CLASSES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { Badge, Button, ButtonDropdown, Col, Container, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'reactstrap';
+import { reverseWithSlug } from 'utils';
 
 const ResearchProblemHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -109,13 +109,12 @@ const ResearchProblemHeader = ({ id }) => {
                         {researchProblemData.label}
                     </TitleBar>
                     {editMode && (
-                        <StatementBrowserDialog
+                        <DataBrowserDialog
                             show={editMode}
+                            isEditMode
                             toggleModal={() => setEditMode((v) => !v)}
                             id={id}
                             label={researchProblemData.label}
-                            enableEdit
-                            syncBackend
                             onCloseModal={() => loadResearchProblemData(id)}
                         />
                     )}

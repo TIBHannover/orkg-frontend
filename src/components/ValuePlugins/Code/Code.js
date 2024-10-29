@@ -58,6 +58,7 @@ const Code = ({ children, type }) => {
             <>
                 <CopyToClipboardButton code={code}>
                     <SyntaxHighlighter
+                        wrapLongLines
                         className="m-0"
                         language={SUPPORTED_LANGUAGES.find((language) => labelToText.endsWith(`.${language.extension}`)?.language)}
                         style={github}

@@ -89,17 +89,13 @@ const ViewPaperVersion = () => {
                                 <rect x="36" y="6" rx="1" ry="1" width="10" height="2" />
                             </ContentLoader>
                         )}
-                        {!isLoading && (
-                            <>
-                                {originalPaperId && (
-                                    <Alert color="warning" className="container d-flex">
-                                        <div className="flex-grow-1">
-                                            You are viewing the published version of the paper. Click to{' '}
-                                            <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: originalPaperId })}>Fetch live data</Link>
-                                        </div>
-                                    </Alert>
-                                )}
-                            </>
+                        {!isLoading && originalPaperId && (
+                            <Alert color="warning" className="container d-flex">
+                                <div className="flex-grow-1">
+                                    You are viewing the published version of the paper. Click to{' '}
+                                    <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: originalPaperId })}>Fetch live data</Link>
+                                </div>
+                            </Alert>
                         )}
                         {!isLoading && !isLoadingFailed && <PaperVersionHeader />}
                         {!isLoading && (

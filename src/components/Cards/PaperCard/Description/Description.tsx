@@ -1,5 +1,5 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import ActionButtonView from 'components/StatementBrowser/StatementActionButton/ActionButtonView';
+import ActionButtonView from 'components/ActionButton/ActionButtonView';
 import { useEffect, useState } from 'react';
 import ReactTextareaAutosize from 'react-textarea-autosize';
 
@@ -30,13 +30,7 @@ const Description = ({ description, isEditable, handleUpdate }: DescriptionProps
                         <small className="text-muted">{description || <em>No description</em>}</small>
                         {isEditable && (
                             <span className="ms-2">
-                                <ActionButtonView
-                                    // @ts-expect-error
-                                    icon={faPen}
-                                    action={() => setIsEditingDescription(true)}
-                                    isDisabled={false}
-                                    title="Edit"
-                                />
+                                <ActionButtonView icon={faPen} action={() => setIsEditingDescription(true)} isDisabled={false} title="Edit" />
                             </span>
                         )}
                     </>

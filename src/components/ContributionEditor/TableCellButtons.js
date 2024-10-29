@@ -1,9 +1,9 @@
 import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faCheck, faTimes, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import ActionButton from 'components/ActionButton/ActionButton';
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
-import { setIsHelpModalOpen } from 'slices/statementBrowserSlice';
+import { setIsHelpModalOpen } from 'slices/contributionEditorSlice';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useState, memo } from 'react';
@@ -35,7 +35,7 @@ const TableCellButtons = ({ onEdit = null, onDelete = null, backgroundColor, sty
     return (
         <ButtonsContainer style={{ backgroundColor, ...style }} className={buttonClasses}>
             {onEdit && (value?.shared ?? 0) > 1 && (
-                <StatementActionButton
+                <ActionButton
                     isDisabled
                     interactive
                     appendTo={document.body}
@@ -56,7 +56,7 @@ const TableCellButtons = ({ onEdit = null, onDelete = null, backgroundColor, sty
                 />
             )}
             {onEdit && (value?.shared ?? 0) <= 1 && (
-                <StatementActionButton
+                <ActionButton
                     appendTo={document.body}
                     title="Edit"
                     icon={faPen}
@@ -65,7 +65,7 @@ const TableCellButtons = ({ onEdit = null, onDelete = null, backgroundColor, sty
                 />
             )}
 
-            <StatementActionButton
+            <ActionButton
                 title={onDelete ? 'Delete' : 'This item cannot be deleted'}
                 icon={faTrash}
                 appendTo={document.body}

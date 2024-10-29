@@ -2,72 +2,24 @@
 
 import { faEllipsisV, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
 import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import TemplatesFilters from 'components/Templates/TemplatesFilters/TemplatesFilters';
+import useTemplateGallery from 'components/Templates/TemplatesFilters/useTemplateGallery';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
-import { debounce, isBoolean } from 'lodash';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import {
-    Badge,
-    ButtonDropdown,
-    Button,
-    Col,
-    Container,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Form,
-    FormGroup,
-    Input,
-    Label,
-    ListGroup,
-    ListGroupItem,
-    Row,
-} from 'reactstrap';
-import { getTemplates, templatesUrl, getTemplatesParams } from 'services/backend/templates';
-import { Node, VisibilityOptions } from 'services/backend/types';
-import useSWRInfinite from 'swr/infinite';
+import { Badge, Button, ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle, ListGroup, ListGroupItem } from 'reactstrap';
 
 const Templates = () => {
-    const pageSize = 25;
-
-    const searchParams = useSearchParams();
-    const router = useRouter();
-
-    const getKey = (pageIndex: number): getTemplatesParams => ({
-        page: pageIndex,
-        size: pageSize,
-        sortBy: [{ property: 'created_at', direction: 'desc' }],
-        visibility: searchParams.get('sort') as VisibilityOptions,
-        research_field: searchParams.get('researchField') ?? undefined,
-        include_subfields: searchParams.get('includeSubfields') ? searchParams.get('includeSubfields') === 'true' : undefined,
-        researchProblem: searchParams.get('researchProblem'),
-        targetClass: searchParams.get('targetClass'),
-        q: searchParams.get('q'),
-    });
-
-    const { data, isLoading, isValidating, size, setSize } = useSWRInfinite(
-        (pageIndex) => [getKey(pageIndex), templatesUrl, 'getTemplates'],
-        ([params]) => getTemplates(params),
-    );
+    const { key, data, isLoadingTemplates, totalElements, isLastPageReached, hasNextPage, size, handleLoadMore, isFilterApplied, resetFilters } =
+        useTemplateGallery({});
 
     useEffect(() => {
         document.title = 'Templates - ORKG';
     }, []);
-
-    const totalElements = data?.[0]?.totalElements;
-    const isEmpty = totalElements === 0;
-    const isLastPageReached = isEmpty || (data && data[data.length - 1])?.last;
-    const hasNextPage = !isLastPageReached;
-    const isLoadingTemplates = isLoading || isValidating;
-    const handleLoadMore = () => setSize(size + 1);
 
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -84,53 +36,6 @@ const Templates = () => {
             .
         </>
     );
-
-    const handleChangeFilter = (value: Node | null | boolean, filerId: string) => {
-        const params = new URLSearchParams(searchParams.toString());
-
-        if (value && !isBoolean(value)) {
-            params.set(filerId, value?.id);
-        } else if (isBoolean(value)) {
-            params.set(filerId, value.toString());
-        } else {
-            params.delete(filerId);
-        }
-        router.push(`?${params.toString()}`);
-    };
-
-    const handleSearch = debounce((term) => {
-        const params = new URLSearchParams(searchParams);
-        if (term) {
-            params.set('q', term);
-        } else {
-            params.delete('q');
-        }
-        router.push(`?${params.toString()}`);
-    }, 500);
-
-    const isFilterApplied =
-        searchParams.get('researchField')?.toString() ||
-        searchParams.get('researchProblem')?.toString() ||
-        searchParams.get('targetClass')?.toString() ||
-        searchParams.get('q')?.toString();
-
-    const filterCommonProps = {
-        openMenuOnFocus: true,
-        allowCreate: false,
-        isClearable: true,
-        enableExternalSources: false,
-    };
-
-    const resetFilters = () => {
-        const params = new URLSearchParams(searchParams.toString());
-        params.delete('sort');
-        params.delete('researchField');
-        params.delete('includeSubfields');
-        params.delete('researchProblem');
-        params.delete('targetClass');
-        params.delete('q');
-        router.push(`?${params.toString()}`);
-    };
 
     return (
         <>
@@ -187,77 +92,8 @@ const Templates = () => {
                     {infoContainerText}
                 </Container>
             )}
-            <Container className="box rounded pt-4 pb-2 ps-4 pe-4 clearfix">
-                <Form className="mb-3">
-                    <Row>
-                        <Col md={6}>
-                            <FormGroup>
-                                <Label for="filter-research-field" className="d-flex">
-                                    <div className="flex-grow-1">Filter by research field</div>
-                                    <Label check className="mb-0 me-0">
-                                        <Input
-                                            onChange={(e) => handleChangeFilter(e.target.checked, 'includeSubfields')}
-                                            defaultValue={searchParams.get('includeSubfields')?.toString()}
-                                            type="checkbox"
-                                            disabled={isLoading}
-                                        />{' '}
-                                        Include subfields
-                                    </Label>
-                                </Label>
-                                <Autocomplete
-                                    entityType={ENTITIES.RESOURCE}
-                                    includeClasses={[CLASSES.RESEARCH_FIELD]}
-                                    placeholder="Select or type to enter a research field"
-                                    onChange={(v) => handleChangeFilter(v as Node, 'researchField')}
-                                    inputId="filter-research-field"
-                                    defaultValueId={searchParams.get('researchField')?.toString()}
-                                    {...filterCommonProps}
-                                />
-                            </FormGroup>
-                        </Col>
-                        <Col md={6}>
-                            <FormGroup>
-                                <Label for="filter-research-problem">Filter by research problem</Label>
-                                <Autocomplete
-                                    entityType={ENTITIES.RESOURCE}
-                                    includeClasses={[CLASSES.PROBLEM]}
-                                    placeholder="Select or type to enter a research problem"
-                                    onChange={(v) => handleChangeFilter(v as Node, 'researchProblem')}
-                                    inputId="filter-research-problem"
-                                    defaultValueId={searchParams.get('researchProblem')?.toString()}
-                                    {...filterCommonProps}
-                                />
-                            </FormGroup>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}>
-                            <FormGroup>
-                                <Label for="filter-label">Filter by label</Label>
-                                <Input
-                                    type="text"
-                                    id="filter-label"
-                                    maxLength={MAX_LENGTH_INPUT}
-                                    onChange={(e) => handleSearch(e.target.value)}
-                                    defaultValue={searchParams.get('q')?.toString()}
-                                />
-                            </FormGroup>
-                        </Col>
-                        <Col md={6}>
-                            <FormGroup>
-                                <Label for="filter-class">Filter by class</Label>
-                                <Autocomplete
-                                    entityType={ENTITIES.CLASS}
-                                    placeholder="Select or type to enter a class"
-                                    onChange={(v) => handleChangeFilter(v as Node, 'targetClass')}
-                                    inputId="filter-class"
-                                    defaultValueId={searchParams.get('targetClass')?.toString()}
-                                    {...filterCommonProps}
-                                />
-                            </FormGroup>
-                        </Col>
-                    </Row>
-                </Form>
+            <Container className="box rounded pt-4 pb-3 ps-4 pe-4 clearfix">
+                <TemplatesFilters isLoading={isLoadingTemplates} key={key} />
             </Container>
             <Container className="p-0 mt-4">
                 <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
