@@ -20,7 +20,7 @@ import { CookiesProvider } from 'react-cookie';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Provider } from 'react-redux';
-import configureStore from 'store';
+import { setupStore } from 'store';
 import { ThemeProvider } from 'styled-components';
 import SWR_CONFIG from 'services/SWRConfig';
 import { SWRConfig } from 'swr';
@@ -58,8 +58,7 @@ plugins.input.add('@doi/id', {
     },
 });
 
-// const { store, history } = configureStore();
-const { store } = configureStore();
+const { store } = setupStore();
 
 // Configuration for citation-js bibtex plubin
 const configCitationJs = plugins.config.get('@bibtex');

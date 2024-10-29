@@ -1,19 +1,20 @@
-import { useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, FormGroup, FormFeedback, Input, InputGroup } from 'reactstrap';
-import { semantifyBioassays } from 'services/orkgNlp/index';
-import { useCSVReader } from 'react-papaparse';
-import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { fillStatements } from 'slices/statementBrowserSlice';
-import { setBioassayRawResponse, setBioassayText } from 'slices/viewPaperSlice';
-import { useDispatch } from 'react-redux';
-import useBioassays from 'components/ViewPaper/hooks/useBioassays';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import BioassaySelectItem from 'components/ViewPaper/BioassaysModal/BioassaySelectItem';
+import useBioassays from 'components/ViewPaper/hooks/useBioassays';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useCSVReader } from 'react-papaparse';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import { Button, FormFeedback, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { createResourceStatement, statementsUrl } from 'services/backend/statements';
+import { semantifyBioassays } from 'services/orkgNlp/index';
+import { setBioassayRawResponse, setBioassayText } from 'slices/viewPaperSlice';
+import { mutate } from 'swr';
 
-const BioassaysModal = (props) => {
+const BioassaysModal = ({ selectedResource, toggle, showDialog }) => {
     const dispatch = useDispatch();
     const { CSVReader } = useCSVReader();
     const [bioassaysTest, setBioassaysTest] = useState('');
@@ -23,7 +24,7 @@ const BioassaysModal = (props) => {
     const [submitAlert, setSubmitAlert] = useState(null);
     const [assayData, setAssayData] = useState([]);
     const [selectedItems, setSelectedItems] = useState({});
-    const { handleSaveBioassaysFeedback } = useBioassays();
+    const { handleSaveBioassaysFeedback } = useBioassays({ selectedResource });
 
     const handleSubmitText = () => {
         setIsLoadingData(true);
@@ -67,48 +68,37 @@ const BioassaysModal = (props) => {
         }
     };
 
-    const createStatementIdObject = () => {
-        // append list values as strings
-        const statements = { properties: [], values: [] };
+    const handleInsertData = () => {
+        const apiCalls = [];
         for (const key of Object.keys(selectedItems)) {
             if (selectedItems[key].length > 0) {
-                const label = assayData.labels.find((l) => l.property.id === key);
-                statements.properties.push({
-                    existingPredicateId: label.property.id,
-                    propertyId: label.property.id,
-                    label: label.property.label,
-                });
-
                 for (const value of selectedItems[key]) {
-                    const val = label.resources.find((v) => v.id === value);
-                    statements.values.push({
-                        label: val.label,
-                        type: 'object',
-                        existingResourceId: val.id,
-                        isExistingValue: true,
-                        propertyId: label.property.id,
-                    });
+                    // Add the statements to the selected contribution
+                    apiCalls.push(createResourceStatement(selectedResource, key, value));
                 }
             }
         }
-        return statements;
-    };
-
-    const handleInsertData = () => {
-        const statements = createStatementIdObject();
-        // insert into statement Browser
-        dispatch(
-            fillStatements({
-                statements,
-                resourceId: props.selectedResource,
-                syncBackend: true,
-            }),
-        );
-        setAssayData([]);
-        setSelectedItems({});
-        setIsSubmitted(false);
-        handleSaveBioassaysFeedback({ selectedItems });
-        props.toggle();
+        Promise.all(apiCalls)
+            .then(() => {
+                // revalidate the cache of the selected contribution
+                mutate([
+                    {
+                        subjectId: selectedResource,
+                        returnContent: true,
+                        returnFormattedLabels: true,
+                    },
+                    statementsUrl,
+                    'getStatements',
+                ]);
+                setAssayData([]);
+                setSelectedItems({});
+                setIsSubmitted(false);
+                handleSaveBioassaysFeedback({ selectedItems });
+                toggle();
+            })
+            .catch(() => {
+                toast.error('Error inserting data.');
+            });
     };
 
     const PARSER_OPTIONS = {
@@ -116,8 +106,8 @@ const BioassaysModal = (props) => {
     };
 
     return (
-        <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
-            <ModalHeader toggle={props.toggle}>Semantification of Bioassays</ModalHeader>
+        <Modal size="lg" isOpen={showDialog} toggle={toggle}>
+            <ModalHeader toggle={toggle}>Semantification of Bioassays</ModalHeader>
             <ModalBody>
                 {isLoadingData && (
                     <div className="text-center text-primary">
@@ -180,8 +170,8 @@ const BioassaysModal = (props) => {
                         selectedItems={selectedItems}
                         handleSelect={handleSelect}
                         data={assayData}
-                        id={props.selectedResource}
-                        selectionFinished={props.toggle}
+                        id={selectedResource}
+                        selectionFinished={toggle}
                         loadingData={isLoadingData}
                     />
                 )}
@@ -192,7 +182,7 @@ const BioassaysModal = (props) => {
                     onClick={() => {
                         setAssayData([]);
                         setIsSubmitted(false);
-                        props.toggle();
+                        toggle();
                     }}
                     disabled={isLoadingData}
                 >

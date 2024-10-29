@@ -4,18 +4,18 @@ import { faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
+import DataBrowser from 'components/DataBrowser/DataBrowser';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 import EditableHeader from 'components/EditableHeader';
 import PropertyStatements from 'components/Property/PropertyStatements/PropertyStatements';
 import useDeleteProperty from 'components/Property/hooks/useDeleteProperty';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ItemMetadata from 'components/Search/ItemMetadata';
-import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+import useParams from 'components/useParams/useParams';
 import { ENTITIES } from 'constants/graphSettings';
 import { useSelector } from 'react-redux';
-import useParams from 'components/useParams/useParams';
 import { Button, Container } from 'reactstrap';
 import { getPredicate, predicatesUrl } from 'services/backend/predicates';
 import useSWR from 'swr';
@@ -104,19 +104,9 @@ function Property() {
                         <ItemMetadata item={property} showCreatedAt showCreatedBy />
                     </Container>
                     <Container className="mt-3 p-1 box rounded">
-                        <h3 className="ps-4 pt-4">Statements</h3>
-                        <div className="ps-4 pb-4 pe-4">
-                            <StatementBrowser
-                                rootNodeType={ENTITIES.PREDICATE}
-                                enableEdit={isEditMode}
-                                syncBackend={isEditMode}
-                                openExistingResourcesInDialog={false}
-                                initialSubjectId={propertyId}
-                                newStore
-                                propertiesAsLinks
-                                resourcesAsLinks
-                                keyToKeepStateOnLocationChange={propertyId}
-                            />
+                        <div className="pt-4 ps-4 pb-4 pe-4">
+                            <DataBrowser isEditMode={isEditMode} id={propertyId} propertiesAsLinks valuesAsLinks />
+
                             <PropertyStatements propertyId={propertyId} />
                         </div>
                     </Container>

@@ -19,7 +19,7 @@ import { reverse } from 'named-urls';
 import pluralize from 'pluralize';
 import { ChangeEvent, FC } from 'react';
 import { Input } from 'reactstrap';
-import { Paper } from 'services/backend/types';
+import { Paper, Resource } from 'services/backend/types';
 import styled from 'styled-components';
 
 const PaperCardStyled = styled.div`
@@ -31,7 +31,7 @@ const PaperCardStyled = styled.div`
 type PaperCardType = {
     paper: Partial<Paper>;
     onSelect?: (event: ChangeEvent<HTMLInputElement>) => void;
-    paths?: string[];
+    paths?: Resource[][];
     selectable?: boolean;
     linkTarget?: string;
     selected?: boolean;

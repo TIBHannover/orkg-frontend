@@ -4,7 +4,7 @@ import Autocomplete from 'components/Autocomplete/Autocomplete';
 import TemplatesModal from 'components/ContributionEditor/TemplatesModal/TemplatesModal';
 import SmartPropertyGuidelinesCheck from 'components/SmartSuggestions/SmartPropertyGuidelinesCheck';
 import SmartPropertySuggestions from 'components/SmartSuggestions/SmartPropertySuggestions';
-import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
+import ConfirmCreatePropertyModal from 'components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
 import { StyledButton } from 'components/StatementBrowser/styled';
 import { ENTITIES } from 'constants/graphSettings';
 import { useState } from 'react';

@@ -5,7 +5,7 @@ import FilterInputField from 'components/Filters/FilterInputField/FilterInputFie
 import FilterLabel from 'components/Filters/FilterInputField/FilterLabel';
 import AllFiltersOffCanvas from 'components/Filters/Panel/AllFiltersOffCanvas';
 import useFilterConfig from 'components/Filters/hooks/useFilterConfig';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import ActionButton from 'components/ActionButton/ActionButton';
 import { motion } from 'framer-motion';
 import { FC, Fragment, useState } from 'react';
 import { Button, Col, Container, Label, Row } from 'reactstrap';
@@ -127,7 +127,7 @@ const Filters: FC<FiltersProps> = ({ id }) => {
                     </>
 
                     <Col className="ms-auto">
-                        <StatementActionButton title="All filters" icon={faFilter} action={() => setShowEditPanel((v) => !v)} />
+                        <ActionButton title="All filters" icon={faFilter} action={() => setShowEditPanel((v) => !v)} />
                     </Col>
                 </Row>
             </div>

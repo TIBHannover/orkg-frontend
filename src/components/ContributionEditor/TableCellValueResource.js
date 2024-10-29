@@ -1,11 +1,11 @@
-import { useState, useMemo, memo } from 'react';
-import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import { generatedFormattedLabel, updateResourceStatementsAction } from 'slices/contributionEditorSlice';
-import PropTypes from 'prop-types';
+import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
 import { uniq } from 'lodash';
 import { env } from 'next-runtime-env';
+import PropTypes from 'prop-types';
+import { memo, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
+import { generatedFormattedLabel, updateResourceStatementsAction } from 'slices/contributionEditorSlice';
 
 const TableCellValueResource = ({ value }) => {
     const [isModelOpen, setIsModalOpen] = useState(false);
@@ -51,15 +51,14 @@ const TableCellValueResource = ({ value }) => {
                 {formattedLabel !== '' ? formattedLabel.toString() : <i>No label</i>}
             </Button>
             {isModelOpen && (
-                <StatementBrowserDialog
+                <DataBrowserDialog
+                    show
                     toggleModal={(v) => setIsModalOpen(!v)}
+                    onCloseModal={() => dispatch(updateResourceStatementsAction(value.id))}
                     id={value.id}
                     label={value.label}
-                    show
-                    enableEdit={env('NEXT_PUBLIC_PWC_USER_ID') !== value.created_by ? true : undefined}
-                    syncBackend
+                    isEditMode={env('NEXT_PUBLIC_PWC_USER_ID') !== value.created_by ? true : undefined}
                     canEditSharedRootLevel={false}
-                    onCloseModal={() => dispatch(updateResourceStatementsAction(value.id))}
                 />
             )}
         </>

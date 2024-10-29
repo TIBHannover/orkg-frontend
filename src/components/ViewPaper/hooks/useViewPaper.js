@@ -5,7 +5,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getPaper } from 'services/backend/papers';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { resetStatementBrowser } from 'slices/statementBrowserSlice';
 import { loadPaper, setPaperContributions, setVersion } from 'slices/viewPaperSlice';
 
 const useViewPaper = ({ paperId }) => {
@@ -18,7 +17,6 @@ const useViewPaper = ({ paperId }) => {
 
     const loadPaperData = useCallback(async () => {
         setIsLoading(true);
-        dispatch(resetStatementBrowser());
         try {
             const paper = await getPaper(paperId);
             dispatch(loadPaper(paper));

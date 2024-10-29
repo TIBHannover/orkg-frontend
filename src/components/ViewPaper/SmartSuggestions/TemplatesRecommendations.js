@@ -1,19 +1,12 @@
-import TemplateButton from 'components/StatementBrowser/TemplatesModal/TemplateButton/TemplateButton';
-import { AnimationContainer } from 'components/ViewPaper/SmartSuggestions/styled';
 import useTemplatesRecommendation from 'components/ViewPaper/hooks/useTemplatesRecommendation';
-import { CLASSES } from 'constants/graphSettings';
+import { AnimationContainer } from 'components/ViewPaper/SmartSuggestions/styled';
+import TemplateButton from 'components/ViewPaper/SmartSuggestions/TemplateButton';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
 import { ListGroup } from 'reactstrap';
 
-function TemplatesRecommendations({ target, title = '', abstract = '' }) {
-    const selectedResource = useSelector((state) => state.statementBrowser.selectedResource);
-
-    const isContributionLevel = useSelector(
-        (state) => selectedResource && state.statementBrowser.resources.byId[selectedResource]?.classes?.includes(CLASSES.CONTRIBUTION),
-    );
-    const { recommendedTemplates } = useTemplatesRecommendation({ title, abstract });
+function TemplatesRecommendations({ title = '', abstract = '', resourceId }) {
+    const { recommendedTemplates, isContributionLevel } = useTemplatesRecommendation({ title, abstract, resourceId });
 
     return (
         <div>
@@ -29,15 +22,7 @@ function TemplatesRecommendations({ target, title = '', abstract = '' }) {
                                 timeout={{ enter: 600, exit: 600 }}
                             >
                                 <div>
-                                    <TemplateButton
-                                        addMode
-                                        tippyTarget={target}
-                                        id={template.id}
-                                        label={template.label}
-                                        resourceId={selectedResource}
-                                        syncBackend
-                                        isSmart
-                                    />
+                                    <TemplateButton template={template} isSmart resourceId={resourceId} />
                                 </div>
                             </AnimationContainer>
                         ))}
@@ -49,9 +34,9 @@ function TemplatesRecommendations({ target, title = '', abstract = '' }) {
 }
 
 TemplatesRecommendations.propTypes = {
+    resourceId: PropTypes.string.isRequired,
     title: PropTypes.string,
     abstract: PropTypes.string,
-    target: PropTypes.object,
 };
 
 export default TemplatesRecommendations;

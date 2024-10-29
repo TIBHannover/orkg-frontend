@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import { reverseWithSlug } from 'utils';
 import Tippy from '@tippyjs/react';
 import { useSelector } from 'react-redux';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import ActionButton from 'components/ActionButton/ActionButton';
 import ResearchProblemsModal from 'components/ResearchProblemsBox/ResearchProblemsModal';
 
 const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
@@ -56,7 +56,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
                                     </Link>
                                 </Tippy>{' '}
                                 {isEditMode && !!user && user.isCurationAllowed && by === 'Observatory' && (
-                                    <StatementActionButton
+                                    <ActionButton
                                         title="Delete this research problem from the observatory"
                                         icon={faTrash}
                                         key={`problem${rp.id}`}

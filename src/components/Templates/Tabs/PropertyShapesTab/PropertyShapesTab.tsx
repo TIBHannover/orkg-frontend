@@ -1,8 +1,8 @@
 import arrayMove from 'array-move';
 import { OptionType } from 'components/Autocomplete/types';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import AddPropertyView from 'components/StatementBrowser/AddProperty/AddPropertyView';
-import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
+import AddPropertyView from 'components/Templates/Tabs/PropertyShapesTab/AddProperty/AddPropertyView';
+import ConfirmCreatePropertyModal from 'components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
 import PropertyShape from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/PropertyShape';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { ChangeEvent, FC, useCallback, useState } from 'react';
@@ -138,10 +138,10 @@ const PropertyShapesTab: FC<{}> = () => {
         <div className="p-4">
             {isOpenConfirmModal && (
                 <ConfirmCreatePropertyModal
+                    isOpen={isOpenConfirmModal}
                     onCreate={handleCreate}
                     label={propertyLabel}
                     toggle={() => setIsOpenConfirmModal((v) => !v)}
-                    shouldPerformCreate
                 />
             )}
             <div className="pb-4">

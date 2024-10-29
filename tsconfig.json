@@ -23,6 +23,6 @@
             }
         ]
     },
-    "include": ["src", ".next/types/**/*.ts"],
+    "include": ["jest.config.ts", "src", ".next/types/**/*.ts"],
     "exclude": ["node_modules"]
 }

@@ -1,16 +1,15 @@
 import Tippy from '@tippyjs/react';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import ListInputField from 'components/RosettaStone/SingleStatement/ListInputField';
-import { getConfigByClassId, InputFormType } from 'constants/DataTypes';
+import { getConfigByClassId, InputType, StandardInputType } from 'constants/DataTypes';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { FC } from 'react';
 import { Input, InputGroup } from 'reactstrap';
-import { InputType } from 'reactstrap/types/lib/Input';
-import { Node, PropertyShape } from 'services/backend/types';
+import { Node, RSPropertyShape } from 'services/backend/types';
 
 type StatementInputFieldProps = {
     value: Node[];
-    propertyShape: PropertyShape;
+    propertyShape: RSPropertyShape;
     updateValue: (value: Node[]) => void;
 };
 
@@ -23,7 +22,7 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
         range = propertyShape.datatype;
     }
 
-    let inputFormType: InputFormType;
+    let inputFormType: InputType;
     const config = getConfigByClassId(range?.id ?? '');
     inputFormType = config.inputFormType;
 
@@ -38,7 +37,7 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
     }
 
     const Forms: {
-        [key in InputFormType]?: JSX.Element;
+        [key in InputType]?: JSX.Element;
     } & {
         default: JSX.Element;
     } = {
@@ -85,7 +84,7 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
                     <Input
                         placeholder={propertyShape.placeholder}
                         name="literalValue"
-                        type={inputFormType as InputType}
+                        type={inputFormType as StandardInputType}
                         bsSize="sm"
                         value={value?.[0]?.label ?? ''}
                         onChange={(e) => updateValue([{ ...(value?.[0] ?? {}), label: e.target.value }])}

@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'tippy.js/animations/shift-away.css';
 import 'tippy.js/dist/backdrop.css';
 import 'tippy.js/dist/tippy.css';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const RootLayout = ({ children }) => (
     <html lang="en">

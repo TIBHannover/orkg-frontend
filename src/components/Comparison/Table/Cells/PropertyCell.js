@@ -4,8 +4,8 @@ import classNames from 'classnames';
 import FilterModal from 'components/Comparison/Filters/FilterModal';
 import FilterWrapper from 'components/Comparison/Filters/FilterWrapper';
 import { getDataByProperty, getRuleByProperty, getValuesByProperty } from 'components/Comparison/Filters/helpers';
+import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import { ENTITIES } from 'constants/graphSettings';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
@@ -150,7 +150,7 @@ const PropertyCell = ({ id, label, property, similar, group, grouped = false, gr
                 </Button>
             )}
             {showStatementBrowser && (
-                <StatementBrowserDialog
+                <DataBrowserDialog
                     show
                     type={ENTITIES.PREDICATE}
                     toggleModal={() => setShowStatementBrowser((v) => !v)}

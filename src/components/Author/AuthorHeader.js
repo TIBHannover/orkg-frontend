@@ -1,24 +1,26 @@
-import Link from 'next/link';
-import { useState } from 'react';
-import { Button, Container, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import NotFound from 'app/not-found';
+import { faGoogle, faLinkedin, faOrcid, faResearchgate } from '@fortawesome/free-brands-svg-icons';
+import { faEllipsisV, faExternalLinkAlt, faGlobe, faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faOrcid, faLinkedin, faGoogle, faResearchgate } from '@fortawesome/free-brands-svg-icons';
-import { faExternalLinkAlt, faEllipsisV, faGlobe, faSpinner, faPen } from '@fortawesome/free-solid-svg-icons';
-import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
+import NotFound from 'app/not-found';
+import useAuthor from 'components/Author/hooks/useAuthor';
+import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
-import useAuthor from 'components/Author/hooks/useAuthor';
+import { useState } from 'react';
+import { Button, ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 
 const AuthorHeader = ({ authorId }) => {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [editMode, setEditMode] = useState(false);
+
     const { author, isLoading, isFailedLoading, loadAuthorData } = useAuthor({
         authorId,
     });
+
+    const [editMode, setEditMode] = useState(false);
 
     return (
         <>
@@ -60,13 +62,12 @@ const AuthorHeader = ({ authorId }) => {
                     </TitleBar>
 
                     {editMode && (
-                        <StatementBrowserDialog
+                        <DataBrowserDialog
+                            isEditMode
                             show={editMode}
                             toggleModal={() => setEditMode((v) => !v)}
                             id={author.id}
                             label={author.label}
-                            enableEdit
-                            syncBackend
                             onCloseModal={() => loadAuthorData()}
                         />
                     )}

@@ -5,7 +5,7 @@ import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMa
 import ROUTES from 'constants/routes';
 import { reverseWithSlug } from 'utils';
 import PropTypes from 'prop-types';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import ActionButton from 'components/ActionButton/ActionButton';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const ResearchProblemCard = (props) => {
@@ -31,7 +31,7 @@ const ResearchProblemCard = (props) => {
                 </Link>{' '}
                 <small>
                     {props.options?.map?.((option) => (
-                        <StatementActionButton
+                        <ActionButton
                             title={option.label}
                             icon={option.icon}
                             key={`problem${props.problem.id}`}

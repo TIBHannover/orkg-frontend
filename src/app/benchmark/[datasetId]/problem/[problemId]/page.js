@@ -1,21 +1,24 @@
 'use client';
 
-import Link from 'next/link';
 import { faEllipsisV, faPen, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import CodeURLsTooltip from 'components/Benchmarks/BenchmarkCard/CodeURLsTooltip';
 import useBenchmarkDatasetPapers from 'components/Benchmarks/hooks/useBenchmarkDatasetPapers';
 import useBenchmarkDatasetResource from 'components/Benchmarks/hooks/useBenchmarkDatasetResource';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
+import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
+import useParams from 'components/useParams/useParams';
+import { useRouter } from 'next/navigation';
+import PaperTitle from 'components/PaperTitle/PaperTitle';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import TitleBar from 'components/TitleBar/TitleBar';
 import usePaginate from 'components/hooks/usePaginate';
 import { SubTitle } from 'components/styled';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import Chart from 'react-google-charts';
 import { useSortBy, useTable } from 'react-table';
 import {
@@ -31,9 +34,6 @@ import {
 } from 'reactstrap';
 import { getDatasetsBenchmarksByResearchProblemId } from 'services/backend/datasets';
 import { reverseWithSlug } from 'utils';
-import { useRouter } from 'next/navigation';
-import useParams from 'components/useParams/useParams';
-import PaperTitle from 'components/PaperTitle/PaperTitle';
 
 function getTicksAxisH(data) {
     const dateRange = data.slice(1).map((value) => value[0]);
@@ -237,13 +237,12 @@ function Benchmark() {
                     </TitleBar>
 
                     {editMode && (
-                        <StatementBrowserDialog
+                        <DataBrowserDialog
                             show={editMode}
                             toggleModal={() => setEditMode((v) => !v)}
                             id={datasetId}
                             label={resourceData.label}
-                            enableEdit
-                            syncBackend
+                            isEditMode
                             onCloseModal={() => loadResourceData(datasetId)}
                         />
                     )}

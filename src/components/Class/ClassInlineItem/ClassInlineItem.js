@@ -4,7 +4,7 @@ import Autocomplete from 'components/Autocomplete/Autocomplete';
 import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import ActionButton from 'components/ActionButton/ActionButton';
 import { StyledButton } from 'components/StatementBrowser/styled';
 import { useSelector } from 'react-redux';
 import { ENTITIES } from 'constants/graphSettings';
@@ -91,13 +91,13 @@ const ClassInlineItem = ({
                     <ButtonsContainer className="item-buttons" displayButtonOnHover={displayButtonOnHover}>
                         {editMode && !isCurationAllowed && (
                             <span className="ms-2">
-                                <StatementActionButton title="Editing requires a curator role" icon={faPen} action={null} isDisabled />
+                                <ActionButton title="Editing requires a curator role" icon={faPen} action={null} isDisabled />
                             </span>
                         )}
                         {classObject && editMode && isCurationAllowed && (
                             <span className="ms-2">
                                 {onChange && (
-                                    <StatementActionButton
+                                    <ActionButton
                                         title="Change class"
                                         icon={faPen}
                                         action={() => {
@@ -107,7 +107,7 @@ const ClassInlineItem = ({
                                     />
                                 )}
                                 {onDelete && (
-                                    <StatementActionButton
+                                    <ActionButton
                                         title="Remove class"
                                         icon={faTrash}
                                         requireConfirmation
@@ -136,7 +136,7 @@ const ClassInlineItem = ({
                         )}
                         {!classObject && editMode && isCurationAllowed && (
                             <span className={noValueMessage ? 'ms-2' : ''}>
-                                <StatementActionButton
+                                <ActionButton
                                     title="Add class"
                                     icon={faPlus}
                                     action={() => {

@@ -3,7 +3,7 @@ import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
 import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
 import { OptionType } from 'components/Autocomplete/types';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import ConfirmCreatePropertyModal from 'components/StatementBrowser/AddProperty/ConfirmCreatePropertyModal';
+import ConfirmCreatePropertyModal from 'components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { ChangeEvent, FC, useState } from 'react';
@@ -78,10 +78,10 @@ const GeneralSettings: FC<{}> = () => {
         <div className="p-4">
             {isOpenConfirmModal && (
                 <ConfirmCreatePropertyModal
+                    isOpen={isOpenConfirmModal}
                     onCreate={handleCreate}
                     label={propertyLabel}
                     toggle={() => setIsOpenConfirmModal((v) => !v)}
-                    shouldPerformCreate
                 />
             )}
 

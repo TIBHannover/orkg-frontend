@@ -2,12 +2,12 @@ import { OptionType } from 'components/Autocomplete/types';
 import Link from 'next/link';
 import { ENTITIES } from 'constants/graphSettings';
 import { FC, Fragment } from 'react';
-import { PropertyShape } from 'services/backend/types';
+import { RSPropertyShape } from 'services/backend/types';
 import { getLinkByEntityType } from 'utils';
 
 type StatementValueProps = {
     value: OptionType[];
-    propertyShape: PropertyShape;
+    propertyShape: RSPropertyShape;
 };
 
 const StatementValue: FC<StatementValueProps> = ({ value, propertyShape }) => {

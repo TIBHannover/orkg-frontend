@@ -1,6 +1,6 @@
 import capitalize from 'capitalize';
 import { FC } from 'react';
-import { PropertyShape } from 'services/backend/types';
+import { RSPropertyShape } from 'services/backend/types';
 import styled from 'styled-components';
 
 const PositionCardStyled = styled.div`
@@ -16,7 +16,7 @@ const PlaceholderStyled = styled.div`
 
 type PositionCardProps = {
     index: number;
-    property: PropertyShape;
+    property: RSPropertyShape;
     type: string;
     color?: string;
 };

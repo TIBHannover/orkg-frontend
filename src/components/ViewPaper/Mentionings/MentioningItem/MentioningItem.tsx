@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Badge, ListGroupItem } from 'reactstrap';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import ActionButton from 'components/ActionButton/ActionButton';
 import { faCheck, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Mentioning } from 'services/backend/types';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
@@ -59,7 +59,7 @@ const MentioningItem: FC<MentioningItemProps> = ({ item, isEditMode, onDelete })
 
                 {isEditMode && (
                     <ButtonsContainer className="item-buttons ms-2" displayButtonOnHover>
-                        <StatementActionButton
+                        <ActionButton
                             title="Delete resource"
                             icon={faTrash}
                             requireConfirmation

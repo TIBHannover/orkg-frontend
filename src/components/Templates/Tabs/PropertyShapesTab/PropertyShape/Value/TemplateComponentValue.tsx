@@ -100,7 +100,7 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                 </InputGroup>
                 <div className="mt-2">
                     <FormGroup row>
-                        <Label className="text-end text-muted" for="cardinalityValueInput" sm={3}>
+                        <Label className="text-end text-muted" for={`cardinalityValueInput-${id}`} sm={3}>
                             <small>Cardinality</small>
                         </Label>
                         <Col sm={9}>
@@ -110,7 +110,7 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                                 value={cardinality}
                                 type="select"
                                 bsSize="sm"
-                                id="cardinalityValueInput"
+                                id={`cardinalityValueInput-${id}`}
                             >
                                 <option value="0,*">Zero or more [0,*]</option>
                                 <option value="0,1">Optional [0,1]</option>
@@ -124,7 +124,7 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                 {cardinality === 'range' && (
                     <div className="mt-2">
                         <FormGroup row>
-                            <Label className="text-end text-muted" for="minCountValueInput" sm={3}>
+                            <Label className="text-end text-muted" for={`minCountValueInput-${id}`} sm={3}>
                                 <small>Minimum Occurrence</small>
                             </Label>
                             <Col sm={9}>
@@ -137,13 +137,13 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                                     min="0"
                                     step="1"
                                     name="min_count"
-                                    id="minCountValueInput"
+                                    id={`minCountValueInput-${id}`}
                                     placeholder="Minimum number of occurrences in the resource"
                                 />
                             </Col>
                         </FormGroup>
                         <FormGroup row>
-                            <Label className="text-end text-muted" for="maxCountValueInput" sm={3}>
+                            <Label className="text-end text-muted" for={`maxCountValueInput-${id}`} sm={3}>
                                 <small>Maximum Occurrence</small>
                             </Label>
                             <Col sm={9}>
@@ -165,7 +165,7 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                     </div>
                 )}
                 <FormGroup row>
-                    <Label className="text-end text-muted" for="placeholderInput" sm={3}>
+                    <Label className="text-end text-muted" for={`placeholderInput-${id}`} sm={3}>
                         <small>Placeholder</small>
                     </Label>
                     <Col sm={9}>
@@ -176,14 +176,14 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                             value={propertyShape.placeholder || ''}
                             type="text"
                             name="placeholder"
-                            id="placeholderInput"
+                            id={`placeholderInput-${id}`}
                             placeholder="Enter a placeholder for the input form"
                         />
                     </Col>
                 </FormGroup>
 
                 <FormGroup row>
-                    <Label className="text-end text-muted" for="descriptionInput" sm={3}>
+                    <Label className="text-end text-muted" for={`descriptionInput-${id}`} sm={3}>
                         <small>Description</small>
                     </Label>
                     <Col sm={9}>
@@ -194,7 +194,7 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                             value={propertyShape.description || ''}
                             type="textarea"
                             name="description"
-                            id="descriptionInput"
+                            id={`descriptionInput-${id}`}
                             placeholder="Enter a description for the input form"
                         />
                     </Col>

@@ -27,7 +27,7 @@ const useViewPaperVersion = ({ paperId }) => {
                     return;
                 }
                 // Load the paper metadata but skip the research field and contribution data
-                getThing({ thingType: THING_TYPES.PAPER_VERSION, thingKey: paperId }).then(async (r) => {
+                await getThing({ thingType: THING_TYPES.PAPER_VERSION, thingKey: paperId }).then(async (r) => {
                     setPaperStatements(r.data.statements);
                     const contributionsNodes = filterSubjectOfStatementsByPredicateAndClass(
                         r.data.statements,

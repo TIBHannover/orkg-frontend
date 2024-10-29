@@ -4,7 +4,7 @@ import FilterInputField from 'components/Filters/FilterInputField/FilterInputFie
 import FilterLabel from 'components/Filters/FilterInputField/FilterLabel';
 import FilterCurationForm from 'components/Filters/Panel/FilterCurationForm';
 import useCurateFilters from 'components/Filters/hooks/useCurateFilters';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import ActionButton from 'components/ActionButton/ActionButton';
 import { FILTER_SOURCE } from 'constants/filters';
 import { Dispatch, FC, Fragment, SetStateAction, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -54,7 +54,7 @@ const AllFiltersOffCanvas: FC<AllFiltersOffCanvasProps> = ({
     return (
         <Offcanvas direction="end" isOpen={isOpen} toggle={toggle}>
             <OffcanvasHeader toggle={toggle}>
-                All filters <StatementActionButton title="Add filter" icon={faPlus} action={() => openEditFilterModal(null)} />
+                All filters <ActionButton title="Add filter" icon={faPlus} action={() => openEditFilterModal(null)} />
             </OffcanvasHeader>
             <OffcanvasBody>
                 <div className="mb-3">
@@ -70,13 +70,13 @@ const AllFiltersOffCanvas: FC<AllFiltersOffCanvasProps> = ({
                                     )}
                                     {(filter.source === FILTER_SOURCE.LOCAL_STORAGE || (filter.source === FILTER_SOURCE.DATABASE && isCurator)) && (
                                         <div className="float-end">
-                                            <StatementActionButton
+                                            <ActionButton
                                                 title="Edit filter"
                                                 icon={faPen}
                                                 action={() => openEditFilterModal({ ...filter, id: filter.id || index.toString() } as FilterConfig)}
                                             />
 
-                                            <StatementActionButton title="Delete filter" icon={faTimes} action={() => deleteFilter(filter)} />
+                                            <ActionButton title="Delete filter" icon={faTimes} action={() => deleteFilter(filter)} />
                                         </div>
                                     )}
                                 </Label>

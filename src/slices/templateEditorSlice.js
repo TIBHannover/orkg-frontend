@@ -12,6 +12,7 @@ const initialState = {
     description: '',
     created_by: null,
     created_at: null,
+    extraction_method: 'UNKNOWN',
     diagramMode: false,
     relations: {
         researchFields: [],

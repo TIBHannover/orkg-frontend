@@ -7,9 +7,10 @@ import {
     updateResourceStatementsAction,
     updateLiteral,
     updateResourceLabel,
+    getValueClass,
+    isLiteral,
 } from 'slices/contributionEditorSlice';
-import { getValueClass, isLiteral } from 'slices/statementBrowserSlice';
-import validationSchema from 'components/StatementBrowser/ValueForm/helpers/validationSchema';
+import validationSchema from 'components/ContributionEditor/TableCellForm/helpers/validationSchema';
 import { getConfigByType, getConfigByClassId } from 'constants/DataTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { ENTITIES, CLASSES, MISC } from 'constants/graphSettings';

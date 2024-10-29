@@ -2,7 +2,7 @@ import { setComparisonData, setUsedReferences } from 'slices/reviewSlice';
 import PropTypes from 'prop-types';
 import EmbeddedComparison from 'components/Comparison/EmbeddedComparison/EmbeddedComparison';
 import { useState, useEffect } from 'react';
-import configureStore from 'store';
+import { setupStore } from 'store';
 import { Provider, useSelector, useDispatch } from 'react-redux';
 import { isEqual } from 'lodash';
 import { Alert } from 'reactstrap';
@@ -40,7 +40,7 @@ const SectionComparison = ({ id, sectionId }) => {
     };
 
     useEffect(() => {
-        const { store } = configureStore();
+        const { store } = setupStore();
         setStore(store);
     }, []);
 

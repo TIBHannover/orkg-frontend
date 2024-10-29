@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import ActionButton from 'components/ActionButton/ActionButton';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${(props) => props.theme.dark};
@@ -49,7 +49,7 @@ const ContributorCard = ({ contributor, showStatsDetails = false, options }) => 
                 )}
                 <small>
                     {options?.map?.((option) => (
-                        <StatementActionButton
+                        <ActionButton
                             title={option.label}
                             icon={option.icon}
                             key={`contributor-card-${contributor.id}-${option.label}`}

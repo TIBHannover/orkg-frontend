@@ -62,13 +62,13 @@ const AddStatement: FC<AddStatementProps> = ({ handleAddStatement }) => {
         page: 0,
     };
 
-    const onChange = (value: SingleValue<RosettaStoneTemplate>, actionMeta: ActionMeta<RosettaStoneTemplate>) => {
+    const onChange = async (value: SingleValue<RosettaStoneTemplate>, actionMeta: ActionMeta<RosettaStoneTemplate>) => {
         if (actionMeta.action === 'create-option') {
             setInitialLabel(value?.label ?? '');
             setIsModalOpen(true);
             setShowAdd(false);
         } else if (value?.id) {
-            handleAddStatement(value?.id);
+            await handleAddStatement(value?.id);
             setShowAdd(false);
         }
     };

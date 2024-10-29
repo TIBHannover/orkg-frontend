@@ -150,7 +150,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
                 aria-label={placeholder?.toString()}
                 {...(allowCreate ? { createOptionPosition: 'first' } : {})}
             />
-            <OntologiesModal />
+            {enableExternalSources && <OntologiesModal />}
         </>
     );
 };

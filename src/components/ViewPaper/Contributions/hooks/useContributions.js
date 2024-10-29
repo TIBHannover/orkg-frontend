@@ -1,92 +1,29 @@
-import { useEffect, useState } from 'react';
-import { createResourceStatement, deleteStatementById } from 'services/backend/statements';
-import { updateResource, createResource } from 'services/backend/resources';
-import { useSelector, useDispatch } from 'react-redux';
-import { updateContributionLabel } from 'slices/statementBrowserSlice';
-import { toast } from 'react-toastify';
 import Confirm from 'components/Confirmation/Confirmation';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes';
-import { useRouter } from 'next/navigation';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { EXTRACTION_METHODS } from 'constants/misc';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { createResource, updateResource } from 'services/backend/resources';
+import { createResourceStatement, deleteStatementById } from 'services/backend/statements';
 import {
-    selectContribution,
-    setPaperContributions,
+    setContributionExtractionMethod,
     setIsAddingContribution,
     setIsDeletingContribution,
     setIsSavingContribution,
-    setSelectedContributionId,
-    setContributionExtractionMethod,
+    setPaperContributions,
 } from 'slices/viewPaperSlice';
 
-const useContributions = ({ paperId, contributionId }) => {
+const useContributions = ({ paperId }) => {
     const contributions = useSelector((state) => state.viewPaper.contributions);
     const paperTitle = useSelector((state) => state.viewPaper.paper.title);
-    const selectedContributionId = useSelector((state) => state.viewPaper.selectedContributionId);
     const dispatch = useDispatch();
-    const [isLoading, setIsLoading] = useState(true);
-    const [isLoadingContributionFailed, setLoadingContributionFailed] = useState(false);
 
     const [, setContributions] = useState([]);
     const router = useRouter();
-
-    useEffect(() => {
-        if (contributions?.length && (selectedContributionId !== contributionId || !contributionId)) {
-            try {
-                // apply selected contribution
-                if (
-                    contributionId &&
-                    !contributions.some((el) => el.id === contributionId) &&
-                    contributionId !== 'statements' &&
-                    contributionId !== 'mentions'
-                ) {
-                    throw new Error('Contribution not found');
-                }
-                const selected = contributionId && contributions.some((el) => el.id === contributionId) ? contributionId : contributions[0].id;
-
-                let newSelectedContributionId = '';
-                if (contributionId === 'statements') {
-                    newSelectedContributionId = 'statements';
-                } else if (contributionId === 'mentions') {
-                    newSelectedContributionId = 'mentions';
-                } else {
-                    newSelectedContributionId = selected;
-                }
-
-                dispatch(setSelectedContributionId(newSelectedContributionId));
-            } catch (e) {
-                setLoadingContributionFailed(true);
-                console.error(e);
-            }
-        }
-    }, [contributionId, contributions, dispatch, selectedContributionId]);
-
-    useEffect(() => {
-        const handleSelectContribution = (cId) => {
-            if (cId !== 'statements') {
-                setIsLoading(true);
-                // get the contribution label
-                const contributionResource = contributions?.find((c) => c.id === selectedContributionId);
-                if (contributionResource) {
-                    setLoadingContributionFailed(false);
-                    dispatch(
-                        selectContribution({
-                            contributionId: cId,
-                            contributionLabel: contributionResource.label,
-                        }),
-                    );
-                } else {
-                    setLoadingContributionFailed(true);
-                }
-                setIsLoading(false);
-            } else {
-                setLoadingContributionFailed(false);
-                setIsLoading(false);
-            }
-        };
-        handleSelectContribution(selectedContributionId);
-    }, [contributions, dispatch, selectedContributionId]);
 
     const handleChangeContributionLabel = (cId, label) => {
         // find the index of contribution
@@ -100,7 +37,6 @@ const useContributions = ({ paperId, contributionId }) => {
             updateResource(cId, label)
                 .then(() => {
                     dispatch(setPaperContributions(newContributions));
-                    dispatch(updateContributionLabel({ id: cId, label }));
                     dispatch(setIsSavingContribution({ id: cId, status: false }));
                     toast.success('Contribution name updated successfully');
                 })
@@ -178,9 +114,6 @@ const useContributions = ({ paperId, contributionId }) => {
     };
 
     return {
-        isLoading,
-        isLoadingContributionFailed,
-        selectedContributionId,
         contributions,
         paperTitle,
         handleAutomaticContributionVerification,

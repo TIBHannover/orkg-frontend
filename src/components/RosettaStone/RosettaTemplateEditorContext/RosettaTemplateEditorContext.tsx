@@ -1,6 +1,6 @@
 import arrayMove from 'array-move';
 import { Dispatch, FC, ReactNode, createContext, useContext, useReducer } from 'react';
-import { PropertyShape } from 'services/backend/types';
+import { RSPropertyShape } from 'services/backend/types';
 import { guid } from 'utils';
 
 export type RosettaTemplateEditorType = {
@@ -10,7 +10,7 @@ export type RosettaTemplateEditorType = {
     lockedExamples: string;
     label: string;
     description: string;
-    properties: PropertyShape[];
+    properties: RSPropertyShape[];
     isSaving: boolean;
 };
 
@@ -20,7 +20,7 @@ type RosettaTemplateEditorAction =
     | { type: 'setDescription'; payload: string }
     | { type: 'setExamples'; payload: string }
     | { type: 'setIsSaving'; payload: boolean }
-    | { type: 'setProperty'; payload: { index: number; data: PropertyShape } }
+    | { type: 'setProperty'; payload: { index: number; data: RSPropertyShape } }
     | { type: 'moveProperties'; payload: { dragIndex: number; hoverIndex: number } }
     | { type: 'addObjectPosition'; payload: string }
     | { type: 'deleteObjectPosition'; payload: number };

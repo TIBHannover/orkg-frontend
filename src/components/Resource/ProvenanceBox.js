@@ -9,7 +9,7 @@ import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
 import useProvenance from 'components/Resource/hooks/useProvenance';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import ActionButton from 'components/ActionButton/ActionButton';
 import { Badge } from 'reactstrap';
 
 function ProvenanceBox({ item, editMode = false }) {
@@ -45,7 +45,7 @@ function ProvenanceBox({ item, editMode = false }) {
                 </Badge>
             )}
             {editMode && isCurationAllowed && (
-                <StatementActionButton title="Edit provenance" icon={faPen} action={() => setShowAssignObservatory((v) => !v)} />
+                <ActionButton title="Edit provenance" icon={faPen} action={() => setShowAssignObservatory((v) => !v)} />
             )}
             <ObservatoryModal
                 callBack={updateCallBack}

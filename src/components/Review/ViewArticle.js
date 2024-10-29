@@ -4,6 +4,7 @@ import Tippy from '@tippyjs/react';
 import { SectionStyled } from 'components/ArticleBuilder/styled';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
+import DataBrowser from 'components/DataBrowser/DataBrowser';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
@@ -19,7 +20,6 @@ import SectionComparison from 'components/Review/SectionComparison';
 import SectionVisualization from 'components/Review/SectionVisualization';
 import SustainableDevelopmentGoals from 'components/Review/SustainableDevelopmentGoals';
 import ViewArticleStatementBrowser from 'components/Review/ViewArticleStatementBrowser';
-import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -164,15 +164,7 @@ const ViewArticle = () => {
                                                                 </Link>
                                                             </div>
                                                             {!isPublished ? (
-                                                                <StatementBrowser
-                                                                    enableEdit={false}
-                                                                    initialSubjectId={section.contentLink.objectId}
-                                                                    initialSubjectLabel="Main"
-                                                                    newStore
-                                                                    rootNodeType={
-                                                                        section.type.id === CLASSES.RESOURCE_SECTION ? 'resource' : 'predicate'
-                                                                    }
-                                                                />
+                                                                <DataBrowser id={section.contentLink.objectId} showHeader={false} />
                                                             ) : (
                                                                 <ViewArticleStatementBrowser id={section.contentLink.objectId} />
                                                             )}

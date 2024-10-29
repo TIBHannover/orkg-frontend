@@ -58,6 +58,7 @@ const Template = () => {
         created_at: createdAt,
         observatory_id: observatoryId,
         organization_id: organizationId,
+        extraction_method: extractionMethod,
     } = useSelector((state) => state.templateEditor);
     const router = useRouter();
     const [menuOpen, setMenuOpen] = useState(false);
@@ -213,10 +214,12 @@ const Template = () => {
                                     created_at: createdAt,
                                     organization_id: organizationId,
                                     observatory_id: observatoryId,
+                                    extraction_method: extractionMethod,
                                 }}
                                 showCreatedAt
                                 showCreatedBy
                                 showProvenance
+                                showExtractionMethod
                                 editMode={editMode}
                             />
                         </div>

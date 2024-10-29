@@ -5,18 +5,18 @@ import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
 } from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import ActionButton from 'components/ActionButton/ActionButton';
 import type { Identifier } from 'dnd-core';
 import { parseInt } from 'lodash';
 import { FC, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { AccordionBody, AccordionHeader, AccordionItem } from 'reactstrap';
-import { PropertyShape } from 'services/backend/types';
+import { RSPropertyShape } from 'services/backend/types';
 import { handleSortableHoverReactDnd } from 'utils';
 
 type PositionItemProps = {
     i: number;
-    property: PropertyShape;
+    property: RSPropertyShape;
     moveCard: (update: { dragIndex: number; hoverIndex: number }) => void;
 };
 
@@ -31,7 +31,7 @@ const PositionItem: FC<PositionItemProps> = ({ i, property, moveCard }) => {
 
     const dispatch = useRosettaTemplateEditorDispatch();
 
-    const isRequiredObject = (p: PropertyShape) => p?.min_count !== null && p?.min_count !== undefined && parseInt(p.min_count.toString()) > 0;
+    const isRequiredObject = (p: RSPropertyShape) => p?.min_count !== null && p?.min_count !== undefined && parseInt(p.min_count.toString()) > 0;
 
     const handleDeleteObjectPosition = (index: number) => {
         dispatch({ type: 'deleteObjectPosition', payload: index });
@@ -39,7 +39,7 @@ const PositionItem: FC<PositionItemProps> = ({ i, property, moveCard }) => {
 
     const ref = useRef<HTMLElement>(null);
 
-    const [{ handlerId }, drop] = useDrop<PropertyShape & { index: number }, void, { handlerId: Identifier | null }>({
+    const [{ handlerId }, drop] = useDrop<RSPropertyShape & { index: number }, void, { handlerId: Identifier | null }>({
         accept: ItemTypes.OBJECT_POSITION,
         canDrop: () => i !== 0 && i !== 1 && !isLocked,
         collect: (monitor) => {
@@ -47,7 +47,7 @@ const PositionItem: FC<PositionItemProps> = ({ i, property, moveCard }) => {
                 handlerId: monitor.getHandlerId(),
             };
         },
-        hover: (item: PropertyShape & { index: number }, monitor) => {
+        hover: (item: RSPropertyShape & { index: number }, monitor) => {
             if (monitor.canDrop()) {
                 handleSortableHoverReactDnd({ item, monitor, currentRef: ref.current, hoverIndex: i, handleUpdate: moveCard });
             }
@@ -88,7 +88,7 @@ const PositionItem: FC<PositionItemProps> = ({ i, property, moveCard }) => {
                         </>
                     )}
                 </div>
-                <StatementActionButton
+                <ActionButton
                     title={i === 0 || i === 1 ? 'Subject and Verb position are required' : deleteButtonMessage}
                     icon={faTrash}
                     requireConfirmation

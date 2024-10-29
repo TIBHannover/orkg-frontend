@@ -1,24 +1,24 @@
-import Link from 'next/link';
-import { useState } from 'react';
-import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Badge } from 'reactstrap';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import { SubTitle } from 'components/styled';
+import { faEllipsisV, faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import CheckClasses from 'components/CheckClasses/CheckClasses';
+import CheckSlug from 'components/CheckSlug/CheckSlug';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
+import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
 import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
+import { SubTitle } from 'components/styled';
+import TitleBar from 'components/TitleBar/TitleBar';
 import Contributors from 'components/TopContributors/Contributors';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import { useSelector } from 'react-redux';
+import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
-import CheckSlug from 'components/CheckSlug/CheckSlug';
-import CheckClasses from 'components/CheckClasses/CheckClasses';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Badge, Button, ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import { reverseWithSlug } from 'utils';
-import { CLASSES } from 'constants/graphSettings';
-import TitleBar from 'components/TitleBar/TitleBar';
 
 const ResearchFieldHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -55,13 +55,12 @@ const ResearchFieldHeader = ({ id }) => {
             {!isLoading && !isFailedLoading && (
                 <>
                     {editMode && (
-                        <StatementBrowserDialog
+                        <DataBrowserDialog
+                            isEditMode
                             show={editMode}
                             toggleModal={() => setEditMode((v) => !v)}
                             id={id}
                             label={researchFieldData.label}
-                            enableEdit
-                            syncBackend
                             onCloseModal={() => loadResearchFieldData(id)}
                         />
                     )}

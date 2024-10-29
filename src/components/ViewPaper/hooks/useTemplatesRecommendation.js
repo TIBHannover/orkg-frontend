@@ -1,35 +1,35 @@
-import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { getTemplateRecommendations } from 'services/orkgNlp';
+import { CLASSES } from 'constants/graphSettings';
 import { differenceBy } from 'lodash';
-import useUsedTemplates from 'components/StatementBrowser/TemplatesModal/hooks/useUsedTemplates';
+import { getResource, resourcesUrl } from 'services/backend/resources';
+import { getTemplate, getTemplates, templatesUrl } from 'services/backend/templates';
+import { getTemplateRecommendations, nlpServiceUrl } from 'services/orkgNlp';
+import useSWR from 'swr';
 
-const useTemplatesRecommendation = ({ title, abstract }) => {
-    const selectedResource = useSelector((state) => state.statementBrowser.selectedResource);
-    const [recommendedTemplates, setRecommendedTemplates] = useState([]);
-    const [isLoadingRT, setIsLoadingRT] = useState(false);
-    const { usedTemplates } = useUsedTemplates({ resourceId: selectedResource });
+const useTemplatesRecommendation = ({ title, abstract, resourceId }) => {
+    const { data: resource } = useSWR([resourceId, resourcesUrl, 'getResource'], ([params]) => getResource(params));
 
-    useEffect(() => {
-        const fetchRecommendation = () => {
-            setIsLoadingRT(true);
-            getTemplateRecommendations({ title, abstract })
-                .then((result) => {
-                    setRecommendedTemplates(result.templates);
-                    setIsLoadingRT(false);
-                })
-                .catch(() => {
-                    setRecommendedTemplates([]);
-                    setIsLoadingRT(false);
-                });
-        };
-        if (title || abstract) {
-            fetchRecommendation();
-        }
-    }, [abstract, title]);
+    const { data: templates } = useSWR(
+        resource && 'classes' in resource && resource.classes.length > 0 ? [resource.classes, templatesUrl, 'getTemplates'] : null,
+        ([params]) => Promise.all(params.map((id) => getTemplates({ targetClass: id }))),
+    );
+
+    const { data, isLoading: isLoadingRT } = useSWR(
+        title || abstract ? [{ title, abstract }, nlpServiceUrl, 'getTemplateRecommendations'] : null,
+        ([params]) => getTemplateRecommendations(params),
+    );
+    const templateRecommendations = data?.templates ?? [];
+    const usedTemplates = templates?.map((c) => c.content).flat() ?? [];
+
+    const recommendedTemplatesIds = differenceBy(templateRecommendations ?? [], usedTemplates ?? [], 'id');
+
+    const { data: recommendedTemplates } = useSWR(
+        recommendedTemplatesIds && recommendedTemplatesIds.length > 0 ? [recommendedTemplatesIds, templatesUrl, 'getTemplates'] : null,
+        ([params]) => Promise.all(params.map((t) => getTemplate(t.id))),
+    );
 
     return {
-        recommendedTemplates: differenceBy(recommendedTemplates, usedTemplates, 'id'),
+        isContributionLevel: resource && 'classes' in resource && resource.classes.includes(CLASSES.CONTRIBUTION),
+        recommendedTemplates: recommendedTemplates ?? [],
         isLoadingRT,
     };
 };

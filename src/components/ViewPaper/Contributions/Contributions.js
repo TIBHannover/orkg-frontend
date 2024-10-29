@@ -1,21 +1,20 @@
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
-import Mentionings from 'components/ViewPaper/Mentionings/Mentionings';
+import DataBrowser from 'components/DataBrowser/DataBrowser';
 import RosettaStoneStatements from 'components/RosettaStone/Statements/RosettaStoneStatements';
-import useParams from 'components/useParams/useParams';
-import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import Tabs from 'components/Tabs/Tabs';
 import ContributionComparisons from 'components/ViewPaper/ContributionComparisons/ContributionComparisons';
 import AutomaticContributionWarning from 'components/ViewPaper/Contributions/AutomaticContributionWarning';
 import useContributions from 'components/ViewPaper/Contributions/hooks/useContributions';
+import Mentionings from 'components/ViewPaper/Mentionings/Mentionings';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import SmartSuggestions from 'components/ViewPaper/SmartSuggestions/SmartSuggestions';
 import SustainableDevelopmentGoals from 'components/ViewPaper/SustainableDevelopmentGoals/SustainableDevelopmentGoals';
 import useFetchAbstract from 'components/ViewPaper/hooks/useFetchAbstract';
+import useParams from 'components/useParams/useParams';
 import { EXTRACTION_METHODS } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -27,9 +26,6 @@ import { Alert, Col, FormGroup, Row } from 'reactstrap';
 const Contributions = (props) => {
     const { resourceId, contributionId } = useParams();
     const {
-        isLoading,
-        isLoadingContributionFailed,
-        selectedContributionId,
         contributions,
         paperTitle,
         handleAutomaticContributionVerification,
@@ -43,6 +39,8 @@ const Contributions = (props) => {
     });
 
     const isAddingContribution = useSelector((state) => state.viewPaper.isAddingContribution);
+
+    const researchFieldId = useSelector((state) => state.viewPaper.paper.research_fields?.[0]?.id);
 
     const onTabChange = (key) => {
         const url =
@@ -63,28 +61,32 @@ const Contributions = (props) => {
 
     let selectedTab;
 
-    if (selectedContributionId === 'statements') {
+    if (contributionId === 'statements') {
         selectedTab = 'statements';
-    } else if (selectedContributionId === 'mentions') {
+    } else if (contributionId === 'mentions') {
         selectedTab = 'mentions';
     } else {
         selectedTab = 'contributions';
+    }
+    let selectedContributionId = null;
+    let failedContributionId = false;
+    if (contributionId === 'statements' || (!contributionId && !contributions?.length)) {
+        selectedContributionId = null;
+    }
+    if (!contributionId && contributions?.length > 0) {
+        selectedContributionId = contributions[0].id;
+    }
+    if (contributionId && contributions?.some((el) => el.id === contributionId)) {
+        selectedContributionId = contributionId;
+    }
+    if (contributionId && !contributions?.some((el) => el.id === contributionId)) {
+        failedContributionId = true;
     }
 
     return (
         <div>
             <Row>
                 <Col md="9">
-                    {isLoading && (
-                        <div>
-                            <ContentLoader height="100%" width="100%" viewBox="0 0 100 6" style={{ width: '100% !important' }} speed={2}>
-                                <rect x="0" y="0" rx="1" ry="1" width={20} height="5" />
-                                <rect x="21" y="0" rx="1" ry="1" width={20} height="5" />
-                                <rect x="42" y="0" rx="1" ry="1" width={20} height="5" />
-                            </ContentLoader>
-                        </div>
-                    )}
-
                     <Tabs
                         moreIcon={<Icon size="lg" icon={faAngleDown} />}
                         activeKey={selectedTab}
@@ -97,72 +99,98 @@ const Contributions = (props) => {
                                 label: 'Contributions',
                                 key: 'contributions',
                                 children: (
-                                    <Tabs
-                                        tabBarExtraContent={
-                                            props.enableEdit ? (
-                                                <AddContributionButton disabled={isAddingContribution} onClick={() => handleCreateContribution()} />
-                                            ) : null
-                                        }
-                                        moreIcon={<Icon size="lg" icon={faAngleDown} />}
-                                        activeKey={selectedContributionId}
-                                        destroyInactiveTabPane
-                                        onChange={onTabChange}
-                                        items={[
-                                            ...(contributions?.map((contribution) => ({
-                                                label: (
-                                                    <ContributionTab
-                                                        handleChangeContributionLabel={handleChangeContributionLabel}
-                                                        isSelected={contribution.id === selectedContributionId}
-                                                        canDelete={contributions.length !== 1}
-                                                        contribution={contribution}
-                                                        key={contribution.id}
-                                                        toggleDeleteContribution={toggleDeleteContribution}
-                                                        enableEdit={props.enableEdit}
-                                                    />
-                                                ),
-                                                key: contribution.id,
-                                                children: (
-                                                    <div
-                                                        className="p-4"
-                                                        style={{
-                                                            backgroundColor:
-                                                                contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC ? '#ecf6f8' : '',
-                                                        }}
-                                                    >
-                                                        {contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC && (
-                                                            <AutomaticContributionWarning
+                                    <>
+                                        {!failedContributionId && (
+                                            <Tabs
+                                                tabBarExtraContent={
+                                                    props.enableEdit ? (
+                                                        <AddContributionButton
+                                                            disabled={isAddingContribution}
+                                                            onClick={() => handleCreateContribution()}
+                                                        />
+                                                    ) : null
+                                                }
+                                                moreIcon={<Icon size="lg" icon={faAngleDown} />}
+                                                activeKey={contributionId}
+                                                destroyInactiveTabPane
+                                                onChange={onTabChange}
+                                                items={[
+                                                    ...(contributions?.map((contribution) => ({
+                                                        label: (
+                                                            <ContributionTab
+                                                                handleChangeContributionLabel={handleChangeContributionLabel}
+                                                                isSelected={contribution.id === contributionId}
+                                                                canDelete={contributions.length !== 1}
                                                                 contribution={contribution}
-                                                                onVerifyHandler={handleAutomaticContributionVerification}
+                                                                key={contribution.id}
+                                                                toggleDeleteContribution={toggleDeleteContribution}
                                                                 enableEdit={props.enableEdit}
                                                             />
-                                                        )}
-                                                        {!isLoadingContributionFailed && (
-                                                            <div>
-                                                                <FormGroup>
-                                                                    <StatementBrowser
+                                                        ),
+                                                        key: contribution.id,
+                                                        children: (
+                                                            <div
+                                                                className="p-4"
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC
+                                                                            ? '#ecf6f8'
+                                                                            : '',
+                                                                }}
+                                                            >
+                                                                {contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC && (
+                                                                    <AutomaticContributionWarning
+                                                                        contribution={contribution}
+                                                                        onVerifyHandler={handleAutomaticContributionVerification}
                                                                         enableEdit={props.enableEdit}
-                                                                        syncBackend={props.enableEdit}
-                                                                        openExistingResourcesInDialog={false}
-                                                                        initOnLocationChange={false}
-                                                                        keyToKeepStateOnLocationChange={contributionId ?? resourceId}
-                                                                        renderTemplateBox
                                                                     />
-                                                                </FormGroup>
+                                                                )}
+                                                                {selectedContributionId && (
+                                                                    <div>
+                                                                        <FormGroup>
+                                                                            <DataBrowser
+                                                                                isEditMode={props.enableEdit}
+                                                                                id={selectedContributionId}
+                                                                                canEditSharedRootLevel
+                                                                                researchField={researchFieldId}
+                                                                                title={paperTitle}
+                                                                                abstract={abstract}
+                                                                            />
+                                                                        </FormGroup>
 
-                                                                {contribution.id && <ContributionComparisons contributionId={contribution.id} />}
+                                                                        {/* selectedContribution && <SimilarContributions contributionId={selectedContribution} /> */}
+
+                                                                        {contribution.id && (
+                                                                            <ContributionComparisons contributionId={contribution.id} />
+                                                                        )}
+                                                                    </div>
+                                                                )}
                                                             </div>
-                                                        )}
-                                                        {isLoadingContributionFailed && (
-                                                            <Alert className="mt-4 mb-5" color="danger">
-                                                                {contributions.length === 0 && 'This paper has no contributions yet'}
-                                                                {contributions.length !== 0 && "Contribution doesn't exist"}
-                                                            </Alert>
-                                                        )}
-                                                    </div>
-                                                ),
-                                            })) ?? []),
-                                        ]}
-                                    />
+                                                        ),
+                                                    })) ?? []),
+                                                ]}
+                                            />
+                                        )}
+                                        {failedContributionId && (
+                                            <Alert className="m-3" color="danger">
+                                                Contribution doesn't exist
+                                            </Alert>
+                                        )}
+                                        {contributions?.length === 0 && (
+                                            <Alert className="m-3 rounded" color="warning">
+                                                This paper has no contributions yet
+                                                <br />
+                                                {props.enableEdit ? (
+                                                    <span style={{ fontSize: '0.875rem' }}>
+                                                        Start by adding a contribution using the top right (+) button
+                                                    </span>
+                                                ) : (
+                                                    <span style={{ fontSize: '0.875rem' }}>Please contribute by editing</span>
+                                                )}
+                                                <br />
+                                            </Alert>
+                                        )}
+                                    </>
                                 ),
                             },
                             {
@@ -185,19 +213,6 @@ const Contributions = (props) => {
                             },
                         ]}
                     />
-
-                    {!isLoading && contributions?.length === 0 && (
-                        <Alert className="mt-1 mb-0 rounded" color="warning">
-                            This paper has no contributions yet
-                            <br />
-                            {props.enableEdit ? (
-                                <span style={{ fontSize: '0.875rem' }}>Start by adding a contribution using the top right (+) button</span>
-                            ) : (
-                                <span style={{ fontSize: '0.875rem' }}>Please contribute by editing</span>
-                            )}
-                            <br />
-                        </Alert>
-                    )}
                 </Col>
 
                 <div className="col-md-3">
@@ -209,9 +224,14 @@ const Contributions = (props) => {
                         </div>
                     )}
 
-                    {selectedContributionId !== 'statements' && props.enableEdit && (
+                    {selectedContributionId && contributionId !== 'statements' && contributionId !== 'mentions' && props.enableEdit && (
                         <div className="mb-3">
-                            <SmartSuggestions isLoadingAbstract={isLoadingAbstract} title={paperTitle} abstract={abstract} />
+                            <SmartSuggestions
+                                isLoadingAbstract={isLoadingAbstract}
+                                title={paperTitle}
+                                abstract={abstract}
+                                resourceId={selectedContributionId}
+                            />
                         </div>
                     )}
 

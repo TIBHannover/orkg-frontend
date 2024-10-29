@@ -273,7 +273,7 @@ export type Paper = {
     mentionings: Mentioning[];
 };
 
-export type PropertyShapeUntypedType = {
+export type RSPropertyShapeUntypedType = {
     id?: string;
     label?: string;
     placeholder: string;
@@ -287,12 +287,39 @@ export type PropertyShapeUntypedType = {
     postposition?: string;
 };
 
+export type PropertyShapeUntypedType = {
+    id?: string;
+    label?: string;
+    placeholder: string;
+    description: string;
+    min_count?: number | string;
+    max_count?: number | string;
+    path: Node;
+    created_at?: string;
+    created_by?: string;
+    preposition?: string;
+    postposition?: string;
+};
+
+export type RSPropertyShapeLiteralType = RSPropertyShapeUntypedType & {
+    datatype?: Node;
+};
+
 export type PropertyShapeLiteralType = PropertyShapeUntypedType & {
     datatype?: Node;
 };
 
+export type RSPropertyShapeStringType = RSPropertyShapeLiteralType & {
+    pattern: string;
+};
+
 export type PropertyShapeStringType = PropertyShapeLiteralType & {
     pattern: string;
+};
+
+export type RSPropertyShapeNumberType = RSPropertyShapeLiteralType & {
+    min_inclusive: number;
+    max_inclusive: number;
 };
 
 export type PropertyShapeNumberType = PropertyShapeLiteralType & {
@@ -300,9 +327,20 @@ export type PropertyShapeNumberType = PropertyShapeLiteralType & {
     max_inclusive: number;
 };
 
+export type RSPropertyShapeResourceType = RSPropertyShapeUntypedType & {
+    class?: Node;
+};
+
 export type PropertyShapeResourceType = PropertyShapeUntypedType & {
     class?: Node;
 };
+
+export type RSPropertyShape =
+    | RSPropertyShapeUntypedType
+    | RSPropertyShapeLiteralType
+    | RSPropertyShapeStringType
+    | RSPropertyShapeNumberType
+    | RSPropertyShapeResourceType;
 
 export type PropertyShape =
     | PropertyShapeUntypedType
@@ -325,7 +363,7 @@ export type Template = {
     created_at: string;
     created_by: string;
     visibility: Visibility;
-    unlisted_by: string;
+    unlisted_by?: string;
 };
 
 export type CreateTemplateParams = {
@@ -345,7 +383,7 @@ export type RosettaStoneTemplate = {
     formatted_label: string;
     example_usage: string;
     target_class: Node;
-    properties: PropertyShape[];
+    properties: RSPropertyShape[];
     organizations: string[];
     observatories: string[];
     created_at: string;
@@ -380,7 +418,7 @@ export type CreateRosettaStoneTemplateParams = {
     description: string;
     example_usage: string;
     formatted_label: string;
-    properties: (Omit<PropertyShape, 'path'> & { path: string })[];
+    properties: (Omit<RSPropertyShape, 'path'> & { path: string })[];
     organizations: string[];
     observatories: string[];
 };

@@ -1,15 +1,15 @@
 import { faCheck, faGripVertical, faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import ActionButton from 'components/ActionButton/ActionButton';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { OptionType } from 'components/Autocomplete/types';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Link from 'next/link';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { PropertyStyle } from 'components/StatementBrowser/styled';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { FC, useState } from 'react';
 import { ConnectDragSource } from 'react-dnd';
 import { useSelector } from 'react-redux';
@@ -57,8 +57,8 @@ const TemplateComponentProperty: FC<TemplateComponentPropertyProps> = ({ id, dra
 
                     {isEditMode && (
                         <div className="propertyOptions">
-                            <StatementActionButton title="Edit property" icon={faPen} action={() => setIsEditing(true)} />
-                            <StatementActionButton
+                            <ActionButton title="Edit property" icon={faPen} action={() => setIsEditing(true)} />
+                            <ActionButton
                                 title="Delete property"
                                 icon={faTrash}
                                 action={() => handleDeletePropertyShape(id)}

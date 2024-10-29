@@ -2,15 +2,15 @@ import { useState } from 'react';
 import { Button, FormGroup, Modal, ModalHeader, ModalBody, Label, Input, ListGroupItem, Alert, InputGroup } from 'reactstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
-import { setIsTemplateModalOpen } from 'slices/statementBrowserSlice';
+import { setIsTemplateModalOpen } from 'slices/contributionEditorSlice';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import Tippy, { useSingleton } from '@tippyjs/react';
 import TemplateButton from 'components/ContributionEditor/TemplatesModal/TemplateButton/TemplateButton';
-import SearchFieldSelector from 'components/StatementBrowser/TemplatesModal/SearchFieldSelector/SearchFieldSelector';
-import useTemplates from 'components/StatementBrowser/TemplatesModal/hooks/useTemplates';
+import SearchFieldSelector from 'components/ContributionEditor/TemplatesModal/SearchFieldSelector/SearchFieldSelector';
+import useTemplates from 'components/ContributionEditor/TableCellForm/hooks/useTemplates';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
@@ -40,7 +40,7 @@ const AnimationContainer = styled(CSSTransition)`
 
 const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsTemplatesModalOpen = undefined }) => {
     const [source, target] = useSingleton();
-    const isTemplatesModalOpen = useSelector((state) => isTemplatesModalOpenProp ?? state.statementBrowser.isTemplatesModalOpen);
+    const isTemplatesModalOpen = useSelector((state) => isTemplatesModalOpenProp ?? state.contributionEditor.isTemplatesModalOpen);
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
     const onlyFeatured = true;
     const {
@@ -89,7 +89,7 @@ const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsT
                         <AnimationContainer in={usedTemplates?.length > 0} timeout={600} classNames="zoom" unmountOnExit>
                             <div>
                                 <p>Used templates:</p>
-                                {usedTemplates.map((template) => (
+                                {usedTemplates?.map((template) => (
                                     <TemplateButton
                                         addMode={false}
                                         tippyTarget={target}
@@ -188,11 +188,11 @@ const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsT
                             </Alert>
                         )}
 
-                        {!labelFilter && !targetFilter && featuredTemplates.length > 0 && (
+                        {!labelFilter && !targetFilter && featuredTemplates?.length > 0 && (
                             <FormGroup>
                                 <p>Featured templates:</p>
                                 <div>
-                                    {featuredTemplates.map((template) => (
+                                    {featuredTemplates?.map((template) => (
                                         <TemplateButton tippyTarget={target} key={`t${template.id}`} id={template.id} label={template.label} />
                                     ))}
                                 </div>
@@ -208,7 +208,7 @@ const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsT
                             </ContentLoader>
                         )}
 
-                        {templates.length > 0 && (
+                        {templates?.length > 0 && (
                             <FormGroup>
                                 {labelFilter === '' && !targetFilter && !onlyFeatured && featuredTemplates.length > 0 && <p>Other templates:</p>}
                                 {targetFilter && (
@@ -217,7 +217,7 @@ const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsT
                                     </p>
                                 )}
                                 <div>
-                                    {templates.map((template) => (
+                                    {templates?.map((template) => (
                                         <TemplateButton tippyTarget={target} key={`t${template.id}`} id={template.id} label={template.label} />
                                     ))}
                                 </div>

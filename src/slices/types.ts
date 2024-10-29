@@ -19,7 +19,7 @@ export type AuthSliceType = {
 };
 
 // TODO: not complete yet
-export type StatementBrowser = {
+export type ContributionEditor = {
     isHelpModalOpen: boolean;
     helpCenterArticleId: string;
 };
@@ -27,5 +27,5 @@ export type StatementBrowser = {
 // TODO: add additional slices here when they are migrated to TypeScript
 export type RootStore = {
     auth: AuthSliceType;
-    statementBrowser: StatementBrowser;
+    contributionEditor: ContributionEditor;
 };

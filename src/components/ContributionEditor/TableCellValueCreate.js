@@ -1,9 +1,9 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
-import { ENTITIES } from 'constants/graphSettings';
 import TableCellForm from 'components/ContributionEditor/TableCellForm/TableCellForm';
 import useTableCellForm from 'components/ContributionEditor/TableCellForm/hooks/useTableCellForm';
+import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
+import ActionButton from 'components/ActionButton/ActionButton';
+import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
 import styled from 'styled-components';
@@ -52,7 +52,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                     }}
                 >
                     <CreateButtonContainer className="create-button">
-                        <StatementActionButton
+                        <ActionButton
                             isDisabled={!canAddValue}
                             title={canAddValue ? 'Add value' : 'This property reached the maximum number of values set by template'}
                             icon={faPlus}
@@ -69,16 +69,17 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                 </div>
             )}
             {isModelOpen && (
-                <StatementBrowserDialog
+                <DataBrowserDialog
+                    show
                     toggleModal={(v) => setIsModalOpen(!v)}
+                    onCloseModal={() => updateResourceStatements(dialogResourceId)}
                     id={dialogResourceId}
                     label={dialogResourceLabel}
-                    show
-                    enableEdit
-                    syncBackend
-                    onCloseModal={() => updateResourceStatements(dialogResourceId)}
+                    canEditSharedRootLevel={false}
+                    isEditMode
                 />
             )}
+
             {isCreating && <TableCellForm closeForm={setIsCreating} contributionId={contributionId} propertyId={propertyId} />}
         </>
     );
