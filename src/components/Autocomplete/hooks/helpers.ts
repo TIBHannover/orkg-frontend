@@ -5,6 +5,7 @@ import REGEX from 'constants/regex';
 import type { GroupBase, OptionsOrGroups } from 'react-select';
 import { MultiValue } from 'react-select';
 import { createClass, getClasses } from 'services/backend/classes';
+import { importClassByURI, importPredicateByURI, importResourceByURI } from 'services/backend/import';
 import { createLiteral } from 'services/backend/literals';
 import { getEntities, getEntity } from 'services/backend/misc';
 import { createPredicate } from 'services/backend/predicates';
@@ -184,30 +185,6 @@ export const getExternalData = ({
     return promises;
 };
 
-const findOrCreateProperty = async (value: OptionType) => {
-    let property;
-    property = value.uri
-        ? ((await getStatements({
-              subjectLabel: value.label,
-              objectLabel: value.uri,
-              predicateId: PREDICATES.SAME_AS,
-              size: 1,
-              returnContent: true,
-          })) as Statement[])
-        : [];
-    property = property.length > 0 ? property[0].subject : null;
-    if (!property) {
-        property = await createPredicate(value.label);
-        if (value.uri) {
-            createLiteralStatement(property.id, PREDICATES.SAME_AS, (await createLiteral(value.uri, 'xsd:anyURI')).id);
-        }
-        if (value.description) {
-            createLiteralStatement(property.id, PREDICATES.DESCRIPTION, (await createLiteral(value.description)).id);
-        }
-    }
-    return property;
-};
-
 const findOrCreateResource = async (value: OptionType) => {
     let resource;
     resource = value.uri
@@ -233,21 +210,6 @@ const findOrCreateResource = async (value: OptionType) => {
     return resource;
 };
 
-const findOrCreateClass = async (value: OptionType) => {
-    let newClass;
-    try {
-        newClass = (await getClasses({
-            uri: value.uri?.trim(),
-        })) as Class;
-    } catch (e) {
-        newClass = await createClass(value.label, value.uri ?? null);
-        if (value.description) {
-            createLiteralStatement(newClass.id, PREDICATES.DESCRIPTION, (await createLiteral(value.description)).id);
-        }
-    }
-    return newClass;
-};
-
 export const importStatements = async (id: string, value: OptionType) => {
     for (const s of value.statements ?? []) {
         createLiteralStatement(id, s.predicate, (await createLiteral(s.value.label)).id);
@@ -260,12 +222,16 @@ export const importExternalSelectedOption = async (entityType: EntityType, value
         return value;
     }
     // Import the option
-    if (entityType === ENTITIES.RESOURCE) {
-        importedValue = (await findOrCreateResource(value)) as OptionType;
-    } else if (entityType === ENTITIES.PREDICATE) {
-        importedValue = (await findOrCreateProperty(value)) as OptionType;
-    } else if (entityType === ENTITIES.CLASS) {
-        importedValue = (await findOrCreateClass(value)) as OptionType;
+    if (entityType === ENTITIES.RESOURCE && value.ontology && value.uri) {
+        if (value.source !== AUTOCOMPLETE_SOURCE.OLS_API) {
+            importedValue = await importResourceByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
+        } else {
+            importedValue = (await findOrCreateResource(value)) as OptionType;
+        }
+    } else if (entityType === ENTITIES.PREDICATE && value.ontology && value.uri) {
+        importedValue = await importPredicateByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
+    } else if (entityType === ENTITIES.CLASS && value.ontology && value.uri) {
+        importedValue = await importClassByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
     } else {
         throw new Error('No implemented yet.');
     }
