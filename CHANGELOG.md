@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.149.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.148.0...v0.149.0) - 2024-10-30
+
+### Changes
+
+- use Turbopack for Development [`#1399`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1399)
+- feat: use dedicated import endpoints for external ontologies [`#1395`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1395)
+- refactor: improve statement browser with new features and enhancements [`#1393`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1393)
+- chore: update NextJs [`#1398`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1398)
+
+---
 ## [v0.148.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.147.0...v0.148.0) - 2024-10-17
 
 ### Changes
