@@ -9,9 +9,6 @@ import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { EditModeContainer, Title } from 'components/EditModeHeader/EditModeHeader';
 import EditableHeader from 'components/EditableHeader';
 import ExportCitation from 'components/ExportCitation/ExportCitation';
-import Link from 'next/link';
-import useParams from 'components/useParams/useParams';
-import { useRouter } from 'next/navigation';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ItemMetadata from 'components/Search/ItemMetadata';
 import ShaclFlowModal from 'components/Templates/ShaclFlow/ShaclFlowModal';
@@ -21,12 +18,15 @@ import TemplateEditorHeaderBar from 'components/Templates/TemplateEditorHeaderBa
 import TitleBar from 'components/TitleBar/TitleBar';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import useContributor from 'components/hooks/useContributor';
-import ROUTES from 'constants/routes';
+import useParams from 'components/useParams/useParams';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { InView } from 'react-intersection-observer';
 import { useDispatch, useSelector } from 'react-redux';
-import VisibilitySensor from 'react-visibility-sensor';
 import {
     Button,
     ButtonDropdown,
@@ -190,7 +190,7 @@ const Template = () => {
             >
                 Template
             </TitleBar>
-            <VisibilitySensor onChange={handleShowHeaderBar}>
+            <InView as="div" onChange={(inView) => handleShowHeaderBar(inView)}>
                 <Container className="p-0">
                     {(editMode || isSaving) && (
                         <EditModeContainer className="box rounded-top">
@@ -225,7 +225,7 @@ const Template = () => {
                         </div>
                     </div>
                 </Container>
-            </VisibilitySensor>
+            </InView>
             {showHeaderBar && <TemplateEditorHeaderBar />}
             <TabsContainer id={id} />
             {diagramMode && <ShaclFlowModal />}
