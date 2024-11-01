@@ -33,6 +33,11 @@ const nextConfig = {
         serverComponentsExternalPackages: ['citeproc'],
         turbo: {
             resolveExtensions: ['.mdx', '.tsx', '.ts', '.jsx', '.js', '.mjs', '.json'],
+            rules: {
+                '*.md': {
+                    loaders: ['raw-loader'],
+                },
+            },
         },
     },
     output: 'standalone',
